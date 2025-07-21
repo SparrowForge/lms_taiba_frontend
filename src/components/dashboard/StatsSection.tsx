@@ -2,12 +2,12 @@
 
 import {Card, Col, Row, Statistic, Typography} from 'antd'
 import {
-    ArrowDownOutlined,
-    ArrowUpOutlined,
-    BookOutlined,
-    FileTextOutlined,
-    TeamOutlined,
-    UserOutlined
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  BookOutlined,
+  FileTextOutlined,
+  TeamOutlined,
+  UserOutlined
 } from '@ant-design/icons'
 import {useAuth} from '@/hooks/useAuth'
 
@@ -59,7 +59,7 @@ export const StatsSection = () => {
           Welcome back, {getUserFullName()}! 👋
         </Title>
         <Text className="text-gray-600 text-base">
-          Here's what's happening with your LMS today.
+          Here&apos;s what&apos;s happening with your LMS today.
         </Text>
       </div>
 

@@ -2,19 +2,20 @@
 
 import {Avatar, Layout, Menu, Typography} from 'antd'
 import {
-    BarChartOutlined,
-    BellOutlined,
-    BookOutlined,
-    CalendarOutlined,
-    DashboardOutlined,
-    FileTextOutlined,
-    LogoutOutlined,
-    SettingOutlined,
-    TeamOutlined,
-    UserOutlined
+  BarChartOutlined,
+  BellOutlined,
+  BookOutlined,
+  CalendarOutlined,
+  DashboardOutlined,
+  FileTextOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+  TeamOutlined,
+  UserOutlined
 } from '@ant-design/icons'
 import {useAuth} from '@/hooks/useAuth'
 import {usePathname, useRouter} from 'next/navigation'
+import {toast, ToastContainer} from 'react-toastify'
 
 const {Sider} = Layout
 const {Text} = Typography
@@ -24,7 +25,7 @@ interface SidebarProps {
   onCollapse: (collapsed: boolean) => void
 }
 
-export const Sidebar = ({collapsed, onCollapse}: SidebarProps) => {
+export const Sidebar = ({collapsed}: SidebarProps) => {
   const {user, logout, getUserFullName} = useAuth()
   const router = useRouter()
   const pathname = usePathname()
@@ -39,7 +40,7 @@ export const Sidebar = ({collapsed, onCollapse}: SidebarProps) => {
 
   const menuItems = [
     {
-      key: '/dashboard',
+      key: '/',
       icon: <DashboardOutlined />,
       label: 'Dashboard',
     },
@@ -100,26 +101,29 @@ export const Sidebar = ({collapsed, onCollapse}: SidebarProps) => {
   ]
 
   const handleMenuClick = ({key}: {key: string}) => {
+    toast.success('Menu clicked!')
     router.push(key)
   }
 
   return (
-    <Sider
-      collapsed={collapsed}
-      theme="light"
-      width={280}
-      className="border-r border-gray-200 shadow-sm"
-      style={{
-        overflow: 'auto',
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-        top: 0,
-        bottom: 0,
-        zIndex: 1000,
-        backgroundColor: '#ffffff',
-      }}
-    >
+    <>
+    <ToastContainer position="bottom-right" autoClose={2000} hideProgressBar={true}/>
+      <Sider
+        collapsed={collapsed}
+        theme="light"
+        width={280}
+        className="border-r border-gray-200 shadow-sm"
+        style={{
+          overflow: 'auto',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          zIndex: 1000,
+          backgroundColor: '#ffffff',
+        }}
+      >
       {/* Logo/Brand */}
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-center">
@@ -199,6 +203,7 @@ export const Sidebar = ({collapsed, onCollapse}: SidebarProps) => {
           }}
         />
       </div>
-    </Sider>
+      </Sider>
+    </>
   )
 }

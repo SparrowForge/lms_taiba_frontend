@@ -1,0 +1,237 @@
+'use client'
+
+import {useCallback} from 'react'
+import {useAppDispatch, useAppSelector} from '@/store/hooks'
+import {
+    addUser,
+    clearFilters,
+    clearUsers,
+    deleteUser,
+    setActionStatus,
+    setDetailsStatus,
+    setFilters,
+    setListStatus,
+    setPagination,
+    setSelectedUser,
+    setUsers,
+    updateUser,
+} from '@/store/slices/userSlice'
+import {userService} from '@/services/userService'
+import {IUser, IUserCreate, IUserFilters, IUserUpdate} from '@/types/user'
+import {Status} from '@/types/common'
+import {RootState} from '@/store'
+
+export const useUsers = () => {
+  const dispatch = useAppDispatch()
+  const {
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    users,
+    selectedUser,
+    pagination,
+    filters
+  } = useAppSelector((state: RootState) => state.users)
+
+  // Helper to get loading states
+  const listLoading = listStatus.status === Status.LOADING
+  const detailsLoading = detailsStatus.status === Status.LOADING
+  const actionLoading = actionStatus.status === Status.LOADING
+
+  // Helper to get error states
+  const listError = listStatus.status === Status.FAILED ? listStatus.message : null
+  const detailsError = detailsStatus.status === Status.FAILED ? detailsStatus.message : null
+  const actionError = actionStatus.status === Status.FAILED ? actionStatus.message : null
+
+  // Load users with filters (List action)
+  const loadUsers = useCallback(async (filters: IUserFilters = {}) => {
+    try {
+      dispatch(setListStatus({status: Status.LOADING}))
+
+      const response = await userService.getUsers(filters)
+      dispatch(setUsers(response.data.items ?? []))
+      dispatch(setPagination(response.data.meta ?? {}))
+      dispatch(setListStatus({status: Status.SUCCESS}))
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to fetch users'
+      dispatch(setListStatus({status: Status.FAILED, message: errorMessage}))
+    }
+  }, [dispatch])
+
+  // Load single user (Details action)
+  const loadUser = useCallback(async (id: number) => {
+    try {
+      dispatch(setDetailsStatus({status: Status.LOADING}))
+
+      const response = await userService.getUser(id)
+      dispatch(setSelectedUser(response))
+
+      // Update user in the list if exists, otherwise add
+      const index = users.findIndex((user: IUser) => user.id === response.id)
+      if (index !== -1) {
+        dispatch(updateUser(response))
+      } else {
+        dispatch(addUser(response))
+      }
+      dispatch(setDetailsStatus({status: Status.SUCCESS}))
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to fetch user'
+      dispatch(setDetailsStatus({status: Status.FAILED, message: errorMessage}))
+    }
+  }, [dispatch, users])
+
+  // Create user (Action)
+  const addUserAction = useCallback(async (userData: IUserCreate) => {
+    try {
+      dispatch(setActionStatus({status: Status.LOADING}))
+
+      const response = await userService.createUser(userData)
+      dispatch(addUser(response))
+      dispatch(setActionStatus({status: Status.SUCCESS, message: 'User created successfully'}))
+      return response
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to create user'
+      dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
+      throw error
+    }
+  }, [dispatch])
+
+  // Update user (Action)
+  const editUser = useCallback(async (id: number, userData: IUserUpdate) => {
+    try {
+      dispatch(setActionStatus({status: Status.LOADING}))
+
+      const response = await userService.updateUser(id, userData)
+      dispatch(updateUser(response))
+      dispatch(setActionStatus({status: Status.SUCCESS, message: 'User updated successfully'}))
+      return response
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to update user'
+      dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
+      throw error
+    }
+  }, [dispatch])
+
+  // Delete user (Action)
+  const removeUser = useCallback(async (id: number) => {
+    try {
+      dispatch(setActionStatus({status: Status.LOADING}))
+
+      await userService.deleteUser(id)
+      dispatch(deleteUser(id))
+      dispatch(setActionStatus({status: Status.SUCCESS, message: 'User deleted successfully'}))
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to delete user'
+      dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
+      throw error
+    }
+  }, [dispatch])
+
+  // Update user status (Action)
+  const changeUserStatus = useCallback(async (id: number, status: 'active' | 'inactive' | 'pending') => {
+    try {
+      dispatch(setActionStatus({status: Status.LOADING}))
+
+      const response = await userService.updateUserStatus(id, status)
+      dispatch(updateUser(response))
+      dispatch(setActionStatus({status: Status.SUCCESS, message: 'User status updated successfully'}))
+      return response
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to update user status'
+      dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
+      throw error
+    }
+  }, [dispatch])
+
+  // Set filters
+  const setUserFilters = useCallback((newFilters: IUserFilters) => {
+    dispatch(setFilters(newFilters))
+  }, [dispatch])
+
+  // Clear filters
+  const clearUserFilters = useCallback(() => {
+    dispatch(clearFilters())
+  }, [dispatch])
+
+  // Clear users
+  const clearUserList = useCallback(() => {
+    dispatch(clearUsers())
+  }, [dispatch])
+
+  // Get user by ID
+  const getUserById = useCallback((id: number) => {
+    return users.find((user: IUser) => user.id === id)
+  }, [users])
+
+  // // Get users by role
+  // const getUsersByRole = useCallback((role: 'admin' | 'teacher' | 'student') => {
+  //   return users.filter((user: IUser) => user.role === role)
+  // }, [users])
+
+  // Get users by status
+  const getUsersByStatus = useCallback((status: 'active' | 'inactive' | 'pending') => {
+    return users.filter((user: IUser) => user.status === status)
+  }, [users])
+
+  // Search users locally
+  const searchUsersLocally = useCallback((query: string) => {
+    const lowercaseQuery = query.toLowerCase()
+    return users.filter((user: IUser) =>
+      user.firstName.toLowerCase().includes(lowercaseQuery) ||
+      user.lastName.toLowerCase().includes(lowercaseQuery) ||
+      user.phone?.toLowerCase().includes(lowercaseQuery)
+    )
+  }, [users])
+
+  // Pagination helpers
+  const goToPage = useCallback((page: number) => {
+    setUserFilters({...filters, page})
+  }, [filters, setUserFilters])
+
+  const changePageSize = useCallback((limit: number) => {
+    setUserFilters({...filters, limit, page: 1})
+  }, [filters, setUserFilters])
+
+
+  return {
+    // State
+    users,
+    selectedUser,
+    pagination,
+    filters,
+
+    // Status states
+    listStatus,
+    listLoading,
+    listError,
+
+    detailsStatus,
+    detailsLoading,
+    detailsError,
+
+    actionStatus,
+    actionLoading,
+    actionError,
+
+    // Actions
+    loadUsers,
+    loadUser,
+    addUser: addUserAction,
+    editUser,
+    removeUser,
+    changeUserStatus,
+    setUserFilters,
+    clearUserFilters,
+    clearUserList,
+
+    // Helpers
+    getUserById,
+    // getUsersByRole,
+    getUsersByStatus,
+    searchUsersLocally,
+
+    // Pagination
+    goToPage,
+    changePageSize,
+  }
+}

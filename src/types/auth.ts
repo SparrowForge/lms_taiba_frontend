@@ -1,17 +1,5 @@
-import type {IBaseResponse, IEmptyResponse} from './common'
-
-// User interface matching the API response
-export interface IUser {
-  id: number
-  email: string
-  firstName: string
-  lastName: string
-  status: 'active' | 'inactive' | 'suspended'
-  phone: string
-  createdAt: string
-  updatedAt: string
-  deletedAt: string | null
-}
+import {IBaseResponse, IStatusState} from "./common"
+import {IUser} from "./user"
 
 // Authentication response interface
 export interface IAuthResponse {
@@ -43,12 +31,17 @@ export interface AuthState {
   isAuthenticated: boolean
   isLoading: boolean
   error: string | null
+
+  // Status fields like user slice
+  loginStatus: IStatusState
+  registerStatus: IStatusState
+  userStatus: IStatusState
 }
 
 // API Response types using IBaseResponse
 export type LoginApiResponse = IBaseResponse<IAuthResponse>
 export type RegisterApiResponse = IBaseResponse<IAuthResponse>
-export type LogoutApiResponse = IEmptyResponse
+export type LogoutApiResponse = IBaseResponse<void>
 export type GetCurrentUserApiResponse = IBaseResponse<IUser>
 export type RefreshTokenApiResponse = IBaseResponse<IAuthResponse>
 

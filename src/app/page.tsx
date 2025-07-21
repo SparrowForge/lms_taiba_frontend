@@ -1,32 +1,24 @@
-'use client'
+import {ProtectedRoute} from "@/components/auth/ProtectedRoute";
+import {MainLayout} from "@/components/layout/MainLayout";
+import {QuickActionsSection} from "@/components/dashboard/QuickActionsSection";
+import {StatsSection} from "@/components/dashboard/StatsSection";
+import {ActivitySection} from "@/components/dashboard/ActivitySection";
+import {Col, Row} from "antd";
 
-import {useEffect} from 'react'
-import {useRouter} from 'next/navigation'
-import {Spin} from 'antd'
-import {useAuth} from '@/hooks/useAuth'
-
-export default function Home() {
-  const { isAuthenticated, isLoading } = useAuth()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated) {
-        router.push('/dashboard')
-      } else {
-        router.push('/login')
-      }
-    }
-  }, [isAuthenticated, isLoading, router])
-
-  // Show loading while checking authentication
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Spin size="large" />
-      </div>
-    )
-  }
-
-  return null
+export default function HomePage() {
+  return (
+    <ProtectedRoute>
+      <MainLayout>
+        <StatsSection />
+        <Row gutter={[24, 24]} className='px-6' style={{width: '100%', minWidth: 0}}>
+          <Col xs={24} lg={16}>
+            <ActivitySection />
+          </Col>
+          <Col xs={24} lg={8}>
+            <QuickActionsSection />
+          </Col>
+        </Row>
+      </MainLayout>
+    </ProtectedRoute>
+  )
 }

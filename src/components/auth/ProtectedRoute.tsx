@@ -15,6 +15,8 @@ export const ProtectedRoute = ({ children, redirectTo = '/login' }: ProtectedRou
   const router = useRouter()
 
   useEffect(() => {
+    // Only redirect if we're not loading AND not authenticated
+    // This prevents the flash redirect when auth state is still loading
     if (!isLoading && !isAuthenticated) {
       router.push(redirectTo)
     }

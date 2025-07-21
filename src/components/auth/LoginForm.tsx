@@ -1,18 +1,20 @@
 'use client'
 
-import {Button, Card, Form, Input, message} from 'antd'
+import {Button, Card, Form, Input} from 'antd'
 import {LockOutlined, UserOutlined} from '@ant-design/icons'
 import {useAuth} from '@/hooks/useAuth'
 import type {LoginCredentials} from '@/types/auth'
+import {toast, ToastContainer} from 'react-toastify'
 
 export const LoginForm = () => {
-  const { login, isLoading, error, clearError } = useAuth()
+  const { login, loginLoading, loginError, clearError } = useAuth()
   const [form] = Form.useForm()
 
   const handleSubmit = async (values: LoginCredentials) => {
     try {
       await login(values)
-      message.success('Login successful!')
+      //show toast message using nextjs toast
+      toast.success('Login successful!')
     } catch (error) {
       // Error is already handled by Redux store and displayed via error state
       console.error('Login failed:', error)
@@ -21,26 +23,28 @@ export const LoginForm = () => {
 
   // Clear error when form changes
   const handleFormChange = () => {
-    if (error) {
+    if (loginError) {
       clearError()
     }
   }
 
   return (
-    <Card
-      title={
-        <div className="text-center py-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Sign in to your account
-          </h2>
-          <p className="text-sm text-gray-600">
-            Welcome back to LMS Taiba Admin Panel
-          </p>
-        </div>
-      }
-      style={{ width: 600}}
-      className="shadow-lg rounded-lg"
-    >
+    <>
+    <ToastContainer position="bottom-right" autoClose={2000} hideProgressBar={true}/>
+      <Card
+        title={
+          <div className="text-center py-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Sign in to your account
+            </h2>
+            <p className="text-sm text-gray-600">
+              Welcome back to LMS Taiba Admin Panel
+            </p>
+          </div>
+        }
+        style={{ width: 600}}
+        className="shadow-lg rounded-lg"
+      >
       <Form
         form={form}
         name="login"
@@ -60,7 +64,7 @@ export const LoginForm = () => {
           <Input
             prefix={<UserOutlined className="text-gray-400" />}
             placeholder="Enter your email"
-            disabled={isLoading}
+            disabled={loginLoading}
           />
         </Form.Item>
 
@@ -75,15 +79,15 @@ export const LoginForm = () => {
           <Input.Password
             prefix={<LockOutlined className="text-gray-400" />}
             placeholder="Enter your password"
-            disabled={isLoading}
+            disabled={loginLoading}
           />
         </Form.Item>
 
         {/* API Error Display */}
-        {error && (
+        {loginError && (
           <div className="mb-4">
             <div className="ant-form-item-explain ant-form-item-explain-error">
-              <div className="ant-form-item-explain-error">{error}</div>
+              <div className="ant-form-item-explain-error">{loginError}</div>
             </div>
           </div>
         )}
@@ -92,12 +96,12 @@ export const LoginForm = () => {
           <Button
             type="primary"
             htmlType="submit"
-            loading={isLoading}
+            loading={loginLoading}
             block
             size="large"
             className="h-12 text-base font-medium"
           >
-            {isLoading ? 'Signing in...' : 'Sign In'}
+            {loginLoading ? 'Signing in...' : 'Sign In'}
           </Button>
         </Form.Item>
       </Form>
@@ -111,6 +115,7 @@ export const LoginForm = () => {
           </a>
         </p>
       </div>
-    </Card>
+      </Card>
+    </>
   )
 }

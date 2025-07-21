@@ -1,9 +1,12 @@
+import "@ant-design/v5-patch-for-react-19";
 import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import "antd/dist/reset.css";
 import {ReduxProvider} from "@/components/providers/ReduxProvider";
+import {AntdProvider} from "@/components/providers/AntdProvider";
 import {AuthInitializer} from "@/components/auth/AuthInitializer";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +34,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReduxProvider>
-          <AuthInitializer>
-            {children}
-          </AuthInitializer>
+          <AntdProvider>
+            <AuthInitializer>
+              {children}
+            </AuthInitializer>
+          </AntdProvider>
         </ReduxProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {authService} from '@/services/authService'
-import type {AuthState, IAuthResponse, IUser, LoginCredentials, RegisterCredentials} from '@/types/auth'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import type {AuthState} from '@/types/auth'
+import type {IUser} from '@/types/user'
+import {IStatusState, Status} from '@/types/common'
 
 // Initial state
 const initialState: AuthState = {
@@ -8,84 +9,63 @@ const initialState: AuthState = {
   token: null,
   refreshToken: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true, // Start with loading true to prevent flash redirects
   error: null,
+
+  // Status fields like user slice
+  loginStatus: {
+    status: Status.INITIAL,
+    message: undefined
+  },
+  registerStatus: {
+    status: Status.INITIAL,
+    message: undefined
+  },
+  userStatus: {
+    status: Status.INITIAL,
+    message: undefined
+  }
 }
-
-// Async thunks
-export const login = createAsyncThunk(
-  'auth/login',
-  async (credentials: LoginCredentials, { rejectWithValue }) => {
-    try {
-      const response = await authService.login(credentials)
-      return response
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Login failed')
-    }
-  }
-)
-
-export const register = createAsyncThunk(
-  'auth/register',
-  async (credentials: RegisterCredentials, { rejectWithValue }) => {
-    try {
-      const response = await authService.register(credentials)
-      return response
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Registration failed')
-    }
-  }
-)
-
-export const logout = createAsyncThunk(
-  'auth/logout',
-  async (_, { rejectWithValue }) => {
-    try {
-      await authService.logout()
-      return null
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Logout failed')
-    }
-  }
-)
-
-export const getCurrentUser = createAsyncThunk(
-  'auth/getCurrentUser',
-  async (_, { rejectWithValue }) => {
-    try {
-      const user = await authService.getCurrentUser()
-      return user
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Failed to get user')
-    }
-  }
-)
-
-export const refreshToken = createAsyncThunk(
-  'auth/refreshToken',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await authService.refreshToken()
-      return response
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Token refresh failed')
-    }
-  }
-)
 
 // Auth slice
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // Clear error
-    clearError: (state) => {
-      state.error = null
+    // Status actions
+    setLoginStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.loginStatus = action.payload
+    },
+    setRegisterStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.registerStatus = action.payload
+    },
+    setUserStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.userStatus = action.payload
     },
 
-    // Set loading state
+    // Data actions
+    setUser: (state, action: PayloadAction<IUser | null>) => {
+      state.user = action.payload
+    },
+    setToken: (state, action: PayloadAction<string | null>) => {
+      state.token = action.payload
+    },
+    setRefreshToken: (state, action: PayloadAction<string | null>) => {
+      state.refreshToken = action.payload
+    },
+    setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload
+    },
+
+    // Loading and error actions
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload
+    },
+    setError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload
+    },
+    clearError: (state) => {
+      state.error = null
     },
 
     // Initialize auth state from localStorage
@@ -109,114 +89,37 @@ const authSlice = createSlice({
         state.user = { ...state.user, ...action.payload }
       }
     },
-  },
-  extraReducers: (builder) => {
-    // Login
-    builder
-      .addCase(login.pending, (state) => {
-        state.isLoading = true
-        state.error = null
-      })
-      .addCase(login.fulfilled, (state, action: PayloadAction<IAuthResponse>) => {
-        state.isLoading = false
-        state.user = action.payload.user
-        state.token = action.payload.access_token
-        state.refreshToken = action.payload.refresh_token
-        state.isAuthenticated = true
-        state.error = null
-      })
-      .addCase(login.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload as string
-      })
 
-    // Register
-    builder
-      .addCase(register.pending, (state) => {
-        state.isLoading = true
-        state.error = null
-      })
-      .addCase(register.fulfilled, (state, action: PayloadAction<IAuthResponse>) => {
-        state.isLoading = false
-        state.user = action.payload.user
-        state.token = action.payload.access_token
-        state.refreshToken = action.payload.refresh_token
-        state.isAuthenticated = true
-        state.error = null
-      })
-      .addCase(register.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload as string
-      })
-
-    // Logout
-    builder
-      .addCase(logout.pending, (state) => {
-        state.isLoading = true
-      })
-      .addCase(logout.fulfilled, (state) => {
-        state.isLoading = false
-        state.user = null
-        state.token = null
-        state.refreshToken = null
-        state.isAuthenticated = false
-        state.error = null
-      })
-      .addCase(logout.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload as string
-      })
-
-    // Get current user
-    builder
-      .addCase(getCurrentUser.pending, (state) => {
-        state.isLoading = true
-        state.error = null
-      })
-      .addCase(getCurrentUser.fulfilled, (state, action: PayloadAction<IUser>) => {
-        state.isLoading = false
-        state.user = action.payload
-        state.isAuthenticated = true
-        state.error = null
-      })
-      .addCase(getCurrentUser.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload as string
-        // If getting current user fails, user might not be authenticated
-        state.isAuthenticated = false
-        state.user = null
-        state.token = null
-        state.refreshToken = null
-      })
-
-    // Refresh token
-    builder
-      .addCase(refreshToken.pending, (state) => {
-        state.isLoading = true
-        state.error = null
-      })
-      .addCase(refreshToken.fulfilled, (state, action: PayloadAction<IAuthResponse>) => {
-        state.isLoading = false
-        state.user = action.payload.user
-        state.token = action.payload.access_token
-        state.refreshToken = action.payload.refresh_token
-        state.isAuthenticated = true
-        state.error = null
-      })
-      .addCase(refreshToken.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload as string
-        // If refresh fails, user is not authenticated
-        state.isAuthenticated = false
-        state.user = null
-        state.token = null
-        state.refreshToken = null
-      })
-  },
+    // Clear auth state (for logout)
+    clearAuth: (state) => {
+      state.user = null
+      state.token = null
+      state.refreshToken = null
+      state.isAuthenticated = false
+      state.error = null
+      state.loginStatus = initialState.loginStatus
+      state.registerStatus = initialState.registerStatus
+      state.userStatus = initialState.userStatus
+    }
+  }
 })
 
 // Export actions
-export const { clearError, setLoading, initializeAuth, updateUser } = authSlice.actions
+export const {
+  setLoginStatus,
+  setRegisterStatus,
+  setUserStatus,
+  setUser,
+  setToken,
+  setRefreshToken,
+  setIsAuthenticated,
+  setLoading,
+  setError,
+  clearError,
+  initializeAuth,
+  updateUser,
+  clearAuth
+} = authSlice.actions
 
 // Export reducer
 export default authSlice.reducer

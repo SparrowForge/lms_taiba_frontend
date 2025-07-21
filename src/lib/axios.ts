@@ -31,12 +31,6 @@ api.interceptors.request.use(
       config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
       config.headers['Pragma'] = 'no-cache'
       config.headers['Expires'] = '0'
-
-      // Add timestamp to prevent caching
-      if (!config.params) {
-        config.params = {}
-      }
-      config.params._t = Date.now()
     }
 
     // Log requests in development
@@ -84,12 +78,35 @@ api.interceptors.response.use(
 
     // Handle authentication errors (client-side only)
     if (response && response.status === 401 && typeof window !== 'undefined') {
-      // Clear token
+      console.log('🔐 401 Unauthorized - Redirecting to login...')
+      console.log('Current pathname:', window.location.pathname)
+      
+      // Clear all auth data
       localStorage.removeItem('token')
-
-      // You can add your auth logout logic here
-      // For now, just redirect to login
-      window.location.href = '/login'
+      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('user')
+      
+      // Clear any other auth-related data
+      sessionStorage.clear()
+      
+      // Dispatch logout event to notify other parts of the app
+      window.dispatchEvent(new CustomEvent('auth:logout'))
+      
+      // Use a more reliable redirect method
+      try {
+        // Check if we're not already on login page to avoid infinite redirects
+        if (!window.location.pathname.includes('/login')) {
+          console.log('Redirecting to /login...')
+          // Use replace to avoid adding to browser history
+          window.location.replace('/login')
+        } else {
+          console.log('Already on login page, skipping redirect')
+        }
+      } catch (redirectError) {
+        console.error('Redirect error:', redirectError)
+        // Fallback to simple href
+        window.location.href = '/login'
+      }
     }
 
     // Handle server errors

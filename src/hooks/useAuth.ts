@@ -2,17 +2,23 @@ import {useCallback} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {useRouter} from 'next/navigation'
 import {
-    clearError,
-    getCurrentUser,
-    initializeAuth,
-    login,
-    logout,
-    refreshToken,
-    register,
-    updateUser
+  clearAuth,
+  clearError,
+  initializeAuth,
+  setIsAuthenticated,
+  setLoginStatus,
+  setRefreshToken,
+  setRegisterStatus,
+  setToken,
+  setUser,
+  setUserStatus,
+  updateUser
 } from '@/store/slices/authSlice'
-import type {IUser, LoginCredentials, RegisterCredentials} from '@/types/auth'
+import {authService} from '@/services/authService'
+import type {LoginCredentials, RegisterCredentials} from '@/types/auth'
+import type {IUser} from '@/types/user'
 import type {AppDispatch, RootState} from '@/store'
+import {Status} from '@/types/common'
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -25,16 +31,39 @@ export const useAuth = () => {
     refreshToken: refreshTokenState,
     isAuthenticated,
     isLoading,
-    error
+    error,
+    loginStatus,
+    registerStatus,
+    userStatus
   } = useSelector((state: RootState) => state.auth)
+
+  // Helper to get loading states
+  const loginLoading = loginStatus.status === Status.LOADING
+  const registerLoading = registerStatus.status === Status.LOADING
+  const userLoading = userStatus.status === Status.LOADING
+
+  // Helper to get error states
+  const loginError = loginStatus.status === Status.FAILED ? loginStatus.message : null
+  const registerError = registerStatus.status === Status.FAILED ? registerStatus.message : null
+  const userError = userStatus.status === Status.FAILED ? userStatus.message : null
 
   // Login function
   const handleLogin = useCallback(async (credentials: LoginCredentials) => {
     try {
-      const result = await dispatch(login(credentials)).unwrap()
-      router.push('/dashboard') // Redirect to dashboard after login
-      return result
-    } catch (error) {
+      dispatch(setLoginStatus({status: Status.LOADING}))
+
+      const response = await authService.login(credentials)
+      dispatch(setUser(response.user))
+      dispatch(setToken(response.access_token))
+      dispatch(setRefreshToken(response.refresh_token))
+      dispatch(setIsAuthenticated(true))
+      dispatch(setLoginStatus({status: Status.SUCCESS}))
+
+      router.push('/') // Redirect to main page (dashboard) after login
+      return response
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Login failed'
+      dispatch(setLoginStatus({status: Status.FAILED, message: errorMessage}))
       throw error
     }
   }, [dispatch, router])
@@ -42,10 +71,20 @@ export const useAuth = () => {
   // Register function
   const handleRegister = useCallback(async (credentials: RegisterCredentials) => {
     try {
-      const result = await dispatch(register(credentials)).unwrap()
-      router.push('/dashboard') // Redirect to dashboard after registration
-      return result
-    } catch (error) {
+      dispatch(setRegisterStatus({status: Status.LOADING}))
+
+      const response = await authService.register(credentials)
+      dispatch(setUser(response.user))
+      dispatch(setToken(response.access_token))
+      dispatch(setRefreshToken(response.refresh_token))
+      dispatch(setIsAuthenticated(true))
+      dispatch(setRegisterStatus({status: Status.SUCCESS}))
+
+      router.push('/') // Redirect to main page (dashboard) after registration
+      return response
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Registration failed'
+      dispatch(setRegisterStatus({status: Status.FAILED, message: errorMessage}))
       throw error
     }
   }, [dispatch, router])
@@ -53,11 +92,13 @@ export const useAuth = () => {
   // Logout function
   const handleLogout = useCallback(async () => {
     try {
-      await dispatch(logout()).unwrap()
+      await authService.logout()
+      dispatch(clearAuth())
       router.push('/login') // Redirect to login after logout
     } catch (error) {
       console.error('Logout error:', error)
-      // Even if logout fails, redirect to login
+      // Even if logout fails, clear auth state and redirect to login
+      dispatch(clearAuth())
       router.push('/login')
     }
   }, [dispatch, router])
@@ -65,9 +106,22 @@ export const useAuth = () => {
   // Get current user function
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const result = await dispatch(getCurrentUser()).unwrap()
-      return result
-    } catch (error) {
+      dispatch(setUserStatus({status: Status.LOADING}))
+
+      const user = await authService.getCurrentUser()
+      dispatch(setUser(user))
+      dispatch(setIsAuthenticated(true))
+      dispatch(setUserStatus({status: Status.SUCCESS}))
+
+      return user
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to get user'
+      dispatch(setUserStatus({status: Status.FAILED, message: errorMessage}))
+      // If getting current user fails, user might not be authenticated
+      dispatch(setIsAuthenticated(false))
+      dispatch(setUser(null))
+      dispatch(setToken(null))
+      dispatch(setRefreshToken(null))
       throw error
     }
   }, [dispatch])
@@ -75,9 +129,18 @@ export const useAuth = () => {
   // Refresh token function
   const handleRefreshTokenAction = useCallback(async () => {
     try {
-      const result = await dispatch(refreshToken()).unwrap()
-      return result
-    } catch (error) {
+      const response = await authService.refreshToken()
+      dispatch(setUser(response.user))
+      dispatch(setToken(response.access_token))
+      dispatch(setRefreshToken(response.refresh_token))
+      dispatch(setIsAuthenticated(true))
+      return response
+    } catch (error: any) {
+      // If refresh fails, user is not authenticated
+      dispatch(setIsAuthenticated(false))
+      dispatch(setUser(null))
+      dispatch(setToken(null))
+      dispatch(setRefreshToken(null))
       throw error
     }
   }, [dispatch])
@@ -116,6 +179,17 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     error,
+
+    // Status states
+    loginStatus,
+    loginLoading,
+    loginError,
+    registerStatus,
+    registerLoading,
+    registerError,
+    userStatus,
+    userLoading,
+    userError,
 
     // Actions
     login: handleLogin,
