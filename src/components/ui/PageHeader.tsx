@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Card, Space, Typography} from 'antd';
 import {ArrowLeftOutlined} from '@ant-design/icons';
+import {useTranslations} from 'next-intl';
 
 const { Title } = Typography;
 
@@ -15,6 +16,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   onBack,
   children
 }) => {
+  const t = useTranslations();
   return (
     <Card>
       <Space direction="vertical" style={{ width: '100%' }}>
@@ -26,7 +28,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                 onClick={onBack}
                 type="text"
               >
-                Back
+                {t('back', { defaultValue: 'Back' })}
               </Button>
             )}
             <Title level={2} style={{ margin: 0 }}>{title}</Title>

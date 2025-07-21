@@ -55,5 +55,11 @@
   "location": "Location",
   "code": "Code",
   "pleaseEnterLocation": "Please enter location",
-  "pleaseEnterCode": "Please enter code"
+  "pleaseEnterCode": "Please enter code",
+  "department": "Department",
+  "departments": "Departments",
+  "select_branch": "Select branch",
+  "enter_name": "Enter {name}",
+  "enter_code": "Enter code",
+  "required_field": "{field} is required"
 } 

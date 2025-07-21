@@ -55,5 +55,11 @@
   "location": "الموقع",
   "code": "الرمز",
   "pleaseEnterLocation": "يرجى إدخال الموقع",
-  "pleaseEnterCode": "يرجى إدخال الرمز"
+  "pleaseEnterCode": "يرجى إدخال الرمز",
+  "department": "قسم",
+  "departments": "أقسام",
+  "select_branch": "اختر الفرع",
+  "enter_name": "أدخل {name}",
+  "enter_code": "أدخل الرمز",
+  "required_field": "{field} مطلوب"
 } 
