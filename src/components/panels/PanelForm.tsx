@@ -141,17 +141,6 @@ const PanelForm: React.FC<PanelFormProps> = ({
         role="main"
         aria-labelledby="form-title"
       >
-        <h1
-          id="form-title"
-          style={{
-            marginBottom: '24px',
-            textAlign: 'center',
-            fontSize: '24px',
-            fontWeight: 'bold'
-          }}
-        >
-          {mode === 'create' ? t('create', { name: entityName }) : t('edit', { name: entityName })}
-        </h1>
         {formContent}
       </div>
     </div>

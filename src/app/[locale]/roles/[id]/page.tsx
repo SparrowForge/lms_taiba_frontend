@@ -1,0 +1,64 @@
+'use client';
+
+import React, {useEffect, useState} from 'react';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {useRoles} from '@/hooks/useRoles';
+import {IRole} from '@/types/role';
+import {Status} from '@/types/common';
+import {useTranslations} from 'next-intl';
+import {createRoleDetailsConfig} from '@/components/roles/roleConfig';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+
+interface RoleDetailPageProps {
+  params: Promise<{ id: string; locale: string }>;
+}
+
+const RoleDetailPage: React.FC<RoleDetailPageProps> = ({ params }) => {
+  const resolvedParams = React.use(params);
+  const { roles, listStatus, loadRoles, getRoleById, loadRole } = useRoles();
+  const [role, setRole] = useState<IRole | null>(null);
+  const t = useTranslations();
+  const entityName = t('role', { defaultValue: 'Role' });
+
+  useEffect(() => {
+    const roleId = parseInt(resolvedParams.id);
+    const foundRole = getRoleById(roleId);
+    if (foundRole) {
+      setRole(foundRole);
+    } else {
+      loadRole(roleId);
+    }
+  }, [resolvedParams.id, getRoleById, loadRole]);
+
+  useEffect(() => {
+    if (roles.length === 0) {
+      loadRoles();
+    }
+  }, [roles.length, loadRoles]);
+
+  useEffect(() => {
+    if (roles.length > 0) {
+      const foundRole = getRoleById(parseInt(resolvedParams.id));
+      if (foundRole) {
+        setRole(foundRole);
+      }
+    }
+  }, [roles, resolvedParams.id, getRoleById]);
+
+  const config = createRoleDetailsConfig(
+    role,
+    listStatus.status === Status.LOADING,
+    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+  );
+
+  return (
+    <ProtectedRoute>
+      <MainLayout>
+        <EntityDetails config={config} />
+      </MainLayout>
+    </ProtectedRoute>
+  );
+};
+
+export default RoleDetailPage;

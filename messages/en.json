@@ -61,5 +61,9 @@
   "select_branch": "Select branch",
   "enter_name": "Enter {name}",
   "enter_code": "Enter code",
-  "required_field": "{field} is required"
+  "required_field": "{field} is required",
+  "role": "Role",
+  "roles": "Roles",
+  "description": "Description",
+  "enter_description": "Enter description"
 } 

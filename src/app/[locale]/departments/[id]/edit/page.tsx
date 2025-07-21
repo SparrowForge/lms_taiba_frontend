@@ -9,6 +9,7 @@ import {useDepartments} from '@/hooks/useDepartments';
 import {IDepartment} from '@/types/department';
 import {useTranslations} from 'next-intl';
 import DepartmentForm from '@/components/departments/DepartmentForm';
+import {PageHeader} from '@/components/ui/PageHeader';
 
 interface DepartmentEditPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -91,12 +92,8 @@ const DepartmentEditPage: React.FC<DepartmentEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '24px' }}>
-          <div style={{ marginBottom: '24px' }}>
-            <Button onClick={handleBack} style={{ marginRight: '16px' }}>
-              {t('back')}
-            </Button>
-          </div>
+        <div style={{ padding: '24px' }}>
+          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
           <DepartmentForm
             mode="edit"
             departmentId={department.id}
