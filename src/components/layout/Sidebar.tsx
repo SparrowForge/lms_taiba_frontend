@@ -73,6 +73,11 @@ export const Sidebar = ({collapsed}: SidebarProps) => {
       label: 'Roles',
     },
     {
+      key: '/menus',
+      icon: <UserOutlined />,
+      label: 'Menus',
+    },
+    {
       key: '/students',
       icon: <UserOutlined />,
       label: 'Students',

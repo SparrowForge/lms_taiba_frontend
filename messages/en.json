@@ -65,5 +65,14 @@
   "role": "Role",
   "roles": "Roles",
   "description": "Description",
-  "enter_description": "Enter description"
+  "enter_description": "Enter description",
+  "menu": "Menu",
+  "menus": "Menus",
+  "route": "Route",
+  "parent": "Parent",
+  "sortOrder": "Sort Order",
+  "select_panel": "Select panel",
+  "select_parent": "Select parent",
+  "enter_route": "Enter route",
+  "enter_sortOrder": "Enter sort order"
 } 

@@ -5,6 +5,7 @@ import panelReducer from './slices/panelSlice'
 import branchReducer from './slices/branchSlice'
 import departmentReducer from './slices/departmentSlice'
 import roleReducer from './slices/roleSlice'
+import menuReducer from './slices/menuSlice'
 
 // Root state type
 export interface RootState {
@@ -14,6 +15,7 @@ export interface RootState {
   branches: ReturnType<typeof branchReducer>
   departments: ReturnType<typeof departmentReducer>
   roles: ReturnType<typeof roleReducer>
+  menus: ReturnType<typeof menuReducer>
 }
 
 // Create store
@@ -25,6 +27,7 @@ export const store = configureStore({
     branches: branchReducer,
     departments: departmentReducer,
     roles: roleReducer,
+    menus: menuReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

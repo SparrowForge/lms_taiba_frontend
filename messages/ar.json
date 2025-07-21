@@ -65,5 +65,14 @@
   "role": "دور",
   "roles": "أدوار",
   "description": "الوصف",
-  "enter_description": "أدخل الوصف"
+  "enter_description": "أدخل الوصف",
+  "menu": "قائمة",
+  "menus": "قوائم",
+  "route": "المسار",
+  "parent": "الأب",
+  "sortOrder": "ترتيب الفرز",
+  "select_panel": "اختر اللوحة",
+  "select_parent": "اختر الأب",
+  "enter_route": "أدخل المسار",
+  "enter_sortOrder": "أدخل ترتيب الفرز"
 } 

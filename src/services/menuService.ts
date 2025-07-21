@@ -1,0 +1,39 @@
+import {api} from '@/lib/axios';
+import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
+import {IBasePaginatedResponse} from '@/types/common';
+
+export const menuService = {
+  // Get all menus with pagination and search
+  getMenus: async (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }): Promise<IBasePaginatedResponse<IMenu>> => {
+    const response = await api.get<IBasePaginatedResponse<IMenu>>('/menus', { params });
+    return response.data;
+  },
+
+  // Get a single menu by ID
+  getMenu: async (id: number): Promise<IMenu> => {
+    const response = await api.get<IMenu>(`/menus/${id}`);
+    return response.data;
+  },
+
+  // Create a new menu
+  createMenu: async (data: IMenuCreate): Promise<IMenu> => {
+    const response = await api.post<IMenu>('/menus', data);
+    return response.data;
+  },
+
+  // Update an existing menu
+  updateMenu: async (id: number, data: IMenuUpdate): Promise<IMenu> => {
+    const response = await api.put(`/menus/${id}`, data);
+    return response.data;
+  },
+
+  // Delete a menu
+  deleteMenu: async (id: number): Promise<void> => {
+    const response = await api.delete(`/menus/${id}`);
+    return response.data;
+  },
+};
