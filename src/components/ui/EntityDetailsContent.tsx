@@ -1,7 +1,8 @@
 import React from 'react';
-import {Alert, Avatar, Button, Card, Col, Row, Space, Spin, Typography} from 'antd';
-import {ArrowLeftOutlined, EditOutlined, UserOutlined} from '@ant-design/icons';
-import { useTranslations } from 'next-intl';
+import {Alert, Avatar, Card, Col, Row, Spin, Typography} from 'antd';
+import {UserOutlined} from '@ant-design/icons';
+import {useTranslations} from 'next-intl';
+import PageHeaderDetails from './PageHeaderDetails';
 
 const { Title, Text } = Typography;
 
@@ -127,33 +128,12 @@ export const EntityDetailsContent = <T extends { id: number }>({
   return (
     <div style={{ padding: '24px' }}>
       {/* Header */}
-      <Card>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              {config.onBack && (
-                <Button
-                  icon={<ArrowLeftOutlined />}
-                  onClick={config.onBack}
-                  type="text"
-                >
-                  {t('back')}
-                </Button>
-              )}
-              <Title level={2} style={{ margin: 0 }}>{config.name} {t('details_name', { name: config.name })}</Title>
-            </div>
-            {config.onEdit && (
-              <Button
-                type="primary"
-                icon={<EditOutlined />}
-                onClick={() => config.onEdit!(config.item!)}
-              >
-                {t('edit_name', { name: config.name })}
-              </Button>
-            )}
-          </div>
-        </Space>
-      </Card>
+      <PageHeaderDetails
+        title={t('details_name', { name: config.name })}
+        onBack={config.onBack}
+        onEdit={config.onEdit ? () => config.onEdit!(config.item!) : undefined}
+        editText={t('edit_name', { name: config.name })}
+      />
       {content}
     </div>
   );

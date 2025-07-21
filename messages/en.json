@@ -74,5 +74,17 @@
   "select_panel": "Select panel",
   "select_parent": "Select parent",
   "enter_route": "Enter route",
-  "enter_sortOrder": "Enter sort order"
+  "enter_sortOrder": "Enter sort order",
+  "roleMenuPermission": "Role Menu Permission",
+  "roleMenuPermissions": "Role Menu Permissions",
+  "insert": "Insert",
+  "update": "Update",
+  "select_role": "Select role",
+  "select_menu": "Select menu",
+  "allow_view": "Allow view",
+  "allow_insert": "Allow insert",
+  "allow_update": "Allow update",
+  "allow_delete": "Allow delete",
+  "yes": "Yes",
+  "no": "No"
 } 

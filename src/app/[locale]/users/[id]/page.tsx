@@ -7,6 +7,7 @@ import {IUser} from '@/types/user';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {createUserDetailsConfig} from '@/components/users/userConfig';
+import {Status} from '@/types/common';
 
 interface UserDetailPageProps {
   params: Promise<{
@@ -16,7 +17,7 @@ interface UserDetailPageProps {
 
 const UserDetailPage: React.FC<UserDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { users, listLoading, listError, loadUsers, getUserById, loadUser } = useUsers();
+  const { users, listStatus, loadUsers, getUserById, loadUser } = useUsers();
   const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
@@ -50,8 +51,8 @@ const UserDetailPage: React.FC<UserDetailPageProps> = ({ params }) => {
 
   const config = createUserDetailsConfig(
     user,
-    listLoading,
-    listError || null
+    listStatus.status === Status.LOADING,
+    listStatus.status === Status.FAILED ? listStatus.message || null : null
   );
 
   return (

@@ -74,5 +74,17 @@
   "select_panel": "اختر اللوحة",
   "select_parent": "اختر الأب",
   "enter_route": "أدخل المسار",
-  "enter_sortOrder": "أدخل ترتيب الفرز"
+  "enter_sortOrder": "أدخل ترتيب الفرز",
+  "roleMenuPermission": "صلاحية دور القائمة",
+  "roleMenuPermissions": "صلاحيات دور القائمة",
+  "insert": "إدراج",
+  "update": "تحديث",
+  "select_role": "اختر الدور",
+  "select_menu": "اختر القائمة",
+  "allow_view": "السماح بالعرض",
+  "allow_insert": "السماح بالإدراج",
+  "allow_update": "السماح بالتحديث",
+  "allow_delete": "السماح بالحذف",
+  "yes": "نعم",
+  "no": "لا"
 } 
