@@ -31,10 +31,10 @@ export const ProtectedRoute = ({ children, redirectTo = '/login' }: ProtectedRou
     )
   }
 
-  // Don't render children if not authenticated
-  if (!isAuthenticated) {
-    return null
-  }
+  // // Don't render children if not authenticated
+  // if (!isAuthenticated) {
+  //   return null
+  // }
 
   return <>{children}</>
 }

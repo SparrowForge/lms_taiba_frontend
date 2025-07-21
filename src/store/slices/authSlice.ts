@@ -1,7 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import type {AuthState} from '@/types/auth'
 import type {IUser} from '@/types/user'
-import {IStatusState, Status} from '@/types/common'
 
 // Initial state
 const initialState: AuthState = {
@@ -11,20 +10,6 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isLoading: true, // Start with loading true to prevent flash redirects
   error: null,
-
-  // Status fields like user slice
-  loginStatus: {
-    status: Status.INITIAL,
-    message: undefined
-  },
-  registerStatus: {
-    status: Status.INITIAL,
-    message: undefined
-  },
-  userStatus: {
-    status: Status.INITIAL,
-    message: undefined
-  }
 }
 
 // Auth slice
@@ -32,16 +17,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // Status actions
-    setLoginStatus: (state, action: PayloadAction<IStatusState>) => {
-      state.loginStatus = action.payload
-    },
-    setRegisterStatus: (state, action: PayloadAction<IStatusState>) => {
-      state.registerStatus = action.payload
-    },
-    setUserStatus: (state, action: PayloadAction<IStatusState>) => {
-      state.userStatus = action.payload
-    },
 
     // Data actions
     setUser: (state, action: PayloadAction<IUser | null>) => {
@@ -97,18 +72,13 @@ const authSlice = createSlice({
       state.refreshToken = null
       state.isAuthenticated = false
       state.error = null
-      state.loginStatus = initialState.loginStatus
-      state.registerStatus = initialState.registerStatus
-      state.userStatus = initialState.userStatus
+      state.isLoading = false
     }
   }
 })
 
 // Export actions
 export const {
-  setLoginStatus,
-  setRegisterStatus,
-  setUserStatus,
   setUser,
   setToken,
   setRefreshToken,

@@ -1,10 +1,12 @@
 'use client';
 
 import React, {useEffect} from 'react';
-import {Button, Form, Input, message, Select, Space} from 'antd';
+import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
 import {useUsers} from '@/hooks/useUsers';
 import {IUserCreate, IUserUpdate} from '@/types/user';
+import {Status} from '@/types/common';
+import {toast} from 'react-toastify';
 
 interface UserFormProps {
   mode: 'create' | 'edit';
@@ -25,8 +27,7 @@ const UserForm: React.FC<UserFormProps> = ({
 }) => {
   const router = useRouter();
   const [form] = Form.useForm();
-  const { addUser, editUser } = useUsers();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { addUser, editUser, actionStatus } = useUsers();
 
   useEffect(() => {
     if (initialValues) {
@@ -38,7 +39,7 @@ const UserForm: React.FC<UserFormProps> = ({
     try {
       if (mode === 'create') {
         await addUser(values as IUserCreate);
-        messageApi.success('User created successfully!');
+        toast.success('User created successfully!');
         if (onSuccess) {
           onSuccess();
         } else {
@@ -46,16 +47,16 @@ const UserForm: React.FC<UserFormProps> = ({
         }
       } else if (mode === 'edit' && userId) {
         await editUser(userId, values as IUserUpdate);
-        messageApi.success('User updated successfully!');
+        toast.success('User updated successfully!');
         if (onSuccess) {
           onSuccess();
         } else {
           router.push(`/users/${userId}`);
         }
       }
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : `Failed to ${mode} user`;
-      messageApi.error(errorMessage);
+    } catch (error: any) {
+      const errorMessage = error?.message || `Failed to ${mode} user`;
+      toast.error(errorMessage);
     }
   };
 
@@ -66,10 +67,6 @@ const UserForm: React.FC<UserFormProps> = ({
       router.back();
     }
   };
-
-  // const getTitle = () => {
-  //   return mode === 'create' ? 'Create User' : 'Edit User';
-  // };
 
   const getSubmitText = () => {
     return mode === 'create' ? 'Create User' : 'Update User';
@@ -82,13 +79,20 @@ const UserForm: React.FC<UserFormProps> = ({
         layout="vertical"
         onFinish={handleSubmit}
         initialValues={initialValues}
+        aria-label={`${mode === 'create' ? 'Create' : 'Edit'} user form`}
+        role="form"
       >
         <Form.Item
           name="firstName"
           label="First Name"
           rules={[{ required: true, message: 'Please enter first name' }]}
         >
-          <Input placeholder="Enter first name" />
+          <Input 
+            placeholder="Enter first name" 
+            aria-label="First name"
+            aria-required="true"
+            aria-describedby="firstName-help"
+          />
         </Form.Item>
 
         <Form.Item
@@ -96,7 +100,12 @@ const UserForm: React.FC<UserFormProps> = ({
           label="Last Name"
           rules={[{ required: true, message: 'Please enter last name' }]}
         >
-          <Input placeholder="Enter last name" />
+          <Input 
+            placeholder="Enter last name" 
+            aria-label="Last name"
+            aria-required="true"
+            aria-describedby="lastName-help"
+          />
         </Form.Item>
 
         <Form.Item
@@ -107,7 +116,13 @@ const UserForm: React.FC<UserFormProps> = ({
             { type: 'email', message: 'Please enter a valid email' }
           ]}
         >
-          <Input placeholder="Enter email address" />
+          <Input 
+            placeholder="Enter email address" 
+            type="email"
+            aria-label="Email address"
+            aria-required="true"
+            aria-describedby="email-help"
+          />
         </Form.Item>
 
         <Form.Item
@@ -117,7 +132,12 @@ const UserForm: React.FC<UserFormProps> = ({
             { pattern: /^[0-9+\-\s()]*$/, message: 'Please enter a valid phone number' }
           ]}
         >
-          <Input placeholder="Enter phone number" />
+          <Input 
+            placeholder="Enter phone number" 
+            type="tel"
+            aria-label="Phone number"
+            aria-describedby="phone-help"
+          />
         </Form.Item>
 
         {mode === 'create' && (
@@ -129,52 +149,57 @@ const UserForm: React.FC<UserFormProps> = ({
               { min: 6, message: 'Password must be at least 6 characters' }
             ]}
           >
-            <Input.Password placeholder="Enter password" />
+            <Input.Password 
+              placeholder="Enter password" 
+              aria-label="Password"
+              aria-required="true"
+              aria-describedby="password-help"
+            />
           </Form.Item>
         )}
-
-        <Form.Item
-          name="role"
-          label="Role"
-          rules={[{ required: true, message: 'Please select role' }]}
-        >
-          <Select placeholder="Select role">
-            <Select.Option value="admin">Admin</Select.Option>
-            <Select.Option value="teacher">Teacher</Select.Option>
-            <Select.Option value="student">Student</Select.Option>
-          </Select>
-        </Form.Item>
 
         <Form.Item
           name="status"
           label="Status"
           rules={[{ required: true, message: 'Please select status' }]}
         >
-          <Select placeholder="Select status">
-            <Select.Option value="active">Active</Select.Option>
-            <Select.Option value="inactive">Inactive</Select.Option>
-            <Select.Option value="pending">Pending</Select.Option>
+          <Select 
+            placeholder="Select status"
+            aria-label="User status"
+            aria-required="true"
+            aria-describedby="status-help"
+          >
+            <Select.Option value="active" aria-label="Active status">Active</Select.Option>
+            <Select.Option value="inactive" aria-label="Inactive status">Inactive</Select.Option>
+            <Select.Option value="pending" aria-label="Pending status">Pending</Select.Option>
           </Select>
         </Form.Item>
 
-        <Form.Item style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}>
-          <Space size={embedded ? 'small' : 'large'}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              size={embedded ? 'middle' : 'large'}
-              style={{ minWidth: embedded ? '80px' : '120px' }}
-            >
-              {getSubmitText()}
-            </Button>
-            <Button
-              onClick={handleCancel}
-              size={embedded ? 'middle' : 'large'}
-              style={{ minWidth: embedded ? '80px' : '120px' }}
-            >
-              Cancel
-            </Button>
-          </Space>
+        <Form.Item 
+          style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}
+        >
+          <div role="group" aria-label="Form actions">
+            <Space size={embedded ? 'small' : 'large'}>
+              <Button
+                loading={actionStatus.status === Status.LOADING}
+                type="primary"
+                htmlType="submit"
+                size={embedded ? 'middle' : 'large'}
+                style={{ minWidth: embedded ? '80px' : '120px' }}
+                aria-label={`${getSubmitText()} button`}
+              >
+                {getSubmitText()}
+              </Button>
+              <Button
+                onClick={handleCancel}
+                size={embedded ? 'middle' : 'large'}
+                style={{ minWidth: embedded ? '80px' : '120px' }}
+                aria-label="Cancel button"
+              >
+                Cancel
+              </Button>
+            </Space>
+          </div>
         </Form.Item>
       </Form>
     </>
@@ -182,19 +207,33 @@ const UserForm: React.FC<UserFormProps> = ({
 
   return (
     <>
-      {contextHolder}
       {embedded ? (
         formContent
       ) : (
         <div style={{ padding: '24px' }}>
-          <div style={{
-            maxWidth: '600px',
-            margin: '0 auto',
-            backgroundColor: '#fff',
-            padding: '24px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-          }}>
+          <div 
+            style={{
+              maxWidth: '600px',
+              margin: '0 auto',
+              backgroundColor: '#fff',
+              padding: '24px',
+              borderRadius: '8px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}
+            role="main"
+            aria-labelledby="form-title"
+          >
+            <h1 
+              id="form-title" 
+              style={{ 
+                marginBottom: '24px', 
+                textAlign: 'center',
+                fontSize: '24px',
+                fontWeight: 'bold'
+              }}
+            >
+              {mode === 'create' ? 'Create New User' : 'Edit User'}
+            </h1>
             {formContent}
           </div>
         </div>

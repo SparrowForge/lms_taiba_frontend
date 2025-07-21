@@ -4,6 +4,7 @@ import {useState} from 'react'
 import {Button, Layout} from 'antd'
 import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons'
 import {Sidebar} from './Sidebar'
+import ErrorBoundary from '../error/ErrorBoundary'
 
 const {Header, Content} = Layout
 
@@ -61,9 +62,11 @@ export const MainLayout = ({children}: MainLayoutProps) => {
             maxWidth: '100%'
           }}
         >
-          <div style={{width: '100%', minWidth: 0}}>
-            {children}
-          </div>
+          <ErrorBoundary>
+            <div style={{width: '100%', minWidth: 0}}>
+              {children}
+            </div>
+          </ErrorBoundary>
         </Content>
       </Layout>
     </Layout>

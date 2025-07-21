@@ -3,18 +3,18 @@
 import {useCallback} from 'react'
 import {useAppDispatch, useAppSelector} from '@/store/hooks'
 import {
-    addUser,
-    clearFilters,
-    clearUsers,
-    deleteUser,
-    setActionStatus,
-    setDetailsStatus,
-    setFilters,
-    setListStatus,
-    setPagination,
-    setSelectedUser,
-    setUsers,
-    updateUser,
+  addUser,
+  clearFilters,
+  clearUsers,
+  deleteUser,
+  setActionStatus,
+  setDetailsStatus,
+  setFilters,
+  setListStatus,
+  setPagination,
+  setSelectedUser,
+  setUsers,
+  updateUser,
 } from '@/store/slices/userSlice'
 import {userService} from '@/services/userService'
 import {IUser, IUserCreate, IUserFilters, IUserUpdate} from '@/types/user'
@@ -33,15 +33,6 @@ export const useUsers = () => {
     filters
   } = useAppSelector((state: RootState) => state.users)
 
-  // Helper to get loading states
-  const listLoading = listStatus.status === Status.LOADING
-  const detailsLoading = detailsStatus.status === Status.LOADING
-  const actionLoading = actionStatus.status === Status.LOADING
-
-  // Helper to get error states
-  const listError = listStatus.status === Status.FAILED ? listStatus.message : null
-  const detailsError = detailsStatus.status === Status.FAILED ? detailsStatus.message : null
-  const actionError = actionStatus.status === Status.FAILED ? actionStatus.message : null
 
   // Load users with filters (List action)
   const loadUsers = useCallback(async (filters: IUserFilters = {}) => {
@@ -90,9 +81,10 @@ export const useUsers = () => {
       dispatch(setActionStatus({status: Status.SUCCESS, message: 'User created successfully'}))
       return response
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to create user'
-      dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
-      throw error
+
+      const errorMessage = error?.message || 'Failed to create user';
+      dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+      throw error;
     }
   }, [dispatch])
 
@@ -106,7 +98,7 @@ export const useUsers = () => {
       dispatch(setActionStatus({status: Status.SUCCESS, message: 'User updated successfully'}))
       return response
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to update user'
+      const errorMessage = error?.message || 'Failed to update user'
       dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
       throw error
     }
@@ -121,7 +113,7 @@ export const useUsers = () => {
       dispatch(deleteUser(id))
       dispatch(setActionStatus({status: Status.SUCCESS, message: 'User deleted successfully'}))
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to delete user'
+      const errorMessage = error?.message || 'Failed to delete user'
       dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
       throw error
     }
@@ -137,7 +129,7 @@ export const useUsers = () => {
       dispatch(setActionStatus({status: Status.SUCCESS, message: 'User status updated successfully'}))
       return response
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to update user status'
+      const errorMessage = error?.message || 'Failed to update user status'
       dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
       throw error
     }
@@ -202,16 +194,8 @@ export const useUsers = () => {
 
     // Status states
     listStatus,
-    listLoading,
-    listError,
-
     detailsStatus,
-    detailsLoading,
-    detailsError,
-
     actionStatus,
-    actionLoading,
-    actionError,
 
     // Actions
     loadUsers,

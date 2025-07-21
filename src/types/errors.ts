@@ -1,28 +1,11 @@
-// API Error types
-export interface ApiError {
-  message: string;
-  status?: number;
-  response?: {
-    data?: {
-      message?: string;
-      errors?: Record<string, string[]>;
-    };
-    status?: number;
-  };
+export interface IErrorResponse {
+  statusCode: number
+  message: string
 }
 
-// Generic error type for catch blocks
-export type ErrorWithMessage = {
-  message: string;
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-};
 
 // Type guard to check if error has a message
-export function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
+export function isErrorWithMessage(error: unknown): error is IErrorResponse {
   return (
     typeof error === 'object' &&
     error !== null &&
@@ -34,7 +17,7 @@ export function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
 // Helper function to extract error message
 export function getErrorMessage(error: unknown): string {
   if (isErrorWithMessage(error)) {
-    return error.response?.data?.message || error.message;
+    return error.message;
   }
   return 'An unknown error occurred';
 } 

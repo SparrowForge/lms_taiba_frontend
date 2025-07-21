@@ -112,6 +112,7 @@ api.interceptors.response.use(
     // Handle server errors
     if (response && response.status >= 500) {
       console.error('Server Error:', response.data)
+      return Promise.reject(response.data)
     }
 
     return Promise.reject(error)

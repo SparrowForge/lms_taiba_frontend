@@ -31,7 +31,7 @@ export const userService = {
 
   // Update user
   async updateUser(id: number, userData: IUserUpdate): Promise<IUser> {
-    const response = await api.put<IUser>(`/users/${id}`, userData)
+    const response = await api.patch<IUser>(`/users/${id}`, userData)
     return response.data
   },
 

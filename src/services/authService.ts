@@ -1,5 +1,6 @@
 import {apiService} from '@/lib/axios'
-import type {IAuthResponse, IUser, LoginCredentials, RegisterCredentials} from '@/types/auth'
+import type {IAuthResponse, LoginCredentials, RegisterCredentials} from '@/types/auth'
+import {IUser} from '@/types/user'
 
 class AuthService {
   // Login user

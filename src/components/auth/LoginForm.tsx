@@ -7,7 +7,7 @@ import type {LoginCredentials} from '@/types/auth'
 import {toast, ToastContainer} from 'react-toastify'
 
 export const LoginForm = () => {
-  const { login, loginLoading, loginError, clearError } = useAuth()
+  const { login, isLoading, error, clearError } = useAuth()
   const [form] = Form.useForm()
 
   const handleSubmit = async (values: LoginCredentials) => {
@@ -23,7 +23,7 @@ export const LoginForm = () => {
 
   // Clear error when form changes
   const handleFormChange = () => {
-    if (loginError) {
+    if (error) {
       clearError()
     }
   }
@@ -64,7 +64,7 @@ export const LoginForm = () => {
           <Input
             prefix={<UserOutlined className="text-gray-400" />}
             placeholder="Enter your email"
-            disabled={loginLoading}
+            disabled={isLoading}
           />
         </Form.Item>
 
@@ -79,15 +79,15 @@ export const LoginForm = () => {
           <Input.Password
             prefix={<LockOutlined className="text-gray-400" />}
             placeholder="Enter your password"
-            disabled={loginLoading}
+            disabled={isLoading}
           />
         </Form.Item>
 
         {/* API Error Display */}
-        {loginError && (
+        {error && (
           <div className="mb-4">
             <div className="ant-form-item-explain ant-form-item-explain-error">
-              <div className="ant-form-item-explain-error">{loginError}</div>
+              <div className="ant-form-item-explain-error">{error}</div>
             </div>
           </div>
         )}
@@ -96,12 +96,12 @@ export const LoginForm = () => {
           <Button
             type="primary"
             htmlType="submit"
-            loading={loginLoading}
+            loading={isLoading}
             block
             size="large"
             className="h-12 text-base font-medium"
           >
-            {loginLoading ? 'Signing in...' : 'Sign In'}
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
         </Form.Item>
       </Form>

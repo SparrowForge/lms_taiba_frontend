@@ -11,6 +11,7 @@ import {ProtectedRoute} from "@/components/auth/ProtectedRoute"
 import {useRouter} from "next/navigation"
 import UserFormDrawer from "@/components/users/UserFormModal"
 import UserDetailsDrawer from "@/components/users/UserDetailsDrawer"
+import AsyncErrorBoundary from "@/components/error/AsyncErrorBoundary"
 
 export default function UsersPage() {
     const router = useRouter()
@@ -26,8 +27,6 @@ export default function UsersPage() {
     useEffect(() => {
       loadUsers({page: 1, limit: 10})
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-    console.log(users)
 
     const handleEditDrawer = (userId: number) => {
       setSelectedUserId(userId)
@@ -122,7 +121,13 @@ export default function UsersPage() {
 
     return <ProtectedRoute>
         <MainLayout>
-            <EntityList config ={config as EntityConfig<IUser>} />
+            <AsyncErrorBoundary 
+              error={listStatus.status === Status.FAILED ? new Error(listStatus.message || 'Failed to load users') : null}
+              loading={listStatus.status === Status.LOADING}
+              onRetry={() => loadUsers({page: 1, limit: 10})}
+            >
+              <EntityList config ={config as EntityConfig<IUser>} />
+            </AsyncErrorBoundary>
 
             <UserFormDrawer
               mode={drawerMode}
