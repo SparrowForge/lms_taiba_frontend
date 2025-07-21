@@ -50,5 +50,10 @@
   "pleaseEnterValidPhone": "يرجى إدخال رقم هاتف صحيح",
   "pleaseEnterPassword": "يرجى إدخال كلمة المرور",
   "passwordMinLength": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
-  "pleaseSelectStatus": "يرجى اختيار الحالة"
+  "pleaseSelectStatus": "يرجى اختيار الحالة",
+  "branch": "فرع",
+  "location": "الموقع",
+  "code": "الرمز",
+  "pleaseEnterLocation": "يرجى إدخال الموقع",
+  "pleaseEnterCode": "يرجى إدخال الرمز"
 } 

@@ -2,12 +2,14 @@ import {configureStore} from '@reduxjs/toolkit'
 import authReducer from './slices/authSlice'
 import userReducer from './slices/userSlice'
 import panelReducer from './slices/panelSlice'
+import branchReducer from './slices/branchSlice'
 
 // Root state type
 export interface RootState {
   auth: ReturnType<typeof authReducer>
   users: ReturnType<typeof userReducer>
   panels: ReturnType<typeof panelReducer>
+  branches: ReturnType<typeof branchReducer>
 }
 
 // Create store
@@ -16,6 +18,7 @@ export const store = configureStore({
     auth: authReducer,
     users: userReducer,
     panels: panelReducer,
+    branches: branchReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

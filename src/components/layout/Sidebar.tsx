@@ -55,7 +55,12 @@ export const Sidebar = ({collapsed}: SidebarProps) => {
     {
       key: '/panels',
       icon: <UserOutlined />,
-      label: 'Module',
+      label: 'Panels',
+    },
+    {
+      key: '/branches',
+      icon: <UserOutlined />,
+      label: 'Branches',
     },
     {
       key: '/students',

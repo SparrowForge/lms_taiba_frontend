@@ -50,5 +50,10 @@
   "pleaseEnterValidPhone": "Please enter a valid phone number",
   "pleaseEnterPassword": "Please enter password",
   "passwordMinLength": "Password must be at least 6 characters",
-  "pleaseSelectStatus": "Please select status"
+  "pleaseSelectStatus": "Please select status",
+  "branch": "Branch",
+  "location": "Location",
+  "code": "Code",
+  "pleaseEnterLocation": "Please enter location",
+  "pleaseEnterCode": "Please enter code"
 } 
