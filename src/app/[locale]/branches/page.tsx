@@ -58,7 +58,6 @@ export default function BranchesPage() {
     setDrawerVisible(true);
   };
 
-  console.log(branches);
   const config: EntityConfig<IBranch> = {
     name: entityName,
     title: t('managemen_name', { name: entityName }),

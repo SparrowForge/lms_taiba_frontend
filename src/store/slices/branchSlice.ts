@@ -45,7 +45,6 @@ const branchSlice = createSlice({
       state.actionStatus = action.payload;
     },
     setBranches: (state, action: PayloadAction<IBranch[]>) => {
-      console.log(action.payload);
       state.branches = action.payload;
     },
     addBranch: (state, action: PayloadAction<IBranch>) => {

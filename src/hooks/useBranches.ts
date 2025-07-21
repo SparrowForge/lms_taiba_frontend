@@ -34,9 +34,8 @@ export const useBranches = () => {
     try {
       dispatch(setListStatus({ status: Status.LOADING }));
       const response: IBasePaginatedResponse<IBranch> = await branchService.getBranches(params);
-      console.log(response);
       dispatch(setBranches(response?.data?.items ?? []));
-      dispatch(setPagination(response?.data?.meta ?? {}));
+      dispatch(setPagination(response?.data?.meta ?? { page: 1, limit: 10, total: 0, totalPages: 0, hasNextPage: false, hasPreviousPage: false }));
       dispatch(setListStatus({ status: Status.SUCCESS }));
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load branches';
