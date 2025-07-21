@@ -5,6 +5,7 @@ import {Drawer} from 'antd';
 import {useUsers} from '@/hooks/useUsers';
 import {IUser, IUserCreate, IUserUpdate} from '@/types/user';
 import UserForm from './UserForm';
+import { useTranslations } from 'next-intl';
 
 interface UserFormDrawerProps {
   mode: 'create' | 'edit';
@@ -23,6 +24,8 @@ const UserFormDrawer: React.FC<UserFormDrawerProps> = ({
   onCancel,
   onSuccess
 }) => {
+  const t = useTranslations();
+  const entityName = t('user', { defaultValue: 'User' });
   const { getUserById, loadUser } = useUsers();
   const [user, setUser] = useState<IUser | null>(null);
 
@@ -47,7 +50,7 @@ const UserFormDrawer: React.FC<UserFormDrawerProps> = ({
   }, [user, mode]);
 
   const getTitle = () => {
-    return mode === 'create' ? 'Create User' : 'Edit User';
+    return mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName });
   };
 
   const handleDrawerSuccess = () => {

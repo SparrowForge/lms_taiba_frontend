@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Space} from 'antd';
+import { useTranslations } from 'next-intl';
 
 interface EntityActionsProps {
   id: number;
@@ -36,6 +37,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
   deleteText,
   loadingStates = {}
 }) => {
+  const t = useTranslations();
   const [localLoading, setLocalLoading] = useState<{
     view: boolean;
     edit: boolean;
@@ -78,9 +80,9 @@ const EntityActions: React.FC<EntityActionsProps> = ({
           onClick={() => handleAction('view', onView)}
           loading={isLoading('view')}
           disabled={isLoading('view')}
-          aria-label={`${viewText} item ${id}`}
+          aria-label={`${viewText || t('view')} item ${id}`}
         >
-          {viewText}
+          {viewText || t('view')}
         </Button>
       )}
       {onViewModal && (
@@ -91,9 +93,9 @@ const EntityActions: React.FC<EntityActionsProps> = ({
           onClick={() => handleAction('viewModal', onViewModal)}
           loading={isLoading('viewModal')}
           disabled={isLoading('viewModal')}
-          aria-label={`${viewModalText} item ${id}`}
+          aria-label={`${viewModalText || t('quickView')} item ${id}`}
         >
-          {viewModalText}
+          {viewModalText || t('quickView')}
         </Button>
       )}
       {onEdit && (
@@ -104,9 +106,9 @@ const EntityActions: React.FC<EntityActionsProps> = ({
           onClick={() => handleAction('edit', onEdit)}
           loading={isLoading('edit')}
           disabled={isLoading('edit')}
-          aria-label={`${editText} item ${id}`}
+          aria-label={`${editText || t('edit')} item ${id}`}
         >
-          {editText}
+          {editText || t('edit')}
         </Button>
       )}
       {onEditModal && (
@@ -117,9 +119,9 @@ const EntityActions: React.FC<EntityActionsProps> = ({
           onClick={() => handleAction('editModal', onEditModal)}
           loading={isLoading('editModal')}
           disabled={isLoading('editModal')}
-          aria-label={`${editModalText} item ${id}`}
+          aria-label={`${editModalText || t('quickEdit')} item ${id}`}
         >
-          {editModalText}
+          {editModalText || t('quickEdit')}
         </Button>
       )}
       {onDelete && (
@@ -130,9 +132,9 @@ const EntityActions: React.FC<EntityActionsProps> = ({
           onClick={() => handleAction('delete', onDelete)}
           loading={isLoading('delete')}
           disabled={isLoading('delete')}
-          aria-label={`${deleteText} item ${id}`}
+          aria-label={`${deleteText || t('delete')} item ${id}`}
         >
-          {deleteText}
+          {deleteText || t('delete')}
         </Button>
       )}
     </Space>

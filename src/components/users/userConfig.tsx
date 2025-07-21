@@ -2,6 +2,7 @@ import React from 'react';
 import {IUser} from '@/types/user';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import UserStatusTag from '@/components/users/UserStatusTag';
+import { useTranslations } from 'next-intl';
 
 export const getUserDisplayName = (user: IUser) => {
   return `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || 'Unknown User';
@@ -24,9 +25,9 @@ export const createUserDetailsConfig = (
   } = {}
 ): EntityDetailsConfig<IUser> => {
   const { embedded = false, onEdit, onBack } = options;
-
+  const t = useTranslations();
   return {
-    name: 'User',
+    name: t('user'),
     route: '/users',
     getDisplayName: getUserDisplayName,
     getInitials: getUserInitials,
@@ -43,33 +44,33 @@ export const createUserDetailsConfig = (
       },
       {
         key: 'firstName',
-        label: 'First Name',
+        label: t('firstName'),
       },
       {
         key: 'lastName',
-        label: 'Last Name',
+        label: t('lastName'),
       },
       {
         key: 'email',
-        label: 'Email',
+        label: t('email'),
       },
       {
         key: 'phone',
-        label: 'Phone',
+        label: t('phone'),
       },
       {
         key: 'status',
-        label: 'Status',
+        label: t('status'),
         render: (value: string) => <UserStatusTag status={value} />,
       },
       {
         key: 'createdAt',
-        label: 'Created At',
+        label: t('createdAt'),
         render: (value: string) => value ? new Date(value).toLocaleDateString() : 'N/A',
       },
       {
         key: 'updatedAt',
-        label: 'Updated At',
+        label: t('updatedAt'),
         render: (value: string) => value ? new Date(value).toLocaleDateString() : 'N/A',
       },
     ],

@@ -7,6 +7,8 @@ import {useUsers} from '@/hooks/useUsers';
 import {IUser} from '@/types/user';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 import {createUserDetailsConfig} from '@/components/users/userConfig';
+import { Status } from '@/types/common';
+import { useTranslations } from 'next-intl';
 
 interface UserDetailsDrawerProps {
   userId?: number;
@@ -21,9 +23,10 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
   onClose,
   onEdit
 }) => {
-  const { users, listLoading, listError, getUserById, loadUser } = useUsers();
+  const { users, listStatus, getUserById, loadUser } = useUsers();
   const [user, setUser] = useState<IUser | null>(null);
-
+  const t = useTranslations();
+  const entityName = t('user', { defaultValue: 'User' }); 
   // Load user data when drawer opens
   useEffect(() => {
     if (userId && visible) {
@@ -55,8 +58,8 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
 
   const config = createUserDetailsConfig(
     user,
-    listLoading,
-    listError || null,
+    listStatus.status === Status.LOADING,
+    listStatus.status === Status.FAILED ? listStatus.message || null : null,
     {
       embedded: true,
       onEdit: onEdit ? handleEdit : undefined,
@@ -65,7 +68,7 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
 
   return (
     <Drawer
-      title="User Details"
+      title={t('details_name', { name: entityName })}
       open={visible}
       onClose={onClose}
       width={600}
@@ -79,7 +82,7 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
               icon={<EditOutlined />}
               onClick={() => onEdit(user.id)}
             >
-              Edit User
+              {t('edit_name', { name: entityName })}
             </Button>
           </Space>
         ) : undefined

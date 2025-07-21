@@ -4,6 +4,7 @@ import {Alert, Button, Card, Input, Space, Table, Typography} from 'antd'
 import {FileExcelOutlined, SearchOutlined, UserAddOutlined} from '@ant-design/icons'
 import {usePathname, useRouter} from 'next/navigation'
 import {TableProps} from 'antd/es/table'
+import { useTranslations } from 'next-intl';
 
 const { Title } = Typography
 const { Search } = Input
@@ -26,6 +27,7 @@ export interface EntityConfig<T> {
 
 // Generic EntityList component
 export const EntityList = <T extends { id: number }>({ config }: { config: EntityConfig<T> }) => {
+  const t = useTranslations();
   //const [searchText, setSearchText] = useState('')
   const router = useRouter()
   const pathname = usePathname()
@@ -56,17 +58,17 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
           <div style={{display: 'flex', gap: '16px'}}>
 
             <Button type="primary" icon={<UserAddOutlined />} onClick={handleAddItem} style={{backgroundColor: '#1890ff', borderColor: '#1890ff'}}>
-              Add {config.name}
+              {t('add_name', { name: config.name })}
             </Button>
 
             {config.onAdd && (
               <Button type="primary" icon={<UserAddOutlined />} onClick={config.onAdd} style={{backgroundColor: '#722ed1', borderColor: '#722ed1'}}>
-                Quick Add {config.name}
+                {t('quickAdd_name', { name: config.name })}
               </Button>
             )}
             {config.exportUrl && (
               <Button type="primary" icon={<FileExcelOutlined />} onClick={handleExport}>
-                Export
+                {t('export')}
               </Button>
             )}
           </div>
@@ -74,7 +76,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
 
         {config.error && (
           <Alert
-            message="Error"
+            message={t('error')}
             description={config.error}
             type="error"
             showIcon
@@ -84,7 +86,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
 
         <Space direction="vertical" style={{ width: '100%' }}>
           <Search
-            placeholder={`Search ${config.name} by ${config.searchFields.join(', ')}`}
+            placeholder={t('search_name', { name: config.name, fields: config.searchFields.join(', ') })}
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -108,7 +110,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
               pageSize: 10,
               showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} ${config.name}`,
+              showTotal: (total, range) => `${range[0]}-${range[1]} ${t('of')} ${total} ${config.name}`,
               onChange: (page, pageSize) => {
                 router.push(`${config.route}?skip=${(page - 1) * pageSize}&limit=${pageSize}`)
               }

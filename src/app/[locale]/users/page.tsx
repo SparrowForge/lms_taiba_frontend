@@ -12,6 +12,7 @@ import {useRouter} from "next/navigation"
 import UserFormDrawer from "@/components/users/UserFormModal"
 import UserDetailsDrawer from "@/components/users/UserDetailsDrawer"
 import AsyncErrorBoundary from "@/components/error/AsyncErrorBoundary"
+import { useTranslations } from 'next-intl';
 
 export default function UsersPage() {
     const router = useRouter()
@@ -22,6 +23,8 @@ export default function UsersPage() {
     const [selectedDetailsUserId, setSelectedDetailsUserId] = useState<number | undefined>()
 
     const { users, listStatus, pagination, loadUsers,} = useUsers()
+    const t = useTranslations();
+    const entityName = t('user');
 
     // Fetch data on component mount
     useEffect(() => {
@@ -57,8 +60,8 @@ export default function UsersPage() {
     }
 
     const config: EntityConfig<IUser> = {
-      name: 'user',
-      title: 'Users Management',
+      name: entityName,
+      title: t('managemen_name', { name: entityName }),
       route: '/users',
       exportUrl: '/users/export',
       searchFields: ['name', 'email'] as (keyof IUser)[],
@@ -72,57 +75,56 @@ export default function UsersPage() {
       error: listStatus.status === Status.FAILED ? listStatus.message : null,
       columns: [
         {
-          title: 'First Name',
+          title: t('firstName'),
           dataIndex: 'firstName',
           key: 'firstName',
           render: (text: string) => <span>{text}</span>
         },
         {
-          title: 'Last Name',
+          title: t('lastName'),
           dataIndex: 'lastName',
           key: 'lastName',
           render: (text: string) => <span>{text}</span>
         },
         {
-          title: 'Email',
+          title: t('email'),
           dataIndex: 'email',
           key: 'email',
           render: (text: string) => <span>{text}</span>
         },
         {
-          title: 'Phone',
+          title: t('phone'),
           dataIndex: 'phone',
           key: 'phone',
           render: (text: string) => <span>{text}</span>
         },
         {
-          title: 'Status',
+          title: t('status'),
           dataIndex: 'status',
           key: 'status',
           render: (text: string) => <span>{text}</span>
         },
         {
-          title: 'Actions',
+          title: t('actions'),
           key: 'actions',
           width: 250,
           render: (user: IUser) => <EntityActions
             onView={() => router.push(`/users/${user.id}`)}
             onViewModal={handleViewDetails}
-            viewModalText="Quick View"
+            viewModalText={t('quickView')}
             onEdit={() => router.push(`/users/${user.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText="Quick Edit"
+            editModalText={t('quickEdit')}
             onDelete={() => router.push(`/users/${user.id}/delete`)}
             id={user.id} />
         },
-
       ]
     }
 
     return <ProtectedRoute>
         <MainLayout>
             <AsyncErrorBoundary 
-              error={listStatus.status === Status.FAILED ? new Error(listStatus.message || 'Failed to load users') : null}
+              error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
               loading={listStatus.status === Status.LOADING}
               onRetry={() => loadUsers({page: 1, limit: 10})}
             >

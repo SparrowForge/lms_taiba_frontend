@@ -1,6 +1,7 @@
 import React from 'react';
 import {Alert, Avatar, Button, Card, Col, Row, Space, Spin, Typography} from 'antd';
 import {ArrowLeftOutlined, EditOutlined, UserOutlined} from '@ant-design/icons';
+import { useTranslations } from 'next-intl';
 
 const { Title, Text } = Typography;
 
@@ -29,20 +30,20 @@ export const EntityDetailsContent = <T extends { id: number }>({
 }: {
   config: EntityDetailsConfig<T>
 }) => {
+  const t = useTranslations();
   if (config.loading) {
     return (
       <div style={{ padding: config.embedded ? '0' : '24px', textAlign: 'center' }}>
         <Spin size="large" />
-        <div style={{ marginTop: '16px' }}>Loading {config.name} details...</div>
+        <div style={{ marginTop: '16px' }}>{t('loading')} {config.name} {t('details_name', { name: config.name })}...</div>
       </div>
     );
   }
-
   if (config.error) {
     return (
       <div style={{ padding: config.embedded ? '0' : '24px' }}>
         <Alert
-          message="Error"
+          message={t('error')}
           description={config.error}
           type="error"
           showIcon
@@ -50,26 +51,24 @@ export const EntityDetailsContent = <T extends { id: number }>({
       </div>
     );
   }
-
   if (!config.item) {
     return (
       <div style={{ padding: config.embedded ? '0' : '24px' }}>
         <Alert
-          message={`${config.name} Not Found`}
-          description={`The ${config.name} you're looking for doesn't exist.`}
+          message={t('notFound_name', { name: config.name })}
+          description={t('notFound_description', { name: config.name })}
           type="warning"
           showIcon
         />
       </div>
     );
   }
-
   const content = (
     <div style={{ marginTop: config.embedded ? '0' : '24px' }}>
       <Row gutter={[24, 24]}>
         {/* Profile Card */}
         <Col xs={24} lg={config.embedded ? 24 : 8}>
-          <Card title={`${config.name} Profile`}>
+          <Card title={`${config.name} ${t('profile')}`}>
             <div style={{ textAlign: 'center' }}>
               <Avatar
                 size={config.embedded ? 60 : 80}
@@ -87,10 +86,9 @@ export const EntityDetailsContent = <T extends { id: number }>({
             </div>
           </Card>
         </Col>
-
         {/* Details Table */}
         <Col xs={24} lg={config.embedded ? 24 : 16}>
-          <Card title={`${config.name} Information`}>
+          <Card title={`${config.name} ${t('information')}`}>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <tbody>
@@ -121,12 +119,10 @@ export const EntityDetailsContent = <T extends { id: number }>({
       </Row>
     </div>
   );
-
   // If embedded, return just the content
   if (config.embedded) {
     return content;
   }
-
   // If not embedded, return with header actions
   return (
     <div style={{ padding: '24px' }}>
@@ -141,10 +137,10 @@ export const EntityDetailsContent = <T extends { id: number }>({
                   onClick={config.onBack}
                   type="text"
                 >
-                  Back
+                  {t('back')}
                 </Button>
               )}
-              <Title level={2} style={{ margin: 0 }}>{config.name} Details</Title>
+              <Title level={2} style={{ margin: 0 }}>{config.name} {t('details_name', { name: config.name })}</Title>
             </div>
             {config.onEdit && (
               <Button
@@ -152,13 +148,12 @@ export const EntityDetailsContent = <T extends { id: number }>({
                 icon={<EditOutlined />}
                 onClick={() => config.onEdit!(config.item!)}
               >
-                Edit {config.name}
+                {t('edit_name', { name: config.name })}
               </Button>
             )}
           </div>
         </Space>
       </Card>
-
       {content}
     </div>
   );
