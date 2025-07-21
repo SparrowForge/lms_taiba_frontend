@@ -29,11 +29,11 @@ const EntityActions: React.FC<EntityActionsProps> = ({
   onView,
   onEditModal,
   onViewModal,
-  viewText = 'View',
-  editText = 'Edit',
-  editModalText = 'Quick Edit',
-  viewModalText = 'Quick View',
-  deleteText = 'Delete',
+  viewText,
+  editText,
+  editModalText,
+  viewModalText,
+  deleteText,
   loadingStates = {}
 }) => {
   const [localLoading, setLocalLoading] = useState<{

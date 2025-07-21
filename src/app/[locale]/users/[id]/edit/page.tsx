@@ -9,6 +9,7 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {PageHeader} from '@/components/ui/PageHeader';
 import UserForm from '@/components/users/UserForm';
+import {Status} from '@/types/common';
 
 interface UserEditPageProps {
   params: Promise<{
@@ -19,7 +20,7 @@ interface UserEditPageProps {
 const UserEditPage: React.FC<UserEditPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { users, listLoading, loadUsers, getUserById, loadUser } = useUsers();
+  const { users, listStatus, loadUsers, getUserById, loadUser } = useUsers();
   const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const UserEditPage: React.FC<UserEditPageProps> = ({ params }) => {
     }
   }, [users, resolvedParams.id, getUserById]);
 
-  if (listLoading) {
+  if (listStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>

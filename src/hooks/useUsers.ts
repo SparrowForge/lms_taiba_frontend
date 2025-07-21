@@ -40,6 +40,7 @@ export const useUsers = () => {
       dispatch(setListStatus({status: Status.LOADING}))
 
       const response = await userService.getUsers(filters)
+      console.log(response);
       dispatch(setUsers(response.data.items ?? []))
       dispatch(setPagination(response.data.meta ?? {}))
       dispatch(setListStatus({status: Status.SUCCESS}))

@@ -223,7 +223,7 @@ const UserForm: React.FC<UserFormProps> = ({
             role="main"
             aria-labelledby="form-title"
           >
-            <h1 
+            {/* <h1 
               id="form-title" 
               style={{ 
                 marginBottom: '24px', 
@@ -233,7 +233,7 @@ const UserForm: React.FC<UserFormProps> = ({
               }}
             >
               {mode === 'create' ? 'Create New User' : 'Edit User'}
-            </h1>
+            </h1> */}
             {formContent}
           </div>
         </div>

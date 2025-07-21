@@ -5,6 +5,8 @@ import {Button, Layout} from 'antd'
 import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons'
 import {Sidebar} from './Sidebar'
 import ErrorBoundary from '../error/ErrorBoundary'
+import {LanguageSwitcher} from '../ui/LanguageSwitcher'
+
 
 const {Header, Content} = Layout
 
@@ -51,7 +53,10 @@ export const MainLayout = ({children}: MainLayoutProps) => {
             }}
           />
           <div className="flex-1" />
-          {/* Add any header content here like notifications, user menu, etc. */}
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            {/* Add any other header content here like notifications, user menu, etc. */}
+          </div>
         </Header>
 
         <Content
