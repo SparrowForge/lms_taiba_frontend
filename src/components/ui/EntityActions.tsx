@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {Button, Space} from 'antd';
-import { useTranslations } from 'next-intl';
+import {Button, Dropdown, MenuProps, Spin} from 'antd';
+import {DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined} from '@ant-design/icons';
+import {useTranslations} from 'next-intl';
 
 interface EntityActionsProps {
   id: number;
@@ -70,74 +71,129 @@ const EntityActions: React.FC<EntityActionsProps> = ({
   const isLoading = (action: keyof typeof loadingStates) =>
     loadingStates[action] || localLoading[action];
 
+  // Build menu items dynamically based on available actions
+  const menuItems: MenuProps['items'] = [];
+
+  // Add View action
+  if (onView) {
+    menuItems.push({
+      key: 'view',
+      icon: isLoading('view') ? <Spin size="small" /> : <EyeOutlined />,
+      label: viewText || t('view'),
+      onClick: () => handleAction('view', onView),
+      disabled: isLoading('view'),
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        color: '#1890ff'
+      }
+    });
+  }
+
+  // Add View Modal action
+  if (onViewModal) {
+    menuItems.push({
+      key: 'viewModal',
+      icon: isLoading('viewModal') ? <Spin size="small" /> : <EyeOutlined />,
+      label: viewModalText || t('quickView'),
+      onClick: () => handleAction('viewModal', onViewModal),
+      disabled: isLoading('viewModal'),
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        color: '#722ed1'
+      }
+    });
+  }
+
+  // Add Edit action
+  if (onEdit) {
+    menuItems.push({
+      key: 'edit',
+      icon: isLoading('edit') ? <Spin size="small" /> : <EditOutlined />,
+      label: editText || t('edit'),
+      onClick: () => handleAction('edit', onEdit),
+      disabled: isLoading('edit'),
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        color: '#1890ff'
+      }
+    });
+  }
+
+  // Add Edit Modal action
+  if (onEditModal) {
+    menuItems.push({
+      key: 'editModal',
+      icon: isLoading('editModal') ? <Spin size="small" /> : <EditOutlined />,
+      label: editModalText || t('quickEdit'),
+      onClick: () => handleAction('editModal', onEditModal),
+      disabled: isLoading('editModal'),
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        color: '#52c41a'
+      }
+    });
+  }
+
+  // Add Delete action (with danger styling)
+  if (onDelete) {
+    menuItems.push({
+      key: 'delete',
+      icon: isLoading('delete') ? <Spin size="small" /> : <DeleteOutlined />,
+      label: deleteText || t('delete'),
+      onClick: () => handleAction('delete', onDelete),
+      disabled: isLoading('delete'),
+      danger: true,
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+      }
+    });
+  }
+
+  // If no actions are available, return null
+  if (menuItems.length === 0) {
+    return null;
+  }
+
   return (
-    <Space size="small" role="group" aria-label="Entity actions">
-      {onView && (
-        <Button
-          type="link"
-          size="small"
-          style={{ color: '#1890ff' }}
-          onClick={() => handleAction('view', onView)}
-          loading={isLoading('view')}
-          disabled={isLoading('view')}
-          aria-label={`${viewText || t('view')} item ${id}`}
-        >
-          {viewText || t('view')}
-        </Button>
-      )}
-      {onViewModal && (
-        <Button
-          type="link"
-          size="small"
-          style={{ color: '#722ed1' }}
-          onClick={() => handleAction('viewModal', onViewModal)}
-          loading={isLoading('viewModal')}
-          disabled={isLoading('viewModal')}
-          aria-label={`${viewModalText || t('quickView')} item ${id}`}
-        >
-          {viewModalText || t('quickView')}
-        </Button>
-      )}
-      {onEdit && (
-        <Button
-          type="link"
-          size="small"
-          style={{ color: '#1890ff' }}
-          onClick={() => handleAction('edit', onEdit)}
-          loading={isLoading('edit')}
-          disabled={isLoading('edit')}
-          aria-label={`${editText || t('edit')} item ${id}`}
-        >
-          {editText || t('edit')}
-        </Button>
-      )}
-      {onEditModal && (
-        <Button
-          type="link"
-          size="small"
-          style={{ color: '#52c41a' }}
-          onClick={() => handleAction('editModal', onEditModal)}
-          loading={isLoading('editModal')}
-          disabled={isLoading('editModal')}
-          aria-label={`${editModalText || t('quickEdit')} item ${id}`}
-        >
-          {editModalText || t('quickEdit')}
-        </Button>
-      )}
-      {onDelete && (
-        <Button
-          type="link"
-          size="small"
-          danger
-          onClick={() => handleAction('delete', onDelete)}
-          loading={isLoading('delete')}
-          disabled={isLoading('delete')}
-          aria-label={`${deleteText || t('delete')} item ${id}`}
-        >
-          {deleteText || t('delete')}
-        </Button>
-      )}
-    </Space>
+    <Dropdown
+      menu={{
+        items: menuItems,
+        style: {
+          minWidth: '140px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+        }
+      }}
+      trigger={['click']}
+      placement="bottomRight"
+      arrow={{ pointAtCenter: true }}
+      overlayStyle={{
+        animationDuration: '0.2s'
+      }}
+    >
+      <Button
+        type="text"
+        icon={<MoreOutlined />}
+        size="small"
+        className="hover:bg-gray-50 transition-colors duration-200"
+        style={{
+          borderRadius: '6px',
+          border: '1px solid #f0f0f0',
+          color: '#666'
+        }}
+        aria-label={`Actions for item ${id}`}
+      />
+    </Dropdown>
   );
 };
 

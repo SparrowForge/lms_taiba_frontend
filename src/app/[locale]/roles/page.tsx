@@ -99,7 +99,7 @@ export default function RolesPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (role: IRole) => (
           <EntityActions
             onView={() => router.push(`/roles/${role.id}`)}

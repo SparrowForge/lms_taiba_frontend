@@ -12,7 +12,7 @@ import {useRouter} from "next/navigation"
 import UserFormDrawer from "@/components/users/UserFormModal"
 import UserDetailsDrawer from "@/components/users/UserDetailsDrawer"
 import AsyncErrorBoundary from "@/components/error/AsyncErrorBoundary"
-import { useTranslations } from 'next-intl';
+import {useTranslations} from 'next-intl';
 
 export default function UsersPage() {
     const router = useRouter()
@@ -107,7 +107,7 @@ export default function UsersPage() {
         {
           title: t('actions'),
           key: 'actions',
-          width: 250,
+          width: 100,
           render: (user: IUser) => <EntityActions
             onView={() => router.push(`/users/${user.id}`)}
             onViewModal={handleViewDetails}
@@ -123,7 +123,7 @@ export default function UsersPage() {
 
     return <ProtectedRoute>
         <MainLayout>
-            <AsyncErrorBoundary 
+            <AsyncErrorBoundary
               error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
               loading={listStatus.status === Status.LOADING}
               onRetry={() => loadUsers({page: 1, limit: 10})}

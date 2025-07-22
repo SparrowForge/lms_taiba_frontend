@@ -123,7 +123,7 @@ export default function RoleMenuPermissionsPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (permission: IRoleMenuPermission) => (
           <EntityActions
             onView={() => router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}`)}

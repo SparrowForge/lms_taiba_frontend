@@ -1,18 +1,18 @@
 'use client';
 
-import { EntityConfig, EntityList } from '@/components/ui/EntityList';
-import { ISubject } from '@/types/subject';
-import { useSubjects } from '@/hooks/useSubjects';
-import { useEffect, useState } from 'react';
-import { Status } from '@/types/common';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import {ISubject} from '@/types/subject';
+import {useSubjects} from '@/hooks/useSubjects';
+import {useEffect, useState} from 'react';
+import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { useRouter } from 'next/navigation';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {useRouter} from 'next/navigation';
 import SubjectFormDrawer from '@/components/subjects/SubjectFormDrawer';
 import SubjectDetailsDrawer from '@/components/subjects/SubjectDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import { useTranslations } from 'next-intl';
+import {useTranslations} from 'next-intl';
 
 export default function SubjectsPage() {
   const t = useTranslations();
@@ -117,7 +117,7 @@ export default function SubjectsPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (subject: ISubject) => (
           <EntityActions
             onView={() => router.push(`/subjects/${subject.id}`)}
@@ -165,4 +165,4 @@ export default function SubjectsPage() {
       </MainLayout>
     </ProtectedRoute>
   );
-} 
+}

@@ -111,7 +111,7 @@ export default function CoursesPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (course: ICourse) => (
           <EntityActions
             onView={() => router.push(`/courses/${course.id}`)}

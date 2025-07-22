@@ -87,7 +87,7 @@ export default function PanelsPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (panel: IPanel) => (
           <EntityActions
             onView={() => router.push(`/panels/${panel.id}`)}

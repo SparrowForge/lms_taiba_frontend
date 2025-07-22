@@ -111,7 +111,7 @@ export default function MenusPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (menu: IMenu) => (
           <EntityActions
             onView={() => router.push(`/menus/${menu.id}`)}

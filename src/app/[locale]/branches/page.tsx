@@ -1,18 +1,18 @@
 'use client';
 
-import { EntityConfig, EntityList } from '@/components/ui/EntityList';
-import { IBranch } from '@/types/branch';
-import { useBranches } from '@/hooks/useBranches';
-import { useEffect, useState } from 'react';
-import { Status } from '@/types/common';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import {IBranch} from '@/types/branch';
+import {useBranches} from '@/hooks/useBranches';
+import {useEffect, useState} from 'react';
+import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { useRouter } from 'next/navigation';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {useRouter} from 'next/navigation';
 import BranchFormDrawer from '@/components/branches/BranchFormDrawer';
 import BranchDetailsDrawer from '@/components/branches/BranchDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import { useTranslations } from 'next-intl';
+import {useTranslations} from 'next-intl';
 
 export default function BranchesPage() {
   const t = useTranslations();
@@ -99,7 +99,7 @@ export default function BranchesPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (branch: IBranch) => (
           <EntityActions
             onView={() => router.push(`/branches/${branch.id}`)}
@@ -144,4 +144,4 @@ export default function BranchesPage() {
       </MainLayout>
     </ProtectedRoute>
   );
-} 
+}

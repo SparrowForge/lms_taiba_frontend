@@ -1,32 +1,38 @@
 'use client'
 
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {Button, Dropdown} from 'antd';
 import {GlobalOutlined} from '@ant-design/icons';
 import {useLocale} from 'next-intl';
 import {usePathname, useRouter} from 'next/navigation';
 import {routing} from '@/i18n/routing';
 
-export const LanguageSwitcher: React.FC = () => {
+export const LanguageSwitcher: React.FC = React.memo(() => {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  // No namespace needed for flat structure
 
-  const handleLanguageChange = (newLocale: string) => {
+  const handleLanguageChange = useCallback((newLocale: string) => {
     // Remove the current locale from the pathname
     const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
 
     // Navigate to the new locale path
     const newPath = `/${newLocale}${pathWithoutLocale}`;
     router.push(newPath);
-  };
+  }, [locale, pathname, router]);
 
-  const languageItems = routing.locales.map((loc: string) => ({
+  // Memoize language items to prevent unnecessary re-renders
+  const languageItems = useMemo(() => routing.locales.map((loc: string) => ({
     key: loc,
     label: loc === 'en' ? 'English' : loc === 'ar' ? 'العربية' : loc.toUpperCase(),
     onClick: () => handleLanguageChange(loc),
-  }));
+  })), [handleLanguageChange]);
+
+  // Memoize button style
+  const buttonStyle = useMemo(() => ({
+    border: 'none',
+    boxShadow: 'none',
+  }), []);
 
   return (
     <Dropdown
@@ -38,13 +44,12 @@ export const LanguageSwitcher: React.FC = () => {
         type="text"
         icon={<GlobalOutlined />}
         className="flex items-center gap-2"
-        style={{
-          border: 'none',
-          boxShadow: 'none',
-        }}
+        style={buttonStyle}
       >
         {locale.toUpperCase()}
       </Button>
     </Dropdown>
   );
-};
+});
+
+LanguageSwitcher.displayName = 'LanguageSwitcher';

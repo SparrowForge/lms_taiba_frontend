@@ -99,7 +99,7 @@ export default function DepartmentsPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (department: IDepartment) => (
           <EntityActions
             onView={() => router.push(`/departments/${department.id}`)}
