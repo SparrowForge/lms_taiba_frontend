@@ -107,5 +107,12 @@
   "select_course": "اختر الدورة",
   "enter_creditHours": "أدخل الساعات المعتمدة",
   "enter_theoryHours": "أدخل الساعات النظرية",
-  "enter_practicalHours": "أدخل الساعات العملية"
+  "enter_practicalHours": "أدخل الساعات العملية",
+  "batch": "دفعة",
+  "batches": "دفعات",
+  "intakeCapacity": "سعة القبول",
+  "session": "الفصل",
+  "year": "السنة",
+  "update_name": "تحديث {name}",
+  "required_name": "{name} مطلوب"
 } 

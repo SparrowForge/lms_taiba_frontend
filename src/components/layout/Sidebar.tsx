@@ -78,6 +78,11 @@ export const Sidebar = ({collapsed}: SidebarProps) => {
       label: 'Courses',
     },
     {
+      key: '/batches',
+      icon: <BookOutlined />,
+      label: 'Batches',
+    },
+    {
       key: '/subjects',
       icon: <BookOutlined />,
       label: 'Subjects',

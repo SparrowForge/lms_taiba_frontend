@@ -9,6 +9,7 @@ import menuReducer from './slices/menuSlice'
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice'
 import courseReducer from './slices/courseSlice'
 import subjectReducer from './slices/subjectSlice'
+import batchReducer from './slices/batchSlice'
 
 // Root state type
 export interface RootState {
@@ -22,6 +23,7 @@ export interface RootState {
   roleMenuPermissions: ReturnType<typeof roleMenuPermissionReducer>
   courses: ReturnType<typeof courseReducer>
   subjects: ReturnType<typeof subjectReducer>
+  batches: ReturnType<typeof batchReducer>
 }
 
 // Create store
@@ -37,6 +39,7 @@ export const store = configureStore({
     roleMenuPermissions: roleMenuPermissionReducer,
     courses: courseReducer,
     subjects: subjectReducer,
+    batches: batchReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
