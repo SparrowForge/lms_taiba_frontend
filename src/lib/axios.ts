@@ -3,7 +3,7 @@ import axios from 'axios'
 import type {IBaseResponse, IErrorResponse} from '@/types/common'
 
 // Environment variables for Next.js
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api/v1'
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://79.132.131.161:3001/api/v1'
 const ENV = process.env.NODE_ENV || 'development'
 
 // Create axios instance
