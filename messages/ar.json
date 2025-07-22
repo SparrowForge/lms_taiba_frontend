@@ -86,5 +86,17 @@
   "allow_update": "السماح بالتحديث",
   "allow_delete": "السماح بالحذف",
   "yes": "نعم",
-  "no": "لا"
+  "no": "لا",
+  "course": "دورة",
+  "courses": "دورات",
+  "courseType": "نوع الدورة",
+  "durationInSemesters": "المدة (فصول دراسية)",
+  "select_department": "اختر القسم",
+  "select_courseType": "اختر نوع الدورة",
+  "enter_durationInSemesters": "أدخل المدة بالفصول الدراسية",
+  "certificate": "شهادة",
+  "diploma": "دبلوم",
+  "bachelor": "بكالوريوس",
+  "master": "ماجستير",
+  "phd": "دكتوراه"
 } 

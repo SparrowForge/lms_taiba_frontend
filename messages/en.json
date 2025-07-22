@@ -86,5 +86,17 @@
   "allow_update": "Allow update",
   "allow_delete": "Allow delete",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "course": "Course",
+  "courses": "Courses",
+  "courseType": "Course Type",
+  "durationInSemesters": "Duration (Semesters)",
+  "select_department": "Select department",
+  "select_courseType": "Select course type",
+  "enter_durationInSemesters": "Enter duration in semesters",
+  "certificate": "Certificate",
+  "diploma": "Diploma",
+  "bachelor": "Bachelor",
+  "master": "Master",
+  "phd": "PhD"
 } 

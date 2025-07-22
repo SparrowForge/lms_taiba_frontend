@@ -83,6 +83,11 @@ export const Sidebar = ({collapsed}: SidebarProps) => {
       label: 'Role Menu Permissions',
     },
     {
+      key: '/courses',
+      icon: <BookOutlined />,
+      label: 'Courses',
+    },
+    {
       key: '/students',
       icon: <UserOutlined />,
       label: 'Students',
