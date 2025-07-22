@@ -88,45 +88,9 @@ export const Sidebar = ({collapsed}: SidebarProps) => {
       label: 'Courses',
     },
     {
-      key: '/students',
-      icon: <UserOutlined />,
-      label: 'Students',
-    },
-    {
-      key: '/teachers',
-      icon: <TeamOutlined />,
-      label: 'Teachers',
-    },
-    {
-      key: '/courses',
+      key: '/subjects',
       icon: <BookOutlined />,
-      label: 'Courses',
-    },
-    {
-      key: '/assignments',
-      icon: <FileTextOutlined />,
-      label: 'Assignments',
-    },
-    {
-      type: 'divider' as const,
-    },
-    {
-      key: '/calendar',
-      icon: <CalendarOutlined />,
-      label: 'Calendar',
-    },
-    {
-      key: '/reports',
-      icon: <BarChartOutlined />,
-      label: 'Reports',
-    },
-    {
-      key: '/notifications',
-      icon: <BellOutlined />,
-      label: 'Notifications',
-    },
-    {
-      type: 'divider' as const,
+      label: 'Subjects',
     },
     {
       key: '/settings',

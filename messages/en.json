@@ -98,5 +98,14 @@
   "diploma": "Diploma",
   "bachelor": "Bachelor",
   "master": "Master",
-  "phd": "PhD"
+  "phd": "PhD",
+  "subject": "Subject",
+  "subjects": "Subjects",
+  "creditHours": "Credit Hours",
+  "theoryHours": "Theory Hours",
+  "practicalHours": "Practical Hours",
+  "select_course": "Select course",
+  "enter_creditHours": "Enter credit hours",
+  "enter_theoryHours": "Enter theory hours",
+  "enter_practicalHours": "Enter practical hours"
 } 

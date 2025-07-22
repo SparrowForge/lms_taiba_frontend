@@ -98,5 +98,14 @@
   "diploma": "دبلوم",
   "bachelor": "بكالوريوس",
   "master": "ماجستير",
-  "phd": "دكتوراه"
+  "phd": "دكتوراه",
+  "subject": "مادة",
+  "subjects": "مواد",
+  "creditHours": "ساعات معتمدة",
+  "theoryHours": "ساعات نظرية",
+  "practicalHours": "ساعات عملية",
+  "select_course": "اختر الدورة",
+  "enter_creditHours": "أدخل الساعات المعتمدة",
+  "enter_theoryHours": "أدخل الساعات النظرية",
+  "enter_practicalHours": "أدخل الساعات العملية"
 } 

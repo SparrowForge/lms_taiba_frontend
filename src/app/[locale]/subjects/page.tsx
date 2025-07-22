@@ -1,0 +1,168 @@
+'use client';
+
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
+import { ISubject } from '@/types/subject';
+import { useSubjects } from '@/hooks/useSubjects';
+import { useEffect, useState } from 'react';
+import { Status } from '@/types/common';
+import EntityActions from '@/components/ui/EntityActions';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useRouter } from 'next/navigation';
+import SubjectFormDrawer from '@/components/subjects/SubjectFormDrawer';
+import SubjectDetailsDrawer from '@/components/subjects/SubjectDetailsDrawer';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import { useTranslations } from 'next-intl';
+
+export default function SubjectsPage() {
+  const t = useTranslations();
+  const entityName = t('subject', { defaultValue: 'Subject' });
+  const router = useRouter();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
+  const [selectedSubjectId, setSelectedSubjectId] = useState<number | undefined>();
+  const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
+  const [selectedDetailsSubjectId, setSelectedDetailsSubjectId] = useState<number | undefined>();
+
+  const { subjects, listStatus, pagination, loadSubjects } = useSubjects();
+
+  useEffect(() => {
+    loadSubjects({ page: 1, limit: 10 });
+  }, [loadSubjects]);
+
+  const handleEditDrawer = (subjectId: number) => {
+    setSelectedSubjectId(subjectId);
+    setDrawerMode('edit');
+    setDrawerVisible(true);
+  };
+
+  const handleCreateDrawer = () => {
+    setSelectedSubjectId(undefined);
+    setDrawerMode('create');
+    setDrawerVisible(true);
+  };
+
+  const handleDrawerSuccess = () => {
+    loadSubjects({ page: 1, limit: 10 });
+  };
+
+  const handleViewDetails = (subjectId: number) => {
+    setSelectedDetailsSubjectId(subjectId);
+    setDetailsDrawerVisible(true);
+  };
+
+  const handleDetailsEdit = (subjectId: number) => {
+    setDetailsDrawerVisible(false);
+    setSelectedSubjectId(subjectId);
+    setDrawerMode('edit');
+    setDrawerVisible(true);
+  };
+
+  const config: EntityConfig<ISubject> = {
+    name: entityName,
+    title: t('managemen_name', { name: entityName }),
+    route: '/subjects',
+    searchFields: ['name', 'code', 'course.name'] as any,
+    onSearch: (searchText: string) => {
+      loadSubjects({ page: 1, limit: 10, search: searchText });
+    },
+    onAdd: handleCreateDrawer,
+    items: subjects,
+    itemsCount: pagination?.total ?? 0,
+    loading: listStatus.status === Status.LOADING,
+    error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    columns: [
+      {
+        title: t('name'),
+        dataIndex: 'name',
+        key: 'name',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('code'),
+        dataIndex: 'code',
+        key: 'code',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('creditHours'),
+        dataIndex: 'creditHours',
+        key: 'creditHours',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('theoryHours'),
+        dataIndex: 'theoryHours',
+        key: 'theoryHours',
+        render: (text: number) => <span>{text}</span>,
+      },
+      {
+        title: t('practicalHours'),
+        dataIndex: 'practicalHours',
+        key: 'practicalHours',
+        render: (text: number) => <span>{text}</span>,
+      },
+      {
+        title: t('course'),
+        dataIndex: 'course',
+        key: 'course',
+        render: (course: any) => <span>{course?.name || 'N/A'}</span>,
+      },
+      {
+        title: t('createdAt'),
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: (text: string) => new Date(text).toLocaleString(),
+      },
+      {
+        title: t('actions'),
+        key: 'actions',
+        width: 200,
+        render: (subject: ISubject) => (
+          <EntityActions
+            onView={() => router.push(`/subjects/${subject.id}`)}
+            onViewModal={handleViewDetails}
+            viewText={t('view')}
+            editText={t('edit')}
+            deleteText={t('delete')}
+            viewModalText={t('quickView')}
+            onEdit={() => router.push(`/subjects/${subject.id}/edit`)}
+            onEditModal={handleEditDrawer}
+            editModalText={t('quickEdit')}
+            onDelete={() => {}}
+            id={subject.id}
+          />
+        ),
+      },
+    ],
+  };
+
+  return (
+    <ProtectedRoute>
+      <MainLayout>
+        <AsyncErrorBoundary
+          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          loading={listStatus.status === Status.LOADING}
+          onRetry={() => loadSubjects({ page: 1, limit: 10 })}
+        >
+          <EntityList config={config as any} />
+        </AsyncErrorBoundary>
+
+        <SubjectFormDrawer
+          mode={drawerMode}
+          subjectId={selectedSubjectId}
+          visible={drawerVisible}
+          onCancel={() => setDrawerVisible(false)}
+          onSuccess={handleDrawerSuccess}
+        />
+
+        <SubjectDetailsDrawer
+          subjectId={selectedDetailsSubjectId}
+          visible={detailsDrawerVisible}
+          onClose={() => setDetailsDrawerVisible(false)}
+          onEdit={handleDetailsEdit}
+        />
+      </MainLayout>
+    </ProtectedRoute>
+  );
+} 
