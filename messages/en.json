@@ -120,5 +120,8 @@
   "semesters": "Semesters",
   "termNo": "Term No",
   "startDate": "Start Date",
-  "endDate": "End Date"
+  "endDate": "End Date",
+  "semesterSubject": "Semester Subject",
+  "semesterSubjects": "Semester Subjects",
+  "subjectCode": "Subject Code"
 } 

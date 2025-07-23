@@ -88,6 +88,11 @@ export const Sidebar = ({collapsed}: SidebarProps) => {
       label: 'Semesters',
     },
     {
+      key: '/semester-subjects',
+      icon: <BookOutlined />,
+      label: 'Semester Subjects',
+    },
+    {
       key: '/subjects',
       icon: <BookOutlined />,
       label: 'Subjects',
