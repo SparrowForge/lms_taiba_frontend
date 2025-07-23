@@ -108,6 +108,11 @@ export const Sidebar = ({collapsed}: SidebarProps) => {
       label: 'Faculty Subjects',
     },
     {
+      key: '/audit',
+      icon: <BookOutlined />,
+      label: 'Audit Logs',
+    },
+    {
       key: '/settings',
       icon: <SettingOutlined />,
       label: 'Settings',

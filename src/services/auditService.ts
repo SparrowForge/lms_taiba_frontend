@@ -1,0 +1,23 @@
+import {api} from '@/lib/axios';
+import {IAudit} from '@/types/audit';
+import {IBasePaginatedResponse} from '@/types/common';
+
+export const auditService = {
+  // Get all audit logs with pagination and search
+  getAudit: async (params = {}): Promise<IBasePaginatedResponse<IAudit>> => {
+    const response = await api.get<IBasePaginatedResponse<IAudit>>('/audit', { params });
+    return response.data;
+  },
+
+  // Get a single audit log by ID
+  getAuditById: async (id: number): Promise<IAudit> => {
+    const response = await api.get<IAudit>(`/audit/${id}`);
+    return response.data;
+  },
+
+  // Clean/delete audit logs
+  cleanAudit: async (params = {}): Promise<void> => {
+    const response = await api.delete('/audit', { params });
+    return response.data;
+  },
+}; 
