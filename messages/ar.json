@@ -132,5 +132,18 @@
   "fullTime": "دوام كامل",
   "partTime": "دوام جزئي",
   "visiting": "زيارة",
-  "contract": "عقد"
+  "contract": "عقد",
+  "facultySubject": "مادة عضو هيئة التدريس",
+  "facultySubjects": "مواد أعضاء هيئة التدريس",
+  "hoursPerWeek": "ساعات في الأسبوع",
+  "instructor": "مدرس",
+  "assistant": "مساعد",
+  "coordinator": "منسق",
+  "lecturer": "محاضر",
+  "search_faculty_subjects": "البحث في مواد أعضاء هيئة التدريس",
+  "no_faculty_subjects_found": "لم يتم العثور على مواد أعضاء هيئة التدريس",
+  "action_successful": "تم إكمال الإجراء بنجاح",
+  "action_failed": "فشل الإجراء",
+  "error_loading_entity": "خطأ في تحميل {entity}",
+  "dashboard": "لوحة التحكم"
 } 

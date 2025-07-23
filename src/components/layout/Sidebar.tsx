@@ -103,6 +103,11 @@ export const Sidebar = ({collapsed}: SidebarProps) => {
       label: 'Faculties',
     },
     {
+      key: '/faculty-subjects',
+      icon: <BookOutlined />,
+      label: 'Faculty Subjects',
+    },
+    {
       key: '/settings',
       icon: <SettingOutlined />,
       label: 'Settings',

@@ -133,5 +133,18 @@
   "fullTime": "Full Time",
   "partTime": "Part Time",
   "visiting": "Visiting",
-  "contract": "Contract"
+  "contract": "Contract",
+  "facultySubject": "Faculty Subject",
+  "facultySubjects": "Faculty Subjects",
+  "hoursPerWeek": "Hours Per Week",
+  "instructor": "Instructor",
+  "assistant": "Assistant",
+  "coordinator": "Coordinator",
+  "lecturer": "Lecturer",
+  "search_faculty_subjects": "Search faculty subjects",
+  "no_faculty_subjects_found": "No faculty subjects found",
+  "action_successful": "Action completed successfully",
+  "action_failed": "Action failed",
+  "error_loading_entity": "Error loading {entity}",
+  "dashboard": "Dashboard"
 } 

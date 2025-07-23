@@ -13,6 +13,7 @@ import batchReducer from './slices/batchSlice'
 import semesterReducer from './slices/semesterSlice'
 import semesterSubjectReducer from './slices/semesterSubjectSlice'
 import facultyReducer from './slices/facultySlice'
+import facultySubjectReducer from './slices/facultySubjectSlice'
 
 // Root state type
 export interface RootState {
@@ -30,6 +31,7 @@ export interface RootState {
   semesters: ReturnType<typeof semesterReducer>
   semesterSubjects: ReturnType<typeof semesterSubjectReducer>
   faculties: ReturnType<typeof facultyReducer>
+  facultySubjects: ReturnType<typeof facultySubjectReducer>
 }
 
 // Create store
@@ -49,6 +51,7 @@ export const store = configureStore({
     semesters: semesterReducer,
     semesterSubjects: semesterSubjectReducer,
     faculties: facultyReducer,
+    facultySubjects: facultySubjectReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
