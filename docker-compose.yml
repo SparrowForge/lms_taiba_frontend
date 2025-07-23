@@ -1,20 +1,8 @@
-version: '3.8'
-
-# Enable BuildKit for faster builds
-x-buildkit: &buildkit
-  DOCKER_BUILDKIT: 1
-  COMPOSE_DOCKER_CLI_BUILD: 1
-
 services:
   lms-admin-panel:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        BUILDKIT_INLINE_CACHE: 1
-      cache_from:
-        - lms_taiba_admin_panel-lms-admin-panel
-      # Enable BuildKit features for faster builds
       target: runner
     container_name: lms-admin-panel
     restart: unless-stopped
