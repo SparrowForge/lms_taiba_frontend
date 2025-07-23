@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { PageHeader } from '@/components/ui/PageHeader';
+import {useRouter} from 'next/navigation';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {PageHeader} from '@/components/ui/PageHeader';
 import BatchForm from '@/components/batches/BatchForm';
-import { useTranslations } from 'next-intl';
+import {useTranslations} from 'next-intl';
 
 const BatchCreatePage: React.FC = () => {
   const t = useTranslations();
@@ -20,8 +20,8 @@ const BatchCreatePage: React.FC = () => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
-        <div style={{ maxWidth: 600, margin: '0 auto' }}>
+        <div style={{ padding: '24px' }}>
+          <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
           <BatchForm mode="create" onCancel={handleBack} />
         </div>
       </MainLayout>
@@ -29,4 +29,4 @@ const BatchCreatePage: React.FC = () => {
   );
 };
 
-export default BatchCreatePage; 
+export default BatchCreatePage;

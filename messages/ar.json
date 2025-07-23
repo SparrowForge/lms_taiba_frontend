@@ -114,5 +114,10 @@
   "session": "الفصل",
   "year": "السنة",
   "update_name": "تحديث {name}",
-  "required_name": "{name} مطلوب"
+  "required_name": "{name} مطلوب",
+  "semester": "فصل دراسي",
+  "semesters": "فصول دراسية",
+  "termNo": "رقم الفصل",
+  "startDate": "تاريخ البدء",
+  "endDate": "تاريخ الانتهاء"
 } 

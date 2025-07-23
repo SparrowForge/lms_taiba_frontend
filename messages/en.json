@@ -115,5 +115,10 @@
   "year": "Year",
   "update_name": "Update {name}",
   "select_name": "Select {name}",
-  "required_name": "{name} is required"
+  "required_name": "{name} is required",
+  "semester": "Semester",
+  "semesters": "Semesters",
+  "termNo": "Term No",
+  "startDate": "Start Date",
+  "endDate": "End Date"
 } 
