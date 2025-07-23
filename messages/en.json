@@ -123,5 +123,15 @@
   "endDate": "End Date",
   "semesterSubject": "Semester Subject",
   "semesterSubjects": "Semester Subjects",
-  "subjectCode": "Subject Code"
+  "subjectCode": "Subject Code",
+  "faculty": "Faculty",
+  "faculties": "Faculties",
+  "fullName": "Full Name",
+  "employeeCode": "Employee Code",
+  "employmentType": "Employment Type",
+  "joinedDate": "Joined Date",
+  "fullTime": "Full Time",
+  "partTime": "Part Time",
+  "visiting": "Visiting",
+  "contract": "Contract"
 } 

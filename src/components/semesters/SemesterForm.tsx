@@ -12,6 +12,7 @@ import {useTranslations} from 'next-intl';
 import {getErrorMessage} from '@/types/errors';
 import dayjs from 'dayjs';
 
+
 interface SemesterFormProps {
   mode: 'create' | 'edit';
   semesterId?: number;

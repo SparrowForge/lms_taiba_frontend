@@ -122,5 +122,15 @@
   "endDate": "تاريخ الانتهاء",
   "semesterSubject": "مادة الفصل الدراسي",
   "semesterSubjects": "مواد الفصول الدراسية",
-  "subjectCode": "رمز المادة"
+  "subjectCode": "رمز المادة",
+  "faculty": "أعضاء هيئة التدريس",
+  "faculties": "أعضاء هيئة التدريس",
+  "fullName": "الاسم الكامل",
+  "employeeCode": "رمز الموظف",
+  "employmentType": "نوع التوظيف",
+  "joinedDate": "تاريخ الانضمام",
+  "fullTime": "دوام كامل",
+  "partTime": "دوام جزئي",
+  "visiting": "زيارة",
+  "contract": "عقد"
 } 
