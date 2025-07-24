@@ -23,7 +23,7 @@ export const batchService = {
 
   // Update an existing batch
   updateBatch: async (id: number, data: IBatchUpdate): Promise<IBatch> => {
-    const response = await api.put(`/batches/${id}`, data);
+    const response = await api.patch<IBatch>(`/batches/${id}`, data);
     return response.data;
   },
 

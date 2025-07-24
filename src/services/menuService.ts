@@ -23,7 +23,7 @@ export const menuService = {
 
   // Update an existing menu
   updateMenu: async (id: number, data: IMenuUpdate): Promise<IMenu> => {
-    const response = await api.put(`/menus/${id}`, data);
+    const response = await api.patch<IMenu>(`/menus/${id}`, data);
     return response.data;
   },
 

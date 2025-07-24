@@ -16,7 +16,7 @@ export const panelService = {
     return response.data;
   },
   async updatePanel(id: number, data: Partial<IPanel>): Promise<IPanel> {
-    const response = await api.put<IPanel>(`/panels/${id}`, data);
+    const response = await api.patch<IPanel>(`/panels/${id}`, data);
     return response.data;
   },
   async deletePanel(id: number): Promise<void> {

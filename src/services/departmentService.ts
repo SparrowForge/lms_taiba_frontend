@@ -23,7 +23,7 @@ export const departmentService = {
 
   // Update an existing department
   updateDepartment: async (id: number, data: IDepartmentUpdate): Promise<IDepartment> => {
-    const response = await api.put(`/departments/${id}`, data);
+    const response = await api.patch<IDepartment>(`/departments/${id}`, data);
     return response.data;
   },
 

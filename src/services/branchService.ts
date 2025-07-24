@@ -23,7 +23,7 @@ export const branchService = {
 
   // Update an existing branch
   updateBranch: async (id: number, data: IBranchUpdate): Promise<IBranch> => {
-    const response = await api.put(`/branches/${id}`, data);
+    const response = await api.patch<IBranch>(`/branches/${id}`, data);
     return response.data;
   },
 

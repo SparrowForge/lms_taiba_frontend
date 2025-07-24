@@ -23,7 +23,7 @@ export const roleMenuPermissionService = {
 
   // Update an existing role menu permission
   updateRoleMenuPermission: async (roleId: number, menuId: number, data: IRoleMenuPermissionUpdate): Promise<IRoleMenuPermission> => {
-    const response = await api.put(`/role-menu-permissions/${roleId}/${menuId}`, data);
+    const response = await api.patch<IRoleMenuPermission>(`/role-menu-permissions/${roleId}/${menuId}`, data);
     return response.data;
   },
 

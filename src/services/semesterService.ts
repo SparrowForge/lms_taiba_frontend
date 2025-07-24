@@ -23,7 +23,7 @@ export const semesterService = {
 
   // Update an existing semester
   updateSemester: async (id: number, data: ISemesterUpdate): Promise<ISemester> => {
-    const response = await api.put(`/semesters/${id}`, data);
+    const response = await api.patch<ISemester>(`/semesters/${id}`, data);
     return response.data;
   },
 

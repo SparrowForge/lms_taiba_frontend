@@ -23,7 +23,7 @@ export const courseService = {
 
   // Update an existing course
   updateCourse: async (id: number, data: ICourseUpdate): Promise<ICourse> => {
-    const response = await api.put(`/courses/${id}`, data);
+    const response = await api.patch<ICourse>(`/courses/${id}`, data);
     return response.data;
   },
 

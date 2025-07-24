@@ -23,7 +23,7 @@ export const facultySubjectService = {
 
   // Update an existing faculty subject
   updateFacultySubject: async (id: number, data: IFacultySubjectUpdate): Promise<IFacultySubject> => {
-    const response = await api.put<IFacultySubject>(`/faculty-subjects/${id}`, data);
+    const response = await api.patch<IFacultySubject>(`/faculty-subjects/${id}`, data);
     return response.data;
   },
 

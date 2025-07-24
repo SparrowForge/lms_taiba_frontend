@@ -23,7 +23,7 @@ export const subjectService = {
 
   // Update an existing subject
   updateSubject: async (id: number, data: ISubjectUpdate): Promise<ISubject> => {
-    const response = await api.put(`/subjects/${id}`, data);
+    const response = await api.patch<ISubject>(`/subjects/${id}`, data);
     return response.data;
   },
 

@@ -23,7 +23,7 @@ export const roleService = {
 
   // Update an existing role
   updateRole: async (id: number, data: IRoleUpdate): Promise<IRole> => {
-    const response = await api.put(`/roles/${id}`, data);
+    const response = await api.patch<IRole>(`/roles/${id}`, data);
     return response.data;
   },
 
