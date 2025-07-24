@@ -7,8 +7,9 @@ import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createRoleMenuPermissionDetailsConfig} from '@/components/roleMenuPermissions/roleMenuPermissionConfig';
+import {useCreateRoleMenuPermissionDetailsConfig} from '@/components/roleMenuPermissions/roleMenuPermissionConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface RoleMenuPermissionDetailPageProps {
   params: Promise<{ roleId: string; menuId: string; locale: string }>;
@@ -49,7 +50,7 @@ const RoleMenuPermissionDetailPage: React.FC<RoleMenuPermissionDetailPageProps> 
     }
   }, [roleMenuPermissions, resolvedParams.roleId, resolvedParams.menuId, getRoleMenuPermissionById]);
 
-  const config = createRoleMenuPermissionDetailsConfig(
+  const config = useCreateRoleMenuPermissionDetailsConfig(
     permission,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -58,7 +59,7 @@ const RoleMenuPermissionDetailPage: React.FC<RoleMenuPermissionDetailPageProps> 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IRoleMenuPermission>} />
       </MainLayout>
     </ProtectedRoute>
   );

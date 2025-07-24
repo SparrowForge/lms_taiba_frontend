@@ -9,6 +9,7 @@ import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateAuditDetailsConfig} from '@/components/audits/auditConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface AuditDetailPageProps {
   params: Promise<{
@@ -57,7 +58,7 @@ const AuditDetailPage: React.FC<AuditDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IAudit>} />
       </MainLayout>
     </ProtectedRoute>
   );

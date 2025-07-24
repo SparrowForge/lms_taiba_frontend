@@ -7,8 +7,9 @@ import { useSubjects } from '@/hooks/useSubjects';
 import { ISubject } from '@/types/subject';
 import { Status } from '@/types/common';
 import { useTranslations } from 'next-intl';
-import { createSubjectDetailsConfig } from '@/components/subjects/subjectConfig';
+import { useCreateSubjectDetailsConfig } from '@/components/subjects/subjectConfig';
 import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface SubjectDetailPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -46,7 +47,7 @@ const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({ params }) => {
     }
   }, [subjects, resolvedParams.id, getSubjectById]);
 
-  const config = createSubjectDetailsConfig(
+  const config = useCreateSubjectDetailsConfig(
     subject,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -55,7 +56,7 @@ const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<ISubject>} />
       </MainLayout>
     </ProtectedRoute>
   );

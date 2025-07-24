@@ -9,6 +9,7 @@ import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateBatchDetailsConfig} from '@/components/batches/batchConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface BatchDetailPageProps {
   params: Promise<{
@@ -57,7 +58,7 @@ const BatchDetailPage: React.FC<BatchDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IBatch>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -7,8 +7,9 @@ import {useDepartments} from '@/hooks/useDepartments';
 import {IDepartment} from '@/types/department';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createDepartmentDetailsConfig} from '@/components/departments/departmentConfig';
+import {useCreateDepartmentDetailsConfig} from '@/components/departments/departmentConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface DepartmentDetailPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -46,7 +47,7 @@ const DepartmentDetailPage: React.FC<DepartmentDetailPageProps> = ({ params }) =
     }
   }, [departments, resolvedParams.id, getDepartmentById]);
 
-  const config = createDepartmentDetailsConfig(
+  const config = useCreateDepartmentDetailsConfig(
     department,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -55,7 +56,7 @@ const DepartmentDetailPage: React.FC<DepartmentDetailPageProps> = ({ params }) =
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IDepartment>} />
       </MainLayout>
     </ProtectedRoute>
   );

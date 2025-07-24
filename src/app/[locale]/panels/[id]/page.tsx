@@ -6,9 +6,10 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {IPanel} from '@/types/panel';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {createPanelDetailsConfig} from '@/components/panels/panelConfig';
+import {useCreatePanelDetailsConfig} from '@/components/panels/panelConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface PanelDetailPageProps {
   params: Promise<{
@@ -48,7 +49,7 @@ const PanelDetailPage: React.FC<PanelDetailPageProps> = ({ params }) => {
     }
   }, [panels, resolvedParams.id, getPanelById]);
 
-  const config = createPanelDetailsConfig(
+  const config = useCreatePanelDetailsConfig(
     panel,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -57,7 +58,7 @@ const PanelDetailPage: React.FC<PanelDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IPanel>} />
       </MainLayout>
     </ProtectedRoute>
   );

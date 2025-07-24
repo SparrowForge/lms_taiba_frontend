@@ -6,9 +6,10 @@ import { EntityDetails } from '@/components/ui/EntityDetails';
 import { IBranch } from '@/types/branch';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { createBranchDetailsConfig } from '@/components/branches/branchConfig';
+import { useCreateBranchDetailsConfig } from '@/components/branches/branchConfig';
 import { Status } from '@/types/common';
 import { useTranslations } from 'next-intl';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface BranchDetailPageProps {
   params: Promise<{
@@ -48,7 +49,7 @@ const BranchDetailPage: React.FC<BranchDetailPageProps> = ({ params }) => {
     }
   }, [branches, resolvedParams.id, getBranchById]);
 
-  const config = createBranchDetailsConfig(
+  const config = useCreateBranchDetailsConfig(
     branch,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -57,7 +58,7 @@ const BranchDetailPage: React.FC<BranchDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IBranch>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -6,9 +6,10 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {ISemester} from '@/types/semester';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {createSemesterDetailsConfig} from '@/components/semesters/semesterConfig';
+import {useCreateSemesterDetailsConfig} from '@/components/semesters/semesterConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface SemesterDetailPageProps {
   params: Promise<{
@@ -48,7 +49,7 @@ const SemesterDetailPage: React.FC<SemesterDetailPageProps> = ({ params }) => {
     }
   }, [semesters, resolvedParams.id, getSemesterById]);
 
-  const config = createSemesterDetailsConfig(
+  const config = useCreateSemesterDetailsConfig(
     semester,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -57,7 +58,7 @@ const SemesterDetailPage: React.FC<SemesterDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<ISemester>} />
       </MainLayout>
     </ProtectedRoute>
   );

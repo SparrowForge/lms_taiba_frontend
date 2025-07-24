@@ -6,8 +6,9 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {IUser} from '@/types/user';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {createUserDetailsConfig} from '@/components/users/userConfig';
+import {useCreateUserDetailsConfig} from '@/components/users/userConfig';
 import {Status} from '@/types/common';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface UserDetailPageProps {
   params: Promise<{
@@ -49,7 +50,7 @@ const UserDetailPage: React.FC<UserDetailPageProps> = ({ params }) => {
     }
   }, [users, resolvedParams.id, getUserById]);
 
-  const config = createUserDetailsConfig(
+  const config = useCreateUserDetailsConfig(
     user,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null
@@ -58,7 +59,7 @@ const UserDetailPage: React.FC<UserDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IUser>} />
       </MainLayout>
     </ProtectedRoute>
   );

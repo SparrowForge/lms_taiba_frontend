@@ -7,8 +7,9 @@ import {useCourses} from '@/hooks/useCourses';
 import {ICourse} from '@/types/course';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createCourseDetailsConfig} from '@/components/courses/courseConfig';
+import {useCreateCourseDetailsConfig} from '@/components/courses/courseConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface CourseDetailPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -46,7 +47,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({ params }) => {
     }
   }, [courses, resolvedParams.id, getCourseById]);
 
-  const config = createCourseDetailsConfig(
+  const config = useCreateCourseDetailsConfig(
     course,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -55,7 +56,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<ICourse>} />
       </MainLayout>
     </ProtectedRoute>
   );

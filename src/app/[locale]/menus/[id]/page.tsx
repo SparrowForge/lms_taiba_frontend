@@ -9,6 +9,7 @@ import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
 import {useCreateMenuDetailsConfig} from '@/components/menus/menuConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface MenuDetailPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -55,7 +56,7 @@ const MenuDetailPage: React.FC<MenuDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IMenu>} />
       </MainLayout>
     </ProtectedRoute>
   );

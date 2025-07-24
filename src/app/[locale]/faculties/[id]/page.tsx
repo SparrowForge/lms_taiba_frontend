@@ -6,9 +6,10 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {IFaculty} from '@/types/faculty';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {createFacultyDetailsConfig} from '@/components/faculties/facultyConfig';
+import {useCreateFacultyDetailsConfig} from '@/components/faculties/facultyConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface FacultyDetailPageProps {
   params: Promise<{
@@ -48,7 +49,7 @@ const FacultyDetailPage: React.FC<FacultyDetailPageProps> = ({ params }) => {
     }
   }, [faculties, resolvedParams.id, getFacultyById]);
 
-  const config = createFacultyDetailsConfig(
+  const config = useCreateFacultyDetailsConfig(
     faculty,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -57,7 +58,7 @@ const FacultyDetailPage: React.FC<FacultyDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IFaculty>} />
       </MainLayout>
     </ProtectedRoute>
   );

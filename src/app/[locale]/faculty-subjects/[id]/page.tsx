@@ -9,6 +9,7 @@ import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateFacultySubjectDetailsConfig} from '@/components/facultySubjects/facultySubjectConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 interface FacultySubjectDetailPageProps {
   params: Promise<{
@@ -57,7 +58,7 @@ const FacultySubjectDetailPage: React.FC<FacultySubjectDetailPageProps> = ({ par
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IFacultySubject>} />
       </MainLayout>
     </ProtectedRoute>
   );
