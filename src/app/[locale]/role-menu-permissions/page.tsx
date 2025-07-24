@@ -13,6 +13,8 @@ import RoleMenuPermissionFormDrawer from '@/components/roleMenuPermissions/RoleM
 import RoleMenuPermissionDetailsDrawer from '@/components/roleMenuPermissions/RoleMenuPermissionDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {IRole} from '@/types/role';
+import {IMenu} from '@/types/menu';
 
 export default function RoleMenuPermissionsPage() {
   const t = useTranslations();
@@ -68,7 +70,7 @@ export default function RoleMenuPermissionsPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/role-menu-permissions',
-    searchFields: ['role.name', 'menu.name'] as any,
+    searchFields: [] as (keyof IRoleMenuPermission)[],
     onSearch: (searchText: string) => {
       loadRoleMenuPermissions({ page: 1, limit: 10, search: searchText });
     },
@@ -82,13 +84,13 @@ export default function RoleMenuPermissionsPage() {
         title: t('role'),
         dataIndex: 'role',
         key: 'role',
-        render: (role: any) => <span>{role?.name || 'N/A'}</span>,
+        render: (role: IRole) => <span>{role?.name || 'N/A'}</span>,
       },
       {
         title: t('menu'),
         dataIndex: 'menu',
         key: 'menu',
-        render: (menu: any) => <span>{menu?.name || 'N/A'}</span>,
+        render: (menu: IMenu) => <span>{menu?.name || 'N/A'}</span>,
       },
       {
         title: t('view'),
@@ -151,7 +153,7 @@ export default function RoleMenuPermissionsPage() {
           loading={listStatus.status === Status.LOADING}
           onRetry={() => loadRoleMenuPermissions({ page: 1, limit: 10 })}
         >
-          <EntityList config={config as any} />
+          <EntityList config={config as EntityConfig<IRoleMenuPermission>} />
         </AsyncErrorBoundary>
 
         <RoleMenuPermissionFormDrawer

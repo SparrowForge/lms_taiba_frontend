@@ -1,20 +1,21 @@
 import {useCallback} from 'react';
 import {useAppDispatch, useAppSelector} from '@/store/hooks';
 import {
-  addPanel,
-  deletePanel,
-  setActionStatus,
-  setDetailsStatus,
-  setListStatus,
-  setPagination,
-  setPanels,
-  setSelectedPanel,
-  updatePanel,
+    addPanel,
+    deletePanel,
+    setActionStatus,
+    setDetailsStatus,
+    setListStatus,
+    setPagination,
+    setPanels,
+    setSelectedPanel,
+    updatePanel,
 } from '@/store/slices/panelSlice';
 import {panelService} from '@/services/panelService';
 import {IPanel} from '@/types/panel';
 import {IBasePaginatedResponse, Status} from '@/types/common';
 import {RootState} from '@/store';
+import {AxiosError} from 'axios';
 
 export const usePanels = () => {
   const dispatch = useAppDispatch();
@@ -36,8 +37,8 @@ export const usePanels = () => {
       dispatch(setPanels(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? { }));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load panels';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load panels' : 'Failed to load panels';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -49,8 +50,8 @@ export const usePanels = () => {
       const response = await panelService.getPanel(id);
       dispatch(setSelectedPanel(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load panel';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load panel' : 'Failed to load panel';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -63,8 +64,8 @@ export const usePanels = () => {
       dispatch(addPanel(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Panel created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create panel';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create panel' : 'Failed to create panel';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -78,8 +79,8 @@ export const usePanels = () => {
       dispatch(updatePanel(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Panel updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update panel';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update panel' : 'Failed to update panel';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -92,8 +93,8 @@ export const usePanels = () => {
       await panelService.deletePanel(id);
       dispatch(deletePanel(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Panel deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete panel';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete panel' : 'Failed to delete panel';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }

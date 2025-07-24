@@ -6,6 +6,7 @@ import {IPanel} from '@/types/panel';
 import {Status} from '@/types/common';
 import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
+import {getErrorMessage} from '@/types/errors';
 
 interface PanelFormProps {
   mode: 'create' | 'edit';
@@ -61,12 +62,15 @@ const PanelForm: React.FC<PanelFormProps> = ({
           router.push(`/panels/${panelId}`);
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
-      if (error?.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error?.message) {
-        errorMessage = error.message;
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { data?: { message?: string } } };
+        if (apiError.response?.data?.message) {
+          errorMessage = apiError.response.data.message;
+        }
+      } else {
+        errorMessage = getErrorMessage(error);
       }
       toast.error(errorMessage);
     }

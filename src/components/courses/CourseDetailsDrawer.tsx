@@ -4,7 +4,7 @@ import {useCourses} from '@/hooks/useCourses';
 import {ICourse} from '@/types/course';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createCourseDetailsConfig} from './courseConfig';
+import {useCreateCourseDetailsConfig} from './courseConfig';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 interface CourseDetailsDrawerProps {
@@ -51,7 +51,7 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
     }
   }, [courses, courseId, getCourseById]);
 
-  const config = createCourseDetailsConfig(
+  const config = useCreateCourseDetailsConfig(
     course,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,

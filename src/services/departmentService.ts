@@ -4,11 +4,7 @@ import {IBasePaginatedResponse} from '@/types/common';
 
 export const departmentService = {
   // Get all departments with pagination and search
-  getDepartments: async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<IBasePaginatedResponse<IDepartment>> => {
+  getDepartments: async (params = {}): Promise<IBasePaginatedResponse<IDepartment>> => {
     const response = await api.get<IBasePaginatedResponse<IDepartment>>('/departments', { params });
     return response.data;
   },

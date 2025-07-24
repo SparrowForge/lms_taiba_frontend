@@ -1,14 +1,10 @@
-import { api } from '@/lib/axios';
-import { IBranch, IBranchCreate, IBranchUpdate } from '@/types/branch';
-import { IBasePaginatedResponse } from '@/types/common';
+import {api} from '@/lib/axios';
+import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
+import {IBasePaginatedResponse} from '@/types/common';
 
 export const branchService = {
   // Get all branches with pagination and search
-  getBranches: async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<IBasePaginatedResponse<IBranch>> => {
+  getBranches: async (params = {}): Promise<IBasePaginatedResponse<IBranch>> => {
     const response = await api.get<IBasePaginatedResponse<IBranch>>('/branches', { params });
     return response.data;
   },
@@ -36,4 +32,4 @@ export const branchService = {
     const response = await api.delete(`/branches/${id}`);
     return response.data;
   },
-}; 
+};

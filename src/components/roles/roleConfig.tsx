@@ -3,7 +3,7 @@ import {useTranslations} from 'next-intl';
 
 export const getRoleDisplayName = (role: IRole) => role.name;
 
-export const createRoleDetailsConfig = (
+export const useCreateRoleDetailsConfig = (
   role: IRole | null,
   loading: boolean,
   error: string | null,
@@ -13,7 +13,6 @@ export const createRoleDetailsConfig = (
   } = {}
 ) => {
   const { embedded = false, onEdit } = options;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const t = useTranslations();
   const entityName = t('role', { defaultValue: 'Role' });
   return {

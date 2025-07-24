@@ -7,7 +7,8 @@ import {useUsers} from '@/hooks/useUsers';
 import {IUserCreate, IUserUpdate} from '@/types/user';
 import {Status} from '@/types/common';
 import {toast} from 'react-toastify';
-import { useTranslations } from 'next-intl';
+import {useTranslations} from 'next-intl';
+import {getErrorMessage} from '@/types/errors';
 
 interface UserFormProps {
   mode: 'create' | 'edit';
@@ -57,8 +58,8 @@ const UserForm: React.FC<UserFormProps> = ({
           router.push(`/users/${userId}`);
         }
       }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('failed_name', { name: entityName });
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error) || t('failed_name', { name: entityName });
       toast.error(errorMessage);
     }
   };
@@ -90,7 +91,7 @@ const UserForm: React.FC<UserFormProps> = ({
           label={t('firstName')}
           rules={[{ required: true, message: t('pleaseEnterFirstName') }]}
         >
-          <Input 
+          <Input
             placeholder={t('firstName')}
             aria-label={t('firstName')}
             aria-required="true"
@@ -103,7 +104,7 @@ const UserForm: React.FC<UserFormProps> = ({
           label={t('lastName')}
           rules={[{ required: true, message: t('pleaseEnterLastName') }]}
         >
-          <Input 
+          <Input
             placeholder={t('lastName')}
             aria-label={t('lastName')}
             aria-required="true"
@@ -119,7 +120,7 @@ const UserForm: React.FC<UserFormProps> = ({
             { type: 'email', message: t('pleaseEnterValidEmail') }
           ]}
         >
-          <Input 
+          <Input
             placeholder={t('email')}
             type="email"
             aria-label={t('email')}
@@ -135,7 +136,7 @@ const UserForm: React.FC<UserFormProps> = ({
             { pattern: /^[0-9+\-\s()]*$/, message: t('pleaseEnterValidPhone') }
           ]}
         >
-          <Input 
+          <Input
             placeholder={t('phone')}
             type="tel"
             aria-label={t('phone')}
@@ -152,7 +153,7 @@ const UserForm: React.FC<UserFormProps> = ({
               { min: 6, message: t('passwordMinLength') }
             ]}
           >
-            <Input.Password 
+            <Input.Password
               placeholder={t('password')}
               aria-label={t('password')}
               aria-required="true"
@@ -166,7 +167,7 @@ const UserForm: React.FC<UserFormProps> = ({
           label={t('status')}
           rules={[{ required: true, message: t('pleaseSelectStatus') }]}
         >
-          <Select 
+          <Select
             placeholder={t('status')}
             aria-label={t('status')}
             aria-required="true"
@@ -178,7 +179,7 @@ const UserForm: React.FC<UserFormProps> = ({
           </Select>
         </Form.Item>
 
-        <Form.Item 
+        <Form.Item
           style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}
         >
           <div role="group" aria-label="Form actions">
@@ -214,7 +215,7 @@ const UserForm: React.FC<UserFormProps> = ({
         formContent
       ) : (
         <div style={{ padding: '24px' }}>
-          <div 
+          <div
             style={{
               maxWidth: '600px',
               margin: '0 auto',
@@ -226,10 +227,10 @@ const UserForm: React.FC<UserFormProps> = ({
             role="main"
             aria-labelledby="form-title"
           >
-            {/* <h1 
-              id="form-title" 
-              style={{ 
-                marginBottom: '24px', 
+            {/* <h1
+              id="form-title"
+              style={{
+                marginBottom: '24px',
                 textAlign: 'center',
                 fontSize: '24px',
                 fontWeight: 'bold'

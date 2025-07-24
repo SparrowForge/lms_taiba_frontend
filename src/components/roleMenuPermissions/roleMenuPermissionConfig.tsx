@@ -4,7 +4,7 @@ import {useTranslations} from 'next-intl';
 export const getRoleMenuPermissionDisplayName = (permission: IRoleMenuPermission) =>
   `${permission.role.name} - ${permission.menu.name}`;
 
-export const createRoleMenuPermissionDetailsConfig = (
+export const useCreateRoleMenuPermissionDetailsConfig = (
   permission: IRoleMenuPermission | null,
   loading: boolean,
   error: string | null,
@@ -14,7 +14,6 @@ export const createRoleMenuPermissionDetailsConfig = (
   } = {}
 ) => {
   const { embedded = false, onEdit } = options;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const t = useTranslations();
   const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
   return {
@@ -37,5 +36,5 @@ export const createRoleMenuPermissionDetailsConfig = (
       { key: 'createdAt', label: t('createdAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
       { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
     ],
-  } as any; // Type assertion to fix generic type issue
+  };
 };

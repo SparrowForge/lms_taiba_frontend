@@ -10,7 +10,7 @@ export interface IStatusState {
   message?: string
 }
 
-export interface IBaseResponse<T = any> {
+export interface IBaseResponse<T> {
   success: boolean
   message: string
   data: T
@@ -18,7 +18,7 @@ export interface IBaseResponse<T = any> {
 }
 
 // Generic base response interface for all API responses
-export interface IBasePaginatedResponse<T = any> {
+export interface IBasePaginatedResponse<T> {
   success: boolean
   message: string
   data: {
@@ -32,8 +32,6 @@ export interface IBasePaginatedResponse<T = any> {
 export interface IErrorResponse {
   success: false
   message: string
-  error?: string
-  details?: any
   timestamp: string
 }
 

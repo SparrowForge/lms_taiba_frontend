@@ -7,7 +7,7 @@ import {useMenus} from '@/hooks/useMenus';
 import {IMenu} from '@/types/menu';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createMenuDetailsConfig} from '@/components/menus/menuConfig';
+import {useCreateMenuDetailsConfig} from '@/components/menus/menuConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
 
 interface MenuDetailPageProps {
@@ -46,7 +46,7 @@ const MenuDetailPage: React.FC<MenuDetailPageProps> = ({ params }) => {
     }
   }, [menus, resolvedParams.id, getMenuById]);
 
-  const config = createMenuDetailsConfig(
+  const config = useCreateMenuDetailsConfig(
     menu,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null

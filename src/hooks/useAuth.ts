@@ -1,16 +1,17 @@
 import {useCallback} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {useRouter} from 'next/navigation'
+import {AxiosError} from 'axios'
 import {
-  clearAuth,
-  clearError,
-  initializeAuth,
-  setIsAuthenticated,
-  setLoading,
-  setRefreshToken,
-  setToken,
-  setUser,
-  updateUser
+    clearAuth,
+    clearError,
+    initializeAuth,
+    setIsAuthenticated,
+    setLoading,
+    setRefreshToken,
+    setToken,
+    setUser,
+    updateUser
 } from '@/store/slices/authSlice'
 import {authService} from '@/services/authService'
 import type {LoginCredentials, RegisterCredentials} from '@/types/auth'
@@ -47,8 +48,9 @@ export const useAuth = () => {
 
       router.push('/') // Redirect to main page (dashboard) after login
       return response
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Login failed'
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message || 'Login failed' : 'Login failed'
+      console.error(errorMessage)
       dispatch(setLoading(false))
       throw error
     }
@@ -68,8 +70,9 @@ export const useAuth = () => {
 
       router.push('/') // Redirect to main page (dashboard) after registration
       return response
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Registration failed'
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message || 'Registration failed' : 'Registration failed'
+      console.error(errorMessage)
       dispatch(setLoading(false))
       throw error
     }
@@ -100,8 +103,9 @@ export const useAuth = () => {
       dispatch(setLoading(false))
 
       return user
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to get user'
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message || 'Failed to get user' : 'Failed to get user'
+      console.error(errorMessage)
       dispatch(setLoading(false))
       // If getting current user fails, user might not be authenticated
       dispatch(setIsAuthenticated(false))
@@ -121,7 +125,7 @@ export const useAuth = () => {
       dispatch(setRefreshToken(response.refresh_token))
       dispatch(setIsAuthenticated(true))
       return response
-    } catch (error: any) {
+    } catch (error: unknown) {
       // If refresh fails, user is not authenticated
       dispatch(setIsAuthenticated(false))
       dispatch(setUser(null))

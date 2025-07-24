@@ -63,7 +63,7 @@ export default function FacultySubjectsPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/faculty-subjects',
-    searchFields: ['faculty.fullName', 'subject.name', 'semester.name', 'batch.name'] as any,
+    searchFields: [] as (keyof IFacultySubject)[],
     onSearch: (searchText: string) => {
       loadFacultySubjects({ page: 1, limit: 10, search: searchText });
     },

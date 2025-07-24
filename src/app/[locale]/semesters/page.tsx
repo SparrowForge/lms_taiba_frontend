@@ -13,6 +13,7 @@ import SemesterFormDrawer from '@/components/semesters/SemesterFormDrawer';
 import SemesterDetailsDrawer from '@/components/semesters/SemesterDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {IBatch} from '@/types/batch';
 
 export default function SemestersPage() {
   const t = useTranslations();
@@ -100,7 +101,7 @@ export default function SemestersPage() {
         title: t('batch'),
         dataIndex: 'batch',
         key: 'batch',
-        render: (batch: any) => <span>{batch?.name || 'N/A'}</span>,
+        render: (batch: IBatch) => <span>{batch?.name || 'N/A'}</span>,
       },
       {
         title: t('createdAt'),
@@ -159,4 +160,4 @@ export default function SemestersPage() {
       </MainLayout>
     </ProtectedRoute>
   );
-} 
+}

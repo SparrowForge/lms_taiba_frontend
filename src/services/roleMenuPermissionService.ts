@@ -4,13 +4,7 @@ import {IBasePaginatedResponse} from '@/types/common';
 
 export const roleMenuPermissionService = {
   // Get all role menu permissions with pagination and search
-  getRoleMenuPermissions: async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    roleId?: number;
-    menuId?: number;
-  }): Promise<IBasePaginatedResponse<IRoleMenuPermission>> => {
+  getRoleMenuPermissions: async (params = {}): Promise<IBasePaginatedResponse<IRoleMenuPermission>> => {
     const response = await api.get<IBasePaginatedResponse<IRoleMenuPermission>>('/role-menu-permissions', { params });
     return response.data;
   },

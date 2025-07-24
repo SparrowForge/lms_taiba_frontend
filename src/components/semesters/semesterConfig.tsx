@@ -10,7 +10,7 @@ export const getSemesterInitials = (semester: ISemester) => {
   return semester.name?.slice(0, 2).toUpperCase() || 'SE';
 };
 
-export const createSemesterDetailsConfig = (
+export const useCreateSemesterDetailsConfig = (
   semester: ISemester | null,
   loading: boolean,
   error: string | null,

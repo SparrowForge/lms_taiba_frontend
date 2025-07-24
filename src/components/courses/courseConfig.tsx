@@ -3,7 +3,7 @@ import {useTranslations} from 'next-intl';
 
 export const getCourseDisplayName = (course: ICourse) => course.name;
 
-export const createCourseDetailsConfig = (
+export const useCreateCourseDetailsConfig = (
   course: ICourse | null,
   loading: boolean,
   error: string | null,
@@ -13,7 +13,6 @@ export const createCourseDetailsConfig = (
   } = {}
 ) => {
   const { embedded = false, onEdit } = options;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const t = useTranslations();
   const entityName = t('course', { defaultValue: 'Course' });
   return {

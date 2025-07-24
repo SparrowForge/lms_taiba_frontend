@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
 import {ISemester} from '@/types/semester';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {createSemesterDetailsConfig} from './semesterConfig';
+import {useCreateSemesterDetailsConfig} from './semesterConfig';
 import {useSemesters} from '@/hooks/useSemesters';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
@@ -55,7 +55,7 @@ const SemesterDetailsDrawer: React.FC<SemesterDetailsDrawerProps> = ({
     onEdit(semester.id);
   };
 
-  const config = createSemesterDetailsConfig(
+  const config = useCreateSemesterDetailsConfig(
     semester,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,

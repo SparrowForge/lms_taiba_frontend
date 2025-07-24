@@ -13,6 +13,7 @@ import DepartmentFormDrawer from '@/components/departments/DepartmentFormDrawer'
 import DepartmentDetailsDrawer from '@/components/departments/DepartmentDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {IBranch} from '@/types/branch';
 
 export default function DepartmentsPage() {
   const t = useTranslations();
@@ -88,7 +89,7 @@ export default function DepartmentsPage() {
         title: t('branch'),
         dataIndex: 'branch',
         key: 'branch',
-        render: (branch: any) => <span>{branch?.name || 'N/A'}</span>,
+        render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
       },
       {
         title: t('createdAt'),

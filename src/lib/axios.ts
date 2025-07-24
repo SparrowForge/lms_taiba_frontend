@@ -80,18 +80,18 @@ api.interceptors.response.use(
     if (response && response.status === 401 && typeof window !== 'undefined') {
       console.log('🔐 401 Unauthorized - Redirecting to login...')
       console.log('Current pathname:', window.location.pathname)
-      
+
       // Clear all auth data
       localStorage.removeItem('token')
       localStorage.removeItem('refreshToken')
       localStorage.removeItem('user')
-      
+
       // Clear any other auth-related data
       sessionStorage.clear()
-      
+
       // Dispatch logout event to notify other parts of the app
       window.dispatchEvent(new CustomEvent('auth:logout'))
-      
+
       // Use a more reliable redirect method
       try {
         // Check if we're not already on login page to avoid infinite redirects
@@ -122,37 +122,39 @@ api.interceptors.response.use(
 // API wrapper functions
 export const apiService = {
   // GET request
-  get: async <T = any>(url: string, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
+  get: async <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
     const response = await api.get<IBaseResponse<T>>(url, config)
     return response.data
   },
 
   // POST request
-  post: async <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
+  post: async <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
     const response = await api.post<IBaseResponse<T>>(url, data, config)
     return response.data
   },
 
   // PUT request
-  put: async <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
+  put: async <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
     const response = await api.put<IBaseResponse<T>>(url, data, config)
     return response.data
   },
 
   // PATCH request
-  patch: async <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  patch: async <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
     const response = await api.patch<IBaseResponse<T>>(url, data, config)
     return response.data
   },
 
   // DELETE request
-  delete: async <T = any>(url: string, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
+  delete: async <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
     const response = await api.delete<IBaseResponse<T>>(url, config)
     return response.data
   },
 
   // Upload file (client-side only)
-  upload: async <T = any>(url: string, file: File, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  upload: async <T = unknown>(url: string, file: File, config?: AxiosRequestConfig): Promise<IBaseResponse<T>> => {
     if (typeof window === 'undefined') {
       throw new Error('Upload is only available on client-side')
     }

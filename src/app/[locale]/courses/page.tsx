@@ -13,6 +13,7 @@ import CourseFormDrawer from '@/components/courses/CourseFormDrawer';
 import CourseDetailsDrawer from '@/components/courses/CourseDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {IDepartment} from '@/types/department';
 
 export default function CoursesPage() {
   const t = useTranslations();
@@ -62,7 +63,7 @@ export default function CoursesPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/courses',
-    searchFields: ['name', 'code', 'courseType', 'department.name'] as any,
+    searchFields: ['name', 'code', 'courseType', 'department.name'] as (keyof ICourse)[],
     onSearch: (searchText: string) => {
       loadCourses({ page: 1, limit: 10, search: searchText });
     },
@@ -100,7 +101,7 @@ export default function CoursesPage() {
         title: t('department'),
         dataIndex: 'department',
         key: 'department',
-        render: (department: any) => <span>{department?.name || 'N/A'}</span>,
+        render: (department: IDepartment) => <span>{department?.name || 'N/A'}</span>,
       },
       {
         title: t('createdAt'),
@@ -139,7 +140,7 @@ export default function CoursesPage() {
           loading={listStatus.status === Status.LOADING}
           onRetry={() => loadCourses({ page: 1, limit: 10 })}
         >
-          <EntityList config={config as any} />
+          <EntityList config={config as EntityConfig<ICourse>} />
         </AsyncErrorBoundary>
 
         <CourseFormDrawer

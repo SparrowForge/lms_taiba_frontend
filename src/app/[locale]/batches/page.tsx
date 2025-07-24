@@ -13,6 +13,7 @@ import BatchFormDrawer from '@/components/batches/BatchFormDrawer';
 import BatchDetailsDrawer from '@/components/batches/BatchDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {ICourse} from "@/types/course";
 
 export default function BatchesPage() {
   const t = useTranslations();
@@ -100,7 +101,7 @@ export default function BatchesPage() {
         title: t('course'),
         dataIndex: 'course',
         key: 'course',
-        render: (course: any) => <span>{course?.name || 'N/A'}</span>,
+        render: (course: ICourse) => <span>{course?.name || 'N/A'}</span>,
       },
       {
         title: t('createdAt'),
@@ -159,4 +160,4 @@ export default function BatchesPage() {
       </MainLayout>
     </ProtectedRoute>
   );
-} 
+}

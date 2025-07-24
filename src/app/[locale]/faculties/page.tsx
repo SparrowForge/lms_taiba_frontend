@@ -14,6 +14,8 @@ import FacultyDetailsDrawer from '@/components/faculties/FacultyDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
 import {Tag} from 'antd';
+import {IBranch} from '@/types/branch';
+import {IDepartment} from '@/types/department';
 
 export default function FacultyPage() {
   const t = useTranslations();
@@ -111,13 +113,13 @@ export default function FacultyPage() {
         title: t('branch'),
         dataIndex: 'branch',
         key: 'branch',
-        render: (branch: any) => <span>{branch?.name || 'N/A'}</span>,
+        render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
       },
       {
         title: t('department'),
         dataIndex: 'department',
         key: 'department',
-        render: (department: any) => <span>{department?.name || 'N/A'}</span>,
+        render: (department: IDepartment) => <span>{department?.name || 'N/A'}</span>,
       },
       {
         title: t('createdAt'),
@@ -176,4 +178,4 @@ export default function FacultyPage() {
       </MainLayout>
     </ProtectedRoute>
   );
-} 
+}

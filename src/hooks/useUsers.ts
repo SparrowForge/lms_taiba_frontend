@@ -3,23 +3,24 @@
 import {useCallback} from 'react'
 import {useAppDispatch, useAppSelector} from '@/store/hooks'
 import {
-  addUser,
-  clearFilters,
-  clearUsers,
-  deleteUser,
-  setActionStatus,
-  setDetailsStatus,
-  setFilters,
-  setListStatus,
-  setPagination,
-  setSelectedUser,
-  setUsers,
-  updateUser,
+    addUser,
+    clearFilters,
+    clearUsers,
+    deleteUser,
+    setActionStatus,
+    setDetailsStatus,
+    setFilters,
+    setListStatus,
+    setPagination,
+    setSelectedUser,
+    setUsers,
+    updateUser,
 } from '@/store/slices/userSlice'
 import {userService} from '@/services/userService'
 import {IUser, IUserCreate, IUserFilters, IUserUpdate} from '@/types/user'
 import {Status} from '@/types/common'
 import {RootState} from '@/store'
+import {AxiosError} from 'axios'
 
 export const useUsers = () => {
   const dispatch = useAppDispatch()
@@ -44,8 +45,8 @@ export const useUsers = () => {
       dispatch(setUsers(response.data.items ?? []))
       dispatch(setPagination(response.data.meta ?? {}))
       dispatch(setListStatus({status: Status.SUCCESS}))
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to fetch users'
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message || 'Failed to fetch users' : 'Failed to fetch users'
       dispatch(setListStatus({status: Status.FAILED, message: errorMessage}))
     }
   }, [dispatch])
@@ -66,8 +67,8 @@ export const useUsers = () => {
         dispatch(addUser(response))
       }
       dispatch(setDetailsStatus({status: Status.SUCCESS}))
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to fetch user'
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message || 'Failed to fetch user' : 'Failed to fetch user'
       dispatch(setDetailsStatus({status: Status.FAILED, message: errorMessage}))
     }
   }, [dispatch, users])
@@ -81,9 +82,8 @@ export const useUsers = () => {
       dispatch(addUser(response))
       dispatch(setActionStatus({status: Status.SUCCESS, message: 'User created successfully'}))
       return response
-    } catch (error: any) {
-
-      const errorMessage = error?.message || 'Failed to create user';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message || 'Failed to create user' : 'Failed to create user';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -98,8 +98,8 @@ export const useUsers = () => {
       dispatch(updateUser(response))
       dispatch(setActionStatus({status: Status.SUCCESS, message: 'User updated successfully'}))
       return response
-    } catch (error: any) {
-      const errorMessage = error?.message || 'Failed to update user'
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message || 'Failed to update user' : 'Failed to update user'
       dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
       throw error
     }
@@ -113,8 +113,8 @@ export const useUsers = () => {
       await userService.deleteUser(id)
       dispatch(deleteUser(id))
       dispatch(setActionStatus({status: Status.SUCCESS, message: 'User deleted successfully'}))
-    } catch (error: any) {
-      const errorMessage = error?.message || 'Failed to delete user'
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message || 'Failed to delete user' : 'Failed to delete user'
       dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
       throw error
     }
@@ -129,8 +129,8 @@ export const useUsers = () => {
       dispatch(updateUser(response))
       dispatch(setActionStatus({status: Status.SUCCESS, message: 'User status updated successfully'}))
       return response
-    } catch (error: any) {
-      const errorMessage = error?.message || 'Failed to update user status'
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message || 'Failed to update user status' : 'Failed to update user status'
       dispatch(setActionStatus({status: Status.FAILED, message: errorMessage}))
       throw error
     }

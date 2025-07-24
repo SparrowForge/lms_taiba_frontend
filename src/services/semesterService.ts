@@ -4,11 +4,7 @@ import {IBasePaginatedResponse} from '@/types/common';
 
 export const semesterService = {
   // Get all semesters with pagination and search
-  getSemesters: async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<IBasePaginatedResponse<ISemester>> => {
+  getSemesters: async (params = {}): Promise<IBasePaginatedResponse<ISemester>> => {
     const response = await api.get<IBasePaginatedResponse<ISemester>>('/semesters', { params });
     return response.data;
   },

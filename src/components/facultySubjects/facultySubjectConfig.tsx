@@ -10,7 +10,7 @@ export const getFacultySubjectInitials = (facultySubject: IFacultySubject) => {
   return `${facultySubject.faculty?.fullName?.slice(0, 1) || 'F'}${facultySubject.subject?.name?.slice(0, 1) || 'S'}`;
 };
 
-export const createFacultySubjectDetailsConfig = (
+export const useCreateFacultySubjectDetailsConfig = (
   facultySubject: IFacultySubject | null,
   loading: boolean,
   error: string | null,

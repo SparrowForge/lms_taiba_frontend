@@ -4,11 +4,7 @@ import {IBasePaginatedResponse} from '@/types/common';
 
 export const menuService = {
   // Get all menus with pagination and search
-  getMenus: async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<IBasePaginatedResponse<IMenu>> => {
+  getMenus: async (params = {}): Promise<IBasePaginatedResponse<IMenu>> => {
     const response = await api.get<IBasePaginatedResponse<IMenu>>('/menus', { params });
     return response.data;
   },

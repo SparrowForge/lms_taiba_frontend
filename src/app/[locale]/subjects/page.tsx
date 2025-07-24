@@ -13,6 +13,7 @@ import SubjectFormDrawer from '@/components/subjects/SubjectFormDrawer';
 import SubjectDetailsDrawer from '@/components/subjects/SubjectDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {ICourse} from '@/types/course';
 
 export default function SubjectsPage() {
   const t = useTranslations();
@@ -62,7 +63,7 @@ export default function SubjectsPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/subjects',
-    searchFields: ['name', 'code', 'course.name'] as any,
+    searchFields: ['name', 'code', 'course.name'] as (keyof ISubject)[],
     onSearch: (searchText: string) => {
       loadSubjects({ page: 1, limit: 10, search: searchText });
     },
@@ -106,7 +107,7 @@ export default function SubjectsPage() {
         title: t('course'),
         dataIndex: 'course',
         key: 'course',
-        render: (course: any) => <span>{course?.name || 'N/A'}</span>,
+        render: (course: ICourse) => <span>{course?.name || 'N/A'}</span>,
       },
       {
         title: t('createdAt'),
@@ -145,7 +146,7 @@ export default function SubjectsPage() {
           loading={listStatus.status === Status.LOADING}
           onRetry={() => loadSubjects({ page: 1, limit: 10 })}
         >
-          <EntityList config={config as any} />
+          <EntityList config={config as EntityConfig<ISubject>} />
         </AsyncErrorBoundary>
 
         <SubjectFormDrawer

@@ -4,7 +4,7 @@ import {useDepartments} from '@/hooks/useDepartments';
 import {IDepartment} from '@/types/department';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createDepartmentDetailsConfig} from './departmentConfig';
+import {useCreateDepartmentDetailsConfig} from './departmentConfig';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 interface DepartmentDetailsDrawerProps {
@@ -51,7 +51,7 @@ const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
     }
   }, [departments, departmentId, getDepartmentById]);
 
-  const config = createDepartmentDetailsConfig(
+  const config = useCreateDepartmentDetailsConfig(
     department,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,

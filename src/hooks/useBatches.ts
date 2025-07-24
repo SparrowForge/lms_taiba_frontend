@@ -1,22 +1,23 @@
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store';
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '@/store';
 import {
-  setListStatus,
-  setDetailsStatus,
-  setActionStatus,
-  setBatches,
-  addBatch,
-  updateBatch,
-  deleteBatch,
-  setSelectedBatch,
-  setPagination,
-  clearActionStatus,
-  clearDetailsStatus,
+    addBatch,
+    clearActionStatus,
+    clearDetailsStatus,
+    deleteBatch,
+    setActionStatus,
+    setBatches,
+    setDetailsStatus,
+    setListStatus,
+    setPagination,
+    setSelectedBatch,
+    updateBatch,
 } from '@/store/slices/batchSlice';
-import { batchService } from '@/services/batchService';
-import { IBatch, IBatchCreate, IBatchUpdate } from '@/types/batch';
-import { IBasePaginatedResponse, Status } from '@/types/common';
+import {batchService} from '@/services/batchService';
+import {IBatch, IBatchCreate, IBatchUpdate} from '@/types/batch';
+import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useBatches = () => {
   const dispatch = useDispatch();
@@ -37,8 +38,8 @@ export const useBatches = () => {
       dispatch(setBatches(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? { page: 1, limit: 10, total: 0, totalPages: 0, hasNextPage: false, hasPreviousPage: false }));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load batches';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load batches' : 'Failed to load batches';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -50,8 +51,8 @@ export const useBatches = () => {
       const response: IBatch = await batchService.getBatch(id);
       dispatch(setSelectedBatch(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load batch';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load batch' : 'Failed to load batch';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -64,8 +65,8 @@ export const useBatches = () => {
       dispatch(addBatch(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Batch created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create batch';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create batch' : 'Failed to create batch';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -79,8 +80,8 @@ export const useBatches = () => {
       dispatch(updateBatch(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Batch updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update batch';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update batch' : 'Failed to update batch';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -93,8 +94,8 @@ export const useBatches = () => {
       await batchService.deleteBatch(id);
       dispatch(deleteBatch(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Batch deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete batch';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete batch' : 'Failed to delete batch';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -140,4 +141,4 @@ export const useBatches = () => {
     clearDetails,
     setSelected,
   };
-}; 
+};

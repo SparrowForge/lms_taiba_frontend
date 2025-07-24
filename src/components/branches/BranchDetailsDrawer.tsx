@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Drawer } from 'antd';
-import { IBranch } from '@/types/branch';
-import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
-import { createBranchDetailsConfig } from './branchConfig';
-import { useBranches } from '@/hooks/useBranches';
-import { Status } from '@/types/common';
-import { useTranslations } from 'next-intl';
+import React, {useEffect, useState} from 'react';
+import {Drawer} from 'antd';
+import {IBranch} from '@/types/branch';
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import {useCreateBranchDetailsConfig} from './branchConfig';
+import {useBranches} from '@/hooks/useBranches';
+import {Status} from '@/types/common';
+import {useTranslations} from 'next-intl';
 
 interface BranchDetailsDrawerProps {
   branchId?: number;
@@ -55,7 +55,7 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
     onEdit(branch.id);
   };
 
-  const config = createBranchDetailsConfig(
+  const config = useCreateBranchDetailsConfig(
     branch,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
@@ -78,4 +78,4 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
   );
 };
 
-export default BranchDetailsDrawer; 
+export default BranchDetailsDrawer;

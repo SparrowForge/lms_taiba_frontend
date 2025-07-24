@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Drawer } from 'antd';
-import { useSubjects } from '@/hooks/useSubjects';
-import { ISubject } from '@/types/subject';
-import { Status } from '@/types/common';
-import { useTranslations } from 'next-intl';
-import { createSubjectDetailsConfig } from './subjectConfig';
-import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
+import React, {useEffect, useState} from 'react';
+import {Drawer} from 'antd';
+import {useSubjects} from '@/hooks/useSubjects';
+import {ISubject} from '@/types/subject';
+import {Status} from '@/types/common';
+import {useTranslations} from 'next-intl';
+import {useCreateSubjectDetailsConfig} from './subjectConfig';
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 interface SubjectDetailsDrawerProps {
   subjectId?: number;
@@ -51,7 +51,7 @@ const SubjectDetailsDrawer: React.FC<SubjectDetailsDrawerProps> = ({
     }
   }, [subjects, subjectId, getSubjectById]);
 
-  const config = createSubjectDetailsConfig(
+  const config = useCreateSubjectDetailsConfig(
     subject,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,
@@ -71,4 +71,4 @@ const SubjectDetailsDrawer: React.FC<SubjectDetailsDrawerProps> = ({
   );
 };
 
-export default SubjectDetailsDrawer; 
+export default SubjectDetailsDrawer;

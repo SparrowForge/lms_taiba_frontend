@@ -6,7 +6,7 @@ import {useRouter} from 'next/navigation';
 import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useSubjects} from '@/hooks/useSubjects';
-import {ISemesterSubjectCreate, ISemesterSubjectUpdate} from '@/types/semesterSubject';
+import {ISemesterSubject, ISemesterSubjectCreate, ISemesterSubjectUpdate} from '@/types/semesterSubject';
 import {Status} from '@/types/common';
 import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
@@ -54,7 +54,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
     }
   }, [mode, form]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Partial<ISemesterSubject>) => {
     try {
       if (mode === 'create') {
         await createSemesterSubject(values as ISemesterSubjectCreate);

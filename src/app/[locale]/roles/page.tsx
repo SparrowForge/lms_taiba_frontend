@@ -13,6 +13,7 @@ import RoleFormDrawer from '@/components/roles/RoleFormDrawer';
 import RoleDetailsDrawer from '@/components/roles/RoleDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {IBranch} from '@/types/branch';
 
 export default function RolesPage() {
   const t = useTranslations();
@@ -88,7 +89,7 @@ export default function RolesPage() {
         title: t('branch'),
         dataIndex: 'branch',
         key: 'branch',
-        render: (branch: any) => <span>{branch?.name || 'N/A'}</span>,
+        render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
       },
       {
         title: t('createdAt'),

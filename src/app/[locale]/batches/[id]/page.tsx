@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useBatches } from '@/hooks/useBatches';
-import { EntityDetails } from '@/components/ui/EntityDetails';
-import { IBatch } from '@/types/batch';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { createBatchDetailsConfig } from '@/components/batches/batchConfig';
-import { Status } from '@/types/common';
-import { useTranslations } from 'next-intl';
+import React, {useEffect, useState} from 'react';
+import {useBatches} from '@/hooks/useBatches';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+import {IBatch} from '@/types/batch';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {useCreateBatchDetailsConfig} from '@/components/batches/batchConfig';
+import {Status} from '@/types/common';
+import {useTranslations} from 'next-intl';
 
 interface BatchDetailPageProps {
   params: Promise<{
@@ -48,7 +48,7 @@ const BatchDetailPage: React.FC<BatchDetailPageProps> = ({ params }) => {
     }
   }, [batches, resolvedParams.id, getBatchById]);
 
-  const config = createBatchDetailsConfig(
+  const config = useCreateBatchDetailsConfig(
     batch,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -63,4 +63,4 @@ const BatchDetailPage: React.FC<BatchDetailPageProps> = ({ params }) => {
   );
 };
 
-export default BatchDetailPage; 
+export default BatchDetailPage;

@@ -17,6 +17,7 @@ import {
 import {courseService} from '@/services/courseService';
 import {ICourse, ICourseCreate, ICourseUpdate} from '@/types/course';
 import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useCourses = () => {
   const dispatch = useDispatch();
@@ -37,8 +38,8 @@ export const useCourses = () => {
       dispatch(setCourses(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? {}));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load courses';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load courses' : 'Failed to load courses';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -50,8 +51,8 @@ export const useCourses = () => {
       const response: ICourse = await courseService.getCourse(id);
       dispatch(setSelectedCourse(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load course';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load course' : 'Failed to load course';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -64,8 +65,8 @@ export const useCourses = () => {
       dispatch(addCourse(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Course created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create course';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create course' : 'Failed to create course';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -79,8 +80,8 @@ export const useCourses = () => {
       dispatch(updateCourse(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Course updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update course';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update course' : 'Failed to update course';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -93,8 +94,8 @@ export const useCourses = () => {
       await courseService.deleteCourse(id);
       dispatch(deleteCourse(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Course deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete course';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete course' : 'Failed to delete course';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }

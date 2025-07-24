@@ -17,6 +17,7 @@ import {
 import {semesterSubjectService} from '@/services/semesterSubjectService';
 import {ISemesterSubject, ISemesterSubjectCreate, ISemesterSubjectUpdate} from '@/types/semesterSubject';
 import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useSemesterSubjects = () => {
   const dispatch = useDispatch();
@@ -37,8 +38,8 @@ export const useSemesterSubjects = () => {
       dispatch(setSemesterSubjects(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? { page: 1, limit: 10, total: 0, totalPages: 0, hasNextPage: false, hasPreviousPage: false }));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load semester subjects';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load semester subjects' : 'Failed to load semester subjects';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -50,8 +51,8 @@ export const useSemesterSubjects = () => {
       const response: ISemesterSubject = await semesterSubjectService.getSemesterSubject(id);
       dispatch(setSelectedSemesterSubject(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load semester subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load semester subject' : 'Failed to load semester subject';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -64,8 +65,8 @@ export const useSemesterSubjects = () => {
       dispatch(addSemesterSubject(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Semester subject created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create semester subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create semester subject' : 'Failed to create semester subject';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -79,8 +80,8 @@ export const useSemesterSubjects = () => {
       dispatch(updateSemesterSubject(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Semester subject updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update semester subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update semester subject' : 'Failed to update semester subject';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -93,8 +94,8 @@ export const useSemesterSubjects = () => {
       await semesterSubjectService.deleteSemesterSubject(id);
       dispatch(deleteSemesterSubject(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Semester subject deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete semester subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete semester subject' : 'Failed to delete semester subject';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }

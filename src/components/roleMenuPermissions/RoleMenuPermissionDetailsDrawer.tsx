@@ -4,7 +4,7 @@ import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createRoleMenuPermissionDetailsConfig} from './roleMenuPermissionConfig';
+import {useCreateRoleMenuPermissionDetailsConfig} from './roleMenuPermissionConfig';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 interface RoleMenuPermissionDetailsDrawerProps {
@@ -53,7 +53,7 @@ const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerP
     }
   }, [roleMenuPermissions, roleId, menuId, getRoleMenuPermissionById]);
 
-  const config = createRoleMenuPermissionDetailsConfig(
+  const config = useCreateRoleMenuPermissionDetailsConfig(
     permission,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,

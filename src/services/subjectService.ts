@@ -1,14 +1,10 @@
-import { api } from '@/lib/axios';
-import { ISubject, ISubjectCreate, ISubjectUpdate } from '@/types/subject';
-import { IBasePaginatedResponse } from '@/types/common';
+import {api} from '@/lib/axios';
+import {ISubject, ISubjectCreate, ISubjectUpdate} from '@/types/subject';
+import {IBasePaginatedResponse} from '@/types/common';
 
 export const subjectService = {
   // Get all subjects with pagination and search
-  getSubjects: async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<IBasePaginatedResponse<ISubject>> => {
+  getSubjects: async (params = {}): Promise<IBasePaginatedResponse<ISubject>> => {
     const response = await api.get<IBasePaginatedResponse<ISubject>>('/subjects', { params });
     return response.data;
   },
@@ -36,4 +32,4 @@ export const subjectService = {
     const response = await api.delete(`/subjects/${id}`);
     return response.data;
   },
-}; 
+};

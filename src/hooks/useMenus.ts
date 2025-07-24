@@ -17,6 +17,7 @@ import {
 import {menuService} from '@/services/menuService';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
 import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useMenus = () => {
   const dispatch = useDispatch();
@@ -38,8 +39,8 @@ export const useMenus = () => {
       dispatch(setMenus(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? {}));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load menus';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load menus' : 'Failed to load menus';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -51,8 +52,8 @@ export const useMenus = () => {
       const response: IMenu = await menuService.getMenu(id);
       dispatch(setSelectedMenu(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load menu';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load menu' : 'Failed to load menu';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -65,8 +66,8 @@ export const useMenus = () => {
       dispatch(addMenu(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Menu created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create menu';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create menu' : 'Failed to create menu';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -80,8 +81,8 @@ export const useMenus = () => {
       dispatch(updateMenu(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Menu updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update menu';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update menu' : 'Failed to update menu';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -94,8 +95,8 @@ export const useMenus = () => {
       await menuService.deleteMenu(id);
       dispatch(deleteMenu(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Menu deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete menu';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete menu' : 'Failed to delete menu';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }

@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Drawer } from 'antd';
-import { IBatch } from '@/types/batch';
-import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
-import { createBatchDetailsConfig } from './batchConfig';
-import { useBatches } from '@/hooks/useBatches';
-import { Status } from '@/types/common';
-import { useTranslations } from 'next-intl';
+import React, {useEffect, useState} from 'react';
+import {Drawer} from 'antd';
+import {IBatch} from '@/types/batch';
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import {useCreateBatchDetailsConfig} from './batchConfig';
+import {useBatches} from '@/hooks/useBatches';
+import {Status} from '@/types/common';
+import {useTranslations} from 'next-intl';
 
 interface BatchDetailsDrawerProps {
   batchId?: number;
@@ -55,7 +55,7 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
     onEdit(batch.id);
   };
 
-  const config = createBatchDetailsConfig(
+  const config = useCreateBatchDetailsConfig(
     batch,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
@@ -78,4 +78,4 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
   );
 };
 
-export default BatchDetailsDrawer; 
+export default BatchDetailsDrawer;

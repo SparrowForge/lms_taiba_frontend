@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
 import {IFaculty} from '@/types/faculty';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {createFacultyDetailsConfig} from './facultyConfig';
+import {useCreateFacultyDetailsConfig} from './facultyConfig';
 import {useFaculties} from '@/hooks/useFaculties';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
@@ -55,7 +55,7 @@ const FacultyDetailsDrawer: React.FC<FacultyDetailsDrawerProps> = ({
     onEdit(faculty.id);
   };
 
-  const config = createFacultyDetailsConfig(
+  const config = useCreateFacultyDetailsConfig(
     faculty,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,

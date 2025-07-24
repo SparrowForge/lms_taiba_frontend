@@ -13,6 +13,8 @@ import SemesterSubjectFormDrawer from '@/components/semesterSubjects/SemesterSub
 import SemesterSubjectDetailsDrawer from '@/components/semesterSubjects/SemesterSubjectDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {ISemester} from '@/types/semester';
+import {ISubject} from '@/types/subject';
 
 export default function SemesterSubjectsPage() {
   const t = useTranslations();
@@ -76,25 +78,25 @@ export default function SemesterSubjectsPage() {
         title: t('semester'),
         dataIndex: 'semester',
         key: 'semester',
-        render: (semester: any) => <span>{semester?.name || 'N/A'}</span>,
+        render: (semester: ISemester) => <span>{semester?.name || 'N/A'}</span>,
       },
       {
         title: t('subject'),
         dataIndex: 'subject',
         key: 'subject',
-        render: (subject: any) => <span>{subject?.name || 'N/A'}</span>,
+        render: (subject: ISubject) => <span>{subject?.name || 'N/A'}</span>,
       },
       {
         title: t('subjectCode'),
         dataIndex: 'subject',
         key: 'subjectCode',
-        render: (subject: any) => <span>{subject?.code || 'N/A'}</span>,
+        render: (subject: ISubject) => <span>{subject?.code || 'N/A'}</span>,
       },
       {
         title: t('creditHours'),
         dataIndex: 'subject',
         key: 'creditHours',
-        render: (subject: any) => <span>{subject?.creditHours || 'N/A'}</span>,
+        render: (subject: ISubject) => <span>{subject?.creditHours || 'N/A'}</span>,
       },
       {
         title: t('createdAt'),
@@ -153,4 +155,4 @@ export default function SemesterSubjectsPage() {
       </MainLayout>
     </ProtectedRoute>
   );
-} 
+}

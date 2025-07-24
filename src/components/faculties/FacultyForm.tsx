@@ -6,7 +6,7 @@ import {useRouter} from 'next/navigation';
 import {useFaculties} from '@/hooks/useFaculties';
 import {useBranches} from '@/hooks/useBranches';
 import {useDepartments} from '@/hooks/useDepartments';
-import {IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
+import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
 import {Status} from '@/types/common';
 import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
@@ -58,11 +58,11 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
     }
   }, [mode, form]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Partial<IFaculty>) => {
     try {
       const payload = {
         ...values,
-        joinedDate: values.joinedDate ? values.joinedDate.format('YYYY-MM-DD') : undefined,
+        joinedDate: values.joinedDate ? dayjs(values.joinedDate).toISOString() : undefined,
       };
       if (mode === 'create') {
         await createFaculty(payload as IFacultyCreate);

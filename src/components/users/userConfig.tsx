@@ -2,7 +2,7 @@ import React from 'react';
 import {IUser} from '@/types/user';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import UserStatusTag from '@/components/users/UserStatusTag';
-import { useTranslations } from 'next-intl';
+import {useTranslations} from 'next-intl';
 
 export const getUserDisplayName = (user: IUser) => {
   return `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || 'Unknown User';
@@ -14,7 +14,7 @@ export const getUserInitials = (user: IUser) => {
   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || 'U';
 };
 
-export const createUserDetailsConfig = (
+export const useCreateUserDetailsConfig = (
   user: IUser | null,
   loading: boolean,
   error: string | null,

@@ -6,9 +6,9 @@ import {EditOutlined} from '@ant-design/icons';
 import {useUsers} from '@/hooks/useUsers';
 import {IUser} from '@/types/user';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {createUserDetailsConfig} from '@/components/users/userConfig';
-import { Status } from '@/types/common';
-import { useTranslations } from 'next-intl';
+import {useCreateUserDetailsConfig} from '@/components/users/userConfig';
+import {Status} from '@/types/common';
+import {useTranslations} from 'next-intl';
 
 interface UserDetailsDrawerProps {
   userId?: number;
@@ -26,7 +26,7 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
   const { users, listStatus, getUserById, loadUser } = useUsers();
   const [user, setUser] = useState<IUser | null>(null);
   const t = useTranslations();
-  const entityName = t('user', { defaultValue: 'User' }); 
+  const entityName = t('user', { defaultValue: 'User' });
   // Load user data when drawer opens
   useEffect(() => {
     if (userId && visible) {
@@ -56,7 +56,7 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
     }
   };
 
-  const config = createUserDetailsConfig(
+  const config = useCreateUserDetailsConfig(
     user,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,

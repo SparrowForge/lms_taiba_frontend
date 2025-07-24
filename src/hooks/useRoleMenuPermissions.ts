@@ -17,6 +17,7 @@ import {
 import {roleMenuPermissionService} from '@/services/roleMenuPermissionService';
 import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
 import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useRoleMenuPermissions = () => {
   const dispatch = useDispatch();
@@ -37,8 +38,8 @@ export const useRoleMenuPermissions = () => {
       dispatch(setRoleMenuPermissions(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? {}));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load role menu permissions';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load role menu permissions' : 'Failed to load role menu permissions';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -50,8 +51,8 @@ export const useRoleMenuPermissions = () => {
       const response: IRoleMenuPermission = await roleMenuPermissionService.getRoleMenuPermission(roleId, menuId);
       dispatch(setSelectedRoleMenuPermission(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load role menu permission';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load role menu permission' : 'Failed to load role menu permission';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -64,8 +65,8 @@ export const useRoleMenuPermissions = () => {
       dispatch(addRoleMenuPermission(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Role menu permission created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create role menu permission';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create role menu permission' : 'Failed to create role menu permission';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -79,8 +80,8 @@ export const useRoleMenuPermissions = () => {
       dispatch(updateRoleMenuPermission(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Role menu permission updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update role menu permission';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update role menu permission' : 'Failed to update role menu permission';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -93,8 +94,8 @@ export const useRoleMenuPermissions = () => {
       await roleMenuPermissionService.deleteRoleMenuPermission(roleId, menuId);
       dispatch(deleteRoleMenuPermission({ roleId, menuId }));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Role menu permission deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete role menu permission';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete role menu permission' : 'Failed to delete role menu permission';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }

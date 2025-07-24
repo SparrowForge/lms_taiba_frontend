@@ -4,7 +4,7 @@ import {useMenus} from '@/hooks/useMenus';
 import {IMenu} from '@/types/menu';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createMenuDetailsConfig} from './menuConfig';
+import {useCreateMenuDetailsConfig} from './menuConfig';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 interface MenuDetailsDrawerProps {
@@ -51,7 +51,7 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
     }
   }, [menus, menuId, getMenuById]);
 
-  const config = createMenuDetailsConfig(
+  const config = useCreateMenuDetailsConfig(
     menu,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,

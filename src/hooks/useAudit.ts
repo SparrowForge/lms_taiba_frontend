@@ -15,6 +15,7 @@ import {
 import {auditService} from '@/services/auditService';
 import {IAudit} from '@/types/audit';
 import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useAudit = () => {
   const dispatch = useDispatch();
@@ -35,8 +36,8 @@ export const useAudit = () => {
       dispatch(setAudits(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? { page: 1, limit: 10, total: 0, totalPages: 0, hasNextPage: false, hasPreviousPage: false }));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load audit logs';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load audit logs' : 'Failed to load audit logs';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -48,8 +49,8 @@ export const useAudit = () => {
       const response: IAudit = await auditService.getAuditById(id);
       dispatch(setSelectedAudit(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load audit log';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load audit log' : 'Failed to load audit log';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -61,8 +62,8 @@ export const useAudit = () => {
       await auditService.cleanAudit(params);
       dispatch(clearAudits());
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Audit logs cleaned successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to clean audit logs';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to clean audit logs' : 'Failed to clean audit logs';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }

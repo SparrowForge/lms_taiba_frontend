@@ -4,11 +4,7 @@ import {IBasePaginatedResponse} from '@/types/common';
 
 export const roleService = {
   // Get all roles with pagination and search
-  getRoles: async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<IBasePaginatedResponse<IRole>> => {
+  getRoles: async (params = {}): Promise<IBasePaginatedResponse<IRole>> => {
     const response = await api.get<IBasePaginatedResponse<IRole>>('/roles', { params });
     return response.data;
   },

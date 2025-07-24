@@ -10,7 +10,7 @@ export const getFacultyInitials = (faculty: IFaculty) => {
   return faculty.fullName?.slice(0, 2).toUpperCase() || 'FA';
 };
 
-export const createFacultyDetailsConfig = (
+export const useCreateFacultyDetailsConfig = (
   faculty: IFaculty | null,
   loading: boolean,
   error: string | null,

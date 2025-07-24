@@ -5,6 +5,8 @@ import {LockOutlined, UserOutlined} from '@ant-design/icons'
 import {useAuth} from '@/hooks/useAuth'
 import type {LoginCredentials} from '@/types/auth'
 import {toast, ToastContainer} from 'react-toastify'
+import {getErrorMessage} from '@/types/errors'
+import Link from 'next/link'
 
 export const LoginForm = () => {
   const { login, isLoading, error, clearError } = useAuth()
@@ -15,9 +17,10 @@ export const LoginForm = () => {
       await login(values)
       //show toast message using nextjs toast
       toast.success('Login successful!')
-    } catch (error) {
+    } catch (error: unknown) {
       // Error is already handled by Redux store and displayed via error state
       console.error('Login failed:', error)
+      toast.error(getErrorMessage(error) || 'Login failed!')
     }
   }
 
@@ -110,9 +113,9 @@ export const LoginForm = () => {
       <div className="text-center mt-4">
         <p className="text-sm text-gray-600">
           {`Don't have an account?{' '}`}
-          <a href="/register" className="text-blue-600 hover:text-blue-500 font-medium">
+          <Link href="/register" className="text-blue-600 hover:text-blue-500 font-medium cursor-pointer">
             Contact administrator
-          </a>
+          </Link>
         </p>
       </div>
       </Card>

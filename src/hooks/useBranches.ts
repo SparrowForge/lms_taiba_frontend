@@ -1,22 +1,23 @@
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store';
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '@/store';
 import {
-  setListStatus,
-  setDetailsStatus,
-  setActionStatus,
-  setBranches,
-  addBranch,
-  updateBranch,
-  deleteBranch,
-  setSelectedBranch,
-  setPagination,
-  clearActionStatus,
-  clearDetailsStatus,
+    addBranch,
+    clearActionStatus,
+    clearDetailsStatus,
+    deleteBranch,
+    setActionStatus,
+    setBranches,
+    setDetailsStatus,
+    setListStatus,
+    setPagination,
+    setSelectedBranch,
+    updateBranch,
 } from '@/store/slices/branchSlice';
-import { branchService } from '@/services/branchService';
-import { IBranch, IBranchCreate, IBranchUpdate } from '@/types/branch';
-import { IBasePaginatedResponse, Status } from '@/types/common';
+import {branchService} from '@/services/branchService';
+import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
+import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useBranches = () => {
   const dispatch = useDispatch();
@@ -37,8 +38,8 @@ export const useBranches = () => {
       dispatch(setBranches(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? { page: 1, limit: 10, total: 0, totalPages: 0, hasNextPage: false, hasPreviousPage: false }));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load branches';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load branches' : 'Failed to load branches';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -50,8 +51,8 @@ export const useBranches = () => {
       const response: IBranch = await branchService.getBranch(id);
       dispatch(setSelectedBranch(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load branch';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load branch' : 'Failed to load branch';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -64,8 +65,8 @@ export const useBranches = () => {
       dispatch(addBranch(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Branch created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create branch';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create branch' : 'Failed to create branch';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -79,8 +80,8 @@ export const useBranches = () => {
       dispatch(updateBranch(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Branch updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update branch';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update branch' : 'Failed to update branch';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -93,8 +94,8 @@ export const useBranches = () => {
       await branchService.deleteBranch(id);
       dispatch(deleteBranch(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Branch deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete branch';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete branch' : 'Failed to delete branch';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -140,4 +141,4 @@ export const useBranches = () => {
     clearDetails,
     setSelected,
   };
-}; 
+};

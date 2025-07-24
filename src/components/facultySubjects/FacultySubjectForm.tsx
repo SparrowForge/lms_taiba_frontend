@@ -8,7 +8,7 @@ import {useFaculties} from '@/hooks/useFaculties';
 import {useSubjects} from '@/hooks/useSubjects';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useBatches} from '@/hooks/useBatches';
-import {IFacultySubjectCreate, IFacultySubjectUpdate} from '@/types/facultySubject';
+import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate} from '@/types/facultySubject';
 import {Status} from '@/types/common';
 import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
@@ -60,7 +60,7 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
     }
   }, [mode, form]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Partial<IFacultySubject>) => {
     try {
       if (mode === 'create') {
         await createFacultySubject(values as IFacultySubjectCreate);

@@ -13,6 +13,7 @@ import MenuFormDrawer from '@/components/menus/MenuFormDrawer';
 import MenuDetailsDrawer from '@/components/menus/MenuDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {IPanel} from '@/types/panel';
 
 export default function MenusPage() {
   const t = useTranslations();
@@ -88,13 +89,13 @@ export default function MenusPage() {
         title: t('panel'),
         dataIndex: 'panel',
         key: 'panel',
-        render: (panel: any) => <span>{panel?.name || 'N/A'}</span>,
+        render: (panel: IPanel) => <span>{panel?.name || 'N/A'}</span>,
       },
       {
         title: t('parent'),
         dataIndex: 'parent',
         key: 'parent',
-        render: (parent: any) => <span>{parent?.name || 'N/A'}</span>,
+        render: (parent: IMenu) => <span>{parent?.name || 'N/A'}</span>,
       },
       {
         title: t('sortOrder'),

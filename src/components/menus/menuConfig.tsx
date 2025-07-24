@@ -3,7 +3,7 @@ import {useTranslations} from 'next-intl';
 
 export const getMenuDisplayName = (menu: IMenu) => menu.name;
 
-export const createMenuDetailsConfig = (
+export const useCreateMenuDetailsConfig = (
   menu: IMenu | null,
   loading: boolean,
   error: string | null,
@@ -13,7 +13,6 @@ export const createMenuDetailsConfig = (
   } = {}
 ) => {
   const { embedded = false, onEdit } = options;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const t = useTranslations();
   const entityName = t('menu', { defaultValue: 'Menu' });
   return {

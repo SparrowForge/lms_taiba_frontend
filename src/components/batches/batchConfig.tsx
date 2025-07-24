@@ -1,6 +1,6 @@
-import { IBatch } from '@/types/batch';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
-import { useTranslations } from 'next-intl';
+import {IBatch} from '@/types/batch';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import {useTranslations} from 'next-intl';
 
 export const getBatchDisplayName = (batch: IBatch) => {
   return batch.name || `Batch #${batch.id}`;
@@ -10,7 +10,7 @@ export const getBatchInitials = (batch: IBatch) => {
   return batch.name?.slice(0, 2).toUpperCase() || 'BA';
 };
 
-export const createBatchDetailsConfig = (
+export const useCreateBatchDetailsConfig = (
   batch: IBatch | null,
   loading: boolean,
   error: string | null,
@@ -44,4 +44,4 @@ export const createBatchDetailsConfig = (
       { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
     ],
   };
-}; 
+};

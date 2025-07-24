@@ -2,6 +2,7 @@ import {IRole} from './role';
 import {IMenu} from './menu';
 
 export interface IRoleMenuPermission {
+  id: number;
   roleId: number;
   menuId: number;
   view: boolean;

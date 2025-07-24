@@ -3,7 +3,7 @@ import {useTranslations} from 'next-intl';
 
 export const getDepartmentDisplayName = (department: IDepartment) => department.name;
 
-export const createDepartmentDetailsConfig = (
+export const useCreateDepartmentDetailsConfig = (
   department: IDepartment | null,
   loading: boolean,
   error: string | null,
@@ -13,7 +13,6 @@ export const createDepartmentDetailsConfig = (
   } = {}
 ) => {
   const { embedded = false, onEdit } = options;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const t = useTranslations();
   const entityName = t('department', { defaultValue: 'Department' });
   return {

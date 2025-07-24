@@ -10,7 +10,7 @@ export const getSemesterSubjectInitials = (semesterSubject: ISemesterSubject) =>
   return `${semesterSubject.semester?.name?.slice(0, 1) || 'S'}${semesterSubject.subject?.name?.slice(0, 1) || 'S'}`;
 };
 
-export const createSemesterSubjectDetailsConfig = (
+export const useCreateSemesterSubjectDetailsConfig = (
   semesterSubject: ISemesterSubject | null,
   loading: boolean,
   error: string | null,

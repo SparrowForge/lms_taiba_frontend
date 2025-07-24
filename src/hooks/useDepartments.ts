@@ -2,21 +2,22 @@ import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 import {
-  addDepartment,
-  clearActionStatus,
-  clearDetailsStatus,
-  deleteDepartment,
-  setActionStatus,
-  setDepartments,
-  setDetailsStatus,
-  setListStatus,
-  setPagination,
-  setSelectedDepartment,
-  updateDepartment,
+    addDepartment,
+    clearActionStatus,
+    clearDetailsStatus,
+    deleteDepartment,
+    setActionStatus,
+    setDepartments,
+    setDetailsStatus,
+    setListStatus,
+    setPagination,
+    setSelectedDepartment,
+    updateDepartment,
 } from '@/store/slices/departmentSlice';
 import {departmentService} from '@/services/departmentService';
 import {IDepartment, IDepartmentCreate, IDepartmentUpdate} from '@/types/department';
 import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useDepartments = () => {
   const dispatch = useDispatch();
@@ -38,8 +39,8 @@ export const useDepartments = () => {
       dispatch(setDepartments(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? {}));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load departments';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load departments' : 'Failed to load departments';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -51,8 +52,8 @@ export const useDepartments = () => {
       const response: IDepartment = await departmentService.getDepartment(id);
       dispatch(setSelectedDepartment(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load department';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load department' : 'Failed to load department';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -65,8 +66,8 @@ export const useDepartments = () => {
       dispatch(addDepartment(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Department created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create department';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create department' : 'Failed to create department';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -80,8 +81,8 @@ export const useDepartments = () => {
       dispatch(updateDepartment(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Department updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update department';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update department' : 'Failed to update department';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -94,8 +95,8 @@ export const useDepartments = () => {
       await departmentService.deleteDepartment(id);
       dispatch(deleteDepartment(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Department deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete department';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete department' : 'Failed to delete department';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }

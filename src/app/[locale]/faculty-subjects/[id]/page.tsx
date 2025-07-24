@@ -6,7 +6,7 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {IFacultySubject} from '@/types/facultySubject';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {createFacultySubjectDetailsConfig} from '@/components/facultySubjects/facultySubjectConfig';
+import {useCreateFacultySubjectDetailsConfig} from '@/components/facultySubjects/facultySubjectConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
 
@@ -48,7 +48,7 @@ const FacultySubjectDetailPage: React.FC<FacultySubjectDetailPageProps> = ({ par
     }
   }, [facultySubjects, resolvedParams.id, getFacultySubjectById]);
 
-  const config = createFacultySubjectDetailsConfig(
+  const config = useCreateFacultySubjectDetailsConfig(
     facultySubject,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null

@@ -46,6 +46,7 @@ export default function AuditPage() {
 
   const handleDetailsEdit = (auditId: number) => {
     // Audit logs are read-only, so this won't do anything
+    console.log('onDetailsEdit', auditId);
     console.log('Edit not available for audit logs');
   };
 
@@ -56,11 +57,7 @@ export default function AuditPage() {
       okText: t('yes'),
       cancelText: t('no'),
       onOk: async () => {
-        try {
-          await cleanAudit();
-        } catch (error) {
-          // Error is already handled in the hook
-        }
+        await cleanAudit();
       },
     });
   };
@@ -69,7 +66,7 @@ export default function AuditPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/audit',
-    searchFields: ['username', 'action', 'resource', 'method', 'ip'] as any,
+    searchFields: ['username', 'action', 'resource', 'method', 'ip'] as (keyof IAudit)[],
     onSearch: (searchText: string) => {
       loadAudits({ page: 1, limit: 10, search: searchText });
     },

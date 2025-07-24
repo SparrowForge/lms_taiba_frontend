@@ -6,7 +6,7 @@ import {useRouter} from 'next/navigation';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 import {useRoles} from '@/hooks/useRoles';
 import {useMenus} from '@/hooks/useMenus';
-import {IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
+import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
 import {Status} from '@/types/common';
 import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
@@ -63,7 +63,7 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
     }
   }, [menus.length, loadMenus]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Partial<IRoleMenuPermission>) => {
     try {
       if (mode === 'create') {
         await createRoleMenuPermission(values as IRoleMenuPermissionCreate);

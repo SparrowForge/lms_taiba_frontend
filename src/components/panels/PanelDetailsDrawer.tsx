@@ -3,7 +3,7 @@ import {Drawer} from 'antd';
 import {usePanels} from '@/hooks/usePanels';
 import {IPanel} from '@/types/panel';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {createPanelDetailsConfig} from './panelConfig';
+import {useCreatePanelDetailsConfig} from './panelConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
 
@@ -50,7 +50,7 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
     }
   }, [panels, panelId, getPanelById]);
 
-  const config = createPanelDetailsConfig(
+  const config = useCreatePanelDetailsConfig(
     panel,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,

@@ -1,9 +1,9 @@
-import { ISubject } from '@/types/subject';
-import { useTranslations } from 'next-intl';
+import {ISubject} from '@/types/subject';
+import {useTranslations} from 'next-intl';
 
 export const getSubjectDisplayName = (subject: ISubject) => subject.name;
 
-export const createSubjectDetailsConfig = (
+export const useCreateSubjectDetailsConfig = (
   subject: ISubject | null,
   loading: boolean,
   error: string | null,
@@ -13,7 +13,6 @@ export const createSubjectDetailsConfig = (
   } = {}
 ) => {
   const { embedded = false, onEdit } = options;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const t = useTranslations();
   const entityName = t('subject', { defaultValue: 'Subject' });
   return {
@@ -39,4 +38,4 @@ export const createSubjectDetailsConfig = (
       { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
     ],
   };
-}; 
+};

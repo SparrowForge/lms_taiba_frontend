@@ -10,7 +10,7 @@ export const getAuditInitials = (audit: IAudit) => {
   return `${audit.action?.slice(0, 1) || 'A'}${audit.resource?.slice(0, 1) || 'R'}`;
 };
 
-export const createAuditDetailsConfig = (
+export const useCreateAuditDetailsConfig = (
   audit: IAudit | null,
   loading: boolean,
   error: string | null,
@@ -53,4 +53,4 @@ export const createAuditDetailsConfig = (
       { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
     ],
   };
-}; 
+};

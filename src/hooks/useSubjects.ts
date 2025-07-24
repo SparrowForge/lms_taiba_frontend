@@ -1,22 +1,23 @@
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store';
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '@/store';
 import {
-  setListStatus,
-  setDetailsStatus,
-  setActionStatus,
-  setSubjects,
-  addSubject,
-  updateSubject,
-  deleteSubject,
-  setSelectedSubject,
-  setPagination,
-  clearActionStatus,
-  clearDetailsStatus,
+    addSubject,
+    clearActionStatus,
+    clearDetailsStatus,
+    deleteSubject,
+    setActionStatus,
+    setDetailsStatus,
+    setListStatus,
+    setPagination,
+    setSelectedSubject,
+    setSubjects,
+    updateSubject,
 } from '@/store/slices/subjectSlice';
-import { subjectService } from '@/services/subjectService';
-import { ISubject, ISubjectCreate, ISubjectUpdate } from '@/types/subject';
-import { IBasePaginatedResponse, Status } from '@/types/common';
+import {subjectService} from '@/services/subjectService';
+import {ISubject, ISubjectCreate, ISubjectUpdate} from '@/types/subject';
+import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useSubjects = () => {
   const dispatch = useDispatch();
@@ -37,8 +38,8 @@ export const useSubjects = () => {
       dispatch(setSubjects(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? {}));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load subjects';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load subjects' : 'Failed to load subjects';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -50,8 +51,8 @@ export const useSubjects = () => {
       const response: ISubject = await subjectService.getSubject(id);
       dispatch(setSelectedSubject(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load subject' : 'Failed to load subject';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -64,8 +65,8 @@ export const useSubjects = () => {
       dispatch(addSubject(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Subject created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create subject' : 'Failed to create subject';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -79,8 +80,8 @@ export const useSubjects = () => {
       dispatch(updateSubject(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Subject updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update subject' : 'Failed to update subject';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -93,8 +94,8 @@ export const useSubjects = () => {
       await subjectService.deleteSubject(id);
       dispatch(deleteSubject(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Subject deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete subject' : 'Failed to delete subject';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -140,4 +141,4 @@ export const useSubjects = () => {
     clearDetails,
     setSelected,
   };
-}; 
+};

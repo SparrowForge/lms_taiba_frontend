@@ -17,6 +17,7 @@ import {
 import {roleService} from '@/services/roleService';
 import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
 import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useRoles = () => {
   const dispatch = useDispatch();
@@ -38,8 +39,8 @@ export const useRoles = () => {
       dispatch(setRoles(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? {}));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load roles';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load roles' : 'Failed to load roles';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -51,8 +52,8 @@ export const useRoles = () => {
       const response: IRole = await roleService.getRole(id);
       dispatch(setSelectedRole(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load role';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load role' : 'Failed to load role';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -65,8 +66,8 @@ export const useRoles = () => {
       dispatch(addRole(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Role created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create role';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create role' : 'Failed to create role';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -80,8 +81,8 @@ export const useRoles = () => {
       dispatch(updateRole(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Role updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update role';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update role' : 'Failed to update role';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -94,8 +95,8 @@ export const useRoles = () => {
       await roleService.deleteRole(id);
       dispatch(deleteRole(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Role deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete role';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete role' : 'Failed to delete role';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }

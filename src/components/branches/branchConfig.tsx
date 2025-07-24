@@ -1,12 +1,12 @@
-import { IBranch } from '@/types/branch';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
-import { useTranslations } from 'next-intl';
+import {IBranch} from '@/types/branch';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import {useTranslations} from 'next-intl';
 
 export const getBranchDisplayName = (branch: IBranch) => branch.name;
 
 export const getBranchInitials = (branch: IBranch) => branch.name.charAt(0).toUpperCase();
 
-export const createBranchDetailsConfig = (
+export const useCreateBranchDetailsConfig = (
   branch: IBranch | null,
   loading: boolean,
   error: string | null,

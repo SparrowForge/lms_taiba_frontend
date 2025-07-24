@@ -6,9 +6,10 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {ISemesterSubject} from '@/types/semesterSubject';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {createSemesterSubjectDetailsConfig} from '@/components/semesterSubjects/semesterSubjectConfig';
+import {useCreateSemesterSubjectDetailsConfig} from '@/components/semesterSubjects/semesterSubjectConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 interface SemesterSubjectDetailPageProps {
   params: Promise<{
@@ -48,7 +49,7 @@ const SemesterSubjectDetailPage: React.FC<SemesterSubjectDetailPageProps> = ({ p
     }
   }, [semesterSubjects, resolvedParams.id, getSemesterSubjectById]);
 
-  const config = createSemesterSubjectDetailsConfig(
+  const config = useCreateSemesterSubjectDetailsConfig(
     semesterSubject,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -57,10 +58,10 @@ const SemesterSubjectDetailPage: React.FC<SemesterSubjectDetailPageProps> = ({ p
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<ISemesterSubject>} />
       </MainLayout>
     </ProtectedRoute>
   );
 };
 
-export default SemesterSubjectDetailPage; 
+export default SemesterSubjectDetailPage;

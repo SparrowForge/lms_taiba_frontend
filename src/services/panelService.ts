@@ -3,7 +3,7 @@ import {IPanel} from '@/types/panel';
 import {IBasePaginatedResponse} from '@/types/common';
 
 export const panelService = {
-  async getPanels(params?: Record<string, any>):  Promise<IBasePaginatedResponse<IPanel>> {
+  async getPanels(params = {}): Promise<IBasePaginatedResponse<IPanel>> {
     const response = await api.get<IBasePaginatedResponse<IPanel>>('/panels', { params });
     return response.data;
   },

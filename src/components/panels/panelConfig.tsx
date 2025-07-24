@@ -3,7 +3,7 @@ import {useTranslations} from 'next-intl';
 
 export const getPanelDisplayName = (panel: IPanel) => panel.name;
 
-export const createPanelDetailsConfig = (
+export const useCreatePanelDetailsConfig = (
   panel: IPanel | null,
   loading: boolean,
   error: string | null,
@@ -13,7 +13,6 @@ export const createPanelDetailsConfig = (
   } = {}
 ) => {
   const { embedded = false, onEdit } = options;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const t = useTranslations();
   const entityName = t('panel', { defaultValue: 'Panel' });
   return {

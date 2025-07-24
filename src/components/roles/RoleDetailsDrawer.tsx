@@ -4,7 +4,7 @@ import {useRoles} from '@/hooks/useRoles';
 import {IRole} from '@/types/role';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createRoleDetailsConfig} from './roleConfig';
+import {useCreateRoleDetailsConfig} from './roleConfig';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 interface RoleDetailsDrawerProps {
@@ -51,7 +51,7 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
     }
   }, [roles, roleId, getRoleById]);
 
-  const config = createRoleDetailsConfig(
+  const config = useCreateRoleDetailsConfig(
     role,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,

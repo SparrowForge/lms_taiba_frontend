@@ -4,11 +4,7 @@ import {IBasePaginatedResponse} from '@/types/common';
 
 export const courseService = {
   // Get all courses with pagination and search
-  getCourses: async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<IBasePaginatedResponse<ICourse>> => {
+  getCourses: async (params = {}): Promise<IBasePaginatedResponse<ICourse>> => {
     const response = await api.get<IBasePaginatedResponse<ICourse>>('/courses', { params });
     return response.data;
   },

@@ -1,14 +1,10 @@
-import { api } from '@/lib/axios';
-import { IBatch, IBatchCreate, IBatchUpdate } from '@/types/batch';
-import { IBasePaginatedResponse } from '@/types/common';
+import {api} from '@/lib/axios';
+import {IBatch, IBatchCreate, IBatchUpdate} from '@/types/batch';
+import {IBasePaginatedResponse} from '@/types/common';
 
 export const batchService = {
   // Get all batches with pagination and search
-  getBatches: async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }): Promise<IBasePaginatedResponse<IBatch>> => {
+  getBatches: async (params = {}): Promise<IBasePaginatedResponse<IBatch>> => {
     const response = await api.get<IBasePaginatedResponse<IBatch>>('/batches', { params });
     return response.data;
   },
@@ -36,4 +32,4 @@ export const batchService = {
     const response = await api.delete(`/batches/${id}`);
     return response.data;
   },
-}; 
+};

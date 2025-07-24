@@ -45,7 +45,8 @@ export default async function LocaleLayout({
   let messages;
   try {
     messages = await getMessages();
-  } catch (error) {
+  } catch (error: unknown) {
+    console.log(error);
     notFound();
   }
 

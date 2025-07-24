@@ -26,7 +26,7 @@ const FacultySubjectFormDrawer: React.FC<FacultySubjectFormDrawerProps> = ({
 }) => {
   const t = useTranslations();
   const entityName = t('facultySubject');
-  const { createFacultySubject, editFacultySubject, actionStatus, clearAction } = useFacultySubjects();
+  const { clearAction } = useFacultySubjects();
 
   useEffect(() => {
     if (!open) {
@@ -53,7 +53,7 @@ const FacultySubjectFormDrawer: React.FC<FacultySubjectFormDrawerProps> = ({
       width={720}
       open={open}
       onClose={handleCancel}
-      destroyOnClose
+      destroyOnHidden={true}
       maskClosable={false}
       keyboard={false}
     >

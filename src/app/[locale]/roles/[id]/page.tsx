@@ -7,8 +7,9 @@ import {useRoles} from '@/hooks/useRoles';
 import {IRole} from '@/types/role';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {createRoleDetailsConfig} from '@/components/roles/roleConfig';
+import {useCreateRoleDetailsConfig} from '@/components/roles/roleConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 interface RoleDetailPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -46,7 +47,7 @@ const RoleDetailPage: React.FC<RoleDetailPageProps> = ({ params }) => {
     }
   }, [roles, resolvedParams.id, getRoleById]);
 
-  const config = createRoleDetailsConfig(
+  const config = useCreateRoleDetailsConfig(
     role,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -55,7 +56,7 @@ const RoleDetailPage: React.FC<RoleDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config} />
+        <EntityDetails config={config as EntityDetailsConfig<IRole>} />
       </MainLayout>
     </ProtectedRoute>
   );

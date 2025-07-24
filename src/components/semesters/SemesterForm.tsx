@@ -5,7 +5,7 @@ import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd'
 import {useRouter} from 'next/navigation';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useBatches} from '@/hooks/useBatches';
-import {ISemesterCreate, ISemesterUpdate} from '@/types/semester';
+import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
 import {Status} from '@/types/common';
 import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
@@ -57,12 +57,12 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
     }
   }, [mode, form]);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Partial<ISemester>) => {
     try {
       const payload = {
         ...values,
-        startDate: values.startDate ? values.startDate.format('YYYY-MM-DD') : undefined,
-        endDate: values.endDate ? values.endDate.format('YYYY-MM-DD') : undefined,
+        startDate: values.startDate ? dayjs(values.startDate).toISOString() : undefined,
+        endDate: values.endDate ? dayjs(values.endDate).toISOString() : undefined,
       };
       if (mode === 'create') {
         await createSemester(payload as ISemesterCreate);

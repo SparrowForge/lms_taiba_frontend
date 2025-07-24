@@ -17,6 +17,7 @@ import {
 import {facultySubjectService} from '@/services/facultySubjectService';
 import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate} from '@/types/facultySubject';
 import {IBasePaginatedResponse, Status} from '@/types/common';
+import {AxiosError} from 'axios';
 
 export const useFacultySubjects = () => {
   const dispatch = useDispatch();
@@ -37,8 +38,8 @@ export const useFacultySubjects = () => {
       dispatch(setFacultySubjects(response?.data?.items ?? []));
       dispatch(setPagination(response?.data?.meta ?? { page: 1, limit: 10, total: 0, totalPages: 0, hasNextPage: false, hasPreviousPage: false }));
       dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load faculty subjects';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load faculty subjects' : 'Failed to load faculty subjects';
       dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -50,8 +51,8 @@ export const useFacultySubjects = () => {
       const response: IFacultySubject = await facultySubjectService.getFacultySubject(id);
       dispatch(setSelectedFacultySubject(response));
       dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to load faculty subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load faculty subject' : 'Failed to load faculty subject';
       dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
     }
   }, [dispatch]);
@@ -64,8 +65,8 @@ export const useFacultySubjects = () => {
       dispatch(addFacultySubject(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Faculty subject created successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to create faculty subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create faculty subject' : 'Failed to create faculty subject';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -79,8 +80,8 @@ export const useFacultySubjects = () => {
       dispatch(updateFacultySubject(response));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Faculty subject updated successfully' }));
       return response;
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to update faculty subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update faculty subject' : 'Failed to update faculty subject';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }
@@ -93,8 +94,8 @@ export const useFacultySubjects = () => {
       await facultySubjectService.deleteFacultySubject(id);
       dispatch(deleteFacultySubject(id));
       dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Faculty subject deleted successfully' }));
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to delete faculty subject';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete faculty subject' : 'Failed to delete faculty subject';
       dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
       throw error;
     }

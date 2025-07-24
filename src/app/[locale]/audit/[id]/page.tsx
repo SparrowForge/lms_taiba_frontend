@@ -6,7 +6,7 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {IAudit} from '@/types/audit';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {createAuditDetailsConfig} from '@/components/audits/auditConfig';
+import {useCreateAuditDetailsConfig} from '@/components/audits/auditConfig';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
 
@@ -48,7 +48,7 @@ const AuditDetailPage: React.FC<AuditDetailPageProps> = ({ params }) => {
     }
   }, [audits, resolvedParams.id, getAuditById]);
 
-  const config = createAuditDetailsConfig(
+  const config = useCreateAuditDetailsConfig(
     audit,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
@@ -63,4 +63,4 @@ const AuditDetailPage: React.FC<AuditDetailPageProps> = ({ params }) => {
   );
 };
 
-export default AuditDetailPage; 
+export default AuditDetailPage;

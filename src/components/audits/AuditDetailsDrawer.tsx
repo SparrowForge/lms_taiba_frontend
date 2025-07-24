@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
 import {IAudit} from '@/types/audit';
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {createAuditDetailsConfig} from './auditConfig';
+import {useCreateAuditDetailsConfig} from './auditConfig';
 import {useAudit} from '@/hooks/useAudit';
 import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
@@ -26,7 +26,7 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
   const { audits, getAuditById, loadAudit, detailsStatus } = useAudit();
   const t = useTranslations();
   const entityName = t('audit', { defaultValue: 'Audit' });
-  
+
   useEffect(() => {
     if (visible && auditId) {
       // Try to get from current list first
@@ -56,7 +56,7 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
     onEdit(audit.id);
   };
 
-  const config = createAuditDetailsConfig(
+  const config = useCreateAuditDetailsConfig(
     audit,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
@@ -79,4 +79,4 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
   );
 };
 
-export default AuditDetailsDrawer; 
+export default AuditDetailsDrawer;
