@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import FacultyFormDrawer from '@/components/faculties/FacultyFormDrawer';
 import FacultyDetailsDrawer from '@/components/faculties/FacultyDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -28,6 +28,16 @@ export default function FacultyPage() {
   const [selectedDetailsFacultyId, setSelectedDetailsFacultyId] = useState<number | undefined>();
 
   const { faculties, listStatus, pagination, loadFaculties } = useFaculties();
+
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadFaculties({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit, loadFaculties]);
 
   useEffect(() => {
     loadFaculties({ page: 1, limit: 10 });

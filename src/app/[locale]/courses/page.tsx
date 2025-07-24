@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import CourseFormDrawer from '@/components/courses/CourseFormDrawer';
 import CourseDetailsDrawer from '@/components/courses/CourseDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -27,9 +27,19 @@ export default function CoursesPage() {
 
   const { courses, listStatus, pagination, loadCourses } = useCourses();
 
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadCourses({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit,  loadCourses]);
+
   useEffect(() => {
     loadCourses({ page: 1, limit: 10 });
-  }, [loadCourses]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (courseId: number) => {
     setSelectedCourseId(courseId);

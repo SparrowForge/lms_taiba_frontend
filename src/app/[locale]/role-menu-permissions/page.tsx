@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import RoleMenuPermissionFormDrawer from '@/components/roleMenuPermissions/RoleMenuPermissionFormDrawer';
 import RoleMenuPermissionDetailsDrawer from '@/components/roleMenuPermissions/RoleMenuPermissionDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -30,9 +30,19 @@ export default function RoleMenuPermissionsPage() {
 
   const { roleMenuPermissions, listStatus, pagination, loadRoleMenuPermissions } = useRoleMenuPermissions();
 
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadRoleMenuPermissions({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit, loadRoleMenuPermissions]);
+
   useEffect(() => {
     loadRoleMenuPermissions({ page: 1, limit: 10 });
-  }, [loadRoleMenuPermissions]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (roleId: number, menuId: number) => {
     setSelectedRoleId(roleId);

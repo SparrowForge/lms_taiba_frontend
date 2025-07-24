@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import DepartmentFormDrawer from '@/components/departments/DepartmentFormDrawer';
 import DepartmentDetailsDrawer from '@/components/departments/DepartmentDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -27,9 +27,19 @@ export default function DepartmentsPage() {
 
   const { departments, listStatus, pagination, loadDepartments } = useDepartments();
 
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadDepartments({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit, loadDepartments]);
+
   useEffect(() => {
     loadDepartments({ page: 1, limit: 10 });
-  }, [loadDepartments]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (departmentId: number) => {
     setSelectedDepartmentId(departmentId);

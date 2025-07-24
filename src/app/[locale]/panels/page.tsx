@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import PanelFormDrawer from '@/components/panels/PanelFormDrawer';
 import PanelDetailsDrawer from '@/components/panels/PanelDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -26,8 +26,18 @@ export default function PanelsPage() {
 
   const { panels, listStatus, pagination, loadPanels } = usePanels();
 
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
   useEffect(() => {
-    loadPanels({ page: 1, limit: 10 });
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadPanels({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit]);
+
+  useEffect(() => {
+    loadPanels({ page: 1, limit: 10 }); // eslint-disable-line react-hooks/exhaustive-deps
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (panelId: number) => {

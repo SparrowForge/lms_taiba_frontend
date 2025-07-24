@@ -8,7 +8,7 @@ import {Status} from "@/types/common"
 import EntityActions from "@/components/ui/EntityActions"
 import {MainLayout} from "@/components/layout/MainLayout"
 import {ProtectedRoute} from "@/components/auth/ProtectedRoute"
-import {useRouter} from "next/navigation"
+import {useRouter, useSearchParams} from "next/navigation"
 import UserFormDrawer from "@/components/users/UserFormModal"
 import UserDetailsDrawer from "@/components/users/UserDetailsDrawer"
 import AsyncErrorBoundary from "@/components/error/AsyncErrorBoundary"
@@ -25,6 +25,17 @@ export default function UsersPage() {
     const { users, listStatus, pagination, loadUsers,} = useUsers()
     const t = useTranslations();
     const entityName = t('user');
+
+
+    //get skip & limit from url
+    const searchParams = useSearchParams();
+    const skip = searchParams.get('skip');
+    const limit = searchParams.get('limit');
+
+    useEffect(() => {
+      const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+      loadUsers({page, limit: parseInt(limit ?? '10')});
+    }, [skip, limit, loadUsers]);
 
     // Fetch data on component mount
     useEffect(() => {

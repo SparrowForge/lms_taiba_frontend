@@ -184,4 +184,4 @@ export default function FacultySubjectsPage() {
       </MainLayout>
     </ProtectedRoute>
   );
-} 
+}

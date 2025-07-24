@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import RoleFormDrawer from '@/components/roles/RoleFormDrawer';
 import RoleDetailsDrawer from '@/components/roles/RoleDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -27,9 +27,19 @@ export default function RolesPage() {
 
   const { roles, listStatus, pagination, loadRoles } = useRoles();
 
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadRoles({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit,  loadRoles]);
+
   useEffect(() => {
     loadRoles({ page: 1, limit: 10 });
-  }, [loadRoles]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (roleId: number) => {
     setSelectedRoleId(roleId);

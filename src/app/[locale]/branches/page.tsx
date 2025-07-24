@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import BranchFormDrawer from '@/components/branches/BranchFormDrawer';
 import BranchDetailsDrawer from '@/components/branches/BranchDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -25,6 +25,16 @@ export default function BranchesPage() {
   const [selectedDetailsBranchId, setSelectedDetailsBranchId] = useState<number | undefined>();
 
   const { branches, listStatus, pagination, loadBranches } = useBranches();
+
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadBranches({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit,  loadBranches]);
 
   useEffect(() => {
     loadBranches({ page: 1, limit: 10 });

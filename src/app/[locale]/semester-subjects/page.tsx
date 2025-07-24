@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import SemesterSubjectFormDrawer from '@/components/semesterSubjects/SemesterSubjectFormDrawer';
 import SemesterSubjectDetailsDrawer from '@/components/semesterSubjects/SemesterSubjectDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -27,6 +27,18 @@ export default function SemesterSubjectsPage() {
   const [selectedDetailsSemesterSubjectId, setSelectedDetailsSemesterSubjectId] = useState<number | undefined>();
 
   const { semesterSubjects, listStatus, pagination, loadSemesterSubjects } = useSemesterSubjects();
+
+
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadSemesterSubjects({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit, loadSemesterSubjects]);
+
 
   useEffect(() => {
     loadSemesterSubjects({ page: 1, limit: 10 });

@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import BatchFormDrawer from '@/components/batches/BatchFormDrawer';
 import BatchDetailsDrawer from '@/components/batches/BatchDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -26,6 +26,16 @@ export default function BatchesPage() {
   const [selectedDetailsBatchId, setSelectedDetailsBatchId] = useState<number | undefined>();
 
   const { batches, listStatus, pagination, loadBatches } = useBatches();
+
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadBatches({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit,  loadBatches]);
 
   useEffect(() => {
     loadBatches({ page: 1, limit: 10 });

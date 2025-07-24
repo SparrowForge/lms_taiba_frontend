@@ -2,9 +2,9 @@
 
 import {Alert, Button, Card, Input, Space, Table, Typography} from 'antd'
 import {FileExcelOutlined, SearchOutlined, UserAddOutlined} from '@ant-design/icons'
-import {usePathname, useRouter} from 'next/navigation'
+import {useRouter, useSearchParams} from 'next/navigation'
 import {TableProps} from 'antd/es/table'
-import { useTranslations } from 'next-intl';
+import {useTranslations} from 'next-intl';
 
 const { Title } = Typography
 const { Search } = Input
@@ -28,9 +28,10 @@ export interface EntityConfig<T> {
 // Generic EntityList component
 export const EntityList = <T extends { id: number }>({ config }: { config: EntityConfig<T> }) => {
   const t = useTranslations();
-  //const [searchText, setSearchText] = useState('')
   const router = useRouter()
-  const pathname = usePathname()
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
   const handleAddItem = () => {
     // if (config.onAdd) {
     //   config.onAdd()
@@ -105,9 +106,9 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
             rowKey="id"
             style={{border: '1px solid #e0e0e0', borderRadius: '8px', padding: '16px', }}
             pagination={{
-              current: pathname.includes('skip=') ? parseInt(pathname.split('skip=')[1]) / 10 + 1 : 1,
+              current: skip ? parseInt(skip ?? '0') / parseInt(limit ?? '10') + 1 : 1,
               total: config.itemsCount ?? config.items.length,
-              pageSize: 10,
+              pageSize: parseInt(limit ?? '10'),
               showSizeChanger: true,
               showQuickJumper: true,
               showTotal: (total, range) => `${range[0]}-${range[1]} ${t('of')} ${total} ${config.name}`,

@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import MenuFormDrawer from '@/components/menus/MenuFormDrawer';
 import MenuDetailsDrawer from '@/components/menus/MenuDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -27,9 +27,20 @@ export default function MenusPage() {
 
   const { menus, listStatus, pagination, loadMenus } = useMenus();
 
+
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadMenus({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit, loadMenus]);
+
   useEffect(() => {
     loadMenus({ page: 1, limit: 10 });
-  }, [loadMenus]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (menuId: number) => {
     setSelectedMenuId(menuId);

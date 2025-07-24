@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import SubjectFormDrawer from '@/components/subjects/SubjectFormDrawer';
 import SubjectDetailsDrawer from '@/components/subjects/SubjectDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -27,9 +27,19 @@ export default function SubjectsPage() {
 
   const { subjects, listStatus, pagination, loadSubjects } = useSubjects();
 
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadSubjects({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit,  loadSubjects]);
+
   useEffect(() => {
     loadSubjects({ page: 1, limit: 10 });
-  }, [loadSubjects]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (subjectId: number) => {
     setSelectedSubjectId(subjectId);

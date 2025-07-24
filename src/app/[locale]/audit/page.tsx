@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import AuditDetailsDrawer from '@/components/audits/AuditDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
@@ -25,6 +25,16 @@ export default function AuditPage() {
   const [selectedDetailsAuditId, setSelectedDetailsAuditId] = useState<number | undefined>();
 
   const { audits, listStatus, pagination, loadAudits, cleanAudit, actionStatus } = useAudit();
+
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
+  useEffect(() => {
+    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
+    loadAudits({ page, limit: parseInt(limit ?? '10') });
+  }, [skip, limit, loadAudits]);
 
   useEffect(() => {
     loadAudits({ page: 1, limit: 10 });
