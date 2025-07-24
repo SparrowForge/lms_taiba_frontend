@@ -52,7 +52,7 @@ api.interceptors.request.use(
 
 // Response interceptor
 api.interceptors.response.use(
-  (response: AxiosResponse<IBaseResponse>) => {
+  (response: AxiosResponse<unknown>) => {
     // Log responses in development
     if (ENV === 'development') {
       console.log(`✅ API Response: ${response.config.method?.toUpperCase()} ${response.config.url}`, {
