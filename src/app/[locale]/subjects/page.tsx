@@ -25,7 +25,7 @@ export default function SubjectsPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsSubjectId, setSelectedDetailsSubjectId] = useState<number | undefined>();
 
-  const { subjects, listStatus, pagination, loadSubjects } = useSubjects();
+  const { subjects, listStatus, pagination, loadSubjects, removeSubject } = useSubjects();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -140,7 +140,7 @@ export default function SubjectsPage() {
             onEdit={() => router.push(`/subjects/${subject.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeSubject(subject.id)}
             id={subject.id}
           />
         ),

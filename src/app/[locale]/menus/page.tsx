@@ -25,7 +25,7 @@ export default function MenusPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsMenuId, setSelectedDetailsMenuId] = useState<number | undefined>();
 
-  const { menus, listStatus, pagination, loadMenus } = useMenus();
+  const { menus, listStatus, pagination, loadMenus, removeMenu } = useMenus();
 
 
   //get skip & limit from url
@@ -135,7 +135,7 @@ export default function MenusPage() {
             onEdit={() => router.push(`/menus/${menu.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeMenu(menu.id)}
             id={menu.id}
           />
         ),

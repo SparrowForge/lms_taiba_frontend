@@ -24,7 +24,7 @@ export default function PanelsPage() {
   const t = useTranslations();
   const entityName = t('panel', { defaultValue: 'Panel' });
 
-  const { panels, listStatus, pagination, loadPanels } = usePanels();
+  const { panels, listStatus, pagination, loadPanels, removePanel } = usePanels();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -34,10 +34,10 @@ export default function PanelsPage() {
   useEffect(() => {
     const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
     loadPanels({ page, limit: parseInt(limit ?? '10') });
-  }, [skip, limit]);
+  }, [skip, limit, loadPanels]);
 
   useEffect(() => {
-    loadPanels({ page: 1, limit: 10 }); // eslint-disable-line react-hooks/exhaustive-deps
+    loadPanels({ page: 1, limit: 10 });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (panelId: number) => {
@@ -109,7 +109,7 @@ export default function PanelsPage() {
             onEdit={() => router.push(`/panels/${panel.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removePanel(panel.id)}
             id={panel.id}
           />
         ),

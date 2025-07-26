@@ -28,7 +28,7 @@ export default function RoleMenuPermissionsPage() {
   const [selectedDetailsRoleId, setSelectedDetailsRoleId] = useState<number | undefined>();
   const [selectedDetailsMenuId, setSelectedDetailsMenuId] = useState<number | undefined>();
 
-  const { roleMenuPermissions, listStatus, pagination, loadRoleMenuPermissions } = useRoleMenuPermissions();
+  const { roleMenuPermissions, listStatus, pagination, loadRoleMenuPermissions, removeRoleMenuPermission } = useRoleMenuPermissions();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -147,7 +147,7 @@ export default function RoleMenuPermissionsPage() {
             onEdit={() => router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}/edit`)}
             onEditModal={() => handleEditDrawer(permission.roleId, permission.menuId)}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeRoleMenuPermission(permission.roleId, permission.menuId)}
             id={permission.roleId}
           />
         ),

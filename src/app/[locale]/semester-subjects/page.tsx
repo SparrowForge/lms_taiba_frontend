@@ -26,7 +26,7 @@ export default function SemesterSubjectsPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsSemesterSubjectId, setSelectedDetailsSemesterSubjectId] = useState<number | undefined>();
 
-  const { semesterSubjects, listStatus, pagination, loadSemesterSubjects } = useSemesterSubjects();
+  const { semesterSubjects, listStatus, pagination, loadSemesterSubjects, removeSemesterSubject } = useSemesterSubjects();
 
 
   //get skip & limit from url
@@ -131,7 +131,7 @@ export default function SemesterSubjectsPage() {
             onEdit={() => router.push(`/semester-subjects/${semesterSubject.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeSemesterSubject(semesterSubject.id)}
             id={semesterSubject.id}
           />
         ),

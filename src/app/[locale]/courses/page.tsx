@@ -25,7 +25,7 @@ export default function CoursesPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsCourseId, setSelectedDetailsCourseId] = useState<number | undefined>();
 
-  const { courses, listStatus, pagination, loadCourses } = useCourses();
+  const { courses, listStatus, pagination, loadCourses, removeCourse } = useCourses();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -134,7 +134,7 @@ export default function CoursesPage() {
             onEdit={() => router.push(`/courses/${course.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeCourse(course.id)}
             id={course.id}
           />
         ),

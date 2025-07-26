@@ -27,7 +27,7 @@ export default function FacultyPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsFacultyId, setSelectedDetailsFacultyId] = useState<number | undefined>();
 
-  const { faculties, listStatus, pagination, loadFaculties } = useFaculties();
+  const { faculties, listStatus, pagination, loadFaculties, removeFaculty } = useFaculties();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -152,7 +152,7 @@ export default function FacultyPage() {
             onEdit={() => router.push(`/faculties/${faculty.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeFaculty(faculty.id)}
             id={faculty.id}
           />
         ),

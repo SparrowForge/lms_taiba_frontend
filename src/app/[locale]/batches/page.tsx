@@ -25,7 +25,7 @@ export default function BatchesPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsBatchId, setSelectedDetailsBatchId] = useState<number | undefined>();
 
-  const { batches, listStatus, pagination, loadBatches } = useBatches();
+  const { batches, listStatus, pagination, loadBatches, removeBatch } = useBatches();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -134,7 +134,7 @@ export default function BatchesPage() {
             onEdit={() => router.push(`/batches/${batch.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeBatch(batch.id)}
             id={batch.id}
           />
         ),

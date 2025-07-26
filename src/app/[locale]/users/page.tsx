@@ -22,7 +22,7 @@ export default function UsersPage() {
     const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false)
     const [selectedDetailsUserId, setSelectedDetailsUserId] = useState<number | undefined>()
 
-    const { users, listStatus, pagination, loadUsers,} = useUsers()
+    const { users, listStatus, pagination, loadUsers, removeUser } = useUsers()
     const t = useTranslations();
     const entityName = t('user');
 
@@ -126,7 +126,7 @@ export default function UsersPage() {
             onEdit={() => router.push(`/users/${user.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => router.push(`/users/${user.id}/delete`)}
+            onDelete={() => removeUser(user.id)}
             id={user.id} />
         },
       ]

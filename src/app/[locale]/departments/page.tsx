@@ -25,7 +25,7 @@ export default function DepartmentsPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsDepartmentId, setSelectedDetailsDepartmentId] = useState<number | undefined>();
 
-  const { departments, listStatus, pagination, loadDepartments } = useDepartments();
+  const { departments, listStatus, pagination, loadDepartments, removeDepartment } = useDepartments();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -122,7 +122,7 @@ export default function DepartmentsPage() {
             onEdit={() => router.push(`/departments/${department.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeDepartment(department.id)}
             id={department.id}
           />
         ),

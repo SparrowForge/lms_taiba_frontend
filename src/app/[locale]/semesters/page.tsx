@@ -25,7 +25,7 @@ export default function SemestersPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsSemesterId, setSelectedDetailsSemesterId] = useState<number | undefined>();
 
-  const { semesters, listStatus, pagination, loadSemesters } = useSemesters();
+  const { semesters, listStatus, pagination, loadSemesters, removeSemester } = useSemesters();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -134,7 +134,7 @@ export default function SemestersPage() {
             onEdit={() => router.push(`/semesters/${semester.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeSemester(semester.id)}
             id={semester.id}
           />
         ),

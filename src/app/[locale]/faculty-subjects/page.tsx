@@ -25,7 +25,7 @@ export default function FacultySubjectsPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsFacultySubjectId, setSelectedDetailsFacultySubjectId] = useState<number | undefined>();
 
-  const { facultySubjects, listStatus, pagination, loadFacultySubjects } = useFacultySubjects();
+  const { facultySubjects, listStatus, pagination, loadFacultySubjects, removeFacultySubject } = useFacultySubjects();
 
   useEffect(() => {
     loadFacultySubjects({ page: 1, limit: 10 });
@@ -148,7 +148,7 @@ export default function FacultySubjectsPage() {
             onEdit={() => router.push(`/faculty-subjects/${facultySubject.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeFacultySubject(facultySubject.id)}
             id={facultySubject.id}
           />
         ),

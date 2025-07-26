@@ -25,7 +25,7 @@ export default function RolesPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsRoleId, setSelectedDetailsRoleId] = useState<number | undefined>();
 
-  const { roles, listStatus, pagination, loadRoles } = useRoles();
+  const { roles, listStatus, pagination, loadRoles, removeRole } = useRoles();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -122,7 +122,7 @@ export default function RolesPage() {
             onEdit={() => router.push(`/roles/${role.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeRole(role.id)}
             id={role.id}
           />
         ),

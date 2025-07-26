@@ -24,7 +24,7 @@ export default function BranchesPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsBranchId, setSelectedDetailsBranchId] = useState<number | undefined>();
 
-  const { branches, listStatus, pagination, loadBranches } = useBranches();
+  const { branches, listStatus, pagination, loadBranches, removeBranch } = useBranches();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -118,7 +118,7 @@ export default function BranchesPage() {
             onEdit={() => router.push(`/branches/${branch.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t('quickEdit')}
-            onDelete={() => {}}
+            onDelete={() => removeBranch(branch.id)}
             id={branch.id}
           />
         ),
