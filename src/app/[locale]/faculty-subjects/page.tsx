@@ -8,7 +8,7 @@ import {Status} from '@/types/common';
 import EntityActions from '@/components/ui/EntityActions';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import FacultySubjectFormDrawer from '@/components/facultySubjects/FacultySubjectFormDrawer';
 import FacultySubjectDetailsDrawer from '@/components/facultySubjects/FacultySubjectDetailsDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -27,9 +27,19 @@ export default function FacultySubjectsPage() {
 
   const { facultySubjects, listStatus, pagination, loadFacultySubjects, removeFacultySubject } = useFacultySubjects();
 
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
   useEffect(() => {
-    loadFacultySubjects({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadFacultySubjects({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadFacultySubjects({ page: 1, limit: 10 });
+    }
+  }, [skip, limit, loadFacultySubjects]);
 
   const handleEditDrawer = (facultySubjectId: number) => {
     setSelectedFacultySubjectId(facultySubjectId);
@@ -136,7 +146,7 @@ export default function FacultySubjectsPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (facultySubject: IFacultySubject) => (
           <EntityActions
             onView={() => router.push(`/faculty-subjects/${facultySubject.id}`)}

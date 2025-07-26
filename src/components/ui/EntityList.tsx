@@ -90,12 +90,10 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
             placeholder={t('search_name', { name: config.name, fields: config.searchFields.join(', ') })}
             allowClear
             enterButton={<SearchOutlined />}
-            size="large"
-           // value={searchText}
-            onChange={(e) => {
-              //setSearchText(e.target.value)
-              config.onSearch?.(e.target.value)
+            onSearch={(value) => {
+              config.onSearch?.(value)
             }}
+            size="large"
             style={{ maxWidth: '400px', marginBottom: '16px' }}
           />
 

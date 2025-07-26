@@ -33,14 +33,13 @@ export default function UsersPage() {
     const limit = searchParams.get('limit');
 
     useEffect(() => {
-      const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-      loadUsers({page, limit: parseInt(limit ?? '10')});
+      if (skip && limit) {
+        const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+        loadUsers({page, limit: parseInt(limit ?? '10')});
+      } else {
+        loadUsers({page: 1, limit: 10});
+      }
     }, [skip, limit, loadUsers]);
-
-    // Fetch data on component mount
-    useEffect(() => {
-      loadUsers({page: 1, limit: 10})
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleEditDrawer = (userId: number) => {
       setSelectedUserId(userId)

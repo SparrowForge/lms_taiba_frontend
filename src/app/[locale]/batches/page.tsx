@@ -33,13 +33,13 @@ export default function BatchesPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadBatches({ page, limit: parseInt(limit ?? '10') });
-  }, [skip, limit,  loadBatches]);
-
-  useEffect(() => {
-    loadBatches({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadBatches({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadBatches({ page: 1, limit: 10 });
+    }
+  }, [skip, limit, loadBatches]);
 
   const handleEditDrawer = (batchId: number) => {
     setSelectedBatchId(batchId);

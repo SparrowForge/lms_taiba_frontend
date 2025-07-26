@@ -33,13 +33,13 @@ export default function SemestersPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadSemesters({ page, limit: parseInt(limit ?? '10') });
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadSemesters({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadSemesters({ page: 1, limit: 10 });
+    }
   }, [skip, limit, loadSemesters]);
-
-  useEffect(() => {
-    loadSemesters({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (semesterId: number) => {
     setSelectedSemesterId(semesterId);
@@ -122,7 +122,7 @@ export default function SemestersPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (semester: ISemester) => (
           <EntityActions
             onView={() => router.push(`/semesters/${semester.id}`)}

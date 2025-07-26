@@ -34,13 +34,13 @@ export default function MenusPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadMenus({ page, limit: parseInt(limit ?? '10') });
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadMenus({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadMenus({ page: 1, limit: 10 });
+    }
   }, [skip, limit, loadMenus]);
-
-  useEffect(() => {
-    loadMenus({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (menuId: number) => {
     setSelectedMenuId(menuId);

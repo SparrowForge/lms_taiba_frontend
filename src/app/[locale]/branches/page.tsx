@@ -32,13 +32,13 @@ export default function BranchesPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadBranches({ page, limit: parseInt(limit ?? '10') });
-  }, [skip, limit,  loadBranches]);
-
-  useEffect(() => {
-    loadBranches({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadBranches({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadBranches({ page: 1, limit: 10 });
+    }
+  }, [skip, limit, loadBranches]);
 
   const handleEditDrawer = (branchId: number) => {
     setSelectedBranchId(branchId);

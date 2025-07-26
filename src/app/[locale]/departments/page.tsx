@@ -33,13 +33,13 @@ export default function DepartmentsPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadDepartments({ page, limit: parseInt(limit ?? '10') });
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadDepartments({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadDepartments({ page: 1, limit: 10 });
+    }
   }, [skip, limit, loadDepartments]);
-
-  useEffect(() => {
-    loadDepartments({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (departmentId: number) => {
     setSelectedDepartmentId(departmentId);

@@ -36,13 +36,13 @@ export default function RoleMenuPermissionsPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadRoleMenuPermissions({ page, limit: parseInt(limit ?? '10') });
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadRoleMenuPermissions({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadRoleMenuPermissions({ page: 1, limit: 10 });
+    }
   }, [skip, limit, loadRoleMenuPermissions]);
-
-  useEffect(() => {
-    loadRoleMenuPermissions({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (roleId: number, menuId: number) => {
     setSelectedRoleId(roleId);

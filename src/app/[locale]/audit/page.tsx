@@ -32,13 +32,13 @@ export default function AuditPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadAudits({ page, limit: parseInt(limit ?? '10') });
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadAudits({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadAudits({ page: 1, limit: 10 });
+    }
   }, [skip, limit, loadAudits]);
-
-  useEffect(() => {
-    loadAudits({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (actionStatus.status === Status.SUCCESS) {
@@ -159,7 +159,7 @@ export default function AuditPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 150,
+        width: 100,
         render: (audit: IAudit) => (
           <EntityActions
             onView={() => router.push(`/audit/${audit.id}`)}

@@ -32,13 +32,13 @@ export default function PanelsPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadPanels({ page, limit: parseInt(limit ?? '10') });
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadPanels({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadPanels({ page: 1, limit: 10 });
+    }
   }, [skip, limit, loadPanels]);
-
-  useEffect(() => {
-    loadPanels({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (panelId: number) => {
     setSelectedPanelId(panelId);

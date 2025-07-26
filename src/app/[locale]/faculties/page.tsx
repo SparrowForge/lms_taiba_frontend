@@ -35,13 +35,13 @@ export default function FacultyPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadFaculties({ page, limit: parseInt(limit ?? '10') });
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadFaculties({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadFaculties({ page: 1, limit: 10 });
+    }
   }, [skip, limit, loadFaculties]);
-
-  useEffect(() => {
-    loadFaculties({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditDrawer = (facultyId: number) => {
     setSelectedFacultyId(facultyId);
@@ -140,7 +140,7 @@ export default function FacultyPage() {
       {
         title: t('actions'),
         key: 'actions',
-        width: 200,
+        width: 100,
         render: (faculty: IFaculty) => (
           <EntityActions
             onView={() => router.push(`/faculties/${faculty.id}`)}

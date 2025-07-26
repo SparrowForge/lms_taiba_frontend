@@ -33,13 +33,13 @@ export default function RolesPage() {
   const limit = searchParams.get('limit');
 
   useEffect(() => {
-    const page = skip ? parseInt(skip) / parseInt(limit ?? '10') + 1 : 1;
-    loadRoles({ page, limit: parseInt(limit ?? '10') });
-  }, [skip, limit,  loadRoles]);
-
-  useEffect(() => {
-    loadRoles({ page: 1, limit: 10 });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadRoles({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadRoles({ page: 1, limit: 10 });
+    }
+  }, [skip, limit, loadRoles]);
 
   const handleEditDrawer = (roleId: number) => {
     setSelectedRoleId(roleId);
