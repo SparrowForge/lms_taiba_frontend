@@ -9,7 +9,6 @@ interface AsyncErrorBoundaryProps {
   fallback?: ReactNode;
   onRetry?: () => void;
   error?: Error | null;
-  loading?: boolean;
 }
 
 const AsyncErrorBoundary: React.FC<AsyncErrorBoundaryProps> = ({
@@ -17,7 +16,6 @@ const AsyncErrorBoundary: React.FC<AsyncErrorBoundaryProps> = ({
   fallback,
   onRetry,
   error,
-  loading = false
 }) => {
   const [hasError, setHasError] = useState(false);
   const [errorState, setErrorState] = useState<Error | null>(null);
@@ -39,33 +37,6 @@ const AsyncErrorBoundary: React.FC<AsyncErrorBoundaryProps> = ({
       onRetry();
     }
   };
-
-  if (loading) {
-    return (
-      <div style={{
-        padding: '24px',
-        textAlign: 'center',
-        minHeight: '200px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <div>
-          <div style={{ marginBottom: '16px' }}>
-            <div className="ant-spin ant-spin-lg ant-spin-spinning">
-              <span className="ant-spin-dot ant-spin-dot-spin">
-                <i className="ant-spin-dot-item"></i>
-                <i className="ant-spin-dot-item"></i>
-                <i className="ant-spin-dot-item"></i>
-                <i className="ant-spin-dot-item"></i>
-              </span>
-            </div>
-          </div>
-          <Text type="secondary">Loading...</Text>
-        </div>
-      </div>
-    );
-  }
 
   if (hasError || errorState) {
     // Custom fallback UI

@@ -147,7 +147,6 @@ export default function CoursesPage() {
       <MainLayout>
         <AsyncErrorBoundary
           error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
-          loading={listStatus.status === Status.LOADING}
           onRetry={() => loadCourses({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<ICourse>} />
