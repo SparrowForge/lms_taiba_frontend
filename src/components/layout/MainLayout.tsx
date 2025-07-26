@@ -79,7 +79,7 @@ export const MainLayout = ({children}: MainLayoutProps) => {
         </Header>
 
         <Content
-          className="bg-gray-50 overflow-auto"
+          className="bg-gray-50"
           style={contentStyle}
         >
           <ErrorBoundary>

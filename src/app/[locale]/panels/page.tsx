@@ -76,7 +76,7 @@ export default function PanelsPage() {
     onSearch: (searchText: string) => {
       loadPanels({ page: 1, limit: 10, search: searchText });
     },
-    onAdd: handleCreateDrawer,
+    onQuickAdd: handleCreateDrawer,
     items: panels,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,

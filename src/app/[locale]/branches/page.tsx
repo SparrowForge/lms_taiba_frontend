@@ -76,7 +76,7 @@ export default function BranchesPage() {
     onSearch: (searchText: string) => {
       loadBranches({ page: 1, limit: 10, search: searchText });
     },
-    onAdd: handleCreateDrawer,
+    onQuickAdd: handleCreateDrawer,
     items: branches,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,

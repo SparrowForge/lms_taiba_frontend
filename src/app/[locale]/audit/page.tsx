@@ -15,7 +15,6 @@ import {useTranslations} from 'next-intl';
 import {Button, Modal, Tag} from 'antd';
 import {DeleteOutlined} from '@ant-design/icons';
 import {toast} from 'react-toastify';
-import {PageHeader} from '@/components/ui/PageHeader';
 
 export default function AuditPage() {
   const t = useTranslations();
@@ -80,7 +79,19 @@ export default function AuditPage() {
     onSearch: (searchText: string) => {
       loadAudits({ page: 1, limit: 10, search: searchText });
     },
-    onAdd: undefined, // No add functionality for audit logs
+    extraActions: [
+      <Button
+        key={'clean_audit'}
+        type="primary"
+        danger
+        icon={<DeleteOutlined />}
+        onClick={handleCleanAudit}
+        loading={actionStatus.status === Status.LOADING}
+      >
+        {t('clean_audit')}
+      </Button>
+    ],
+    disableAddNew: true,
     items: audits,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
@@ -182,20 +193,7 @@ export default function AuditPage() {
           error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
           onRetry={() => loadAudits({ page: 1, limit: 10 })}
         >
-          <div>
-            <PageHeader title={''}>
-            <Button
-                type="primary"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={handleCleanAudit}
-                loading={actionStatus.status === Status.LOADING}
-              >
-                {t('clean_audit')}
-              </Button>
-            </PageHeader>
-            <EntityList config={config as EntityConfig<IAudit>} />
-          </div>
+          <EntityList config={config as EntityConfig<IAudit>} />
         </AsyncErrorBoundary>
 
         <AuditDetailsDrawer

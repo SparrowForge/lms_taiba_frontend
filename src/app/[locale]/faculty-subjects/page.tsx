@@ -77,7 +77,7 @@ export default function FacultySubjectsPage() {
     onSearch: (searchText: string) => {
       loadFacultySubjects({ page: 1, limit: 10, search: searchText });
     },
-    onAdd: handleCreateDrawer,
+    onQuickAdd: handleCreateDrawer,
     items: facultySubjects,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,

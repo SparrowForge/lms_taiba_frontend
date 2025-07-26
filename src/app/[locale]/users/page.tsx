@@ -78,7 +78,7 @@ export default function UsersPage() {
       onSearch: (searchText: string) => {
         loadUsers({page: 1, limit: 10, search: searchText})
       },
-      onAdd: handleCreateDrawer,
+      onQuickAdd: handleCreateDrawer,
       items: users,
       itemsCount: pagination?.total ?? 0,
       loading: listStatus.status === Status.LOADING,

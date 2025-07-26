@@ -77,7 +77,7 @@ export default function BatchesPage() {
     onSearch: (searchText: string) => {
       loadBatches({ page: 1, limit: 10, search: searchText });
     },
-    onAdd: handleCreateDrawer,
+    onQuickAdd: handleCreateDrawer,
     items: batches,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,

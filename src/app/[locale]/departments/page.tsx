@@ -77,7 +77,7 @@ export default function DepartmentsPage() {
     onSearch: (searchText: string) => {
       loadDepartments({ page: 1, limit: 10, search: searchText });
     },
-    onAdd: handleCreateDrawer,
+    onQuickAdd: handleCreateDrawer,
     items: departments,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
