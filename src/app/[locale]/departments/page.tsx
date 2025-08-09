@@ -11,6 +11,7 @@ import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {MainLayout} from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
 import {useDepartments} from '@/hooks/useDepartments';
 
@@ -129,7 +130,7 @@ export default function DepartmentsPage() {
         title: t('status'),
         dataIndex: 'status',
         key: 'status',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
         title: t('createdAt'),

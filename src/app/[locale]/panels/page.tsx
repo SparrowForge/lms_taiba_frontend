@@ -11,6 +11,7 @@ import PanelDetailsDrawer from '@/components/panels/PanelDetailsDrawer';
 import PanelFormDrawer from '@/components/panels/PanelFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
 import {usePanels} from '@/hooks/usePanels';
 
@@ -102,7 +103,7 @@ export default function PanelsPage() {
         title: t('status'),
         dataIndex: 'status',
         key: 'status',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
         title: t('actions'),

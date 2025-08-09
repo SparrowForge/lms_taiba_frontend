@@ -1,5 +1,6 @@
 'use client';
 
+import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 import React, {useEffect, useState} from 'react';
@@ -106,8 +107,9 @@ export default function UserRolesPage() {
       },
       {
         title: t('createdAt'),
+        dataIndex: 'createdAt',
         key: 'createdAt',
-        render: (text: string) => new Date(text).toLocaleString(),
+        render: (text: string) => dayjs(text).format('DD-MM-YYYY HH:mm'),
       },
       {
         title: t('actions'),

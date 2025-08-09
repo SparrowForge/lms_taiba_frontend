@@ -15,6 +15,7 @@ import {useCourses} from '@/hooks/useCourses';
 import {IBatch, IBatchCreate, IBatchUpdate} from '@/types/batch';
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
+
 import FormLayout from '../layout/FormLayout';
 
 
@@ -50,16 +51,8 @@ const BatchForm: React.FC<BatchFormProps> = ({
     if (initialValues) {
       form.setFieldsValue({
         ...initialValues,
-        startDate: (initialValues as IBatch)?.startDate
-          ? dayjs((initialValues as IBatch).startDate as string)
-          : (initialValues as IBatchUpdate)?.startDate
-            ? dayjs((initialValues as IBatchUpdate).startDate as string)
-            : undefined,
-        endDate: (initialValues as IBatch)?.endDate
-          ? dayjs((initialValues as IBatch).endDate as string)
-          : (initialValues as IBatchUpdate)?.endDate
-            ? dayjs((initialValues as IBatchUpdate).endDate as string)
-            : undefined,
+        startDate: initialValues.startDate ? dayjs(initialValues.startDate) : undefined,
+        endDate: initialValues.endDate ? dayjs(initialValues.endDate) : undefined,
       });
     }
   }, [initialValues, form]);
@@ -132,7 +125,11 @@ const BatchForm: React.FC<BatchFormProps> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={{
+        ...initialValues,
+        startDate: initialValues?.startDate ? dayjs(initialValues.startDate) : undefined,
+        endDate: initialValues?.endDate ? dayjs(initialValues.endDate) : undefined,
+      }}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

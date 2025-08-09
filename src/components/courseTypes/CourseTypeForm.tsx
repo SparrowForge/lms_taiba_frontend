@@ -13,6 +13,7 @@ import {useCourseTypes} from '@/hooks/useCourseTypes';
 import {Status} from '@/types/common';
 import {ICourseType, ICourseTypeCreate, ICourseTypeUpdate} from '@/types/courseType';
 import {getErrorMessage} from '@/types/errors';
+
 import FormLayout from '../layout/FormLayout';
 
 

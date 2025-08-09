@@ -15,6 +15,7 @@ import {useSemesters} from '@/hooks/useSemesters';
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
+
 import FormLayout from '../layout/FormLayout';
 
 
@@ -120,7 +121,11 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={{
+        ...initialValues,
+        startDate: initialValues?.startDate ? dayjs(initialValues.startDate) : undefined,
+        endDate: initialValues?.endDate ? dayjs(initialValues.endDate) : undefined,
+      }}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

@@ -1,6 +1,5 @@
 'use client';
 
-import {Tag} from 'antd';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
@@ -12,6 +11,7 @@ import FacultyFormDrawer from '@/components/faculties/FacultyFormDrawer';
 import {MainLayout} from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
 import {useFaculties} from '@/hooks/useFaculties';
 
@@ -116,9 +116,7 @@ export default function FacultyPage() {
         title: t('status'),
         dataIndex: 'isActive',
         key: 'isActive',
-        render: (isActive: boolean) => (
-          <Tag color={isActive ? 'green' : 'red'}>{isActive ? t('active') : t('inactive')}</Tag>
-        ),
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
         title: t('branch'),

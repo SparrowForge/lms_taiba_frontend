@@ -11,6 +11,7 @@ import ScheduleTypeDetailsDrawer from '@/components/scheduleTypes/ScheduleTypeDe
 import ScheduleTypeFormDrawer from '@/components/scheduleTypes/ScheduleTypeFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
@@ -92,7 +93,7 @@ export default function ScheduleTypesPage() {
         title: t('status'),
         dataIndex: 'status',
         key: 'status',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
         title: t('createdAt'),

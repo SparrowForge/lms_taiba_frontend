@@ -11,6 +11,7 @@ import SubjectDetailsDrawer from '@/components/subjects/SubjectDetailsDrawer';
 import SubjectFormDrawer from '@/components/subjects/SubjectFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
 import {useSubjects} from '@/hooks/useSubjects';
 
@@ -132,7 +133,7 @@ export default function SubjectsPage() {
         title: t('status'),
         dataIndex: 'status',
         key: 'status',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
         title: t('createdAt'),

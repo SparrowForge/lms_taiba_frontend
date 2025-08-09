@@ -105,9 +105,9 @@ const BatchEditPage: React.FC<BatchEditPageProps> = ({ params }) => {
               startDate: batch.startDate,
               endDate: batch.endDate,
               status: batch.status,
-            remarks: batch.remarks,
-          }}
-        />
+              remarks: batch.remarks,
+            }}
+          />
       </MainLayout>
     </ProtectedRoute>
   );

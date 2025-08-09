@@ -15,6 +15,7 @@ import {useFaculties} from '@/hooks/useFaculties';
 import {Status} from '@/types/common';
 import {IDepartment, IDepartmentCreate, IDepartmentUpdate} from '@/types/department';
 import {getErrorMessage} from '@/types/errors';
+
 import FormLayout from '../layout/FormLayout';
 
 

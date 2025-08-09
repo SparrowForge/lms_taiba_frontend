@@ -11,6 +11,7 @@ import MenuDetailsDrawer from '@/components/menus/MenuDetailsDrawer';
 import MenuFormDrawer from '@/components/menus/MenuFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
 import {useMenus} from '@/hooks/useMenus';
 
@@ -120,7 +121,7 @@ export default function MenusPage() {
         title: t('status'),
         dataIndex: 'status',
         key: 'status',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
         title: t('createdAt'),
