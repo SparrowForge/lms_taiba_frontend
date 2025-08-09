@@ -1,20 +1,23 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
-import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import RoleMenuPermissionFormDrawer from '@/components/roleMenuPermissions/RoleMenuPermissionFormDrawer';
-import RoleMenuPermissionDetailsDrawer from '@/components/roleMenuPermissions/RoleMenuPermissionDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
-import {IRole} from '@/types/role';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import RoleMenuPermissionDetailsDrawer from '@/components/roleMenuPermissions/RoleMenuPermissionDetailsDrawer';
+import RoleMenuPermissionFormDrawer from '@/components/roleMenuPermissions/RoleMenuPermissionFormDrawer';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
+
+import {Status} from '@/types/common';
 import {IMenu} from '@/types/menu';
+import {IRole} from '@/types/role';
+import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
 export default function RoleMenuPermissionsPage() {
   const t = useTranslations();
@@ -28,7 +31,13 @@ export default function RoleMenuPermissionsPage() {
   const [selectedDetailsRoleId, setSelectedDetailsRoleId] = useState<number | undefined>();
   const [selectedDetailsMenuId, setSelectedDetailsMenuId] = useState<number | undefined>();
 
-  const { roleMenuPermissions, listStatus, pagination, loadRoleMenuPermissions, removeRoleMenuPermission } = useRoleMenuPermissions();
+  const {
+    roleMenuPermissions,
+    listStatus,
+    pagination,
+    loadRoleMenuPermissions,
+    removeRoleMenuPermission,
+  } = useRoleMenuPermissions();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -138,13 +147,17 @@ export default function RoleMenuPermissionsPage() {
         width: 100,
         render: (permission: IRoleMenuPermission) => (
           <EntityActions
-            onView={() => router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}`)}
+            onView={() =>
+              router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}`)
+            }
             onViewModal={() => handleViewDetails(permission.roleId, permission.menuId)}
             viewText={t('view')}
             editText={t('edit')}
             deleteText={t('delete')}
             viewModalText={t('quickView')}
-            onEdit={() => router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}/edit`)}
+            onEdit={() =>
+              router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}/edit`)
+            }
             onEditModal={() => handleEditDrawer(permission.roleId, permission.menuId)}
             editModalText={t('quickEdit')}
             onDelete={() => removeRoleMenuPermission(permission.roleId, permission.menuId)}
@@ -159,7 +172,11 @@ export default function RoleMenuPermissionsPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadRoleMenuPermissions({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IRoleMenuPermission>} />

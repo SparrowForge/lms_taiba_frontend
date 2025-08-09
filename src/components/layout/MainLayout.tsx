@@ -1,59 +1,72 @@
-'use client'
+'use client';
 
-import {useCallback, useMemo, useState} from 'react'
-import {Button, Layout} from 'antd'
-import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons'
-import {Sidebar} from './Sidebar'
-import ErrorBoundary from '../error/ErrorBoundary'
-import {LanguageSwitcher} from '../ui/LanguageSwitcher'
+import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
+import {Button, Layout} from 'antd';
+import {useCallback, useMemo, useState} from 'react';
 
-const {Header, Content} = Layout
+import {Sidebar} from './Sidebar';
+import ErrorBoundary from '../error/ErrorBoundary';
+import {LanguageSwitcher} from '../ui/LanguageSwitcher';
+
+const { Header, Content } = Layout;
 
 interface MainLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
-export const MainLayout = ({children}: MainLayoutProps) => {
-  const [collapsed, setCollapsed] = useState(false)
+export const MainLayout = ({ children }: MainLayoutProps) => {
+  const [collapsed, setCollapsed] = useState(false);
 
   // Memoize sidebar width calculation
-  const sidebarWidth = useMemo(() => collapsed ? 80 : 280, [collapsed])
+  const sidebarWidth = useMemo(() => (collapsed ? 80 : 280), [collapsed]);
 
   // Memoize toggle function to prevent unnecessary re-renders
   const handleToggleCollapse = useCallback(() => {
-    setCollapsed(prev => !prev)
-  }, [])
+    setCollapsed((prev) => !prev);
+  }, []);
 
   // Memoize layout styles to prevent recalculation
-  const layoutStyle = useMemo(() => ({
-    marginLeft: sidebarWidth,
-    width: `calc(100vw - ${sidebarWidth}px)`,
-    minWidth: 0,
-    overflow: 'hidden'
-  }), [sidebarWidth])
+  const layoutStyle = useMemo(
+    () => ({
+      marginLeft: sidebarWidth,
+      width: `calc(100vw - ${sidebarWidth}px)`,
+      minWidth: 0,
+      overflow: 'hidden',
+    }),
+    [sidebarWidth],
+  );
 
   // Memoize header styles
-  const headerStyle = useMemo(() => ({
-    backgroundColor: '#ffffff',
-    padding: '0 16px',
-    height: '64px',
-    lineHeight: '64px',
-    width: '100%',
-    minWidth: 0,
-  }), [])
+  const headerStyle = useMemo(
+    () => ({
+      backgroundColor: '#ffffff',
+      padding: '0 16px',
+      height: '64px',
+      lineHeight: '64px',
+      width: '100%',
+      minWidth: 0,
+    }),
+    [],
+  );
 
   // Memoize content styles
-  const contentStyle = useMemo(() => ({
-    width: '100%',
-    minWidth: 0,
-    maxWidth: '100%'
-  }), [])
+  const contentStyle = useMemo(
+    () => ({
+      width: '100%',
+      minWidth: 0,
+      maxWidth: '100%',
+    }),
+    [],
+  );
 
   // Memoize button styles
-  const buttonStyle = useMemo(() => ({
-    border: 'none',
-    boxShadow: 'none',
-  }), [])
+  const buttonStyle = useMemo(
+    () => ({
+      border: 'none',
+      boxShadow: 'none',
+    }),
+    [],
+  );
 
   return (
     <Layout className="h-screen overflow-hidden w-full">
@@ -78,17 +91,12 @@ export const MainLayout = ({children}: MainLayoutProps) => {
           </div>
         </Header>
 
-        <Content
-          className="bg-gray-50"
-          style={contentStyle}
-        >
+        <Content className="bg-gray-50" style={contentStyle}>
           <ErrorBoundary>
-            <div style={{width: '100%', minWidth: 0}}>
-              {children}
-            </div>
+            <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
           </ErrorBoundary>
         </Content>
       </Layout>
     </Layout>
-  )
-}
+  );
+};

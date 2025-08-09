@@ -1,15 +1,19 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useAudit} from '@/hooks/useAudit';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {IAudit} from '@/types/audit';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateAuditDetailsConfig} from '@/components/audits/auditConfig';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import React, {useEffect, useState} from 'react';
+
+import {useCreateAuditDetailsConfig} from '@/components/audits/auditConfig';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useAudit} from '@/hooks/useAudit';
+
+import {IAudit} from '@/types/audit';
+import {Status} from '@/types/common';
+
 
 interface AuditDetailPageProps {
   params: Promise<{
@@ -52,7 +56,9 @@ const AuditDetailPage: React.FC<AuditDetailPageProps> = ({ params }) => {
   const config = useCreateAuditDetailsConfig(
     audit,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+    listStatus.status === Status.FAILED
+      ? listStatus.message || t('failed_name', { name: entityName })
+      : null,
   );
 
   return (

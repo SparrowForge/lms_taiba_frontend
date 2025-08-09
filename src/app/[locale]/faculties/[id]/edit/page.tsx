@@ -1,15 +1,19 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {useFaculties} from '@/hooks/useFaculties';
-import {IFaculty} from '@/types/faculty';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {PageHeader} from '@/components/ui/PageHeader';
-import FacultyForm from '@/components/faculties/FacultyForm';
 import {Button, Card} from 'antd';
+import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import FacultyForm from '@/components/faculties/FacultyForm';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useFaculties} from '@/hooks/useFaculties';
+
+import {IFaculty} from '@/types/faculty';
+
 
 interface FacultyEditPageProps {
   params: Promise<{
@@ -102,4 +106,4 @@ const FacultyEditPage: React.FC<FacultyEditPageProps> = ({ params }) => {
   );
 };
 
-export default FacultyEditPage; 
+export default FacultyEditPage;

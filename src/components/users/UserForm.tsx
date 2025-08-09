@@ -1,14 +1,16 @@
 'use client';
 
-import React, {useEffect} from 'react';
 import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useUsers} from '@/hooks/useUsers';
-import {IUserCreate, IUserUpdate} from '@/types/user';
-import {Status} from '@/types/common';
-import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import {useUsers} from '@/hooks/useUsers';
+
+import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
+import {IUserCreate, IUserUpdate} from '@/types/user';
 
 interface UserFormProps {
   mode: 'create' | 'edit';
@@ -25,7 +27,7 @@ const UserForm: React.FC<UserFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('user', { defaultValue: 'User' });
@@ -73,7 +75,9 @@ const UserForm: React.FC<UserFormProps> = ({
   };
 
   const getSubmitText = () => {
-    return mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName });
+    return mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
   };
 
   const formContent = (
@@ -117,7 +121,7 @@ const UserForm: React.FC<UserFormProps> = ({
           label={t('email')}
           rules={[
             { required: true, message: t('pleaseEnterEmail') },
-            { type: 'email', message: t('pleaseEnterValidEmail') }
+            { type: 'email', message: t('pleaseEnterValidEmail') },
           ]}
         >
           <Input
@@ -132,9 +136,7 @@ const UserForm: React.FC<UserFormProps> = ({
         <Form.Item
           name="phone"
           label={t('phone')}
-          rules={[
-            { pattern: /^[0-9+\-\s()]*$/, message: t('pleaseEnterValidPhone') }
-          ]}
+          rules={[{ pattern: /^[0-9+\-\s()]*$/, message: t('pleaseEnterValidPhone') }]}
         >
           <Input
             placeholder={t('phone')}
@@ -150,7 +152,7 @@ const UserForm: React.FC<UserFormProps> = ({
             label={t('password')}
             rules={[
               { required: true, message: t('pleaseEnterPassword') },
-              { min: 6, message: t('passwordMinLength') }
+              { min: 6, message: t('passwordMinLength') },
             ]}
           >
             <Input.Password
@@ -173,15 +175,19 @@ const UserForm: React.FC<UserFormProps> = ({
             aria-required="true"
             aria-describedby="status-help"
           >
-            <Select.Option value="active" aria-label={t('active')}>{t('active')}</Select.Option>
-            <Select.Option value="inactive" aria-label={t('inactive')}>{t('inactive')}</Select.Option>
-            <Select.Option value="pending" aria-label={t('pending')}>{t('pending')}</Select.Option>
+            <Select.Option value="active" aria-label={t('active')}>
+              {t('active')}
+            </Select.Option>
+            <Select.Option value="inactive" aria-label={t('inactive')}>
+              {t('inactive')}
+            </Select.Option>
+            <Select.Option value="pending" aria-label={t('pending')}>
+              {t('pending')}
+            </Select.Option>
           </Select>
         </Form.Item>
 
-        <Form.Item
-          style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}
-        >
+        <Form.Item style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}>
           <div role="group" aria-label="Form actions">
             <Space size={embedded ? 'small' : 'large'}>
               <Button
@@ -222,7 +228,7 @@ const UserForm: React.FC<UserFormProps> = ({
               backgroundColor: '#fff',
               padding: '24px',
               borderRadius: '8px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
             }}
             role="main"
             aria-labelledby="form-title"

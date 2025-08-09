@@ -1,15 +1,19 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
-import {ISemesterSubject} from '@/types/semesterSubject';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {PageHeader} from '@/components/ui/PageHeader';
-import SemesterSubjectForm from '@/components/semesterSubjects/SemesterSubjectForm';
 import {Button, Card} from 'antd';
+import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import SemesterSubjectForm from '@/components/semesterSubjects/SemesterSubjectForm';
+import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
+
+import {ISemesterSubject} from '@/types/semesterSubject';
+
 
 interface SemesterSubjectEditPageProps {
   params: Promise<{
@@ -20,7 +24,13 @@ interface SemesterSubjectEditPageProps {
 const SemesterSubjectEditPage: React.FC<SemesterSubjectEditPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { semesterSubjects, listStatus, loadSemesterSubjects, getSemesterSubjectById, loadSemesterSubject } = useSemesterSubjects();
+  const {
+    semesterSubjects,
+    listStatus,
+    loadSemesterSubjects,
+    getSemesterSubjectById,
+    loadSemesterSubject,
+  } = useSemesterSubjects();
   const [semesterSubject, setSemesterSubject] = useState<ISemesterSubject | null>(null);
   const t = useTranslations();
   const entityName = t('semesterSubject', { defaultValue: 'Semester Subject' });
@@ -102,4 +112,4 @@ const SemesterSubjectEditPage: React.FC<SemesterSubjectEditPageProps> = ({ param
   );
 };
 
-export default SemesterSubjectEditPage; 
+export default SemesterSubjectEditPage;

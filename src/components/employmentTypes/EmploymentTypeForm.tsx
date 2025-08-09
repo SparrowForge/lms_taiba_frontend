@@ -1,0 +1,140 @@
+'use client';
+
+import {Button, Form, Input, Space} from 'antd';
+import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import StatusSelect from '@/components/ui/StatusSelect';
+
+import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
+
+import {Status} from '@/types/common';
+import {IEmploymentType, IEmploymentTypeCreate, IEmploymentTypeUpdate,} from '@/types/employmentType';
+import {getErrorMessage} from '@/types/errors';
+
+
+interface Props {
+  mode: 'create' | 'edit';
+  employmentTypeId?: number;
+  initialValues?: Partial<IEmploymentTypeCreate | IEmploymentTypeUpdate>;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+  embedded?: boolean;
+}
+
+const EmploymentTypeForm: React.FC<Props> = ({
+  mode,
+  employmentTypeId,
+  initialValues,
+  onSuccess,
+  onCancel,
+  embedded = false,
+}) => {
+  const t = useTranslations();
+  const entityName = t('employmentType');
+  const router = useRouter();
+  const [form] = Form.useForm();
+  const { createEmploymentType, editEmploymentType, actionStatus } = useEmploymentTypes();
+
+  useEffect(() => {
+    if (initialValues) form.setFieldsValue(initialValues);
+  }, [initialValues, form]);
+  useEffect(() => {
+    if (mode === 'create') form.resetFields();
+  }, [mode, form]);
+
+  const handleSubmit = async (values: Partial<IEmploymentType>) => {
+    try {
+      if (mode === 'create') {
+        await createEmploymentType(values as IEmploymentTypeCreate);
+        toast.success(t('created_name', { name: entityName }));
+        if (onSuccess) onSuccess();
+        else router.push('/employment-types');
+      } else if (mode === 'edit' && employmentTypeId) {
+        await editEmploymentType(employmentTypeId, values as IEmploymentTypeUpdate);
+        toast.success(t('updated_name', { name: entityName }));
+        if (onSuccess) onSuccess();
+        else router.push(`/employment-types/${employmentTypeId}`);
+      }
+    } catch (error: unknown) {
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { data?: { message?: string } } };
+        if (apiError.response?.data?.message) errorMessage = apiError.response.data.message;
+      } else {
+        errorMessage = getErrorMessage(error);
+      }
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleCancel = () => {
+    if (onCancel) onCancel();
+    else router.back();
+  };
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('update_name', { name: entityName });
+
+  const formContent = (
+    <Form
+      form={form}
+      layout="vertical"
+      initialValues={initialValues}
+      onFinish={handleSubmit}
+      disabled={actionStatus.status === Status.LOADING}
+    >
+      <Form.Item
+        name="name"
+        label={t('name')}
+        rules={[{ required: true, message: t('required_name', { name: t('name') }) }]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="status"
+        label={t('status')}
+        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+      >
+        <StatusSelect preset="binary" />
+      </Form.Item>
+      <Form.Item>
+        <Space>
+          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
+            {getSubmitText()}
+          </Button>
+          <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
+            {t('cancel')}
+          </Button>
+        </Space>
+      </Form.Item>
+    </Form>
+  );
+
+  return embedded ? (
+    formContent
+  ) : (
+    <div style={{ padding: '24px' }}>
+      <div
+        style={{
+          maxWidth: 600,
+          margin: '0 auto',
+          background: '#fff',
+          padding: 24,
+          borderRadius: 8,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        }}
+      >
+        {formContent}
+      </div>
+    </div>
+  );
+};
+
+export default EmploymentTypeForm;

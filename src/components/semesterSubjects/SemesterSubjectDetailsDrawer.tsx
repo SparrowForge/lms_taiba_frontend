@@ -1,13 +1,20 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {ISemesterSubject} from '@/types/semesterSubject';
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {useCreateSemesterSubjectDetailsConfig} from './semesterSubjectConfig';
-import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+
+import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
+
+import {Status} from '@/types/common';
+import {ISemesterSubject} from '@/types/semesterSubject';
+
+import {useCreateSemesterSubjectDetailsConfig} from './semesterSubjectConfig';
+
 
 interface SemesterSubjectDetailsDrawerProps {
   semesterSubjectId?: number;
@@ -23,7 +30,8 @@ const SemesterSubjectDetailsDrawer: React.FC<SemesterSubjectDetailsDrawerProps> 
   onEdit,
 }) => {
   const [semesterSubject, setSemesterSubject] = useState<ISemesterSubject | null>(null);
-  const { semesterSubjects, getSemesterSubjectById, loadSemesterSubject, detailsStatus } = useSemesterSubjects();
+  const { semesterSubjects, getSemesterSubjectById, loadSemesterSubject, detailsStatus } =
+    useSemesterSubjects();
   const t = useTranslations();
   const entityName = t('semesterSubject', { defaultValue: 'Semester Subject' });
   useEffect(() => {
@@ -62,7 +70,7 @@ const SemesterSubjectDetailsDrawer: React.FC<SemesterSubjectDetailsDrawerProps> 
     {
       embedded: true,
       onEdit: handleEdit,
-    }
+    },
   );
 
   return (
@@ -78,4 +86,4 @@ const SemesterSubjectDetailsDrawer: React.FC<SemesterSubjectDetailsDrawerProps> 
   );
 };
 
-export default SemesterSubjectDetailsDrawer; 
+export default SemesterSubjectDetailsDrawer;

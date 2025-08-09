@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IBatch } from '@/types/batch';
-import { IStatusState, Status, IPaginationMeta } from '@/types/common';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
+import {IBatch} from '@/types/batch';
+import {IPaginationMeta, IStatusState, Status} from '@/types/common';
 
 interface IBatchesState {
   listStatus: IStatusState;
@@ -47,7 +48,7 @@ const batchSlice = createSlice({
       state.batches.unshift(action.payload);
     },
     updateBatch: (state, action: PayloadAction<IBatch>) => {
-      const index = state.batches.findIndex(batch => batch.id === action.payload.id);
+      const index = state.batches.findIndex((batch) => batch.id === action.payload.id);
       if (index !== -1) {
         state.batches[index] = action.payload;
       }
@@ -56,7 +57,7 @@ const batchSlice = createSlice({
       }
     },
     deleteBatch: (state, action: PayloadAction<number>) => {
-      state.batches = state.batches.filter(batch => batch.id !== action.payload);
+      state.batches = state.batches.filter((batch) => batch.id !== action.payload);
       if (state.selectedBatch?.id === action.payload) {
         state.selectedBatch = null;
       }
@@ -90,4 +91,4 @@ export const {
   clearDetailsStatus,
 } = batchSlice.actions;
 
-export default batchSlice.reducer; 
+export default batchSlice.reducer;

@@ -1,11 +1,15 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {usePanels} from '@/hooks/usePanels';
-import {IPanel} from '@/types/panel';
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {useCreatePanelDetailsConfig} from './panelConfig';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {usePanels} from '@/hooks/usePanels';
+
+import {Status} from '@/types/common';
+import {IPanel} from '@/types/panel';
+
+import {useCreatePanelDetailsConfig} from './panelConfig';
 
 interface PanelDetailsDrawerProps {
   panelId?: number;
@@ -18,7 +22,7 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
   panelId,
   visible,
   onClose,
-  onEdit
+  onEdit,
 }) => {
   const { panels, listStatus, loadPanels, getPanelById, loadPanel } = usePanels();
   const [panel, setPanel] = useState<IPanel | null>(null);
@@ -54,7 +58,7 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
     panel,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined }
+    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
   );
 
   return (

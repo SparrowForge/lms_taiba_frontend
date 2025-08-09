@@ -1,19 +1,22 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IDepartment} from '@/types/department';
-import {useDepartments} from '@/hooks/useDepartments';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import DepartmentFormDrawer from '@/components/departments/DepartmentFormDrawer';
-import DepartmentDetailsDrawer from '@/components/departments/DepartmentDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import DepartmentDetailsDrawer from '@/components/departments/DepartmentDetailsDrawer';
+import DepartmentFormDrawer from '@/components/departments/DepartmentFormDrawer';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useDepartments} from '@/hooks/useDepartments';
+
 import {IBranch} from '@/types/branch';
+import {Status} from '@/types/common';
+import {IDepartment} from '@/types/department';
 
 export default function DepartmentsPage() {
   const t = useTranslations();
@@ -23,9 +26,12 @@ export default function DepartmentsPage() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedDepartmentId, setSelectedDepartmentId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsDepartmentId, setSelectedDetailsDepartmentId] = useState<number | undefined>();
+  const [selectedDetailsDepartmentId, setSelectedDetailsDepartmentId] = useState<
+    number | undefined
+  >();
 
-  const { departments, listStatus, pagination, loadDepartments, removeDepartment } = useDepartments();
+  const { departments, listStatus, pagination, loadDepartments, removeDepartment } =
+    useDepartments();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -73,7 +79,7 @@ export default function DepartmentsPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/departments',
-    searchFields: ['name', 'code', 'branch.name'] as (keyof IDepartment)[],
+    searchFields: ['name', 'code', 'status'] as (keyof IDepartment)[],
     onSearch: (searchText: string) => {
       loadDepartments({ page: 1, limit: 10, search: searchText });
     },
@@ -100,6 +106,30 @@ export default function DepartmentsPage() {
         dataIndex: 'branch',
         key: 'branch',
         render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
+      },
+      {
+        title: t('head'),
+        dataIndex: 'headId',
+        key: 'headId',
+        render: (val: number) => <span>{val}</span>,
+      },
+      {
+        title: t('email'),
+        dataIndex: 'email',
+        key: 'email',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('phone'),
+        dataIndex: 'phone',
+        key: 'phone',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('status'),
+        dataIndex: 'status',
+        key: 'status',
+        render: (text: string) => <span>{text}</span>,
       },
       {
         title: t('createdAt'),
@@ -134,7 +164,11 @@ export default function DepartmentsPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadDepartments({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IDepartment>} />

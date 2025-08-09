@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
 import {useTranslations} from 'next-intl';
+import React from 'react';
+
+import FacultySubjectForm from '@/components/facultySubjects/FacultySubjectForm';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
-import FacultySubjectForm from '@/components/facultySubjects/FacultySubjectForm';
 
 const CreateFacultySubjectPage: React.FC = () => {
   const t = useTranslations();
@@ -12,16 +13,16 @@ const CreateFacultySubjectPage: React.FC = () => {
 
   return (
     <MainLayout>
-      <PageHeader title={t('create_name', { name: entityName })} onBack={() => window.history.back()}>
+      <PageHeader
+        title={t('create_name', { name: entityName })}
+        onBack={() => window.history.back()}
+      >
         {/* Additional actions can go here */}
       </PageHeader>
-      
-      <FacultySubjectForm
-        mode="create"
-        embedded={false}
-      />
+
+      <FacultySubjectForm mode="create" embedded={false} />
     </MainLayout>
   );
 };
 
-export default CreateFacultySubjectPage; 
+export default CreateFacultySubjectPage;

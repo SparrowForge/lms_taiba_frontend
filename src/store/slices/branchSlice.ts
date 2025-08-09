@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IBranch } from '@/types/branch';
-import { IStatusState, Status } from '@/types/common';
-import { IPaginationMeta } from '@/types/common';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
+import {IBranch} from '@/types/branch';
+import {IPaginationMeta, IStatusState, Status} from '@/types/common';
 
 // State interface
 interface IBranchesState {
@@ -51,7 +51,7 @@ const branchSlice = createSlice({
       state.branches.unshift(action.payload);
     },
     updateBranch: (state, action: PayloadAction<IBranch>) => {
-      const index = state.branches.findIndex(branch => branch.id === action.payload.id);
+      const index = state.branches.findIndex((branch) => branch.id === action.payload.id);
       if (index !== -1) {
         state.branches[index] = action.payload;
       }
@@ -60,7 +60,7 @@ const branchSlice = createSlice({
       }
     },
     deleteBranch: (state, action: PayloadAction<number>) => {
-      state.branches = state.branches.filter(branch => branch.id !== action.payload);
+      state.branches = state.branches.filter((branch) => branch.id !== action.payload);
       if (state.selectedBranch?.id === action.payload) {
         state.selectedBranch = null;
       }
@@ -94,4 +94,4 @@ export const {
   clearDetailsStatus,
 } = branchSlice.actions;
 
-export default branchSlice.reducer; 
+export default branchSlice.reducer;

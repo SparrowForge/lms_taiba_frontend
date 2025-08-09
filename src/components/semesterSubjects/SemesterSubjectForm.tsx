@@ -1,16 +1,19 @@
 'use client';
 
-import React, {useEffect} from 'react';
 import {Button, Form, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
-import {useSemesters} from '@/hooks/useSemesters';
-import {useSubjects} from '@/hooks/useSubjects';
-import {ISemesterSubject, ISemesterSubjectCreate, ISemesterSubjectUpdate} from '@/types/semesterSubject';
-import {Status} from '@/types/common';
-import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import {useSemesters} from '@/hooks/useSemesters';
+import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
+import {useSubjects} from '@/hooks/useSubjects';
+
+import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
+import {ISemesterSubject, ISemesterSubjectCreate, ISemesterSubjectUpdate,} from '@/types/semesterSubject';
+
 
 interface SemesterSubjectFormProps {
   mode: 'create' | 'edit';
@@ -27,7 +30,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('semesterSubject');
@@ -74,7 +77,10 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
         if (apiError.response?.data?.message) {
@@ -95,7 +101,10 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('update_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('update_name', { name: entityName });
 
   const formContent = (
     <Form
@@ -114,9 +123,11 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
           showSearch
           placeholder={t('select_name', { name: t('semester') })}
           optionFilterProp="children"
-          filterOption={(input, option) => (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())}
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
         >
-          {semesters.map(semester => (
+          {semesters.map((semester) => (
             <Select.Option key={semester.id} value={semester.id}>
               {semester.name}
             </Select.Option>
@@ -132,9 +143,11 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
           showSearch
           placeholder={t('select_name', { name: t('subject') })}
           optionFilterProp="children"
-          filterOption={(input, option) => (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())}
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
         >
-          {subjects.map(subject => (
+          {subjects.map((subject) => (
             <Select.Option key={subject.id} value={subject.id}>
               {subject.name} ({subject.code})
             </Select.Option>
@@ -153,7 +166,9 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
       </Form.Item>
     </Form>
   );
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -162,7 +177,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"
@@ -173,4 +188,4 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
   );
 };
 
-export default SemesterSubjectForm; 
+export default SemesterSubjectForm;

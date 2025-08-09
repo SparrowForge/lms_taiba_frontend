@@ -1,8 +1,12 @@
 export interface IBranch {
   id: number;
   name: string;
-  location: string;
   code: string;
+  instituteId: number;
+  addressId: number;
+  externalInstituteIdNo: string;
+  campusDirectorUserId: number;
+  status: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -10,12 +14,20 @@ export interface IBranch {
 
 export interface IBranchCreate {
   name: string;
-  location: string;
   code: string;
+  instituteId: number;
+  addressId: number;
+  externalInstituteIdNo: string;
+  campusDirectorUserId: number;
+  status: string;
 }
 
 export interface IBranchUpdate {
   name?: string;
-  location?: string;
   code?: string;
-} 
+  instituteId?: number;
+  addressId?: number;
+  externalInstituteIdNo?: string;
+  campusDirectorUserId?: number;
+  status?: string;
+}

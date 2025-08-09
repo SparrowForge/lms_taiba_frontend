@@ -1,18 +1,22 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IBranch} from '@/types/branch';
-import {useBranches} from '@/hooks/useBranches';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import BranchFormDrawer from '@/components/branches/BranchFormDrawer';
-import BranchDetailsDrawer from '@/components/branches/BranchDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import BranchDetailsDrawer from '@/components/branches/BranchDetailsDrawer';
+import BranchFormDrawer from '@/components/branches/BranchFormDrawer';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useBranches} from '@/hooks/useBranches';
+
+import {IBranch} from '@/types/branch';
+import {Status} from '@/types/common';
+
 
 export default function BranchesPage() {
   const t = useTranslations();
@@ -72,7 +76,7 @@ export default function BranchesPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/branches',
-    searchFields: ['name', 'code', 'location'] as (keyof IBranch)[],
+    searchFields: ['name', 'code'] as (keyof IBranch)[],
     onSearch: (searchText: string) => {
       loadBranches({ page: 1, limit: 10, search: searchText });
     },
@@ -95,9 +99,33 @@ export default function BranchesPage() {
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('location'),
-        dataIndex: 'location',
-        key: 'location',
+        title: t('instituteId'),
+        dataIndex: 'instituteId',
+        key: 'instituteId',
+        render: (text: number) => <span>{text}</span>,
+      },
+      {
+        title: t('address'),
+        dataIndex: 'addressId',
+        key: 'addressId',
+        render: (text: number) => <span>{text}</span>,
+      },
+      {
+        title: t('externalInstituteIdNo'),
+        dataIndex: 'externalInstituteIdNo',
+        key: 'externalInstituteIdNo',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('campusDirectorUserId'),
+        dataIndex: 'campusDirectorUserId',
+        key: 'campusDirectorUserId',
+        render: (text: number) => <span>{text}</span>,
+      },
+      {
+        title: t('status'),
+        dataIndex: 'status',
+        key: 'status',
         render: (text: string) => <span>{text}</span>,
       },
       {
@@ -130,7 +158,11 @@ export default function BranchesPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadBranches({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IBranch>} />

@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Button, Card} from 'antd';
 import {useRouter} from 'next/navigation';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useDepartments} from '@/hooks/useDepartments';
-import {IDepartment} from '@/types/department';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import DepartmentForm from '@/components/departments/DepartmentForm';
+import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useDepartments} from '@/hooks/useDepartments';
+
+import {IDepartment} from '@/types/department';
 
 interface DepartmentEditPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -18,7 +21,8 @@ interface DepartmentEditPageProps {
 const DepartmentEditPage: React.FC<DepartmentEditPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { departments, listStatus, loadDepartments, getDepartmentById, loadDepartment } = useDepartments();
+  const { departments, listStatus, loadDepartments, getDepartmentById, loadDepartment } =
+    useDepartments();
   const [department, setDepartment] = useState<IDepartment | null>(null);
   const t = useTranslations();
   const entityName = t('department', { defaultValue: 'Department' });

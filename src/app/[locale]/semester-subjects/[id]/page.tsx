@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {ISemesterSubject} from '@/types/semesterSubject';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateSemesterSubjectDetailsConfig} from '@/components/semesterSubjects/semesterSubjectConfig';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {useCreateSemesterSubjectDetailsConfig} from '@/components/semesterSubjects/semesterSubjectConfig';
+import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
+
+import {Status} from '@/types/common';
+import {ISemesterSubject} from '@/types/semesterSubject';
 
 interface SemesterSubjectDetailPageProps {
   params: Promise<{
@@ -19,7 +22,13 @@ interface SemesterSubjectDetailPageProps {
 
 const SemesterSubjectDetailPage: React.FC<SemesterSubjectDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { semesterSubjects, listStatus, loadSemesterSubjects, getSemesterSubjectById, loadSemesterSubject } = useSemesterSubjects();
+  const {
+    semesterSubjects,
+    listStatus,
+    loadSemesterSubjects,
+    getSemesterSubjectById,
+    loadSemesterSubject,
+  } = useSemesterSubjects();
   const [semesterSubject, setSemesterSubject] = useState<ISemesterSubject | null>(null);
   const t = useTranslations();
   const entityName = t('semesterSubject', { defaultValue: 'Semester Subject' });
@@ -52,7 +61,9 @@ const SemesterSubjectDetailPage: React.FC<SemesterSubjectDetailPageProps> = ({ p
   const config = useCreateSemesterSubjectDetailsConfig(
     semesterSubject,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+    listStatus.status === Status.FAILED
+      ? listStatus.message || t('failed_name', { name: entityName })
+      : null,
   );
 
   return (

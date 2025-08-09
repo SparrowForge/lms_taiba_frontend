@@ -1,19 +1,22 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IBatch} from '@/types/batch';
-import {useBatches} from '@/hooks/useBatches';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import BatchFormDrawer from '@/components/batches/BatchFormDrawer';
-import BatchDetailsDrawer from '@/components/batches/BatchDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
-import {ICourse} from "@/types/course";
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import BatchDetailsDrawer from '@/components/batches/BatchDetailsDrawer';
+import BatchFormDrawer from '@/components/batches/BatchFormDrawer';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useBatches} from '@/hooks/useBatches';
+
+import {IBatch} from '@/types/batch';
+import {Status} from '@/types/common';
+import {ICourse} from '@/types/course';
 
 export default function BatchesPage() {
   const t = useTranslations();
@@ -90,6 +93,18 @@ export default function BatchesPage() {
         render: (text: string) => <span>{text}</span>,
       },
       {
+        title: t('startDate'),
+        dataIndex: 'startDate',
+        key: 'startDate',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('endDate'),
+        dataIndex: 'endDate',
+        key: 'endDate',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
         title: t('year'),
         dataIndex: 'year',
         key: 'year',
@@ -106,6 +121,18 @@ export default function BatchesPage() {
         dataIndex: 'intakeCapacity',
         key: 'intakeCapacity',
         render: (text: number) => <span>{text}</span>,
+      },
+      {
+        title: t('status'),
+        dataIndex: 'status',
+        key: 'status',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('remarks'),
+        dataIndex: 'remarks',
+        key: 'remarks',
+        render: (text: string) => <span>{text}</span>,
       },
       {
         title: t('course'),
@@ -146,7 +173,11 @@ export default function BatchesPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadBatches({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IBatch>} />

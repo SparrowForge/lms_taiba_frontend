@@ -1,7 +1,7 @@
-import React from 'react';
-import {Button, Card} from 'antd';
 import {ArrowLeftOutlined, EditOutlined} from '@ant-design/icons';
+import {Button, Card} from 'antd';
 import {useTranslations} from 'next-intl';
+import React from 'react';
 
 interface PageHeaderDetailsProps {
   title: string;
@@ -16,37 +16,31 @@ const PageHeaderDetails: React.FC<PageHeaderDetailsProps> = ({
   onBack,
   onEdit,
   editText,
-  backText
+  backText,
 }) => {
   const t = useTranslations();
 
   return (
     <Card>
-    <div style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        {onBack && (
-          <Button
-            icon={<ArrowLeftOutlined />}
-            onClick={onBack}
-            type="text"
-          >
-            {backText || t('back')}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {onBack && (
+            <Button icon={<ArrowLeftOutlined />} onClick={onBack} type="text">
+              {backText || t('back')}
+            </Button>
+          )}
+          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>{title}</h1>
+        </div>
+        {onEdit && (
+          <Button type="primary" icon={<EditOutlined />} onClick={onEdit}>
+            {editText || t('edit')}
           </Button>
-        )}
-        <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>{title}</h1>
-      </div>
-      {onEdit && (
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          onClick={onEdit}
-        >
-          {editText || t('edit')}
-        </Button>
         )}
       </div>
     </Card>

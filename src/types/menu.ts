@@ -10,6 +10,7 @@ export interface IMenu {
   panel: IPanel;
   parent: IMenu | null;
   children: IMenu[];
+  status: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -21,6 +22,7 @@ export interface IMenuCreate {
   panelId: number;
   parentId?: number | null;
   sortOrder: number;
+  status: string;
 }
 
 export interface IMenuUpdate {
@@ -29,4 +31,5 @@ export interface IMenuUpdate {
   panelId?: number;
   parentId?: number | null;
   sortOrder?: number;
+  status?: string;
 }

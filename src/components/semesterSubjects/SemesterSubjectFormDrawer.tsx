@@ -1,11 +1,15 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {ISemesterSubject} from '@/types/semesterSubject';
-import SemesterSubjectForm from './SemesterSubjectForm';
-import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
+
+import {ISemesterSubject} from '@/types/semesterSubject';
+
+import SemesterSubjectForm from './SemesterSubjectForm';
+
 
 interface SemesterSubjectFormDrawerProps {
   mode: 'create' | 'edit';
@@ -63,7 +67,11 @@ const SemesterSubjectFormDrawer: React.FC<SemesterSubjectFormDrawerProps> = ({
 
   return (
     <Drawer
-      title={mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })}
+      title={
+        mode === 'create'
+          ? t('create_name', { name: entityName })
+          : t('edit_name', { name: entityName })
+      }
       width={600}
       open={visible}
       onClose={handleCancel}
@@ -81,4 +89,4 @@ const SemesterSubjectFormDrawer: React.FC<SemesterSubjectFormDrawerProps> = ({
   );
 };
 
-export default SemesterSubjectFormDrawer; 
+export default SemesterSubjectFormDrawer;

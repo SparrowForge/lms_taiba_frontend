@@ -1,15 +1,22 @@
 'use client';
 
-import React, {useEffect} from 'react';
 import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useCourses} from '@/hooks/useCourses';
-import {useDepartments} from '@/hooks/useDepartments';
-import {ICourse, ICourseCreate, ICourseUpdate} from '@/types/course';
-import {Status} from '@/types/common';
-import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import StatusSelect from '@/components/ui/StatusSelect';
+
+import {useCourses} from '@/hooks/useCourses';
+import {useCourseTypes} from '@/hooks/useCourseTypes';
+import {useDepartments} from '@/hooks/useDepartments';
+import {useScheduleTypes} from '@/hooks/useScheduleTypes';
+
+import {Status} from '@/types/common';
+import {ICourse, ICourseCreate, ICourseUpdate} from '@/types/course';
 import {getErrorMessage} from '@/types/errors';
+
 
 interface CourseFormProps {
   mode: 'create' | 'edit';
@@ -26,7 +33,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('course');
@@ -34,6 +41,8 @@ const CourseForm: React.FC<CourseFormProps> = ({
   const [form] = Form.useForm();
   const { createCourse, editCourse, actionStatus } = useCourses();
   const { departments, loadDepartments } = useDepartments();
+  const { courseTypes, loadCourseTypes } = useCourseTypes();
+  const { scheduleTypes, loadScheduleTypes } = useScheduleTypes();
 
   useEffect(() => {
     if (initialValues) {
@@ -52,6 +61,11 @@ const CourseForm: React.FC<CourseFormProps> = ({
       loadDepartments();
     }
   }, [departments.length, loadDepartments]);
+
+  useEffect(() => {
+    loadCourseTypes({ page: 1, limit: 100 });
+    loadScheduleTypes({ page: 1, limit: 100 });
+  }, [loadCourseTypes, loadScheduleTypes]);
 
   const handleSubmit = async (values: Partial<ICourse>) => {
     try {
@@ -73,7 +87,10 @@ const CourseForm: React.FC<CourseFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
 
       // Try to extract error message from API response
       if (error && typeof error === 'object' && 'response' in error) {
@@ -98,15 +115,13 @@ const CourseForm: React.FC<CourseFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const formContent = (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={handleSubmit}
-      initialValues={initialValues}
-    >
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
       <Form.Item
         name="departmentId"
         label={t('department')}
@@ -145,23 +160,53 @@ const CourseForm: React.FC<CourseFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="courseType"
+        name="courseTypeId"
         label={t('courseType')}
         rules={[{ required: true, message: t('required_field', { field: t('courseType') }) }]}
       >
-        <Select placeholder={t('select_courseType')}>
-          <Select.Option value="Certificate">{t('certificate')}</Select.Option>
-          <Select.Option value="Diploma">{t('diploma')}</Select.Option>
-          <Select.Option value="Bachelor">{t('bachelor')}</Select.Option>
-          <Select.Option value="Master">{t('master')}</Select.Option>
-          <Select.Option value="PhD">{t('phd')}</Select.Option>
+        <Select
+          placeholder={t('select_courseType')}
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {courseTypes.map((ct) => (
+            <Select.Option key={ct.id} value={ct.id}>
+              {ct.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        name="scheduleTypeId"
+        label={t('scheduleType')}
+        rules={[{ required: true, message: t('required_name', { name: t('scheduleType') }) }]}
+      >
+        <Select
+          placeholder={t('select_name', { name: t('scheduleType') })}
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {scheduleTypes.map((st) => (
+            <Select.Option key={st.id} value={st.id}>
+              {st.name}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 
       <Form.Item
         name="durationInSemesters"
         label={t('durationInSemesters')}
-        rules={[{ required: true, message: t('required_field', { field: t('durationInSemesters') }) }]}
+        rules={[
+          { required: true, message: t('required_field', { field: t('durationInSemesters') }) },
+        ]}
       >
         <InputNumber
           placeholder={t('enter_durationInSemesters')}
@@ -176,30 +221,35 @@ const CourseForm: React.FC<CourseFormProps> = ({
         label={t('description')}
         rules={[{ required: true, message: t('required_field', { field: t('description') }) }]}
       >
-        <Input.TextArea
-          placeholder={t('enter_description')}
-          rows={4}
-        />
+        <Input.TextArea placeholder={t('enter_description')} rows={4} />
+      </Form.Item>
+
+      <Form.Item
+        name="status"
+        label={t('status')}
+        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+      >
+        <StatusSelect preset="lifecycle" />
+      </Form.Item>
+
+      <Form.Item name="remarks" label={t('remarks')}>
+        <Input.TextArea rows={3} />
       </Form.Item>
 
       <Form.Item>
         <Space>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={actionStatus.status === Status.LOADING}
-          >
+          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>
-            {t('cancel')}
-          </Button>
+          <Button onClick={handleCancel}>{t('cancel')}</Button>
         </Space>
       </Form.Item>
     </Form>
   );
 
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -208,7 +258,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"

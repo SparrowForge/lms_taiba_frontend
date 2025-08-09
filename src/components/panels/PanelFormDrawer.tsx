@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
 import {usePanels} from '@/hooks/usePanels';
+
 import {IPanel} from '@/types/panel';
+
 import PanelForm from './PanelForm';
-import { useTranslations } from 'next-intl';
+
 
 interface PanelFormDrawerProps {
   mode: 'create' | 'edit';
@@ -20,12 +24,12 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
   initialValues,
   visible,
   onCancel,
-  onSuccess
+  onSuccess,
 }) => {
   const { getPanelById, loadPanel } = usePanels();
   const [panel, setPanel] = useState<IPanel | null>(null);
   const t = useTranslations();
-  const entityName = t('panel', { defaultValue: 'Panel' }); 
+  const entityName = t('panel', { defaultValue: 'Panel' });
   useEffect(() => {
     if (mode === 'edit' && panelId && visible) {
       const foundPanel = getPanelById(panelId);
@@ -37,7 +41,10 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
     }
   }, [mode, panelId, visible, getPanelById, loadPanel]);
 
-  const getTitle = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getTitle = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const handleDrawerSuccess = () => {
     if (onSuccess) onSuccess();
@@ -54,13 +61,7 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
   };
 
   return (
-    <Drawer
-      title={getTitle()}
-      open={visible}
-      onClose={onCancel}
-      width={500}
-      placement="right"
-    >
+    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <PanelForm
         mode={mode}
         panelId={panelId}

@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Drawer } from 'antd';
-import { useSubjects } from '@/hooks/useSubjects';
-import { ISubject } from '@/types/subject';
+import {Drawer} from 'antd';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {useSubjects} from '@/hooks/useSubjects';
+
+import {ISubject} from '@/types/subject';
+
 import SubjectForm from './SubjectForm';
-import { useTranslations } from 'next-intl';
+
 
 interface SubjectFormDrawerProps {
   mode: 'create' | 'edit';
@@ -20,7 +24,7 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
   initialValues,
   visible,
   onCancel,
-  onSuccess
+  onSuccess,
 }) => {
   const { getSubjectById, loadSubject } = useSubjects();
   const [subject, setSubject] = useState<ISubject | null>(null);
@@ -38,7 +42,10 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
     }
   }, [mode, subjectId, visible, getSubjectById, loadSubject]);
 
-  const getTitle = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getTitle = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const handleDrawerSuccess = () => {
     if (onSuccess) onSuccess();
@@ -61,13 +68,7 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
   };
 
   return (
-    <Drawer
-      title={getTitle()}
-      open={visible}
-      onClose={onCancel}
-      width={500}
-      placement="right"
-    >
+    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <SubjectForm
         mode={mode}
         subjectId={subjectId}
@@ -80,4 +81,4 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
   );
 };
 
-export default SubjectFormDrawer; 
+export default SubjectFormDrawer;

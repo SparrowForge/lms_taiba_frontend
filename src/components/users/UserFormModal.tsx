@@ -1,11 +1,15 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
 import {useUsers} from '@/hooks/useUsers';
+
 import {IUser, IUserCreate, IUserUpdate} from '@/types/user';
+
 import UserForm from './UserForm';
-import { useTranslations } from 'next-intl';
+
 
 interface UserFormDrawerProps {
   mode: 'create' | 'edit';
@@ -22,7 +26,7 @@ const UserFormDrawer: React.FC<UserFormDrawerProps> = ({
   initialValues,
   visible,
   onCancel,
-  onSuccess
+  onSuccess,
 }) => {
   const t = useTranslations();
   const entityName = t('user', { defaultValue: 'User' });
@@ -50,7 +54,9 @@ const UserFormDrawer: React.FC<UserFormDrawerProps> = ({
   }, [user, mode]);
 
   const getTitle = () => {
-    return mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName });
+    return mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
   };
 
   const handleDrawerSuccess = () => {
@@ -72,7 +78,7 @@ const UserFormDrawer: React.FC<UserFormDrawerProps> = ({
         lastName: user.lastName,
         email: user.email,
         phone: user.phone,
-        status: user.status as "active" | "inactive" | "pending",
+        status: user.status as 'active' | 'inactive' | 'pending',
       };
     }
     return initialValues;

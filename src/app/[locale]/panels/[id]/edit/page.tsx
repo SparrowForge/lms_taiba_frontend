@@ -1,15 +1,19 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {usePanels} from '@/hooks/usePanels';
-import {IPanel} from '@/types/panel';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {PageHeader} from '@/components/ui/PageHeader';
-import PanelForm from '@/components/panels/PanelForm';
 import {Button, Card} from 'antd';
+import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import PanelForm from '@/components/panels/PanelForm';
+import {PageHeader} from '@/components/ui/PageHeader';
+
+import {usePanels} from '@/hooks/usePanels';
+
+import {IPanel} from '@/types/panel';
+
 
 interface PanelEditPageProps {
   params: Promise<{

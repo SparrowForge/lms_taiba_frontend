@@ -1,11 +1,16 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {useDepartments} from '@/hooks/useDepartments';
-import {IDepartment} from '@/types/department';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {useCreateDepartmentDetailsConfig} from './departmentConfig';
+import React, {useEffect, useState} from 'react';
+
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {useDepartments} from '@/hooks/useDepartments';
+
+import {Status} from '@/types/common';
+import {IDepartment} from '@/types/department';
+
+import {useCreateDepartmentDetailsConfig} from './departmentConfig';
+
 
 interface DepartmentDetailsDrawerProps {
   departmentId?: number;
@@ -18,9 +23,10 @@ const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
   departmentId,
   visible,
   onClose,
-  onEdit
+  onEdit,
 }) => {
-  const { departments, listStatus, loadDepartments, getDepartmentById, loadDepartment } = useDepartments();
+  const { departments, listStatus, loadDepartments, getDepartmentById, loadDepartment } =
+    useDepartments();
   const [department, setDepartment] = useState<IDepartment | null>(null);
   const t = useTranslations();
   const entityName = t('department', { defaultValue: 'Department' });
@@ -55,7 +61,7 @@ const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
     department,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined }
+    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
   );
 
   return (

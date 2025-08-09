@@ -1,5 +1,5 @@
-import React from 'react';
 import {Tag} from 'antd';
+import React from 'react';
 
 interface UserStatusTagProps {
   status: string;
@@ -19,11 +19,7 @@ const UserStatusTag: React.FC<UserStatusTagProps> = ({ status }) => {
     }
   };
 
-  return (
-    <Tag color={getColor(status)}>
-      {status}
-    </Tag>
-  );
+  return <Tag color={getColor(status)}>{status}</Tag>;
 };
 
 export default UserStatusTag;

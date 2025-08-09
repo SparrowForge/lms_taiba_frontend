@@ -1,20 +1,21 @@
-'use client'
+'use client';
 
-import {Card, Col, Row, Statistic, Typography} from 'antd'
 import {
-  ArrowDownOutlined,
-  ArrowUpOutlined,
-  BookOutlined,
-  FileTextOutlined,
-  TeamOutlined,
-  UserOutlined
-} from '@ant-design/icons'
-import {useAuth} from '@/hooks/useAuth'
+    ArrowDownOutlined,
+    ArrowUpOutlined,
+    BookOutlined,
+    FileTextOutlined,
+    TeamOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
+import {Card, Col, Row, Statistic, Typography} from 'antd';
 
-const {Title, Text} = Typography
+import {useAuth} from '@/hooks/useAuth';
+
+const { Title, Text } = Typography;
 
 export const StatsSection = () => {
-  const {getUserFullName} = useAuth()
+  const { getUserFullName } = useAuth();
 
   const statsData = [
     {
@@ -23,7 +24,7 @@ export const StatsSection = () => {
       prefix: <UserOutlined />,
       color: '#3f8600',
       change: '+12%',
-      changeType: 'up' as const
+      changeType: 'up' as const,
     },
     {
       title: 'Active Courses',
@@ -31,7 +32,7 @@ export const StatsSection = () => {
       prefix: <BookOutlined />,
       color: '#1890ff',
       change: '+8%',
-      changeType: 'up' as const
+      changeType: 'up' as const,
     },
     {
       title: 'Teachers',
@@ -39,7 +40,7 @@ export const StatsSection = () => {
       prefix: <TeamOutlined />,
       color: '#722ed1',
       change: '+5%',
-      changeType: 'up' as const
+      changeType: 'up' as const,
     },
     {
       title: 'Assignments',
@@ -47,9 +48,9 @@ export const StatsSection = () => {
       prefix: <FileTextOutlined />,
       color: '#fa8c16',
       change: '-3%',
-      changeType: 'down' as const
-    }
-  ]
+      changeType: 'down' as const,
+    },
+  ];
 
   return (
     <div className="p-6 bg-gray-50">
@@ -69,16 +70,11 @@ export const StatsSection = () => {
           <Col xs={24} sm={12} lg={6} key={index}>
             <Card
               className="shadow-sm hover:shadow-md transition-shadow duration-300 border-0"
-              styles={{body: {padding: '24px'}}}
+              styles={{ body: { padding: '24px' } }}
             >
               <div className="flex items-center justify-between mb-4">
-                <div
-                  className="p-3 rounded-lg"
-                  style={{backgroundColor: `${stat.color}15`}}
-                >
-                  <div style={{color: stat.color, fontSize: '24px'}}>
-                    {stat.prefix}
-                  </div>
+                <div className="p-3 rounded-lg" style={{ backgroundColor: `${stat.color}15` }}>
+                  <div style={{ color: stat.color, fontSize: '24px' }}>{stat.prefix}</div>
                 </div>
                 <div className="text-right">
                   <div className="flex items-center">
@@ -89,7 +85,7 @@ export const StatsSection = () => {
                     )}
                     <Text
                       className={stat.changeType === 'up' ? 'text-green-500' : 'text-red-500'}
-                      style={{fontSize: '12px'}}
+                      style={{ fontSize: '12px' }}
                     >
                       {stat.change}
                     </Text>
@@ -102,7 +98,7 @@ export const StatsSection = () => {
                 valueStyle={{
                   color: stat.color,
                   fontSize: '28px',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
                 }}
               />
             </Card>
@@ -110,5 +106,5 @@ export const StatsSection = () => {
         ))}
       </Row>
     </div>
-  )
-}
+  );
+};

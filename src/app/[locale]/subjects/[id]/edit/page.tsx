@@ -1,15 +1,18 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Button, Card } from 'antd';
-import { useRouter } from 'next/navigation';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { useSubjects } from '@/hooks/useSubjects';
-import { ISubject } from '@/types/subject';
-import { useTranslations } from 'next-intl';
+import {Button, Card} from 'antd';
+import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
 import SubjectForm from '@/components/subjects/SubjectForm';
-import { PageHeader } from '@/components/ui/PageHeader';
+import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useSubjects} from '@/hooks/useSubjects';
+
+import {ISubject} from '@/types/subject';
 
 interface SubjectEditPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -111,4 +114,4 @@ const SubjectEditPage: React.FC<SubjectEditPageProps> = ({ params }) => {
   );
 };
 
-export default SubjectEditPage; 
+export default SubjectEditPage;

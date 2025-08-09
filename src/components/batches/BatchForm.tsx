@@ -1,15 +1,21 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
-import { useRouter } from 'next/navigation';
-import { useBatches } from '@/hooks/useBatches';
-import { useCourses } from '@/hooks/useCourses';
-import { IBatch, IBatchCreate, IBatchUpdate } from '@/types/batch';
-import { Status } from '@/types/common';
-import { toast } from 'react-toastify';
-import { useTranslations } from 'next-intl';
-import { getErrorMessage } from '@/types/errors';
+import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd';
+import dayjs from 'dayjs';
+import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import StatusSelect from '@/components/ui/StatusSelect';
+
+import {useBatches} from '@/hooks/useBatches';
+import {useCourses} from '@/hooks/useCourses';
+
+import {IBatch, IBatchCreate, IBatchUpdate} from '@/types/batch';
+import {Status} from '@/types/common';
+import {getErrorMessage} from '@/types/errors';
+
 
 interface BatchFormProps {
   mode: 'create' | 'edit';
@@ -26,7 +32,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('batch');
@@ -41,7 +47,19 @@ const BatchForm: React.FC<BatchFormProps> = ({
 
   useEffect(() => {
     if (initialValues) {
-      form.setFieldsValue(initialValues);
+      form.setFieldsValue({
+        ...initialValues,
+        startDate: (initialValues as IBatch)?.startDate
+          ? dayjs((initialValues as IBatch).startDate as string)
+          : (initialValues as IBatchUpdate)?.startDate
+            ? dayjs((initialValues as IBatchUpdate).startDate as string)
+            : undefined,
+        endDate: (initialValues as IBatch)?.endDate
+          ? dayjs((initialValues as IBatch).endDate as string)
+          : (initialValues as IBatchUpdate)?.endDate
+            ? dayjs((initialValues as IBatchUpdate).endDate as string)
+            : undefined,
+      });
     }
   }, [initialValues, form]);
 
@@ -53,8 +71,17 @@ const BatchForm: React.FC<BatchFormProps> = ({
 
   const handleSubmit = async (values: Partial<IBatch>) => {
     try {
+      const payload = {
+        ...values,
+        startDate: values.startDate
+          ? dayjs(values.startDate as unknown as string | Date).toISOString()
+          : undefined,
+        endDate: values.endDate
+          ? dayjs(values.endDate as unknown as string | Date).toISOString()
+          : undefined,
+      };
       if (mode === 'create') {
-        await createBatch(values as IBatchCreate);
+        await createBatch(payload as IBatchCreate);
         toast.success(t('created_name', { name: entityName }));
         if (onSuccess) {
           onSuccess();
@@ -62,7 +89,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
           router.push('/batches');
         }
       } else if (mode === 'edit' && batchId) {
-        await editBatch(batchId, values as IBatchUpdate);
+        await editBatch(batchId, payload as IBatchUpdate);
         toast.success(t('updated_name', { name: entityName }));
         if (onSuccess) {
           onSuccess();
@@ -71,7 +98,10 @@ const BatchForm: React.FC<BatchFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
         if (apiError.response?.data?.message) {
@@ -92,10 +122,13 @@ const BatchForm: React.FC<BatchFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const formContent = (
-<Form
+    <Form
       form={form}
       layout="vertical"
       initialValues={initialValues}
@@ -111,10 +144,11 @@ const BatchForm: React.FC<BatchFormProps> = ({
           showSearch
           placeholder={t('select_name', { name: t('course') })}
           optionFilterProp="children"
-          filterOption={(input, option) => 
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())}
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
         >
-          {courses.map(course => (
+          {courses.map((course) => (
             <Select.Option key={course.id} value={course.id}>
               {course.name}
             </Select.Option>
@@ -149,6 +183,34 @@ const BatchForm: React.FC<BatchFormProps> = ({
       >
         <InputNumber min={1} max={10000} style={{ width: '100%' }} />
       </Form.Item>
+      <Form.Item
+        name="startDate"
+        label={t('startDate')}
+        rules={[{ required: true, message: t('required_name', { name: t('startDate') }) }]}
+      >
+        <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
+      </Form.Item>
+      <Form.Item
+        name="endDate"
+        label={t('endDate')}
+        rules={[{ required: true, message: t('required_name', { name: t('endDate') }) }]}
+      >
+        <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
+      </Form.Item>
+      <Form.Item
+        name="status"
+        label={t('status')}
+        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+      >
+        <StatusSelect />
+      </Form.Item>
+      <Form.Item
+        name="remarks"
+        label={t('remarks')}
+        rules={[{ required: true, message: t('required_name', { name: t('remarks') }) }]}
+      >
+        <Input.TextArea rows={3} />
+      </Form.Item>
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
@@ -160,8 +222,10 @@ const BatchForm: React.FC<BatchFormProps> = ({
         </Space>
       </Form.Item>
     </Form>
-  )
-  return embedded ? formContent : (
+  );
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -170,7 +234,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"
@@ -181,4 +245,4 @@ const BatchForm: React.FC<BatchFormProps> = ({
   );
 };
 
-export default BatchForm; 
+export default BatchForm;

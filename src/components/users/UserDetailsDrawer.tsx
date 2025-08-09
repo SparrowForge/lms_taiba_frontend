@@ -1,14 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {Button, Drawer, Space} from 'antd';
 import {EditOutlined} from '@ant-design/icons';
-import {useUsers} from '@/hooks/useUsers';
-import {IUser} from '@/types/user';
+import {Button, Drawer, Space} from 'antd';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 import {useCreateUserDetailsConfig} from '@/components/users/userConfig';
+
+import {useUsers} from '@/hooks/useUsers';
+
 import {Status} from '@/types/common';
-import {useTranslations} from 'next-intl';
+import {IUser} from '@/types/user';
+
 
 interface UserDetailsDrawerProps {
   userId?: number;
@@ -21,7 +25,7 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
   userId,
   visible,
   onClose,
-  onEdit
+  onEdit,
 }) => {
   const { users, listStatus, getUserById, loadUser } = useUsers();
   const [user, setUser] = useState<IUser | null>(null);
@@ -63,7 +67,7 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
     {
       embedded: true,
       onEdit: onEdit ? handleEdit : undefined,
-    }
+    },
   );
 
   return (
@@ -77,11 +81,7 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
       extra={
         onEdit && user ? (
           <Space>
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              onClick={() => onEdit(user.id)}
-            >
+            <Button type="primary" icon={<EditOutlined />} onClick={() => onEdit(user.id)}>
               {t('edit_name', { name: entityName })}
             </Button>
           </Space>

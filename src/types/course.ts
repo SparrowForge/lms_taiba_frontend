@@ -5,9 +5,12 @@ export interface ICourse {
   departmentId: number;
   name: string;
   code: string;
-  courseType: string;
+  courseTypeId: number;
+  scheduleTypeId: number;
   durationInSemesters: number;
   description: string;
+  status: string;
+  remarks: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -18,16 +21,22 @@ export interface ICourseCreate {
   departmentId: number;
   name: string;
   code: string;
-  courseType: string;
+  courseTypeId: number;
+  scheduleTypeId: number;
   durationInSemesters: number;
   description: string;
+  status: string;
+  remarks: string;
 }
 
 export interface ICourseUpdate {
   departmentId?: number;
   name?: string;
   code?: string;
-  courseType?: string;
+  courseTypeId?: number;
+  scheduleTypeId?: number;
   durationInSemesters?: number;
   description?: string;
+  status?: string;
+  remarks?: string;
 }

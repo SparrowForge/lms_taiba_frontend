@@ -1,15 +1,19 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {useSemesters} from '@/hooks/useSemesters';
-import {ISemester} from '@/types/semester';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {PageHeader} from '@/components/ui/PageHeader';
-import SemesterForm from '@/components/semesters/SemesterForm';
 import {Button, Card} from 'antd';
+import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import SemesterForm from '@/components/semesters/SemesterForm';
+import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useSemesters} from '@/hooks/useSemesters';
+
+import {ISemester} from '@/types/semester';
+
 
 interface SemesterEditPageProps {
   params: Promise<{

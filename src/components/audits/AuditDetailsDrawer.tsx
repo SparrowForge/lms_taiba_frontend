@@ -1,13 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {IAudit} from '@/types/audit';
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {useCreateAuditDetailsConfig} from './auditConfig';
-import {useAudit} from '@/hooks/useAudit';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {useAudit} from '@/hooks/useAudit';
+
+import {IAudit} from '@/types/audit';
+import {Status} from '@/types/common';
+
+import {useCreateAuditDetailsConfig} from './auditConfig';
+
 
 interface AuditDetailsDrawerProps {
   auditId?: number;
@@ -63,7 +68,7 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
     {
       embedded: true,
       onEdit: handleEdit,
-    }
+    },
   );
 
   return (

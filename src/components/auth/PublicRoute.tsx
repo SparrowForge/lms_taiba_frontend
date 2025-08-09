@@ -1,23 +1,24 @@
-'use client'
+'use client';
 
-import {useEffect} from 'react'
-import {useRouter} from 'next/navigation'
-import {useAuth} from '@/hooks/useAuth'
+import {useRouter} from 'next/navigation';
+import {useEffect} from 'react';
+
+import {useAuth} from '@/hooks/useAuth';
 
 interface PublicRouteProps {
-  children: React.ReactNode
-  redirectTo?: string
+  children: React.ReactNode;
+  redirectTo?: string;
 }
 
 export const PublicRoute = ({ children, redirectTo = '/' }: PublicRouteProps) => {
-  const { isAuthenticated, isLoading } = useAuth()
-  const router = useRouter()
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.push(redirectTo)
+      router.push(redirectTo);
     }
-  }, [isAuthenticated, isLoading, router, redirectTo])
+  }, [isAuthenticated, isLoading, router, redirectTo]);
 
   // // Show loading while checking authentication
   // if (isLoading) {
@@ -33,5 +34,5 @@ export const PublicRoute = ({ children, redirectTo = '/' }: PublicRouteProps) =>
   //   return null
   // }
 
-  return <>{children}</>
-}
+  return <>{children}</>;
+};

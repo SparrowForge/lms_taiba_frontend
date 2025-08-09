@@ -1,25 +1,26 @@
-'use client'
+'use client';
 
-import {useEffect} from 'react'
-import {useRouter} from 'next/navigation'
-import {useAuth} from '@/hooks/useAuth'
+import {useRouter} from 'next/navigation';
+import {useEffect} from 'react';
+
+import {useAuth} from '@/hooks/useAuth';
 
 interface ProtectedRouteProps {
-  children: React.ReactNode
-  redirectTo?: string
+  children: React.ReactNode;
+  redirectTo?: string;
 }
 
 export const ProtectedRoute = ({ children, redirectTo = '/login' }: ProtectedRouteProps) => {
-  const { isAuthenticated, isLoading } = useAuth()
-  const router = useRouter()
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     // Only redirect if we're not loading AND not authenticated
     // This prevents the flash redirect when auth state is still loading
     if (!isLoading && !isAuthenticated) {
-      router.push(redirectTo)
+      router.push(redirectTo);
     }
-  }, [isAuthenticated, isLoading, router, redirectTo])
+  }, [isAuthenticated, isLoading, router, redirectTo]);
 
   // Show loading while checking authentication
   // if (isLoading) {
@@ -35,5 +36,5 @@ export const ProtectedRoute = ({ children, redirectTo = '/login' }: ProtectedRou
   //   return null
   // }
 
-  return <>{children}</>
-}
+  return <>{children}</>;
+};

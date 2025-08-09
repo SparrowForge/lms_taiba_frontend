@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {IRole} from '@/types/role';
+
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {IRole} from '@/types/role';
 
 // State interface
 interface IRolesState {
@@ -50,7 +51,7 @@ const roleSlice = createSlice({
       state.roles.unshift(action.payload);
     },
     updateRole: (state, action: PayloadAction<IRole>) => {
-      const index = state.roles.findIndex(role => role.id === action.payload.id);
+      const index = state.roles.findIndex((role) => role.id === action.payload.id);
       if (index !== -1) {
         state.roles[index] = action.payload;
       }
@@ -59,7 +60,7 @@ const roleSlice = createSlice({
       }
     },
     deleteRole: (state, action: PayloadAction<number>) => {
-      state.roles = state.roles.filter(role => role.id !== action.payload);
+      state.roles = state.roles.filter((role) => role.id !== action.payload);
       if (state.selectedRole?.id === action.payload) {
         state.selectedRole = null;
       }

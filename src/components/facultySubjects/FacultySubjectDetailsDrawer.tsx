@@ -1,13 +1,20 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {IFacultySubject} from '@/types/facultySubject';
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {useCreateFacultySubjectDetailsConfig} from './facultySubjectConfig';
-import {useFacultySubjects} from '@/hooks/useFacultySubjects';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+
+import {useFacultySubjects} from '@/hooks/useFacultySubjects';
+
+import {Status} from '@/types/common';
+import {IFacultySubject} from '@/types/facultySubject';
+
+import {useCreateFacultySubjectDetailsConfig} from './facultySubjectConfig';
+
 
 interface FacultySubjectDetailsDrawerProps {
   facultySubjectId?: number;
@@ -23,10 +30,11 @@ const FacultySubjectDetailsDrawer: React.FC<FacultySubjectDetailsDrawerProps> = 
   onEdit,
 }) => {
   const [facultySubject, setFacultySubject] = useState<IFacultySubject | null>(null);
-  const { facultySubjects, getFacultySubjectById, loadFacultySubject, detailsStatus } = useFacultySubjects();
+  const { facultySubjects, getFacultySubjectById, loadFacultySubject, detailsStatus } =
+    useFacultySubjects();
   const t = useTranslations();
   const entityName = t('facultySubject', { defaultValue: 'Faculty Subject' });
-  
+
   useEffect(() => {
     if (visible && facultySubjectId) {
       // Try to get from current list first
@@ -63,7 +71,7 @@ const FacultySubjectDetailsDrawer: React.FC<FacultySubjectDetailsDrawerProps> = 
     {
       embedded: true,
       onEdit: handleEdit,
-    }
+    },
   );
 
   return (
@@ -79,4 +87,4 @@ const FacultySubjectDetailsDrawer: React.FC<FacultySubjectDetailsDrawerProps> = 
   );
 };
 
-export default FacultySubjectDetailsDrawer; 
+export default FacultySubjectDetailsDrawer;

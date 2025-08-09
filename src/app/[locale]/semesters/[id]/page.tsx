@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useSemesters} from '@/hooks/useSemesters';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {ISemester} from '@/types/semester';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateSemesterDetailsConfig} from '@/components/semesters/semesterConfig';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {useCreateSemesterDetailsConfig} from '@/components/semesters/semesterConfig';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useSemesters} from '@/hooks/useSemesters';
+
+import {Status} from '@/types/common';
+import {ISemester} from '@/types/semester';
 
 interface SemesterDetailPageProps {
   params: Promise<{
@@ -52,7 +55,9 @@ const SemesterDetailPage: React.FC<SemesterDetailPageProps> = ({ params }) => {
   const config = useCreateSemesterDetailsConfig(
     semester,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+    listStatus.status === Status.FAILED
+      ? listStatus.message || t('failed_name', { name: entityName })
+      : null,
   );
 
   return (

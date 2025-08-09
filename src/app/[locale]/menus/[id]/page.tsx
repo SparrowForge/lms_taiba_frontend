@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useMenus} from '@/hooks/useMenus';
-import {IMenu} from '@/types/menu';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
 import {useCreateMenuDetailsConfig} from '@/components/menus/menuConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useMenus} from '@/hooks/useMenus';
+
+import {Status} from '@/types/common';
+import {IMenu} from '@/types/menu';
 
 interface MenuDetailPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -50,7 +53,9 @@ const MenuDetailPage: React.FC<MenuDetailPageProps> = ({ params }) => {
   const config = useCreateMenuDetailsConfig(
     menu,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+    listStatus.status === Status.FAILED
+      ? listStatus.message || t('failed_name', { name: entityName })
+      : null,
   );
 
   return (

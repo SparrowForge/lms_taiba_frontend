@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {ISemester} from '@/types/semester';
+
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {ISemester} from '@/types/semester';
 
 interface ISemestersState {
   listStatus: IStatusState;
@@ -47,7 +48,7 @@ const semesterSlice = createSlice({
       state.semesters.unshift(action.payload);
     },
     updateSemester: (state, action: PayloadAction<ISemester>) => {
-      const index = state.semesters.findIndex(semester => semester.id === action.payload.id);
+      const index = state.semesters.findIndex((semester) => semester.id === action.payload.id);
       if (index !== -1) {
         state.semesters[index] = action.payload;
       }
@@ -56,7 +57,7 @@ const semesterSlice = createSlice({
       }
     },
     deleteSemester: (state, action: PayloadAction<number>) => {
-      state.semesters = state.semesters.filter(semester => semester.id !== action.payload);
+      state.semesters = state.semesters.filter((semester) => semester.id !== action.payload);
       if (state.selectedSemester?.id === action.payload) {
         state.selectedSemester = null;
       }

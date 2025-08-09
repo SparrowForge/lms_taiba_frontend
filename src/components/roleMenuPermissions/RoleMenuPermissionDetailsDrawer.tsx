@@ -1,11 +1,16 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {useCreateRoleMenuPermissionDetailsConfig} from './roleMenuPermissionConfig';
+import React, {useEffect, useState} from 'react';
+
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
+
+import {Status} from '@/types/common';
+import {IRoleMenuPermission} from '@/types/roleMenuPermission';
+
+import {useCreateRoleMenuPermissionDetailsConfig} from './roleMenuPermissionConfig';
+
 
 interface RoleMenuPermissionDetailsDrawerProps {
   roleId?: number;
@@ -20,9 +25,15 @@ const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerP
   menuId,
   visible,
   onClose,
-  onEdit
+  onEdit,
 }) => {
-  const { roleMenuPermissions, listStatus, loadRoleMenuPermissions, getRoleMenuPermissionById, loadRoleMenuPermission } = useRoleMenuPermissions();
+  const {
+    roleMenuPermissions,
+    listStatus,
+    loadRoleMenuPermissions,
+    getRoleMenuPermissionById,
+    loadRoleMenuPermission,
+  } = useRoleMenuPermissions();
   const [permission, setPermission] = useState<IRoleMenuPermission | null>(null);
   const t = useTranslations();
   const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
@@ -57,7 +68,7 @@ const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerP
     permission,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.roleId, p.menuId) : undefined }
+    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.roleId, p.menuId) : undefined },
   );
 
   return (

@@ -1,18 +1,22 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {ICourse} from '@/types/course';
-import {useCourses} from '@/hooks/useCourses';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import CourseFormDrawer from '@/components/courses/CourseFormDrawer';
-import CourseDetailsDrawer from '@/components/courses/CourseDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import CourseDetailsDrawer from '@/components/courses/CourseDetailsDrawer';
+import CourseFormDrawer from '@/components/courses/CourseFormDrawer';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useCourses} from '@/hooks/useCourses';
+
+import {Status} from '@/types/common';
+import {ICourse} from '@/types/course';
 import {IDepartment} from '@/types/department';
 
 export default function CoursesPage() {
@@ -73,7 +77,7 @@ export default function CoursesPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/courses',
-    searchFields: ['name', 'code', 'courseType', 'department.name'] as (keyof ICourse)[],
+    searchFields: ['name', 'code', 'status'] as (keyof ICourse)[],
     onSearch: (searchText: string) => {
       loadCourses({ page: 1, limit: 10, search: searchText });
     },
@@ -97,9 +101,15 @@ export default function CoursesPage() {
       },
       {
         title: t('courseType'),
-        dataIndex: 'courseType',
-        key: 'courseType',
-        render: (text: string) => <span>{text}</span>,
+        dataIndex: 'courseTypeId',
+        key: 'courseTypeId',
+        render: (val: number) => <span>{val}</span>,
+      },
+      {
+        title: t('scheduleType'),
+        dataIndex: 'scheduleTypeId',
+        key: 'scheduleTypeId',
+        render: (val: number) => <span>{val}</span>,
       },
       {
         title: t('durationInSemesters'),
@@ -112,6 +122,12 @@ export default function CoursesPage() {
         dataIndex: 'department',
         key: 'department',
         render: (department: IDepartment) => <span>{department?.name || 'N/A'}</span>,
+      },
+      {
+        title: t('status'),
+        dataIndex: 'status',
+        key: 'status',
+        render: (text: string) => <span>{text}</span>,
       },
       {
         title: t('createdAt'),
@@ -146,7 +162,11 @@ export default function CoursesPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadCourses({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<ICourse>} />

@@ -1,18 +1,22 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IPanel} from '@/types/panel';
-import {usePanels} from '@/hooks/usePanels';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import PanelFormDrawer from '@/components/panels/PanelFormDrawer';
-import PanelDetailsDrawer from '@/components/panels/PanelDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import PanelDetailsDrawer from '@/components/panels/PanelDetailsDrawer';
+import PanelFormDrawer from '@/components/panels/PanelFormDrawer';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {usePanels} from '@/hooks/usePanels';
+
+import {Status} from '@/types/common';
+import {IPanel} from '@/types/panel';
+
 
 export default function PanelsPage() {
   const router = useRouter();
@@ -72,7 +76,7 @@ export default function PanelsPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/panels',
-    searchFields: ['name'] as (keyof IPanel)[],
+    searchFields: ['name', 'status'] as (keyof IPanel)[],
     onSearch: (searchText: string) => {
       loadPanels({ page: 1, limit: 10, search: searchText });
     },
@@ -93,6 +97,12 @@ export default function PanelsPage() {
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
+      },
+      {
+        title: t('status'),
+        dataIndex: 'status',
+        key: 'status',
+        render: (text: string) => <span>{text}</span>,
       },
       {
         title: t('actions'),
@@ -121,7 +131,11 @@ export default function PanelsPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadPanels({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IPanel>} />

@@ -1,19 +1,22 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {ISemester} from '@/types/semester';
-import {useSemesters} from '@/hooks/useSemesters';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import SemesterFormDrawer from '@/components/semesters/SemesterFormDrawer';
-import SemesterDetailsDrawer from '@/components/semesters/SemesterDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import SemesterDetailsDrawer from '@/components/semesters/SemesterDetailsDrawer';
+import SemesterFormDrawer from '@/components/semesters/SemesterFormDrawer';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useSemesters} from '@/hooks/useSemesters';
+
 import {IBatch} from '@/types/batch';
+import {Status} from '@/types/common';
+import {ISemester} from '@/types/semester';
 
 export default function SemestersPage() {
   const t = useTranslations();
@@ -73,7 +76,7 @@ export default function SemestersPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/semesters',
-    searchFields: ['name', 'termNo'] as (keyof ISemester)[],
+    searchFields: ['name', 'termNo', 'status'] as (keyof ISemester)[],
     onSearch: (searchText: string) => {
       loadSemesters({ page: 1, limit: 10, search: searchText });
     },
@@ -105,6 +108,12 @@ export default function SemestersPage() {
         title: t('endDate'),
         dataIndex: 'endDate',
         key: 'endDate',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('status'),
+        dataIndex: 'status',
+        key: 'status',
         render: (text: string) => <span>{text}</span>,
       },
       {
@@ -146,7 +155,11 @@ export default function SemestersPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadSemesters({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<ISemester>} />

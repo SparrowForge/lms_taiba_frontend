@@ -1,6 +1,6 @@
-import React, {Component, ErrorInfo, ReactNode} from 'react';
-import {Alert, Button, Card, Typography} from 'antd';
 import {HomeOutlined, ReloadOutlined} from '@ant-design/icons';
+import {Alert, Button, Card, Typography} from 'antd';
+import React, {Component, ErrorInfo, ReactNode} from 'react';
 
 const { Title, Text } = Typography;
 
@@ -31,7 +31,7 @@ class ErrorBoundary extends Component<Props, State> {
 
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
 
     // Call custom error handler if provided
@@ -60,40 +60,47 @@ class ErrorBoundary extends Component<Props, State> {
 
       // Default error UI
       return (
-        <div style={{
-          padding: '24px',
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#f5f5f5'
-        }}>
+        <div
+          style={{
+            padding: '24px',
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#f5f5f5',
+          }}
+        >
           <Card style={{ maxWidth: '600px', width: '100%' }}>
             <div style={{ textAlign: 'center' }}>
               <Title level={2} style={{ color: '#ff4d4f', marginBottom: '16px' }}>
                 Something went wrong
               </Title>
 
-                             <Text type="secondary" style={{ display: 'block', marginBottom: '24px' }}>
-                 We&apos;re sorry, but something unexpected happened. Please try again or contact support if the problem persists.
-               </Text>
+              <Text type="secondary" style={{ display: 'block', marginBottom: '24px' }}>
+                We&apos;re sorry, but something unexpected happened. Please try again or contact
+                support if the problem persists.
+              </Text>
 
               <Alert
                 message="Error Details"
                 description={
                   <div style={{ textAlign: 'left', fontSize: '12px' }}>
-                    <Text code>{this.state.error?.name}: {this.state.error?.message}</Text>
+                    <Text code>
+                      {this.state.error?.name}: {this.state.error?.message}
+                    </Text>
                     {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
                       <details style={{ marginTop: '8px' }}>
                         <summary>Stack Trace</summary>
-                        <pre style={{
-                          fontSize: '10px',
-                          overflow: 'auto',
-                          maxHeight: '200px',
-                          backgroundColor: '#f5f5f5',
-                          padding: '8px',
-                          borderRadius: '4px'
-                        }}>
+                        <pre
+                          style={{
+                            fontSize: '10px',
+                            overflow: 'auto',
+                            maxHeight: '200px',
+                            backgroundColor: '#f5f5f5',
+                            padding: '8px',
+                            borderRadius: '4px',
+                          }}
+                        >
                           {this.state.errorInfo.componentStack}
                         </pre>
                       </details>
@@ -114,11 +121,7 @@ class ErrorBoundary extends Component<Props, State> {
                 >
                   Reload Page
                 </Button>
-                <Button
-                  icon={<HomeOutlined />}
-                  onClick={this.handleGoHome}
-                  size="large"
-                >
+                <Button icon={<HomeOutlined />} onClick={this.handleGoHome} size="large">
                   Go Home
                 </Button>
               </div>

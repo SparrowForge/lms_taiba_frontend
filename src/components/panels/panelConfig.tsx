@@ -1,5 +1,6 @@
-import {IPanel} from '@/types/panel';
 import {useTranslations} from 'next-intl';
+
+import {IPanel} from '@/types/panel';
 
 export const getPanelDisplayName = (panel: IPanel) => panel.name;
 
@@ -10,7 +11,7 @@ export const useCreatePanelDetailsConfig = (
   options: {
     embedded?: boolean;
     onEdit?: (panel: IPanel) => void;
-  } = {}
+  } = {},
 ) => {
   const { embedded = false, onEdit } = options;
   const t = useTranslations();
@@ -28,8 +29,16 @@ export const useCreatePanelDetailsConfig = (
     fields: [
       { key: 'id', label: t('id') },
       { key: 'name', label: t('name') },
-      { key: 'createdAt', label: t('createdAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
-      { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
+      {
+        key: 'createdAt',
+        label: t('createdAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
+      {
+        key: 'updatedAt',
+        label: t('updatedAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
     ],
   };
 };

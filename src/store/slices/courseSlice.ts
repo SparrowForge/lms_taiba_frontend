@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {ICourse} from '@/types/course';
+
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {ICourse} from '@/types/course';
 
 // State interface
 interface ICoursesState {
@@ -50,7 +51,7 @@ const courseSlice = createSlice({
       state.courses.unshift(action.payload);
     },
     updateCourse: (state, action: PayloadAction<ICourse>) => {
-      const index = state.courses.findIndex(course => course.id === action.payload.id);
+      const index = state.courses.findIndex((course) => course.id === action.payload.id);
       if (index !== -1) {
         state.courses[index] = action.payload;
       }
@@ -59,7 +60,7 @@ const courseSlice = createSlice({
       }
     },
     deleteCourse: (state, action: PayloadAction<number>) => {
-      state.courses = state.courses.filter(course => course.id !== action.payload);
+      state.courses = state.courses.filter((course) => course.id !== action.payload);
       if (state.selectedCourse?.id === action.payload) {
         state.selectedCourse = null;
       }

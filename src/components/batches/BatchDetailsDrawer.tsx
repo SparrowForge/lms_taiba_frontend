@@ -1,13 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {IBatch} from '@/types/batch';
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {useCreateBatchDetailsConfig} from './batchConfig';
-import {useBatches} from '@/hooks/useBatches';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {useBatches} from '@/hooks/useBatches';
+
+import {IBatch} from '@/types/batch';
+import {Status} from '@/types/common';
+
+import {useCreateBatchDetailsConfig} from './batchConfig';
+
 
 interface BatchDetailsDrawerProps {
   batchId?: number;
@@ -62,7 +67,7 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
     {
       embedded: true,
       onEdit: handleEdit,
-    }
+    },
   );
 
   return (

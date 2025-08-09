@@ -1,13 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {IBranch} from '@/types/branch';
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {useCreateBranchDetailsConfig} from './branchConfig';
-import {useBranches} from '@/hooks/useBranches';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {useBranches} from '@/hooks/useBranches';
+
+import {IBranch} from '@/types/branch';
+import {Status} from '@/types/common';
+
+import {useCreateBranchDetailsConfig} from './branchConfig';
+
 
 interface BranchDetailsDrawerProps {
   branchId?: number;
@@ -62,7 +67,7 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
     {
       embedded: true,
       onEdit: handleEdit,
-    }
+    },
   );
 
   return (

@@ -38,4 +38,4 @@ export interface IFacultyUpdate {
   employmentType?: string;
   isActive?: boolean;
   joinedDate?: string;
-} 
+}

@@ -1,14 +1,22 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { Button, Form, Input, Space } from 'antd';
-import { useRouter } from 'next/navigation';
-import { useBranches } from '@/hooks/useBranches';
-import { IBranch, IBranchCreate, IBranchUpdate } from '@/types/branch';
-import { Status } from '@/types/common';
-import { toast } from 'react-toastify';
-import { useTranslations } from 'next-intl';
-import { getErrorMessage } from '@/types/errors';
+import {Button, Form, Input, Select, Space} from 'antd';
+import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import StatusSelect from '@/components/ui/StatusSelect';
+
+import {useAddresses} from '@/hooks/useAddresses';
+import {useBranches} from '@/hooks/useBranches';
+import {useInstitutes} from '@/hooks/useInstitutes';
+import {useUsers} from '@/hooks/useUsers';
+
+import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
+import {Status} from '@/types/common';
+import {getErrorMessage} from '@/types/errors';
+
 
 interface BranchFormProps {
   mode: 'create' | 'edit';
@@ -25,13 +33,23 @@ const BranchForm: React.FC<BranchFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('branch');
   const router = useRouter();
   const [form] = Form.useForm();
   const { createBranch, editBranch, actionStatus } = useBranches();
+  const { addresses, loadAddresses } = useAddresses();
+  const { users, loadUsers } = useUsers();
+  const { institutes, loadInstitutes } = useInstitutes();
+
+  useEffect(() => {
+    // Load related entities for selects
+    loadAddresses({ page: 1, limit: 100 });
+    loadUsers({ page: 1, limit: 100 });
+    loadInstitutes({ page: 1, limit: 100 });
+  }, [loadAddresses, loadUsers, loadInstitutes]);
 
   useEffect(() => {
     if (initialValues) {
@@ -65,8 +83,11 @@ const BranchForm: React.FC<BranchFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
-      
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
+
       // Try to extract error message from API response
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
@@ -77,7 +98,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         // Use the helper function for other error types
         errorMessage = getErrorMessage(error);
       }
-      
+
       toast.error(errorMessage);
     }
   };
@@ -90,7 +111,10 @@ const BranchForm: React.FC<BranchFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const formContent = (
     <Form
@@ -106,23 +130,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         label={t('name')}
         rules={[{ required: true, message: t('pleaseEnterName_name', { name: entityName }) }]}
       >
-        <Input
-          placeholder={t('name')}
-          aria-label={t('name')}
-          aria-required="true"
-        />
-      </Form.Item>
-
-      <Form.Item
-        name="location"
-        label={t('location')}
-        rules={[{ required: true, message: t('pleaseEnterLocation') }]}
-      >
-        <Input
-          placeholder={t('location')}
-          aria-label={t('location')}
-          aria-required="true"
-        />
+        <Input placeholder={t('name')} aria-label={t('name')} aria-required="true" />
       </Form.Item>
 
       <Form.Item
@@ -130,11 +138,90 @@ const BranchForm: React.FC<BranchFormProps> = ({
         label={t('code')}
         rules={[{ required: true, message: t('pleaseEnterCode') }]}
       >
-        <Input
-          placeholder={t('code')}
-          aria-label={t('code')}
-          aria-required="true"
-        />
+        <Input placeholder={t('code')} aria-label={t('code')} aria-required="true" />
+      </Form.Item>
+
+      <Form.Item
+        name="instituteId"
+        label={t('institute')}
+        rules={[{ required: true, message: t('required_name', { name: t('institute') }) }]}
+      >
+        <Select
+          showSearch
+          placeholder={t('select_name', { name: t('institute') })}
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {institutes.map((inst) => (
+            <Select.Option key={inst.id} value={inst.id}>
+              {inst.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        name="addressId"
+        label={t('address')}
+        rules={[{ required: true, message: t('required_name', { name: t('address') }) }]}
+      >
+        <Select
+          showSearch
+          placeholder={t('select_name', { name: t('address') })}
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {addresses.map((address) => (
+            <Select.Option key={address.id} value={address.id}>
+              {address.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        name="externalInstituteIdNo"
+        label={t('externalInstituteIdNo')}
+        rules={[
+          { required: true, message: t('required_name', { name: t('externalInstituteIdNo') }) },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="campusDirectorUserId"
+        label={t('campusDirectorUserId')}
+        rules={[
+          { required: true, message: t('required_name', { name: t('campusDirectorUserId') }) },
+        ]}
+      >
+        <Select
+          showSearch
+          placeholder={t('select_name', { name: t('user') })}
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {users.map((user) => (
+            <Select.Option key={user.id} value={user.id}>
+              {user.firstName} {user.lastName}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        name="status"
+        label={t('status')}
+        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+      >
+        <StatusSelect preset="binary" />
       </Form.Item>
 
       <Form.Item style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}>
@@ -162,7 +249,9 @@ const BranchForm: React.FC<BranchFormProps> = ({
     </Form>
   );
 
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -171,7 +260,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"
@@ -182,4 +271,4 @@ const BranchForm: React.FC<BranchFormProps> = ({
   );
 };
 
-export default BranchForm; 
+export default BranchForm;

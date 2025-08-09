@@ -7,6 +7,8 @@ export interface ISemester {
   termNo: number;
   startDate: string;
   endDate: string;
+  status: string;
+  remarks: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -19,6 +21,8 @@ export interface ISemesterCreate {
   termNo: number;
   startDate: string;
   endDate: string;
+  status: string;
+  remarks: string;
 }
 
 export interface ISemesterUpdate {
@@ -27,4 +31,6 @@ export interface ISemesterUpdate {
   termNo?: number;
   startDate?: string;
   endDate?: string;
+  status?: string;
+  remarks?: string;
 }

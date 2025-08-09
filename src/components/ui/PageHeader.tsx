@@ -1,7 +1,7 @@
-import React from 'react';
-import {Button, Card, Space, Typography} from 'antd';
 import {ArrowLeftOutlined} from '@ant-design/icons';
+import {Button, Card, Space, Typography} from 'antd';
 import {useTranslations} from 'next-intl';
+import React from 'react';
 
 const { Title } = Typography;
 
@@ -11,11 +11,7 @@ interface PageHeaderProps {
   children?: React.ReactNode;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({
-  title,
-  onBack,
-  children
-}) => {
+export const PageHeader: React.FC<PageHeaderProps> = ({ title, onBack, children }) => {
   const t = useTranslations();
   return (
     <Card>
@@ -23,15 +19,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             {onBack && (
-              <Button
-                icon={<ArrowLeftOutlined />}
-                onClick={onBack}
-                type="text"
-              >
+              <Button icon={<ArrowLeftOutlined />} onClick={onBack} type="text">
                 {t('back', { defaultValue: 'Back' })}
               </Button>
             )}
-            <Title level={2} style={{ margin: 0 }}>{title}</Title>
+            <Title level={2} style={{ margin: 0 }}>
+              {title}
+            </Title>
           </div>
           {children}
         </div>

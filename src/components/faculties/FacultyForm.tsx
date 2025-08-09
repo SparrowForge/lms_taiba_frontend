@@ -1,17 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
 import {Button, DatePicker, Form, Input, Select, Space, Switch} from 'antd';
+import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
-import {useFaculties} from '@/hooks/useFaculties';
+import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
 import {useBranches} from '@/hooks/useBranches';
 import {useDepartments} from '@/hooks/useDepartments';
-import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
+import {useFaculties} from '@/hooks/useFaculties';
+
 import {Status} from '@/types/common';
-import {toast} from 'react-toastify';
-import {useTranslations} from 'next-intl';
 import {getErrorMessage} from '@/types/errors';
-import dayjs from 'dayjs';
+import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
+
 
 interface FacultyFormProps {
   mode: 'create' | 'edit';
@@ -28,7 +31,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('faculty');
@@ -82,7 +85,10 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
         if (apiError.response?.data?.message) {
@@ -103,7 +109,10 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('update_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('update_name', { name: entityName });
 
   const formContent = (
     <Form
@@ -122,9 +131,11 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
           showSearch
           placeholder={t('select_name', { name: t('branch') })}
           optionFilterProp="children"
-          filterOption={(input, option) => (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())}
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
         >
-          {branches.map(branch => (
+          {branches.map((branch) => (
             <Select.Option key={branch.id} value={branch.id}>
               {branch.name}
             </Select.Option>
@@ -140,9 +151,11 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
           showSearch
           placeholder={t('select_name', { name: t('department') })}
           optionFilterProp="children"
-          filterOption={(input, option) => (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())}
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
         >
-          {departments.map(department => (
+          {departments.map((department) => (
             <Select.Option key={department.id} value={department.id}>
               {department.name}
             </Select.Option>
@@ -161,7 +174,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
         label={t('email')}
         rules={[
           { required: true, message: t('required_name', { name: t('email') }) },
-          { type: 'email', message: t('pleaseEnterValidEmail') }
+          { type: 'email', message: t('pleaseEnterValidEmail') },
         ]}
       >
         <Input />
@@ -178,9 +191,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
         label={t('employmentType')}
         rules={[{ required: true, message: t('required_name', { name: t('employmentType') }) }]}
       >
-        <Select
-          placeholder={t('select_name', { name: t('employmentType') })}
-        >
+        <Select placeholder={t('select_name', { name: t('employmentType') })}>
           <Select.Option value="full-time">{t('fullTime')}</Select.Option>
           <Select.Option value="part-time">{t('partTime')}</Select.Option>
           <Select.Option value="visiting">{t('visiting')}</Select.Option>
@@ -194,11 +205,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
-      <Form.Item
-        name="isActive"
-        label={t('status')}
-        valuePropName="checked"
-      >
+      <Form.Item name="isActive" label={t('status')} valuePropName="checked">
         <Switch checkedChildren={t('active')} unCheckedChildren={t('inactive')} />
       </Form.Item>
       <Form.Item>
@@ -213,7 +220,9 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       </Form.Item>
     </Form>
   );
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -222,7 +231,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"
@@ -233,4 +242,4 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
   );
 };
 
-export default FacultyForm; 
+export default FacultyForm;

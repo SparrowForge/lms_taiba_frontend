@@ -1,33 +1,33 @@
-import {IUser} from "./user"
+import {IUser} from './user';
 
 // Authentication response interface
 export interface IAuthResponse {
-  user: IUser
-  access_token: string
-  refresh_token: string
+  user: IUser;
+  access_token: string;
+  refresh_token: string;
 }
 
 // Credentials interfaces
 export interface LoginCredentials {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface RegisterCredentials {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
-  confirmPassword: string
-  phone?: string
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phone?: string;
 }
 
 // Redux state interface
 export interface AuthState {
-  user: IUser | null
-  token: string | null
-  refreshToken: string | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  error: string | null
+  user: IUser | null;
+  token: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
 }

@@ -1,15 +1,19 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {useFacultySubjects} from '@/hooks/useFacultySubjects';
-import {IFacultySubject} from '@/types/facultySubject';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {PageHeader} from '@/components/ui/PageHeader';
-import FacultySubjectForm from '@/components/facultySubjects/FacultySubjectForm';
 import {Button, Card} from 'antd';
+import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import FacultySubjectForm from '@/components/facultySubjects/FacultySubjectForm';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useFacultySubjects} from '@/hooks/useFacultySubjects';
+
+import {IFacultySubject} from '@/types/facultySubject';
+
 
 interface FacultySubjectEditPageProps {
   params: Promise<{
@@ -20,7 +24,13 @@ interface FacultySubjectEditPageProps {
 const FacultySubjectEditPage: React.FC<FacultySubjectEditPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { facultySubjects, listStatus, loadFacultySubjects, getFacultySubjectById, loadFacultySubject } = useFacultySubjects();
+  const {
+    facultySubjects,
+    listStatus,
+    loadFacultySubjects,
+    getFacultySubjectById,
+    loadFacultySubject,
+  } = useFacultySubjects();
   const [facultySubject, setFacultySubject] = useState<IFacultySubject | null>(null);
   const t = useTranslations();
   const entityName = t('facultySubject', { defaultValue: 'Faculty Subject' });
@@ -102,4 +112,4 @@ const FacultySubjectEditPage: React.FC<FacultySubjectEditPageProps> = ({ params 
   );
 };
 
-export default FacultySubjectEditPage; 
+export default FacultySubjectEditPage;

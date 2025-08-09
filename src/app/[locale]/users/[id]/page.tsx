@@ -1,14 +1,18 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {useUsers} from '@/hooks/useUsers';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {IUser} from '@/types/user';
-import {MainLayout} from '@/components/layout/MainLayout';
+
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useCreateUserDetailsConfig} from '@/components/users/userConfig';
+
+import {useUsers} from '@/hooks/useUsers';
+
 import {Status} from '@/types/common';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import {IUser} from '@/types/user';
+
 
 interface UserDetailPageProps {
   params: Promise<{
@@ -53,7 +57,7 @@ const UserDetailPage: React.FC<UserDetailPageProps> = ({ params }) => {
   const config = useCreateUserDetailsConfig(
     user,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null
+    listStatus.status === Status.FAILED ? listStatus.message || null : null,
   );
 
   return (

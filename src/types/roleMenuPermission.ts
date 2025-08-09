@@ -1,5 +1,5 @@
-import {IRole} from './role';
 import {IMenu} from './menu';
+import {IRole} from './role';
 
 export interface IRoleMenuPermission {
   id: number;

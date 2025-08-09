@@ -1,6 +1,8 @@
-import {IBatch} from '@/types/batch';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useTranslations} from 'next-intl';
+
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {IBatch} from '@/types/batch';
 
 export const getBatchDisplayName = (batch: IBatch) => {
   return batch.name || `Batch #${batch.id}`;
@@ -18,7 +20,7 @@ export const useCreateBatchDetailsConfig = (
     embedded?: boolean;
     onEdit?: (batch: IBatch) => void;
     onBack?: () => void;
-  } = {}
+  } = {},
 ): EntityDetailsConfig<IBatch> => {
   const { embedded = false, onEdit, onBack } = options;
   const t = useTranslations();
@@ -36,12 +38,28 @@ export const useCreateBatchDetailsConfig = (
     fields: [
       { key: 'id', label: 'ID' },
       { key: 'name', label: t('name') },
+      { key: 'startDate', label: t('startDate') },
+      { key: 'endDate', label: t('endDate') },
       { key: 'year', label: t('year') },
       { key: 'session', label: t('session') },
       { key: 'intakeCapacity', label: t('intakeCapacity') },
-      { key: 'course.name', label: t('course'), render: (value: string, item: IBatch) => item?.course?.name || 'N/A' },
-      { key: 'createdAt', label: t('createdAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
-      { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
+      { key: 'status', label: t('status') },
+      { key: 'remarks', label: t('remarks') },
+      {
+        key: 'course.name',
+        label: t('course'),
+        render: (value: string, item: IBatch) => item?.course?.name || 'N/A',
+      },
+      {
+        key: 'createdAt',
+        label: t('createdAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
+      {
+        key: 'updatedAt',
+        label: t('updatedAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
     ],
   };
 };

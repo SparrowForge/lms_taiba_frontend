@@ -1,10 +1,14 @@
 'use client';
 
-import React, {useEffect} from 'react';
 import {Drawer} from 'antd';
-import {useFacultySubjects} from '@/hooks/useFacultySubjects';
-import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate} from '@/types/facultySubject';
 import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+
+import {useFacultySubjects} from '@/hooks/useFacultySubjects';
+
+import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate,} from '@/types/facultySubject';
+
+
 import FacultySubjectForm from './FacultySubjectForm';
 
 interface FacultySubjectFormDrawerProps {
@@ -22,7 +26,7 @@ const FacultySubjectFormDrawer: React.FC<FacultySubjectFormDrawerProps> = ({
   facultySubjectId,
   initialValues,
   onClose,
-  onSuccess
+  onSuccess,
 }) => {
   const t = useTranslations();
   const entityName = t('facultySubject');
@@ -45,7 +49,10 @@ const FacultySubjectFormDrawer: React.FC<FacultySubjectFormDrawerProps> = ({
     onClose();
   };
 
-  const getTitle = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getTitle = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   return (
     <Drawer

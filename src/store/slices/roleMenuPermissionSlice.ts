@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
+
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
 // State interface
 interface IRoleMenuPermissionsState {
@@ -51,22 +52,35 @@ const roleMenuPermissionSlice = createSlice({
     },
     updateRoleMenuPermission: (state, action: PayloadAction<IRoleMenuPermission>) => {
       const index = state.roleMenuPermissions.findIndex(
-        permission => permission.roleId === action.payload.roleId && permission.menuId === action.payload.menuId
+        (permission) =>
+          permission.roleId === action.payload.roleId &&
+          permission.menuId === action.payload.menuId,
       );
       if (index !== -1) {
         state.roleMenuPermissions[index] = action.payload;
       }
-      if (state.selectedRoleMenuPermission?.roleId === action.payload.roleId &&
-          state.selectedRoleMenuPermission?.menuId === action.payload.menuId) {
+      if (
+        state.selectedRoleMenuPermission?.roleId === action.payload.roleId &&
+        state.selectedRoleMenuPermission?.menuId === action.payload.menuId
+      ) {
         state.selectedRoleMenuPermission = action.payload;
       }
     },
-    deleteRoleMenuPermission: (state, action: PayloadAction<{ roleId: number; menuId: number }>) => {
+    deleteRoleMenuPermission: (
+      state,
+      action: PayloadAction<{ roleId: number; menuId: number }>,
+    ) => {
       state.roleMenuPermissions = state.roleMenuPermissions.filter(
-        permission => !(permission.roleId === action.payload.roleId && permission.menuId === action.payload.menuId)
+        (permission) =>
+          !(
+            permission.roleId === action.payload.roleId &&
+            permission.menuId === action.payload.menuId
+          ),
       );
-      if (state.selectedRoleMenuPermission?.roleId === action.payload.roleId &&
-          state.selectedRoleMenuPermission?.menuId === action.payload.menuId) {
+      if (
+        state.selectedRoleMenuPermission?.roleId === action.payload.roleId &&
+        state.selectedRoleMenuPermission?.menuId === action.payload.menuId
+      ) {
         state.selectedRoleMenuPermission = null;
       }
     },

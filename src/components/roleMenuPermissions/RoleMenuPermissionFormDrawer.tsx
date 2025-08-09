@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
-import RoleMenuPermissionForm from './RoleMenuPermissionForm';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
+
+import {IRoleMenuPermission} from '@/types/roleMenuPermission';
+
+import RoleMenuPermissionForm from './RoleMenuPermissionForm';
+
 
 interface RoleMenuPermissionFormDrawerProps {
   mode: 'create' | 'edit';
@@ -22,7 +26,7 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
   initialValues,
   visible,
   onCancel,
-  onSuccess
+  onSuccess,
 }) => {
   const { getRoleMenuPermissionById, loadRoleMenuPermission } = useRoleMenuPermissions();
   const [permission, setPermission] = useState<IRoleMenuPermission | null>(null);
@@ -40,7 +44,10 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
     }
   }, [mode, roleId, menuId, visible, getRoleMenuPermissionById, loadRoleMenuPermission]);
 
-  const getTitle = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getTitle = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const handleDrawerSuccess = () => {
     if (onSuccess) onSuccess();
@@ -60,13 +67,7 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
   };
 
   return (
-    <Drawer
-      title={getTitle()}
-      open={visible}
-      onClose={onCancel}
-      width={500}
-      placement="right"
-    >
+    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <RoleMenuPermissionForm
         mode={mode}
         roleId={roleId}

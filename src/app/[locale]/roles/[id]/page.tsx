@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRoles} from '@/hooks/useRoles';
-import {IRole} from '@/types/role';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
 import {useCreateRoleDetailsConfig} from '@/components/roles/roleConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useRoles} from '@/hooks/useRoles';
+
+import {Status} from '@/types/common';
+import {IRole} from '@/types/role';
 
 interface RoleDetailPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -50,7 +53,9 @@ const RoleDetailPage: React.FC<RoleDetailPageProps> = ({ params }) => {
   const config = useCreateRoleDetailsConfig(
     role,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+    listStatus.status === Status.FAILED
+      ? listStatus.message || t('failed_name', { name: entityName })
+      : null,
   );
 
   return (

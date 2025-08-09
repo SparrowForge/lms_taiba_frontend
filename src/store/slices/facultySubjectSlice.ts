@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {IFacultySubject} from '@/types/facultySubject';
+
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {IFacultySubject} from '@/types/facultySubject';
 
 interface FacultySubjectState {
   facultySubjects: IFacultySubject[];
@@ -42,7 +43,7 @@ const facultySubjectSlice = createSlice({
     },
     updateFacultySubject: (state, action: PayloadAction<IFacultySubject>) => {
       const index = state.facultySubjects.findIndex(
-        (facultySubject) => facultySubject.id === action.payload.id
+        (facultySubject) => facultySubject.id === action.payload.id,
       );
       if (index !== -1) {
         state.facultySubjects[index] = action.payload;
@@ -50,7 +51,7 @@ const facultySubjectSlice = createSlice({
     },
     deleteFacultySubject: (state, action: PayloadAction<number>) => {
       state.facultySubjects = state.facultySubjects.filter(
-        (facultySubject) => facultySubject.id !== action.payload
+        (facultySubject) => facultySubject.id !== action.payload,
       );
     },
     setListStatus: (state, action: PayloadAction<IStatusState>) => {
@@ -88,4 +89,4 @@ export const {
   clearDetailsStatus,
 } = facultySubjectSlice.actions;
 
-export default facultySubjectSlice.reducer; 
+export default facultySubjectSlice.reducer;

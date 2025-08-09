@@ -1,15 +1,21 @@
 'use client';
 
-import React, {useEffect} from 'react';
 import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import StatusSelect from '@/components/ui/StatusSelect';
+
+
 import {useMenus} from '@/hooks/useMenus';
 import {usePanels} from '@/hooks/usePanels';
-import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
+
 import {Status} from '@/types/common';
-import {toast} from 'react-toastify';
-import {useTranslations} from 'next-intl';
 import {getErrorMessage} from '@/types/errors';
+import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
+
 
 interface MenuFormProps {
   mode: 'create' | 'edit';
@@ -26,7 +32,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('menu');
@@ -79,7 +85,10 @@ const MenuForm: React.FC<MenuFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
 
       // Try to extract error message from API response
       if (error && typeof error === 'object' && 'response' in error) {
@@ -104,15 +113,13 @@ const MenuForm: React.FC<MenuFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const formContent = (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={handleSubmit}
-      initialValues={initialValues}
-    >
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
       <Form.Item
         name="panelId"
         label={t('panel')}
@@ -134,10 +141,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
         </Select>
       </Form.Item>
 
-      <Form.Item
-        name="parentId"
-        label={t('parent')}
-      >
+      <Form.Item name="parentId" label={t('parent')}>
         <Select
           placeholder={t('select_parent')}
           allowClear
@@ -175,31 +179,31 @@ const MenuForm: React.FC<MenuFormProps> = ({
         label={t('sortOrder')}
         rules={[{ required: true, message: t('required_field', { field: t('sortOrder') }) }]}
       >
-        <InputNumber
-          placeholder={t('enter_sortOrder')}
-          min={1}
-          style={{ width: '100%' }}
-        />
+        <InputNumber placeholder={t('enter_sortOrder')} min={1} style={{ width: '100%' }} />
+      </Form.Item>
+
+      <Form.Item
+        name="status"
+        label={t('status')}
+        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+      >
+        <StatusSelect preset="binary" />
       </Form.Item>
 
       <Form.Item>
         <Space>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={actionStatus.status === Status.LOADING}
-          >
+          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>
-            {t('cancel')}
-          </Button>
+          <Button onClick={handleCancel}>{t('cancel')}</Button>
         </Space>
       </Form.Item>
     </Form>
   );
 
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -208,7 +212,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"

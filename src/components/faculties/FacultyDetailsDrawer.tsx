@@ -1,13 +1,20 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {IFaculty} from '@/types/faculty';
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {useCreateFacultyDetailsConfig} from './facultyConfig';
-import {useFaculties} from '@/hooks/useFaculties';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+
+import {useFaculties} from '@/hooks/useFaculties';
+
+import {Status} from '@/types/common';
+import {IFaculty} from '@/types/faculty';
+
+import {useCreateFacultyDetailsConfig} from './facultyConfig';
+
 
 interface FacultyDetailsDrawerProps {
   facultyId?: number;
@@ -62,7 +69,7 @@ const FacultyDetailsDrawer: React.FC<FacultyDetailsDrawerProps> = ({
     {
       embedded: true,
       onEdit: handleEdit,
-    }
+    },
   );
 
   return (
@@ -78,4 +85,4 @@ const FacultyDetailsDrawer: React.FC<FacultyDetailsDrawerProps> = ({
   );
 };
 
-export default FacultyDetailsDrawer; 
+export default FacultyDetailsDrawer;

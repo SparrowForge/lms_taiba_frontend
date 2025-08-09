@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {IMenu} from '@/types/menu';
+
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {IMenu} from '@/types/menu';
 
 // State interface
 interface IMenusState {
@@ -50,7 +51,7 @@ const menuSlice = createSlice({
       state.menus.unshift(action.payload);
     },
     updateMenu: (state, action: PayloadAction<IMenu>) => {
-      const index = state.menus.findIndex(menu => menu.id === action.payload.id);
+      const index = state.menus.findIndex((menu) => menu.id === action.payload.id);
       if (index !== -1) {
         state.menus[index] = action.payload;
       }
@@ -59,7 +60,7 @@ const menuSlice = createSlice({
       }
     },
     deleteMenu: (state, action: PayloadAction<number>) => {
-      state.menus = state.menus.filter(menu => menu.id !== action.payload);
+      state.menus = state.menus.filter((menu) => menu.id !== action.payload);
       if (state.selectedMenu?.id === action.payload) {
         state.selectedMenu = null;
       }

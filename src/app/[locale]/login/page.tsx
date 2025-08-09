@@ -1,5 +1,5 @@
-import {PublicRoute} from '@/components/auth/PublicRoute'
-import {LoginForm} from '@/components/auth/LoginForm'
+import {LoginForm} from '@/components/auth/LoginForm';
+import {PublicRoute} from '@/components/auth/PublicRoute';
 
 export default function LoginPage() {
   return (
@@ -8,5 +8,5 @@ export default function LoginPage() {
         <LoginForm />
       </div>
     </PublicRoute>
-  )
+  );
 }

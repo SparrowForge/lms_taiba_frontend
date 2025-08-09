@@ -1,6 +1,6 @@
-import React, {ReactNode, useEffect, useState} from 'react';
-import {Alert, Button, Card, Typography} from 'antd';
 import {ExclamationCircleOutlined, ReloadOutlined} from '@ant-design/icons';
+import {Alert, Button, Card, Typography} from 'antd';
+import React, {ReactNode, useEffect, useState} from 'react';
 
 const { Title, Text } = Typography;
 
@@ -52,7 +52,7 @@ const AsyncErrorBoundary: React.FC<AsyncErrorBoundaryProps> = ({
             style={{
               fontSize: '48px',
               color: '#ff4d4f',
-              marginBottom: '16px'
+              marginBottom: '16px',
             }}
           />
 
@@ -68,18 +68,22 @@ const AsyncErrorBoundary: React.FC<AsyncErrorBoundaryProps> = ({
             message="Error Details"
             description={
               <div style={{ textAlign: 'left', fontSize: '12px' }}>
-                <Text code>{errorState?.name}: {errorState?.message}</Text>
+                <Text code>
+                  {errorState?.name}: {errorState?.message}
+                </Text>
                 {process.env.NODE_ENV === 'development' && errorState?.stack && (
                   <details style={{ marginTop: '8px' }}>
                     <summary>Stack Trace</summary>
-                    <pre style={{
-                      fontSize: '10px',
-                      overflow: 'auto',
-                      maxHeight: '150px',
-                      backgroundColor: '#f5f5f5',
-                      padding: '8px',
-                      borderRadius: '4px'
-                    }}>
+                    <pre
+                      style={{
+                        fontSize: '10px',
+                        overflow: 'auto',
+                        maxHeight: '150px',
+                        backgroundColor: '#f5f5f5',
+                        padding: '8px',
+                        borderRadius: '4px',
+                      }}
+                    >
                       {errorState.stack}
                     </pre>
                   </details>
@@ -91,12 +95,7 @@ const AsyncErrorBoundary: React.FC<AsyncErrorBoundaryProps> = ({
             style={{ marginBottom: '16px', textAlign: 'left' }}
           />
 
-          <Button
-            type="primary"
-            icon={<ReloadOutlined />}
-            onClick={handleRetry}
-            size="middle"
-          >
+          <Button type="primary" icon={<ReloadOutlined />} onClick={handleRetry} size="middle">
             Try Again
           </Button>
         </div>

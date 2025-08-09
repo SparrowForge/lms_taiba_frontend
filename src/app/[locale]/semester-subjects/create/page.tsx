@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
 import {useRouter} from 'next/navigation';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {PageHeader} from '@/components/ui/PageHeader';
-import SemesterSubjectForm from '@/components/semesterSubjects/SemesterSubjectForm';
 import {useTranslations} from 'next-intl';
+import React from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import SemesterSubjectForm from '@/components/semesterSubjects/SemesterSubjectForm';
+import {PageHeader} from '@/components/ui/PageHeader';
 
 const SemesterSubjectCreatePage: React.FC = () => {
   const t = useTranslations();
@@ -21,13 +22,13 @@ const SemesterSubjectCreatePage: React.FC = () => {
     <ProtectedRoute>
       <MainLayout>
         <div style={{ padding: '24px' }}>
-        <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
 
-        <SemesterSubjectForm mode="create" embedded={false} />
+          <SemesterSubjectForm mode="create" embedded={false} />
         </div>
       </MainLayout>
     </ProtectedRoute>
   );
 };
 
-export default SemesterSubjectCreatePage; 
+export default SemesterSubjectCreatePage;

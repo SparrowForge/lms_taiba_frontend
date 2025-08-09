@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Button, Card} from 'antd';
 import {useRouter} from 'next/navigation';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRoles} from '@/hooks/useRoles';
-import {IRole} from '@/types/role';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
 import RoleForm from '@/components/roles/RoleForm';
 import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useRoles} from '@/hooks/useRoles';
+
+import {IRole} from '@/types/role';
 
 interface RoleEditPageProps {
   params: Promise<{ id: string; locale: string }>;

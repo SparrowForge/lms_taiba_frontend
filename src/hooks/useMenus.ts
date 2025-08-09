@@ -1,6 +1,14 @@
+import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+
 import {RootState} from '@/store';
+
+import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
+
+import {menuService} from '@/services/menuService';
+
 import {
     addMenu,
     clearActionStatus,
@@ -14,98 +22,120 @@ import {
     setSelectedMenu,
     updateMenu,
 } from '@/store/slices/menuSlice';
-import {menuService} from '@/services/menuService';
-import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
-import {IBasePaginatedResponse, Status} from '@/types/common';
-import {AxiosError} from 'axios';
 
 export const useMenus = () => {
   const dispatch = useDispatch();
-  const {
-    menus,
-    selectedMenu,
-    listStatus,
-    detailsStatus,
-    actionStatus,
-    pagination,
-  } = useSelector((state: RootState) => state.menus);
+  const { menus, selectedMenu, listStatus, detailsStatus, actionStatus, pagination } = useSelector(
+    (state: RootState) => state.menus,
+  );
 
   // Load menus with pagination and search
-  const loadMenus = useCallback(async (params = {}) => {
-    try {
-      dispatch(setListStatus({ status: Status.LOADING }));
-      const response: IBasePaginatedResponse<IMenu> = await menuService.getMenus(params);
-      console.log(response);
-      dispatch(setMenus(response?.data?.items ?? []));
-      dispatch(setPagination(response?.data?.meta ?? {}));
-      dispatch(setListStatus({ status: Status.SUCCESS }));
-    } catch (error: unknown) {
-      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load menus' : 'Failed to load menus';
-      dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
-    }
-  }, [dispatch]);
+  const loadMenus = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response: IBasePaginatedResponse<IMenu> = await menuService.getMenus(params);
+        console.log(response);
+        dispatch(setMenus(response?.data?.items ?? []));
+        dispatch(setPagination(response?.data?.meta ?? {}));
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load menus'
+            : 'Failed to load menus';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
 
   // Load a single menu
-  const loadMenu = useCallback(async (id: number) => {
-    try {
-      dispatch(setDetailsStatus({ status: Status.LOADING }));
-      const response: IMenu = await menuService.getMenu(id);
-      dispatch(setSelectedMenu(response));
-      dispatch(setDetailsStatus({ status: Status.SUCCESS }));
-    } catch (error: unknown) {
-      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to load menu' : 'Failed to load menu';
-      dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
-    }
-  }, [dispatch]);
+  const loadMenu = useCallback(
+    async (id: number) => {
+      try {
+        dispatch(setDetailsStatus({ status: Status.LOADING }));
+        const response: IMenu = await menuService.getMenu(id);
+        dispatch(setSelectedMenu(response));
+        dispatch(setDetailsStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load menu'
+            : 'Failed to load menu';
+        dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
 
   // Create a new menu
-  const createMenu = useCallback(async (data: IMenuCreate) => {
-    try {
-      dispatch(setActionStatus({ status: Status.LOADING }));
-      const response: IMenu = await menuService.createMenu(data);
-      dispatch(addMenu(response));
-      dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Menu created successfully' }));
-      return response;
-    } catch (error: unknown) {
-      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to create menu' : 'Failed to create menu';
-      dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
-      throw error;
-    }
-  }, [dispatch]);
+  const createMenu = useCallback(
+    async (data: IMenuCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IMenu = await menuService.createMenu(data);
+        dispatch(addMenu(response));
+        dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Menu created successfully' }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to create menu'
+            : 'Failed to create menu';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
 
   // Edit an existing menu
-  const editMenu = useCallback(async (id: number, data: IMenuUpdate) => {
-    try {
-      dispatch(setActionStatus({ status: Status.LOADING }));
-      const response: IMenu = await menuService.updateMenu(id, data);
-      dispatch(updateMenu(response));
-      dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Menu updated successfully' }));
-      return response;
-    } catch (error: unknown) {
-      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to update menu' : 'Failed to update menu';
-      dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
-      throw error;
-    }
-  }, [dispatch]);
+  const editMenu = useCallback(
+    async (id: number, data: IMenuUpdate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IMenu = await menuService.updateMenu(id, data);
+        dispatch(updateMenu(response));
+        dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Menu updated successfully' }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to update menu'
+            : 'Failed to update menu';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
 
   // Remove a menu
-  const removeMenu = useCallback(async (id: number) => {
-    try {
-      dispatch(setActionStatus({ status: Status.LOADING }));
-      await menuService.deleteMenu(id);
-      dispatch(deleteMenu(id));
-      dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Menu deleted successfully' }));
-    } catch (error: unknown) {
-      const errorMessage = error instanceof AxiosError ? error?.response?.data?.message || error?.message || 'Failed to delete menu' : 'Failed to delete menu';
-      dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
-      throw error;
-    }
-  }, [dispatch]);
+  const removeMenu = useCallback(
+    async (id: number) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        await menuService.deleteMenu(id);
+        dispatch(deleteMenu(id));
+        dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Menu deleted successfully' }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to delete menu'
+            : 'Failed to delete menu';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
 
   // Get menu by ID from the current list
-  const getMenuById = useCallback((id: number): IMenu | undefined => {
-    return menus.find((menu) => menu.id === id);
-  }, [menus]);
+  const getMenuById = useCallback(
+    (id: number): IMenu | undefined => {
+      return menus.find((menu) => menu.id === id);
+    },
+    [menus],
+  );
 
   // Clear action status
   const clearAction = useCallback(() => {
@@ -118,9 +148,12 @@ export const useMenus = () => {
   }, [dispatch]);
 
   // Set selected menu
-  const setSelected = useCallback((menu: IMenu | null) => {
-    dispatch(setSelectedMenu(menu));
-  }, [dispatch]);
+  const setSelected = useCallback(
+    (menu: IMenu | null) => {
+      dispatch(setSelectedMenu(menu));
+    },
+    [dispatch],
+  );
 
   return {
     // State

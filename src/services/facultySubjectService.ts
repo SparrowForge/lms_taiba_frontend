@@ -1,11 +1,14 @@
-import {api} from '@/lib/axios';
-import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate} from '@/types/facultySubject';
 import {IBasePaginatedResponse} from '@/types/common';
+import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate,} from '@/types/facultySubject';
+
+import {api} from '@/lib/axios';
 
 export const facultySubjectService = {
   // Get all faculty subjects with pagination and search
   getFacultySubjects: async (params = {}): Promise<IBasePaginatedResponse<IFacultySubject>> => {
-    const response = await api.get<IBasePaginatedResponse<IFacultySubject>>('/faculty-subjects', { params });
+    const response = await api.get<IBasePaginatedResponse<IFacultySubject>>('/faculty-subjects', {
+      params,
+    });
     return response.data;
   },
 
@@ -22,7 +25,10 @@ export const facultySubjectService = {
   },
 
   // Update an existing faculty subject
-  updateFacultySubject: async (id: number, data: IFacultySubjectUpdate): Promise<IFacultySubject> => {
+  updateFacultySubject: async (
+    id: number,
+    data: IFacultySubjectUpdate,
+  ): Promise<IFacultySubject> => {
     const response = await api.patch<IFacultySubject>(`/faculty-subjects/${id}`, data);
     return response.data;
   },
@@ -32,4 +38,4 @@ export const facultySubjectService = {
     const response = await api.delete(`/faculty-subjects/${id}`);
     return response.data;
   },
-}; 
+};

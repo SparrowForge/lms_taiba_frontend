@@ -1,6 +1,7 @@
-import {api} from '@/lib/axios';
-import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
 import {IBasePaginatedResponse} from '@/types/common';
+import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
+
+import {api} from '@/lib/axios';
 
 export const facultyService = {
   // Get all faculty with pagination and search
@@ -32,4 +33,4 @@ export const facultyService = {
     const response = await api.delete(`/faculty/${id}`);
     return response.data;
   },
-}; 
+};

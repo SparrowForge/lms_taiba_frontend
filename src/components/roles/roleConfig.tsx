@@ -1,5 +1,6 @@
-import {IRole} from '@/types/role';
 import {useTranslations} from 'next-intl';
+
+import {IRole} from '@/types/role';
 
 export const getRoleDisplayName = (role: IRole) => role.name;
 
@@ -10,7 +11,7 @@ export const useCreateRoleDetailsConfig = (
   options: {
     embedded?: boolean;
     onEdit?: (role: IRole) => void;
-  } = {}
+  } = {},
 ) => {
   const { embedded = false, onEdit } = options;
   const t = useTranslations();
@@ -29,9 +30,21 @@ export const useCreateRoleDetailsConfig = (
       { key: 'id', label: t('id') },
       { key: 'name', label: t('name') },
       { key: 'description', label: t('description') },
-      { key: 'branch.name', label: t('branch'), render: (value: string, item: IRole) => item?.branch?.name || 'N/A' },
-      { key: 'createdAt', label: t('createdAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
-      { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
+      {
+        key: 'branch.name',
+        label: t('branch'),
+        render: (value: string, item: IRole) => item?.branch?.name || 'N/A',
+      },
+      {
+        key: 'createdAt',
+        label: t('createdAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
+      {
+        key: 'updatedAt',
+        label: t('updatedAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
     ],
   };
 };

@@ -1,8 +1,13 @@
 import {useRouter} from 'next/navigation';
+
 import {EntityDetailsConfig, EntityDetailsContent} from './EntityDetailsContent';
 
 // Generic EntityDetails component (Page version with navigation)
-export const EntityDetails = <T extends { id: number }>({ config }: { config: EntityDetailsConfig<T> }) => {
+export const EntityDetails = <T extends { id: number }>({
+  config,
+}: {
+  config: EntityDetailsConfig<T>;
+}) => {
   const router = useRouter();
 
   const handleBack = () => {
@@ -20,7 +25,7 @@ export const EntityDetails = <T extends { id: number }>({ config }: { config: En
       config={{
         ...config,
         onBack: handleBack,
-        onEdit: handleEdit
+        onEdit: handleEdit,
       }}
     />
   );

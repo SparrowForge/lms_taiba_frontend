@@ -1,13 +1,20 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {ISemester} from '@/types/semester';
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {useCreateSemesterDetailsConfig} from './semesterConfig';
-import {useSemesters} from '@/hooks/useSemesters';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+
+import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+
+import {useSemesters} from '@/hooks/useSemesters';
+
+import {Status} from '@/types/common';
+import {ISemester} from '@/types/semester';
+
+import {useCreateSemesterDetailsConfig} from './semesterConfig';
+
 
 interface SemesterDetailsDrawerProps {
   semesterId?: number;
@@ -62,7 +69,7 @@ const SemesterDetailsDrawer: React.FC<SemesterDetailsDrawerProps> = ({
     {
       embedded: true,
       onEdit: handleEdit,
-    }
+    },
   );
 
   return (

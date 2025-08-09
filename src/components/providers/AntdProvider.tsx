@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {ConfigProvider} from 'antd';
 
@@ -7,9 +7,5 @@ interface AntdProviderProps {
 }
 
 export const AntdProvider = ({ children }: AntdProviderProps) => {
-  return (
-    <ConfigProvider>
-      {children}
-    </ConfigProvider>
-  );
+  return <ConfigProvider>{children}</ConfigProvider>;
 };

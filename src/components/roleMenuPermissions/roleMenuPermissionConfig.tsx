@@ -1,5 +1,6 @@
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 import {useTranslations} from 'next-intl';
+
+import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
 export const getRoleMenuPermissionDisplayName = (permission: IRoleMenuPermission) =>
   `${permission.role.name} - ${permission.menu.name}`;
@@ -11,7 +12,7 @@ export const useCreateRoleMenuPermissionDetailsConfig = (
   options: {
     embedded?: boolean;
     onEdit?: (permission: IRoleMenuPermission) => void;
-  } = {}
+  } = {},
 ) => {
   const { embedded = false, onEdit } = options;
   const t = useTranslations();
@@ -27,14 +28,42 @@ export const useCreateRoleMenuPermissionDetailsConfig = (
     embedded,
     onEdit,
     fields: [
-      { key: 'role.name', label: t('role'), render: (value: string, item: IRoleMenuPermission) => item?.role?.name || 'N/A' },
-      { key: 'menu.name', label: t('menu'), render: (value: string, item: IRoleMenuPermission) => item?.menu?.name || 'N/A' },
-      { key: 'view', label: t('view'), render: (value: boolean) => value ? t('yes') : t('no') },
-      { key: 'insert', label: t('insert'), render: (value: boolean) => value ? t('yes') : t('no') },
-      { key: 'update', label: t('update'), render: (value: boolean) => value ? t('yes') : t('no') },
-      { key: 'delete', label: t('delete'), render: (value: boolean) => value ? t('yes') : t('no') },
-      { key: 'createdAt', label: t('createdAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
-      { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
+      {
+        key: 'role.name',
+        label: t('role'),
+        render: (value: string, item: IRoleMenuPermission) => item?.role?.name || 'N/A',
+      },
+      {
+        key: 'menu.name',
+        label: t('menu'),
+        render: (value: string, item: IRoleMenuPermission) => item?.menu?.name || 'N/A',
+      },
+      { key: 'view', label: t('view'), render: (value: boolean) => (value ? t('yes') : t('no')) },
+      {
+        key: 'insert',
+        label: t('insert'),
+        render: (value: boolean) => (value ? t('yes') : t('no')),
+      },
+      {
+        key: 'update',
+        label: t('update'),
+        render: (value: boolean) => (value ? t('yes') : t('no')),
+      },
+      {
+        key: 'delete',
+        label: t('delete'),
+        render: (value: boolean) => (value ? t('yes') : t('no')),
+      },
+      {
+        key: 'createdAt',
+        label: t('createdAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
+      {
+        key: 'updatedAt',
+        label: t('updatedAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
     ],
   };
 };

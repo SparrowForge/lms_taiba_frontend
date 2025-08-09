@@ -1,15 +1,18 @@
 'use client';
 
+import {useTranslations} from 'next-intl';
 import React, {useEffect, useState} from 'react';
-import {useFaculties} from '@/hooks/useFaculties';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {IFaculty} from '@/types/faculty';
-import {MainLayout} from '@/components/layout/MainLayout';
+
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateFacultyDetailsConfig} from '@/components/faculties/facultyConfig';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useFaculties} from '@/hooks/useFaculties';
+
 import {Status} from '@/types/common';
-import {useTranslations} from 'next-intl';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import {IFaculty} from '@/types/faculty';
 
 interface FacultyDetailPageProps {
   params: Promise<{
@@ -52,7 +55,9 @@ const FacultyDetailPage: React.FC<FacultyDetailPageProps> = ({ params }) => {
   const config = useCreateFacultyDetailsConfig(
     faculty,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+    listStatus.status === Status.FAILED
+      ? listStatus.message || t('failed_name', { name: entityName })
+      : null,
   );
 
   return (
@@ -64,4 +69,4 @@ const FacultyDetailPage: React.FC<FacultyDetailPageProps> = ({ params }) => {
   );
 };
 
-export default FacultyDetailPage; 
+export default FacultyDetailPage;

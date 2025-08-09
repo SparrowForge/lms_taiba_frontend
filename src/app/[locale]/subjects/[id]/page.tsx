@@ -1,15 +1,18 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { useSubjects } from '@/hooks/useSubjects';
-import { ISubject } from '@/types/subject';
-import { Status } from '@/types/common';
-import { useTranslations } from 'next-intl';
-import { useCreateSubjectDetailsConfig } from '@/components/subjects/subjectConfig';
-import { EntityDetails } from '@/components/ui/EntityDetails';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {useCreateSubjectDetailsConfig} from '@/components/subjects/subjectConfig';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useSubjects} from '@/hooks/useSubjects';
+
+import {Status} from '@/types/common';
+import {ISubject} from '@/types/subject';
 
 interface SubjectDetailPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -50,7 +53,9 @@ const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({ params }) => {
   const config = useCreateSubjectDetailsConfig(
     subject,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+    listStatus.status === Status.FAILED
+      ? listStatus.message || t('failed_name', { name: entityName })
+      : null,
   );
 
   return (
@@ -62,4 +67,4 @@ const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({ params }) => {
   );
 };
 
-export default SubjectDetailPage; 
+export default SubjectDetailPage;

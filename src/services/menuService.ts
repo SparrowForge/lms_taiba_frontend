@@ -1,6 +1,7 @@
-import {api} from '@/lib/axios';
-import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
 import {IBasePaginatedResponse} from '@/types/common';
+import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
+
+import {api} from '@/lib/axios';
 
 export const menuService = {
   // Get all menus with pagination and search

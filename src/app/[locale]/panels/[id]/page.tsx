@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {usePanels} from '@/hooks/usePanels';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {IPanel} from '@/types/panel';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreatePanelDetailsConfig} from '@/components/panels/panelConfig';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {useCreatePanelDetailsConfig} from '@/components/panels/panelConfig';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {usePanels} from '@/hooks/usePanels';
+
+import {Status} from '@/types/common';
+import {IPanel} from '@/types/panel';
 
 interface PanelDetailPageProps {
   params: Promise<{
@@ -52,7 +55,9 @@ const PanelDetailPage: React.FC<PanelDetailPageProps> = ({ params }) => {
   const config = useCreatePanelDetailsConfig(
     panel,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+    listStatus.status === Status.FAILED
+      ? listStatus.message || t('failed_name', { name: entityName })
+      : null,
   );
 
   return (

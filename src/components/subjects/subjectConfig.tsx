@@ -1,5 +1,6 @@
-import {ISubject} from '@/types/subject';
 import {useTranslations} from 'next-intl';
+
+import {ISubject} from '@/types/subject';
 
 export const getSubjectDisplayName = (subject: ISubject) => subject.name;
 
@@ -10,7 +11,7 @@ export const useCreateSubjectDetailsConfig = (
   options: {
     embedded?: boolean;
     onEdit?: (subject: ISubject) => void;
-  } = {}
+  } = {},
 ) => {
   const { embedded = false, onEdit } = options;
   const t = useTranslations();
@@ -33,9 +34,24 @@ export const useCreateSubjectDetailsConfig = (
       { key: 'theoryHours', label: t('theoryHours') },
       { key: 'practicalHours', label: t('practicalHours') },
       { key: 'description', label: t('description') },
-      { key: 'course.name', label: t('course'), render: (value: string, item: ISubject) => item?.course?.name || 'N/A' },
-      { key: 'createdAt', label: t('createdAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
-      { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
+      { key: 'prerequisite', label: t('prerequisite') },
+      { key: 'status', label: t('status') },
+      { key: 'remarks', label: t('remarks') },
+      {
+        key: 'course.name',
+        label: t('course'),
+        render: (value: string, item: ISubject) => item?.course?.name || 'N/A',
+      },
+      {
+        key: 'createdAt',
+        label: t('createdAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
+      {
+        key: 'updatedAt',
+        label: t('updatedAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
     ],
   };
 };

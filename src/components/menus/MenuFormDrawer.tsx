@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {useMenus} from '@/hooks/useMenus';
-import {IMenu} from '@/types/menu';
-import MenuForm from './MenuForm';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {useMenus} from '@/hooks/useMenus';
+
+import {IMenu} from '@/types/menu';
+
+import MenuForm from './MenuForm';
+
 
 interface MenuFormDrawerProps {
   mode: 'create' | 'edit';
@@ -20,7 +24,7 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
   initialValues,
   visible,
   onCancel,
-  onSuccess
+  onSuccess,
 }) => {
   const { getMenuById, loadMenu } = useMenus();
   const [menu, setMenu] = useState<IMenu | null>(null);
@@ -38,7 +42,10 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
     }
   }, [mode, menuId, visible, getMenuById, loadMenu]);
 
-  const getTitle = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getTitle = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const handleDrawerSuccess = () => {
     if (onSuccess) onSuccess();
@@ -59,13 +66,7 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
   };
 
   return (
-    <Drawer
-      title={getTitle()}
-      open={visible}
-      onClose={onCancel}
-      width={500}
-      placement="right"
-    >
+    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <MenuForm
         mode={mode}
         menuId={menuId}

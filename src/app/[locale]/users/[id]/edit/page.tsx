@@ -1,15 +1,19 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Button, Card} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useUsers} from '@/hooks/useUsers';
-import {IUser} from '@/types/user';
-import {MainLayout} from '@/components/layout/MainLayout';
+import React, {useEffect, useState} from 'react';
+
+
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 import UserForm from '@/components/users/UserForm';
+
+import {useUsers} from '@/hooks/useUsers';
+
 import {Status} from '@/types/common';
+import {IUser} from '@/types/user';
 
 interface UserEditPageProps {
   params: Promise<{
@@ -84,17 +88,14 @@ const UserEditPage: React.FC<UserEditPageProps> = ({ params }) => {
   }
 
   const handleBack = () => {
-    router.back()
+    router.back();
   };
 
   return (
     <ProtectedRoute>
       <MainLayout>
         <div style={{ padding: '24px' }}>
-          <PageHeader
-            title="Edit User"
-            onBack={handleBack}
-          />
+          <PageHeader title="Edit User" onBack={handleBack} />
           <UserForm
             mode="edit"
             userId={parseInt(resolvedParams.id)}
@@ -103,7 +104,7 @@ const UserEditPage: React.FC<UserEditPageProps> = ({ params }) => {
               lastName: user.lastName,
               email: user.email,
               phone: user.phone,
-              status: user.status as "active" | "inactive" | "pending",
+              status: user.status as 'active' | 'inactive' | 'pending',
             }}
           />
         </div>

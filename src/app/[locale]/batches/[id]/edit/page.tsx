@@ -1,15 +1,19 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useBatches } from '@/hooks/useBatches';
-import { IBatch } from '@/types/batch';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { PageHeader } from '@/components/ui/PageHeader';
+import {Button, Card} from 'antd';
+import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import BatchForm from '@/components/batches/BatchForm';
-import { Card, Button } from 'antd';
-import { useTranslations } from 'next-intl';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useBatches} from '@/hooks/useBatches';
+
+import {IBatch} from '@/types/batch';
+
 
 interface BatchEditPageProps {
   params: Promise<{
@@ -88,9 +92,9 @@ const BatchEditPage: React.FC<BatchEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-      <div style={{ padding: '24px' }}>
-        <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
-        <BatchForm
+        <div style={{ padding: '24px' }}>
+          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <BatchForm
             mode="edit"
             batchId={parseInt(resolvedParams.id)}
             initialValues={{
@@ -107,4 +111,4 @@ const BatchEditPage: React.FC<BatchEditPageProps> = ({ params }) => {
   );
 };
 
-export default BatchEditPage; 
+export default BatchEditPage;

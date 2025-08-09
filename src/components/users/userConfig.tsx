@@ -1,8 +1,10 @@
+import {useTranslations} from 'next-intl';
 import React from 'react';
-import {IUser} from '@/types/user';
+
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import UserStatusTag from '@/components/users/UserStatusTag';
-import {useTranslations} from 'next-intl';
+
+import {IUser} from '@/types/user';
 
 export const getUserDisplayName = (user: IUser) => {
   return `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || 'Unknown User';
@@ -22,7 +24,7 @@ export const useCreateUserDetailsConfig = (
     embedded?: boolean;
     onEdit?: (user: IUser) => void;
     onBack?: () => void;
-  } = {}
+  } = {},
 ): EntityDetailsConfig<IUser> => {
   const { embedded = false, onEdit, onBack } = options;
   const t = useTranslations();
@@ -66,12 +68,12 @@ export const useCreateUserDetailsConfig = (
       {
         key: 'createdAt',
         label: t('createdAt'),
-        render: (value: string) => value ? new Date(value).toLocaleDateString() : 'N/A',
+        render: (value: string) => (value ? new Date(value).toLocaleDateString() : 'N/A'),
       },
       {
         key: 'updatedAt',
         label: t('updatedAt'),
-        render: (value: string) => value ? new Date(value).toLocaleDateString() : 'N/A',
+        render: (value: string) => (value ? new Date(value).toLocaleDateString() : 'N/A'),
       },
     ],
   };

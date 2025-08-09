@@ -1,20 +1,25 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IAudit} from '@/types/audit';
-import {useAudit} from '@/hooks/useAudit';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter, useSearchParams} from 'next/navigation';
-import AuditDetailsDrawer from '@/components/audits/AuditDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {useTranslations} from 'next-intl';
-import {Button, Modal, Tag} from 'antd';
 import {DeleteOutlined} from '@ant-design/icons';
+import {Button, Modal, Tag} from 'antd';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
+
+import AuditDetailsDrawer from '@/components/audits/AuditDetailsDrawer';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useAudit} from '@/hooks/useAudit';
+
+import {IAudit} from '@/types/audit';
+import {Status} from '@/types/common';
+
+
 
 export default function AuditPage() {
   const t = useTranslations();
@@ -89,7 +94,7 @@ export default function AuditPage() {
         loading={actionStatus.status === Status.LOADING}
       >
         {t('clean_audit')}
-      </Button>
+      </Button>,
     ],
     disableAddNew: true,
     items: audits,
@@ -108,7 +113,17 @@ export default function AuditPage() {
         dataIndex: 'action',
         key: 'action',
         render: (action: string) => (
-          <Tag color={action === 'CREATE' ? 'green' : action === 'UPDATE' ? 'blue' : action === 'DELETE' ? 'red' : 'orange'}>
+          <Tag
+            color={
+              action === 'CREATE'
+                ? 'green'
+                : action === 'UPDATE'
+                  ? 'blue'
+                  : action === 'DELETE'
+                    ? 'red'
+                    : 'orange'
+            }
+          >
             {action}
           </Tag>
         ),
@@ -124,7 +139,19 @@ export default function AuditPage() {
         dataIndex: 'method',
         key: 'method',
         render: (method: string) => (
-          <Tag color={method === 'GET' ? 'blue' : method === 'POST' ? 'green' : method === 'PUT' ? 'orange' : method === 'DELETE' ? 'red' : 'default'}>
+          <Tag
+            color={
+              method === 'GET'
+                ? 'blue'
+                : method === 'POST'
+                  ? 'green'
+                  : method === 'PUT'
+                    ? 'orange'
+                    : method === 'DELETE'
+                      ? 'red'
+                      : 'default'
+            }
+          >
             {method}
           </Tag>
         ),
@@ -134,7 +161,17 @@ export default function AuditPage() {
         dataIndex: 'responseStatus',
         key: 'responseStatus',
         render: (status: number) => (
-          <Tag color={status >= 200 && status < 300 ? 'green' : status >= 400 && status < 500 ? 'orange' : status >= 500 ? 'red' : 'default'}>
+          <Tag
+            color={
+              status >= 200 && status < 300
+                ? 'green'
+                : status >= 400 && status < 500
+                  ? 'orange'
+                  : status >= 500
+                    ? 'red'
+                    : 'default'
+            }
+          >
             {status}
           </Tag>
         ),
@@ -150,9 +187,7 @@ export default function AuditPage() {
         dataIndex: 'success',
         key: 'success',
         render: (success: boolean) => (
-          <Tag color={success ? 'green' : 'red'}>
-            {success ? t('yes') : t('no')}
-          </Tag>
+          <Tag color={success ? 'green' : 'red'}>{success ? t('yes') : t('no')}</Tag>
         ),
       },
       {
@@ -190,7 +225,11 @@ export default function AuditPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadAudits({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IAudit>} />

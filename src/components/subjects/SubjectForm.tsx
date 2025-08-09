@@ -1,15 +1,20 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
-import { useRouter } from 'next/navigation';
-import { useSubjects } from '@/hooks/useSubjects';
-import { useCourses } from '@/hooks/useCourses';
-import { ISubject, ISubjectCreate, ISubjectUpdate } from '@/types/subject';
-import { Status } from '@/types/common';
-import { toast } from 'react-toastify';
-import { useTranslations } from 'next-intl';
-import { getErrorMessage } from '@/types/errors';
+import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
+import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+
+import StatusSelect from '@/components/ui/StatusSelect';
+
+import {useCourses} from '@/hooks/useCourses';
+import {useSubjects} from '@/hooks/useSubjects';
+
+import {Status} from '@/types/common';
+import {getErrorMessage} from '@/types/errors';
+import {ISubject, ISubjectCreate, ISubjectUpdate} from '@/types/subject';
 
 interface SubjectFormProps {
   mode: 'create' | 'edit';
@@ -26,7 +31,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('subject');
@@ -73,8 +78,11 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
-      
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
+
       // Try to extract error message from API response
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
@@ -85,7 +93,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
         // Use the helper function for other error types
         errorMessage = getErrorMessage(error);
       }
-      
+
       toast.error(errorMessage);
     }
   };
@@ -98,15 +106,13 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const formContent = (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={handleSubmit}
-      initialValues={initialValues}
-    >
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
       <Form.Item
         name="courseId"
         label={t('course')}
@@ -157,8 +163,8 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
         label={t('theoryHours')}
         rules={[{ required: true, message: t('required_field', { field: t('theoryHours') }) }]}
       >
-        <InputNumber 
-          placeholder={t('enter_theoryHours')} 
+        <InputNumber
+          placeholder={t('enter_theoryHours')}
           min={0}
           max={20}
           style={{ width: '100%' }}
@@ -170,8 +176,8 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
         label={t('practicalHours')}
         rules={[{ required: true, message: t('required_field', { field: t('practicalHours') }) }]}
       >
-        <InputNumber 
-          placeholder={t('enter_practicalHours')} 
+        <InputNumber
+          placeholder={t('enter_practicalHours')}
           min={0}
           max={20}
           style={{ width: '100%' }}
@@ -183,30 +189,39 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
         label={t('description')}
         rules={[{ required: true, message: t('required_field', { field: t('description') }) }]}
       >
-        <Input.TextArea 
-          placeholder={t('enter_description')} 
-          rows={4}
-        />
+        <Input.TextArea placeholder={t('enter_description')} rows={4} />
+      </Form.Item>
+
+      <Form.Item name="prerequisite" label={t('prerequisite')}>
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="status"
+        label={t('status')}
+        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+      >
+        <StatusSelect preset="lifecycle" />
+      </Form.Item>
+
+      <Form.Item name="remarks" label={t('remarks')}>
+        <Input.TextArea rows={3} />
       </Form.Item>
 
       <Form.Item>
         <Space>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={actionStatus.status === Status.LOADING}
-          >
+          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>
-            {t('cancel')}
-          </Button>
+          <Button onClick={handleCancel}>{t('cancel')}</Button>
         </Space>
       </Form.Item>
     </Form>
   );
 
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -215,7 +230,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"
@@ -226,4 +241,4 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
   );
 };
 
-export default SubjectForm; 
+export default SubjectForm;

@@ -1,8 +1,7 @@
 export interface IErrorResponse {
-  statusCode: number
-  message: string
+  statusCode: number;
+  message: string;
 }
-
 
 // Type guard to check if error has a message
 export function isErrorWithMessage(error: unknown): error is IErrorResponse {
@@ -20,4 +19,4 @@ export function getErrorMessage(error: unknown): string {
     return error.message;
   }
   return 'An unknown error occurred';
-} 
+}

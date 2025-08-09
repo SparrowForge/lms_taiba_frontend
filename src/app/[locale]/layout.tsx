@@ -1,42 +1,47 @@
-import "@ant-design/v5-patch-for-react-19";
-import type {Metadata} from "next";
-import {Geist, Geist_Mono} from "next/font/google";
-import "./globals.css";
-import "antd/dist/reset.css";
-import {ReduxProvider} from "@/components/providers/ReduxProvider";
-import {AntdProvider} from "@/components/providers/AntdProvider";
-import {AuthInitializer} from "@/components/auth/AuthInitializer";
+import '@ant-design/v5-patch-for-react-19';
+// eslint-disable-next-line import/order
+import type {Metadata} from 'next';
+
+// eslint-disable-next-line import/order
+import {Geist, Geist_Mono} from 'next/font/google';
+
+import './globals.css';
+import 'antd/dist/reset.css';
 import {dir} from 'i18next';
+import {notFound} from 'next/navigation';
 import {hasLocale, NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
+
 import {routing} from '@/i18n/routing';
-import {notFound} from 'next/navigation';
+
+import {AuthInitializer} from '@/components/auth/AuthInitializer';
+import {AntdProvider} from '@/components/providers/AntdProvider';
+import {ReduxProvider} from '@/components/providers/ReduxProvider';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "LMS Taiba Admin Panel",
-  description: "Learning Management System Admin Panel",
+  title: 'LMS Taiba Admin Panel',
+  description: 'Learning Management System Admin Panel',
 };
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }) {
-
   // Ensure that the incoming `locale` is valid
-  const {locale} = await params;
+  const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
@@ -52,9 +57,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir(locale)}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ReduxProvider>
           <AntdProvider>
             <AuthInitializer>

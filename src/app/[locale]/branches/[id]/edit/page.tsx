@@ -1,15 +1,19 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useBranches } from '@/hooks/useBranches';
-import { IBranch } from '@/types/branch';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { PageHeader } from '@/components/ui/PageHeader';
+import {Button, Card} from 'antd';
+import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import BranchForm from '@/components/branches/BranchForm';
-import { Card, Button } from 'antd';
-import { useTranslations } from 'next-intl';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useBranches} from '@/hooks/useBranches';
+
+import {IBranch} from '@/types/branch';
+
 
 interface BranchEditPageProps {
   params: Promise<{
@@ -105,4 +109,4 @@ const BranchEditPage: React.FC<BranchEditPageProps> = ({ params }) => {
   );
 };
 
-export default BranchEditPage; 
+export default BranchEditPage;

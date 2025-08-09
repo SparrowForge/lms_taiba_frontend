@@ -1,11 +1,16 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {useMenus} from '@/hooks/useMenus';
-import {IMenu} from '@/types/menu';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {useCreateMenuDetailsConfig} from './menuConfig';
+import React, {useEffect, useState} from 'react';
+
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {useMenus} from '@/hooks/useMenus';
+
+import {Status} from '@/types/common';
+import {IMenu} from '@/types/menu';
+
+import {useCreateMenuDetailsConfig} from './menuConfig';
+
 
 interface MenuDetailsDrawerProps {
   menuId?: number;
@@ -18,7 +23,7 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
   menuId,
   visible,
   onClose,
-  onEdit
+  onEdit,
 }) => {
   const { menus, listStatus, loadMenus, getMenuById, loadMenu } = useMenus();
   const [menu, setMenu] = useState<IMenu | null>(null);
@@ -55,7 +60,7 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
     menu,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined }
+    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
   );
 
   return (

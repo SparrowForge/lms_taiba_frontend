@@ -1,11 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Drawer } from 'antd';
-import { IBatch } from '@/types/batch';
+import {Drawer} from 'antd';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {useBatches} from '@/hooks/useBatches';
+
+import {IBatch} from '@/types/batch';
+
 import BatchForm from './BatchForm';
-import { useBatches } from '@/hooks/useBatches';
-import { useTranslations } from 'next-intl';
+
 
 interface BatchFormDrawerProps {
   mode: 'create' | 'edit';
@@ -63,7 +67,11 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
 
   return (
     <Drawer
-      title={mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })}
+      title={
+        mode === 'create'
+          ? t('create_name', { name: entityName })
+          : t('edit_name', { name: entityName })
+      }
       width={600}
       open={visible}
       onClose={handleCancel}
@@ -81,4 +89,4 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
   );
 };
 
-export default BatchFormDrawer; 
+export default BatchFormDrawer;

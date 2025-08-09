@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
 import {IAudit} from '@/types/audit';
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
 
@@ -41,17 +42,13 @@ const auditSlice = createSlice({
       state.audits.unshift(action.payload);
     },
     updateAudit: (state, action: PayloadAction<IAudit>) => {
-      const index = state.audits.findIndex(
-        (audit) => audit.id === action.payload.id
-      );
+      const index = state.audits.findIndex((audit) => audit.id === action.payload.id);
       if (index !== -1) {
         state.audits[index] = action.payload;
       }
     },
     deleteAudit: (state, action: PayloadAction<number>) => {
-      state.audits = state.audits.filter(
-        (audit) => audit.id !== action.payload
-      );
+      state.audits = state.audits.filter((audit) => audit.id !== action.payload);
     },
     clearAudits: (state) => {
       state.audits = [];
@@ -92,4 +89,4 @@ export const {
   clearDetailsStatus,
 } = auditSlice.actions;
 
-export default auditSlice.reducer; 
+export default auditSlice.reducer;

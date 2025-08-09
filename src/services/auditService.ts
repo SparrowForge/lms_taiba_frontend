@@ -1,6 +1,7 @@
-import {api} from '@/lib/axios';
 import {IAudit} from '@/types/audit';
 import {IBasePaginatedResponse} from '@/types/common';
+
+import {api} from '@/lib/axios';
 
 export const auditService = {
   // Get all audit logs with pagination and search
@@ -20,4 +21,4 @@ export const auditService = {
     const response = await api.delete('/audit', { params });
     return response.data;
   },
-}; 
+};

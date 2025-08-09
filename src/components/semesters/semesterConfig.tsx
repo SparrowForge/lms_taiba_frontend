@@ -1,6 +1,8 @@
-import {ISemester} from '@/types/semester';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useTranslations} from 'next-intl';
+
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {ISemester} from '@/types/semester';
 
 export const getSemesterDisplayName = (semester: ISemester) => {
   return semester.name || `Semester #${semester.id}`;
@@ -18,7 +20,7 @@ export const useCreateSemesterDetailsConfig = (
     embedded?: boolean;
     onEdit?: (semester: ISemester) => void;
     onBack?: () => void;
-  } = {}
+  } = {},
 ): EntityDetailsConfig<ISemester> => {
   const { embedded = false, onEdit, onBack } = options;
   const t = useTranslations();
@@ -39,9 +41,21 @@ export const useCreateSemesterDetailsConfig = (
       { key: 'termNo', label: t('termNo') },
       { key: 'startDate', label: t('startDate') },
       { key: 'endDate', label: t('endDate') },
-      { key: 'batch.name', label: t('batch'), render: (value: string, item: ISemester) => item?.batch?.name || 'N/A' },
-      { key: 'createdAt', label: t('createdAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
-      { key: 'updatedAt', label: t('updatedAt'), render: (value: string) => value ? new Date(value).toLocaleString() : 'N/A' },
+      {
+        key: 'batch.name',
+        label: t('batch'),
+        render: (value: string, item: ISemester) => item?.batch?.name || 'N/A',
+      },
+      {
+        key: 'createdAt',
+        label: t('createdAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
+      {
+        key: 'updatedAt',
+        label: t('updatedAt'),
+        render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
+      },
     ],
   };
 };

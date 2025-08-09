@@ -1,11 +1,16 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {useCourses} from '@/hooks/useCourses';
-import {ICourse} from '@/types/course';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {useCreateCourseDetailsConfig} from './courseConfig';
+import React, {useEffect, useState} from 'react';
+
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {useCourses} from '@/hooks/useCourses';
+
+import {Status} from '@/types/common';
+import {ICourse} from '@/types/course';
+
+import {useCreateCourseDetailsConfig} from './courseConfig';
+
 
 interface CourseDetailsDrawerProps {
   courseId?: number;
@@ -18,7 +23,7 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
   courseId,
   visible,
   onClose,
-  onEdit
+  onEdit,
 }) => {
   const { courses, listStatus, loadCourses, getCourseById, loadCourse } = useCourses();
   const [course, setCourse] = useState<ICourse | null>(null);
@@ -55,7 +60,7 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
     course,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined }
+    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
   );
 
   return (

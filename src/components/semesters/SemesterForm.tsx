@@ -1,16 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
 import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import {useSemesters} from '@/hooks/useSemesters';
-import {useBatches} from '@/hooks/useBatches';
-import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
-import {Status} from '@/types/common';
-import {toast} from 'react-toastify';
-import {useTranslations} from 'next-intl';
-import {getErrorMessage} from '@/types/errors';
 import dayjs from 'dayjs';
+import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import StatusSelect from '@/components/ui/StatusSelect';
+
+import {useBatches} from '@/hooks/useBatches';
+import {useSemesters} from '@/hooks/useSemesters';
+
+import {Status} from '@/types/common';
+import {getErrorMessage} from '@/types/errors';
+import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
 
 
 interface SemesterFormProps {
@@ -28,7 +32,7 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('semester');
@@ -82,7 +86,10 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
         if (apiError.response?.data?.message) {
@@ -103,7 +110,10 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('update_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('update_name', { name: entityName });
 
   const formContent = (
     <Form
@@ -122,9 +132,11 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
           showSearch
           placeholder={t('select_name', { name: t('batch') })}
           optionFilterProp="children"
-          filterOption={(input, option) => (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())}
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
         >
-          {batches.map(batch => (
+          {batches.map((batch) => (
             <Select.Option key={batch.id} value={batch.id}>
               {batch.name}
             </Select.Option>
@@ -159,6 +171,16 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
+      <Form.Item
+        name="status"
+        label={t('status')}
+        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+      >
+        <StatusSelect preset="lifecycle" />
+      </Form.Item>
+      <Form.Item name="remarks" label={t('remarks')}>
+        <Input.TextArea rows={3} />
+      </Form.Item>
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
@@ -171,7 +193,9 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
       </Form.Item>
     </Form>
   );
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -180,7 +204,7 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"

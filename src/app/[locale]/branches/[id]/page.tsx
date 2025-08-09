@@ -1,15 +1,19 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useBranches } from '@/hooks/useBranches';
-import { EntityDetails } from '@/components/ui/EntityDetails';
-import { IBranch } from '@/types/branch';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { useCreateBranchDetailsConfig } from '@/components/branches/branchConfig';
-import { Status } from '@/types/common';
-import { useTranslations } from 'next-intl';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {useCreateBranchDetailsConfig} from '@/components/branches/branchConfig';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useBranches} from '@/hooks/useBranches';
+
+import {IBranch} from '@/types/branch';
+import {Status} from '@/types/common';
+
 
 interface BranchDetailPageProps {
   params: Promise<{
@@ -52,7 +56,9 @@ const BranchDetailPage: React.FC<BranchDetailPageProps> = ({ params }) => {
   const config = useCreateBranchDetailsConfig(
     branch,
     listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || t('failed_name', { name: entityName }) : null
+    listStatus.status === Status.FAILED
+      ? listStatus.message || t('failed_name', { name: entityName })
+      : null,
   );
 
   return (
@@ -64,4 +70,4 @@ const BranchDetailPage: React.FC<BranchDetailPageProps> = ({ params }) => {
   );
 };
 
-export default BranchDetailPage; 
+export default BranchDetailPage;

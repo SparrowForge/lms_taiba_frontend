@@ -1,6 +1,7 @@
-import {api} from '@/lib/axios';
-import {IPanel} from '@/types/panel';
 import {IBasePaginatedResponse} from '@/types/common';
+import {IPanel} from '@/types/panel';
+
+import {api} from '@/lib/axios';
 
 export const panelService = {
   async getPanels(params = {}): Promise<IBasePaginatedResponse<IPanel>> {

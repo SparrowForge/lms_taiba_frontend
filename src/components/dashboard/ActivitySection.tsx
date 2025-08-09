@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import {Avatar, Button, Card, List, Typography} from 'antd'
-import {EyeOutlined} from '@ant-design/icons'
+import {EyeOutlined} from '@ant-design/icons';
+import {Avatar, Button, Card, List, Typography} from 'antd';
 
-const {Text} = Typography
+const { Text } = Typography;
 
 interface ActivityItem {
-  id: number
-  user: string
-  action: string
-  course: string
-  time: string
-  avatar: string
+  id: number;
+  user: string;
+  action: string;
+  course: string;
+  time: string;
+  avatar: string;
 }
 
 export const ActivitySection = () => {
@@ -22,7 +22,7 @@ export const ActivitySection = () => {
       action: 'enrolled in',
       course: 'Advanced Mathematics',
       time: '2 minutes ago',
-      avatar: 'AH'
+      avatar: 'AH',
     },
     {
       id: 2,
@@ -30,7 +30,7 @@ export const ActivitySection = () => {
       action: 'submitted assignment for',
       course: 'Physics 101',
       time: '15 minutes ago',
-      avatar: 'SJ'
+      avatar: 'SJ',
     },
     {
       id: 3,
@@ -38,7 +38,7 @@ export const ActivitySection = () => {
       action: 'completed',
       course: 'English Literature',
       time: '1 hour ago',
-      avatar: 'MA'
+      avatar: 'MA',
     },
     {
       id: 4,
@@ -46,27 +46,22 @@ export const ActivitySection = () => {
       action: 'started',
       course: 'Computer Science',
       time: '2 hours ago',
-      avatar: 'FA'
-    }
-  ]
+      avatar: 'FA',
+    },
+  ];
 
   return (
     <Card
       title={
         <div className="flex items-center">
           <span className="text-lg font-semibold">Recent Activity</span>
-          <Button
-            type="link"
-            size="small"
-            className="ml-auto"
-            icon={<EyeOutlined />}
-          >
+          <Button type="link" size="small" className="ml-auto" icon={<EyeOutlined />}>
             View All
           </Button>
         </div>
       }
       className="shadow-sm border-0"
-      styles={{body: {padding: '24px'}}}
+      styles={{ body: { padding: '24px' } }}
     >
       <List
         dataSource={recentActivities}
@@ -74,10 +69,7 @@ export const ActivitySection = () => {
           <List.Item className="border-0 px-0 py-3">
             <List.Item.Meta
               avatar={
-                <Avatar
-                  size={40}
-                  style={{backgroundColor: '#1890ff'}}
-                >
+                <Avatar size={40} style={{ backgroundColor: '#1890ff' }}>
                   {item.avatar}
                 </Avatar>
               }
@@ -86,23 +78,17 @@ export const ActivitySection = () => {
                   <Text strong className="text-sm">
                     {item.user}
                   </Text>
-                  <Text className="text-gray-500 text-sm ml-2">
-                    {item.action}
-                  </Text>
+                  <Text className="text-gray-500 text-sm ml-2">{item.action}</Text>
                   <Text strong className="text-sm ml-2 text-blue-600">
                     {item.course}
                   </Text>
                 </div>
               }
-              description={
-                <Text className="text-gray-400 text-xs">
-                  {item.time}
-                </Text>
-              }
+              description={<Text className="text-gray-400 text-xs">{item.time}</Text>}
             />
           </List.Item>
         )}
       />
     </Card>
-  )
-}
+  );
+};

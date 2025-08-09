@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {IDepartment} from '@/types/department';
+
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {IDepartment} from '@/types/department';
 
 // State interface
 interface IDepartmentsState {
@@ -50,7 +51,9 @@ const departmentSlice = createSlice({
       state.departments.unshift(action.payload);
     },
     updateDepartment: (state, action: PayloadAction<IDepartment>) => {
-      const index = state.departments.findIndex(department => department.id === action.payload.id);
+      const index = state.departments.findIndex(
+        (department) => department.id === action.payload.id,
+      );
       if (index !== -1) {
         state.departments[index] = action.payload;
       }
@@ -59,7 +62,9 @@ const departmentSlice = createSlice({
       }
     },
     deleteDepartment: (state, action: PayloadAction<number>) => {
-      state.departments = state.departments.filter(department => department.id !== action.payload);
+      state.departments = state.departments.filter(
+        (department) => department.id !== action.payload,
+      );
       if (state.selectedDepartment?.id === action.payload) {
         state.selectedDepartment = null;
       }

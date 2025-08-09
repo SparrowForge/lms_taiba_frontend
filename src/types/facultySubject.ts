@@ -1,7 +1,7 @@
 import {IBatch} from './batch';
+import {IFaculty} from './faculty';
 import {ISemester} from './semester';
 import {ISubject} from './subject';
-import {IFaculty} from './faculty';
 
 export interface IFacultySubject {
   id: number;
@@ -36,4 +36,4 @@ export interface IFacultySubjectUpdate {
   batchId?: number;
   hoursPerWeek?: number;
   role?: string;
-} 
+}

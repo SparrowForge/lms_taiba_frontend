@@ -1,7 +1,8 @@
-import React from 'react';
-import {Alert, Avatar, Card, Col, Row, Spin, Typography} from 'antd';
 import {UserOutlined} from '@ant-design/icons';
+import {Alert, Avatar, Card, Col, Row, Spin, Typography} from 'antd';
 import {useTranslations} from 'next-intl';
+import React from 'react';
+
 import PageHeaderDetails from './PageHeaderDetails';
 
 const { Title, Text } = Typography;
@@ -27,28 +28,25 @@ export interface EntityDetailsConfig<T> {
 
 // Generic EntityDetailsContent component
 export const EntityDetailsContent = <T extends { id: number }>({
-  config
+  config,
 }: {
-  config: EntityDetailsConfig<T>
+  config: EntityDetailsConfig<T>;
 }) => {
   const t = useTranslations();
   if (config.loading) {
     return (
       <div style={{ padding: config.embedded ? '0' : '24px', textAlign: 'center' }}>
         <Spin size="large" />
-        <div style={{ marginTop: '16px' }}>{t('loading')} {config.name} {t('details_name', { name: config.name })}...</div>
+        <div style={{ marginTop: '16px' }}>
+          {t('loading')} {config.name} {t('details_name', { name: config.name })}...
+        </div>
       </div>
     );
   }
   if (config.error) {
     return (
       <div style={{ padding: config.embedded ? '0' : '24px' }}>
-        <Alert
-          message={t('error')}
-          description={config.error}
-          type="error"
-          showIcon
-        />
+        <Alert message={t('error')} description={config.error} type="error" showIcon />
       </div>
     );
   }
@@ -81,9 +79,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
               <Title level={config.embedded ? 5 : 4} style={{ marginBottom: '8px' }}>
                 {config.getDisplayName(config.item)}
               </Title>
-              <Text type="secondary">
-                ID: {config.item.id}
-              </Text>
+              <Text type="secondary">ID: {config.item.id}</Text>
             </div>
           </Card>
         </Col>
@@ -94,21 +90,33 @@ export const EntityDetailsContent = <T extends { id: number }>({
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <tbody>
                   {config.fields.map((field, index) => (
-                    <tr key={field.key} style={{ borderBottom: index < config.fields.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
-                      <td style={{
-                        padding: '12px 16px',
-                        fontWeight: '600',
-                        backgroundColor: '#fafafa',
-                        width: '30%',
-                        verticalAlign: 'top'
-                      }}>
+                    <tr
+                      key={field.key}
+                      style={{
+                        borderBottom:
+                          index < config.fields.length - 1 ? '1px solid #f0f0f0' : 'none',
+                      }}
+                    >
+                      <td
+                        style={{
+                          padding: '12px 16px',
+                          fontWeight: '600',
+                          backgroundColor: '#fafafa',
+                          width: '30%',
+                          verticalAlign: 'top',
+                        }}
+                      >
                         {field.label}
                       </td>
-                      <td style={{
-                        padding: '12px 16px',
-                        verticalAlign: 'top'
-                      }}>
-                        {field.render ? field.render((config.item as any)[field.key], config.item!) : (config.item as any)[field.key]}
+                      <td
+                        style={{
+                          padding: '12px 16px',
+                          verticalAlign: 'top',
+                        }}
+                      >
+                        {field.render
+                          ? field.render((config.item as any)[field.key], config.item!)
+                          : (config.item as any)[field.key]}
                       </td>
                     </tr>
                   ))}

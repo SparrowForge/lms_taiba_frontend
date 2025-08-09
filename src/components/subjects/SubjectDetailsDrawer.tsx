@@ -1,11 +1,16 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {useSubjects} from '@/hooks/useSubjects';
-import {ISubject} from '@/types/subject';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {useCreateSubjectDetailsConfig} from './subjectConfig';
+import React, {useEffect, useState} from 'react';
+
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {useSubjects} from '@/hooks/useSubjects';
+
+import {Status} from '@/types/common';
+import {ISubject} from '@/types/subject';
+
+import {useCreateSubjectDetailsConfig} from './subjectConfig';
+
 
 interface SubjectDetailsDrawerProps {
   subjectId?: number;
@@ -18,7 +23,7 @@ const SubjectDetailsDrawer: React.FC<SubjectDetailsDrawerProps> = ({
   subjectId,
   visible,
   onClose,
-  onEdit
+  onEdit,
 }) => {
   const { subjects, listStatus, loadSubjects, getSubjectById, loadSubject } = useSubjects();
   const [subject, setSubject] = useState<ISubject | null>(null);
@@ -55,7 +60,7 @@ const SubjectDetailsDrawer: React.FC<SubjectDetailsDrawerProps> = ({
     subject,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined }
+    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
   );
 
   return (

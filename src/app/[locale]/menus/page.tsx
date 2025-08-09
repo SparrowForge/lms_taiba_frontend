@@ -1,18 +1,21 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IMenu} from '@/types/menu';
-import {useMenus} from '@/hooks/useMenus';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import MenuFormDrawer from '@/components/menus/MenuFormDrawer';
-import MenuDetailsDrawer from '@/components/menus/MenuDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import MenuDetailsDrawer from '@/components/menus/MenuDetailsDrawer';
+import MenuFormDrawer from '@/components/menus/MenuFormDrawer';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useMenus} from '@/hooks/useMenus';
+
+import {Status} from '@/types/common';
+import {IMenu} from '@/types/menu';
 import {IPanel} from '@/types/panel';
 
 export default function MenusPage() {
@@ -26,7 +29,6 @@ export default function MenusPage() {
   const [selectedDetailsMenuId, setSelectedDetailsMenuId] = useState<number | undefined>();
 
   const { menus, listStatus, pagination, loadMenus, removeMenu } = useMenus();
-
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -74,7 +76,7 @@ export default function MenusPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/menus',
-    searchFields: ['name', 'route', 'panel.name'] as (keyof IMenu)[],
+    searchFields: ['name', 'route', 'status'] as (keyof IMenu)[],
     onSearch: (searchText: string) => {
       loadMenus({ page: 1, limit: 10, search: searchText });
     },
@@ -115,6 +117,12 @@ export default function MenusPage() {
         render: (text: number) => <span>{text}</span>,
       },
       {
+        title: t('status'),
+        dataIndex: 'status',
+        key: 'status',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
         title: t('createdAt'),
         dataIndex: 'createdAt',
         key: 'createdAt',
@@ -147,7 +155,11 @@ export default function MenusPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadMenus({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IMenu>} />

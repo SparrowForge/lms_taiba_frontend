@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
 import {useRouter} from 'next/navigation';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {PageHeader} from '@/components/ui/PageHeader';
-import PanelForm from '@/components/panels/PanelForm';
 import {useTranslations} from 'next-intl';
+import React from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import PanelForm from '@/components/panels/PanelForm';
+import {PageHeader} from '@/components/ui/PageHeader';
 
 export default function CreatePanelPage() {
   const router = useRouter();

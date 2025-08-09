@@ -1,4 +1,4 @@
-import { ICourse } from './course';
+import {ICourse} from './course';
 
 export interface ISubject {
   id: number;
@@ -9,6 +9,9 @@ export interface ISubject {
   theoryHours: number;
   practicalHours: number;
   description: string;
+  prerequisite: string;
+  status: string;
+  remarks: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -23,6 +26,9 @@ export interface ISubjectCreate {
   theoryHours: number;
   practicalHours: number;
   description: string;
+  prerequisite: string;
+  status: string;
+  remarks: string;
 }
 
 export interface ISubjectUpdate {
@@ -33,4 +39,7 @@ export interface ISubjectUpdate {
   theoryHours?: number;
   practicalHours?: number;
   description?: string;
-} 
+  prerequisite?: string;
+  status?: string;
+  remarks?: string;
+}

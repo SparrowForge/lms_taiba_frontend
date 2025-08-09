@@ -1,12 +1,14 @@
 'use client';
 
-import React from 'react';
 import {useRouter} from 'next/navigation';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {PageHeader} from '@/components/ui/PageHeader';
-import FacultyForm from '@/components/faculties/FacultyForm';
 import {useTranslations} from 'next-intl';
+import React from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import FacultyForm from '@/components/faculties/FacultyForm';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {PageHeader} from '@/components/ui/PageHeader';
+
 
 const FacultyCreatePage: React.FC = () => {
   const t = useTranslations();
@@ -21,13 +23,13 @@ const FacultyCreatePage: React.FC = () => {
     <ProtectedRoute>
       <MainLayout>
         <div style={{ padding: '24px' }}>
-        <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
 
-        <FacultyForm mode="create" embedded={false} />
+          <FacultyForm mode="create" embedded={false} />
         </div>
       </MainLayout>
     </ProtectedRoute>
   );
 };
 
-export default FacultyCreatePage; 
+export default FacultyCreatePage;

@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Button, Card} from 'antd';
 import {useRouter} from 'next/navigation';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useMenus} from '@/hooks/useMenus';
-import {IMenu} from '@/types/menu';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
 import MenuForm from '@/components/menus/MenuForm';
 import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useMenus} from '@/hooks/useMenus';
+
+import {IMenu} from '@/types/menu';
 
 interface MenuEditPageProps {
   params: Promise<{ id: string; locale: string }>;

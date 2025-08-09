@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ISubject } from '@/types/subject';
-import { IStatusState, Status } from '@/types/common';
-import { IPaginationMeta } from '@/types/common';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
+import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {ISubject} from '@/types/subject';
 
 // State interface
 interface ISubjectsState {
@@ -51,7 +51,7 @@ const subjectSlice = createSlice({
       state.subjects.unshift(action.payload);
     },
     updateSubject: (state, action: PayloadAction<ISubject>) => {
-      const index = state.subjects.findIndex(subject => subject.id === action.payload.id);
+      const index = state.subjects.findIndex((subject) => subject.id === action.payload.id);
       if (index !== -1) {
         state.subjects[index] = action.payload;
       }
@@ -60,7 +60,7 @@ const subjectSlice = createSlice({
       }
     },
     deleteSubject: (state, action: PayloadAction<number>) => {
-      state.subjects = state.subjects.filter(subject => subject.id !== action.payload);
+      state.subjects = state.subjects.filter((subject) => subject.id !== action.payload);
       if (state.selectedSubject?.id === action.payload) {
         state.selectedSubject = null;
       }
@@ -94,4 +94,4 @@ export const {
   clearDetailsStatus,
 } = subjectSlice.actions;
 
-export default subjectSlice.reducer; 
+export default subjectSlice.reducer;

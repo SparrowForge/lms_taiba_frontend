@@ -1,6 +1,16 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import type {AuthState} from '@/types/auth'
-import type {IUser} from '@/types/user'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
+import type {AuthState} from '@/types/auth';
+import type {IUser} from '@/types/user';
+
+// Helper function to get cookie value
+const getCookie = (name: string): string | null => {
+  if (typeof window === 'undefined') return null;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  return null;
+};
 
 // Initial state
 const initialState: AuthState = {
@@ -10,72 +20,89 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isLoading: true, // Start with loading true to prevent flash redirects
   error: null,
-}
+};
 
 // Auth slice
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-
     // Data actions
     setUser: (state, action: PayloadAction<IUser | null>) => {
-      state.user = action.payload
+      state.user = action.payload;
     },
     setToken: (state, action: PayloadAction<string | null>) => {
-      state.token = action.payload
+      state.token = action.payload;
     },
     setRefreshToken: (state, action: PayloadAction<string | null>) => {
-      state.refreshToken = action.payload
+      state.refreshToken = action.payload;
     },
     setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
-      state.isAuthenticated = action.payload
+      state.isAuthenticated = action.payload;
     },
 
     // Loading and error actions
     setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload
+      state.isLoading = action.payload;
     },
     setError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload
+      state.error = action.payload;
     },
     clearError: (state) => {
-      state.error = null
+      state.error = null;
     },
 
-    // Initialize auth state from localStorage
+    // Initialize auth state from localStorage and cookies
     initializeAuth: (state) => {
       if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('token')
-        const refreshToken = localStorage.getItem('refreshToken')
+        // Check localStorage first
+        const localStorageToken = localStorage.getItem('token');
+        const localStorageRefreshToken = localStorage.getItem('refreshToken');
+
+        // Check cookies as fallback
+        const cookieToken = getCookie('token');
+        const cookieRefreshToken = getCookie('refreshToken');
+
+        // Use localStorage if available, otherwise use cookies
+        const token = localStorageToken || cookieToken;
+        const refreshToken = localStorageRefreshToken || cookieRefreshToken;
+
         if (token) {
-          state.token = token
-          state.refreshToken = refreshToken
-          state.isAuthenticated = true
+          state.token = token;
+          state.refreshToken = refreshToken;
+          state.isAuthenticated = true;
+
+          // If we have a token from cookies but not localStorage, sync them
+          if (cookieToken && !localStorageToken) {
+            localStorage.setItem('token', cookieToken);
+          }
+          if (cookieRefreshToken && !localStorageRefreshToken) {
+            localStorage.setItem('refreshToken', cookieRefreshToken);
+          }
         }
       }
       // Always set loading to false after initialization
-      state.isLoading = false
+      state.isLoading = false;
     },
 
     // Update user profile
     updateUser: (state, action: PayloadAction<Partial<IUser>>) => {
       if (state.user) {
-        state.user = { ...state.user, ...action.payload }
+        state.user = { ...state.user, ...action.payload };
       }
     },
 
     // Clear auth state (for logout)
     clearAuth: (state) => {
-      state.user = null
-      state.token = null
-      state.refreshToken = null
-      state.isAuthenticated = false
-      state.error = null
-      state.isLoading = false
-    }
-  }
-})
+      state.user = null;
+      state.token = null;
+      state.refreshToken = null;
+      state.isAuthenticated = false;
+      state.error = null;
+      state.isLoading = false;
+    },
+  },
+});
 
 // Export actions
 export const {
@@ -88,8 +115,8 @@ export const {
   clearError,
   initializeAuth,
   updateUser,
-  clearAuth
-} = authSlice.actions
+  clearAuth,
+} = authSlice.actions;
 
 // Export reducer
-export default authSlice.reducer
+export default authSlice.reducer;

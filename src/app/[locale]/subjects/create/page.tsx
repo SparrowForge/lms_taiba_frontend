@@ -1,12 +1,14 @@
 'use client';
 
+import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
 import React from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
 import SubjectForm from '@/components/subjects/SubjectForm';
-import { useTranslations } from 'next-intl';
-import { PageHeader } from '@/components/ui/PageHeader';
-import { useRouter } from 'next/navigation';
+import {PageHeader} from '@/components/ui/PageHeader';
+
 
 export default function CreateSubjectPage() {
   const t = useTranslations();
@@ -17,16 +19,10 @@ export default function CreateSubjectPage() {
     <ProtectedRoute>
       <MainLayout>
         <div style={{ padding: '24px' }}>
-          <PageHeader
-            title={t('create_name', { name: entityName })}
-            onBack={() => router.back()}
-          />
-          <SubjectForm
-            mode="create"
-            embedded={false}
-          />
+          <PageHeader title={t('create_name', { name: entityName })} onBack={() => router.back()} />
+          <SubjectForm mode="create" embedded={false} />
         </div>
       </MainLayout>
     </ProtectedRoute>
   );
-} 
+}

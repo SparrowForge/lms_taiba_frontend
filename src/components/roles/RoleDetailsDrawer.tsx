@@ -1,11 +1,16 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {useRoles} from '@/hooks/useRoles';
-import {IRole} from '@/types/role';
-import {Status} from '@/types/common';
 import {useTranslations} from 'next-intl';
-import {useCreateRoleDetailsConfig} from './roleConfig';
+import React, {useEffect, useState} from 'react';
+
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+
+import {useRoles} from '@/hooks/useRoles';
+
+import {Status} from '@/types/common';
+import {IRole} from '@/types/role';
+
+import {useCreateRoleDetailsConfig} from './roleConfig';
+
 
 interface RoleDetailsDrawerProps {
   roleId?: number;
@@ -18,7 +23,7 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
   roleId,
   visible,
   onClose,
-  onEdit
+  onEdit,
 }) => {
   const { roles, listStatus, loadRoles, getRoleById, loadRole } = useRoles();
   const [role, setRole] = useState<IRole | null>(null);
@@ -55,7 +60,7 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
     role,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined }
+    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
   );
 
   return (

@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Button, Card} from 'antd';
 import {useRouter} from 'next/navigation';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
 import RoleMenuPermissionForm from '@/components/roleMenuPermissions/RoleMenuPermissionForm';
 import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
+
+import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
 interface RoleMenuPermissionEditPageProps {
   params: Promise<{ roleId: string; menuId: string; locale: string }>;
@@ -18,7 +21,13 @@ interface RoleMenuPermissionEditPageProps {
 const RoleMenuPermissionEditPage: React.FC<RoleMenuPermissionEditPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { roleMenuPermissions, listStatus, loadRoleMenuPermissions, getRoleMenuPermissionById, loadRoleMenuPermission } = useRoleMenuPermissions();
+  const {
+    roleMenuPermissions,
+    listStatus,
+    loadRoleMenuPermissions,
+    getRoleMenuPermissionById,
+    loadRoleMenuPermission,
+  } = useRoleMenuPermissions();
   const [permission, setPermission] = useState<IRoleMenuPermission | null>(null);
   const t = useTranslations();
   const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
@@ -32,7 +41,12 @@ const RoleMenuPermissionEditPage: React.FC<RoleMenuPermissionEditPageProps> = ({
     } else {
       loadRoleMenuPermission(roleId, menuId);
     }
-  }, [resolvedParams.roleId, resolvedParams.menuId, getRoleMenuPermissionById, loadRoleMenuPermission]);
+  }, [
+    resolvedParams.roleId,
+    resolvedParams.menuId,
+    getRoleMenuPermissionById,
+    loadRoleMenuPermission,
+  ]);
 
   useEffect(() => {
     if (roleMenuPermissions.length === 0) {
@@ -49,7 +63,12 @@ const RoleMenuPermissionEditPage: React.FC<RoleMenuPermissionEditPageProps> = ({
         setPermission(foundPermission);
       }
     }
-  }, [roleMenuPermissions, resolvedParams.roleId, resolvedParams.menuId, getRoleMenuPermissionById]);
+  }, [
+    roleMenuPermissions,
+    resolvedParams.roleId,
+    resolvedParams.menuId,
+    getRoleMenuPermissionById,
+  ]);
 
   if (listStatus.status === 'loading') {
     return (

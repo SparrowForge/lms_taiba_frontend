@@ -1,15 +1,21 @@
 'use client';
 
-import React, {useEffect} from 'react';
 import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useRoles} from '@/hooks/useRoles';
-import {useBranches} from '@/hooks/useBranches';
-import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
-import {Status} from '@/types/common';
-import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import StatusSelect from '@/components/ui/StatusSelect';
+
+
+import {useBranches} from '@/hooks/useBranches';
+import {useRoles} from '@/hooks/useRoles';
+
+import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
+import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
+
 
 interface RoleFormProps {
   mode: 'create' | 'edit';
@@ -26,7 +32,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('role');
@@ -73,7 +79,10 @@ const RoleForm: React.FC<RoleFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
 
       // Try to extract error message from API response
       if (error && typeof error === 'object' && 'response' in error) {
@@ -98,15 +107,13 @@ const RoleForm: React.FC<RoleFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const formContent = (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={handleSubmit}
-      initialValues={initialValues}
-    >
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
       <Form.Item
         name="branchId"
         label={t('branch')}
@@ -141,30 +148,31 @@ const RoleForm: React.FC<RoleFormProps> = ({
         label={t('description')}
         rules={[{ required: true, message: t('required_field', { field: t('description') }) }]}
       >
-        <Input.TextArea
-          placeholder={t('enter_description')}
-          rows={4}
-        />
+        <Input.TextArea placeholder={t('enter_description')} rows={4} />
+      </Form.Item>
+
+      <Form.Item
+        name="status"
+        label={t('status')}
+        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+      >
+        <StatusSelect preset="binary" />
       </Form.Item>
 
       <Form.Item>
         <Space>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={actionStatus.status === Status.LOADING}
-          >
+          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>
-            {t('cancel')}
-          </Button>
+          <Button onClick={handleCancel}>{t('cancel')}</Button>
         </Space>
       </Form.Item>
     </Form>
   );
 
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -173,7 +181,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"

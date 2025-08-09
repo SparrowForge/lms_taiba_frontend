@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {Button, Dropdown, MenuProps, Spin} from 'antd';
 import {DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined} from '@ant-design/icons';
+import {Button, Dropdown, MenuProps, Spin} from 'antd';
 import {useTranslations} from 'next-intl';
+import React, {useState} from 'react';
 
 interface EntityActionsProps {
   id: number;
@@ -36,7 +36,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
   editModalText,
   viewModalText,
   deleteText,
-  loadingStates = {}
+  loadingStates = {},
 }) => {
   const t = useTranslations();
   const [localLoading, setLocalLoading] = useState<{
@@ -50,21 +50,21 @@ const EntityActions: React.FC<EntityActionsProps> = ({
     edit: false,
     delete: false,
     viewModal: false,
-    editModal: false
+    editModal: false,
   });
 
   const handleAction = async (
     action: 'view' | 'edit' | 'delete' | 'viewModal' | 'editModal',
-    handler?: (id: number) => Promise<void> | void
+    handler?: (id: number) => Promise<void> | void,
   ) => {
     if (!handler) return;
 
-    setLocalLoading(prev => ({ ...prev, [action]: true }));
+    setLocalLoading((prev) => ({ ...prev, [action]: true }));
 
     try {
       await handler(id);
     } finally {
-      setLocalLoading(prev => ({ ...prev, [action]: false }));
+      setLocalLoading((prev) => ({ ...prev, [action]: false }));
     }
   };
 
@@ -86,8 +86,8 @@ const EntityActions: React.FC<EntityActionsProps> = ({
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        color: '#1890ff'
-      }
+        color: '#1890ff',
+      },
     });
   }
 
@@ -103,8 +103,8 @@ const EntityActions: React.FC<EntityActionsProps> = ({
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        color: '#722ed1'
-      }
+        color: '#722ed1',
+      },
     });
   }
 
@@ -120,8 +120,8 @@ const EntityActions: React.FC<EntityActionsProps> = ({
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        color: '#1890ff'
-      }
+        color: '#1890ff',
+      },
     });
   }
 
@@ -137,8 +137,8 @@ const EntityActions: React.FC<EntityActionsProps> = ({
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        color: '#52c41a'
-      }
+        color: '#52c41a',
+      },
     });
   }
 
@@ -154,8 +154,8 @@ const EntityActions: React.FC<EntityActionsProps> = ({
       style: {
         display: 'flex',
         alignItems: 'center',
-        gap: '8px'
-      }
+        gap: '8px',
+      },
     });
   }
 
@@ -171,14 +171,14 @@ const EntityActions: React.FC<EntityActionsProps> = ({
         style: {
           minWidth: '140px',
           borderRadius: '8px',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
-        }
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        },
       }}
       trigger={['click']}
       placement="bottomRight"
       arrow={{ pointAtCenter: true }}
       overlayStyle={{
-        animationDuration: '0.2s'
+        animationDuration: '0.2s',
       }}
     >
       <Button
@@ -189,7 +189,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
         style={{
           borderRadius: '6px',
           border: '1px solid #f0f0f0',
-          color: '#666'
+          color: '#666',
         }}
         aria-label={`Actions for item ${id}`}
       />

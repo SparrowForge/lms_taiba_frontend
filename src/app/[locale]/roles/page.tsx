@@ -1,19 +1,22 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IRole} from '@/types/role';
-import {useRoles} from '@/hooks/useRoles';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import RoleFormDrawer from '@/components/roles/RoleFormDrawer';
-import RoleDetailsDrawer from '@/components/roles/RoleDetailsDrawer';
+
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import RoleDetailsDrawer from '@/components/roles/RoleDetailsDrawer';
+import RoleFormDrawer from '@/components/roles/RoleFormDrawer';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useRoles} from '@/hooks/useRoles';
+
 import {IBranch} from '@/types/branch';
+import {Status} from '@/types/common';
+import {IRole} from '@/types/role';
 
 export default function RolesPage() {
   const t = useTranslations();
@@ -73,7 +76,7 @@ export default function RolesPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/roles',
-    searchFields: ['name', 'description', 'branch.name'] as (keyof IRole)[],
+    searchFields: ['name', 'description', 'status'] as (keyof IRole)[],
     onSearch: (searchText: string) => {
       loadRoles({ page: 1, limit: 10, search: searchText });
     },
@@ -100,6 +103,12 @@ export default function RolesPage() {
         dataIndex: 'branch',
         key: 'branch',
         render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
+      },
+      {
+        title: t('status'),
+        dataIndex: 'status',
+        key: 'status',
+        render: (text: string) => <span>{text}</span>,
       },
       {
         title: t('createdAt'),
@@ -134,7 +143,11 @@ export default function RolesPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadRoles({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IRole>} />

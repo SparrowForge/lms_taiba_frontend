@@ -1,19 +1,22 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {ISemesterSubject} from '@/types/semesterSubject';
-import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import SemesterSubjectFormDrawer from '@/components/semesterSubjects/SemesterSubjectFormDrawer';
-import SemesterSubjectDetailsDrawer from '@/components/semesterSubjects/SemesterSubjectDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import SemesterSubjectDetailsDrawer from '@/components/semesterSubjects/SemesterSubjectDetailsDrawer';
+import SemesterSubjectFormDrawer from '@/components/semesterSubjects/SemesterSubjectFormDrawer';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
+
+import {Status} from '@/types/common';
 import {ISemester} from '@/types/semester';
+import {ISemesterSubject} from '@/types/semesterSubject';
 import {ISubject} from '@/types/subject';
 
 export default function SemesterSubjectsPage() {
@@ -24,10 +27,12 @@ export default function SemesterSubjectsPage() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedSemesterSubjectId, setSelectedSemesterSubjectId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsSemesterSubjectId, setSelectedDetailsSemesterSubjectId] = useState<number | undefined>();
+  const [selectedDetailsSemesterSubjectId, setSelectedDetailsSemesterSubjectId] = useState<
+    number | undefined
+  >();
 
-  const { semesterSubjects, listStatus, pagination, loadSemesterSubjects, removeSemesterSubject } = useSemesterSubjects();
-
+  const { semesterSubjects, listStatus, pagination, loadSemesterSubjects, removeSemesterSubject } =
+    useSemesterSubjects();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -142,7 +147,11 @@ export default function SemesterSubjectsPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadSemesterSubjects({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<ISemesterSubject>} />

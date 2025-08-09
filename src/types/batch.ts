@@ -1,4 +1,4 @@
-import { ICourse } from './course';
+import {ICourse} from './course';
 
 export interface IBatch {
   id: number;
@@ -7,6 +7,10 @@ export interface IBatch {
   year: number;
   session: string;
   intakeCapacity: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+  remarks: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -19,6 +23,10 @@ export interface IBatchCreate {
   year: number;
   session: string;
   intakeCapacity: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+  remarks: string;
 }
 
 export interface IBatchUpdate {
@@ -27,4 +35,8 @@ export interface IBatchUpdate {
   year?: number;
   session?: string;
   intakeCapacity?: number;
-} 
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+  remarks?: string;
+}

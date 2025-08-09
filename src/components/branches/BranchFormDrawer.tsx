@@ -1,11 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Drawer } from 'antd';
-import { IBranch } from '@/types/branch';
+import {Drawer} from 'antd';
+import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {useBranches} from '@/hooks/useBranches';
+
+import {IBranch} from '@/types/branch';
+
 import BranchForm from './BranchForm';
-import { useBranches } from '@/hooks/useBranches';
-import { useTranslations } from 'next-intl';
+
 
 interface BranchFormDrawerProps {
   mode: 'create' | 'edit';
@@ -25,7 +29,7 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
   const [initialValues, setInitialValues] = useState<Partial<IBranch> | undefined>();
   const { branches, getBranchById, loadBranch } = useBranches();
   const t = useTranslations();
-  const entityName = t('branch', { defaultValue: 'Branch' }); 
+  const entityName = t('branch', { defaultValue: 'Branch' });
   useEffect(() => {
     if (visible && mode === 'edit' && branchId) {
       // Try to get from current list first
@@ -63,7 +67,11 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
 
   return (
     <Drawer
-      title={mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })}
+      title={
+        mode === 'create'
+          ? t('create_name', { name: entityName })
+          : t('edit_name', { name: entityName })
+      }
       width={600}
       open={visible}
       onClose={handleCancel}
@@ -81,4 +89,4 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
   );
 };
 
-export default BranchFormDrawer; 
+export default BranchFormDrawer;

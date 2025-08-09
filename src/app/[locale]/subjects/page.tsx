@@ -1,19 +1,22 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {ISubject} from '@/types/subject';
-import {useSubjects} from '@/hooks/useSubjects';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useRouter, useSearchParams} from 'next/navigation';
-import SubjectFormDrawer from '@/components/subjects/SubjectFormDrawer';
-import SubjectDetailsDrawer from '@/components/subjects/SubjectDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import {MainLayout} from '@/components/layout/MainLayout';
+import SubjectDetailsDrawer from '@/components/subjects/SubjectDetailsDrawer';
+import SubjectFormDrawer from '@/components/subjects/SubjectFormDrawer';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useSubjects} from '@/hooks/useSubjects';
+
+import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
+import {ISubject} from '@/types/subject';
 
 export default function SubjectsPage() {
   const t = useTranslations();
@@ -73,7 +76,7 @@ export default function SubjectsPage() {
     name: entityName,
     title: t('managemen_name', { name: entityName }),
     route: '/subjects',
-    searchFields: ['name', 'code', 'course.name'] as (keyof ISubject)[],
+    searchFields: ['name', 'code', 'status'] as (keyof ISubject)[],
     onSearch: (searchText: string) => {
       loadSubjects({ page: 1, limit: 10, search: searchText });
     },
@@ -120,6 +123,18 @@ export default function SubjectsPage() {
         render: (course: ICourse) => <span>{course?.name || 'N/A'}</span>,
       },
       {
+        title: t('prerequisite'),
+        dataIndex: 'prerequisite',
+        key: 'prerequisite',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t('status'),
+        dataIndex: 'status',
+        key: 'status',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
         title: t('createdAt'),
         dataIndex: 'createdAt',
         key: 'createdAt',
@@ -152,7 +167,11 @@ export default function SubjectsPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadSubjects({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<ISubject>} />

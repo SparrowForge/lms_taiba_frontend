@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {useCourses} from '@/hooks/useCourses';
-import {ICourse} from '@/types/course';
-import CourseForm from './CourseForm';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {useCourses} from '@/hooks/useCourses';
+
+import {ICourse} from '@/types/course';
+
+import CourseForm from './CourseForm';
+
 
 interface CourseFormDrawerProps {
   mode: 'create' | 'edit';
@@ -20,7 +24,7 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
   initialValues,
   visible,
   onCancel,
-  onSuccess
+  onSuccess,
 }) => {
   const { getCourseById, loadCourse } = useCourses();
   const [course, setCourse] = useState<ICourse | null>(null);
@@ -38,7 +42,10 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
     }
   }, [mode, courseId, visible, getCourseById, loadCourse]);
 
-  const getTitle = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getTitle = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const handleDrawerSuccess = () => {
     if (onSuccess) onSuccess();
@@ -60,13 +67,7 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
   };
 
   return (
-    <Drawer
-      title={getTitle()}
-      open={visible}
-      onClose={onCancel}
-      width={500}
-      placement="right"
-    >
+    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <CourseForm
         mode={mode}
         courseId={courseId}

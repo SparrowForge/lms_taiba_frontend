@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {IPanel} from '@/types/panel';
+
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {IPanel} from '@/types/panel';
 
 interface PanelsState {
   listStatus: IStatusState;
@@ -17,7 +18,14 @@ const initialState: PanelsState = {
   actionStatus: { status: Status.INITIAL },
   panels: [],
   selectedPanel: null,
-  pagination: { page: 1, limit: 10, total: 0, totalPages: 0, hasNextPage: false, hasPreviousPage: false },
+  pagination: {
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPreviousPage: false,
+  },
 };
 
 const panelSlice = createSlice({
@@ -44,11 +52,11 @@ const panelSlice = createSlice({
       state.panels.unshift(action.payload);
     },
     updatePanel(state, action: PayloadAction<IPanel>) {
-      const idx = state.panels.findIndex(p => p.id === action.payload.id);
+      const idx = state.panels.findIndex((p) => p.id === action.payload.id);
       if (idx !== -1) state.panels[idx] = action.payload;
     },
     deletePanel(state, action: PayloadAction<number>) {
-      state.panels = state.panels.filter(p => p.id !== action.payload);
+      state.panels = state.panels.filter((p) => p.id !== action.payload);
     },
     setPagination(state, action: PayloadAction<IPaginationMeta>) {
       state.pagination = action.payload;

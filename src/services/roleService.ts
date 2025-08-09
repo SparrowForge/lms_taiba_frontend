@@ -1,6 +1,7 @@
-import {api} from '@/lib/axios';
-import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
 import {IBasePaginatedResponse} from '@/types/common';
+import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
+
+import {api} from '@/lib/axios';
 
 export const roleService = {
   // Get all roles with pagination and search

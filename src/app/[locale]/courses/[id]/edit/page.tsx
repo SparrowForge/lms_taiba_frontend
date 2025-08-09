@@ -1,15 +1,18 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Button, Card} from 'antd';
 import {useRouter} from 'next/navigation';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCourses} from '@/hooks/useCourses';
-import {ICourse} from '@/types/course';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseForm from '@/components/courses/CourseForm';
+import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
+
+import {useCourses} from '@/hooks/useCourses';
+
+import {ICourse} from '@/types/course';
 
 interface CourseEditPageProps {
   params: Promise<{ id: string; locale: string }>;

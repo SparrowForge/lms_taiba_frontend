@@ -1,11 +1,15 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
 import {Drawer} from 'antd';
-import {IFaculty} from '@/types/faculty';
-import FacultyForm from './FacultyForm';
-import {useFaculties} from '@/hooks/useFaculties';
 import {useTranslations} from 'next-intl';
+import React, {useEffect, useState} from 'react';
+
+import {useFaculties} from '@/hooks/useFaculties';
+
+import {IFaculty} from '@/types/faculty';
+
+import FacultyForm from './FacultyForm';
+
 
 interface FacultyFormDrawerProps {
   mode: 'create' | 'edit';
@@ -63,7 +67,11 @@ const FacultyFormDrawer: React.FC<FacultyFormDrawerProps> = ({
 
   return (
     <Drawer
-      title={mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })}
+      title={
+        mode === 'create'
+          ? t('create_name', { name: entityName })
+          : t('edit_name', { name: entityName })
+      }
       width={600}
       open={visible}
       onClose={handleCancel}
@@ -81,4 +89,4 @@ const FacultyFormDrawer: React.FC<FacultyFormDrawerProps> = ({
   );
 };
 
-export default FacultyFormDrawer; 
+export default FacultyFormDrawer;

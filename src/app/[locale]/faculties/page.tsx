@@ -1,21 +1,24 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IFaculty} from '@/types/faculty';
-import {useFaculties} from '@/hooks/useFaculties';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter, useSearchParams} from 'next/navigation';
-import FacultyFormDrawer from '@/components/faculties/FacultyFormDrawer';
-import FacultyDetailsDrawer from '@/components/faculties/FacultyDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {useTranslations} from 'next-intl';
 import {Tag} from 'antd';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import FacultyDetailsDrawer from '@/components/faculties/FacultyDetailsDrawer';
+import FacultyFormDrawer from '@/components/faculties/FacultyFormDrawer';
+import {MainLayout} from '@/components/layout/MainLayout';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useFaculties} from '@/hooks/useFaculties';
+
 import {IBranch} from '@/types/branch';
+import {Status} from '@/types/common';
 import {IDepartment} from '@/types/department';
+import {IFaculty} from '@/types/faculty';
 
 export default function FacultyPage() {
   const t = useTranslations();
@@ -114,9 +117,7 @@ export default function FacultyPage() {
         dataIndex: 'isActive',
         key: 'isActive',
         render: (isActive: boolean) => (
-          <Tag color={isActive ? 'green' : 'red'}>
-            {isActive ? t('active') : t('inactive')}
-          </Tag>
+          <Tag color={isActive ? 'green' : 'red'}>{isActive ? t('active') : t('inactive')}</Tag>
         ),
       },
       {
@@ -164,7 +165,11 @@ export default function FacultyPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadFaculties({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IFaculty>} />

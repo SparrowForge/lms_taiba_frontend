@@ -1,19 +1,23 @@
 'use client';
 
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
-import {IFacultySubject} from '@/types/facultySubject';
-import {useFacultySubjects} from '@/hooks/useFacultySubjects';
-import {useEffect, useState} from 'react';
-import {Status} from '@/types/common';
-import EntityActions from '@/components/ui/EntityActions';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useRouter, useSearchParams} from 'next/navigation';
-import FacultySubjectFormDrawer from '@/components/facultySubjects/FacultySubjectFormDrawer';
-import FacultySubjectDetailsDrawer from '@/components/facultySubjects/FacultySubjectDetailsDrawer';
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {useTranslations} from 'next-intl';
 import {Tag} from 'antd';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
+
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
+import FacultySubjectDetailsDrawer from '@/components/facultySubjects/FacultySubjectDetailsDrawer';
+import FacultySubjectFormDrawer from '@/components/facultySubjects/FacultySubjectFormDrawer';
+import {MainLayout} from '@/components/layout/MainLayout';
+import EntityActions from '@/components/ui/EntityActions';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+
+import {useFacultySubjects} from '@/hooks/useFacultySubjects';
+
+import {Status} from '@/types/common';
+import {IFacultySubject} from '@/types/facultySubject';
+
 
 export default function FacultySubjectsPage() {
   const t = useTranslations();
@@ -23,9 +27,12 @@ export default function FacultySubjectsPage() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedFacultySubjectId, setSelectedFacultySubjectId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsFacultySubjectId, setSelectedDetailsFacultySubjectId] = useState<number | undefined>();
+  const [selectedDetailsFacultySubjectId, setSelectedDetailsFacultySubjectId] = useState<
+    number | undefined
+  >();
 
-  const { facultySubjects, listStatus, pagination, loadFacultySubjects, removeFacultySubject } = useFacultySubjects();
+  const { facultySubjects, listStatus, pagination, loadFacultySubjects, removeFacultySubject } =
+    useFacultySubjects();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -132,8 +139,18 @@ export default function FacultySubjectsPage() {
         dataIndex: 'role',
         key: 'role',
         render: (role: string) => (
-          <Tag color={role === 'instructor' ? 'blue' : role === 'assistant' ? 'green' : role === 'coordinator' ? 'purple' : 'orange'}>
-            {(role)}
+          <Tag
+            color={
+              role === 'instructor'
+                ? 'blue'
+                : role === 'assistant'
+                  ? 'green'
+                  : role === 'coordinator'
+                    ? 'purple'
+                    : 'orange'
+            }
+          >
+            {role}
           </Tag>
         ),
       },
@@ -170,7 +187,11 @@ export default function FacultySubjectsPage() {
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
-          error={listStatus.status === Status.FAILED ? new Error(listStatus.message || t('failed_name', { name: entityName })) : null}
+          error={
+            listStatus.status === Status.FAILED
+              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              : null
+          }
           onRetry={() => loadFacultySubjects({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<IFacultySubject>} />

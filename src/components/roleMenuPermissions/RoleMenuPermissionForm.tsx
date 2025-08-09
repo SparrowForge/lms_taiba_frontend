@@ -1,16 +1,18 @@
 'use client';
 
-import React, {useEffect} from 'react';
 import {Button, Checkbox, Form, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import {useMenus} from '@/hooks/useMenus';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 import {useRoles} from '@/hooks/useRoles';
-import {useMenus} from '@/hooks/useMenus';
-import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
+
 import {Status} from '@/types/common';
-import {toast} from 'react-toastify';
-import {useTranslations} from 'next-intl';
 import {getErrorMessage} from '@/types/errors';
+import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate,} from '@/types/roleMenuPermission';
 
 interface RoleMenuPermissionFormProps {
   mode: 'create' | 'edit';
@@ -29,13 +31,14 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const t = useTranslations();
   const entityName = t('roleMenuPermission');
   const router = useRouter();
   const [form] = Form.useForm();
-  const { createRoleMenuPermission, editRoleMenuPermission, actionStatus } = useRoleMenuPermissions();
+  const { createRoleMenuPermission, editRoleMenuPermission, actionStatus } =
+    useRoleMenuPermissions();
   const { roles, loadRoles } = useRoles();
   const { menus, loadMenus } = useMenus();
 
@@ -83,7 +86,10 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
 
       // Try to extract error message from API response
       if (error && typeof error === 'object' && 'response' in error) {
@@ -108,15 +114,13 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const formContent = (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={handleSubmit}
-      initialValues={initialValues}
-    >
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
       {mode === 'create' && (
         <>
           <Form.Item
@@ -163,56 +167,36 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
         </>
       )}
 
-      <Form.Item
-        name="view"
-        valuePropName="checked"
-        label={t('view')}
-      >
+      <Form.Item name="view" valuePropName="checked" label={t('view')}>
         <Checkbox>{t('allow_view')}</Checkbox>
       </Form.Item>
 
-      <Form.Item
-        name="insert"
-        valuePropName="checked"
-        label={t('insert')}
-      >
+      <Form.Item name="insert" valuePropName="checked" label={t('insert')}>
         <Checkbox>{t('allow_insert')}</Checkbox>
       </Form.Item>
 
-      <Form.Item
-        name="update"
-        valuePropName="checked"
-        label={t('update')}
-      >
+      <Form.Item name="update" valuePropName="checked" label={t('update')}>
         <Checkbox>{t('allow_update')}</Checkbox>
       </Form.Item>
 
-      <Form.Item
-        name="delete"
-        valuePropName="checked"
-        label={t('delete')}
-      >
+      <Form.Item name="delete" valuePropName="checked" label={t('delete')}>
         <Checkbox>{t('allow_delete')}</Checkbox>
       </Form.Item>
 
       <Form.Item>
         <Space>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={actionStatus.status === Status.LOADING}
-          >
+          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>
-            {t('cancel')}
-          </Button>
+          <Button onClick={handleCancel}>{t('cancel')}</Button>
         </Space>
       </Form.Item>
     </Form>
   );
 
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -221,7 +205,7 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"

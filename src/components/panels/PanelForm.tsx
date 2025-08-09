@@ -1,12 +1,18 @@
-import React, {useEffect} from 'react';
 import {Button, Form, Input, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {usePanels} from '@/hooks/usePanels';
-import {IPanel} from '@/types/panel';
-import {Status} from '@/types/common';
-import {toast} from 'react-toastify';
 import {useTranslations} from 'next-intl';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
+import StatusSelect from '@/components/ui/StatusSelect';
+
+
+import {usePanels} from '@/hooks/usePanels';
+
+import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
+import {IPanel} from '@/types/panel';
+
 
 interface PanelFormProps {
   mode: 'create' | 'edit';
@@ -23,7 +29,7 @@ const PanelForm: React.FC<PanelFormProps> = ({
   initialValues,
   onSuccess,
   onCancel,
-  embedded = false
+  embedded = false,
 }) => {
   const router = useRouter();
   const [form] = Form.useForm();
@@ -63,7 +69,10 @@ const PanelForm: React.FC<PanelFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', { name: entityName, defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}` });
+      let errorMessage = t('failed_name', {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
         if (apiError.response?.data?.message) {
@@ -84,7 +93,10 @@ const PanelForm: React.FC<PanelFormProps> = ({
     }
   };
 
-  const getSubmitText = () => (mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName }));
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t('create_name', { name: entityName })
+      : t('edit_name', { name: entityName });
 
   const formContent = (
     <Form
@@ -100,11 +112,14 @@ const PanelForm: React.FC<PanelFormProps> = ({
         label={t('name')}
         rules={[{ required: true, message: t('pleaseEnterName_name', { name: entityName }) }]}
       >
-        <Input
-          placeholder={t('name')}
-          aria-label={t('name')}
-          aria-required="true"
-        />
+        <Input placeholder={t('name')} aria-label={t('name')} aria-required="true" />
+      </Form.Item>
+      <Form.Item
+        name="status"
+        label={t('status')}
+        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+      >
+        <StatusSelect preset="binary" />
       </Form.Item>
       <Form.Item style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}>
         <Space size={embedded ? 'small' : 'large'}>
@@ -131,7 +146,9 @@ const PanelForm: React.FC<PanelFormProps> = ({
     </Form>
   );
 
-  return embedded ? formContent : (
+  return embedded ? (
+    formContent
+  ) : (
     <div style={{ padding: '24px' }}>
       <div
         style={{
@@ -140,7 +157,7 @@ const PanelForm: React.FC<PanelFormProps> = ({
           backgroundColor: '#fff',
           padding: '24px',
           borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         }}
         role="main"
         aria-labelledby="form-title"
