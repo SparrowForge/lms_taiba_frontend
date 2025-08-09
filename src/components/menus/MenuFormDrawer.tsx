@@ -12,7 +12,6 @@ import MenuForm from './MenuForm';
 interface MenuFormDrawerProps {
   mode: 'create' | 'edit';
   menuId?: number;
-  initialValues?: Partial<IMenu>;
   visible: boolean;
   onCancel: () => void;
   onSuccess?: () => void;
@@ -21,13 +20,12 @@ interface MenuFormDrawerProps {
 const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
   mode,
   menuId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
+  const [initialValues, setInitialValues] = useState<Partial<IMenu> | undefined>();
   const { getMenuById, loadMenu } = useMenus();
-  const [menu, setMenu] = useState<IMenu | null>(null);
   const t = useTranslations();
   const entityName = t('menu', { defaultValue: 'Menu' });
 
@@ -35,7 +33,7 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
     if (mode === 'edit' && menuId && visible) {
       const foundMenu = getMenuById(menuId);
       if (foundMenu) {
-        setMenu(foundMenu);
+        setInitialValues(foundMenu);
       } else {
         loadMenu(menuId);
       }
@@ -52,25 +50,12 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && menu) {
-      return {
-        panelId: menu.panelId,
-        parentId: menu.parentId,
-        name: menu.name,
-        route: menu.route,
-        sortOrder: menu.sortOrder,
-      };
-    }
-    return initialValues;
-  };
-
   return (
     <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <MenuForm
         mode={mode}
         menuId={menuId}
-        initialValues={getFormInitialValues()}
+        initialValues={initialValues}
         onSuccess={handleDrawerSuccess}
         onCancel={onCancel}
         embedded={true}

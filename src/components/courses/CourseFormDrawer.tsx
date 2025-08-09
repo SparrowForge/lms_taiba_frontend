@@ -12,7 +12,6 @@ import CourseForm from './CourseForm';
 interface CourseFormDrawerProps {
   mode: 'create' | 'edit';
   courseId?: number;
-  initialValues?: Partial<ICourse>;
   visible: boolean;
   onCancel: () => void;
   onSuccess?: () => void;
@@ -21,13 +20,12 @@ interface CourseFormDrawerProps {
 const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
   mode,
   courseId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
+  const [initialValues, setInitialValues] = useState<Partial<ICourse> | undefined>();
   const { getCourseById, loadCourse } = useCourses();
-  const [course, setCourse] = useState<ICourse | null>(null);
   const t = useTranslations();
   const entityName = t('course', { defaultValue: 'Course' });
 
@@ -35,7 +33,7 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
     if (mode === 'edit' && courseId && visible) {
       const foundCourse = getCourseById(courseId);
       if (foundCourse) {
-        setCourse(foundCourse);
+        setInitialValues(foundCourse);
       } else {
         loadCourse(courseId);
       }
@@ -52,26 +50,13 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && course) {
-      return {
-        departmentId: course.departmentId,
-        name: course.name,
-        code: course.code,
-        courseType: course.courseType,
-        durationInSemesters: course.durationInSemesters,
-        description: course.description,
-      };
-    }
-    return initialValues;
-  };
 
   return (
     <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <CourseForm
         mode={mode}
         courseId={courseId}
-        initialValues={getFormInitialValues()}
+        initialValues={initialValues}
         onSuccess={handleDrawerSuccess}
         onCancel={onCancel}
         embedded={true}

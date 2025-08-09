@@ -12,7 +12,6 @@ import PanelForm from './PanelForm';
 interface PanelFormDrawerProps {
   mode: 'create' | 'edit';
   panelId?: number;
-  initialValues?: Partial<IPanel>;
   visible: boolean;
   onCancel: () => void;
   onSuccess?: () => void;
@@ -21,20 +20,19 @@ interface PanelFormDrawerProps {
 const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
   mode,
   panelId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
   const { getPanelById, loadPanel } = usePanels();
-  const [panel, setPanel] = useState<IPanel | null>(null);
+  const [initialValues, setInitialValues] = useState<Partial<IPanel> | undefined>();
   const t = useTranslations();
   const entityName = t('panel', { defaultValue: 'Panel' });
   useEffect(() => {
     if (mode === 'edit' && panelId && visible) {
       const foundPanel = getPanelById(panelId);
       if (foundPanel) {
-        setPanel(foundPanel);
+        setInitialValues(foundPanel);
       } else {
         loadPanel(panelId);
       }
@@ -51,21 +49,12 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && panel) {
-      return {
-        name: panel.name,
-      };
-    }
-    return initialValues;
-  };
-
   return (
     <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <PanelForm
         mode={mode}
         panelId={panelId}
-        initialValues={getFormInitialValues()}
+        initialValues={initialValues}
         onSuccess={handleDrawerSuccess}
         onCancel={onCancel}
         embedded={true}

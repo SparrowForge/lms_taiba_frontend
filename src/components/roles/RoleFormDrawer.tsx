@@ -12,7 +12,6 @@ import RoleForm from './RoleForm';
 interface RoleFormDrawerProps {
   mode: 'create' | 'edit';
   roleId?: number;
-  initialValues?: Partial<IRole>;
   visible: boolean;
   onCancel: () => void;
   onSuccess?: () => void;
@@ -21,13 +20,12 @@ interface RoleFormDrawerProps {
 const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
   mode,
   roleId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
+  const [initialValues, setInitialValues] = useState<Partial<IRole> | undefined>();
   const { getRoleById, loadRole } = useRoles();
-  const [role, setRole] = useState<IRole | null>(null);
   const t = useTranslations();
   const entityName = t('role', { defaultValue: 'Role' });
 
@@ -35,7 +33,7 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
     if (mode === 'edit' && roleId && visible) {
       const foundRole = getRoleById(roleId);
       if (foundRole) {
-        setRole(foundRole);
+        setInitialValues(foundRole);
       } else {
         loadRole(roleId);
       }
@@ -52,23 +50,12 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && role) {
-      return {
-        branchId: role.branchId,
-        name: role.name,
-        description: role.description,
-      };
-    }
-    return initialValues;
-  };
-
   return (
     <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <RoleForm
         mode={mode}
         roleId={roleId}
-        initialValues={getFormInitialValues()}
+        initialValues={initialValues}
         onSuccess={handleDrawerSuccess}
         onCancel={onCancel}
         embedded={true}

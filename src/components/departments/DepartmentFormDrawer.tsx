@@ -12,7 +12,6 @@ import DepartmentForm from './DepartmentForm';
 interface DepartmentFormDrawerProps {
   mode: 'create' | 'edit';
   departmentId?: number;
-  initialValues?: Partial<IDepartment>;
   visible: boolean;
   onCancel: () => void;
   onSuccess?: () => void;
@@ -21,13 +20,12 @@ interface DepartmentFormDrawerProps {
 const DepartmentFormDrawer: React.FC<DepartmentFormDrawerProps> = ({
   mode,
   departmentId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
   const { getDepartmentById, loadDepartment } = useDepartments();
-  const [department, setDepartment] = useState<IDepartment | null>(null);
+  const [initialValues, setInitialValues] = useState<Partial<IDepartment> | undefined>();
   const t = useTranslations();
   const entityName = t('department', { defaultValue: 'Department' });
 
@@ -35,7 +33,7 @@ const DepartmentFormDrawer: React.FC<DepartmentFormDrawerProps> = ({
     if (mode === 'edit' && departmentId && visible) {
       const foundDepartment = getDepartmentById(departmentId);
       if (foundDepartment) {
-        setDepartment(foundDepartment);
+        setInitialValues(foundDepartment);
       } else {
         loadDepartment(departmentId);
       }
@@ -52,23 +50,13 @@ const DepartmentFormDrawer: React.FC<DepartmentFormDrawerProps> = ({
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && department) {
-      return {
-        branchId: department.branchId,
-        name: department.name,
-        code: department.code,
-      };
-    }
-    return initialValues;
-  };
 
   return (
     <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <DepartmentForm
         mode={mode}
         departmentId={departmentId}
-        initialValues={getFormInitialValues()}
+        initialValues={initialValues}
         onSuccess={handleDrawerSuccess}
         onCancel={onCancel}
         embedded={true}

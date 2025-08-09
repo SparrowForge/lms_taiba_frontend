@@ -12,7 +12,6 @@ import SubjectForm from './SubjectForm';
 interface SubjectFormDrawerProps {
   mode: 'create' | 'edit';
   subjectId?: number;
-  initialValues?: Partial<ISubject>;
   visible: boolean;
   onCancel: () => void;
   onSuccess?: () => void;
@@ -21,13 +20,12 @@ interface SubjectFormDrawerProps {
 const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
   mode,
   subjectId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
+  const [initialValues, setInitialValues] = useState<Partial<ISubject> | undefined>();
   const { getSubjectById, loadSubject } = useSubjects();
-  const [subject, setSubject] = useState<ISubject | null>(null);
   const t = useTranslations();
   const entityName = t('subject', { defaultValue: 'Subject' });
 
@@ -35,7 +33,7 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
     if (mode === 'edit' && subjectId && visible) {
       const foundSubject = getSubjectById(subjectId);
       if (foundSubject) {
-        setSubject(foundSubject);
+        setInitialValues(foundSubject);
       } else {
         loadSubject(subjectId);
       }
@@ -52,27 +50,12 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && subject) {
-      return {
-        courseId: subject.courseId,
-        name: subject.name,
-        code: subject.code,
-        creditHours: subject.creditHours,
-        theoryHours: subject.theoryHours,
-        practicalHours: subject.practicalHours,
-        description: subject.description,
-      };
-    }
-    return initialValues;
-  };
-
   return (
     <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
       <SubjectForm
         mode={mode}
         subjectId={subjectId}
-        initialValues={getFormInitialValues()}
+        initialValues={initialValues}
         onSuccess={handleDrawerSuccess}
         onCancel={onCancel}
         embedded={true}
