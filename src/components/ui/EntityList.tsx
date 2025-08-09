@@ -54,7 +54,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
   };
 
   return (
-    <div style={{ padding: '24px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ padding: '8px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Card style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Fixed Top Section */}
         <div
@@ -138,9 +138,9 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
         </div>
 
         {/* Scrollable Table Section */}
-        <div style={{ flex: 1, overflow: 'auto', marginBottom: '16px' }}>
+        <div style={{ flex: 1, overflow: 'auto', marginBottom: '16px', height: 'calc(100vh - 200px)' }}>
           <Table
-            scroll={{ y: 'calc(100vh - 400px)' }}
+            scroll={{ y: 'calc(100vh - 360px)' }}
             loading={config.loading}
             columns={config.columns}
             dataSource={config.items}
@@ -157,11 +157,11 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
             bottom: 0,
             zIndex: 10,
             backgroundColor: '#fff',
-            paddingTop: '16px',
-            // borderTop: '1px solid #f0f0f0',
+            paddingTop: '12px',
+            borderTop: '1px solid #f0f0f0',
             display: 'flex',
             justifyContent: 'center',
-            paddingBottom: '16px',
+            paddingBottom: '12px',
           }}
         >
           <Pagination

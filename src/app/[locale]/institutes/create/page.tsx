@@ -18,10 +18,8 @@ export default function CreateInstitutePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('create_name', { name: entityName })} onBack={() => router.back()} />
           <InstituteForm mode="create" />
-        </div>
       </MainLayout>
     </ProtectedRoute>
   );

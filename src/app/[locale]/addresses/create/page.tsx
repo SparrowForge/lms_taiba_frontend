@@ -18,10 +18,8 @@ export default function CreateAddressPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('create_name', { name: entityName })} onBack={() => router.back()} />
           <AddressForm mode="create" />
-        </div>
       </MainLayout>
     </ProtectedRoute>
   );

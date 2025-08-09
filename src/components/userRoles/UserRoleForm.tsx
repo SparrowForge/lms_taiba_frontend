@@ -13,6 +13,7 @@ import {useUsers} from '@/hooks/useUsers';
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IUserRole, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
+import FormLayout from '../layout/FormLayout';
 
 interface UserRoleFormProps {
   mode: 'create' | 'edit';
@@ -169,22 +170,9 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
   return embedded ? (
     formContent
   ) : (
-    <div style={{ padding: '24px' }}>
-      <div
-        style={{
-          maxWidth: '600px',
-          margin: '0 auto',
-          backgroundColor: '#fff',
-          padding: '24px',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        }}
-        role="main"
-        aria-labelledby="form-title"
-      >
-        {formContent}
-      </div>
-    </div>
+    <FormLayout>
+      {formContent}
+    </FormLayout>
   );
 };
 

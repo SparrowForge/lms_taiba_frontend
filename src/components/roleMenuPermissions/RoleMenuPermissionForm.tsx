@@ -13,6 +13,7 @@ import {useRoles} from '@/hooks/useRoles';
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate,} from '@/types/roleMenuPermission';
+import FormLayout from '../layout/FormLayout';
 
 interface RoleMenuPermissionFormProps {
   mode: 'create' | 'edit';
@@ -197,22 +198,9 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
   return embedded ? (
     formContent
   ) : (
-    <div style={{ padding: '24px' }}>
-      <div
-        style={{
-          maxWidth: '600px',
-          margin: '0 auto',
-          backgroundColor: '#fff',
-          padding: '24px',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        }}
-        role="main"
-        aria-labelledby="form-title"
-      >
-        {formContent}
-      </div>
-    </div>
+    <FormLayout>
+      {formContent}
+    </FormLayout>
   );
 };
 

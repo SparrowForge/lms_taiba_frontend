@@ -18,10 +18,8 @@ export default function CreateEmploymentTypePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('create_name', { name: entityName })} onBack={() => router.back()} />
           <EmploymentTypeForm mode="create" />
-        </div>
       </MainLayout>
     </ProtectedRoute>
   );

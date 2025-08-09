@@ -11,6 +11,7 @@ import {useUsers} from '@/hooks/useUsers';
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IUserCreate, IUserUpdate} from '@/types/user';
+import FormLayout from '../layout/FormLayout';
 
 interface UserFormProps {
   mode: 'create' | 'edit';
@@ -220,19 +221,8 @@ const UserForm: React.FC<UserFormProps> = ({
       {embedded ? (
         formContent
       ) : (
-        <div style={{ padding: '24px' }}>
-          <div
-            style={{
-              maxWidth: '600px',
-              margin: '0 auto',
-              backgroundColor: '#fff',
-              padding: '24px',
-              borderRadius: '8px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            }}
-            role="main"
-            aria-labelledby="form-title"
-          >
+        <FormLayout>
+          
             {/* <h1
               id="form-title"
               style={{
@@ -245,8 +235,7 @@ const UserForm: React.FC<UserFormProps> = ({
               {mode === 'create' ? 'Create New User' : 'Edit User'}
             </h1> */}
             {formContent}
-          </div>
-        </div>
+        </FormLayout>
       )}
     </>
   );

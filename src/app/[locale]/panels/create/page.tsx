@@ -17,10 +17,8 @@ export default function CreatePanelPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('create_name', { name: entityName })} onBack={() => router.back()} />
           <PanelForm mode="create" />
-        </div>
       </MainLayout>
     </ProtectedRoute>
   );

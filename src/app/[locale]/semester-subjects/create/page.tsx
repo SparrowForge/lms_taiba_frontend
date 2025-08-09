@@ -21,11 +21,8 @@ const SemesterSubjectCreatePage: React.FC = () => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
-
           <SemesterSubjectForm mode="create" embedded={false} />
-        </div>
       </MainLayout>
     </ProtectedRoute>
   );

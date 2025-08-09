@@ -1,7 +1,9 @@
 import {ArrowLeftOutlined, EditOutlined} from '@ant-design/icons';
-import {Button, Card} from 'antd';
+import {Button, Card, Typography} from 'antd';
 import {useTranslations} from 'next-intl';
 import React from 'react';
+
+const { Title } = Typography;
 
 interface PageHeaderDetailsProps {
   title: string;
@@ -21,7 +23,7 @@ const PageHeaderDetails: React.FC<PageHeaderDetailsProps> = ({
   const t = useTranslations();
 
   return (
-    <Card>
+    <Card size="small">
       <div
         style={{
           display: 'flex',
@@ -35,7 +37,9 @@ const PageHeaderDetails: React.FC<PageHeaderDetailsProps> = ({
               {backText || t('back')}
             </Button>
           )}
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>{title}</h1>
+          <Title level={4} style={{ margin: 0}}>
+              {title}
+          </Title>
         </div>
         {onEdit && (
           <Button type="primary" icon={<EditOutlined />} onClick={onEdit}>

@@ -94,7 +94,7 @@ const UserEditPage: React.FC<UserEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
+        <div>
           <PageHeader title="Edit User" onBack={handleBack} />
           <UserForm
             mode="edit"

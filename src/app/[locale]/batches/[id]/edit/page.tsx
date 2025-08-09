@@ -92,7 +92,6 @@ const BatchEditPage: React.FC<BatchEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
           <BatchForm
             mode="edit"
@@ -106,10 +105,9 @@ const BatchEditPage: React.FC<BatchEditPageProps> = ({ params }) => {
               startDate: batch.startDate,
               endDate: batch.endDate,
               status: batch.status,
-              remarks: batch.remarks,
-            }}
-          />
-        </div>
+            remarks: batch.remarks,
+          }}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

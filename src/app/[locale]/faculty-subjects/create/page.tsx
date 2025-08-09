@@ -1,6 +1,7 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 
 import FacultySubjectForm from '@/components/facultySubjects/FacultySubjectForm';
@@ -10,16 +11,15 @@ import {PageHeader} from '@/components/ui/PageHeader';
 const CreateFacultySubjectPage: React.FC = () => {
   const t = useTranslations();
   const entityName = t('facultySubject');
+  const router = useRouter();
+  
+  const handleBack = () => {
+    router.back();
+  };
 
   return (
     <MainLayout>
-      <PageHeader
-        title={t('create_name', { name: entityName })}
-        onBack={() => window.history.back()}
-      >
-        {/* Additional actions can go here */}
-      </PageHeader>
-
+      <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack}/>
       <FacultySubjectForm mode="create" embedded={false} />
     </MainLayout>
   );

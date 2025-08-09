@@ -96,16 +96,14 @@ const RoleEditPage: React.FC<RoleEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
           <RoleForm
             mode="edit"
             roleId={role.id}
             initialValues={getInitialValues()}
             embedded={false}
-            onCancel={handleBack}
-          />
-        </div>
+          onCancel={handleBack}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

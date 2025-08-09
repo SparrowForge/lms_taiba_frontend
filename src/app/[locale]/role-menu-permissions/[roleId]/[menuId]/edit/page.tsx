@@ -115,7 +115,6 @@ const RoleMenuPermissionEditPage: React.FC<RoleMenuPermissionEditPageProps> = ({
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
           <RoleMenuPermissionForm
             mode="edit"
@@ -123,9 +122,8 @@ const RoleMenuPermissionEditPage: React.FC<RoleMenuPermissionEditPageProps> = ({
             menuId={permission.menuId}
             initialValues={getInitialValues()}
             embedded={false}
-            onCancel={handleBack}
-          />
-        </div>
+          onCancel={handleBack}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

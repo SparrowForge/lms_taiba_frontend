@@ -17,10 +17,8 @@ export default function CreateUserPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('create_name', { name: t('user') })} onBack={() => router.back()} />
           <UserForm mode="create" />
-        </div>
       </MainLayout>
     </ProtectedRoute>
   );

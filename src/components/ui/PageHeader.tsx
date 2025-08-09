@@ -14,7 +14,7 @@ interface PageHeaderProps {
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, onBack, children }) => {
   const t = useTranslations();
   return (
-    <Card>
+    <Card style={{ marginTop: '8px', marginRight: '8px', marginLeft: '8px' }} size="small">
       <Space direction="vertical" style={{ width: '100%' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -23,7 +23,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, onBack, children 
                 {t('back', { defaultValue: 'Back' })}
               </Button>
             )}
-            <Title level={2} style={{ margin: 0 }}>
+            <Title level={4} style={{ margin: 0}}>
               {title}
             </Title>
           </div>

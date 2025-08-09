@@ -63,10 +63,10 @@ export const EntityDetailsContent = <T extends { id: number }>({
     );
   }
   const content = (
-    <div style={{ marginTop: config.embedded ? '0' : '24px' }}>
-      <Row gutter={[24, 24]}>
+    <div style={{ marginTop: config.embedded ? '0' : '8px' }}>
+      <Row gutter={[8, 8]}>
         {/* Profile Card */}
-        <Col xs={24} lg={config.embedded ? 24 : 8}>
+        <Col xs={8} lg={config.embedded ? 24 : 8}>
           <Card title={`${config.name} ${t('profile')}`}>
             <div style={{ textAlign: 'center' }}>
               <Avatar
@@ -84,7 +84,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
           </Card>
         </Col>
         {/* Details Table */}
-        <Col xs={24} lg={config.embedded ? 24 : 16}>
+        <Col xs={8} lg={config.embedded ? 24 : 16}>
           <Card title={`${config.name} ${t('information')}`}>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -134,7 +134,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
   }
   // If not embedded, return with header actions
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ padding: '8px' }}>
       {/* Header */}
       <PageHeaderDetails
         title={t('details_name', { name: config.name })}

@@ -99,14 +99,12 @@ const SemesterSubjectEditPage: React.FC<SemesterSubjectEditPageProps> = ({ param
     <ProtectedRoute>
       <MainLayout>
         <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
-        <div style={{ maxWidth: 600, margin: '0 auto' }}>
           <SemesterSubjectForm
             mode="edit"
             semesterSubjectId={semesterSubject.id}
             initialValues={semesterSubject}
-            onCancel={handleBack}
-          />
-        </div>
+          onCancel={handleBack}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

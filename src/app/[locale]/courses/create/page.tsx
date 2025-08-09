@@ -18,10 +18,8 @@ export default function CreateCoursePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('create_name', { name: entityName })} onBack={() => router.back()} />
           <CourseForm mode="create" embedded={false} />
-        </div>
       </MainLayout>
     </ProtectedRoute>
   );

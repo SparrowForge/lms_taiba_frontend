@@ -100,16 +100,14 @@ const DepartmentEditPage: React.FC<DepartmentEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
           <DepartmentForm
             mode="edit"
             departmentId={department.id}
             initialValues={getInitialValues()}
             embedded={false}
-            onCancel={handleBack}
-          />
-        </div>
+          onCancel={handleBack}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -92,7 +92,6 @@ const AddressEditPage: React.FC<AddressEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
           <AddressForm
             mode="edit"
@@ -106,9 +105,8 @@ const AddressEditPage: React.FC<AddressEditPageProps> = ({ params }) => {
               country: address.country,
               phone: address.phone,
               email: address.email,
-            }}
-          />
-        </div>
+          }}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

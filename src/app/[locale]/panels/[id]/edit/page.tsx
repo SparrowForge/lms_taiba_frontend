@@ -92,7 +92,6 @@ const PanelEditPage: React.FC<PanelEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
           <PanelForm
             mode="edit"
@@ -100,9 +99,8 @@ const PanelEditPage: React.FC<PanelEditPageProps> = ({ params }) => {
             initialValues={{
               name: panel.name,
               status: panel.status,
-            }}
-          />
-        </div>
+          }}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

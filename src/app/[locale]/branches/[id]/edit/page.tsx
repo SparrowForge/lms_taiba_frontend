@@ -92,7 +92,6 @@ const BranchEditPage: React.FC<BranchEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
           <BranchForm
             mode="edit"
@@ -105,9 +104,8 @@ const BranchEditPage: React.FC<BranchEditPageProps> = ({ params }) => {
               campusDirectorUserId: branch.campusDirectorUserId,
               status: branch.status,
               code: branch.code,
-            }}
-          />
-        </div>
+          }}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

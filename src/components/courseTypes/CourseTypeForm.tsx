@@ -13,6 +13,7 @@ import {useCourseTypes} from '@/hooks/useCourseTypes';
 import {Status} from '@/types/common';
 import {ICourseType, ICourseTypeCreate, ICourseTypeUpdate} from '@/types/courseType';
 import {getErrorMessage} from '@/types/errors';
+import FormLayout from '../layout/FormLayout';
 
 
 interface Props {
@@ -126,20 +127,9 @@ const CourseTypeForm: React.FC<Props> = ({
   return embedded ? (
     formContent
   ) : (
-    <div style={{ padding: '24px' }}>
-      <div
-        style={{
-          maxWidth: 600,
-          margin: '0 auto',
-          background: '#fff',
-          padding: 24,
-          borderRadius: 8,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        }}
-      >
-        {formContent}
-      </div>
-    </div>
+    <FormLayout>
+      {formContent}
+    </FormLayout>
   );
 };
 

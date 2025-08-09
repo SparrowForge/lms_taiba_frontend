@@ -82,14 +82,12 @@ const ScheduleTypeEditPage: React.FC<PageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
           <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
           <ScheduleTypeForm
             mode="edit"
             scheduleTypeId={parseInt(resolvedParams.id)}
-            initialValues={{ name: item.name, status: item.status }}
-          />
-        </div>
+          initialValues={{ name: item.name, status: item.status }}
+        />
       </MainLayout>
     </ProtectedRoute>
   );
