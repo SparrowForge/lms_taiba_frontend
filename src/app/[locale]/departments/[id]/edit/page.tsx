@@ -91,6 +91,10 @@ const DepartmentEditPage: React.FC<DepartmentEditPageProps> = ({ params }) => {
     branchId: department.branchId,
     name: department.name,
     code: department.code,
+    headId: department.headId,
+    email: department.email,
+    phone: department.phone,
+    status: department.status,
   });
 
   return (

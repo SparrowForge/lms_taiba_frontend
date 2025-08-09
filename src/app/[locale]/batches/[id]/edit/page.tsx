@@ -103,6 +103,10 @@ const BatchEditPage: React.FC<BatchEditPageProps> = ({ params }) => {
               session: batch.session,
               intakeCapacity: batch.intakeCapacity,
               courseId: batch.courseId,
+              startDate: batch.startDate,
+              endDate: batch.endDate,
+              status: batch.status,
+              remarks: batch.remarks,
             }}
           />
         </div>

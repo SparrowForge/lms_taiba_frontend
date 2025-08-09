@@ -90,7 +90,10 @@ const CourseEditPage: React.FC<CourseEditPageProps> = ({ params }) => {
     departmentId: course.departmentId,
     name: course.name,
     code: course.code,
-    courseType: course.courseType,
+    courseTypeId: course.courseTypeId,
+    scheduleTypeId: course.scheduleTypeId,
+    status: course.status,
+    remarks: course.remarks,
     durationInSemesters: course.durationInSemesters,
     description: course.description,
   });

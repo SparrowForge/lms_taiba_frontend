@@ -92,6 +92,7 @@ const MenuEditPage: React.FC<MenuEditPageProps> = ({ params }) => {
     name: menu.name,
     route: menu.route,
     sortOrder: menu.sortOrder,
+    status: menu.status,
   });
 
   return (

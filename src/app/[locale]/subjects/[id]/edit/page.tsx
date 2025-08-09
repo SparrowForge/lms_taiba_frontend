@@ -94,6 +94,9 @@ const SubjectEditPage: React.FC<SubjectEditPageProps> = ({ params }) => {
     theoryHours: subject.theoryHours,
     practicalHours: subject.practicalHours,
     description: subject.description,
+    prerequisite: subject.prerequisite,
+    status: subject.status,
+    remarks: subject.remarks,
   });
 
   return (

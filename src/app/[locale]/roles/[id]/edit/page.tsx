@@ -90,6 +90,7 @@ const RoleEditPage: React.FC<RoleEditPageProps> = ({ params }) => {
     branchId: role.branchId,
     name: role.name,
     description: role.description,
+    status: role.status,
   });
 
   return (

@@ -99,6 +99,7 @@ const PanelEditPage: React.FC<PanelEditPageProps> = ({ params }) => {
             panelId={parseInt(resolvedParams.id)}
             initialValues={{
               name: panel.name,
+              status: panel.status,
             }}
           />
         </div>

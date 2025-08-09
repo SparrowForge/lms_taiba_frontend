@@ -99,7 +99,11 @@ const BranchEditPage: React.FC<BranchEditPageProps> = ({ params }) => {
             branchId={parseInt(resolvedParams.id)}
             initialValues={{
               name: branch.name,
-              location: branch.location,
+              instituteId: branch.instituteId,
+              addressId: branch.addressId,
+              externalInstituteIdNo: branch.externalInstituteIdNo,
+              campusDirectorUserId: branch.campusDirectorUserId,
+              status: branch.status,
               code: branch.code,
             }}
           />
