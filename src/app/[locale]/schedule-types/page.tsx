@@ -70,7 +70,7 @@ export default function ScheduleTypesPage() {
 
   const config: EntityConfig<IScheduleType> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/schedule-types',
     searchFields: ['name', 'status'] as (keyof IScheduleType)[],
     onSearch: (searchText: string) => {

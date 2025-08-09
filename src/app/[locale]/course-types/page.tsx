@@ -71,7 +71,7 @@ export default function CourseTypesPage() {
 
   const config: EntityConfig<ICourseType> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/course-types',
     searchFields: ['name', 'status'] as (keyof ICourseType)[],
     onSearch: (searchText: string) => {

@@ -69,7 +69,7 @@ export default function InstitutesPage() {
 
   const config: EntityConfig<IInstitute> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/institutes',
     searchFields: ['name', 'status'] as (keyof IInstitute)[],
     onSearch: (searchText: string) => {

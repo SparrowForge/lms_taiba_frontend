@@ -77,7 +77,7 @@ export default function DepartmentsPage() {
 
   const config: EntityConfig<IDepartment> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/departments',
     searchFields: ['name', 'code', 'status'] as (keyof IDepartment)[],
     onSearch: (searchText: string) => {

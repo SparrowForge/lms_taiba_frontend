@@ -74,7 +74,7 @@ export default function SubjectsPage() {
 
   const config: EntityConfig<ISubject> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/subjects',
     searchFields: ['name', 'code', 'status'] as (keyof ISubject)[],
     onSearch: (searchText: string) => {

@@ -73,7 +73,7 @@ export default function AddressesPage() {
 
   const config: EntityConfig<IAddress> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/addresses',
     searchFields: ['name', 'city', 'state'] as (keyof IAddress)[],
     onSearch: (searchText: string) => {

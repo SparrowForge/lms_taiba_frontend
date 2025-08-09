@@ -74,7 +74,7 @@ export default function MenusPage() {
 
   const config: EntityConfig<IMenu> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/menus',
     searchFields: ['name', 'route', 'status'] as (keyof IMenu)[],
     onSearch: (searchText: string) => {

@@ -74,7 +74,7 @@ export default function BranchesPage() {
 
   const config: EntityConfig<IBranch> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/branches',
     searchFields: ['name', 'code'] as (keyof IBranch)[],
     onSearch: (searchText: string) => {

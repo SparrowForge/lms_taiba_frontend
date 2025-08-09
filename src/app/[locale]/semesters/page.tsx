@@ -74,7 +74,7 @@ export default function SemestersPage() {
 
   const config: EntityConfig<ISemester> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/semesters',
     searchFields: ['name', 'termNo', 'status'] as (keyof ISemester)[],
     onSearch: (searchText: string) => {

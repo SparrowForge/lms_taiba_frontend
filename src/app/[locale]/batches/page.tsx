@@ -74,7 +74,7 @@ export default function BatchesPage() {
 
   const config: EntityConfig<IBatch> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/batches',
     searchFields: ['name', 'year', 'session'] as (keyof IBatch)[],
     onSearch: (searchText: string) => {

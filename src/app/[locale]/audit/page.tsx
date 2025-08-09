@@ -78,7 +78,7 @@ export default function AuditPage() {
 
   const config: EntityConfig<IAudit> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/audit',
     searchFields: ['username', 'action', 'resource', 'method', 'ip'] as (keyof IAudit)[],
     onSearch: (searchText: string) => {

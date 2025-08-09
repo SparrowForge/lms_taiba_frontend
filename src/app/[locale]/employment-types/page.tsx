@@ -6,8 +6,8 @@ import {useEffect, useState} from 'react';
 
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import EmploymentTypeFormDrawer from '@/components/employmentTypes/EmploymentTypeFormDrawer';
 import EmploymentTypeDetailsDrawer from '@/components/employmentTypes/EmploymentTypeDetailsDrawer';
+import EmploymentTypeFormDrawer from '@/components/employmentTypes/EmploymentTypeFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {MainLayout} from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
@@ -71,7 +71,7 @@ export default function EmploymentTypesPage() {
 
   const config: EntityConfig<IEmploymentType> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/employment-types',
     searchFields: ['name', 'status'] as (keyof IEmploymentType)[],
     onSearch: (searchText: string) => {

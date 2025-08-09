@@ -1,11 +1,11 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-
-import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {MainLayout} from '@/components/layout/MainLayout';
 import RoleDetailsDrawer from '@/components/roles/RoleDetailsDrawer';
 import RoleFormDrawer from '@/components/roles/RoleFormDrawer';
@@ -74,7 +74,7 @@ export default function RolesPage() {
 
   const config: EntityConfig<IRole> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/roles',
     searchFields: ['name', 'description', 'status'] as (keyof IRole)[],
     onSearch: (searchText: string) => {

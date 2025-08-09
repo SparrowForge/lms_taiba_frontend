@@ -74,7 +74,7 @@ export default function PanelsPage() {
 
   const config: EntityConfig<IPanel> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/panels',
     searchFields: ['name', 'status'] as (keyof IPanel)[],
     onSearch: (searchText: string) => {

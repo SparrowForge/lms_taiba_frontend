@@ -1,7 +1,7 @@
 {
   "panel": "لوحة",
   "user": "مستخدم",
-  "managemen_name": "إدارة {name}",
+  "management_name": "إدارة {name}",
   "name": "الاسم",
   "createdAt": "تاريخ الإنشاء",
   "updatedAt": "تاريخ التحديث",

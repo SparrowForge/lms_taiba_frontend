@@ -65,7 +65,7 @@ export default function UserRolesPage() {
 
   const config: EntityConfig<IUserRole> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/user-roles',
     searchFields: ['userId', 'roleId'] as (keyof IUserRole)[],
     onSearch: (searchText: string) => {

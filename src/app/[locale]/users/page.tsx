@@ -75,7 +75,7 @@ export default function UsersPage() {
 
   const config: EntityConfig<IUser> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/users',
     exportUrl: '/users/export',
     searchFields: ['name', 'email'] as (keyof IUser)[],

@@ -1,7 +1,7 @@
 {
   "panel": "Panel",
   "user": "User",
-  "managemen_name": "{name} Management",
+  "management_name": "{name} Management",
   "name": "Name",
   "createdAt": "Created At",
   "updatedAt": "Updated At",

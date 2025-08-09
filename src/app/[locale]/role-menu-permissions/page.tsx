@@ -87,7 +87,7 @@ export default function RoleMenuPermissionsPage() {
 
   const config: EntityConfig<IRoleMenuPermission> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/role-menu-permissions',
     searchFields: [] as (keyof IRoleMenuPermission)[],
     onSearch: (searchText: string) => {

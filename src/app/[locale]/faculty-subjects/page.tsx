@@ -78,7 +78,7 @@ export default function FacultySubjectsPage() {
 
   const config: EntityConfig<IFacultySubject> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t('management_name', { name: entityName }),
     route: '/faculty-subjects',
     searchFields: [] as (keyof IFacultySubject)[],
     onSearch: (searchText: string) => {
