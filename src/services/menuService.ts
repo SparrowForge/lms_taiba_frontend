@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse} from '@/types/common';
-import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
+import { IBasePaginatedResponse } from '@/types/common';
+import { IMenu, IMenuCreate, IMenuUpdate } from '@/types/menu';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const menuService = {
   // Get all menus with pagination and search
@@ -31,6 +31,12 @@ export const menuService = {
   // Delete a menu
   deleteMenu: async (id: number): Promise<void> => {
     const response = await api.delete(`/menus/${id}`);
+    return response.data;
+  },
+
+  //get my menus
+  getMyMenus: async (params = {}): Promise<IBasePaginatedResponse<IMenu>> => {
+    const response = await api.get<IBasePaginatedResponse<IMenu>>('/my-menus', { params });
     return response.data;
   },
 };

@@ -1,7 +1,7 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {IPaginationMeta, IStatusState, Status} from '@/types/common';
-import {IMenu} from '@/types/menu';
+import { IPaginationMeta, IStatusState, Status } from '@/types/common';
+import { IMenu } from '@/types/menu';
 
 // State interface
 interface IMenusState {
@@ -11,6 +11,8 @@ interface IMenusState {
   menus: IMenu[];
   selectedMenu: IMenu | null;
   pagination: IPaginationMeta;
+  myMenusStatus: IStatusState;
+  myMenus: IMenu[];
 }
 
 // Initial state
@@ -18,6 +20,7 @@ const initialState: IMenusState = {
   listStatus: { status: Status.INITIAL },
   detailsStatus: { status: Status.INITIAL },
   actionStatus: { status: Status.INITIAL },
+  myMenusStatus: { status: Status.INITIAL },
   menus: [],
   selectedMenu: null,
   pagination: {
@@ -28,6 +31,7 @@ const initialState: IMenusState = {
     hasNextPage: false,
     hasPreviousPage: false,
   },
+  myMenus: [],
 };
 
 // Slice
@@ -77,6 +81,12 @@ const menuSlice = createSlice({
     clearDetailsStatus: (state) => {
       state.detailsStatus = { status: Status.INITIAL };
     },
+    setMyMenusStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.myMenusStatus = action.payload;
+    },
+    setMyMenus: (state, action: PayloadAction<IMenu[]>) => { // ⬅ added
+      state.myMenus = action.payload;
+    },
   },
 });
 
@@ -92,6 +102,8 @@ export const {
   setPagination,
   clearActionStatus,
   clearDetailsStatus,
+  setMyMenusStatus,
+  setMyMenus,
 } = menuSlice.actions;
 
 export default menuSlice.reducer;
