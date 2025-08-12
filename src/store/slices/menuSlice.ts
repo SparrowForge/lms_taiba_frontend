@@ -81,10 +81,10 @@ const menuSlice = createSlice({
     clearDetailsStatus: (state) => {
       state.detailsStatus = { status: Status.INITIAL };
     },
-    setMyMenusStatus: (state, action: PayloadAction<IStatusState>) => {
+    setMyMenusStatus: (state, action: PayloadAction<IStatusState>) => {// ⬅ my menus
       state.myMenusStatus = action.payload;
     },
-    setMyMenus: (state, action: PayloadAction<IMenu[]>) => { // ⬅ added
+    setMyMenus: (state, action: PayloadAction<IMenu[]>) => { 
       state.myMenus = action.payload;
     },
   },

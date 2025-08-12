@@ -35,8 +35,8 @@ export const useMenus = () => {
     async (params = {}) => {
       try {
         dispatch(setMyMenusStatus({ status: Status.LOADING }));
-        const response: IBasePaginatedResponse<IMenu> = await menuService.getMyMenus(params);
-        dispatch(setMyMenus(response?.data?.items ?? []));
+        const response = await menuService.getMyMenus(params);
+        dispatch(setMyMenus(response?.data ?? []));
         dispatch(setMyMenusStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =

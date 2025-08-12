@@ -2,7 +2,12 @@ import { IBasePaginatedResponse } from '@/types/common';
 import { IMenu, IMenuCreate, IMenuUpdate } from '@/types/menu';
 
 import { api } from '@/lib/axios';
-
+  interface IMyMenusResponse {
+  success: boolean;
+  message: string;
+  data: IMenu[];    // **Note: data is directly an array here**
+  timestamp: string;
+}
 export const menuService = {
   // Get all menus with pagination and search
   getMenus: async (params = {}): Promise<IBasePaginatedResponse<IMenu>> => {
@@ -35,8 +40,16 @@ export const menuService = {
   },
 
   //get my menus
-  getMyMenus: async (params = {}): Promise<IBasePaginatedResponse<IMenu>> => {
-    const response = await api.get<IBasePaginatedResponse<IMenu>>('/my-menus', { params });
-    return response.data;
-  },
+  // getMyMenus: async (params = {}): Promise<IBasePaginatedResponse<IMenu>> => {
+  //   const response = await api.get<IBasePaginatedResponse<IMenu>>('/menus/my-menus', { params });
+  //   return response.data;
+  // },
+
+
+
+getMyMenus: async (params = {}): Promise<IMyMenusResponse> => {
+  const response = await api.get<IMyMenusResponse>('/menus/my-menus', { params });
+  return response.data;
+},
+
 };

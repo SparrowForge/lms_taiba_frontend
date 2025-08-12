@@ -7,6 +7,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {Sidebar} from './Sidebar';
 import ErrorBoundary from '../error/ErrorBoundary';
 import {LanguageSwitcher} from '../ui/LanguageSwitcher';
+import { Sidebar2 } from './Sidebar2';
 
 const { Header, Content } = Layout;
 
@@ -70,7 +71,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <Layout className="h-screen overflow-hidden w-full">
-      <Sidebar collapsed={collapsed} onCollapse={setCollapsed} />
+      {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
+      <Sidebar2 collapsed={collapsed} onCollapse={setCollapsed} />
 
       <Layout style={layoutStyle}>
         <Header
