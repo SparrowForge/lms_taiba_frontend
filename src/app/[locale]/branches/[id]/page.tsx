@@ -9,6 +9,7 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
+import { useAudit } from '@/hooks/useAudit';
 import {useBranches} from '@/hooks/useBranches';
 
 import {IBranch} from '@/types/branch';
@@ -24,9 +25,15 @@ interface BranchDetailPageProps {
 const BranchDetailPage: React.FC<BranchDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
   const { branches, listStatus, loadBranches, getBranchById, loadBranch } = useBranches();
+  const { loadAuditsByResource} = useAudit();
   const [branch, setBranch] = useState<IBranch | null>(null);
   const t = useTranslations();
   const entityName = t('branch');
+
+  useEffect(() => {
+    loadAuditsByResource('branches', parseInt(resolvedParams.id));
+  }, []);
+
 
   useEffect(() => {
     const branchId = parseInt(resolvedParams.id);

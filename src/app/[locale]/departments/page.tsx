@@ -104,15 +104,13 @@ export default function DepartmentsPage() {
       },
       {
         title: t('branch'),
-        dataIndex: 'branch',
         key: 'branch',
         render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
       },
       {
         title: t('head'),
-        dataIndex: 'headId',
-        key: 'headId',
-        render: (val: number) => <span>{val}</span>,
+        key: 'head',
+        render: (department: IDepartment) => <span>{department.head?.fullName || 'N/A'}</span>,
       },
       {
         title: t('email'),

@@ -3,6 +3,8 @@ import {Alert, Avatar, Card, Col, Row, Spin, Typography} from 'antd';
 import {useTranslations} from 'next-intl';
 import React from 'react';
 
+import { useAudit } from '@/hooks/useAudit';
+
 import PageHeaderDetails from './PageHeaderDetails';
 
 const { Title, Text } = Typography;
@@ -33,6 +35,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
   config: EntityDetailsConfig<T>;
 }) => {
   const t = useTranslations();
+  const { auditsByResource } = useAudit();
   if (config.loading) {
     return (
       <div style={{ padding: config.embedded ? '0' : '24px', textAlign: 'center' }}>

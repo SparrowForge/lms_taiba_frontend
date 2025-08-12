@@ -114,8 +114,8 @@ export default function FacultyPage() {
       },
       {
         title: t('status'),
-        dataIndex: 'isActive',
-        key: 'isActive',
+        dataIndex: 'status',
+        key: 'status',
         render: (text: string) => <StatusTag status={text} />,
       },
       {

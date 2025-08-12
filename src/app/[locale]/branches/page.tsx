@@ -100,16 +100,14 @@ export default function BranchesPage() {
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('instituteId'),
-        dataIndex: 'instituteId',
-        key: 'instituteId',
-        render: (text: number) => <span>{text}</span>,
+        title: t('institute'),
+        key: 'institute',
+        render: (branch: IBranch) => <span>{branch.institute.name}</span>,
       },
       {
         title: t('address'),
-        dataIndex: 'addressId',
         key: 'addressId',
-        render: (text: number) => <span>{text}</span>,
+        render: (branch: IBranch) => <span>{branch.address.name}</span>,
       },
       {
         title: t('externalInstituteIdNo'),
@@ -119,9 +117,8 @@ export default function BranchesPage() {
       },
       {
         title: t('campusDirectorUserId'),
-        dataIndex: 'campusDirectorUserId',
         key: 'campusDirectorUserId',
-        render: (text: number) => <span>{text}</span>,
+        render: (branch: IBranch) => <span>{branch.campusDirector.firstName}</span>,
       },
       {
         title: t('status'),

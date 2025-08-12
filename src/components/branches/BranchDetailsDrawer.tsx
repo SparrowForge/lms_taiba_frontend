@@ -6,6 +6,7 @@ import React, {useEffect, useState} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import { useAudit } from '@/hooks/useAudit';
 import {useBranches} from '@/hooks/useBranches';
 
 import {IBranch} from '@/types/branch';
@@ -29,8 +30,17 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
 }) => {
   const [branch, setBranch] = useState<IBranch | null>(null);
   const { branches, getBranchById, loadBranch, detailsStatus } = useBranches();
+  const { auditsByResource, loadAuditsByResource} = useAudit();
   const t = useTranslations();
   const entityName = t('branch', { defaultValue: 'Branch' });
+
+
+  useEffect(() => {
+    if (visible && branchId) {
+      loadAuditsByResource('branches', branchId);
+    }
+  }, [visible, branchId, loadAuditsByResource]);
+
   useEffect(() => {
     if (visible && branchId) {
       // Try to get from current list first

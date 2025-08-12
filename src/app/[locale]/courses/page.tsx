@@ -102,15 +102,13 @@ export default function CoursesPage() {
       },
       {
         title: t('courseType'),
-        dataIndex: 'courseTypeId',
-        key: 'courseTypeId',
-        render: (val: number) => <span>{val}</span>,
+        key: 'courseType',
+        render: (course: ICourse) => <span>{course.courseType.name}</span>,
       },
       {
         title: t('scheduleType'),
-        dataIndex: 'scheduleTypeId',
-        key: 'scheduleTypeId',
-        render: (val: number) => <span>{val}</span>,
+        key: 'scheduleType',
+        render: (course: ICourse) => <span>{course.scheduleType.name}</span>,
       },
       {
         title: t('durationInSemesters'),
