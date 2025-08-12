@@ -1,13 +1,8 @@
 import { IBasePaginatedResponse } from '@/types/common';
-import { IMenu, IMenuCreate, IMenuUpdate } from '@/types/menu';
+import { IMenu, IMenuCreate, IMenuUpdate, IMyMenusResponse } from '@/types/menu';
 
 import { api } from '@/lib/axios';
-  interface IMyMenusResponse {
-  success: boolean;
-  message: string;
-  data: IMenu[];    // **Note: data is directly an array here**
-  timestamp: string;
-}
+
 export const menuService = {
   // Get all menus with pagination and search
   getMenus: async (params = {}): Promise<IBasePaginatedResponse<IMenu>> => {
