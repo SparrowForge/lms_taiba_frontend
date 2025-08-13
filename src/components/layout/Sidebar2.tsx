@@ -30,9 +30,12 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
         setCurrentPath(pathname.split('?')[0]);
     }, [pathname]);
 
-    useEffect(() => {
+useEffect(() => {
+    if (!myMenus || myMenus.length === 0) {
         loadMyMenus();
-    }, [loadMyMenus]);
+    }
+}, [myMenus, loadMyMenus]);
+
 
     const handleLogout = useCallback(async () => {
         try {

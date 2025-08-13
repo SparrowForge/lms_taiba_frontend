@@ -26,8 +26,12 @@ body {
 }
 
 
-.ant-menu-item-selected {
-    background-color: transparent !important;
-    color: #16a34a !important; /* Tailwind green-600 */
-    font-weight: 600;
+.ant-menu-light .ant-menu-item-selected {
+  background-color: #e6f4ff !important; /* light blue background */
+  color: #1677ff !important; /* Ant Design blue text */
 }
+
+.ant-menu-light .ant-menu-item-selected .anticon {
+  color: #1677ff !important;
+}
+
