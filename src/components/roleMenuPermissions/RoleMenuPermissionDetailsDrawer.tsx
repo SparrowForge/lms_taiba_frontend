@@ -15,14 +15,14 @@ import {useCreateRoleMenuPermissionDetailsConfig} from './roleMenuPermissionConf
 
 
 interface RoleMenuPermissionDetailsDrawerProps {
-  roleMenuPermissionId?: number;
+  id?: number;
   visible: boolean;
   onClose: () => void;
   onEdit: (roleMenuPermissionId: number) => void;
 }
 
 const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerProps> = ({
-  roleMenuPermissionId,
+  id,
   visible,
   onClose,
   onEdit,
@@ -32,10 +32,10 @@ const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerP
   const t = useTranslations();
   const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
   useEffect(() => {
-    if (visible && roleMenuPermissionId) {
-      getRoleMenuPermissionById(roleMenuPermissionId);
+    if (visible && id) {
+      getRoleMenuPermissionById(id);
     }
-  }, [visible, roleMenuPermissionId, getRoleMenuPermissionById]);
+  }, [visible, id, getRoleMenuPermissionById]);
 
   const handleEdit = (roleMenuPermission: IRoleMenuPermission) => {
     onEdit(roleMenuPermission.id);

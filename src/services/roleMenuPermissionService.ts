@@ -15,7 +15,7 @@ export const roleMenuPermissionService = {
     return response.data;
   },
 
-  // Get a single role menu permission by roleId and menuId
+  // Get a single role menu permission by id
   getRoleMenuPermission: async (id: number): Promise<IBaseResponse<IRoleMenuPermission>> => {
     const response = await api.get<IBaseResponse<IRoleMenuPermission>>(
       `/role-menu-permissions/${id}`,

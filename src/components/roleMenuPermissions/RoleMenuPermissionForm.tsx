@@ -12,14 +12,13 @@ import {useRoles} from '@/hooks/useRoles';
 
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
-import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate,} from '@/types/roleMenuPermission';
+import {IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate,} from '@/types/roleMenuPermission';
 
 import FormLayout from '../layout/FormLayout';
 
 interface RoleMenuPermissionFormProps {
   mode: 'create' | 'edit';
-  roleId?: number;
-  menuId?: number;
+  id?: number;
   initialValues?: Partial<IRoleMenuPermissionCreate | IRoleMenuPermissionUpdate>;
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -28,8 +27,7 @@ interface RoleMenuPermissionFormProps {
 
 const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
   mode,
-  roleId,
-  menuId,
+  id,
   initialValues,
   onSuccess,
   onCancel,
@@ -55,7 +53,7 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
     loadMenus({ page: 1, limit: 100 });
   }, [loadRoles, loadMenus]);
 
-  const handleSubmit = async (values: Partial<IRoleMenuPermission>) => {
+  const handleSubmit = async (values: Partial<IRoleMenuPermissionCreate | IRoleMenuPermissionUpdate>) => {
     try {
       if (mode === 'create') {
         await createRoleMenuPermission(values as IRoleMenuPermissionCreate);
@@ -65,16 +63,13 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
         } else {
           router.push('/role-menu-permissions');
         }
-      } else if (mode === 'edit' && roleId && menuId) {
-        // For editing, we need to find the existing permission by roleId and menuId
-        // This is a special case where we need both IDs to identify the permission
-        const permissionData = { ...values, roleId, menuId };
-        await editRoleMenuPermission(roleId, permissionData as IRoleMenuPermissionUpdate);
+      } else if (mode === 'edit' && id) {
+        await editRoleMenuPermission(id, values as IRoleMenuPermissionUpdate);
         toast.success(t('updated_name', { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
-          router.push(`/role-menu-permissions/${roleId}/${menuId}`);
+          router.push(`/role-menu-permissions/${id}`);
         }
       }
     } catch (error: unknown) {

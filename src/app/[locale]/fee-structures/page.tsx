@@ -14,9 +14,9 @@ import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 
+import {IBatch} from '@/types/batch';
 import {Status} from '@/types/common';
 import {IFeeStructure} from '@/types/feeStructure';
-import {IBatch} from '@/types/batch';
 import {ISemester} from '@/types/semester';
 
 

@@ -17,25 +17,19 @@ import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 export default function RoleMenuPermissionDetailPage({ 
   params 
 }: { 
-  params: Promise<{ roleId: string; menuId: string }> 
+  params: Promise<{ id: string }> 
 }) {
   const { selectedRoleMenuPermission, detailsStatus, getRoleMenuPermissionById } = useRoleMenuPermissions();
   const t = useTranslations();
   const entityName = t('roleMenuPermission');
 
   const resolvedParams = React.use(params);
-  // For role menu permissions, we need to construct a unique ID from roleId and menuId
-  // This assumes the API endpoint can handle this or we need to modify the hook
-  const roleId = parseInt(resolvedParams.roleId);
-  const menuId = parseInt(resolvedParams.menuId);
+  const roleMenuPermissionId = parseInt(resolvedParams.id);
 
   // Load role menu permission if not already loaded
   useEffect(() => {
-    // Note: This might need adjustment based on how the API identifies role menu permissions
-    // For now, using a combination approach
-    const combinedId = roleId * 10000 + menuId; // Simple way to create unique ID
-    getRoleMenuPermissionById(combinedId);
-  }, [getRoleMenuPermissionById, roleId, menuId]);
+    getRoleMenuPermissionById(roleMenuPermissionId);
+  }, [getRoleMenuPermissionById, roleMenuPermissionId]);
 
   const config = useCreateRoleMenuPermissionDetailsConfig(
     selectedRoleMenuPermission,

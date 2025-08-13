@@ -1,80 +1,65 @@
+'use client';
+
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
-
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
 import RoleMenuPermissionForm from './RoleMenuPermissionForm';
 
 
 interface RoleMenuPermissionFormDrawerProps {
   mode: 'create' | 'edit';
-  roleId?: number;
-  menuId?: number;
-  initialValues?: Partial<IRoleMenuPermission>;
+  id?: number;
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> = ({
   mode,
-  roleId,
-  menuId,
-  initialValues,
+  id,
   visible,
   onCancel,
   onSuccess,
 }) => {
-  const { getRoleMenuPermissionById, loadRoleMenuPermission } = useRoleMenuPermissions();
-  const [permission, setPermission] = useState<IRoleMenuPermission | null>(null);
+ 
+  const { getRoleMenuPermissionById, selectedRoleMenuPermission } = useRoleMenuPermissions();
   const t = useTranslations();
   const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
-
   useEffect(() => {
-    if (mode === 'edit' && roleId && menuId && visible) {
-      const foundPermission = getRoleMenuPermissionById(roleId, menuId);
-      if (foundPermission) {
-        setPermission(foundPermission);
-      } else {
-        loadRoleMenuPermission(roleId, menuId);
-      }
+    if (visible && mode === 'edit' && id) {
+      getRoleMenuPermissionById(id);
     }
-  }, [mode, roleId, menuId, visible, getRoleMenuPermissionById, loadRoleMenuPermission]);
+  }, [visible, mode, id, getRoleMenuPermissionById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+  const handleSuccess = () => {
+    onSuccess();
+  };
 
-  const handleDrawerSuccess = () => {
-    if (onSuccess) onSuccess();
+  const handleCancel = () => {
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && permission) {
-      return {
-        view: permission.view,
-        insert: permission.insert,
-        update: permission.update,
-        delete: permission.delete,
-      };
-    }
-    return initialValues;
-  };
-
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      title={
+        mode === 'create'
+          ? t('create_name', { name: entityName })
+          : t('edit_name', { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <RoleMenuPermissionForm
         mode={mode}
-        roleId={roleId}
-        menuId={menuId}
-        initialValues={getFormInitialValues()}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        id={id}
+        initialValues={selectedRoleMenuPermission || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>

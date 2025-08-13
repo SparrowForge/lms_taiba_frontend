@@ -13,29 +13,28 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
 import {Status} from '@/types/common';
+import {IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
 
 
-const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ roleId: string; menuId: string }> }> = ({ params }) => {
+const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
   const { selectedRoleMenuPermission, detailsStatus, getRoleMenuPermissionById } = useRoleMenuPermissions();
   const t = useTranslations();
   const entityName = t('roleMenuPermission');
 
-  useEffect(() => {
-    const roleId = parseInt(resolvedParams.roleId);
-    const menuId = parseInt(resolvedParams.menuId);
-    getRoleMenuPermissionById(roleId, menuId);
-  }, [resolvedParams.roleId, resolvedParams.menuId, getRoleMenuPermissionById]);
+  const id = parseInt(resolvedParams.id);
 
+  useEffect(() => {
+    getRoleMenuPermissionById(id);
+  }, [getRoleMenuPermissionById, id]);
 
   if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
-          <div style={{ padding: '24px', textAlign: 'center' }}>
-            <Spin />
-            <div>{t('loading', { defaultValue: 'Loading...' })} {entityName}</div>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <Spin size="large" />
           </div>
         </MainLayout>
       </ProtectedRoute>
@@ -46,11 +45,11 @@ const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ roleId: string; m
     return (
       <ProtectedRoute>
         <MainLayout>
-          <div style={{ padding: '24px' }}>
+          <div className="flex items-center justify-center min-h-[400px]">
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <h2>{t('notFound_name', { name: entityName })}</h2>
-                <Button type="primary" onClick={() => router.push('/role-menu-permissions')}>
+                <Button type="primary" onClick={() => router.push('/roles')}>
                   {t('backToList_name', { name: entityName })}</Button>
               </div>
             </Card>
@@ -66,8 +65,8 @@ const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ roleId: string; m
           <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
           <RoleMenuPermissionForm
             mode="edit"
-            roleMenuPermissionId={selectedRoleMenuPermission.id}
-            initialValues={selectedRoleMenuPermission}
+            id={selectedRoleMenuPermission.id}
+            initialValues={selectedRoleMenuPermission as IRoleMenuPermissionUpdate}
         />
       </MainLayout>
     </ProtectedRoute>

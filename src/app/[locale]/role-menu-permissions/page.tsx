@@ -25,11 +25,9 @@ export default function RoleMenuPermissionsPage() {
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedRoleId, setSelectedRoleId] = useState<number | undefined>();
-  const [selectedMenuId, setSelectedMenuId] = useState<number | undefined>();
+  const [selectedId, setSelectedId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsRoleId, setSelectedDetailsRoleId] = useState<number | undefined>();
-  const [selectedDetailsMenuId, setSelectedDetailsMenuId] = useState<number | undefined>();
+  const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
   const {
     roleMenuPermissions,
@@ -53,16 +51,14 @@ export default function RoleMenuPermissionsPage() {
     }
   }, [skip, limit, loadRoleMenuPermissions]);
 
-  const handleEditDrawer = (roleId: number, menuId: number) => {
-    setSelectedRoleId(roleId);
-    setSelectedMenuId(menuId);
+  const handleEditDrawer = (id: number) => {
+    setSelectedId(id);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
 
   const handleCreateDrawer = () => {
-    setSelectedRoleId(undefined);
-    setSelectedMenuId(undefined);
+    setSelectedId(undefined);
     setDrawerMode('create');
     setDrawerVisible(true);
   };
@@ -71,16 +67,14 @@ export default function RoleMenuPermissionsPage() {
     loadRoleMenuPermissions({ page: 1, limit: 10 });
   };
 
-  const handleViewDetails = (roleId: number, menuId: number) => {
-    setSelectedDetailsRoleId(roleId);
-    setSelectedDetailsMenuId(menuId);
+  const handleViewDetails = (id: number) => {
+    setSelectedDetailsId(id);
     setDetailsDrawerVisible(true);
   };
 
-  const handleDetailsEdit = (roleId: number, menuId: number) => {
+  const handleDetailsEdit = (id: number) => {
     setDetailsDrawerVisible(false);
-    setSelectedRoleId(roleId);
-    setSelectedMenuId(menuId);
+    setSelectedId(id);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
@@ -148,20 +142,20 @@ export default function RoleMenuPermissionsPage() {
         render: (permission: IRoleMenuPermission) => (
           <EntityActions
             onView={() =>
-              router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}`)
+              router.push(`/role-menu-permissions/${permission.id}`)
             }
-            onViewModal={() => handleViewDetails(permission.roleId, permission.menuId)}
+            onViewModal={() => handleViewDetails(permission.id)}
             viewText={t('view')}
             editText={t('edit')}
             deleteText={t('delete')}
             viewModalText={t('quickView')}
             onEdit={() =>
-              router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}/edit`)
+              router.push(`/role-menu-permissions/${permission.id}/edit`)
             }
-            onEditModal={() => handleEditDrawer(permission.roleId, permission.menuId)}
+            onEditModal={() => handleEditDrawer(permission.id)}
             editModalText={t('quickEdit')}
-            onDelete={() => removeRoleMenuPermission(permission.roleId, permission.menuId)}
-            id={permission.roleId}
+            onDelete={() => removeRoleMenuPermission(permission.id)}
+            id={permission.id}
           />
         ),
       },
@@ -184,16 +178,14 @@ export default function RoleMenuPermissionsPage() {
 
         <RoleMenuPermissionFormDrawer
           mode={drawerMode}
-          roleId={selectedRoleId}
-          menuId={selectedMenuId}
+          id={selectedId}
           visible={drawerVisible}
           onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}
         />
 
         <RoleMenuPermissionDetailsDrawer
-          roleId={selectedDetailsRoleId}
-          menuId={selectedDetailsMenuId}
+          id={selectedDetailsId}
           visible={detailsDrawerVisible}
           onClose={() => setDetailsDrawerVisible(false)}
           onEdit={handleDetailsEdit}
