@@ -52,35 +52,21 @@ const roleMenuPermissionSlice = createSlice({
     },
     updateRoleMenuPermission: (state, action: PayloadAction<IRoleMenuPermission>) => {
       const index = state.roleMenuPermissions.findIndex(
-        (permission) =>
-          permission.roleId === action.payload.roleId &&
-          permission.menuId === action.payload.menuId,
+        (permission) => permission.id === action.payload.id,
       );
       if (index !== -1) {
         state.roleMenuPermissions[index] = action.payload;
       }
-      if (
-        state.selectedRoleMenuPermission?.roleId === action.payload.roleId &&
-        state.selectedRoleMenuPermission?.menuId === action.payload.menuId
-      ) {
+      if (state.selectedRoleMenuPermission?.id === action.payload.id) {
         state.selectedRoleMenuPermission = action.payload;
       }
     },
-    deleteRoleMenuPermission: (
-      state,
-      action: PayloadAction<{ roleId: number; menuId: number }>,
-    ) => {
+    deleteRoleMenuPermission: (state, action: PayloadAction<number>) => {
       state.roleMenuPermissions = state.roleMenuPermissions.filter(
         (permission) =>
-          !(
-            permission.roleId === action.payload.roleId &&
-            permission.menuId === action.payload.menuId
-          ),
+          permission.id !== action.payload,
       );
-      if (
-        state.selectedRoleMenuPermission?.roleId === action.payload.roleId &&
-        state.selectedRoleMenuPermission?.menuId === action.payload.menuId
-      ) {
+      if (state.selectedRoleMenuPermission?.id === action.payload) {
         state.selectedRoleMenuPermission = null;
       }
     },

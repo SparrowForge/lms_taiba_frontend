@@ -2,11 +2,10 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
-import { useAudit } from '@/hooks/useAudit';
 import {useBranches} from '@/hooks/useBranches';
 
 import {IBranch} from '@/types/branch';
@@ -28,50 +27,22 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [branch, setBranch] = useState<IBranch | null>(null);
-  const { branches, getBranchById, loadBranch, detailsStatus } = useBranches();
-  const { auditsByResource, loadAuditsByResource} = useAudit();
+  
+  const { selectedBranch, getBranchById, detailsStatus } = useBranches();
   const t = useTranslations();
   const entityName = t('branch', { defaultValue: 'Branch' });
-
-
   useEffect(() => {
     if (visible && branchId) {
-      loadAuditsByResource('branches', branchId);
+      getBranchById(branchId);
     }
-  }, [visible, branchId, loadAuditsByResource]);
-
-  useEffect(() => {
-    if (visible && branchId) {
-      // Try to get from current list first
-      const existingBranch = getBranchById(branchId);
-      if (existingBranch) {
-        setBranch(existingBranch);
-      } else {
-        // Load from API if not in current list
-        loadBranch(branchId);
-      }
-    } else {
-      setBranch(null);
-    }
-  }, [visible, branchId, getBranchById, loadBranch]);
-
-  // Update branch when branches list changes
-  useEffect(() => {
-    if (branchId && branches.length > 0) {
-      const foundBranch = getBranchById(branchId);
-      if (foundBranch) {
-        setBranch(foundBranch);
-      }
-    }
-  }, [branches, branchId, getBranchById]);
+  }, [visible, branchId, getBranchById]);
 
   const handleEdit = (branch: IBranch) => {
     onEdit(branch.id);
   };
 
   const config = useCreateBranchDetailsConfig(
-    branch,
+    selectedBranch,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {

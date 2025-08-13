@@ -41,9 +41,6 @@ const ScheduleTypeForm: React.FC<Props> = ({
   const { createScheduleType, editScheduleType, actionStatus } = useScheduleTypes();
 
   useEffect(() => {
-    if (initialValues) form.setFieldsValue(initialValues);
-  }, [initialValues, form]);
-  useEffect(() => {
     if (mode === 'create') form.resetFields();
   }, [mode, form]);
 
@@ -88,7 +85,7 @@ const ScheduleTypeForm: React.FC<Props> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

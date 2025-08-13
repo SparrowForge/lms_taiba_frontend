@@ -2,11 +2,9 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
-
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-
 
 import {useFacultySubjects} from '@/hooks/useFacultySubjects';
 
@@ -29,43 +27,22 @@ const FacultySubjectDetailsDrawer: React.FC<FacultySubjectDetailsDrawerProps> = 
   onClose,
   onEdit,
 }) => {
-  const [facultySubject, setFacultySubject] = useState<IFacultySubject | null>(null);
-  const { facultySubjects, getFacultySubjectById, loadFacultySubject, detailsStatus } =
-    useFacultySubjects();
+  
+  const { selectedFacultySubject, getFacultySubjectById, detailsStatus } = useFacultySubjects();
   const t = useTranslations();
   const entityName = t('facultySubject', { defaultValue: 'Faculty Subject' });
-
   useEffect(() => {
     if (visible && facultySubjectId) {
-      // Try to get from current list first
-      const existingFacultySubject = getFacultySubjectById(facultySubjectId);
-      if (existingFacultySubject) {
-        setFacultySubject(existingFacultySubject);
-      } else {
-        // Load from API if not in current list
-        loadFacultySubject(facultySubjectId);
-      }
-    } else {
-      setFacultySubject(null);
+      getFacultySubjectById(facultySubjectId);
     }
-  }, [visible, facultySubjectId, getFacultySubjectById, loadFacultySubject]);
-
-  // Update facultySubject when facultySubjects list changes
-  useEffect(() => {
-    if (facultySubjectId && facultySubjects.length > 0) {
-      const foundFacultySubject = getFacultySubjectById(facultySubjectId);
-      if (foundFacultySubject) {
-        setFacultySubject(foundFacultySubject);
-      }
-    }
-  }, [facultySubjects, facultySubjectId, getFacultySubjectById]);
+  }, [visible, facultySubjectId, getFacultySubjectById]);
 
   const handleEdit = (facultySubject: IFacultySubject) => {
     onEdit(facultySubject.id);
   };
 
   const config = useCreateFacultySubjectDetailsConfig(
-    facultySubject,
+    selectedFacultySubject,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {

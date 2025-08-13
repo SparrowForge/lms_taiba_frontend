@@ -2,11 +2,9 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
-
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-
 
 import {useFaculties} from '@/hooks/useFaculties';
 
@@ -29,41 +27,22 @@ const FacultyDetailsDrawer: React.FC<FacultyDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [faculty, setFaculty] = useState<IFaculty | null>(null);
-  const { faculties, getFacultyById, loadFaculty, detailsStatus } = useFaculties();
+  
+  const { selectedFaculty, getFacultyById, detailsStatus } = useFaculties();
   const t = useTranslations();
   const entityName = t('faculty', { defaultValue: 'Faculty' });
   useEffect(() => {
     if (visible && facultyId) {
-      // Try to get from current list first
-      const existingFaculty = getFacultyById(facultyId);
-      if (existingFaculty) {
-        setFaculty(existingFaculty);
-      } else {
-        // Load from API if not in current list
-        loadFaculty(facultyId);
-      }
-    } else {
-      setFaculty(null);
+      getFacultyById(facultyId);
     }
-  }, [visible, facultyId, getFacultyById, loadFaculty]);
-
-  // Update faculty when faculties list changes
-  useEffect(() => {
-    if (facultyId && faculties.length > 0) {
-      const foundFaculty = getFacultyById(facultyId);
-      if (foundFaculty) {
-        setFaculty(foundFaculty);
-      }
-    }
-  }, [faculties, facultyId, getFacultyById]);
+  }, [visible, facultyId, getFacultyById]);
 
   const handleEdit = (faculty: IFaculty) => {
     onEdit(faculty.id);
   };
 
   const config = useCreateFacultyDetailsConfig(
-    faculty,
+    selectedFaculty,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {

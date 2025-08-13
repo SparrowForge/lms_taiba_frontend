@@ -41,12 +41,6 @@ const CourseTypeForm: React.FC<Props> = ({
   const { createCourseType, editCourseType, actionStatus } = useCourseTypes();
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -94,7 +88,7 @@ const CourseTypeForm: React.FC<Props> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

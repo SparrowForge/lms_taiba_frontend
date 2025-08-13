@@ -2,7 +2,7 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -27,41 +27,22 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [batch, setBatch] = useState<IBatch | null>(null);
-  const { batches, getBatchById, loadBatch, detailsStatus } = useBatches();
+  
+  const { selectedBatch, getBatchById, detailsStatus } = useBatches();
   const t = useTranslations();
   const entityName = t('batch', { defaultValue: 'Batch' });
   useEffect(() => {
     if (visible && batchId) {
-      // Try to get from current list first
-      const existingBatch = getBatchById(batchId);
-      if (existingBatch) {
-        setBatch(existingBatch);
-      } else {
-        // Load from API if not in current list
-        loadBatch(batchId);
-      }
-    } else {
-      setBatch(null);
+      getBatchById(batchId);
     }
-  }, [visible, batchId, getBatchById, loadBatch]);
-
-  // Update batch when batches list changes
-  useEffect(() => {
-    if (batchId && batches.length > 0) {
-      const foundBatch = getBatchById(batchId);
-      if (foundBatch) {
-        setBatch(foundBatch);
-      }
-    }
-  }, [batches, batchId, getBatchById]);
+  }, [visible, batchId, getBatchById]);
 
   const handleEdit = (batch: IBatch) => {
     onEdit(batch.id);
   };
 
   const config = useCreateBatchDetailsConfig(
-    batch,
+    selectedBatch,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {

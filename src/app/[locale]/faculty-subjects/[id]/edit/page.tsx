@@ -1,9 +1,9 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import FacultySubjectForm from '@/components/facultySubjects/FacultySubjectForm';
@@ -12,67 +12,36 @@ import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useFacultySubjects} from '@/hooks/useFacultySubjects';
 
-import {IFacultySubject} from '@/types/facultySubject';
+import {Status} from '@/types/common';
 
 
-interface FacultySubjectEditPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const FacultySubjectEditPage: React.FC<FacultySubjectEditPageProps> = ({ params }) => {
+const FacultySubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const {
-    facultySubjects,
-    listStatus,
-    loadFacultySubjects,
-    getFacultySubjectById,
-    loadFacultySubject,
-  } = useFacultySubjects();
-  const [facultySubject, setFacultySubject] = useState<IFacultySubject | null>(null);
+  const { selectedFacultySubject, detailsStatus, getFacultySubjectById } = useFacultySubjects();
   const t = useTranslations();
-  const entityName = t('facultySubject', { defaultValue: 'Faculty Subject' });
+  const entityName = t('facultySubject');
 
   useEffect(() => {
     const facultySubjectId = parseInt(resolvedParams.id);
-    const foundFacultySubject = getFacultySubjectById(facultySubjectId);
-    if (foundFacultySubject) {
-      setFacultySubject(foundFacultySubject);
-    } else {
-      loadFacultySubject(facultySubjectId);
-    }
-  }, [resolvedParams.id, getFacultySubjectById, loadFacultySubject]);
+    getFacultySubjectById(facultySubjectId);
+  }, [resolvedParams.id, getFacultySubjectById]);
 
-  useEffect(() => {
-    if (facultySubjects.length === 0) {
-      loadFacultySubjects();
-    }
-  }, [facultySubjects.length, loadFacultySubjects]);
 
-  useEffect(() => {
-    if (facultySubjects.length > 0) {
-      const foundFacultySubject = getFacultySubjectById(parseInt(resolvedParams.id));
-      if (foundFacultySubject) {
-        setFacultySubject(foundFacultySubject);
-      }
-    }
-  }, [facultySubjects, resolvedParams.id, getFacultySubjectById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t('loading', { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!facultySubject) {
+  if (!selectedFacultySubject) {
     return (
       <ProtectedRoute>
         <MainLayout>
@@ -81,8 +50,7 @@ const FacultySubjectEditPage: React.FC<FacultySubjectEditPageProps> = ({ params 
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <h2>{t('notFound_name', { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/faculty-subjects')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t('backToList_name', { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -91,19 +59,14 @@ const FacultySubjectEditPage: React.FC<FacultySubjectEditPageProps> = ({ params 
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
           <FacultySubjectForm
             mode="edit"
-            facultySubjectId={facultySubject.id}
-            initialValues={facultySubject}
-          onCancel={handleBack}
+            facultySubjectId={parseInt(resolvedParams.id)}
+            initialValues={selectedFacultySubject}
         />
       </MainLayout>
     </ProtectedRoute>

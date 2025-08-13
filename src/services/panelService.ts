@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IPanel} from '@/types/panel';
 
 import {api} from '@/lib/axios';
@@ -8,8 +8,8 @@ export const panelService = {
     const response = await api.get<IBasePaginatedResponse<IPanel>>('/panels', { params });
     return response.data;
   },
-  async getPanel(id: number): Promise<IPanel> {
-    const response = await api.get<IPanel>(`/panels/${id}`);
+  async getPanel(id: number): Promise<IBaseResponse<IPanel>> {
+    const response = await api.get<IBaseResponse<IPanel>>(`/panels/${id}`);
     return response.data;
   },
   async createPanel(data: Partial<IPanel>): Promise<IPanel> {

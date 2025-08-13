@@ -11,6 +11,7 @@ import departmentReducer from './slices/departmentSlice';
 import employmentTypeReducer from './slices/employmentTypeSlice';
 import facultyReducer from './slices/facultySlice';
 import facultySubjectReducer from './slices/facultySubjectSlice';
+import feeStructureReducer from './slices/feeStructureSlice';
 import instituteReducer from './slices/instituteSlice';
 import menuReducer from './slices/menuSlice';
 import panelReducer from './slices/panelSlice';
@@ -40,6 +41,7 @@ export interface RootState {
   semesterSubjects: ReturnType<typeof semesterSubjectReducer>;
   faculties: ReturnType<typeof facultyReducer>;
   facultySubjects: ReturnType<typeof facultySubjectReducer>;
+  feeStructures: ReturnType<typeof feeStructureReducer>;
   audits: ReturnType<typeof auditReducer>;
   userRoles: ReturnType<typeof userRoleReducer>;
   addresses: ReturnType<typeof addressReducer>;
@@ -67,6 +69,7 @@ export const store = configureStore({
     semesterSubjects: semesterSubjectReducer,
     faculties: facultyReducer,
     facultySubjects: facultySubjectReducer,
+    feeStructures: feeStructureReducer,
     audits: auditReducer,
     userRoles: userRoleReducer,
     addresses: addressReducer,

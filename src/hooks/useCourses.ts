@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {ICourse, ICourseCreate, ICourseUpdate} from '@/types/course';
 
 import {courseService} from '@/services/courseService';
@@ -53,8 +53,8 @@ export const useCourses = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: ICourse = await courseService.getCourse(id);
-        dispatch(setSelectedCourse(response));
+        const response: IBaseResponse<ICourse> = await courseService.getCourse(id);
+        dispatch(setSelectedCourse(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -135,10 +135,15 @@ export const useCourses = () => {
 
   // Get course by ID from the current list
   const getCourseById = useCallback(
-    (id: number): ICourse | undefined => {
-      return courses.find((course) => course.id === id);
+    (id: number) => {
+      const course = courses.find((course) => course.id === id);
+      if (course) {
+        dispatch(setSelectedCourse(course));
+      } else {
+        loadCourse(id);
+      }
     },
-    [courses],
+    [dispatch],
   );
 
   // Clear action status

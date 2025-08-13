@@ -2,11 +2,9 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
-
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-
 
 import {useSemesters} from '@/hooks/useSemesters';
 
@@ -29,41 +27,22 @@ const SemesterDetailsDrawer: React.FC<SemesterDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [semester, setSemester] = useState<ISemester | null>(null);
-  const { semesters, getSemesterById, loadSemester, detailsStatus } = useSemesters();
+  
+  const { selectedSemester, getSemesterById, detailsStatus } = useSemesters();
   const t = useTranslations();
   const entityName = t('semester', { defaultValue: 'Semester' });
   useEffect(() => {
     if (visible && semesterId) {
-      // Try to get from current list first
-      const existingSemester = getSemesterById(semesterId);
-      if (existingSemester) {
-        setSemester(existingSemester);
-      } else {
-        // Load from API if not in current list
-        loadSemester(semesterId);
-      }
-    } else {
-      setSemester(null);
+      getSemesterById(semesterId);
     }
-  }, [visible, semesterId, getSemesterById, loadSemester]);
-
-  // Update semester when semesters list changes
-  useEffect(() => {
-    if (semesterId && semesters.length > 0) {
-      const foundSemester = getSemesterById(semesterId);
-      if (foundSemester) {
-        setSemester(foundSemester);
-      }
-    }
-  }, [semesters, semesterId, getSemesterById]);
+  }, [visible, semesterId, getSemesterById]);
 
   const handleEdit = (semester: ISemester) => {
     onEdit(semester.id);
   };
 
   const config = useCreateSemesterDetailsConfig(
-    semester,
+    selectedSemester,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
 
 import {facultyService} from '@/services/facultyService';
@@ -65,8 +65,8 @@ export const useFaculties = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IFaculty = await facultyService.getFaculty(id);
-        dispatch(setSelectedFaculty(response));
+        const response: IBaseResponse<IFaculty> = await facultyService.getFaculty(id);
+        dispatch(setSelectedFaculty(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -147,10 +147,15 @@ export const useFaculties = () => {
 
   // Get faculty by ID from the current list
   const getFacultyById = useCallback(
-    (id: number): IFaculty | undefined => {
-      return faculties.find((faculty) => faculty.id === id);
+    (id: number) => {
+      const faculty = faculties.find((faculty) => faculty.id === id);
+      if (faculty) {
+        dispatch(setSelectedFaculty(faculty));
+      } else {
+        loadFaculty(id);
+      }
     },
-    [faculties],
+    [dispatch],
   );
 
   // Clear action status

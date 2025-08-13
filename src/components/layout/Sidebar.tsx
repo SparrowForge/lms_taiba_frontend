@@ -145,6 +145,11 @@ export const Sidebar = ({ collapsed }: SidebarProps) => {
         label: 'Addresses',
       },
       {
+        key: '/fee-structures',
+        icon: <BookOutlined />,
+        label: 'Fee Structures',
+      },
+      {
         key: '/user-roles',
         icon: <UserOutlined />,
         label: 'User Roles',

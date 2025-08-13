@@ -1,6 +1,8 @@
+'use client';
+
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -11,11 +13,12 @@ import {IPanel} from '@/types/panel';
 
 import {useCreatePanelDetailsConfig} from './panelConfig';
 
+
 interface PanelDetailsDrawerProps {
   panelId?: number;
   visible: boolean;
   onClose: () => void;
-  onEdit?: (panelId: number) => void;
+  onEdit: (panelId: number) => void;
 }
 
 const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
@@ -24,50 +27,37 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { panels, listStatus, loadPanels, getPanelById, loadPanel } = usePanels();
-  const [panel, setPanel] = useState<IPanel | null>(null);
+  
+  const { selectedPanel, getPanelById, detailsStatus } = usePanels();
   const t = useTranslations();
   const entityName = t('panel', { defaultValue: 'Panel' });
   useEffect(() => {
-    if (panelId && visible) {
-      const foundPanel = getPanelById(panelId);
-      if (foundPanel) {
-        setPanel(foundPanel);
-      } else {
-        loadPanel(panelId);
-      }
+    if (visible && panelId) {
+      getPanelById(panelId);
     }
-  }, [panelId, visible, getPanelById, loadPanel]);
+  }, [visible, panelId, getPanelById]);
 
-  useEffect(() => {
-    if (panels.length === 0) {
-      loadPanels();
-    }
-  }, [panels.length, loadPanels]);
-
-  useEffect(() => {
-    if (panels.length > 0 && panelId) {
-      const foundPanel = getPanelById(panelId);
-      if (foundPanel) {
-        setPanel(foundPanel);
-      }
-    }
-  }, [panels, panelId, getPanelById]);
+  const handleEdit = (panel: IPanel) => {
+    onEdit(panel.id);
+  };
 
   const config = useCreatePanelDetailsConfig(
-    panel,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
+    selectedPanel,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (
     <Drawer
       title={t('details_name', { name: entityName })}
+      width={800}
       open={visible}
       onClose={onClose}
-      width={500}
-      placement="right"
+      destroyOnHidden={true}
     >
       <EntityDetailsContent config={config} />
     </Drawer>

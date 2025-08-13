@@ -1,7 +1,7 @@
 'use client';
 
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -14,57 +14,36 @@ import {useSubjects} from '@/hooks/useSubjects';
 import {Status} from '@/types/common';
 import {ISubject} from '@/types/subject';
 
-interface SubjectDetailPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
-
-const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({ params }) => {
-  const resolvedParams = React.use(params);
-  const { subjects, listStatus, loadSubjects, getSubjectById, loadSubject } = useSubjects();
-  const [subject, setSubject] = useState<ISubject | null>(null);
+export default function SubjectDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { selectedSubject, detailsStatus, getSubjectById } = useSubjects();
   const t = useTranslations();
-  const entityName = t('subject', { defaultValue: 'Subject' });
+  const entityName = t('subject');
 
-  useEffect(() => {
-    const subjectId = parseInt(resolvedParams.id);
-    const foundSubject = getSubjectById(subjectId);
-    if (foundSubject) {
-      setSubject(foundSubject);
-    } else {
-      loadSubject(subjectId);
-    }
-  }, [resolvedParams.id, getSubjectById, loadSubject]);
+  const resolvedParams = React.use(params);
+  const subjectId = parseInt(resolvedParams.id);
 
+  // Load subject if not already loaded
   useEffect(() => {
-    if (subjects.length === 0) {
-      loadSubjects();
-    }
-  }, [subjects.length, loadSubjects]);
-
-  useEffect(() => {
-    if (subjects.length > 0) {
-      const foundSubject = getSubjectById(parseInt(resolvedParams.id));
-      if (foundSubject) {
-        setSubject(foundSubject);
-      }
-    }
-  }, [subjects, resolvedParams.id, getSubjectById]);
+    getSubjectById(subjectId);
+  }, [getSubjectById, subjectId]);
 
   const config = useCreateSubjectDetailsConfig(
-    subject,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedSubject,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t('failed_name', { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<ISubject>} />
+          <EntityDetails config={config as EntityDetailsConfig<ISubject>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default SubjectDetailPage;
+}

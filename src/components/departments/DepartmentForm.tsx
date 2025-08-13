@@ -45,26 +45,15 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   const { faculties, loadFaculties } = useFaculties();
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
   }, [mode, form]);
 
   useEffect(() => {
-    if (branches.length === 0) {
-      loadBranches();
-    }
-  }, [branches.length, loadBranches]);
-
-  useEffect(() => {
     loadFaculties({ page: 1, limit: 100 });
-  }, [loadFaculties]);
+    loadBranches({ page: 1, limit: 100 });
+  }, [loadFaculties, loadBranches]);
 
   const handleSubmit = async (values: Partial<IDepartment>) => {
     try {
@@ -117,10 +106,10 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   const getSubmitText = () =>
     mode === 'create'
       ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      : t('update_name', { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       <Form.Item
         name="branchId"
         label={t('branch')}

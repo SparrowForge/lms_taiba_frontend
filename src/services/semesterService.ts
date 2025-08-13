@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const semesterService = {
   },
 
   // Get a single semester by ID
-  getSemester: async (id: number): Promise<ISemester> => {
-    const response = await api.get<ISemester>(`/semesters/${id}`);
+  getSemester: async (id: number): Promise<IBaseResponse<ISemester>> => {
+    const response = await api.get<IBaseResponse<ISemester>>(`/semesters/${id}`);
     return response.data;
   },
 

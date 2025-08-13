@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
 
 import {roleService} from '@/services/roleService';
@@ -55,8 +55,8 @@ export const useRoles = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IRole = await roleService.getRole(id);
-        dispatch(setSelectedRole(response));
+        const response: IBaseResponse<IRole> = await roleService.getRole(id);
+        dispatch(setSelectedRole(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -131,10 +131,15 @@ export const useRoles = () => {
 
   // Get role by ID from the current list
   const getRoleById = useCallback(
-    (id: number): IRole | undefined => {
-      return roles.find((role) => role.id === id);
+    (id: number) => {
+      const role = roles.find((role) => role.id === id);
+      if (role) {
+        dispatch(setSelectedRole(role));
+      } else {
+        loadRole(id);
+      }
     },
-    [roles],
+    [dispatch],
   );
 
   // Clear action status

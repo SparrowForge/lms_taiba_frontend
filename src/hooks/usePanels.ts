@@ -3,7 +3,7 @@ import {useCallback} from 'react';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IPanel} from '@/types/panel';
 
 import {panelService} from '@/services/panelService';
@@ -53,8 +53,8 @@ export const usePanels = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response = await panelService.getPanel(id);
-        dispatch(setSelectedPanel(response));
+        const response: IBaseResponse<IPanel> = await panelService.getPanel(id);
+        dispatch(setSelectedPanel(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -136,9 +136,14 @@ export const usePanels = () => {
   // Helpers
   const getPanelById = useCallback(
     (id: number) => {
-      return panels.find((p) => p.id === id) || null;
+      const panel = panels.find((p) => p.id === id);
+      if (panel) {
+        dispatch(setSelectedPanel(panel));
+      } else {
+        loadPanel(id);
+      }
     },
-    [panels],
+    [dispatch],
   );
 
   return {

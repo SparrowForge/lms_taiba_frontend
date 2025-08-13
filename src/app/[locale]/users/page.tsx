@@ -11,7 +11,7 @@ import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 import UserDetailsDrawer from '@/components/users/UserDetailsDrawer';
-import UserFormDrawer from '@/components/users/UserFormModal';
+import UserFormDrawer from '@/components/users/UserFormDrawer';
 
 import {useUsers} from '@/hooks/useUsers';
 

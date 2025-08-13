@@ -2,11 +2,9 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
-
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-
 
 import {useInstitutes} from '@/hooks/useInstitutes';
 
@@ -16,43 +14,41 @@ import {IInstitute} from '@/types/institute';
 import {useCreateInstituteDetailsConfig} from './instituteConfig';
 
 
-interface Props {
+interface InstituteDetailsDrawerProps {
   instituteId?: number;
   visible: boolean;
   onClose: () => void;
   onEdit: (instituteId: number) => void;
 }
 
-const InstituteDetailsDrawer: React.FC<Props> = ({ instituteId, visible, onClose, onEdit }) => {
-  const [item, setItem] = useState<IInstitute | null>(null);
-  const { institutes, getInstituteById, loadInstitute, detailsStatus } = useInstitutes();
+const InstituteDetailsDrawer: React.FC<InstituteDetailsDrawerProps> = ({
+  instituteId,
+  visible,
+  onClose,
+  onEdit,
+}) => {
+  
+  const { selectedInstitute, getInstituteById, detailsStatus } = useInstitutes();
   const t = useTranslations();
   const entityName = t('institute', { defaultValue: 'Institute' });
-
   useEffect(() => {
     if (visible && instituteId) {
-      const existing = getInstituteById(instituteId);
-      if (existing) setItem(existing);
-      else loadInstitute(instituteId);
-    } else {
-      setItem(null);
+      getInstituteById(instituteId);
     }
-  }, [visible, instituteId, getInstituteById, loadInstitute]);
+  }, [visible, instituteId, getInstituteById]);
 
-  useEffect(() => {
-    if (instituteId && institutes.length > 0) {
-      const found = getInstituteById(instituteId);
-      if (found) setItem(found);
-    }
-  }, [institutes, instituteId, getInstituteById]);
-
-  const handleEdit = (it: IInstitute) => onEdit(it.id);
+  const handleEdit = (institute: IInstitute) => {
+    onEdit(institute.id);
+  };
 
   const config = useCreateInstituteDetailsConfig(
-    item,
+    selectedInstitute,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
-    { embedded: true, onEdit: handleEdit },
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (

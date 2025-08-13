@@ -2,7 +2,7 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -27,42 +27,22 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [audit, setAudit] = useState<IAudit | null>(null);
-  const { audits, getAuditById, loadAudit, detailsStatus } = useAudit();
+  
+  const { selectedAudit, getAuditById, detailsStatus } = useAudit();
   const t = useTranslations();
   const entityName = t('audit', { defaultValue: 'Audit' });
-
   useEffect(() => {
     if (visible && auditId) {
-      // Try to get from current list first
-      const existingAudit = getAuditById(auditId);
-      if (existingAudit) {
-        setAudit(existingAudit);
-      } else {
-        // Load from API if not in current list
-        loadAudit(auditId);
-      }
-    } else {
-      setAudit(null);
+      getAuditById(auditId);
     }
-  }, [visible, auditId, getAuditById, loadAudit]);
-
-  // Update audit when audits list changes
-  useEffect(() => {
-    if (auditId && audits.length > 0) {
-      const foundAudit = getAuditById(auditId);
-      if (foundAudit) {
-        setAudit(foundAudit);
-      }
-    }
-  }, [audits, auditId, getAuditById]);
+  }, [visible, auditId, getAuditById]);
 
   const handleEdit = (audit: IAudit) => {
     onEdit(audit.id);
   };
 
   const config = useCreateAuditDetailsConfig(
-    audit,
+    selectedAudit,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {

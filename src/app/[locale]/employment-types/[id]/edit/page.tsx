@@ -1,9 +1,9 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import EmploymentTypeForm from '@/components/employmentTypes/EmploymentTypeForm';
@@ -12,58 +12,36 @@ import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 
-import {IEmploymentType} from '@/types/employmentType';
+import {Status} from '@/types/common';
 
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-const EmploymentTypeEditPage: React.FC<PageProps> = ({ params }) => {
+const EmploymentTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const {
-    employmentTypes,
-    listStatus,
-    loadEmploymentTypes,
-    getEmploymentTypeById,
-    loadEmploymentType,
-  } = useEmploymentTypes();
-  const [item, setItem] = useState<IEmploymentType | null>(null);
+  const { selectedEmploymentType, detailsStatus, getEmploymentTypeById } = useEmploymentTypes();
   const t = useTranslations();
   const entityName = t('employmentType');
 
   useEffect(() => {
-    const itemId = parseInt(resolvedParams.id);
-    const found = getEmploymentTypeById(itemId);
-    if (found) setItem(found);
-    else loadEmploymentType(itemId);
-  }, [resolvedParams.id, getEmploymentTypeById, loadEmploymentType]);
+    const employmentTypeId = parseInt(resolvedParams.id);
+    getEmploymentTypeById(employmentTypeId);
+  }, [resolvedParams.id, getEmploymentTypeById]);
 
-  useEffect(() => {
-    if (employmentTypes.length === 0) loadEmploymentTypes();
-  }, [employmentTypes.length, loadEmploymentTypes]);
 
-  useEffect(() => {
-    if (employmentTypes.length > 0) {
-      const found = getEmploymentTypeById(parseInt(resolvedParams.id));
-      if (found) setItem(found);
-    }
-  }, [employmentTypes, resolvedParams.id, getEmploymentTypeById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            {t('loading', { defaultValue: 'Loading...' })}
+            <Spin />
+            <div>{t('loading', { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!item) {
+  if (!selectedEmploymentType) {
     return (
       <ProtectedRoute>
         <MainLayout>
@@ -72,8 +50,7 @@ const EmploymentTypeEditPage: React.FC<PageProps> = ({ params }) => {
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <h2>{t('notFound_name', { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/employment-types')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t('backToList_name', { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -82,16 +59,14 @@ const EmploymentTypeEditPage: React.FC<PageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => router.back();
-
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
           <EmploymentTypeForm
             mode="edit"
             employmentTypeId={parseInt(resolvedParams.id)}
-          initialValues={{ name: item.name, status: item.status }}
+            initialValues={selectedEmploymentType}
         />
       </MainLayout>
     </ProtectedRoute>

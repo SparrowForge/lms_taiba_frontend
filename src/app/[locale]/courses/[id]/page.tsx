@@ -1,7 +1,7 @@
 'use client';
 
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateCourseDetailsConfig} from '@/components/courses/courseConfig';
@@ -14,57 +14,36 @@ import {useCourses} from '@/hooks/useCourses';
 import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 
-interface CourseDetailPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
-
-const CourseDetailPage: React.FC<CourseDetailPageProps> = ({ params }) => {
-  const resolvedParams = React.use(params);
-  const { courses, listStatus, loadCourses, getCourseById, loadCourse } = useCourses();
-  const [course, setCourse] = useState<ICourse | null>(null);
+export default function CourseDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { selectedCourse, detailsStatus, getCourseById } = useCourses();
   const t = useTranslations();
-  const entityName = t('course', { defaultValue: 'Course' });
+  const entityName = t('course');
 
-  useEffect(() => {
-    const courseId = parseInt(resolvedParams.id);
-    const foundCourse = getCourseById(courseId);
-    if (foundCourse) {
-      setCourse(foundCourse);
-    } else {
-      loadCourse(courseId);
-    }
-  }, [resolvedParams.id, getCourseById, loadCourse]);
+  const resolvedParams = React.use(params);
+  const courseId = parseInt(resolvedParams.id);
 
+  // Load course if not already loaded
   useEffect(() => {
-    if (courses.length === 0) {
-      loadCourses();
-    }
-  }, [courses.length, loadCourses]);
-
-  useEffect(() => {
-    if (courses.length > 0) {
-      const foundCourse = getCourseById(parseInt(resolvedParams.id));
-      if (foundCourse) {
-        setCourse(foundCourse);
-      }
-    }
-  }, [courses, resolvedParams.id, getCourseById]);
+    getCourseById(courseId);
+  }, [getCourseById, courseId]);
 
   const config = useCreateCourseDetailsConfig(
-    course,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedCourse,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t('failed_name', { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<ICourse>} />
+          <EntityDetails config={config as EntityDetailsConfig<ICourse>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default CourseDetailPage;
+}

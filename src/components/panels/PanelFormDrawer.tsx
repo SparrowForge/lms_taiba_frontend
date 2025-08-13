@@ -1,10 +1,10 @@
+'use client';
+
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {usePanels} from '@/hooks/usePanels';
-
-import {IPanel} from '@/types/panel';
 
 import PanelForm from './PanelForm';
 
@@ -14,7 +14,7 @@ interface PanelFormDrawerProps {
   panelId?: number;
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
@@ -24,39 +24,42 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getPanelById, loadPanel } = usePanels();
-  const [initialValues, setInitialValues] = useState<Partial<IPanel> | undefined>();
+ 
+  const { getPanelById, selectedPanel } = usePanels();
   const t = useTranslations();
   const entityName = t('panel', { defaultValue: 'Panel' });
   useEffect(() => {
-    if (mode === 'edit' && panelId && visible) {
-      const foundPanel = getPanelById(panelId);
-      if (foundPanel) {
-        setInitialValues(foundPanel);
-      } else {
-        loadPanel(panelId);
-      }
+    if (visible && mode === 'edit' && panelId) {
+      getPanelById(panelId);
     }
-  }, [mode, panelId, visible, getPanelById, loadPanel]);
+  }, [visible, mode, panelId, getPanelById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+  const handleSuccess = () => {
+    onSuccess();
+  };
 
-  const handleDrawerSuccess = () => {
-    if (onSuccess) onSuccess();
+  const handleCancel = () => {
     onCancel();
   };
 
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      title={
+        mode === 'create'
+          ? t('create_name', { name: entityName })
+          : t('edit_name', { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <PanelForm
         mode={mode}
         panelId={panelId}
-        initialValues={initialValues}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        initialValues={selectedPanel || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>

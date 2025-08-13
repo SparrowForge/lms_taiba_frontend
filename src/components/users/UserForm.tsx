@@ -38,10 +38,10 @@ const UserForm: React.FC<UserFormProps> = ({
   const { addUser, editUser, actionStatus } = useUsers();
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
+    if (mode === 'create') {
+      form.resetFields();
     }
-  }, [initialValues, form]);
+  }, [mode, form]);
 
   const handleSubmit = async (values: IUserCreate | IUserUpdate) => {
     try {
@@ -79,7 +79,7 @@ const UserForm: React.FC<UserFormProps> = ({
   const getSubmitText = () => {
     return mode === 'create'
       ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      : t('update_name', { name: entityName });
   };
 
   const formContent = (
@@ -88,7 +88,7 @@ const UserForm: React.FC<UserFormProps> = ({
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        initialValues={initialValues}
+        initialValues={mode === 'edit' ? initialValues : undefined}
         aria-label={`${mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })} form`}
         role="form"
       >

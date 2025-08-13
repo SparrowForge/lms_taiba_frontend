@@ -1,9 +1,9 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import AddressForm from '@/components/addresses/AddressForm';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -12,61 +12,36 @@ import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useAddresses} from '@/hooks/useAddresses';
 
-import {IAddress} from '@/types/address';
+import {Status} from '@/types/common';
 
 
-interface AddressEditPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const AddressEditPage: React.FC<AddressEditPageProps> = ({ params }) => {
+const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { addresses, listStatus, loadAddresses, getAddressById, loadAddress } = useAddresses();
-  const [address, setAddress] = useState<IAddress | null>(null);
+  const { selectedAddress, detailsStatus, getAddressById } = useAddresses();
   const t = useTranslations();
   const entityName = t('address');
 
   useEffect(() => {
     const addressId = parseInt(resolvedParams.id);
-    const found = getAddressById(addressId);
-    if (found) {
-      setAddress(found);
-    } else {
-      loadAddress(addressId);
-    }
-  }, [resolvedParams.id, getAddressById, loadAddress]);
+    getAddressById(addressId);
+  }, [resolvedParams.id, getAddressById]);
 
-  useEffect(() => {
-    if (addresses.length === 0) {
-      loadAddresses();
-    }
-  }, [addresses.length, loadAddresses]);
 
-  useEffect(() => {
-    if (addresses.length > 0) {
-      const found = getAddressById(parseInt(resolvedParams.id));
-      if (found) {
-        setAddress(found);
-      }
-    }
-  }, [addresses, resolvedParams.id, getAddressById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t('loading', { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!address) {
+  if (!selectedAddress) {
     return (
       <ProtectedRoute>
         <MainLayout>
@@ -85,27 +60,14 @@ const AddressEditPage: React.FC<AddressEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
           <AddressForm
             mode="edit"
             addressId={parseInt(resolvedParams.id)}
-            initialValues={{
-              name: address.name,
-              address: address.address,
-              city: address.city,
-              state: address.state,
-              zipCode: address.zipCode,
-              country: address.country,
-              phone: address.phone,
-              email: address.email,
-          }}
+            initialValues={selectedAddress}
         />
       </MainLayout>
     </ProtectedRoute>

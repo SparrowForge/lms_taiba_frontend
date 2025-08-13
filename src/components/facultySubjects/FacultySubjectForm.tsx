@@ -54,12 +54,6 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
   }, [loadFaculties, loadSubjects, loadSemesters, loadBatches]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -118,7 +112,7 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

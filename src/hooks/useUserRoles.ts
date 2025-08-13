@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IUserRole, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
 
 import {userRoleService} from '@/services/userRoleService';
@@ -66,8 +66,8 @@ export const useUserRoles = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const userRole = await userRoleService.getUserRole(id);
-        dispatch(setSelectedUserRole(userRole));
+        const response: IBaseResponse<IUserRole> = await userRoleService.getUserRole(id);
+        dispatch(setSelectedUserRole(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =

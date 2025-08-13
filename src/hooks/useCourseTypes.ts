@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {ICourseType, ICourseTypeCreate, ICourseTypeUpdate} from '@/types/courseType';
 
 import {courseTypeService} from '@/services/courseTypeService';
@@ -64,8 +64,8 @@ export const useCourseTypes = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: ICourseType = await courseTypeService.getCourseType(id);
-        dispatch(setSelectedCourseType(response));
+        const response: IBaseResponse<ICourseType> = await courseTypeService.getCourseType(id);
+        dispatch(setSelectedCourseType(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -142,10 +142,15 @@ export const useCourseTypes = () => {
   );
 
   const getCourseTypeById = useCallback(
-    (id: number): ICourseType | undefined => {
-      return courseTypes.find((item) => item.id === id);
+    (id: number) => {
+      const courseType = courseTypes.find((item) => item.id === id);
+      if (courseType) {
+        dispatch(setSelectedCourseType(courseType));
+      } else {
+        loadCourseType(id);
+      }
     },
-    [courseTypes],
+    [dispatch],
   );
 
   const clearAction = useCallback(() => {

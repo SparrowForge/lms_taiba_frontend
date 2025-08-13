@@ -43,22 +43,14 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
   const { courses, loadCourses } = useCourses();
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
   }, [mode, form]);
 
   useEffect(() => {
-    if (courses.length === 0) {
-      loadCourses();
-    }
-  }, [courses.length, loadCourses]);
+    loadCourses({ page: 1, limit: 100 });
+  }, [loadCourses]);
 
   const handleSubmit = async (values: Partial<ISubject>) => {
     try {
@@ -111,10 +103,10 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
   const getSubmitText = () =>
     mode === 'create'
       ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      : t('update_name', { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       <Form.Item
         name="courseId"
         label={t('course')}

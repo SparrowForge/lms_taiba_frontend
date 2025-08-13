@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {ISemesterSubject, ISemesterSubjectCreate, ISemesterSubjectUpdate,} from '@/types/semesterSubject';
 
 import {semesterSubjectService} from '@/services/semesterSubjectService';
@@ -71,8 +71,8 @@ export const useSemesterSubjects = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: ISemesterSubject = await semesterSubjectService.getSemesterSubject(id);
-        dispatch(setSelectedSemesterSubject(response));
+        const response: IBaseResponse<ISemesterSubject> = await semesterSubjectService.getSemesterSubject(id);
+        dispatch(setSelectedSemesterSubject(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -171,10 +171,15 @@ export const useSemesterSubjects = () => {
 
   // Get semester subject by ID from the current list
   const getSemesterSubjectById = useCallback(
-    (id: number): ISemesterSubject | undefined => {
-      return semesterSubjects.find((semesterSubject) => semesterSubject.id === id);
+    (id: number) => {
+      const semesterSubject = semesterSubjects.find((semesterSubject) => semesterSubject.id === id);
+      if (semesterSubject) {
+        dispatch(setSelectedSemesterSubject(semesterSubject));
+      } else {
+        loadSemesterSubject(id);
+      }
     },
-    [semesterSubjects],
+    [dispatch],
   );
 
   // Clear action status

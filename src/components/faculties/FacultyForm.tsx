@@ -49,15 +49,6 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
   }, [loadBranches, loadDepartments]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue({
-        ...initialValues,
-        joinedDate: initialValues.joinedDate ? dayjs(initialValues.joinedDate) : undefined,
-      });
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -120,7 +111,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

@@ -48,12 +48,6 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
   }, [loadSemesters, loadSubjects]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -112,7 +106,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

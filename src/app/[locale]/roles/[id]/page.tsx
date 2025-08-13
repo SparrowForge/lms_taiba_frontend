@@ -1,7 +1,7 @@
 'use client';
 
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -14,57 +14,36 @@ import {useRoles} from '@/hooks/useRoles';
 import {Status} from '@/types/common';
 import {IRole} from '@/types/role';
 
-interface RoleDetailPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
-
-const RoleDetailPage: React.FC<RoleDetailPageProps> = ({ params }) => {
-  const resolvedParams = React.use(params);
-  const { roles, listStatus, loadRoles, getRoleById, loadRole } = useRoles();
-  const [role, setRole] = useState<IRole | null>(null);
+export default function RoleDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { selectedRole, detailsStatus, getRoleById } = useRoles();
   const t = useTranslations();
-  const entityName = t('role', { defaultValue: 'Role' });
+  const entityName = t('role');
 
-  useEffect(() => {
-    const roleId = parseInt(resolvedParams.id);
-    const foundRole = getRoleById(roleId);
-    if (foundRole) {
-      setRole(foundRole);
-    } else {
-      loadRole(roleId);
-    }
-  }, [resolvedParams.id, getRoleById, loadRole]);
+  const resolvedParams = React.use(params);
+  const roleId = parseInt(resolvedParams.id);
 
+  // Load role if not already loaded
   useEffect(() => {
-    if (roles.length === 0) {
-      loadRoles();
-    }
-  }, [roles.length, loadRoles]);
-
-  useEffect(() => {
-    if (roles.length > 0) {
-      const foundRole = getRoleById(parseInt(resolvedParams.id));
-      if (foundRole) {
-        setRole(foundRole);
-      }
-    }
-  }, [roles, resolvedParams.id, getRoleById]);
+    getRoleById(roleId);
+  }, [getRoleById, roleId]);
 
   const config = useCreateRoleDetailsConfig(
-    role,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedRole,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t('failed_name', { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IRole>} />
+          <EntityDetails config={config as EntityDetailsConfig<IRole>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default RoleDetailPage;
+}

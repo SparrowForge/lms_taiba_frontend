@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IEmploymentType, IEmploymentTypeCreate, IEmploymentTypeUpdate,} from '@/types/employmentType';
 
 import {employmentTypeService} from '@/services/employmentTypeService';
@@ -70,8 +70,8 @@ export const useEmploymentTypes = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IEmploymentType = await employmentTypeService.getEmploymentType(id);
-        dispatch(setSelectedEmploymentType(response));
+        const response: IBaseResponse<IEmploymentType> = await employmentTypeService.getEmploymentType(id);
+        dispatch(setSelectedEmploymentType(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -160,10 +160,15 @@ export const useEmploymentTypes = () => {
   );
 
   const getEmploymentTypeById = useCallback(
-    (id: number): IEmploymentType | undefined => {
-      return employmentTypes.find((item) => item.id === id);
+    (id: number) => {
+      const employmentType = employmentTypes.find((item) => item.id === id);
+      if (employmentType) {
+        dispatch(setSelectedEmploymentType(employmentType));
+      } else {
+        loadEmploymentType(id);
+      }
     },
-    [employmentTypes],
+    [dispatch],
   );
 
   const clearAction = useCallback(() => {

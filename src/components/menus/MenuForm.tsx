@@ -40,14 +40,8 @@ const MenuForm: React.FC<MenuFormProps> = ({
   const entityName = t('menu');
   const router = useRouter();
   const [form] = Form.useForm();
-  const { createMenu, editMenu, actionStatus, menus, loadMenus } = useMenus();
+  const { createMenu, editMenu, actionStatus, menus } = useMenus();
   const { panels, loadPanels } = usePanels();
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -57,15 +51,9 @@ const MenuForm: React.FC<MenuFormProps> = ({
 
   useEffect(() => {
     if (panels.length === 0) {
-      loadPanels();
+      loadPanels({ page: 1, limit: 100 });
     }
   }, [panels.length, loadPanels]);
-
-  useEffect(() => {
-    if (menus.length === 0) {
-      loadMenus();
-    }
-  }, [menus.length, loadMenus]);
 
   const handleSubmit = async (values: Partial<IMenu>) => {
     try {
@@ -118,10 +106,10 @@ const MenuForm: React.FC<MenuFormProps> = ({
   const getSubmitText = () =>
     mode === 'create'
       ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      : t('update_name', { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       <Form.Item
         name="panelId"
         label={t('panel')}

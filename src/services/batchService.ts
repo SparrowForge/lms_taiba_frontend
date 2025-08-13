@@ -1,5 +1,5 @@
 import {IBatch, IBatchCreate, IBatchUpdate} from '@/types/batch';
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
 import {api} from '@/lib/axios';
 
@@ -11,8 +11,8 @@ export const batchService = {
   },
 
   // Get a single batch by ID
-  getBatch: async (id: number): Promise<IBatch> => {
-    const response = await api.get<IBatch>(`/batches/${id}`);
+  getBatch: async (id: number): Promise<IBaseResponse<IBatch>> => {
+    const response = await api.get<IBaseResponse<IBatch>>(`/batches/${id}`);
     return response.data;
   },
 

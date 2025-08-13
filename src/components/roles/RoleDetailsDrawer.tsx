@@ -1,6 +1,8 @@
+'use client';
+
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -16,7 +18,7 @@ interface RoleDetailsDrawerProps {
   roleId?: number;
   visible: boolean;
   onClose: () => void;
-  onEdit?: (roleId: number) => void;
+  onEdit: (roleId: number) => void;
 }
 
 const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
@@ -25,51 +27,37 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { roles, listStatus, loadRoles, getRoleById, loadRole } = useRoles();
-  const [role, setRole] = useState<IRole | null>(null);
+  
+  const { selectedRole, getRoleById, detailsStatus } = useRoles();
   const t = useTranslations();
   const entityName = t('role', { defaultValue: 'Role' });
-
   useEffect(() => {
-    if (roleId && visible) {
-      const foundRole = getRoleById(roleId);
-      if (foundRole) {
-        setRole(foundRole);
-      } else {
-        loadRole(roleId);
-      }
+    if (visible && roleId) {
+      getRoleById(roleId);
     }
-  }, [roleId, visible, getRoleById, loadRole]);
+  }, [visible, roleId, getRoleById]);
 
-  useEffect(() => {
-    if (roles.length === 0) {
-      loadRoles();
-    }
-  }, [roles.length, loadRoles]);
-
-  useEffect(() => {
-    if (roles.length > 0 && roleId) {
-      const foundRole = getRoleById(roleId);
-      if (foundRole) {
-        setRole(foundRole);
-      }
-    }
-  }, [roles, roleId, getRoleById]);
+  const handleEdit = (role: IRole) => {
+    onEdit(role.id);
+  };
 
   const config = useCreateRoleDetailsConfig(
-    role,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
+    selectedRole,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (
     <Drawer
       title={t('details_name', { name: entityName })}
+      width={800}
       open={visible}
       onClose={onClose}
-      width={500}
-      placement="right"
+      destroyOnHidden={true}
     >
       <EntityDetailsContent config={config} />
     </Drawer>

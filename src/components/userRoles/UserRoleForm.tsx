@@ -47,12 +47,6 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
   }, [loadUsers, loadRoles]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }

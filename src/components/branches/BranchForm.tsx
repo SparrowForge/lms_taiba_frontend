@@ -54,12 +54,6 @@ const BranchForm: React.FC<BranchFormProps> = ({
   }, [loadAddresses, loadUsers, loadInstitutes]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -116,14 +110,14 @@ const BranchForm: React.FC<BranchFormProps> = ({
   const getSubmitText = () =>
     mode === 'create'
       ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      : t('update_name', { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       aria-label={`${mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })} form`}
       role="form"
     >

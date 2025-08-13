@@ -1,10 +1,10 @@
+'use client';
+
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useRoles} from '@/hooks/useRoles';
-
-import {IRole} from '@/types/role';
 
 import RoleForm from './RoleForm';
 
@@ -14,7 +14,7 @@ interface RoleFormDrawerProps {
   roleId?: number;
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
@@ -24,40 +24,42 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<IRole> | undefined>();
-  const { getRoleById, loadRole } = useRoles();
+ 
+  const { getRoleById, selectedRole } = useRoles();
   const t = useTranslations();
   const entityName = t('role', { defaultValue: 'Role' });
-
   useEffect(() => {
-    if (mode === 'edit' && roleId && visible) {
-      const foundRole = getRoleById(roleId);
-      if (foundRole) {
-        setInitialValues(foundRole);
-      } else {
-        loadRole(roleId);
-      }
+    if (visible && mode === 'edit' && roleId) {
+      getRoleById(roleId);
     }
-  }, [mode, roleId, visible, getRoleById, loadRole]);
+  }, [visible, mode, roleId, getRoleById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+  const handleSuccess = () => {
+    onSuccess();
+  };
 
-  const handleDrawerSuccess = () => {
-    if (onSuccess) onSuccess();
+  const handleCancel = () => {
     onCancel();
   };
 
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      title={
+        mode === 'create'
+          ? t('create_name', { name: entityName })
+          : t('edit_name', { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <RoleForm
         mode={mode}
         roleId={roleId}
-        initialValues={initialValues}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        initialValues={selectedRole || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>

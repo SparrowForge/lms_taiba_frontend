@@ -1,7 +1,7 @@
 'use client';
 
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateDepartmentDetailsConfig} from '@/components/departments/departmentConfig';
@@ -14,58 +14,36 @@ import {useDepartments} from '@/hooks/useDepartments';
 import {Status} from '@/types/common';
 import {IDepartment} from '@/types/department';
 
-interface DepartmentDetailPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
-
-const DepartmentDetailPage: React.FC<DepartmentDetailPageProps> = ({ params }) => {
-  const resolvedParams = React.use(params);
-  const { departments, listStatus, loadDepartments, getDepartmentById, loadDepartment } =
-    useDepartments();
-  const [department, setDepartment] = useState<IDepartment | null>(null);
+export default function DepartmentDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { selectedDepartment, detailsStatus, getDepartmentById } = useDepartments();
   const t = useTranslations();
-  const entityName = t('department', { defaultValue: 'Department' });
+  const entityName = t('department');
 
-  useEffect(() => {
-    const departmentId = parseInt(resolvedParams.id);
-    const foundDepartment = getDepartmentById(departmentId);
-    if (foundDepartment) {
-      setDepartment(foundDepartment);
-    } else {
-      loadDepartment(departmentId);
-    }
-  }, [resolvedParams.id, getDepartmentById, loadDepartment]);
+  const resolvedParams = React.use(params);
+  const departmentId = parseInt(resolvedParams.id);
 
+  // Load department if not already loaded
   useEffect(() => {
-    if (departments.length === 0) {
-      loadDepartments();
-    }
-  }, [departments.length, loadDepartments]);
-
-  useEffect(() => {
-    if (departments.length > 0) {
-      const foundDepartment = getDepartmentById(parseInt(resolvedParams.id));
-      if (foundDepartment) {
-        setDepartment(foundDepartment);
-      }
-    }
-  }, [departments, resolvedParams.id, getDepartmentById]);
+    getDepartmentById(departmentId);
+  }, [getDepartmentById, departmentId]);
 
   const config = useCreateDepartmentDetailsConfig(
-    department,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedDepartment,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t('failed_name', { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IDepartment>} />
+          <EntityDetails config={config as EntityDetailsConfig<IDepartment>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default DepartmentDetailPage;
+}

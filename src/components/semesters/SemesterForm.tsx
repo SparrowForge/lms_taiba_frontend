@@ -48,16 +48,6 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
   }, [loadBatches]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue({
-        ...initialValues,
-        startDate: initialValues.startDate ? dayjs(initialValues.startDate) : undefined,
-        endDate: initialValues.endDate ? dayjs(initialValues.endDate) : undefined,
-      });
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -121,11 +111,11 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={{
+      initialValues={mode === 'edit' ? {
         ...initialValues,
         startDate: initialValues?.startDate ? dayjs(initialValues.startDate) : undefined,
         endDate: initialValues?.endDate ? dayjs(initialValues.endDate) : undefined,
-      }}
+      } : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

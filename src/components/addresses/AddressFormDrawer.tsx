@@ -2,11 +2,9 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useAddresses} from '@/hooks/useAddresses';
-
-import {IAddress} from '@/types/address';
 
 import AddressForm from './AddressForm';
 
@@ -26,40 +24,22 @@ const AddressFormDrawer: React.FC<AddressFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<IAddress> | undefined>();
-  const { addresses, getAddressById, loadAddress } = useAddresses();
+ 
+  const { getAddressById, selectedAddress } = useAddresses();
   const t = useTranslations();
   const entityName = t('address', { defaultValue: 'Address' });
   useEffect(() => {
     if (visible && mode === 'edit' && addressId) {
-      const existing = getAddressById(addressId);
-      if (existing) {
-        setInitialValues(existing);
-      } else {
-        loadAddress(addressId);
-      }
-    } else {
-      setInitialValues(undefined);
+      getAddressById(addressId);
     }
-  }, [visible, mode, addressId, getAddressById, loadAddress]);
-
-  useEffect(() => {
-    if (mode === 'edit' && addressId && addresses.length > 0) {
-      const found = getAddressById(addressId);
-      if (found) {
-        setInitialValues(found);
-      }
-    }
-  }, [addresses, addressId, mode, getAddressById]);
+  }, [visible, mode, addressId, getAddressById]);
 
   const handleSuccess = () => {
     onSuccess();
-    setInitialValues(undefined);
   };
 
   const handleCancel = () => {
     onCancel();
-    setInitialValues(undefined);
   };
 
   return (
@@ -77,7 +57,7 @@ const AddressFormDrawer: React.FC<AddressFormDrawerProps> = ({
       <AddressForm
         mode={mode}
         addressId={addressId}
-        initialValues={initialValues}
+        initialValues={selectedAddress || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded={true}

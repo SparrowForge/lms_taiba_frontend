@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate,} from '@/types/roleMenuPermission';
 
 import {api} from '@/lib/axios';
@@ -16,9 +16,9 @@ export const roleMenuPermissionService = {
   },
 
   // Get a single role menu permission by roleId and menuId
-  getRoleMenuPermission: async (roleId: number, menuId: number): Promise<IRoleMenuPermission> => {
-    const response = await api.get<IRoleMenuPermission>(
-      `/role-menu-permissions/${roleId}/${menuId}`,
+  getRoleMenuPermission: async (id: number): Promise<IBaseResponse<IRoleMenuPermission>> => {
+    const response = await api.get<IBaseResponse<IRoleMenuPermission>>(
+      `/role-menu-permissions/${id}`,
     );
     return response.data;
   },
@@ -33,20 +33,19 @@ export const roleMenuPermissionService = {
 
   // Update an existing role menu permission
   updateRoleMenuPermission: async (
-    roleId: number,
-    menuId: number,
+    id: number,
     data: IRoleMenuPermissionUpdate,
   ): Promise<IRoleMenuPermission> => {
     const response = await api.patch<IRoleMenuPermission>(
-      `/role-menu-permissions/${roleId}/${menuId}`,
+      `/role-menu-permissions/${id}`,
       data,
     );
     return response.data;
   },
 
   // Delete a role menu permission
-  deleteRoleMenuPermission: async (roleId: number, menuId: number): Promise<void> => {
-    const response = await api.delete(`/role-menu-permissions/${roleId}/${menuId}`);
+  deleteRoleMenuPermission: async (id: number): Promise<void> => {
+    const response = await api.delete(`/role-menu-permissions/${id}`);
     return response.data;
   },
 };

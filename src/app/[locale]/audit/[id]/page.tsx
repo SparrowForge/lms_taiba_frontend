@@ -1,7 +1,7 @@
 'use client';
 
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useCreateAuditDetailsConfig} from '@/components/audits/auditConfig';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -14,60 +14,36 @@ import {useAudit} from '@/hooks/useAudit';
 import {IAudit} from '@/types/audit';
 import {Status} from '@/types/common';
 
-
-interface AuditDetailPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const AuditDetailPage: React.FC<AuditDetailPageProps> = ({ params }) => {
-  const resolvedParams = React.use(params);
-  const { audits, listStatus, loadAudits, getAuditById, loadAudit } = useAudit();
-  const [audit, setAudit] = useState<IAudit | null>(null);
+export default function AuditDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { selectedAudit, detailsStatus, getAuditById } = useAudit();
   const t = useTranslations();
-  const entityName = t('audit', { defaultValue: 'Audit' });
+  const entityName = t('audit');
 
-  useEffect(() => {
-    const auditId = parseInt(resolvedParams.id);
-    const foundAudit = getAuditById(auditId);
-    if (foundAudit) {
-      setAudit(foundAudit);
-    } else {
-      loadAudit(auditId);
-    }
-  }, [resolvedParams.id, getAuditById, loadAudit]);
+  const resolvedParams = React.use(params);
+  const auditId = parseInt(resolvedParams.id);
 
+  // Load audit if not already loaded
   useEffect(() => {
-    if (audits.length === 0) {
-      loadAudits();
-    }
-  }, [audits.length, loadAudits]);
-
-  useEffect(() => {
-    if (audits.length > 0) {
-      const foundAudit = getAuditById(parseInt(resolvedParams.id));
-      if (foundAudit) {
-        setAudit(foundAudit);
-      }
-    }
-  }, [audits, resolvedParams.id, getAuditById]);
+    getAuditById(auditId);
+  }, [getAuditById, auditId]);
 
   const config = useCreateAuditDetailsConfig(
-    audit,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedAudit,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t('failed_name', { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IAudit>} />
+          <EntityDetails config={config as EntityDetailsConfig<IAudit>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default AuditDetailPage;
+}

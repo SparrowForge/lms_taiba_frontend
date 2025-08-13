@@ -1,9 +1,9 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseTypeForm from '@/components/courseTypes/CourseTypeForm';
@@ -12,53 +12,36 @@ import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useCourseTypes} from '@/hooks/useCourseTypes';
 
-import {ICourseType} from '@/types/courseType';
+import {Status} from '@/types/common';
 
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-const CourseTypeEditPage: React.FC<PageProps> = ({ params }) => {
+const CourseTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { courseTypes, listStatus, loadCourseTypes, getCourseTypeById, loadCourseType } =
-    useCourseTypes();
-  const [item, setItem] = useState<ICourseType | null>(null);
+  const { selectedCourseType, detailsStatus, getCourseTypeById } = useCourseTypes();
   const t = useTranslations();
   const entityName = t('courseType');
 
   useEffect(() => {
-    const itemId = parseInt(resolvedParams.id);
-    const found = getCourseTypeById(itemId);
-    if (found) setItem(found);
-    else loadCourseType(itemId);
-  }, [resolvedParams.id, getCourseTypeById, loadCourseType]);
+    const courseTypeId = parseInt(resolvedParams.id);
+    getCourseTypeById(courseTypeId);
+  }, [resolvedParams.id, getCourseTypeById]);
 
-  useEffect(() => {
-    if (courseTypes.length === 0) loadCourseTypes();
-  }, [courseTypes.length, loadCourseTypes]);
 
-  useEffect(() => {
-    if (courseTypes.length > 0) {
-      const found = getCourseTypeById(parseInt(resolvedParams.id));
-      if (found) setItem(found);
-    }
-  }, [courseTypes, resolvedParams.id, getCourseTypeById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            {t('loading', { defaultValue: 'Loading...' })}
+            <Spin />
+            <div>{t('loading', { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!item) {
+  if (!selectedCourseType) {
     return (
       <ProtectedRoute>
         <MainLayout>
@@ -67,8 +50,7 @@ const CourseTypeEditPage: React.FC<PageProps> = ({ params }) => {
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <h2>{t('notFound_name', { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/course-types')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t('backToList_name', { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -77,16 +59,14 @@ const CourseTypeEditPage: React.FC<PageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => router.back();
-
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
           <CourseTypeForm
             mode="edit"
             courseTypeId={parseInt(resolvedParams.id)}
-          initialValues={{ name: item.name, status: item.status }}
+            initialValues={selectedCourseType}
         />
       </MainLayout>
     </ProtectedRoute>

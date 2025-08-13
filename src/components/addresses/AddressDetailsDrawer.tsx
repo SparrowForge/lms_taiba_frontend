@@ -2,7 +2,7 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -27,38 +27,22 @@ const AddressDetailsDrawer: React.FC<AddressDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [address, setAddress] = useState<IAddress | null>(null);
-  const { addresses, getAddressById, loadAddress, detailsStatus } = useAddresses();
+  
+  const { selectedAddress, getAddressById, detailsStatus } = useAddresses();
   const t = useTranslations();
   const entityName = t('address', { defaultValue: 'Address' });
   useEffect(() => {
     if (visible && addressId) {
-      const existing = getAddressById(addressId);
-      if (existing) {
-        setAddress(existing);
-      } else {
-        loadAddress(addressId);
-      }
-    } else {
-      setAddress(null);
+      getAddressById(addressId);
     }
-  }, [visible, addressId, getAddressById, loadAddress]);
-
-  useEffect(() => {
-    if (addressId && addresses.length > 0) {
-      const found = getAddressById(addressId);
-      if (found) {
-        setAddress(found);
-      }
-    }
-  }, [addresses, addressId, getAddressById]);
+  }, [visible, addressId, getAddressById]);
 
   const handleEdit = (address: IAddress) => {
     onEdit(address.id);
   };
 
   const config = useCreateAddressDetailsConfig(
-    address,
+    selectedAddress,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {

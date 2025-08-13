@@ -1,5 +1,5 @@
 import {IAudit} from '@/types/audit';
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
 import {api} from '@/lib/axios';
 
@@ -11,8 +11,8 @@ export const auditService = {
   },
 
   // Get a single audit log by ID
-  getAuditById: async (id: number): Promise<IAudit> => {
-    const response = await api.get<IAudit>(`/audit/${id}`);
+  getAuditById: async (id: number): Promise<IBaseResponse<IAudit>> => {
+    const response = await api.get<IBaseResponse<IAudit>>(`/audit/${id}`);
     return response.data;
   },
 

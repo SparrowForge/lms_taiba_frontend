@@ -1,9 +1,9 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -12,58 +12,36 @@ import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useSubjects} from '@/hooks/useSubjects';
 
-import {ISubject} from '@/types/subject';
+import {Status} from '@/types/common';
 
-interface SubjectEditPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
 
-const SubjectEditPage: React.FC<SubjectEditPageProps> = ({ params }) => {
+const SubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { subjects, listStatus, loadSubjects, getSubjectById, loadSubject } = useSubjects();
-  const [subject, setSubject] = useState<ISubject | null>(null);
+  const { selectedSubject, detailsStatus, getSubjectById } = useSubjects();
   const t = useTranslations();
-  const entityName = t('subject', { defaultValue: 'Subject' });
+  const entityName = t('subject');
 
   useEffect(() => {
     const subjectId = parseInt(resolvedParams.id);
-    const foundSubject = getSubjectById(subjectId);
-    if (foundSubject) {
-      setSubject(foundSubject);
-    } else {
-      loadSubject(subjectId);
-    }
-  }, [resolvedParams.id, getSubjectById, loadSubject]);
+    getSubjectById(subjectId);
+  }, [resolvedParams.id, getSubjectById]);
 
-  useEffect(() => {
-    if (subjects.length === 0) {
-      loadSubjects();
-    }
-  }, [subjects.length, loadSubjects]);
 
-  useEffect(() => {
-    if (subjects.length > 0) {
-      const foundSubject = getSubjectById(parseInt(resolvedParams.id));
-      if (foundSubject) {
-        setSubject(foundSubject);
-      }
-    }
-  }, [subjects, resolvedParams.id, getSubjectById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t('loading', { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!subject) {
+  if (!selectedSubject) {
     return (
       <ProtectedRoute>
         <MainLayout>
@@ -72,8 +50,7 @@ const SubjectEditPage: React.FC<SubjectEditPageProps> = ({ params }) => {
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <h2>{t('notFound_name', { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/subjects')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t('backToList_name', { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -82,33 +59,14 @@ const SubjectEditPage: React.FC<SubjectEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
-  const getInitialValues = () => ({
-    courseId: subject.courseId,
-    name: subject.name,
-    code: subject.code,
-    creditHours: subject.creditHours,
-    theoryHours: subject.theoryHours,
-    practicalHours: subject.practicalHours,
-    description: subject.description,
-    prerequisite: subject.prerequisite,
-    status: subject.status,
-    remarks: subject.remarks,
-  });
-
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
           <SubjectForm
             mode="edit"
-            subjectId={subject.id}
-            initialValues={getInitialValues()}
-            embedded={false}
-          onCancel={handleBack}
+            subjectId={parseInt(resolvedParams.id)}
+            initialValues={selectedSubject}
         />
       </MainLayout>
     </ProtectedRoute>

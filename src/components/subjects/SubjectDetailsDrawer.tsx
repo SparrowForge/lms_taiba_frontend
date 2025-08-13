@@ -1,6 +1,8 @@
+'use client';
+
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -16,7 +18,7 @@ interface SubjectDetailsDrawerProps {
   subjectId?: number;
   visible: boolean;
   onClose: () => void;
-  onEdit?: (subjectId: number) => void;
+  onEdit: (subjectId: number) => void;
 }
 
 const SubjectDetailsDrawer: React.FC<SubjectDetailsDrawerProps> = ({
@@ -25,51 +27,38 @@ const SubjectDetailsDrawer: React.FC<SubjectDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { subjects, listStatus, loadSubjects, getSubjectById, loadSubject } = useSubjects();
-  const [subject, setSubject] = useState<ISubject | null>(null);
+  
+  const { selectedSubject, getSubjectById, detailsStatus } = useSubjects();
   const t = useTranslations();
   const entityName = t('subject', { defaultValue: 'Subject' });
-
   useEffect(() => {
-    if (subjectId && visible) {
-      const foundSubject = getSubjectById(subjectId);
-      if (foundSubject) {
-        setSubject(foundSubject);
-      } else {
-        loadSubject(subjectId);
-      }
+    if (visible && subjectId) {
+      getSubjectById(subjectId);
     }
-  }, [subjectId, visible, getSubjectById, loadSubject]);
+  }, [visible, subjectId, getSubjectById]);
 
-  useEffect(() => {
-    if (subjects.length === 0) {
-      loadSubjects();
-    }
-  }, [subjects.length, loadSubjects]);
-
-  useEffect(() => {
-    if (subjects.length > 0 && subjectId) {
-      const foundSubject = getSubjectById(subjectId);
-      if (foundSubject) {
-        setSubject(foundSubject);
-      }
-    }
-  }, [subjects, subjectId, getSubjectById]);
+  const handleEdit = (subject: ISubject) => {
+    onEdit(subject.id);
+    onClose();
+  };
 
   const config = useCreateSubjectDetailsConfig(
-    subject,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
+    selectedSubject,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (
     <Drawer
       title={t('details_name', { name: entityName })}
+      width={800}
       open={visible}
       onClose={onClose}
-      width={500}
-      placement="right"
+      destroyOnHidden={true}
     >
       <EntityDetailsContent config={config} />
     </Drawer>

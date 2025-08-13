@@ -17,7 +17,7 @@ import FormLayout from '../layout/FormLayout';
 interface AddressFormProps {
   mode: 'create' | 'edit';
   addressId?: number;
-  initialValues?: Partial<IAddressCreate | IAddressUpdate>;
+  initialValues?: Partial<IAddress>;
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
@@ -36,12 +36,6 @@ const AddressForm: React.FC<AddressFormProps> = ({
   const router = useRouter();
   const [form] = Form.useForm();
   const { createAddress, editAddress, actionStatus } = useAddresses();
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue({ ...initialValues });
-    }
-  }, [initialValues, form]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -103,7 +97,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

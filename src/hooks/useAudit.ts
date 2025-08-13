@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IAudit} from '@/types/audit';
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 
 import {auditService} from '@/services/auditService';
 
@@ -88,8 +88,8 @@ export const useAudit = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IAudit = await auditService.getAuditById(id);
-        dispatch(setSelectedAudit(response));
+        const response: IBaseResponse<IAudit> = await auditService.getAuditById(id);
+        dispatch(setSelectedAudit(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -126,10 +126,15 @@ export const useAudit = () => {
 
   // Get audit by ID from the current list
   const getAuditById = useCallback(
-    (id: number): IAudit | undefined => {
-      return audits.find((audit) => audit.id === id);
+    (id: number) => {
+      const audit = audits.find((audit) => audit.id === id);
+      if (audit) {
+        dispatch(setSelectedAudit(audit));
+      } else {
+        loadAudit(id);
+      }
     },
-    [audits],
+    [dispatch],
   );
 
   // Clear action status

@@ -47,27 +47,16 @@ const CourseForm: React.FC<CourseFormProps> = ({
   const { scheduleTypes, loadScheduleTypes } = useScheduleTypes();
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
   }, [mode, form]);
 
   useEffect(() => {
-    if (departments.length === 0) {
-      loadDepartments();
-    }
-  }, [departments.length, loadDepartments]);
-
-  useEffect(() => {
     loadCourseTypes({ page: 1, limit: 100 });
     loadScheduleTypes({ page: 1, limit: 100 });
-  }, [loadCourseTypes, loadScheduleTypes]);
+    loadDepartments({ page: 1, limit: 100 });
+  }, [loadCourseTypes, loadScheduleTypes, loadDepartments]);
 
   const handleSubmit = async (values: Partial<ICourse>) => {
     try {
@@ -120,10 +109,10 @@ const CourseForm: React.FC<CourseFormProps> = ({
   const getSubmitText = () =>
     mode === 'create'
       ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      : t('update_name', { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       <Form.Item
         name="departmentId"
         label={t('department')}

@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const menuService = {
   },
 
   // Get a single menu by ID
-  getMenu: async (id: number): Promise<IMenu> => {
-    const response = await api.get<IMenu>(`/menus/${id}`);
+  getMenu: async (id: number): Promise<IBaseResponse<IMenu>> => {
+    const response = await api.get<IBaseResponse<IMenu>>(`/menus/${id}`);
     return response.data;
   },
 

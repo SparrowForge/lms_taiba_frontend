@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {ISubject, ISubjectCreate, ISubjectUpdate} from '@/types/subject';
 
 import {subjectService} from '@/services/subjectService';
@@ -53,8 +53,8 @@ export const useSubjects = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: ISubject = await subjectService.getSubject(id);
-        dispatch(setSelectedSubject(response));
+        const response: IBaseResponse<ISubject> = await subjectService.getSubject(id);
+        dispatch(setSelectedSubject(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -135,10 +135,15 @@ export const useSubjects = () => {
 
   // Get subject by ID from the current list
   const getSubjectById = useCallback(
-    (id: number): ISubject | undefined => {
-      return subjects.find((subject) => subject.id === id);
+    (id: number) => {
+      const subject = subjects.find((subject) => subject.id === id);
+      if (subject) {
+        dispatch(setSelectedSubject(subject));
+      } else {
+        loadSubject(id);
+      }
     },
-    [subjects],
+    [dispatch],
   );
 
   // Clear action status

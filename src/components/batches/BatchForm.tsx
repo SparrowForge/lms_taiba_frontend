@@ -48,16 +48,6 @@ const BatchForm: React.FC<BatchFormProps> = ({
   }, [loadCourses]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue({
-        ...initialValues,
-        startDate: initialValues.startDate ? dayjs(initialValues.startDate) : undefined,
-        endDate: initialValues.endDate ? dayjs(initialValues.endDate) : undefined,
-      });
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -119,17 +109,17 @@ const BatchForm: React.FC<BatchFormProps> = ({
   const getSubmitText = () =>
     mode === 'create'
       ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      : t('update_name', { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
-      initialValues={{
+      initialValues={mode === 'edit' ? {
         ...initialValues,
         startDate: initialValues?.startDate ? dayjs(initialValues.startDate) : undefined,
         endDate: initialValues?.endDate ? dayjs(initialValues.endDate) : undefined,
-      }}
+      } : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >

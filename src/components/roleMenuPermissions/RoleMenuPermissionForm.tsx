@@ -45,28 +45,15 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
   const { menus, loadMenus } = useMenus();
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
   }, [mode, form]);
 
   useEffect(() => {
-    if (roles.length === 0) {
-      loadRoles();
-    }
-  }, [roles.length, loadRoles]);
-
-  useEffect(() => {
-    if (menus.length === 0) {
-      loadMenus();
-    }
-  }, [menus.length, loadMenus]);
+    loadRoles({ page: 1, limit: 100 });
+    loadMenus({ page: 1, limit: 100 });
+  }, [loadRoles, loadMenus]);
 
   const handleSubmit = async (values: Partial<IRoleMenuPermission>) => {
     try {
@@ -79,7 +66,10 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
           router.push('/role-menu-permissions');
         }
       } else if (mode === 'edit' && roleId && menuId) {
-        await editRoleMenuPermission(roleId, menuId, values as IRoleMenuPermissionUpdate);
+        // For editing, we need to find the existing permission by roleId and menuId
+        // This is a special case where we need both IDs to identify the permission
+        const permissionData = { ...values, roleId, menuId };
+        await editRoleMenuPermission(roleId, permissionData as IRoleMenuPermissionUpdate);
         toast.success(t('updated_name', { name: entityName }));
         if (onSuccess) {
           onSuccess();
@@ -119,10 +109,10 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
   const getSubmitText = () =>
     mode === 'create'
       ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      : t('update_name', { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       {mode === 'create' && (
         <>
           <Form.Item

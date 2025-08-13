@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IBatch, IBatchCreate, IBatchUpdate} from '@/types/batch';
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 
 import {batchService} from '@/services/batchService';
 
@@ -64,8 +64,8 @@ export const useBatches = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBatch = await batchService.getBatch(id);
-        dispatch(setSelectedBatch(response));
+        const response: IBaseResponse<IBatch> = await batchService.getBatch(id);
+        dispatch(setSelectedBatch(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -146,10 +146,15 @@ export const useBatches = () => {
 
   // Get batch by ID from the current list
   const getBatchById = useCallback(
-    (id: number): IBatch | undefined => {
-      return batches.find((batch) => batch.id === id);
+    (id: number) => {
+      const batch = batches.find((batch) => batch.id === id);
+      if (batch) {
+        dispatch(setSelectedBatch(batch));
+      } else {
+        loadBatch(id);
+      }
     },
-    [batches],
+    [dispatch],
   );
 
   // Clear action status

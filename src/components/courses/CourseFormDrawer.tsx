@@ -1,10 +1,10 @@
+'use client';
+
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useCourses} from '@/hooks/useCourses';
-
-import {ICourse} from '@/types/course';
 
 import CourseForm from './CourseForm';
 
@@ -14,7 +14,7 @@ interface CourseFormDrawerProps {
   courseId?: number;
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
@@ -24,41 +24,42 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<ICourse> | undefined>();
-  const { getCourseById, loadCourse } = useCourses();
+ 
+  const { getCourseById, selectedCourse } = useCourses();
   const t = useTranslations();
   const entityName = t('course', { defaultValue: 'Course' });
-
   useEffect(() => {
-    if (mode === 'edit' && courseId && visible) {
-      const foundCourse = getCourseById(courseId);
-      if (foundCourse) {
-        setInitialValues(foundCourse);
-      } else {
-        loadCourse(courseId);
-      }
+    if (visible && mode === 'edit' && courseId) {
+      getCourseById(courseId);
     }
-  }, [mode, courseId, visible, getCourseById, loadCourse]);
+  }, [visible, mode, courseId, getCourseById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+  const handleSuccess = () => {
+    onSuccess();
+  };
 
-  const handleDrawerSuccess = () => {
-    if (onSuccess) onSuccess();
+  const handleCancel = () => {
     onCancel();
   };
 
-
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      title={
+        mode === 'create'
+          ? t('create_name', { name: entityName })
+          : t('edit_name', { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <CourseForm
         mode={mode}
         courseId={courseId}
-        initialValues={initialValues}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        initialValues={selectedCourse || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>

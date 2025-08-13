@@ -1,7 +1,7 @@
 'use client';
 
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useCreateAddressDetailsConfig} from '@/components/addresses/addressConfig';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -14,60 +14,36 @@ import {useAddresses} from '@/hooks/useAddresses';
 import {IAddress} from '@/types/address';
 import {Status} from '@/types/common';
 
-
-interface AddressDetailPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const AddressDetailPage: React.FC<AddressDetailPageProps> = ({ params }) => {
-  const resolvedParams = React.use(params);
-  const { addresses, listStatus, loadAddresses, getAddressById, loadAddress } = useAddresses();
-  const [address, setAddress] = useState<IAddress | null>(null);
+export default function AddressDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { selectedAddress, detailsStatus, getAddressById } = useAddresses();
   const t = useTranslations();
   const entityName = t('address');
 
-  useEffect(() => {
-    const addressId = parseInt(resolvedParams.id);
-    const found = getAddressById(addressId);
-    if (found) {
-      setAddress(found);
-    } else {
-      loadAddress(addressId);
-    }
-  }, [resolvedParams.id, getAddressById, loadAddress]);
+  const resolvedParams = React.use(params);
+  const addressId = parseInt(resolvedParams.id);
 
+  // Load address if not already loaded
   useEffect(() => {
-    if (addresses.length === 0) {
-      loadAddresses();
-    }
-  }, [addresses.length, loadAddresses]);
-
-  useEffect(() => {
-    if (addresses.length > 0) {
-      const found = getAddressById(parseInt(resolvedParams.id));
-      if (found) {
-        setAddress(found);
-      }
-    }
-  }, [addresses, resolvedParams.id, getAddressById]);
+    getAddressById(addressId);
+  }, [getAddressById, addressId]);
 
   const config = useCreateAddressDetailsConfig(
-    address,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedAddress,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t('failed_name', { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IAddress>} />
+          <EntityDetails config={config as EntityDetailsConfig<IAddress>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default AddressDetailPage;
+}

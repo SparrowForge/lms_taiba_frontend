@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IUserRole, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const userRoleService = {
   },
 
   // Get a single user role by ID
-  getUserRole: async (id: number): Promise<IUserRole> => {
-    const response = await api.get<IUserRole>(`/user-roles/${id}`);
+  getUserRole: async (id: number): Promise<IBaseResponse<IUserRole>> => {
+    const response = await api.get<IBaseResponse<IUserRole>>(`/user-roles/${id}`);
     return response.data;
   },
 

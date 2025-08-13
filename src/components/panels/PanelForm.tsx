@@ -40,12 +40,6 @@ const PanelForm: React.FC<PanelFormProps> = ({
   const entityName = t('panel', { defaultValue: 'Panel' });
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -98,14 +92,14 @@ const PanelForm: React.FC<PanelFormProps> = ({
   const getSubmitText = () =>
     mode === 'create'
       ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      : t('update_name', { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       aria-label={`${mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })} form`}
       role="form"
     >

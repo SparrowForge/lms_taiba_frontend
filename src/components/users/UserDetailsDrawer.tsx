@@ -1,24 +1,24 @@
 'use client';
 
-import {EditOutlined} from '@ant-design/icons';
-import {Button, Drawer, Space} from 'antd';
+import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
-import {useCreateUserDetailsConfig} from '@/components/users/userConfig';
 
 import {useUsers} from '@/hooks/useUsers';
 
 import {Status} from '@/types/common';
 import {IUser} from '@/types/user';
 
+import {useCreateUserDetailsConfig} from './userConfig';
+
 
 interface UserDetailsDrawerProps {
   userId?: number;
   visible: boolean;
   onClose: () => void;
-  onEdit?: (userId: number) => void;
+  onEdit: (userId: number) => void;
 }
 
 const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
@@ -27,66 +27,37 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { users, listStatus, getUserById, loadUser } = useUsers();
-  const [user, setUser] = useState<IUser | null>(null);
+  
+  const { selectedUser, getUserById, detailsStatus } = useUsers();
   const t = useTranslations();
   const entityName = t('user', { defaultValue: 'User' });
-  // Load user data when drawer opens
   useEffect(() => {
-    if (userId && visible) {
-      const foundUser = getUserById(userId);
-      if (foundUser) {
-        setUser(foundUser);
-      } else {
-        // Load user individually if not in list
-        loadUser(userId);
-      }
+    if (visible && userId) {
+      getUserById(userId);
     }
-  }, [userId, visible, getUserById, loadUser]);
-
-  // Update user when loaded individually
-  useEffect(() => {
-    if (users.length > 0 && userId) {
-      const foundUser = getUserById(userId);
-      if (foundUser) {
-        setUser(foundUser);
-      }
-    }
-  }, [users, userId, getUserById]);
+  }, [visible, userId, getUserById]);
 
   const handleEdit = (user: IUser) => {
-    if (onEdit) {
-      onEdit(user.id);
-    }
+    onEdit(user.id);
   };
 
   const config = useCreateUserDetailsConfig(
-    user,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null,
+    selectedUser,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {
       embedded: true,
-      onEdit: onEdit ? handleEdit : undefined,
+      onEdit: handleEdit,
     },
   );
 
   return (
     <Drawer
       title={t('details_name', { name: entityName })}
+      width={800}
       open={visible}
       onClose={onClose}
-      width={600}
-      destroyOnHidden
-      placement="right"
-      extra={
-        onEdit && user ? (
-          <Space>
-            <Button type="primary" icon={<EditOutlined />} onClick={() => onEdit(user.id)}>
-              {t('edit_name', { name: entityName })}
-            </Button>
-          </Space>
-        ) : undefined
-      }
+      destroyOnHidden={true}
     >
       <EntityDetailsContent config={config} />
     </Drawer>
