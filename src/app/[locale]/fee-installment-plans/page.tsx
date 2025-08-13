@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -13,13 +14,14 @@ import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
 
 export default function FeeInstallmentPlansPage() {
-  const t = useTranslations();
-  const entityName = t('feeInstallmentPlan', { defaultValue: 'Fee Installment Plan' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -79,7 +81,7 @@ export default function FeeInstallmentPlansPage() {
 
   const config: EntityConfig<IFeeInstallmentPlan> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/fee-installment-plans',
     searchFields: [] as (keyof IFeeInstallmentPlan)[],
     onSearch: (searchText: string) => {
@@ -92,60 +94,60 @@ export default function FeeInstallmentPlansPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('fee_structure', { defaultValue: 'Fee Structure' }),
+        title: t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' }),
         key: 'feeStructure',
         render: (feeInstallmentPlan: IFeeInstallmentPlan) => <span>{feeInstallmentPlan.feeStructure.templateName}</span>,
       },
       {
-        title: t('sequence_no', { defaultValue: 'Sequence No' }),
+        title: t(LOCALE_KEYS.SEQUENCE_NO, { defaultValue: 'Sequence No' }),
         dataIndex: 'sequenceNo',
         key: 'sequenceNo',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('payment_label', { defaultValue: 'Payment Label' }),
+        title: t(LOCALE_KEYS.PAYMENT_LABEL, { defaultValue: 'Payment Label' }),
         dataIndex: 'paymentLabel',
         key: 'paymentLabel',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('semester', { defaultValue: 'Semester' }),
+        title: t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' }),
         dataIndex: ['semester', 'name'],
         key: 'semester',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('duration_months', { defaultValue: 'Duration (Months)' }),
+        title: t(LOCALE_KEYS.DURATION_MONTHS, { defaultValue: 'Duration (Months)' }),
         dataIndex: 'durationMonths',
         key: 'durationMonths',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('amount', { defaultValue: 'Amount' }),
+        title: t(LOCALE_KEYS.AMOUNT, { defaultValue: 'Amount' }),
         dataIndex: 'amount',
         key: 'amount',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('discount_amount', { defaultValue: 'Discount Amount' }),
+        title: t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' }),
         dataIndex: 'discountAmount',
         key: 'discountAmount',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('due_date', { defaultValue: 'Due Date' }),
+        title: t(LOCALE_KEYS.DUE_DATE, { defaultValue: 'Due Date' }),
         dataIndex: 'dueDate',
         key: 'dueDate',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('created_at', { defaultValue: 'Created At' }),
+        title: t(LOCALE_KEYS.CREATED_AT, { defaultValue: 'Created At' }),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (feeInstallmentPlan: IFeeInstallmentPlan) => (
@@ -154,15 +156,15 @@ export default function FeeInstallmentPlansPage() {
               router.push(`/fee-installment-plans/${feeInstallmentPlan.id}`)
             }
             onViewModal={() => handleViewDetails(feeInstallmentPlan.id)}
-            viewText={t('view')}
-            editText={t('edit')}
-            deleteText={t('delete')}
-            viewModalText={t('quickView')}
+            viewText={t(LOCALE_KEYS.VIEW)}
+            editText={t(LOCALE_KEYS.EDIT)}
+            deleteText={t(LOCALE_KEYS.DELETE)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() =>
               router.push(`/fee-installment-plans/${feeInstallmentPlan.id}/edit`)
             }
             onEditModal={() => handleEditDrawer(feeInstallmentPlan.id)}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeFeeInstallmentPlan(feeInstallmentPlan.id)}
             id={feeInstallmentPlan.id}
           />
@@ -171,15 +173,13 @@ export default function FeeInstallmentPlansPage() {
     ],
   };
 
-  console.log(feeInstallmentPlans);
-
   return (
     <ProtectedRoute>
       <MainLayout>
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadFeeInstallmentPlans({ page: 1, limit: 10 })}

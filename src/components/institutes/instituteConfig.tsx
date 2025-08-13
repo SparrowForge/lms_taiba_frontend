@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IInstitute} from '@/types/institute';
 
@@ -15,9 +17,9 @@ export const useCreateInstituteDetailsConfig = (
   options: { embedded?: boolean; onEdit?: (it: IInstitute) => void; onBack?: () => void } = {},
 ): EntityDetailsConfig<IInstitute> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
-    name: t('institute'),
+    name: t(LOCALE_KEYS.INSTITUTE),
     route: '/institutes',
     getDisplayName: getInstituteDisplayName,
     getInitials: getInstituteInitials,
@@ -29,16 +31,16 @@ export const useCreateInstituteDetailsConfig = (
     onBack,
     fields: [
       { key: 'id', label: 'ID' },
-      { key: 'name', label: t('name') },
-      { key: 'status', label: t('status') },
+      { key: 'name', label: t(LOCALE_KEYS.NAME) },
+      { key: 'status', label: t(LOCALE_KEYS.STATUS) },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (v: string) => (v ? new Date(v).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (v: string) => (v ? new Date(v).toLocaleString() : 'N/A'),
       },
     ],

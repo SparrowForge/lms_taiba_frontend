@@ -1,11 +1,13 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
 import {Status} from '@/types/common';
@@ -27,10 +29,10 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedUser, getUserById, detailsStatus } = useUsers();
-  const t = useTranslations();
-  const entityName = t('user', { defaultValue: 'User' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
   useEffect(() => {
     if (visible && userId) {
       getUserById(userId);
@@ -53,7 +55,8 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={userId} // Force remount when userId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

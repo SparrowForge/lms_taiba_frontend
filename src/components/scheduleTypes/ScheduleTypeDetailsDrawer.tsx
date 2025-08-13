@@ -1,11 +1,13 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
 import {Status} from '@/types/common';
@@ -27,10 +29,10 @@ const ScheduleTypeDetailsDrawer: React.FC<ScheduleTypeDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedScheduleType, getScheduleTypeById, detailsStatus } = useScheduleTypes();
-  const t = useTranslations();
-  const entityName = t('scheduleType', { defaultValue: 'Schedule Type' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
   useEffect(() => {
     if (visible && scheduleTypeId) {
       getScheduleTypeById(scheduleTypeId);
@@ -54,7 +56,7 @@ const ScheduleTypeDetailsDrawer: React.FC<ScheduleTypeDetailsDrawerProps> = ({
   return (
     <Drawer
       key={scheduleTypeId} // Force remount when scheduleTypeId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

@@ -3,13 +3,15 @@
 import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useBatches} from '@/hooks/useBatches';
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
 import {Status} from '@/types/common';
@@ -36,8 +38,8 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('semester');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createSemester, editSemester, actionStatus } = useSemesters();
@@ -62,7 +64,7 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
       };
       if (mode === 'create') {
         await createSemester(payload as ISemesterCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -70,7 +72,7 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
         }
       } else if (mode === 'edit' && semesterId) {
         await editSemester(semesterId, payload as ISemesterUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -78,7 +80,7 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -104,8 +106,8 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
@@ -121,12 +123,12 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
     >
       <Form.Item
         name="batchId"
-        label={t('batch')}
-        rules={[{ required: true, message: t('required_name', { name: t('batch') }) }]}
+        label={t(LOCALE_KEYS.BATCH)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('batch') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -141,40 +143,40 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
       </Form.Item>
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_name', { name: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="termNo"
-        label={t('termNo')}
-        rules={[{ required: true, message: t('required_name', { name: t('termNo') }) }]}
+        label={t(LOCALE_KEYS.TERM_NO)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.TERM_NO) }) }]}
       >
         <InputNumber min={1} max={20} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="startDate"
-        label={t('startDate')}
-        rules={[{ required: true, message: t('required_name', { name: t('startDate') }) }]}
+        label={t(LOCALE_KEYS.START_DATE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.START_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
       <Form.Item
         name="endDate"
-        label={t('endDate')}
-        rules={[{ required: true, message: t('required_name', { name: t('endDate') }) }]}
+        label={t(LOCALE_KEYS.END_DATE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.END_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="lifecycle" />
       </Form.Item>
-      <Form.Item name="remarks" label={t('remarks')}>
+      <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
         <Input.TextArea rows={3} />
       </Form.Item>
       <Form.Item>
@@ -183,7 +185,7 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
             {getSubmitText()}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-            {t('cancel')}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>

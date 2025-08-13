@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
@@ -27,10 +29,10 @@ const FeeInstallmentPlanDetailsDrawer: React.FC<FeeInstallmentPlanDetailsDrawerP
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedFeeInstallmentPlan, getFeeInstallmentPlanById, detailsStatus } = useFeeInstallmentPlans();
-  const t = useTranslations();
-  const entityName = t('feeInstallmentPlan', { defaultValue: 'Fee Installment Plan' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
   useEffect(() => {
     if (visible && feeInstallmentPlanId) {
       getFeeInstallmentPlanById(feeInstallmentPlanId);
@@ -54,7 +56,7 @@ const FeeInstallmentPlanDetailsDrawer: React.FC<FeeInstallmentPlanDetailsDrawerP
   return (
     <Drawer
       key={feeInstallmentPlanId} // Force remount when feeInstallmentPlanId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

@@ -1,8 +1,10 @@
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useDepartments} from '@/hooks/useDepartments';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import DepartmentForm from './DepartmentForm';
 
@@ -23,8 +25,8 @@ const DepartmentFormDrawer: React.FC<DepartmentFormDrawerProps> = ({
   onSuccess,
 }) => {
   const { getDepartmentById, selectedDepartment } = useDepartments();
-  const t = useTranslations();
-  const entityName = t('department', { defaultValue: 'Department' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
 
   useEffect(() => {
     if (mode === 'edit' && departmentId && visible) {
@@ -42,16 +44,16 @@ const DepartmentFormDrawer: React.FC<DepartmentFormDrawerProps> = ({
 
 
   return (
-    <Drawer 
+    <Drawer
       key={departmentId} // Force remount when departmentId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
-      open={visible} 
-      onClose={handleCancel} 
+      open={visible}
+      onClose={handleCancel}
       destroyOnHidden={true}
     >
       <DepartmentForm

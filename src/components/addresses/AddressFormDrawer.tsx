@@ -1,10 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useAddresses} from '@/hooks/useAddresses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import AddressForm from './AddressForm';
 
@@ -24,10 +26,10 @@ const AddressFormDrawer: React.FC<AddressFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getAddressById, selectedAddress } = useAddresses();
-  const t = useTranslations();
-  const entityName = t('address', { defaultValue: 'Address' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
   useEffect(() => {
     if (visible && mode === 'edit' && addressId) {
       getAddressById(addressId);
@@ -47,8 +49,8 @@ const AddressFormDrawer: React.FC<AddressFormDrawerProps> = ({
       key={addressId} // Force remount when addressId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

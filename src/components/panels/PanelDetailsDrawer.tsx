@@ -1,11 +1,13 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
 import {Status} from '@/types/common';
@@ -27,10 +29,10 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedPanel, getPanelById, detailsStatus } = usePanels();
-  const t = useTranslations();
-  const entityName = t('panel', { defaultValue: 'Panel' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
   useEffect(() => {
     if (visible && panelId) {
       getPanelById(panelId);
@@ -54,7 +56,7 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
   return (
     <Drawer
       key={panelId} // Force remount when panelId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

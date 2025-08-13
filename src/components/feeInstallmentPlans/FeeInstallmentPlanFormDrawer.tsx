@@ -2,10 +2,12 @@
 
 import {Drawer} from 'antd';
 import dayjs from 'dayjs';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
 
@@ -29,8 +31,8 @@ const FeeInstallmentPlanFormDrawer: React.FC<FeeInstallmentPlanFormDrawerProps> 
 }) => {
 
   const { getFeeInstallmentPlanById, selectedFeeInstallmentPlan } = useFeeInstallmentPlans();
-  const t = useTranslations();
-  const entityName = t('feeInstallmentPlan', { defaultValue: 'Fee Installment Plan' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
   useEffect(() => {
     if (visible && mode === 'edit' && feeInstallmentPlanId) {
       getFeeInstallmentPlanById(feeInstallmentPlanId);
@@ -49,8 +51,8 @@ const FeeInstallmentPlanFormDrawer: React.FC<FeeInstallmentPlanFormDrawerProps> 
     <Drawer
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useDepartments} from '@/hooks/useDepartments';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IDepartment} from '@/types/department';
@@ -27,10 +29,10 @@ const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedDepartment, getDepartmentById, detailsStatus } = useDepartments();
-  const t = useTranslations();
-  const entityName = t('department', { defaultValue: 'Department' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
   useEffect(() => {
     if (visible && departmentId) {
       getDepartmentById(departmentId);
@@ -54,7 +56,7 @@ const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
   return (
     <Drawer
       key={departmentId} // Force remount when departmentId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

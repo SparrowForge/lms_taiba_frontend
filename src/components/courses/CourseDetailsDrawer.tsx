@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
@@ -27,10 +29,10 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedCourse, getCourseById, detailsStatus } = useCourses();
-  const t = useTranslations();
-  const entityName = t('course', { defaultValue: 'Course' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   useEffect(() => {
     if (visible && courseId) {
       getCourseById(courseId);
@@ -54,7 +56,7 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
   return (
     <Drawer
       key={courseId} // Force remount when courseId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

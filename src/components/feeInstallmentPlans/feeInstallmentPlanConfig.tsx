@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
 
@@ -23,9 +25,9 @@ export const useCreateFeeInstallmentPlanDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<IFeeInstallmentPlan> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
-    name: t('feeInstallmentPlan'),
+    name: t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN),
     route: '/fee-installment-plans',
     getDisplayName: getFeeInstallmentPlanDisplayName,
     getInitials: getFeeInstallmentPlanInitials,
@@ -37,26 +39,26 @@ export const useCreateFeeInstallmentPlanDetailsConfig = (
     onBack,
     fields: [
       { key: 'id', label: 'ID' },
-      { key: 'feeStructure.templateName', label: t('fee_structure') },
-      { key: 'sequenceNo', label: t('sequence_no') },
-      { key: 'paymentLabel', label: t('payment_label') },
-      { key: 'semester.name', label: t('semester') },
-      { key: 'durationMonths', label: t('durationMonths') },
-      { key: 'amount', label: t('amount') },
-      { key: 'discountAmount', label: t('discountAmount') },
+      { key: 'feeStructure.templateName', label: t(LOCALE_KEYS.FEE_STRUCTURE) },
+      { key: 'sequenceNo', label: t(LOCALE_KEYS.SEQUENCE_NO) },
+      { key: 'paymentLabel', label: t(LOCALE_KEYS.PAYMENT_LABEL) },
+      { key: 'semester.name', label: t(LOCALE_KEYS.SEMESTER) },
+      { key: 'durationMonths', label: t(LOCALE_KEYS.DURATION_MONTHS) },
+      { key: 'amount', label: t(LOCALE_KEYS.AMOUNT) },
+      { key: 'discountAmount', label: t(LOCALE_KEYS.DISCOUNT_AMOUNT) },
       {
         key: 'dueDate',
-        label: t('dueDate'),
+        label: t(LOCALE_KEYS.DUE_DATE),
         render: (value: string) => (value ? new Date(value).toLocaleDateString() : 'N/A'),
       },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

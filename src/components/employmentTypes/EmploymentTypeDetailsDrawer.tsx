@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IEmploymentType} from '@/types/employmentType';
@@ -27,10 +29,10 @@ const EmploymentTypeDetailsDrawer: React.FC<EmploymentTypeDetailsDrawerProps> = 
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedEmploymentType, getEmploymentTypeById, detailsStatus } = useEmploymentTypes();
-  const t = useTranslations();
-  const entityName = t('employmentType', { defaultValue: 'Employment Type' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
   useEffect(() => {
     if (visible && employmentTypeId) {
       getEmploymentTypeById(employmentTypeId);
@@ -54,7 +56,7 @@ const EmploymentTypeDetailsDrawer: React.FC<EmploymentTypeDetailsDrawerProps> = 
   return (
     <Drawer
       key={employmentTypeId} // Force remount when employmentTypeId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

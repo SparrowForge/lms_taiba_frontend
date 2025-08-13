@@ -1,9 +1,11 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSubjects} from '@/hooks/useSubjects';
 
 import SubjectForm from './SubjectForm';
@@ -24,10 +26,10 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getSubjectById, selectedSubject } = useSubjects();
-  const t = useTranslations();
-  const entityName = t('subject', { defaultValue: 'Subject' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
   useEffect(() => {
     if (visible && mode === 'edit' && subjectId) {
       getSubjectById(subjectId);
@@ -47,8 +49,8 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
       key={subjectId} // Force remount when subjectId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

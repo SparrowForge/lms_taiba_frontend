@@ -2,10 +2,12 @@
 
 import {Button, Checkbox, Form, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 import {useRoles} from '@/hooks/useRoles';
@@ -33,8 +35,8 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('roleMenuPermission');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createRoleMenuPermission, editRoleMenuPermission, actionStatus } =
@@ -57,7 +59,7 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
     try {
       if (mode === 'create') {
         await createRoleMenuPermission(values as IRoleMenuPermissionCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -65,7 +67,7 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
         }
       } else if (mode === 'edit' && roleMenuPermissionId) {
         await editRoleMenuPermission(roleMenuPermissionId, values as IRoleMenuPermissionUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -73,7 +75,7 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -103,8 +105,8 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
@@ -112,11 +114,11 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
         <>
           <Form.Item
             name="roleId"
-            label={t('role')}
-            rules={[{ required: true, message: t('required_field', { field: t('role') }) }]}
+            label={t(LOCALE_KEYS.ROLE)}
+            rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ROLE) }) }]}
           >
             <Select
-              placeholder={t('select_role')}
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}
               loading={roles.length === 0}
               showSearch
               filterOption={(input, option) =>
@@ -133,11 +135,11 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
 
           <Form.Item
             name="menuId"
-            label={t('menu')}
-            rules={[{ required: true, message: t('required_field', { field: t('menu') }) }]}
+            label={t(LOCALE_KEYS.MENU)}
+            rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.MENU) }) }]}
           >
             <Select
-              placeholder={t('select_menu')}
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.MENU) })}
               loading={menus.length === 0}
               showSearch
               filterOption={(input, option) =>
@@ -154,20 +156,20 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
         </>
       )}
 
-      <Form.Item name="view" valuePropName="checked" label={t('view')}>
-        <Checkbox>{t('allow_view')}</Checkbox>
+      <Form.Item name="view" valuePropName="checked" label={t(LOCALE_KEYS.VIEW)}>
+        <Checkbox>{t(LOCALE_KEYS.ALLOW_VIEW)}</Checkbox>
       </Form.Item>
 
-      <Form.Item name="insert" valuePropName="checked" label={t('insert')}>
-        <Checkbox>{t('allow_insert')}</Checkbox>
+      <Form.Item name="insert" valuePropName="checked" label={t(LOCALE_KEYS.INSERT)}>
+        <Checkbox>{t(LOCALE_KEYS.ALLOW_INSERT)}</Checkbox>
       </Form.Item>
 
-      <Form.Item name="update" valuePropName="checked" label={t('update')}>
-        <Checkbox>{t('allow_update')}</Checkbox>
+      <Form.Item name="update" valuePropName="checked" label={t(LOCALE_KEYS.UPDATE)}>
+        <Checkbox>{t(LOCALE_KEYS.ALLOW_UPDATE)}</Checkbox>
       </Form.Item>
 
-      <Form.Item name="delete" valuePropName="checked" label={t('delete')}>
-        <Checkbox>{t('allow_delete')}</Checkbox>
+      <Form.Item name="delete" valuePropName="checked" label={t(LOCALE_KEYS.DELETE)}>
+        <Checkbox>{t(LOCALE_KEYS.ALLOW_DELETE)}</Checkbox>
       </Form.Item>
 
       <Form.Item>
@@ -175,7 +177,7 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>{t('cancel')}</Button>
+          <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>
       </Form.Item>
     </Form>

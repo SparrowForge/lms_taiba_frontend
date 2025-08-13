@@ -1,9 +1,11 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
 import RoleMenuPermissionForm from './RoleMenuPermissionForm';
@@ -24,10 +26,10 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getRoleMenuPermissionById, selectedRoleMenuPermission } = useRoleMenuPermissions();
-  const t = useTranslations();
-  const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   useEffect(() => {
     if (visible && mode === 'edit' && roleMenuPermissionId) {
       getRoleMenuPermissionById(roleMenuPermissionId);
@@ -47,8 +49,8 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
       key={roleMenuPermissionId} // Force remount when roleMenuPermissionId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

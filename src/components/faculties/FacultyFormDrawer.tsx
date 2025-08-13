@@ -1,10 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import FacultyForm from './FacultyForm';
 
@@ -24,10 +26,10 @@ const FacultyFormDrawer: React.FC<FacultyFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getFacultyById, selectedFaculty } = useFaculties();
-  const t = useTranslations();
-  const entityName = t('faculty', { defaultValue: 'Faculty' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
   useEffect(() => {
     if (visible && mode === 'edit' && facultyId) {
       getFacultyById(facultyId);
@@ -47,8 +49,8 @@ const FacultyFormDrawer: React.FC<FacultyFormDrawerProps> = ({
       key={facultyId} // Force remount when facultyId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

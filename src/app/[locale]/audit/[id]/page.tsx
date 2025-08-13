@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useCreateAuditDetailsConfig} from '@/components/audits/auditConfig';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -10,18 +11,19 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useAudit} from '@/hooks/useAudit';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAudit} from '@/types/audit';
 import {Status} from '@/types/common';
 
-export default function AuditDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function AuditDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const { selectedAudit, detailsStatus, getAuditById } = useAudit();
-  const t = useTranslations();
-  const entityName = t('audit');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.AUDIT, { defaultValue: 'Audit' });
 
   const resolvedParams = React.use(params);
   const auditId = parseInt(resolvedParams.id);
@@ -35,7 +37,7 @@ export default function AuditDetailPage({
     selectedAudit,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
-      ? detailsStatus.message || t('failed_name', { name: entityName })
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 

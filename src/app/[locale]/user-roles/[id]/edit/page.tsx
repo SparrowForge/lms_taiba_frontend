@@ -1,14 +1,16 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import {useRouter} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
-import { PageHeader } from '@/components/ui/PageHeader';
+import {PageHeader} from '@/components/ui/PageHeader';
 import UserRoleForm from '@/components/userRoles/UserRoleForm';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';
 
 import {IUserRole} from '@/types/userRole';
@@ -24,8 +26,8 @@ const UserRoleEditPage: React.FC<UserRoleEditPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
   const { selectedUserRole, loadUserRole } = useUserRoles();
   const [initialValues, setInitialValues] = useState<Partial<IUserRole> | undefined>();
-  const t = useTranslations();
-  const entityName = t('userRole', { defaultValue: 'User Role' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER_ROLE, { defaultValue: 'User Role' });
   const router = useRouter();
   const handleBack = () => {
     router.back();
@@ -48,7 +50,7 @@ const UserRoleEditPage: React.FC<UserRoleEditPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={handleBack} />
         <UserRoleForm
           mode="edit"
           userRoleId={parseInt(resolvedParams.id)}

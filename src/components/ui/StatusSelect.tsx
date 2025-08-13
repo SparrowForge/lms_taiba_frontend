@@ -1,8 +1,11 @@
 'use client';
 
 import {Select} from 'antd';
-import {useTranslations} from 'next-intl';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 export type StatusOptionValue = 'active' | 'inactive' | 'complete' | 'archived' | 'ongoing';
 
@@ -31,7 +34,7 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
   preset = 'binary',
   options,
 }) => {
-  const t = useTranslations();
+  const { t } = useLocalization();
   const presetValues: Record<Exclude<StatusPreset, 'custom'>, StatusOptionValue[]> = {
     binary: ['active', 'inactive'],
     lifecycle: ['active', 'inactive', 'ongoing', 'complete', 'archived'],
@@ -42,8 +45,8 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
   ) as StatusOptionValue[];
 
   const localizedOptions = values.map((val) => ({
-    label: t(val),
-    value: val,
+    label: t(LOCALE_KEYS[val as keyof typeof LOCALE_KEYS]),
+    value: val as StatusOptionValue,
   }));
 
   return (
@@ -53,7 +56,7 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
       onChange={onChange as (val: string) => void}
       allowClear={allowClear}
       disabled={disabled}
-      placeholder={placeholder ?? t('pleaseSelectStatus')}
+      placeholder={placeholder ?? t(LOCALE_KEYS.PLEASE_SELECT_STATUS)}
       optionFilterProp="label"
       options={localizedOptions}
       size={size}

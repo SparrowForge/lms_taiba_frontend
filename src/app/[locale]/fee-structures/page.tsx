@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -13,6 +14,7 @@ import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 
 import {useFeeStructures} from '@/hooks/useFeeStructures';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
 import {Status} from '@/types/common';
@@ -20,8 +22,8 @@ import {IFeeStructure} from '@/types/feeStructure';
 import {ISemester} from '@/types/semester';
 
 export default function FeeStructuresPage() {
-  const t = useTranslations();
-  const entityName = t('feeStructure', { defaultValue: 'Fee Structure' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -74,7 +76,7 @@ export default function FeeStructuresPage() {
 
   const config: EntityConfig<IFeeStructure> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/fee-structures',
     searchFields: ['templateName', 'academicYear', 'batch.name', 'semester.name'] as (keyof IFeeStructure)[],
     onSearch: (searchText: string) => {
@@ -87,71 +89,71 @@ export default function FeeStructuresPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('template_name', { defaultValue: 'Template Name' }),
+        title: t(LOCALE_KEYS.TEMPLATE_NAME, { defaultValue: 'Template Name' }),
         dataIndex: 'templateName',
         key: 'templateName',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('batch', { defaultValue: 'Batch' }),
+        title: t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' }),
         dataIndex: 'batch',
         key: 'batch',
         render: (batch: IBatch) => <span>{batch?.name || 'N/A'}</span>,
       },
       {
-        title: t('semester', { defaultValue: 'Semester' }),
+        title: t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' }),
         dataIndex: 'semester',
         key: 'semester',
         render: (semester: ISemester) => <span>{semester?.name || 'N/A'}</span>,
       },
       {
-        title: t('academic_year', { defaultValue: 'Academic Year' }),
+        title: t(LOCALE_KEYS.ACADEMIC_YEAR, { defaultValue: 'Academic Year' }),
         dataIndex: 'academicYear',
         key: 'academicYear',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('payment_type', { defaultValue: 'Payment Type' }),
+        title: t(LOCALE_KEYS.PAYMENT_TYPE, { defaultValue: 'Payment Type' }),
         dataIndex: 'paymentType',
         key: 'paymentType',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('total_fees', { defaultValue: 'Total Fees' }),
+        title: t(LOCALE_KEYS.TOTAL_FEES, { defaultValue: 'Total Fees' }),
         dataIndex: 'totalFees',
         key: 'totalFees',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('currency'),
+        title: t(LOCALE_KEYS.CURRENCY),
         dataIndex: 'currency',
         key: 'currency',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('created_at', { defaultValue: 'Created At' }),
+        title: t(LOCALE_KEYS.CREATED_AT, { defaultValue: 'Created At' }),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (feeStructure: IFeeStructure) => (
           <EntityActions
             onView={() => router.push(`/fee-structures/${feeStructure.id}`)}
             onViewModal={handleViewDetails}
-            viewModalText={t('quickView')}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/fee-structures/${feeStructure.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeFeeStructure(feeStructure.id)}
             id={feeStructure.id}
           />
@@ -166,7 +168,7 @@ export default function FeeStructuresPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadFeeStructures({ page: 1, limit: 10 })}

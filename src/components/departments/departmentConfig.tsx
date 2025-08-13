@@ -1,4 +1,6 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IDepartment} from '@/types/department';
 
@@ -14,8 +16,8 @@ export const useCreateDepartmentDetailsConfig = (
   } = {},
 ) => {
   const { embedded = false, onEdit } = options;
-  const t = useTranslations();
-  const entityName = t('department', { defaultValue: 'Department' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
   return {
     name: entityName,
     route: '/departments',
@@ -27,26 +29,26 @@ export const useCreateDepartmentDetailsConfig = (
     embedded,
     onEdit,
     fields: [
-      { key: 'id', label: t('id') },
-      { key: 'name', label: t('name') },
-      { key: 'code', label: t('code') },
+      { key: 'id', label: t(LOCALE_KEYS.ID) },
+      { key: 'name', label: t(LOCALE_KEYS.NAME) },
+      { key: 'code', label: t(LOCALE_KEYS.CODE) },
       {
         key: 'branch.name',
-        label: t('branch'),
+        label: t(LOCALE_KEYS.BRANCH),
         render: (value: string, item: IDepartment) => item?.branch?.name || 'N/A',
       },
-      { key: 'headId', label: t('head') },
-      { key: 'email', label: t('email') },
-      { key: 'phone', label: t('phone') },
-      { key: 'status', label: t('status') },
+      { key: 'headId', label: t(LOCALE_KEYS.HEAD) },
+      { key: 'email', label: t(LOCALE_KEYS.EMAIL) },
+      { key: 'phone', label: t(LOCALE_KEYS.PHONE) },
+      { key: 'status', label: t(LOCALE_KEYS.STATUS) },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

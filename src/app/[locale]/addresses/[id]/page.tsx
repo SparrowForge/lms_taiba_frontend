@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useCreateAddressDetailsConfig} from '@/components/addresses/addressConfig';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -10,18 +11,19 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useAddresses} from '@/hooks/useAddresses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAddress} from '@/types/address';
 import {Status} from '@/types/common';
 
-export default function AddressDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function AddressDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const { selectedAddress, detailsStatus, getAddressById } = useAddresses();
-  const t = useTranslations();
-  const entityName = t('address');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
 
   const resolvedParams = React.use(params);
   const addressId = parseInt(resolvedParams.id);
@@ -35,7 +37,7 @@ export default function AddressDetailPage({
     selectedAddress,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
-      ? detailsStatus.message || t('failed_name', { name: entityName })
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 

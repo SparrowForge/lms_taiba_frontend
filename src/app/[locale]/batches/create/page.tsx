@@ -1,18 +1,21 @@
 'use client';
 
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import BatchForm from '@/components/batches/BatchForm';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
+import {useLocalization} from '@/hooks/useLocalization';
+
 
 const BatchCreatePage: React.FC = () => {
-  const t = useTranslations();
-  const entityName = t('batch');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   const router = useRouter();
 
   const handleBack = () => {
@@ -22,7 +25,7 @@ const BatchCreatePage: React.FC = () => {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={handleBack} />
           <BatchForm mode="create" onCancel={handleBack} />
       </MainLayout>
     </ProtectedRoute>

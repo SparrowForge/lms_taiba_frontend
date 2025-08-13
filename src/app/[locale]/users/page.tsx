@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -13,11 +14,11 @@ import StatusTag from '@/components/ui/StatusTag';
 import UserDetailsDrawer from '@/components/users/UserDetailsDrawer';
 import UserFormDrawer from '@/components/users/UserFormDrawer';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
 import {Status} from '@/types/common';
 import {IUser} from '@/types/user';
-
 
 
 export default function UsersPage() {
@@ -29,8 +30,8 @@ export default function UsersPage() {
   const [selectedDetailsUserId, setSelectedDetailsUserId] = useState<number | undefined>();
 
   const { users, listStatus, pagination, loadUsers, removeUser } = useUsers();
-  const t = useTranslations();
-  const entityName = t('user');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -76,7 +77,7 @@ export default function UsersPage() {
 
   const config: EntityConfig<IUser> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/users',
     exportUrl: '/users/export',
     searchFields: ['name', 'email'] as (keyof IUser)[],
@@ -90,47 +91,47 @@ export default function UsersPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('firstName'),
+        title: t(LOCALE_KEYS.FIRST_NAME),
         dataIndex: 'firstName',
         key: 'firstName',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('lastName'),
+        title: t(LOCALE_KEYS.LAST_NAME),
         dataIndex: 'lastName',
         key: 'lastName',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('email'),
+        title: t(LOCALE_KEYS.EMAIL),
         dataIndex: 'email',
         key: 'email',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('phone'),
+        title: t(LOCALE_KEYS.PHONE),
         dataIndex: 'phone',
         key: 'phone',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
         render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (user: IUser) => (
           <EntityActions
             onView={() => router.push(`/users/${user.id}`)}
             onViewModal={handleViewDetails}
-            viewModalText={t('quickView')}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/users/${user.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeUser(user.id)}
             id={user.id}
           />
@@ -145,7 +146,7 @@ export default function UsersPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadUsers({ page: 1, limit: 10 })}

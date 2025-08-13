@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useAddresses} from '@/hooks/useAddresses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAddress} from '@/types/address';
 import {Status} from '@/types/common';
@@ -27,10 +29,10 @@ const AddressDetailsDrawer: React.FC<AddressDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedAddress, getAddressById, detailsStatus } = useAddresses();
-  const t = useTranslations();
-  const entityName = t('address', { defaultValue: 'Address' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
   useEffect(() => {
     if (visible && addressId) {
       getAddressById(addressId);
@@ -54,7 +56,7 @@ const AddressDetailsDrawer: React.FC<AddressDetailsDrawerProps> = ({
   return (
     <Drawer
       key={addressId} // Force remount when addressId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

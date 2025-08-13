@@ -2,12 +2,14 @@
 
 import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useBatches} from '@/hooks/useBatches';
 import {useFeeStructures} from '@/hooks/useFeeStructures';
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
 import {Status} from '@/types/common';
@@ -33,8 +35,8 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('feeStructure');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createFeeStructure, editFeeStructure, actionStatus } = useFeeStructures();
@@ -59,7 +61,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       const payload = { ...values };
       if (mode === 'create') {
         await createFeeStructure(payload as IFeeStructureCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -67,7 +69,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
         }
       } else if (mode === 'edit' && feeStructureId) {
         await editFeeStructure(feeStructureId, payload as IFeeStructureUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -75,7 +77,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -101,8 +103,8 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
@@ -114,19 +116,19 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
     >
       <Form.Item
         name="templateName"
-        label={t('templateName')}
-        rules={[{ required: true, message: t('required_field', { field: t('templateName') }) }]}
+        label={t(LOCALE_KEYS.TEMPLATE_NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.TEMPLATE_NAME) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="batchId"
-        label={t('batch')}
-        rules={[{ required: true, message: t('required_field', { field: t('batch') }) }]}
+        label={t(LOCALE_KEYS.BATCH)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
       >
         <Select
-          placeholder={t('select_batch')}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
           onChange={(value) => setSelectedBatchId(value)}
           showSearch
           filterOption={(input, option) =>
@@ -143,11 +145,11 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
 
       <Form.Item
         name="semesterId"
-        label={t('semester', { defaultValue: 'Semester' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
       >
         <Select
-          placeholder={t('select_semester', { defaultValue: 'Select Semester' })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
           options={semesters.map((semester) => ({
             label: semester.name,
             value: semester.id,
@@ -157,28 +159,28 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
 
       <Form.Item
         name="academicYear"
-        label={t('academicYear')}
-        rules={[{ required: true, message: t('required_field', { field: t('academicYear') }) }]}
+        label={t(LOCALE_KEYS.ACADEMIC_YEAR)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ACADEMIC_YEAR) }) }]}
       >
         <Input placeholder="e.g., 2025-2026" />
       </Form.Item>
 
       <Form.Item
         name="paymentType"
-        label={t('paymentType')}
-        rules={[{ required: true, message: t('required_field', { field: t('paymentType') }) }]}
+        label={t(LOCALE_KEYS.PAYMENT_TYPE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PAYMENT_TYPE) }) }]}
       >
-        <Select placeholder={t('select_paymentType')}>
-          <Select.Option value="one_time">{t('oneTime')}</Select.Option>
-          <Select.Option value="installment">{t('installment')}</Select.Option>
-          <Select.Option value="monthly">{t('monthly')}</Select.Option>
+        <Select placeholder={t(LOCALE_KEYS.SELECT_PAYMENT_TYPE)}>
+          <Select.Option value="one_time">{t(LOCALE_KEYS.ONE_TIME)}</Select.Option>
+          <Select.Option value="installment">{t(LOCALE_KEYS.INSTALLMENT)}</Select.Option>
+          <Select.Option value="monthly">{t(LOCALE_KEYS.MONTHLY)}</Select.Option>
         </Select>
       </Form.Item>
 
       <Form.Item
         name="totalFees"
-        label={t('totalFees')}
-        rules={[{ required: true, message: t('required_field', { field: t('totalFees') }) }]}
+        label={t(LOCALE_KEYS.TOTAL_FEES)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.TOTAL_FEES) }) }]}
       >
         <InputNumber
           style={{ width: '100%' }}
@@ -191,8 +193,8 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
 
       <Form.Item
         name="admissionFee"
-        label={t('admissionFee')}
-        rules={[{ required: true, message: t('required_field', { field: t('admissionFee') }) }]}
+        label={t(LOCALE_KEYS.ADMISSION_FEE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ADMISSION_FEE) }) }]}
       >
         <InputNumber
           style={{ width: '100%' }}
@@ -205,20 +207,20 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
 
       <Form.Item
         name="discountType"
-        label={t('discountType')}
-        rules={[{ required: true, message: t('required_field', { field: t('discountType') }) }]}
+        label={t(LOCALE_KEYS.DISCOUNT_TYPE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DISCOUNT_TYPE) }) }]}
       >
-        <Select placeholder={t('select_discountType')}>
-          <Select.Option value="percent">{t('percent')}</Select.Option>
-          <Select.Option value="fixed">{t('fixed')}</Select.Option>
-          <Select.Option value="none">{t('none')}</Select.Option>
+        <Select placeholder={t(LOCALE_KEYS.SELECT_DISCOUNT_TYPE)}>
+          <Select.Option value="percent">{t(LOCALE_KEYS.PERCENT)}</Select.Option>
+          <Select.Option value="fixed">{t(LOCALE_KEYS.FIXED)}</Select.Option>
+          <Select.Option value="none">{t(LOCALE_KEYS.NONE)}</Select.Option>
         </Select>
       </Form.Item>
 
       <Form.Item
         name="discountAmount"
-        label={t('discountAmount', { defaultValue: 'Discount Amount' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DISCOUNT_AMOUNT) }) }]}
       >
         <InputNumber
           style={{ width: '100%' }}
@@ -229,10 +231,10 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
 
       <Form.Item
         name="currency"
-        label={t('currency')}
-        rules={[{ required: true, message: t('required_field', { field: t('currency') }) }]}
+        label={t(LOCALE_KEYS.CURRENCY)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.CURRENCY) }) }]}
       >
-        <Select placeholder={t('select_currency')}>
+        <Select placeholder={t(LOCALE_KEYS.SELECT_CURRENCY)}>
           <Select.Option value="SAR">SAR</Select.Option>
           <Select.Option value="USD">USD</Select.Option>
           <Select.Option value="EUR">EUR</Select.Option>
@@ -242,17 +244,17 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
 
       <Form.Item
         name="remarks"
-        label={t('remarks')}
+        label={t(LOCALE_KEYS.REMARKS)}
       >
         <Input.TextArea rows={3} />
       </Form.Item>
 
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_field', { field: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
-        <Select placeholder={t('select_status')}>
+        <Select placeholder={t(LOCALE_KEYS.SELECT_STATUS)}>
           <Select.Option value="active">{t('active')}</Select.Option>
           <Select.Option value="inactive">{t('inactive')}</Select.Option>
           <Select.Option value="draft">{t('draft')}</Select.Option>

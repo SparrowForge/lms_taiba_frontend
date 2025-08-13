@@ -2,15 +2,16 @@
 
 import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
-import AuditForm from '@/components/audit/AuditForm';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useAudit} from '@/hooks/useAudit';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
@@ -19,8 +20,8 @@ const AuditEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
   const resolvedParams = React.use(params);
   const router = useRouter();
   const { selectedAudit, detailsStatus, getAuditById } = useAudit();
-  const t = useTranslations();
-  const entityName = t('audit');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.AUDIT, { defaultValue: 'Audit' });
 
   useEffect(() => {
     const auditId = parseInt(resolvedParams.id);
@@ -34,7 +35,7 @@ const AuditEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
             <Spin />
-            <div>{t('loading', { defaultValue: 'Loading...' })} {entityName}</div>
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
@@ -48,9 +49,9 @@ const AuditEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/audit')}>
-                  {t('backToList_name', { name: entityName })}</Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -62,12 +63,7 @@ const AuditEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
-          <AuditForm
-            mode="edit"
-            auditId={parseInt(resolvedParams.id)}
-            initialValues={selectedAudit}
-        />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
       </MainLayout>
     </ProtectedRoute>
   );

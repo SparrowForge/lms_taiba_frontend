@@ -1,9 +1,11 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
 import ScheduleTypeForm from './ScheduleTypeForm';
@@ -25,8 +27,8 @@ const ScheduleTypeFormDrawer: React.FC<Props> = ({
   onSuccess,
 }) => {
   const { getScheduleTypeById, selectedScheduleType } = useScheduleTypes();
-  const t = useTranslations();
-  const entityName = t('scheduleType', { defaultValue: 'Schedule Type' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && scheduleTypeId) {
@@ -46,8 +48,8 @@ const ScheduleTypeFormDrawer: React.FC<Props> = ({
       key={scheduleTypeId} // Force remount when scheduleTypeId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

@@ -2,14 +2,16 @@
 
 import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 
 import {useBranches} from '@/hooks/useBranches';
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 
 import {Status} from '@/types/common';
@@ -36,8 +38,8 @@ const RoleForm: React.FC<RoleFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('role');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createRole, editRole, actionStatus } = useRoles();
@@ -57,7 +59,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
     try {
       if (mode === 'create') {
         await createRole(values as IRoleCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -65,7 +67,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         }
       } else if (mode === 'edit' && roleId) {
         await editRole(roleId, values as IRoleUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -73,7 +75,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -103,18 +105,18 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       <Form.Item
         name="branchId"
-        label={t('branch')}
-        rules={[{ required: true, message: t('required_field', { field: t('branch') }) }]}
+        label={t(LOCALE_KEYS.BRANCH)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BRANCH) }) }]}
       >
         <Select
-          placeholder={t('select_branch')}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
           loading={branches.length === 0}
           showSearch
           filterOption={(input, option) =>
@@ -131,24 +133,24 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_field', { field: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
-        <Input placeholder={t('enter_name', { name: t('name') })} />
+        <Input placeholder={t(LOCALE_KEYS.NAME)} />
       </Form.Item>
 
       <Form.Item
         name="description"
-        label={t('description')}
-        rules={[{ required: true, message: t('required_field', { field: t('description') }) }]}
+        label={t(LOCALE_KEYS.DESCRIPTION)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }) }]}
       >
-        <Input.TextArea placeholder={t('enter_description')} rows={4} />
+        <Input.TextArea placeholder={t(LOCALE_KEYS.DESCRIPTION)} rows={4} />
       </Form.Item>
 
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -158,7 +160,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>{t('cancel')}</Button>
+          <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>
       </Form.Item>
     </Form>

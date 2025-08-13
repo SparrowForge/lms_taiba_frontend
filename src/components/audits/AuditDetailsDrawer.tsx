@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useAudit} from '@/hooks/useAudit';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAudit} from '@/types/audit';
 import {Status} from '@/types/common';
@@ -27,10 +29,10 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedAudit, getAuditById, detailsStatus } = useAudit();
-  const t = useTranslations();
-  const entityName = t('audit', { defaultValue: 'Audit' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.AUDIT, { defaultValue: 'Audit' });
   useEffect(() => {
     if (visible && auditId) {
       getAuditById(auditId);
@@ -53,7 +55,7 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

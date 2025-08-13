@@ -1,10 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useInstitutes} from '@/hooks/useInstitutes';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import InstituteForm from './InstituteForm';
 
@@ -25,8 +27,8 @@ const InstituteFormDrawer: React.FC<Props> = ({
   onSuccess,
 }) => {
   const { getInstituteById, selectedInstitute } = useInstitutes();
-  const t = useTranslations();
-  const entityName = t('institute', { defaultValue: 'Institute' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && instituteId) {
@@ -46,8 +48,8 @@ const InstituteFormDrawer: React.FC<Props> = ({
       key={instituteId} // Force remount when instituteId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

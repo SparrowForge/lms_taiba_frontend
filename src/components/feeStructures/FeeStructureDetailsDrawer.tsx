@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useFeeStructures} from '@/hooks/useFeeStructures';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IFeeStructure} from '@/types/feeStructure';
@@ -27,10 +29,10 @@ const FeeStructureDetailsDrawer: React.FC<FeeStructureDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedFeeStructure, getFeeStructureById, detailsStatus } = useFeeStructures();
-  const t = useTranslations();
-  const entityName = t('feeStructure', { defaultValue: 'Fee Structure' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
   useEffect(() => {
     if (visible && feeStructureId) {
       getFeeStructureById(feeStructureId);
@@ -54,7 +56,7 @@ const FeeStructureDetailsDrawer: React.FC<FeeStructureDetailsDrawerProps> = ({
   return (
     <Drawer
       key={feeStructureId} // Force remount when feeStructureId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

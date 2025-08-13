@@ -1,11 +1,13 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 
 import {Status} from '@/types/common';
@@ -27,10 +29,10 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedRole, getRoleById, detailsStatus } = useRoles();
-  const t = useTranslations();
-  const entityName = t('role', { defaultValue: 'Role' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
   useEffect(() => {
     if (visible && roleId) {
       getRoleById(roleId);
@@ -54,7 +56,7 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
   return (
     <Drawer
       key={roleId} // Force remount when roleId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

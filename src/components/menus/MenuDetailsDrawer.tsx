@@ -1,11 +1,13 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
 import {Status} from '@/types/common';
@@ -27,10 +29,10 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedMenu, getMenuById, detailsStatus } = useMenus();
-  const t = useTranslations();
-  const entityName = t('menu', { defaultValue: 'Menu' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   useEffect(() => {
     if (visible && menuId) {
       getMenuById(menuId);
@@ -54,7 +56,7 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
   return (
     <Drawer
       key={menuId} // Force remount when menuId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

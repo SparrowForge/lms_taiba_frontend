@@ -2,10 +2,12 @@
 
 import {Button, Form, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 import {useSubjects} from '@/hooks/useSubjects';
@@ -34,8 +36,8 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('semesterSubject');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createSemesterSubject, editSemesterSubject, actionStatus } = useSemesterSubjects();
@@ -57,7 +59,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
     try {
       if (mode === 'create') {
         await createSemesterSubject(values as ISemesterSubjectCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -65,7 +67,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
         }
       } else if (mode === 'edit' && semesterSubjectId) {
         await editSemesterSubject(semesterSubjectId, values as ISemesterSubjectUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -73,7 +75,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -99,8 +101,8 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
@@ -112,12 +114,12 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
     >
       <Form.Item
         name="semesterId"
-        label={t('semester')}
-        rules={[{ required: true, message: t('required_name', { name: t('semester') }) }]}
+        label={t(LOCALE_KEYS.SEMESTER)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('semester') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -132,12 +134,12 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
       </Form.Item>
       <Form.Item
         name="subjectId"
-        label={t('subject')}
-        rules={[{ required: true, message: t('required_name', { name: t('subject') }) }]}
+        label={t(LOCALE_KEYS.SUBJECT)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SUBJECT) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('subject') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -156,7 +158,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
             {getSubmitText()}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-            {t('cancel')}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>

@@ -3,13 +3,15 @@
 import {Button, DatePicker, Form, Input, Select} from 'antd';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useBranches} from '@/hooks/useBranches';
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 import {useStudents} from '@/hooks/useStudents';
 
 import {Status} from '@/types/common';
@@ -36,8 +38,8 @@ const StudentForm: React.FC<StudentFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('student');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createStudent, editStudent, actionStatus } = useStudents();
@@ -66,7 +68,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
       if (mode === 'create') {
         await createStudent(formData as IStudentCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -74,7 +76,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
         }
       } else if (mode === 'edit' && studentId) {
         await editStudent(studentId, formData as IStudentUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -82,7 +84,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -108,8 +110,8 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
@@ -123,48 +125,48 @@ const StudentForm: React.FC<StudentFormProps> = ({
     >
       <Form.Item
         name="applicationNo"
-        label={t('application_no', { defaultValue: 'Application No' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.APPLICATION_NO, { defaultValue: 'Application No' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.APPLICATION_NO) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="name"
-        label={t('name', { defaultValue: 'Name' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.NAME, { defaultValue: 'Name' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="cardNo"
-        label={t('card_no', { defaultValue: 'Card No' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.CARD_NO, { defaultValue: 'Card No' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.CARD_NO) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="registrationNo"
-        label={t('registration_no', { defaultValue: 'Registration No' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.REGISTRATION_NO, { defaultValue: 'Registration No' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.REGISTRATION_NO) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="admissionDate"
-        label={t('admission_date', { defaultValue: 'Admission Date' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.ADMISSION_DATE, { defaultValue: 'Admission Date' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ADMISSION_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} />
       </Form.Item>
 
       <Form.Item
         name="courseId"
-        label={t('course', { defaultValue: 'Course' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.COURSE) }) }]}
       >
         <Select
           placeholder={t('select_course', { defaultValue: 'Select Course' })}
@@ -177,11 +179,11 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
       <Form.Item
         name="batchId"
-        label={t('batch', { defaultValue: 'Batch' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
       >
         <Select
-          placeholder={t('select_batch', { defaultValue: 'Select Batch' })}
+          placeholder={t(LOCALE_KEYS.SELECT_BATCH, { defaultValue: 'Select Batch' })}
           options={batches.map((batch) => ({
             label: batch.name,
             value: batch.id,
@@ -191,11 +193,11 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
       <Form.Item
         name="branchId"
-        label={t('branch', { defaultValue: 'Branch' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BRANCH) }) }]}
       >
         <Select
-          placeholder={t('select_branch', { defaultValue: 'Select Branch' })}
+          placeholder={t(LOCALE_KEYS.SELECT_BRANCH, { defaultValue: 'Select Branch' })}
           options={branches.map((branch) => ({
             label: branch.name,
             value: branch.id,
@@ -205,30 +207,30 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
       <Form.Item
         name="referenceNo"
-        label={t('reference_no', { defaultValue: 'Reference No' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.REFERENCE_NO, { defaultValue: 'Reference No' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.REFERENCE_NO) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="admissionSource"
-        label={t('admission_source', { defaultValue: 'Admission Source' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.ADMISSION_SOURCE, { defaultValue: 'Admission Source' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ADMISSION_SOURCE) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="status"
-        label={t('status', { defaultValue: 'Status' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.STATUS, { defaultValue: 'Status' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <Select
-          placeholder={t('select_status', { defaultValue: 'Select Status' })}
+          placeholder={t(LOCALE_KEYS.SELECT_STATUS, { defaultValue: 'Select Status' })}
           options={[
-            { label: t('active', { defaultValue: 'Active' }), value: 'active' },
-            { label: t('inactive', { defaultValue: 'Inactive' }), value: 'inactive' },
+            { label: t(LOCALE_KEYS.ACTIVE, { defaultValue: 'Active' }), value: 'active' },
+            { label: t(LOCALE_KEYS.INACTIVE, { defaultValue: 'Inactive' }), value: 'inactive' },
           ]}
         />
       </Form.Item>
@@ -236,7 +238,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
       <Form.Item>
         <div className="flex justify-end space-x-2">
           <Button onClick={handleCancel}>
-            {t('cancel', { defaultValue: 'Cancel' })}
+            {t(LOCALE_KEYS.CANCEL, { defaultValue: 'Cancel' })}
           </Button>
           <Button
             type="primary"

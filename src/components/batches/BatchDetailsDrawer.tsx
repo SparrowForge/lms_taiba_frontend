@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useBatches} from '@/hooks/useBatches';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
 import {Status} from '@/types/common';
@@ -27,10 +29,10 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedBatch, getBatchById, detailsStatus } = useBatches();
-  const t = useTranslations();
-  const entityName = t('batch', { defaultValue: 'Batch' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   useEffect(() => {
     if (visible && batchId) {
       getBatchById(batchId);
@@ -54,7 +56,7 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
   return (
     <Drawer
       key={batchId} // Force remount when batchId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

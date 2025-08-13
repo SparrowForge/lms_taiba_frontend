@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IStudent} from '@/types/student';
 
@@ -23,9 +25,9 @@ export const useCreateStudentDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<IStudent> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
-    name: t('student'),
+    name: t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' }),
     route: '/students',
     getDisplayName: getStudentDisplayName,
     getInitials: getStudentInitials,
@@ -37,25 +39,25 @@ export const useCreateStudentDetailsConfig = (
     onBack,
     fields: [
       { key: 'id', label: 'ID' },
-      { key: 'applicationNo', label: t('application_no') },
-      { key: 'name', label: t('name') },
-      { key: 'cardNo', label: t('card_no') },
-      { key: 'registrationNo', label: t('registration_no') },
-      { key: 'admissionDate', label: t('admission_date') },
-      { key: 'course.name', label: t('course') },
-      { key: 'batch.name', label: t('batch') },
-      { key: 'branch.name', label: t('branch') },
-      { key: 'referenceNo', label: t('reference_no') },
-      { key: 'admissionSource', label: t('admission_source') },
-      { key: 'status', label: t('status') },
+      { key: 'applicationNo', label: t(LOCALE_KEYS.APPLICATION_NO) },
+      { key: 'name', label: t(LOCALE_KEYS.NAME) },
+      { key: 'cardNo', label: t(LOCALE_KEYS.CARD_NO) },
+      { key: 'registrationNo', label: t(LOCALE_KEYS.REGISTRATION_NO) },
+      { key: 'admissionDate', label: t(LOCALE_KEYS.ADMISSION_DATE) },
+      { key: 'course.name', label: t(LOCALE_KEYS.COURSE) },
+      { key: 'batch.name', label: t(LOCALE_KEYS.BATCH) },
+      { key: 'branch.name', label: t(LOCALE_KEYS.BRANCH) },
+      { key: 'referenceNo', label: t(LOCALE_KEYS.REFERENCE_NO) },
+      { key: 'admissionSource', label: t(LOCALE_KEYS.ADMISSION_SOURCE) },
+      { key: 'status', label: t(LOCALE_KEYS.STATUS) },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

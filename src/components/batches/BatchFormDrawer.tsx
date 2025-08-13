@@ -1,10 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useBatches} from '@/hooks/useBatches';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import BatchForm from './BatchForm';
 
@@ -24,10 +26,10 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getBatchById, selectedBatch } = useBatches();
-  const t = useTranslations();
-  const entityName = t('batch', { defaultValue: 'Batch' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   useEffect(() => {
     if (visible && mode === 'edit' && batchId) {
       getBatchById(batchId);
@@ -47,8 +49,8 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
       key={batchId} // Force remount when batchId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

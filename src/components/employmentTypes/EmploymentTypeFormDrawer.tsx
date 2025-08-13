@@ -1,10 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import EmploymentTypeForm from './EmploymentTypeForm';
 
@@ -25,8 +27,8 @@ const EmploymentTypeFormDrawer: React.FC<Props> = ({
   onSuccess,
 }) => {
   const { getEmploymentTypeById, selectedEmploymentType } = useEmploymentTypes();
-  const t = useTranslations();
-  const entityName = t('employmentType', { defaultValue: 'Employment Type' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && employmentTypeId) {
@@ -46,8 +48,8 @@ const EmploymentTypeFormDrawer: React.FC<Props> = ({
       key={employmentTypeId} // Force remount when employmentTypeId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

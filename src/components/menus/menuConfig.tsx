@@ -1,4 +1,6 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IMenu} from '@/types/menu';
 
@@ -14,8 +16,8 @@ export const useCreateMenuDetailsConfig = (
   } = {},
 ) => {
   const { embedded = false, onEdit } = options;
-  const t = useTranslations();
-  const entityName = t('menu', { defaultValue: 'Menu' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   return {
     name: entityName,
     route: '/menus',
@@ -27,28 +29,28 @@ export const useCreateMenuDetailsConfig = (
     embedded,
     onEdit,
     fields: [
-      { key: 'id', label: t('id') },
-      { key: 'name', label: t('name') },
-      { key: 'route', label: t('route') },
+      { key: 'id', label: t(LOCALE_KEYS.ID) },
+      { key: 'name', label: t(LOCALE_KEYS.NAME) },
+      { key: 'route', label: t(LOCALE_KEYS.ROUTE) },
       {
         key: 'panel.name',
-        label: t('panel'),
+        label: t(LOCALE_KEYS.PANEL),
         render: (value: string, item: IMenu) => item?.panel?.name || 'N/A',
       },
       {
         key: 'parent.name',
-        label: t('parent'),
+        label: t(LOCALE_KEYS.PARENT),
         render: (value: string, item: IMenu) => item?.parent?.name || 'N/A',
       },
-      { key: 'sortOrder', label: t('sortOrder') },
+      { key: 'sortOrder', label: t(LOCALE_KEYS.SORT_ORDER) },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

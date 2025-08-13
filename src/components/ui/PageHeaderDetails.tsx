@@ -1,7 +1,11 @@
 import {ArrowLeftOutlined, EditOutlined} from '@ant-design/icons';
 import {Button, Card, Typography} from 'antd';
-import {useTranslations} from 'next-intl';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
+
 
 const { Title } = Typography;
 
@@ -20,7 +24,7 @@ const PageHeaderDetails: React.FC<PageHeaderDetailsProps> = ({
   editText,
   backText,
 }) => {
-  const t = useTranslations();
+  const { t } = useLocalization();
 
   return (
     <Card size="small">
@@ -34,7 +38,7 @@ const PageHeaderDetails: React.FC<PageHeaderDetailsProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           {onBack && (
             <Button icon={<ArrowLeftOutlined />} onClick={onBack} type="text">
-              {backText || t('back')}
+              {backText || t(LOCALE_KEYS.BACK)}
             </Button>
           )}
           <Title level={4} style={{ margin: 0}}>
@@ -43,7 +47,7 @@ const PageHeaderDetails: React.FC<PageHeaderDetailsProps> = ({
         </div>
         {onEdit && (
           <Button type="primary" icon={<EditOutlined />} onClick={onEdit}>
-            {editText || t('edit')}
+            {editText || t(LOCALE_KEYS.EDIT)}
           </Button>
         )}
       </div>

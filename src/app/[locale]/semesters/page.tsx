@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -13,6 +14,7 @@ import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
 import {IBatch} from '@/types/batch';
@@ -20,8 +22,8 @@ import {Status} from '@/types/common';
 import {ISemester} from '@/types/semester';
 
 export default function SemestersPage() {
-  const t = useTranslations();
-  const entityName = t('semester', { defaultValue: 'Semester' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -75,7 +77,7 @@ export default function SemestersPage() {
 
   const config: EntityConfig<ISemester> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/semesters',
     searchFields: ['name', 'termNo', 'status'] as (keyof ISemester)[],
     onSearch: (searchText: string) => {
@@ -88,62 +90,62 @@ export default function SemestersPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('name'),
+        title: t(LOCALE_KEYS.NAME),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('termNo'),
+        title: t(LOCALE_KEYS.TERM_NO),
         dataIndex: 'termNo',
         key: 'termNo',
         render: (text: number) => <span>{text}</span>,
       },
       {
-        title: t('startDate'),
+        title: t(LOCALE_KEYS.START_DATE),
         dataIndex: 'startDate',
         key: 'startDate',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('endDate'),
+        title: t(LOCALE_KEYS.END_DATE),
         dataIndex: 'endDate',
         key: 'endDate',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
         render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('batch'),
+        title: t(LOCALE_KEYS.BATCH),
         dataIndex: 'batch',
         key: 'batch',
         render: (batch: IBatch) => <span>{batch?.name || 'N/A'}</span>,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (semester: ISemester) => (
           <EntityActions
             onView={() => router.push(`/semesters/${semester.id}`)}
             onViewModal={handleViewDetails}
-            viewText={t('view')}
-            editText={t('edit')}
-            deleteText={t('delete')}
-            viewModalText={t('quickView')}
+            viewText={t(LOCALE_KEYS.VIEW)}
+            editText={t(LOCALE_KEYS.EDIT)}
+            deleteText={t(LOCALE_KEYS.DELETE)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/semesters/${semester.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeSemester(semester.id)}
             id={semester.id}
           />
@@ -158,7 +160,7 @@ export default function SemestersPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadSemesters({ page: 1, limit: 10 })}

@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateCourseDetailsConfig} from '@/components/courses/courseConfig';
@@ -10,18 +11,19 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 
-export default function CourseDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function CourseDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const { selectedCourse, detailsStatus, getCourseById } = useCourses();
-  const t = useTranslations();
-  const entityName = t('course');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
 
   const resolvedParams = React.use(params);
   const courseId = parseInt(resolvedParams.id);
@@ -35,7 +37,7 @@ export default function CourseDetailPage({
     selectedCourse,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
-      ? detailsStatus.message || t('failed_name', { name: entityName })
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 

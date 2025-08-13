@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateFacultyDetailsConfig} from '@/components/faculties/facultyConfig';
@@ -10,18 +11,19 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IFaculty} from '@/types/faculty';
 
-export default function FacultyDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function FacultyDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const { selectedFaculty, detailsStatus, getFacultyById } = useFaculties();
-  const t = useTranslations();
-  const entityName = t('faculty');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
 
   const resolvedParams = React.use(params);
   const facultyId = parseInt(resolvedParams.id);
@@ -35,7 +37,7 @@ export default function FacultyDetailPage({
     selectedFaculty,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
-      ? detailsStatus.message || t('failed_name', { name: entityName })
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 

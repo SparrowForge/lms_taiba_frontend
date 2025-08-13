@@ -3,12 +3,14 @@
 import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
 import {useFeeStructures} from '@/hooks/useFeeStructures';
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
 import {Status} from '@/types/common';
@@ -34,8 +36,8 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('feeInstallmentPlan');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createFeeInstallmentPlan, editFeeInstallmentPlan, actionStatus } =
@@ -58,7 +60,7 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
     try {
       if (mode === 'create') {
         await createFeeInstallmentPlan(values as IFeeInstallmentPlanCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -66,7 +68,7 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
         }
       } else if (mode === 'edit' && feeInstallmentPlanId) {
         await editFeeInstallmentPlan(feeInstallmentPlanId, values as IFeeInstallmentPlanUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -74,7 +76,7 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -104,8 +106,8 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? {
@@ -114,11 +116,11 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
     } : undefined}>
       <Form.Item
         name="feeStructureId"
-        label={t('feeStructure', { defaultValue: 'Fee Structure' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.FEE_STRUCTURE) }) }]}
       >
         <Select
-          placeholder={t('select_feeStructure', { defaultValue: 'Select Fee Structure' })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FEE_STRUCTURE) })}
           options={feeStructures.map((feeStructure) => ({
             label: feeStructure.templateName,
             value: feeStructure.id,
@@ -128,11 +130,11 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
 
       <Form.Item
         name="semesterId"
-        label={t('semester', { defaultValue: 'Semester' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
       >
         <Select
-          placeholder={t('select_semester', { defaultValue: 'Select Semester' })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
           options={semesters.map((semester) => ({
             label: semester.name,
             value: semester.id,
@@ -142,32 +144,32 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
 
       <Form.Item
         name="sequenceNo"
-        label={t('sequenceNo', { defaultValue: 'Sequence No' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.SEQUENCE_NO, { defaultValue: 'Sequence No' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SEQUENCE_NO) }) }]}
       >
         <InputNumber style={{ width: '100%' }} min={1} />
       </Form.Item>
 
       <Form.Item
         name="paymentLabel"
-        label={t('paymentLabel', { defaultValue: 'Payment Label' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.PAYMENT_LABEL, { defaultValue: 'Payment Label' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PAYMENT_LABEL) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="durationMonths"
-        label={t('durationMonths', { defaultValue: 'Duration (Months)' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.DURATION_MONTHS, { defaultValue: 'Duration (Months)' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DURATION_MONTHS) }) }]}
       >
         <InputNumber style={{ width: '100%' }} min={1} />
       </Form.Item>
 
       <Form.Item
         name="amount"
-        label={t('amount', { defaultValue: 'Amount' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.AMOUNT, { defaultValue: 'Amount' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.AMOUNT) }) }]}
       >
         <InputNumber
           style={{ width: '100%' }}
@@ -178,8 +180,8 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
 
       <Form.Item
         name="discountAmount"
-        label={t('discountAmount', { defaultValue: 'Discount Amount' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DISCOUNT_AMOUNT) }) }]}
       >
         <InputNumber
           style={{ width: '100%' }}
@@ -190,8 +192,8 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
 
       <Form.Item
         name="dueDate"
-        label={t('dueDate', { defaultValue: 'Due Date' })}
-        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+        label={t(LOCALE_KEYS.DUE_DATE, { defaultValue: 'Due Date' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DUE_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} />
       </Form.Item>
@@ -201,7 +203,7 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>{t('cancel')}</Button>
+          <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>
       </Form.Item>
     </Form>

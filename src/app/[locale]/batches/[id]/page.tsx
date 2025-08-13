@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateBatchDetailsConfig} from '@/components/batches/batchConfig';
@@ -10,18 +11,19 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useBatches} from '@/hooks/useBatches';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
 import {Status} from '@/types/common';
 
-export default function BatchDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function BatchDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const { selectedBatch, detailsStatus, getBatchById } = useBatches();
-  const t = useTranslations();
-  const entityName = t('batch');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
 
   const resolvedParams = React.use(params);
   const batchId = parseInt(resolvedParams.id);
@@ -35,7 +37,7 @@ export default function BatchDetailPage({
     selectedBatch,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
-      ? detailsStatus.message || t('failed_name', { name: entityName })
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 

@@ -1,9 +1,11 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 
 import RoleForm from './RoleForm';
@@ -24,10 +26,10 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getRoleById, selectedRole } = useRoles();
-  const t = useTranslations();
-  const entityName = t('role', { defaultValue: 'Role' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
   useEffect(() => {
     if (visible && mode === 'edit' && roleId) {
       getRoleById(roleId);
@@ -47,8 +49,8 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
       key={roleId} // Force remount when roleId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

@@ -1,11 +1,13 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
 import {Status} from '@/types/common';
@@ -27,10 +29,10 @@ const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerP
   onClose,
   onEdit,
 }) => {
-  
+
   const { selectedRoleMenuPermission, getRoleMenuPermissionById, detailsStatus } = useRoleMenuPermissions();
-  const t = useTranslations();
-  const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   useEffect(() => {
     if (visible && roleMenuPermissionId) {
       getRoleMenuPermissionById(roleMenuPermissionId);
@@ -54,7 +56,7 @@ const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerP
   return (
     <Drawer
       key={roleMenuPermissionId} // Force remount when roleMenuPermissionId changes
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

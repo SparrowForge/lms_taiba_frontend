@@ -2,8 +2,9 @@
 
 import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import FeeInstallmentPlanForm from '@/components/feeInstallmentPlans/FeeInstallmentPlanForm';
@@ -11,6 +12,7 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
@@ -20,8 +22,8 @@ const FeeInstallmentPlanEditPage: React.FC<{ params: Promise<{ id: string }> }> 
   const resolvedParams = React.use(params);
   const router = useRouter();
   const { selectedFeeInstallmentPlan, detailsStatus, getFeeInstallmentPlanById } = useFeeInstallmentPlans();
-  const t = useTranslations();
-  const entityName = t('feeInstallmentPlan');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
 
   const id = parseInt(resolvedParams.id);
 
@@ -35,7 +37,7 @@ const FeeInstallmentPlanEditPage: React.FC<{ params: Promise<{ id: string }> }> 
         <MainLayout>
         <div style={{ padding: '24px', textAlign: 'center' }}>
             <Spin />
-            <div>{t('loading', { defaultValue: 'Loading...' })} {entityName}</div>
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
@@ -49,9 +51,9 @@ const FeeInstallmentPlanEditPage: React.FC<{ params: Promise<{ id: string }> }> 
         <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/addresses')}>
-                  {t('backToList_name', { name: entityName })}
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}
                 </Button>
               </div>
             </Card>
@@ -64,7 +66,7 @@ const FeeInstallmentPlanEditPage: React.FC<{ params: Promise<{ id: string }> }> 
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <FeeInstallmentPlanForm
             mode="edit"
             feeInstallmentPlanId={selectedFeeInstallmentPlan.id}

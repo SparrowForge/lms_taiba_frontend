@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -9,19 +10,20 @@ import {useCreateSubjectDetailsConfig} from '@/components/subjects/subjectConfig
 import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSubjects} from '@/hooks/useSubjects';
 
 import {Status} from '@/types/common';
 import {ISubject} from '@/types/subject';
 
-export default function SubjectDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function SubjectDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const { selectedSubject, detailsStatus, getSubjectById } = useSubjects();
-  const t = useTranslations();
-  const entityName = t('subject');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
 
   const resolvedParams = React.use(params);
   const subjectId = parseInt(resolvedParams.id);
@@ -35,7 +37,7 @@ export default function SubjectDetailPage({
     selectedSubject,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
-      ? detailsStatus.message || t('failed_name', { name: entityName })
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 

@@ -1,10 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useBranches} from '@/hooks/useBranches';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import BranchForm from './BranchForm';
 
@@ -24,10 +26,10 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getBranchById, selectedBranch } = useBranches();
-  const t = useTranslations();
-  const entityName = t('branch', { defaultValue: 'Branch' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
   useEffect(() => {
     if (visible && mode === 'edit' && branchId) {
       getBranchById(branchId);
@@ -47,8 +49,8 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
       key={branchId} // Force remount when branchId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

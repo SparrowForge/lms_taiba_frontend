@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -12,6 +13,7 @@ import StudentFormDrawer from '@/components/students/StudentFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useStudents} from '@/hooks/useStudents';
 
 import {Status} from '@/types/common';
@@ -19,8 +21,8 @@ import {IStudent} from '@/types/student';
 
 
 export default function StudentsPage() {
-  const t = useTranslations();
-  const entityName = t('student', { defaultValue: 'Student' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -73,7 +75,7 @@ export default function StudentsPage() {
 
   const config: EntityConfig<IStudent> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/students',
     searchFields: ['name', 'applicationNo', 'cardNo', 'registrationNo'] as (keyof IStudent)[],
     onSearch: (searchText: string) => {
@@ -86,71 +88,71 @@ export default function StudentsPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('application_no', { defaultValue: 'Application No' }),
+        title: t(LOCALE_KEYS.APPLICATION_NO, { defaultValue: 'Application No' }),
         dataIndex: 'applicationNo',
         key: 'applicationNo',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('name', { defaultValue: 'Name' }),
+        title: t(LOCALE_KEYS.NAME, { defaultValue: 'Name' }),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('card_no', { defaultValue: 'Card No' }),
+        title: t(LOCALE_KEYS.CARD_NO, { defaultValue: 'Card No' }),
         dataIndex: 'cardNo',
         key: 'cardNo',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('registration_no', { defaultValue: 'Registration No' }),
+        title: t(LOCALE_KEYS.REGISTRATION_NO, { defaultValue: 'Registration No' }),
         dataIndex: 'registrationNo',
         key: 'registrationNo',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('course'),
+        title: t(LOCALE_KEYS.COURSE),
         dataIndex: ['course', 'name'],
         key: 'course',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('batch'),
+        title: t(LOCALE_KEYS.BATCH),
         dataIndex: ['batch', 'name'],
         key: 'batch',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('branch'),
+        title: t(LOCALE_KEYS.BRANCH),
         dataIndex: ['branch', 'name'],
         key: 'branch',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
         render: (status: string) => (
           <span className={`px-2 py-1 rounded text-xs font-medium ${
             status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }`}>
-            {t(status, { defaultValue: status })}
+            {t(LOCALE_KEYS.STATUS, { defaultValue: status })}
           </span>
         ),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (student: IStudent) => (
           <EntityActions
             onView={() => router.push(`/students/${student.id}`)}
             onViewModal={handleViewDetails}
-            viewModalText={t('quickView')}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/students/${student.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeStudent(student.id)}
             id={student.id}
           />
@@ -165,7 +167,7 @@ export default function StudentsPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadStudents({ page: 1, limit: 10 })}

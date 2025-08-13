@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -9,19 +10,20 @@ import {useCreateSemesterSubjectDetailsConfig} from '@/components/semesterSubjec
 import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 
 import {Status} from '@/types/common';
 import {ISemesterSubject} from '@/types/semesterSubject';
 
-export default function SemesterSubjectDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function SemesterSubjectDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const { selectedSemesterSubject, detailsStatus, getSemesterSubjectById } = useSemesterSubjects();
-  const t = useTranslations();
-  const entityName = t('semesterSubject');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
 
   const resolvedParams = React.use(params);
   const semesterSubjectId = parseInt(resolvedParams.id);
@@ -35,7 +37,7 @@ export default function SemesterSubjectDetailPage({
     selectedSemesterSubject,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
-      ? detailsStatus.message || t('failed_name', { name: entityName })
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 

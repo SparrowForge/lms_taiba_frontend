@@ -3,14 +3,16 @@
 import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch, IBatchCreate, IBatchUpdate} from '@/types/batch';
 import {Status} from '@/types/common';
@@ -36,8 +38,8 @@ const BatchForm: React.FC<BatchFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('batch');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createBatch, editBatch, actionStatus } = useBatches();
@@ -66,7 +68,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
       };
       if (mode === 'create') {
         await createBatch(payload as IBatchCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -74,7 +76,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
         }
       } else if (mode === 'edit' && batchId) {
         await editBatch(batchId, payload as IBatchUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -82,7 +84,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -108,8 +110,8 @@ const BatchForm: React.FC<BatchFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
@@ -125,12 +127,12 @@ const BatchForm: React.FC<BatchFormProps> = ({
     >
       <Form.Item
         name="courseId"
-        label={t('course')}
-        rules={[{ required: true, message: t('required_name', { name: t('course') }) }]}
+        label={t(LOCALE_KEYS.COURSE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.COURSE) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('course') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -145,57 +147,57 @@ const BatchForm: React.FC<BatchFormProps> = ({
       </Form.Item>
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_name', { name: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="year"
-        label={t('year')}
-        rules={[{ required: true, message: t('required_name', { name: t('year') }) }]}
+        label={t(LOCALE_KEYS.YEAR)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.YEAR) }) }]}
       >
         <InputNumber min={2000} max={2100} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="session"
-        label={t('session')}
-        rules={[{ required: true, message: t('required_name', { name: t('session') }) }]}
+        label={t(LOCALE_KEYS.SESSION)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SESSION) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="intakeCapacity"
-        label={t('intakeCapacity')}
-        rules={[{ required: true, message: t('required_name', { name: t('intakeCapacity') }) }]}
+        label={t(LOCALE_KEYS.INTAKE_CAPACITY)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INTAKE_CAPACITY) }) }]}
       >
         <InputNumber min={1} max={10000} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="startDate"
-        label={t('startDate')}
-        rules={[{ required: true, message: t('required_name', { name: t('startDate') }) }]}
+        label={t(LOCALE_KEYS.START_DATE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.START_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
       <Form.Item
         name="endDate"
-        label={t('endDate')}
-        rules={[{ required: true, message: t('required_name', { name: t('endDate') }) }]}
+        label={t(LOCALE_KEYS.END_DATE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.END_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect />
       </Form.Item>
       <Form.Item
         name="remarks"
-        label={t('remarks')}
-        rules={[{ required: true, message: t('required_name', { name: t('remarks') }) }]}
+        label={t(LOCALE_KEYS.REMARKS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.REMARKS) }) }]}
       >
         <Input.TextArea rows={3} />
       </Form.Item>
@@ -205,7 +207,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
             {getSubmitText()}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-            {t('cancel')}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>

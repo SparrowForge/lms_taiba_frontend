@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IFeeStructure} from '@/types/feeStructure';
 
@@ -23,9 +25,9 @@ export const useCreateFeeStructureDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<IFeeStructure> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
-    name: t('feeStructure'),
+    name: t(LOCALE_KEYS.FEE_STRUCTURE),
     route: '/fee-structures',
     getDisplayName: getFeeStructureDisplayName,
     getInitials: getFeeStructureInitials,
@@ -37,26 +39,26 @@ export const useCreateFeeStructureDetailsConfig = (
     onBack,
     fields: [
       { key: 'id', label: 'ID' },
-      { key: 'templateName', label: t('template_name') },
-      { key: 'batchName', label: t('batch') },
-      { key: 'semesterName', label: t('semester') },
-      { key: 'academicYear', label: t('academic_year') },
-      { key: 'paymentType', label: t('payment_type') },
-      { key: 'totalFees', label: t('total_fees') },
-      { key: 'admissionFee', label: t('admission_fee') },
-      { key: 'discountType', label: t('discount_type') },
-      { key: 'discountAmount', label: t('discount_amount') },
-      { key: 'currency', label: t('currency') },
-      { key: 'remarks', label: t('remarks') },
-      { key: 'status', label: t('status') },
+      { key: 'templateName', label: t(LOCALE_KEYS.TEMPLATE_NAME) },
+      { key: 'batchName', label: t(LOCALE_KEYS.BATCH) },
+      { key: 'semesterName', label: t(LOCALE_KEYS.SEMESTER) },
+      { key: 'academicYear', label: t(LOCALE_KEYS.ACADEMIC_YEAR) },
+      { key: 'paymentType', label: t(LOCALE_KEYS.PAYMENT_TYPE) },
+      { key: 'totalFees', label: t(LOCALE_KEYS.TOTAL_FEES) },
+      { key: 'admissionFee', label: t(LOCALE_KEYS.ADMISSION_FEE) },
+      { key: 'discountType', label: t(LOCALE_KEYS.DISCOUNT_TYPE) },
+      { key: 'discountAmount', label: t(LOCALE_KEYS.DISCOUNT_AMOUNT) },
+      { key: 'currency', label: t(LOCALE_KEYS.CURRENCY) },
+      { key: 'remarks', label: t(LOCALE_KEYS.REMARKS) },
+      { key: 'status', label: t(LOCALE_KEYS.STATUS) },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

@@ -1,9 +1,11 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
 import SemesterForm from './SemesterForm';
@@ -24,10 +26,10 @@ const SemesterFormDrawer: React.FC<SemesterFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getSemesterById, selectedSemester } = useSemesters();
-  const t = useTranslations();
-  const entityName = t('semester', { defaultValue: 'Semester' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   useEffect(() => {
     if (visible && mode === 'edit' && semesterId) {
       getSemesterById(semesterId);
@@ -47,8 +49,8 @@ const SemesterFormDrawer: React.FC<SemesterFormDrawerProps> = ({
       key={semesterId} // Force remount when semesterId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

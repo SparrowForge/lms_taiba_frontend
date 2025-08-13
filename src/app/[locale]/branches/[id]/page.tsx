@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateBranchDetailsConfig} from '@/components/branches/branchConfig';
@@ -10,18 +11,19 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useBranches} from '@/hooks/useBranches';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBranch} from '@/types/branch';
 import {Status} from '@/types/common';
 
-export default function BranchDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function BranchDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const { selectedBranch, detailsStatus, getBranchById } = useBranches();
-  const t = useTranslations();
-  const entityName = t('branch');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
 
   const resolvedParams = React.use(params);
   const branchId = parseInt(resolvedParams.id);
@@ -35,7 +37,7 @@ export default function BranchDetailPage({
     selectedBranch,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
-      ? detailsStatus.message || t('failed_name', { name: entityName })
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 

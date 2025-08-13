@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import DepartmentDetailsDrawer from '@/components/departments/DepartmentDetailsDrawer';
@@ -14,14 +15,15 @@ import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
 import {useDepartments} from '@/hooks/useDepartments';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBranch} from '@/types/branch';
 import {Status} from '@/types/common';
 import {IDepartment} from '@/types/department';
 
 export default function DepartmentsPage() {
-  const t = useTranslations();
-  const entityName = t('department', { defaultValue: 'Department' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -78,7 +80,7 @@ export default function DepartmentsPage() {
 
   const config: EntityConfig<IDepartment> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/departments',
     searchFields: ['name', 'code', 'status'] as (keyof IDepartment)[],
     onSearch: (searchText: string) => {
@@ -91,66 +93,66 @@ export default function DepartmentsPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('name'),
+        title: t(LOCALE_KEYS.NAME),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('code'),
+        title: t(LOCALE_KEYS.CODE),
         dataIndex: 'code',
         key: 'code',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('branch'),
+        title: t(LOCALE_KEYS.BRANCH),
         key: 'branch',
         render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
       },
       {
-        title: t('head'),
+        title: t(LOCALE_KEYS.HEAD),
         key: 'head',
         render: (department: IDepartment) => <span>{department.head?.fullName || 'N/A'}</span>,
       },
       {
-        title: t('email'),
+        title: t(LOCALE_KEYS.EMAIL),
         dataIndex: 'email',
         key: 'email',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('phone'),
+        title: t(LOCALE_KEYS.PHONE),
         dataIndex: 'phone',
         key: 'phone',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
         render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (department: IDepartment) => (
           <EntityActions
             onView={() => router.push(`/departments/${department.id}`)}
             onViewModal={handleViewDetails}
-            viewText={t('view')}
-            editText={t('edit')}
-            deleteText={t('delete')}
-            viewModalText={t('quickView')}
+            viewText={t(LOCALE_KEYS.VIEW)}
+            editText={t(LOCALE_KEYS.EDIT)}
+            deleteText={t(LOCALE_KEYS.DELETE)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/departments/${department.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeDepartment(department.id)}
             id={department.id}
           />
@@ -165,7 +167,7 @@ export default function DepartmentsPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadDepartments({ page: 1, limit: 10 })}

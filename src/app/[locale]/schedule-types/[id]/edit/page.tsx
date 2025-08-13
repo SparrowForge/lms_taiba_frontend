@@ -2,14 +2,16 @@
 
 import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import ScheduleTypeForm from '@/components/scheduleTypes/ScheduleTypeForm';
 import {PageHeader} from '@/components/ui/PageHeader';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
 import {Status} from '@/types/common';
@@ -19,8 +21,8 @@ const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
   const resolvedParams = React.use(params);
   const router = useRouter();
   const { selectedScheduleType, detailsStatus, getScheduleTypeById } = useScheduleTypes();
-  const t = useTranslations();
-  const entityName = t('scheduleType');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
   useEffect(() => {
     const scheduleTypeId = parseInt(resolvedParams.id);
@@ -34,7 +36,7 @@ const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
             <Spin />
-            <div>{t('loading', { defaultValue: 'Loading...' })} {entityName}</div>
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
@@ -48,9 +50,9 @@ const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/schedule-types')}>
-                  {t('backToList_name', { name: entityName })}</Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -62,7 +64,7 @@ const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <ScheduleTypeForm
             mode="edit"
             scheduleTypeId={parseInt(resolvedParams.id)}

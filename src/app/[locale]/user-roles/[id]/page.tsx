@@ -1,13 +1,15 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {EntityDetails} from '@/components/ui/EntityDetails';
 import {useCreateUserRoleDetailsConfig} from '@/components/userRoles/userRoleConfig';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';
 
 import {Status} from '@/types/common';
@@ -23,8 +25,8 @@ const UserRoleDetailPage: React.FC<UserRoleDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
   const { userRoles, listStatus, loadUserRoles, selectedUserRole, loadUserRole } = useUserRoles();
   const [userRole, setUserRole] = useState<IUserRole | null>(null);
-  const t = useTranslations();
-  const entityName = t('userRole');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER_ROLE, { defaultValue: 'User Role' });
 
   useEffect(() => {
     const userRoleId = parseInt(resolvedParams.id);
@@ -52,7 +54,7 @@ const UserRoleDetailPage: React.FC<UserRoleDetailPageProps> = ({ params }) => {
     userRole,
     listStatus.status === Status.LOADING,
     listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+      ? listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 

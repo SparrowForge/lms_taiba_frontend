@@ -1,10 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import CourseForm from './CourseForm';
 
@@ -24,10 +26,10 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getCourseById, selectedCourse } = useCourses();
-  const t = useTranslations();
-  const entityName = t('course', { defaultValue: 'Course' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   useEffect(() => {
     if (visible && mode === 'edit' && courseId) {
       getCourseById(courseId);
@@ -47,8 +49,8 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
       key={courseId} // Force remount when courseId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}

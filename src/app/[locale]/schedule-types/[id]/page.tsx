@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -9,19 +10,20 @@ import {useCreateScheduleTypeDetailsConfig} from '@/components/scheduleTypes/sch
 import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
 import {Status} from '@/types/common';
 import {IScheduleType} from '@/types/scheduleType';
 
-export default function ScheduleTypeDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function ScheduleTypeDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const { selectedScheduleType, detailsStatus, getScheduleTypeById } = useScheduleTypes();
-  const t = useTranslations();
-  const entityName = t('scheduleType');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
   const resolvedParams = React.use(params);
   const scheduleTypeId = parseInt(resolvedParams.id);
@@ -35,7 +37,7 @@ export default function ScheduleTypeDetailPage({
     selectedScheduleType,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
-      ? detailsStatus.message || t('failed_name', { name: entityName })
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
