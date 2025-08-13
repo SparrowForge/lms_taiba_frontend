@@ -19,7 +19,6 @@ import {Status} from '@/types/common';
 import {IFeeStructure} from '@/types/feeStructure';
 import {ISemester} from '@/types/semester';
 
-
 export default function FeeStructuresPage() {
   const t = useTranslations();
   const entityName = t('feeStructure', { defaultValue: 'Fee Structure' });
@@ -77,7 +76,7 @@ export default function FeeStructuresPage() {
     name: entityName,
     title: t('management_name', { name: entityName }),
     route: '/fee-structures',
-    searchFields: ['template_name', 'academic_year', 'batch.name', 'semester.name'] as (keyof IFeeStructure)[],
+    searchFields: ['templateName', 'academicYear', 'batch.name', 'semester.name'] as (keyof IFeeStructure)[],
     onSearch: (searchText: string) => {
       loadFeeStructures({ page: 1, limit: 10, search: searchText });
     },
@@ -88,39 +87,39 @@ export default function FeeStructuresPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('templateName'),
-        dataIndex: 'template_name',
-        key: 'template_name',
+        title: t('template_name', { defaultValue: 'Template Name' }),
+        dataIndex: 'templateName',
+        key: 'templateName',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('batch'),
+        title: t('batch', { defaultValue: 'Batch' }),
         dataIndex: 'batch',
         key: 'batch',
         render: (batch: IBatch) => <span>{batch?.name || 'N/A'}</span>,
       },
       {
-        title: t('semester'),
+        title: t('semester', { defaultValue: 'Semester' }),
         dataIndex: 'semester',
         key: 'semester',
         render: (semester: ISemester) => <span>{semester?.name || 'N/A'}</span>,
       },
       {
-        title: t('academicYear'),
-        dataIndex: 'academic_year',
-        key: 'academic_year',
+        title: t('academic_year', { defaultValue: 'Academic Year' }),
+        dataIndex: 'academicYear',
+        key: 'academicYear',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('paymentType'),
-        dataIndex: 'payment_type',
-        key: 'payment_type',
+        title: t('payment_type', { defaultValue: 'Payment Type' }),
+        dataIndex: 'paymentType',
+        key: 'paymentType',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('totalFees'),
-        dataIndex: 'total_fees',
-        key: 'total_fees',
+        title: t('total_fees', { defaultValue: 'Total Fees' }),
+        dataIndex: 'totalFees',
+        key: 'totalFees',
         render: (text: string) => <span>{text}</span>,
       },
       {
@@ -136,9 +135,9 @@ export default function FeeStructuresPage() {
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('createdAt'),
-        dataIndex: 'created_at',
-        key: 'created_at',
+        title: t('created_at', { defaultValue: 'Created At' }),
+        dataIndex: 'createdAt',
+        key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {

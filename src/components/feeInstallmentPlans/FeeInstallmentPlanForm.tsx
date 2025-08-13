@@ -110,120 +110,90 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
   const formContent = (
     <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? {
       ...initialValues,
-      due_date: initialValues?.due_date ? dayjs(initialValues.due_date) : undefined,
+      dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined,
     } : undefined}>
-      {mode === 'create' && (
-        <>
-          <Form.Item
-            name="fee_structure_id"
-            label={t('feeStructure')}
-            rules={[{ required: true, message: t('required_field', { field: t('feeStructure') }) }]}
-          >
-            <Select
-              placeholder={t('select_feeStructure')}
-              loading={feeStructures.length === 0}
-              showSearch
-              filterOption={(input, option) =>
-                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-              }
-            >
-              {feeStructures.map((feeStructure) => (
-                <Select.Option key={feeStructure.id} value={feeStructure.id}>
-                  {feeStructure.template_name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="semester_id"
-            label={t('semester')}
-            rules={[{ required: true, message: t('required_field', { field: t('semester') }) }]}
-          >
-            <Select
-              placeholder={t('select_semester')}
-              loading={semesters.length === 0}
-              showSearch
-              filterOption={(input, option) =>
-                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-              }
-            >
-              {semesters.map((semester) => (
-                <Select.Option key={semester.id} value={semester.id}>
-                  {semester.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </>
-      )}
-
       <Form.Item
-        name="sequence_no"
-        label={t('sequenceNo')}
-        rules={[{ required: true, message: t('required_field', { field: t('sequenceNo') }) }]}
+        name="feeStructureId"
+        label={t('feeStructure', { defaultValue: 'Fee Structure' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
       >
-        <InputNumber
-          placeholder={t('enter_sequenceNo')}
-          min={1}
-          style={{ width: '100%' }}
+        <Select
+          placeholder={t('select_feeStructure', { defaultValue: 'Select Fee Structure' })}
+          options={feeStructures.map((feeStructure) => ({
+            label: feeStructure.templateName,
+            value: feeStructure.id,
+          }))}
         />
       </Form.Item>
 
       <Form.Item
-        name="payment_label"
-        label={t('paymentLabel')}
-        rules={[{ required: true, message: t('required_field', { field: t('paymentLabel') }) }]}
+        name="semesterId"
+        label={t('semester', { defaultValue: 'Semester' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
       >
-        <Input placeholder={t('enter_paymentLabel')} />
+        <Select
+          placeholder={t('select_semester', { defaultValue: 'Select Semester' })}
+          options={semesters.map((semester) => ({
+            label: semester.name,
+            value: semester.id,
+          }))}
+        />
       </Form.Item>
 
       <Form.Item
-        name="duration_months"
-        label={t('durationMonths')}
-        rules={[{ required: true, message: t('required_field', { field: t('durationMonths') }) }]}
+        name="sequenceNo"
+        label={t('sequenceNo', { defaultValue: 'Sequence No' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
       >
-        <InputNumber
-          placeholder={t('enter_durationMonths')}
-          min={1}
-          style={{ width: '100%' }}
-        />
+        <InputNumber style={{ width: '100%' }} min={1} />
+      </Form.Item>
+
+      <Form.Item
+        name="paymentLabel"
+        label={t('paymentLabel', { defaultValue: 'Payment Label' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="durationMonths"
+        label={t('durationMonths', { defaultValue: 'Duration (Months)' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
+      >
+        <InputNumber style={{ width: '100%' }} min={1} />
       </Form.Item>
 
       <Form.Item
         name="amount"
-        label={t('amount')}
-        rules={[{ required: true, message: t('required_field', { field: t('amount') }) }]}
+        label={t('amount', { defaultValue: 'Amount' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
       >
         <InputNumber
-          placeholder={t('enter_amount')}
+          style={{ width: '100%' }}
           min={0}
           step={0.01}
-          style={{ width: '100%' }}
         />
       </Form.Item>
 
       <Form.Item
-        name="discount_amount"
-        label={t('discountAmount')}
+        name="discountAmount"
+        label={t('discountAmount', { defaultValue: 'Discount Amount' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
       >
         <InputNumber
-          placeholder={t('enter_discountAmount')}
+          style={{ width: '100%' }}
           min={0}
           step={0.01}
-          style={{ width: '100%' }}
         />
       </Form.Item>
 
       <Form.Item
-        name="due_date"
-        label={t('dueDate')}
-        rules={[{ required: true, message: t('required_field', { field: t('dueDate') }) }]}
+        name="dueDate"
+        label={t('dueDate', { defaultValue: 'Due Date' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
       >
-        <DatePicker
-          placeholder={t('select_dueDate')}
-          style={{ width: '100%' }}
-        />
+        <DatePicker style={{ width: '100%' }} />
       </Form.Item>
 
       <Form.Item>

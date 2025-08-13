@@ -5,11 +5,11 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {IFeeStructure} from '@/types/feeStructure';
 
 export const getFeeStructureDisplayName = (feeStructure: IFeeStructure) => {
-  return feeStructure.template_name || `Fee Structure #${feeStructure.id}`;
+  return feeStructure.templateName || `Fee Structure #${feeStructure.id}`;
 };
 
 export const getFeeStructureInitials = (feeStructure: IFeeStructure) => {
-  return feeStructure.template_name?.slice(0, 2).toUpperCase() || 'FS';
+  return feeStructure.templateName?.slice(0, 2).toUpperCase() || 'FS';
 };
 
 export const useCreateFeeStructureDetailsConfig = (
@@ -37,25 +37,25 @@ export const useCreateFeeStructureDetailsConfig = (
     onBack,
     fields: [
       { key: 'id', label: 'ID' },
-      { key: 'template_name', label: t('templateName') },
-      { key: 'batch.name', label: t('batch') },
-      { key: 'semester.name', label: t('semester') },
-      { key: 'academic_year', label: t('academicYear') },
-      { key: 'payment_type', label: t('paymentType') },
-      { key: 'total_fees', label: t('totalFees') },
-      { key: 'admission_fee', label: t('admissionFee') },
-      { key: 'discount_type', label: t('discountType') },
-      { key: 'discount_amount', label: t('discountAmount') },
+      { key: 'templateName', label: t('template_name') },
+      { key: 'batchName', label: t('batch') },
+      { key: 'semesterName', label: t('semester') },
+      { key: 'academicYear', label: t('academic_year') },
+      { key: 'paymentType', label: t('payment_type') },
+      { key: 'totalFees', label: t('total_fees') },
+      { key: 'admissionFee', label: t('admission_fee') },
+      { key: 'discountType', label: t('discount_type') },
+      { key: 'discountAmount', label: t('discount_amount') },
       { key: 'currency', label: t('currency') },
       { key: 'remarks', label: t('remarks') },
       { key: 'status', label: t('status') },
       {
-        key: 'created_at',
+        key: 'createdAt',
         label: t('createdAt'),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
-        key: 'updated_at',
+        key: 'updatedAt',
         label: t('updatedAt'),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },

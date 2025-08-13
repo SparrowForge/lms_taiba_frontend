@@ -16,8 +16,6 @@ import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
 
 import {Status} from '@/types/common';
 import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
-import {IFeeStructure} from '@/types/feeStructure';
-import {ISemester} from '@/types/semester';
 
 export default function FeeInstallmentPlansPage() {
   const t = useTranslations();
@@ -94,57 +92,56 @@ export default function FeeInstallmentPlansPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('feeStructure'),
-        dataIndex: 'fee_structure',
-        key: 'fee_structure',
-        render: (feeStructure: IFeeStructure) => <span>{feeStructure?.template_name || 'N/A'}</span>,
+        title: t('fee_structure', { defaultValue: 'Fee Structure' }),
+        key: 'feeStructure',
+        render: (feeInstallmentPlan: IFeeInstallmentPlan) => <span>{feeInstallmentPlan.feeStructure.templateName}</span>,
       },
       {
-        title: t('sequenceNo'),
-        dataIndex: 'sequence_no',
-        key: 'sequence_no',
-        render: (sequenceNo: number) => <span>{sequenceNo}</span>,
+        title: t('sequence_no', { defaultValue: 'Sequence No' }),
+        dataIndex: 'sequenceNo',
+        key: 'sequenceNo',
+        render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('paymentLabel'),
-        dataIndex: 'payment_label',
-        key: 'payment_label',
-        render: (paymentLabel: string) => <span>{paymentLabel}</span>,
+        title: t('payment_label', { defaultValue: 'Payment Label' }),
+        dataIndex: 'paymentLabel',
+        key: 'paymentLabel',
+        render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('semester'),
-        dataIndex: 'semester',
+        title: t('semester', { defaultValue: 'Semester' }),
+        dataIndex: ['semester', 'name'],
         key: 'semester',
-        render: (semester: ISemester) => <span>{semester?.name || 'N/A'}</span>,
+        render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('durationMonths'),
-        dataIndex: 'duration_months',
-        key: 'duration_months',
-        render: (durationMonths: number) => <span>{durationMonths}</span>,
+        title: t('duration_months', { defaultValue: 'Duration (Months)' }),
+        dataIndex: 'durationMonths',
+        key: 'durationMonths',
+        render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('amount'),
+        title: t('amount', { defaultValue: 'Amount' }),
         dataIndex: 'amount',
         key: 'amount',
-        render: (amount: string) => <span>{amount}</span>,
+        render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('discountAmount'),
-        dataIndex: 'discount_amount',
-        key: 'discount_amount',
-        render: (discountAmount: string) => <span>{discountAmount}</span>,
+        title: t('discount_amount', { defaultValue: 'Discount Amount' }),
+        dataIndex: 'discountAmount',
+        key: 'discountAmount',
+        render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('dueDate'),
-        dataIndex: 'due_date',
-        key: 'due_date',
-        render: (dueDate: string) => <span>{new Date(dueDate).toLocaleDateString()}</span>,
+        title: t('due_date', { defaultValue: 'Due Date' }),
+        dataIndex: 'dueDate',
+        key: 'dueDate',
+        render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('createdAt'),
-        dataIndex: 'created_at',
-        key: 'created_at',
+        title: t('created_at', { defaultValue: 'Created At' }),
+        dataIndex: 'createdAt',
+        key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
@@ -173,6 +170,8 @@ export default function FeeInstallmentPlansPage() {
       },
     ],
   };
+
+  console.log(feeInstallmentPlans);
 
   return (
     <ProtectedRoute>

@@ -5,11 +5,11 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
 
 export const getFeeInstallmentPlanDisplayName = (feeInstallmentPlan: IFeeInstallmentPlan) => {
-  return feeInstallmentPlan.payment_label || `Fee Installment Plan #${feeInstallmentPlan.id}`;
+  return feeInstallmentPlan.paymentLabel || `Fee Installment Plan #${feeInstallmentPlan.id}`;
 };
 
 export const getFeeInstallmentPlanInitials = (feeInstallmentPlan: IFeeInstallmentPlan) => {
-  return feeInstallmentPlan.payment_label?.slice(0, 2).toUpperCase() || 'FI';
+  return feeInstallmentPlan.paymentLabel?.slice(0, 2).toUpperCase() || 'FI';
 };
 
 export const useCreateFeeInstallmentPlanDetailsConfig = (
@@ -37,25 +37,25 @@ export const useCreateFeeInstallmentPlanDetailsConfig = (
     onBack,
     fields: [
       { key: 'id', label: 'ID' },
-      { key: 'fee_structure.template_name', label: t('feeStructure') },
-      { key: 'sequence_no', label: t('sequenceNo') },
-      { key: 'payment_label', label: t('paymentLabel') },
+      { key: 'feeStructure.templateName', label: t('fee_structure') },
+      { key: 'sequenceNo', label: t('sequence_no') },
+      { key: 'paymentLabel', label: t('payment_label') },
       { key: 'semester.name', label: t('semester') },
-      { key: 'duration_months', label: t('durationMonths') },
+      { key: 'durationMonths', label: t('durationMonths') },
       { key: 'amount', label: t('amount') },
-      { key: 'discount_amount', label: t('discountAmount') },
+      { key: 'discountAmount', label: t('discountAmount') },
       {
-        key: 'due_date',
+        key: 'dueDate',
         label: t('dueDate'),
         render: (value: string) => (value ? new Date(value).toLocaleDateString() : 'N/A'),
       },
       {
-        key: 'created_at',
+        key: 'createdAt',
         label: t('createdAt'),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
-        key: 'updated_at',
+        key: 'updatedAt',
         label: t('updatedAt'),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },

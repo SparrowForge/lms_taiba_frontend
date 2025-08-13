@@ -1,6 +1,6 @@
 'use client';
 
-import {Button, Form, Input, Select, Space, InputNumber} from 'antd';
+import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 import React, {useEffect, useState} from 'react';
@@ -40,7 +40,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
   const { createFeeStructure, editFeeStructure, actionStatus } = useFeeStructures();
   const { batches, loadBatches } = useBatches();
   const { semesters, loadSemesters } = useSemesters();
-  const [selectedBatchId, setSelectedBatchId] = useState<number | undefined>(initialValues?.batch_id);
+  const [selectedBatchId, setSelectedBatchId] = useState<number | undefined>(initialValues?.batchId);
 
   useEffect(() => {
     loadBatches({ page: 1, limit: 100 });
@@ -113,7 +113,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       disabled={actionStatus.status === Status.LOADING}
     >
       <Form.Item
-        name="template_name"
+        name="templateName"
         label={t('templateName')}
         rules={[{ required: true, message: t('required_field', { field: t('templateName') }) }]}
       >
@@ -121,7 +121,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="batch_id"
+        name="batchId"
         label={t('batch')}
         rules={[{ required: true, message: t('required_field', { field: t('batch') }) }]}
       >
@@ -142,29 +142,21 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="semester_id"
-        label={t('semester')}
-        rules={[{ required: true, message: t('required_field', { field: t('semester') }) }]}
+        name="semesterId"
+        label={t('semester', { defaultValue: 'Semester' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
       >
         <Select
-          placeholder={t('select_semester')}
-          showSearch
-          filterOption={(input, option) =>
-            String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {semesters
-            .filter((semester) => !selectedBatchId || semester.batchId === selectedBatchId)
-            .map((semester) => (
-              <Select.Option key={semester.id} value={semester.id} label={semester.name}>
-                {semester.name}
-              </Select.Option>
-            ))}
-        </Select>
+          placeholder={t('select_semester', { defaultValue: 'Select Semester' })}
+          options={semesters.map((semester) => ({
+            label: semester.name,
+            value: semester.id,
+          }))}
+        />
       </Form.Item>
 
       <Form.Item
-        name="academic_year"
+        name="academicYear"
         label={t('academicYear')}
         rules={[{ required: true, message: t('required_field', { field: t('academicYear') }) }]}
       >
@@ -172,7 +164,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="payment_type"
+        name="paymentType"
         label={t('paymentType')}
         rules={[{ required: true, message: t('required_field', { field: t('paymentType') }) }]}
       >
@@ -184,7 +176,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="total_fees"
+        name="totalFees"
         label={t('totalFees')}
         rules={[{ required: true, message: t('required_field', { field: t('totalFees') }) }]}
       >
@@ -198,7 +190,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="admission_fee"
+        name="admissionFee"
         label={t('admissionFee')}
         rules={[{ required: true, message: t('required_field', { field: t('admissionFee') }) }]}
       >
@@ -212,7 +204,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="discount_type"
+        name="discountType"
         label={t('discountType')}
         rules={[{ required: true, message: t('required_field', { field: t('discountType') }) }]}
       >
@@ -224,16 +216,14 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="discount_amount"
-        label={t('discountAmount')}
-        rules={[{ required: true, message: t('required_field', { field: t('discountAmount') }) }]}
+        name="discountAmount"
+        label={t('discountAmount', { defaultValue: 'Discount Amount' })}
+        rules={[{ required: true, message: t('required_field', { defaultValue: 'This field is required' }) }]}
       >
         <InputNumber
           style={{ width: '100%' }}
           min={0}
           step={0.01}
-          placeholder="0.00"
-          formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
         />
       </Form.Item>
 

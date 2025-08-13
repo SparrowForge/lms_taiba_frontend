@@ -7,7 +7,7 @@ import React, {useEffect} from 'react';
 
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
 
-import { IFeeInstallmentPlanUpdate } from '@/types/feeInstallmentPlan';
+import {IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
 
 import FeeInstallmentPlanForm from './FeeInstallmentPlanForm';
 
@@ -27,7 +27,7 @@ const FeeInstallmentPlanFormDrawer: React.FC<FeeInstallmentPlanFormDrawerProps> 
   onCancel,
   onSuccess,
 }) => {
- 
+
   const { getFeeInstallmentPlanById, selectedFeeInstallmentPlan } = useFeeInstallmentPlans();
   const t = useTranslations();
   const entityName = t('feeInstallmentPlan', { defaultValue: 'Fee Installment Plan' });
@@ -62,7 +62,7 @@ const FeeInstallmentPlanFormDrawer: React.FC<FeeInstallmentPlanFormDrawerProps> 
         feeInstallmentPlanId={feeInstallmentPlanId}
         initialValues={mode === 'edit' ? {
           ...selectedFeeInstallmentPlan,
-          due_date: selectedFeeInstallmentPlan?.due_date ? dayjs(selectedFeeInstallmentPlan.due_date) : undefined,
+          dueDate: selectedFeeInstallmentPlan?.dueDate ? dayjs(selectedFeeInstallmentPlan.dueDate) : undefined,
         } as Partial<IFeeInstallmentPlanUpdate> : undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}

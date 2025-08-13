@@ -21,6 +21,7 @@ import roleReducer from './slices/roleSlice';
 import scheduleTypeReducer from './slices/scheduleTypeSlice';
 import semesterReducer from './slices/semesterSlice';
 import semesterSubjectReducer from './slices/semesterSubjectSlice';
+import studentReducer from './slices/studentSlice';
 import subjectReducer from './slices/subjectSlice';
 import userRoleReducer from './slices/userRoleSlice';
 import userReducer from './slices/userSlice';
@@ -51,6 +52,7 @@ export interface RootState {
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
   employmentTypes: ReturnType<typeof employmentTypeReducer>;
   institutes: ReturnType<typeof instituteReducer>;
+  students: ReturnType<typeof studentReducer>;
 }
 
 // Create store
@@ -80,6 +82,7 @@ export const store = configureStore({
     scheduleTypes: scheduleTypeReducer,
     employmentTypes: employmentTypeReducer,
     institutes: instituteReducer,
+    students: studentReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

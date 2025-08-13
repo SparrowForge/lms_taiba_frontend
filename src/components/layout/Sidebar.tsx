@@ -155,6 +155,11 @@ export const Sidebar = ({ collapsed }: SidebarProps) => {
         label: 'Fee Installment Plans',
       },
       {
+        key: '/students',
+        icon: <UserOutlined />,
+        label: 'Students',
+      },
+      {
         key: '/user-roles',
         icon: <UserOutlined />,
         label: 'User Roles',
