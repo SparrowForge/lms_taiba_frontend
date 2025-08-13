@@ -1,7 +1,7 @@
 'use client';
 
-import { BookOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Layout, Menu, Typography, Spin, MenuProps } from 'antd';
+import { BellOutlined, BookOutlined, LogoutOutlined, MehOutlined, SettingOutlined, SignatureOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Layout, Menu, Typography, Spin, MenuProps, Dropdown } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useCallback, useMemo, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
@@ -24,14 +24,12 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
     const router = useRouter();
     const pathname = usePathname();
 
-    // Track current path for client-side menu highlight
     const [currentPath, setCurrentPath] = useState<string>('');
 
     useEffect(() => {
         setCurrentPath(pathname.split('?')[0]);
     }, [pathname]);
 
-    // Load menus on mount
     useEffect(() => {
         loadMyMenus();
     }, [loadMyMenus]);
@@ -44,28 +42,36 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
         }
     }, [logout]);
 
+
     // Transform API menus into Ant Design Menu items
     const transformMenus = useCallback(
         (menus: IMenu[]): MenuProps['items'] => {
             return menus.map((menu) => {
                 const hasChildren = menu.children && menu.children.length > 0;
+                const key = hasChildren
+                    ? `parent-${menu.id}`
+                    : menu.route?.startsWith('/')
+                        ? menu.route
+                        : `/${menu.route}`;
+
                 return {
-                    key: hasChildren ? `parent-${menu.id}` : menu.route?.startsWith('/') ? menu.route : `/${menu.route}`,
+                    key,
                     icon: <BookOutlined />,
                     label: menu.name,
-                    children: hasChildren ? transformMenus(menu.children) : undefined,
+                    children: hasChildren ? transformMenus(menu.children) : undefined
                 };
             });
         },
         []
     );
 
+
+    // Compute menuItems every time currentPath changes
     const menuItems = useMemo(() => transformMenus(myMenus || []), [myMenus, transformMenus]);
 
-    // Handle navigation on click
+
     const handleMenuClick = useCallback(
         ({ key }: { key: string }) => {
-            // Only navigate if the key is a real route (not parent container)
             if (key && !key.startsWith('parent-') && key !== currentPath) {
                 router.push(key);
                 setCurrentPath(key);
@@ -74,7 +80,6 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
         [router, currentPath]
     );
 
-    // User profile section
     const userProfileSection = useMemo(
         () => (
             <div className="p-4 border-b border-gray-100">
@@ -98,10 +103,71 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
                             </div>
                         </div>
                     )}
+
                 </div>
             </div>
         ),
         [collapsed, getUserFullName, user?.email]
+    );
+
+
+    //settings 
+
+    // Settings dropdown menu content
+    const settingsDropdownMenu = (
+        <Menu
+            items={[
+                {
+                    key: 'profile',
+                    icon: <UserOutlined />,
+                    label: 'Profile',
+                    onClick: () => router.push('/settings/profile'),
+                },
+                {
+                    type: 'divider',
+                },
+                {
+                    key: 'upgrade',
+                    icon: <SignatureOutlined />,
+                    label: 'Upgrade Plan',
+                    onClick: () => router.push('/upgrade'),
+                },
+                {
+                    key: 'signout',
+                    icon: <LogoutOutlined />,
+                    // label: <span className="text-red-500">Logout</span>,
+                    label: "Logout",
+                    onClick: handleLogout,
+                },
+            ]}
+        />
+    );
+
+    const settingsMenuItems = useMemo(
+        () => [
+            {
+                key: 'notification',
+                icon: <BellOutlined />,
+                label: collapsed ? '' : 'Notification',
+                onClick: () => router.push('/notifications'),
+            },
+            {
+                key: 'settings',
+                icon: <SettingOutlined />,
+                label: (
+                    <Dropdown
+                        overlay={settingsDropdownMenu}
+                        trigger={['click']}
+                        placement="topRight"
+                    >
+                        <span className="cursor-pointer">
+                            {collapsed ? '' : 'Settings'}
+                        </span>
+                    </Dropdown>
+                ),
+            },
+        ],
+        [collapsed, router]
     );
 
     const logoutMenuItems = useMemo(
@@ -117,16 +183,15 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
         [collapsed, handleLogout]
     );
 
-    // Compute default open keys for parent menus
- const defaultOpenKeys = useMemo(() => {
-    if (!menuItems) return [];
-    return menuItems
-        .filter(
-            (item): item is Required<MenuItemType> & { children: MenuItemType[] } =>
-                !!item && Array.isArray((item as any).children) && (item as any).children.length > 0
-        )
-        .map((item) => item.key as string);
-}, [menuItems]);
+    const defaultOpenKeys = useMemo(() => {
+        if (!menuItems) return [];
+        return menuItems
+            .filter(
+                (item): item is Required<MenuItemType> & { children: MenuItemType[] } =>
+                    !!item && Array.isArray((item as any).children) && (item as any).children.length > 0
+            )
+            .map((item) => item.key as string);
+    }, [menuItems]);
 
     return (
         <Sider
@@ -171,6 +236,7 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
 
             {/* Navigation Menu */}
             <div className="flex-1 overflow-auto">
+                <h1 className='p-2 text-gray-700 uppercase'>Main</h1>
                 {myMenusStatus.status === Status.LOADING ? (
                     <div className="flex justify-center items-center p-4">
                         <Spin />
@@ -183,18 +249,28 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
                         items={menuItems}
                         onClick={handleMenuClick}
                     />
+
                 )}
             </div>
 
-            {/* Logout Button */}
-            <div className="p-4 border-t border-gray-100">
+            {/* Logout and settings Button */}
+            <div className="py-4 border-t border-gray-100">
+                <h1 className="px-4 text-gray-500 uppercase text-xs tracking-wider mb-2">Settings</h1>
                 <Menu
                     mode="inline"
-                    items={logoutMenuItems}
+                    items={settingsMenuItems}
                     className="border-0"
                     style={{ backgroundColor: 'transparent' }}
                 />
+                <Menu
+                    mode="inline"
+                    items={logoutMenuItems}
+                    className="border-0 mt-2"
+                    style={{ backgroundColor: 'transparent' }}
+                />
             </div>
+
+
         </Sider>
     );
 };
