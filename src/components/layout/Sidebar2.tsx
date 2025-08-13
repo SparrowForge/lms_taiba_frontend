@@ -3,11 +3,12 @@
 import { BookOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Menu, Typography, Spin, MenuProps } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useMenus } from '@/hooks/useMenus';
 import { Status } from '@/types/common';
 import { IMenu } from '@/types/menu';
+import { MenuItemType } from 'antd/es/menu/interface';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -23,14 +24,17 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
     const router = useRouter();
     const pathname = usePathname();
 
-    // Load menus on mount
+    // Track current path for client-side menu highlight
+    const [currentPath, setCurrentPath] = useState<string>('');
+
+    useEffect(() => {
+        setCurrentPath(pathname.split('?')[0]);
+    }, [pathname]);
+
     // Load menus on mount
     useEffect(() => {
-        console.log('Loading menus...');
         loadMyMenus();
     }, [loadMyMenus]);
-
-
 
     const handleLogout = useCallback(async () => {
         try {
@@ -40,42 +44,37 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
         }
     }, [logout]);
 
-    // Convert API menu structure → Ant Design Menu items
+    // Transform API menus into Ant Design Menu items
     const transformMenus = useCallback(
         (menus: IMenu[]): MenuProps['items'] => {
             return menus.map((menu) => {
                 const hasChildren = menu.children && menu.children.length > 0;
                 return {
-                    key: menu.route ?? `parent-${menu.id}`,
+                    key: hasChildren ? `parent-${menu.id}` : menu.route?.startsWith('/') ? menu.route : `/${menu.route}`,
                     icon: <BookOutlined />,
                     label: menu.name,
-                    children: hasChildren ? transformMenus(menu.children) : [],
+                    children: hasChildren ? transformMenus(menu.children) : undefined,
                 };
             });
         },
         []
     );
 
-
-
     const menuItems = useMemo(() => transformMenus(myMenus || []), [myMenus, transformMenus]);
 
-    // const handleMenuClick = useCallback(
-    //     ({ key }: { key: string }) => {
-    //         if (key.startsWith('/')) { // only navigate if key is a route
-    //             router.push(key);
-    //         }
-    //     },
-    //     [router]
-    // );
+    // Handle navigation on click
     const handleMenuClick = useCallback(
         ({ key }: { key: string }) => {
-            router.push(key);
+            // Only navigate if the key is a real route (not parent container)
+            if (key && !key.startsWith('parent-') && key !== currentPath) {
+                router.push(key);
+                setCurrentPath(key);
+            }
         },
-        [router],
+        [router, currentPath]
     );
 
-
+    // User profile section
     const userProfileSection = useMemo(
         () => (
             <div className="p-4 border-b border-gray-100">
@@ -102,7 +101,7 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
                 </div>
             </div>
         ),
-        [collapsed, getUserFullName, user?.email],
+        [collapsed, getUserFullName, user?.email]
     );
 
     const logoutMenuItems = useMemo(
@@ -115,8 +114,19 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
                 className: 'text-red-600 hover:text-red-700',
             },
         ],
-        [collapsed, handleLogout],
+        [collapsed, handleLogout]
     );
+
+    // Compute default open keys for parent menus
+ const defaultOpenKeys = useMemo(() => {
+    if (!menuItems) return [];
+    return menuItems
+        .filter(
+            (item): item is Required<MenuItemType> & { children: MenuItemType[] } =>
+                !!item && Array.isArray((item as any).children) && (item as any).children.length > 0
+        )
+        .map((item) => item.key as string);
+}, [menuItems]);
 
     return (
         <Sider
@@ -138,7 +148,7 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
             {/* Logo */}
             <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center justify-center">
-                    {!collapsed && (
+                    {!collapsed ? (
                         <div className="text-center">
                             <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-2">
                                 <span className="text-white font-bold text-lg">L</span>
@@ -148,8 +158,7 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
                                 Admin Panel
                             </Text>
                         </div>
-                    )}
-                    {collapsed && (
+                    ) : (
                         <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-lg">L</span>
                         </div>
@@ -169,12 +178,11 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
                 ) : (
                     <Menu
                         mode="inline"
-                        selectedKeys={[pathname]}
+                        selectedKeys={[currentPath]}
+                        defaultOpenKeys={defaultOpenKeys}
                         items={menuItems}
                         onClick={handleMenuClick}
                     />
-
-
                 )}
             </div>
 
@@ -184,9 +192,7 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
                     mode="inline"
                     items={logoutMenuItems}
                     className="border-0"
-                    style={{
-                        backgroundColor: 'transparent',
-                    }}
+                    style={{ backgroundColor: 'transparent' }}
                 />
             </div>
         </Sider>
