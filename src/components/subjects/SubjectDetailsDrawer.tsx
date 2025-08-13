@@ -54,6 +54,7 @@ const SubjectDetailsDrawer: React.FC<SubjectDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={subjectId} // Force remount when subjectId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

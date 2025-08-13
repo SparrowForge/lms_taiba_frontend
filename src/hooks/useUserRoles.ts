@@ -140,13 +140,30 @@ export const useUserRoles = () => {
     [dispatch],
   );
 
+  // Get user role by ID from the current list
+  const getUserRoleById = useCallback(
+    (id: number) => {
+      if (selectedUserRole && selectedUserRole.id === id) {
+        return;
+      }
+
+      const userRole = userRoles.find((userRole) => userRole.id === id);
+      if (userRole) {
+        dispatch(setSelectedUserRole(userRole));
+      } else {
+        loadUserRole(id);
+      }
+    },
+    [userRoles, selectedUserRole, dispatch, loadUserRole],
+  );
+
   // Clear action status
-  const clearActionStatusHandler = useCallback(() => {
+  const clearAction = useCallback(() => {
     dispatch(clearActionStatus());
   }, [dispatch]);
 
   // Clear details status
-  const clearDetailsStatusHandler = useCallback(() => {
+  const clearDetails = useCallback(() => {
     dispatch(clearDetailsStatus());
   }, [dispatch]);
 
@@ -165,7 +182,8 @@ export const useUserRoles = () => {
     createUserRole,
     editUserRole,
     removeUserRole,
-    clearActionStatus: clearActionStatusHandler,
-    clearDetailsStatus: clearDetailsStatusHandler,
+    getUserRoleById,
+    clearAction,
+    clearDetails,
   };
 };

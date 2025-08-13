@@ -44,6 +44,7 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
 
   return (
     <Drawer
+      key={branchId} // Force remount when branchId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })

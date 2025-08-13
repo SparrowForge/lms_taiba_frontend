@@ -44,6 +44,7 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
 
   return (
     <Drawer
+      key={menuId} // Force remount when menuId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })

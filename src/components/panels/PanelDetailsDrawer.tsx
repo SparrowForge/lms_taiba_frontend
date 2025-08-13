@@ -53,6 +53,7 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={panelId} // Force remount when panelId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

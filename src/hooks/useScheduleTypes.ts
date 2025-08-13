@@ -158,6 +158,10 @@ export const useScheduleTypes = () => {
 
   const getScheduleTypeById = useCallback(
     (id: number) => {
+      if (selectedScheduleType && selectedScheduleType.id === id) {
+        return;
+      }
+
       const scheduleType = scheduleTypes.find((item) => item.id === id);
       if (scheduleType) {
         dispatch(setSelectedScheduleType(scheduleType));
@@ -165,7 +169,7 @@ export const useScheduleTypes = () => {
         loadScheduleType(id);
       }
     },
-    [dispatch],
+    [scheduleTypes, selectedScheduleType, dispatch, loadScheduleType],
   );
 
   const clearAction = useCallback(() => {

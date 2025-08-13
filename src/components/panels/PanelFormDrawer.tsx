@@ -44,6 +44,7 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
 
   return (
     <Drawer
+      key={panelId} // Force remount when panelId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })

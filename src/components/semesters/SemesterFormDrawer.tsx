@@ -44,6 +44,7 @@ const SemesterFormDrawer: React.FC<SemesterFormDrawerProps> = ({
 
   return (
     <Drawer
+      key={semesterId} // Force remount when semesterId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })

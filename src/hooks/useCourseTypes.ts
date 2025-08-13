@@ -143,6 +143,10 @@ export const useCourseTypes = () => {
 
   const getCourseTypeById = useCallback(
     (id: number) => {
+      if (selectedCourseType && selectedCourseType.id === id) {
+        return;
+      }
+
       const courseType = courseTypes.find((item) => item.id === id);
       if (courseType) {
         dispatch(setSelectedCourseType(courseType));
@@ -150,7 +154,7 @@ export const useCourseTypes = () => {
         loadCourseType(id);
       }
     },
-    [dispatch],
+    [courseTypes, selectedCourseType, dispatch, loadCourseType],
   );
 
   const clearAction = useCallback(() => {

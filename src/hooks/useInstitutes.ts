@@ -143,6 +143,10 @@ export const useInstitutes = () => {
 
   const getInstituteById = useCallback(
     (id: number) => {
+      if (selectedInstitute && selectedInstitute.id === id) {
+        return;
+      }
+
       const institute = institutes.find((item) => item.id === id);
       if (institute) {
         dispatch(setSelectedInstitute(institute));
@@ -150,7 +154,7 @@ export const useInstitutes = () => {
         loadInstitute(id);
       }
     },
-    [dispatch],
+    [institutes, selectedInstitute, dispatch, loadInstitute],
   );
 
   const clearAction = useCallback(() => {

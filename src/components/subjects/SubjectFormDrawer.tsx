@@ -44,6 +44,7 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
 
   return (
     <Drawer
+      key={subjectId} // Force remount when subjectId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })

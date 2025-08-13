@@ -143,15 +143,18 @@ export const useAddresses = () => {
 
   const getAddressById = useCallback(
     (id: number) => {
+      if (selectedAddress && selectedAddress.id === id) {
+        return;
+      }
+
       const address = addresses.find((address) => address.id === id);
       if (address) {
         dispatch(setSelectedAddress(address));
-      }
-      else{
+      } else {
         loadAddress(id);
       }
     },
-    [dispatch],
+    [addresses, selectedAddress, dispatch, loadAddress],
   );
 
   const clearAction = useCallback(() => {

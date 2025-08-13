@@ -161,6 +161,10 @@ export const useEmploymentTypes = () => {
 
   const getEmploymentTypeById = useCallback(
     (id: number) => {
+      if (selectedEmploymentType && selectedEmploymentType.id === id) {
+        return;
+      }
+
       const employmentType = employmentTypes.find((item) => item.id === id);
       if (employmentType) {
         dispatch(setSelectedEmploymentType(employmentType));
@@ -168,7 +172,7 @@ export const useEmploymentTypes = () => {
         loadEmploymentType(id);
       }
     },
-    [dispatch],
+    [employmentTypes, selectedEmploymentType, dispatch, loadEmploymentType],
   );
 
   const clearAction = useCallback(() => {

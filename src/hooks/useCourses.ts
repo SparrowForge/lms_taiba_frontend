@@ -136,6 +136,10 @@ export const useCourses = () => {
   // Get course by ID from the current list
   const getCourseById = useCallback(
     (id: number) => {
+      if (selectedCourse && selectedCourse.id === id) {
+        return;
+      }
+
       const course = courses.find((course) => course.id === id);
       if (course) {
         dispatch(setSelectedCourse(course));
@@ -143,7 +147,7 @@ export const useCourses = () => {
         loadCourse(id);
       }
     },
-    [dispatch],
+    [courses, selectedCourse, dispatch, loadCourse],
   );
 
   // Clear action status

@@ -178,14 +178,14 @@ export default function RoleMenuPermissionsPage() {
 
         <RoleMenuPermissionFormDrawer
           mode={drawerMode}
-          id={selectedId}
+          roleMenuPermissionId={selectedId}
           visible={drawerVisible}
           onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}
         />
 
         <RoleMenuPermissionDetailsDrawer
-          id={selectedDetailsId}
+          roleMenuPermissionId={selectedDetailsId}
           visible={detailsDrawerVisible}
           onClose={() => setDetailsDrawerVisible(false)}
           onEdit={handleDetailsEdit}

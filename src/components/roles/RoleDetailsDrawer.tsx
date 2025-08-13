@@ -53,6 +53,7 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={roleId} // Force remount when roleId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

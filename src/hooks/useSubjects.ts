@@ -136,6 +136,10 @@ export const useSubjects = () => {
   // Get subject by ID from the current list
   const getSubjectById = useCallback(
     (id: number) => {
+      if (selectedSubject && selectedSubject.id === id) {
+        return;
+      }
+
       const subject = subjects.find((subject) => subject.id === id);
       if (subject) {
         dispatch(setSelectedSubject(subject));
@@ -143,7 +147,7 @@ export const useSubjects = () => {
         loadSubject(id);
       }
     },
-    [dispatch],
+    [subjects, selectedSubject, dispatch, loadSubject],
   );
 
   // Clear action status

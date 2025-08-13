@@ -140,6 +140,10 @@ export const useDepartments = () => {
   // Get department by ID from the current list
   const getDepartmentById = useCallback(
     (id: number) => {
+      if (selectedDepartment && selectedDepartment.id === id) {
+        return;
+      }
+
       const department = departments.find((department) => department.id === id);
       if (department) {
         dispatch(setSelectedDepartment(department));
@@ -147,7 +151,7 @@ export const useDepartments = () => {
         loadDepartment(id);
       }
     },
-    [dispatch],
+    [departments, selectedDepartment, dispatch, loadDepartment],
   );
 
   // Clear action status

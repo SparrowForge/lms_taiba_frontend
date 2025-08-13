@@ -214,5 +214,19 @@
   "select_scheduleType": "اختر نوع الجدول",
   "head": "الرئيس",
   "institutes": "المعاهد",
-  "prerequisite": "المتطلب السابق"
+  "prerequisite": "المتطلب السابق",
+  "feeInstallmentPlan": "خطة أقساط الرسوم",
+  "feeInstallmentPlans": "خطط أقساط الرسوم",
+  "sequenceNo": "رقم التسلسل",
+  "paymentLabel": "تسمية الدفع",
+  "durationMonths": "المدة (بالأشهر)",
+  "amount": "المبلغ",
+  "dueDate": "تاريخ الاستحقاق",
+  "select_feeStructure": "اختر هيكل الرسوم",
+  "enter_sequenceNo": "أدخل رقم التسلسل",
+  "enter_paymentLabel": "أدخل تسمية الدفع",
+  "enter_durationMonths": "أدخل المدة بالأشهر",
+  "enter_amount": "أدخل المبلغ",
+  "enter_discountAmount": "أدخل مبلغ الخصم",
+  "select_dueDate": "اختر تاريخ الاستحقاق"
 }

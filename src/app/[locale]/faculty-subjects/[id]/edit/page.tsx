@@ -41,7 +41,7 @@ const FacultySubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({
     );
   }
 
-  if (!selectedFacultySubject) {
+  if (!selectedFacultySubject || selectedFacultySubject.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

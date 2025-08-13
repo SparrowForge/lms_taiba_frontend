@@ -53,6 +53,7 @@ const EmploymentTypeDetailsDrawer: React.FC<EmploymentTypeDetailsDrawerProps> = 
 
   return (
     <Drawer
+      key={employmentTypeId} // Force remount when employmentTypeId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

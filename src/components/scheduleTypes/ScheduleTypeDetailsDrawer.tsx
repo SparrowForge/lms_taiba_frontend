@@ -53,6 +53,7 @@ const ScheduleTypeDetailsDrawer: React.FC<ScheduleTypeDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={scheduleTypeId} // Force remount when scheduleTypeId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

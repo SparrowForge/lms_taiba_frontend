@@ -41,7 +41,7 @@ const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
     );
   }
 
-  if (!selectedScheduleType) {
+  if (!selectedScheduleType || selectedScheduleType.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

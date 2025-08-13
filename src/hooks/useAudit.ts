@@ -127,6 +127,10 @@ export const useAudit = () => {
   // Get audit by ID from the current list
   const getAuditById = useCallback(
     (id: number) => {
+      if (selectedAudit && selectedAudit.id === id) {
+        return;
+      }
+
       const audit = audits.find((audit) => audit.id === id);
       if (audit) {
         dispatch(setSelectedAudit(audit));
@@ -134,7 +138,7 @@ export const useAudit = () => {
         loadAudit(id);
       }
     },
-    [dispatch],
+    [audits, selectedAudit, dispatch, loadAudit],
   );
 
   // Clear action status

@@ -136,6 +136,10 @@ export const usePanels = () => {
   // Helpers
   const getPanelById = useCallback(
     (id: number) => {
+      if (selectedPanel && selectedPanel.id === id) {
+        return;
+      }
+
       const panel = panels.find((p) => p.id === id);
       if (panel) {
         dispatch(setSelectedPanel(panel));
@@ -143,7 +147,7 @@ export const usePanels = () => {
         loadPanel(id);
       }
     },
-    [dispatch],
+    [panels, selectedPanel, dispatch, loadPanel],
   );
 
   return {

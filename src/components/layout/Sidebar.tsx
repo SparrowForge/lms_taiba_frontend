@@ -150,6 +150,11 @@ export const Sidebar = ({ collapsed }: SidebarProps) => {
         label: 'Fee Structures',
       },
       {
+        key: '/fee-installment-plans',
+        icon: <BookOutlined />,
+        label: 'Fee Installment Plans',
+      },
+      {
         key: '/user-roles',
         icon: <UserOutlined />,
         label: 'User Roles',

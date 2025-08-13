@@ -149,6 +149,10 @@ export const useSemesters = () => {
   // Get semester by ID from the current list
   const getSemesterById = useCallback(
     (id: number) => {
+      if (selectedSemester && selectedSemester.id === id) {
+        return;
+      }
+
       const semester = semesters.find((semester) => semester.id === id);
       if (semester) {
         dispatch(setSelectedSemester(semester));
@@ -156,7 +160,7 @@ export const useSemesters = () => {
         loadSemester(id);
       }
     },
-    [dispatch],
+    [semesters, selectedSemester, dispatch, loadSemester],
   );
 
   // Clear action status

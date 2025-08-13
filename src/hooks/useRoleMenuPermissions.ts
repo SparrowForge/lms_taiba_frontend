@@ -165,6 +165,10 @@ export const useRoleMenuPermissions = () => {
   // Get role menu permission by roleId and menuId from the current list
   const getRoleMenuPermissionById = useCallback(
     (id: number) => {
+      if (selectedRoleMenuPermission && selectedRoleMenuPermission.id === id) {
+        return;
+      }
+
       const roleMenuPermission = roleMenuPermissions.find((item) => item.id === id);
       if (roleMenuPermission) {
         dispatch(setSelectedRoleMenuPermission(roleMenuPermission));
@@ -172,7 +176,7 @@ export const useRoleMenuPermissions = () => {
         loadRoleMenuPermission(id);
       }
     },
-    [dispatch],
+    [roleMenuPermissions, selectedRoleMenuPermission, dispatch, loadRoleMenuPermission],
   );
 
   // Clear action status

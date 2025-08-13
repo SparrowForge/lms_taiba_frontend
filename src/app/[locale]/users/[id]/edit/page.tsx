@@ -41,7 +41,7 @@ const UserEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params })
     );
   }
 
-  if (!selectedUser) {
+  if (!selectedUser || selectedUser.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

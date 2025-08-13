@@ -18,7 +18,7 @@ import FormLayout from '../layout/FormLayout';
 
 interface RoleMenuPermissionFormProps {
   mode: 'create' | 'edit';
-  id?: number;
+  roleMenuPermissionId?: number;
   initialValues?: Partial<IRoleMenuPermissionCreate | IRoleMenuPermissionUpdate>;
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -27,7 +27,7 @@ interface RoleMenuPermissionFormProps {
 
 const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
   mode,
-  id,
+  roleMenuPermissionId,
   initialValues,
   onSuccess,
   onCancel,
@@ -63,13 +63,13 @@ const RoleMenuPermissionForm: React.FC<RoleMenuPermissionFormProps> = ({
         } else {
           router.push('/role-menu-permissions');
         }
-      } else if (mode === 'edit' && id) {
-        await editRoleMenuPermission(id, values as IRoleMenuPermissionUpdate);
+      } else if (mode === 'edit' && roleMenuPermissionId) {
+        await editRoleMenuPermission(roleMenuPermissionId, values as IRoleMenuPermissionUpdate);
         toast.success(t('updated_name', { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
-          router.push(`/role-menu-permissions/${id}`);
+          router.push(`/role-menu-permissions/${roleMenuPermissionId}`);
         }
       }
     } catch (error: unknown) {

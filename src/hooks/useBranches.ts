@@ -147,6 +147,10 @@ export const useBranches = () => {
   // Get branch by ID from the current list
   const getBranchById = useCallback(
     (id: number) => {
+      if (selectedBranch && selectedBranch.id === id) {
+        return;
+      }
+
       const branch = branches.find((branch) => branch.id === id);
       if (branch) {
         dispatch(setSelectedBranch(branch));
@@ -154,7 +158,7 @@ export const useBranches = () => {
         loadBranch(id);
       }
     },
-    [dispatch],
+    [branches, selectedBranch, dispatch, loadBranch],
   );
 
   // Clear action status

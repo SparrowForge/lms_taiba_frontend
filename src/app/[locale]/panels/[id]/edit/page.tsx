@@ -41,7 +41,7 @@ const PanelEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
     );
   }
 
-  if (!selectedPanel) {
+  if (!selectedPanel || selectedPanel.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

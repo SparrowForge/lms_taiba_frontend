@@ -41,7 +41,7 @@ const EmploymentTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({
     );
   }
 
-  if (!selectedEmploymentType) {
+  if (!selectedEmploymentType || selectedEmploymentType.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

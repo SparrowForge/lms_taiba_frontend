@@ -148,6 +148,10 @@ export const useFaculties = () => {
   // Get faculty by ID from the current list
   const getFacultyById = useCallback(
     (id: number) => {
+      if (selectedFaculty && selectedFaculty.id === id) {
+        return;
+      }
+
       const faculty = faculties.find((faculty) => faculty.id === id);
       if (faculty) {
         dispatch(setSelectedFaculty(faculty));
@@ -155,7 +159,7 @@ export const useFaculties = () => {
         loadFaculty(id);
       }
     },
-    [dispatch],
+    [faculties, selectedFaculty, dispatch, loadFaculty],
   );
 
   // Clear action status

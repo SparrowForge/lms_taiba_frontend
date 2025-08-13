@@ -198,10 +198,10 @@ export default function FacultySubjectsPage() {
         </AsyncErrorBoundary>
 
         <FacultySubjectFormDrawer
-          open={drawerVisible}
+          visible={drawerVisible}
           mode={drawerMode}
           facultySubjectId={selectedFacultySubjectId}
-          onClose={() => setDrawerVisible(false)}
+          onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}
         />
 

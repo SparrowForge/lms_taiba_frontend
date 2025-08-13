@@ -44,6 +44,7 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
 
   return (
     <Drawer
+      key={batchId} // Force remount when batchId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })

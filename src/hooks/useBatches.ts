@@ -147,6 +147,10 @@ export const useBatches = () => {
   // Get batch by ID from the current list
   const getBatchById = useCallback(
     (id: number) => {
+      if (selectedBatch && selectedBatch.id === id) {
+        return;
+      }
+
       const batch = batches.find((batch) => batch.id === id);
       if (batch) {
         dispatch(setSelectedBatch(batch));
@@ -154,7 +158,7 @@ export const useBatches = () => {
         loadBatch(id);
       }
     },
-    [dispatch],
+    [batches, selectedBatch, dispatch, loadBatch],
   );
 
   // Clear action status

@@ -53,6 +53,7 @@ const AddressDetailsDrawer: React.FC<AddressDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={addressId} // Force remount when addressId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

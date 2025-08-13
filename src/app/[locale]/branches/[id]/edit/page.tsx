@@ -41,7 +41,7 @@ const BranchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params 
     );
   }
 
-  if (!selectedBranch) {
+  if (!selectedBranch || selectedBranch.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

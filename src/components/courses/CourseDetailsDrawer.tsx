@@ -53,6 +53,7 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={courseId} // Force remount when courseId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

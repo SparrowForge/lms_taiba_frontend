@@ -132,6 +132,10 @@ export const useRoles = () => {
   // Get role by ID from the current list
   const getRoleById = useCallback(
     (id: number) => {
+      if (selectedRole && selectedRole.id === id) {
+        return;
+      }
+
       const role = roles.find((role) => role.id === id);
       if (role) {
         dispatch(setSelectedRole(role));
@@ -139,7 +143,7 @@ export const useRoles = () => {
         loadRole(id);
       }
     },
-    [dispatch],
+    [roles, selectedRole, dispatch, loadRole],
   );
 
   // Clear action status

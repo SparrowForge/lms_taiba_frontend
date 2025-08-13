@@ -41,7 +41,7 @@ const FeeStructureEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
     );
   }
 
-  if (!selectedFeeStructure) {
+  if (!selectedFeeStructure || selectedFeeStructure.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

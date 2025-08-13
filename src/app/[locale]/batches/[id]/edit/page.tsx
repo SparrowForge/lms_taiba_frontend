@@ -41,7 +41,7 @@ const BatchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
     );
   }
 
-  if (!selectedBatch) {
+  if (!selectedBatch || selectedBatch.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

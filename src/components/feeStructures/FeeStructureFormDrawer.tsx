@@ -44,6 +44,7 @@ const FeeStructureFormDrawer: React.FC<FeeStructureFormDrawerProps> = ({
 
   return (
     <Drawer
+      key={feeStructureId} // Force remount when feeStructureId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })

@@ -44,6 +44,7 @@ const AddressFormDrawer: React.FC<AddressFormDrawerProps> = ({
 
   return (
     <Drawer
+      key={addressId} // Force remount when addressId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })

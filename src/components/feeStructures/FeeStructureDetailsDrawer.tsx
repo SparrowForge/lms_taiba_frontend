@@ -53,6 +53,7 @@ const FeeStructureDetailsDrawer: React.FC<FeeStructureDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={feeStructureId} // Force remount when feeStructureId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

@@ -41,7 +41,7 @@ const MenuEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params })
     );
   }
 
-  if (!selectedMenu) {
+  if (!selectedMenu || selectedMenu.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

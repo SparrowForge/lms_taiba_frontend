@@ -53,6 +53,7 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={batchId} // Force remount when batchId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

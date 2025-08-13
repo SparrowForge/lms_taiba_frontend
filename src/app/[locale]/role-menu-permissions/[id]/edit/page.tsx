@@ -41,7 +41,7 @@ const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ id: string }> }> 
     );
   }
 
-  if (!selectedRoleMenuPermission) {
+  if (!selectedRoleMenuPermission || selectedRoleMenuPermission.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
@@ -65,7 +65,7 @@ const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ id: string }> }> 
           <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
           <RoleMenuPermissionForm
             mode="edit"
-            id={selectedRoleMenuPermission.id}
+            roleMenuPermissionId={selectedRoleMenuPermission.id}
             initialValues={selectedRoleMenuPermission as IRoleMenuPermissionUpdate}
         />
       </MainLayout>

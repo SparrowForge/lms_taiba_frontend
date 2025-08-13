@@ -41,7 +41,7 @@ const SubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
     );
   }
 
-  if (!selectedSubject) {
+  if (!selectedSubject || selectedSubject.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

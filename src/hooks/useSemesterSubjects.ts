@@ -172,6 +172,10 @@ export const useSemesterSubjects = () => {
   // Get semester subject by ID from the current list
   const getSemesterSubjectById = useCallback(
     (id: number) => {
+      if (selectedSemesterSubject && selectedSemesterSubject.id === id) {
+        return;
+      }
+
       const semesterSubject = semesterSubjects.find((semesterSubject) => semesterSubject.id === id);
       if (semesterSubject) {
         dispatch(setSelectedSemesterSubject(semesterSubject));
@@ -179,7 +183,7 @@ export const useSemesterSubjects = () => {
         loadSemesterSubject(id);
       }
     },
-    [dispatch],
+    [semesterSubjects, selectedSemesterSubject, dispatch, loadSemesterSubject],
   );
 
   // Clear action status

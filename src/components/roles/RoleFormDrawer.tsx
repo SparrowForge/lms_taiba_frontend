@@ -44,6 +44,7 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
 
   return (
     <Drawer
+      key={roleId} // Force remount when roleId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })

@@ -15,8 +15,8 @@ import {
     clearDetailsStatus,
     deleteFeeStructure,
     setActionStatus,
-    setFeeStructures,
     setDetailsStatus,
+    setFeeStructures,
     setListStatus,
     setPagination,
     setSelectedFeeStructure,
@@ -142,6 +142,10 @@ export const useFeeStructures = () => {
 
   const getFeeStructureById = useCallback(
     (id: number) => {
+      if (selectedFeeStructure && selectedFeeStructure.id === id) {
+        return;
+      }
+
       const feeStructure = feeStructures.find((feeStructure) => feeStructure.id === id);
       if (feeStructure) {
         dispatch(setSelectedFeeStructure(feeStructure));
@@ -149,7 +153,7 @@ export const useFeeStructures = () => {
         loadFeeStructure(id);
       }
     },
-    [dispatch],
+    [feeStructures, selectedFeeStructure, dispatch, loadFeeStructure],
   );
 
   const clearAction = useCallback(() => {

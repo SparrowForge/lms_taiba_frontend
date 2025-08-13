@@ -11,7 +11,7 @@ import RoleMenuPermissionForm from './RoleMenuPermissionForm';
 
 interface RoleMenuPermissionFormDrawerProps {
   mode: 'create' | 'edit';
-  id?: number;
+  roleMenuPermissionId?: number;
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
@@ -19,7 +19,7 @@ interface RoleMenuPermissionFormDrawerProps {
 
 const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> = ({
   mode,
-  id,
+  roleMenuPermissionId,
   visible,
   onCancel,
   onSuccess,
@@ -29,10 +29,10 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
   const t = useTranslations();
   const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
   useEffect(() => {
-    if (visible && mode === 'edit' && id) {
-      getRoleMenuPermissionById(id);
+    if (visible && mode === 'edit' && roleMenuPermissionId) {
+      getRoleMenuPermissionById(roleMenuPermissionId);
     }
-  }, [visible, mode, id, getRoleMenuPermissionById]);
+  }, [visible, mode, roleMenuPermissionId, getRoleMenuPermissionById]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -44,6 +44,7 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
 
   return (
     <Drawer
+      key={roleMenuPermissionId} // Force remount when roleMenuPermissionId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })
@@ -56,7 +57,7 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
     >
       <RoleMenuPermissionForm
         mode={mode}
-        id={id}
+        roleMenuPermissionId={roleMenuPermissionId}
         initialValues={selectedRoleMenuPermission || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}

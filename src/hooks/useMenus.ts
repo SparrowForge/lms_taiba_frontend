@@ -132,6 +132,10 @@ export const useMenus = () => {
   // Get menu by ID from the current list
   const getMenuById = useCallback(
     (id: number) => {
+      if (selectedMenu && selectedMenu.id === id) {
+        return;
+      }
+
       const menu = menus.find((menu) => menu.id === id);
       if (menu) {
         dispatch(setSelectedMenu(menu));
@@ -139,7 +143,7 @@ export const useMenus = () => {
         loadMenu(id);
       }
     },
-    [dispatch],
+    [menus, selectedMenu, dispatch, loadMenu],
   );
 
   // Clear action status

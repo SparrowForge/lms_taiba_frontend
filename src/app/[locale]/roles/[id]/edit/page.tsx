@@ -41,7 +41,7 @@ const RoleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params })
     );
   }
 
-  if (!selectedRole) {
+  if (!selectedRole || selectedRole.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>

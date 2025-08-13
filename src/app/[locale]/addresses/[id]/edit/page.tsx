@@ -22,10 +22,11 @@ const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
   const t = useTranslations();
   const entityName = t('address');
 
+  const addressId = parseInt(resolvedParams.id);
+
   useEffect(() => {
-    const addressId = parseInt(resolvedParams.id);
     getAddressById(addressId);
-  }, [resolvedParams.id, getAddressById]);
+  }, [addressId, getAddressById]);
 
 
   if (detailsStatus.status === Status.LOADING) {
@@ -41,7 +42,7 @@ const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
     );
   }
 
-  if (!selectedAddress) {
+  if (!selectedAddress || selectedAddress.id !== addressId) {
     return (
       <ProtectedRoute>
         <MainLayout>
@@ -66,7 +67,7 @@ const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
           <PageHeader title={t('edit_name', { name: entityName })} onBack={() => router.back()} />
           <AddressForm
             mode="edit"
-            addressId={parseInt(resolvedParams.id)}
+            addressId={addressId}
             initialValues={selectedAddress}
         />
       </MainLayout>

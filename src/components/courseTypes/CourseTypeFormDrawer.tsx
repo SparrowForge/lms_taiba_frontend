@@ -2,11 +2,9 @@
 
 import {Drawer} from 'antd';
 import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {useCourseTypes} from '@/hooks/useCourseTypes';
-
-import {ICourseType} from '@/types/courseType';
 
 import CourseTypeForm from './CourseTypeForm';
 
@@ -26,39 +24,26 @@ const CourseTypeFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<ICourseType> | undefined>();
-  const { courseTypes, getCourseTypeById, loadCourseType } = useCourseTypes();
+  const { getCourseTypeById, selectedCourseType } = useCourseTypes();
   const t = useTranslations();
   const entityName = t('courseType', { defaultValue: 'Course Type' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && courseTypeId) {
-      const existing = getCourseTypeById(courseTypeId);
-      if (existing) setInitialValues(existing);
-      else loadCourseType(courseTypeId);
-    } else {
-      setInitialValues(undefined);
+      getCourseTypeById(courseTypeId);
     }
-  }, [visible, mode, courseTypeId, getCourseTypeById, loadCourseType]);
-
-  useEffect(() => {
-    if (mode === 'edit' && courseTypeId && courseTypes.length > 0) {
-      const found = getCourseTypeById(courseTypeId);
-      if (found) setInitialValues(found);
-    }
-  }, [courseTypes, courseTypeId, mode, getCourseTypeById]);
+  }, [visible, mode, courseTypeId, getCourseTypeById]);
 
   const handleSuccess = () => {
     onSuccess();
-    setInitialValues(undefined);
   };
   const handleCancel = () => {
     onCancel();
-    setInitialValues(undefined);
   };
 
   return (
     <Drawer
+      key={courseTypeId} // Force remount when courseTypeId changes
       title={
         mode === 'create'
           ? t('create_name', { name: entityName })
@@ -72,7 +57,7 @@ const CourseTypeFormDrawer: React.FC<Props> = ({
       <CourseTypeForm
         mode={mode}
         courseTypeId={courseTypeId}
-        initialValues={initialValues}
+        initialValues={selectedCourseType || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded

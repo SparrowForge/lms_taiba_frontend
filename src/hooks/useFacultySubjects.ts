@@ -166,6 +166,10 @@ export const useFacultySubjects = () => {
   // Get faculty subject by ID from the current list
   const getFacultySubjectById = useCallback(
     (id: number) => {
+      if (selectedFacultySubject && selectedFacultySubject.id === id) {
+        return;
+      }
+
       const facultySubject = facultySubjects.find((facultySubject) => facultySubject.id === id);
       if (facultySubject) {
         dispatch(setSelectedFacultySubject(facultySubject));
@@ -173,7 +177,7 @@ export const useFacultySubjects = () => {
         loadFacultySubject(id);
       }
     },
-    [dispatch],
+    [facultySubjects, selectedFacultySubject, dispatch, loadFacultySubject],
   );
 
   // Clear action status

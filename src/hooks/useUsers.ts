@@ -5,7 +5,7 @@ import {useCallback} from 'react';
 
 import {RootState} from '@/store';
 
-import {IBaseResponse,  Status} from '@/types/common';
+import {IBaseResponse, Status} from '@/types/common';
 import {IUser, IUserCreate, IUserFilters, IUserUpdate} from '@/types/user';
 
 import {userService} from '@/services/userService';
@@ -189,6 +189,10 @@ export const useUsers = () => {
   // Get user by ID
   const getUserById = useCallback(
     (id: number) => {
+      if (selectedUser && selectedUser.id === id) {
+        return;
+      }
+
       const user = users.find((user: IUser) => user.id === id);
       if (user) {
         dispatch(setSelectedUser(user));
@@ -196,7 +200,7 @@ export const useUsers = () => {
         loadUser(id);
       }
     },
-    [dispatch],
+    [users, selectedUser, dispatch, loadUser],
   );
 
   // // Get users by role

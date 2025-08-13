@@ -53,6 +53,7 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={menuId} // Force remount when menuId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}

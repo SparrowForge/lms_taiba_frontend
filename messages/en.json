@@ -215,5 +215,19 @@
   "select_scheduleType": "Select schedule type",
   "head": "Head",
   "institutes": "Institutes",
-  "prerequisite": "Prerequisite"
+  "prerequisite": "Prerequisite",
+  "feeInstallmentPlan": "Fee Installment Plan",
+  "feeInstallmentPlans": "Fee Installment Plans",
+  "sequenceNo": "Sequence No",
+  "paymentLabel": "Payment Label",
+  "durationMonths": "Duration (Months)",
+  "amount": "Amount",
+  "dueDate": "Due Date",
+  "select_feeStructure": "Select fee structure",
+  "enter_sequenceNo": "Enter sequence number",
+  "enter_paymentLabel": "Enter payment label",
+  "enter_durationMonths": "Enter duration in months",
+  "enter_amount": "Enter amount",
+  "enter_discountAmount": "Enter discount amount",
+  "select_dueDate": "Select due date"
 }

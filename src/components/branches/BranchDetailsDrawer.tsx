@@ -53,6 +53,7 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
 
   return (
     <Drawer
+      key={branchId} // Force remount when branchId changes
       title={t('details_name', { name: entityName })}
       width={800}
       open={visible}
