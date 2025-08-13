@@ -160,10 +160,26 @@ export const Sidebar = ({ collapsed }: SidebarProps) => {
         label: 'Students',
       },
       {
+        key: '/student-educations',
+        icon: <BookOutlined />,
+        label: 'Student Educations',
+      },
+      {
+        key: '/student-families',
+        icon: <BookOutlined />,
+        label: 'Student Families',
+      },
+      {
+        key: '/student-profiles',
+        icon: <BookOutlined />,
+        label: 'Student Profiles',
+      },
+      {
         key: '/user-roles',
         icon: <UserOutlined />,
         label: 'User Roles',
       },
+
     ],
     [],
   );
