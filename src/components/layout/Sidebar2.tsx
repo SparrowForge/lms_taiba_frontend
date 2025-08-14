@@ -1,14 +1,14 @@
 'use client';
 
-import { BellOutlined, BookOutlined, LogoutOutlined, MehOutlined, SettingOutlined, SignatureOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Layout, Menu, Typography, Spin, MenuProps, Dropdown } from 'antd';
+import { BellOutlined, BookOutlined, LogoutOutlined, MehOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SettingOutlined, SignatureOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Layout, Menu, Typography, Spin, MenuProps, Dropdown, Button } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useCallback, useMemo, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useMenus } from '@/hooks/useMenus';
 import { Status } from '@/types/common';
 import { IMenu } from '@/types/menu';
-import { MenuItemType } from 'antd/es/menu/interface';
+import { ItemType, MenuItemType } from 'antd/es/menu/interface';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -18,7 +18,7 @@ interface SidebarProps {
     onCollapse: (collapsed: boolean) => void;
 }
 
-export const Sidebar2 = ({ collapsed }: SidebarProps) => {
+export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
     const { user, logout, getUserFullName } = useAuth();
     const { myMenus, myMenusStatus, loadMyMenus } = useMenus();
     const router = useRouter();
@@ -61,7 +61,7 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
                 return {
                     key,
                     icon: <BookOutlined />,
-                    label:locale === 'ar' ? menu.localName : menu.name,
+                    label: locale === 'ar' ? menu.localName : menu.name,
                     children: hasChildren ? transformMenus(menu.children) : undefined
                 };
             });
@@ -118,29 +118,29 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
     //settings 
 
     // Settings dropdown menu content
-const settingsMenuItemsDropdown: MenuProps['items'] = [
-    {
-        key: 'profile',
-        icon: <UserOutlined />,
-        label: 'Profile',
-        onClick: () => router.push('/settings/profile'),
-    },
-    {
-        type: 'divider',
-    },
-    {
-        key: 'upgrade',
-        icon: <SignatureOutlined />,
-        label: 'Upgrade Plan',
-        onClick: () => router.push('/upgrade'),
-    },
-    {
-        key: 'signout',
-        icon: <LogoutOutlined />,
-        label: 'Logout',
-        onClick: handleLogout,
-    },
-];
+    const settingsMenuItemsDropdown: MenuProps['items'] = [
+        {
+            key: 'profile',
+            icon: <UserOutlined />,
+            label: 'Profile',
+            onClick: () => router.push('/settings/profile'),
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: 'upgrade',
+            icon: <SignatureOutlined />,
+            label: 'Upgrade Plan',
+            onClick: () => router.push('/upgrade'),
+        },
+        {
+            key: 'signout',
+            icon: <LogoutOutlined />,
+            label: 'Logout',
+            onClick: handleLogout,
+        },
+    ];
 
     const settingsMenuItems = useMemo(
         () => [
@@ -186,92 +186,169 @@ const settingsMenuItemsDropdown: MenuProps['items'] = [
 
     const defaultOpenKeys = useMemo(() => {
         if (!menuItems) return [];
-        return menuItems
-            .filter(
-                (item): item is Required<MenuItemType> & { children: MenuItemType[] } =>
-                    !!item && Array.isArray((item as any).children) && (item as any).children.length > 0
-            )
-            .map((item) => item.key as string);
-    }, [menuItems]);
+
+        const openKey = menuItems.find(
+            (item): item is MenuItemType & { children: ItemType<MenuItemType>[] } =>
+                !!item &&
+                'children' in item &&
+                Array.isArray(item.children) &&
+                item.children.some(
+                    (child): child is MenuItemType =>
+                        !!child && 'key' in child && child.key === currentPath
+                )
+        )?.key;
+
+        return openKey ? [String(openKey)] : [];
+    }, [menuItems, currentPath]);
+
+    <>     {/* Toggle Button */}
+        <Button
+            type="primary"
+            shape="default"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => onCollapse(!collapsed)}
+            className={`absolute  shadow-md ${locale === 'en'
+                ? collapsed
+                    ? 'top-[100px] left-16'
+                    : 'top-[170px] left-[264px]'
+                : collapsed
+                    ? 'top-[100px] left-4'
+                    : 'top-[170px] left-4'
+                }`}
+            style={{
+                width: 28,
+                height: 28,
+                padding: 0,
+                backgroundColor: '#fff',
+                color: '#333',
+                border: '1px solid #ddd',
+            }}
+        /></>
 
     return (
-        <Sider
-            collapsed={collapsed}
-            theme="light"
-            width={280}
-            className="border-r border-gray-200 shadow-sm"
-            style={{
-                overflow: 'auto',
-                height: '100vh',
-                position: 'fixed',
-                left: 0,
-                top: 0,
-                bottom: 0,
-                zIndex: 1000,
-                backgroundColor: '#ffffff',
-            }}
-        >
-            {/* Logo */}
-            <div className="p-6 border-b border-gray-100">
-                <div className="flex items-center justify-center">
-                    {!collapsed ? (
-                        <div className="text-center">
-                            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+        <>
+            <Sider
+                collapsed={collapsed}
+                theme="light"
+                width={280}
+                className="border-r border-gray-200 shadow-sm flex flex-col"
+                style={{
+                    overflow: 'auto', // ❌ remove auto scroll
+                    height: '100vh',
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    zIndex: 1000,
+                    backgroundColor: '#ffffff',
+                }}
+            >
+                {/* Logo */}
+                <div className="p-6 border-b border-gray-100 shrink-0">
+                    <div className="flex items-center justify-center">
+                        {!collapsed ? (
+                            <div className="text-center">
+                                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <span className="text-white font-bold text-lg">L</span>
+                                </div>
+                                <h1 className="text-xl font-bold text-gray-900 mb-1">LMS Taiba</h1>
+                                <Text type="secondary" className="text-xs">
+                                    Admin Panel
+                                </Text>
+                            </div>
+                        ) : (
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                                 <span className="text-white font-bold text-lg">L</span>
                             </div>
-                            <h1 className="text-xl font-bold text-gray-900 mb-1">LMS Taiba</h1>
-                            <Text type="secondary" className="text-xs">
-                                Admin Panel
-                            </Text>
+                        )}
+                    </div>
+                </div>
+
+                {/* User Profile */}
+                <div className="shrink-0">{userProfileSection}</div>
+                <div className={`absolute right-0 z-20 ${
+    collapsed ? 'bottom-[460px]' : 'bottom-[400px]'
+  }`}>
+                    <Button
+                        type="primary"
+                        shape="default"
+                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        onClick={() => onCollapse(!collapsed)}
+                        style={{
+                            width: 28,
+                            height: 28,
+                            padding: 0,
+                            backgroundColor: '#fff',
+                            color: '#333',
+                            border: '1px solid #ddd',
+                        }}
+                    />
+                </div>
+                {/* Navigation Menu - scrollable */}
+                <div className="flex-1 overflow-hidden
+                 min-h-0 scroll-smooth" style={{
+                    overflow : "auto"
+
+                 }}>
+                    <h1 className="py-4 px-2 text-gray-400 uppercase">Main</h1>
+                    {myMenusStatus.status === Status.LOADING ? (
+                        <div className="flex justify-center items-center p-4">
+                            <Spin />
                         </div>
                     ) : (
-                        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                            <span className="text-white font-bold text-lg">L</span>
-                        </div>
+                        <Menu
+                            mode="inline"
+                            selectedKeys={[currentPath]}
+                            defaultOpenKeys={defaultOpenKeys}
+                            items={menuItems}
+                            onClick={handleMenuClick}
+                        />
                     )}
                 </div>
-            </div>
 
-            {/* User Profile */}
-            {userProfileSection}
-
-            {/* Navigation Menu */}
-            <div className="flex-1 overflow-auto">
-                <h1 className='p-2 text-gray-700 uppercase'>Main</h1>
-                {myMenusStatus.status === Status.LOADING ? (
-                    <div className="flex justify-center items-center p-4">
-                        <Spin />
-                    </div>
-                ) : (
+                {/* Logout and Settings */}
+                <div className="py-4 border-t border-gray-100 shrink-0">
+                    <h1 className="px-4 text-gray-500 uppercase text-xs tracking-wider mb-2">Settings</h1>
                     <Menu
                         mode="inline"
-                        selectedKeys={[currentPath]}
-                        defaultOpenKeys={defaultOpenKeys}
-                        items={menuItems}
-                        onClick={handleMenuClick}
+                        items={settingsMenuItems}
+                        className="border-0"
+                        style={{ backgroundColor: 'transparent' }}
                     />
+                    <Menu
+                        mode="inline"
+                        items={logoutMenuItems}
+                        className="border-0 mt-2"
+                        style={{ backgroundColor: 'transparent' }}
+                    />
+                </div>
 
-                )}
-            </div>
+            </Sider>
 
-            {/* Logout and settings Button */}
-            <div className="py-4 border-t border-gray-100">
-                <h1 className="px-4 text-gray-500 uppercase text-xs tracking-wider mb-2">Settings</h1>
-                <Menu
-                    mode="inline"
-                    items={settingsMenuItems}
-                    className="border-0"
-                    style={{ backgroundColor: 'transparent' }}
-                />
-                <Menu
-                    mode="inline"
-                    items={logoutMenuItems}
-                    className="border-0 mt-2"
-                    style={{ backgroundColor: 'transparent' }}
-                />
-            </div>
+            {/* Toggle Button */}
+            {/* <Button
+                type="primary"
+                shape="default"
+                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                onClick={() => onCollapse(!collapsed)}
+                className={`absolute z-2000 shadow-md ${locale === 'en'
+                        ? collapsed
+                            ? 'top-[100px] left-16'
+                            : 'top-[170px] left-[264px]'
+                        : collapsed
+                            ? 'top-[100px] left-4'
+                            : 'top-[170px] left-4'
+                    }`}
+                style={{
+                    width: 28,
+                    height: 28,
+                    padding: 0,
+                    backgroundColor: '#fff',
+                    color: '#333',
+                    border: '1px solid #ddd',
+                }}
+            />  */}
 
-
-        </Sider>
+        </>
     );
 };
