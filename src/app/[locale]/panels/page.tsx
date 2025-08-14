@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -11,7 +12,9 @@ import PanelDetailsDrawer from '@/components/panels/PanelDetailsDrawer';
 import PanelFormDrawer from '@/components/panels/PanelFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
 import {Status} from '@/types/common';
@@ -25,8 +28,8 @@ export default function PanelsPage() {
   const [selectedPanelId, setSelectedPanelId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsPanelId, setSelectedDetailsPanelId] = useState<number | undefined>();
-  const t = useTranslations();
-  const entityName = t('panel', { defaultValue: 'Panel' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
 
   const { panels, listStatus, pagination, loadPanels, removePanel } = usePanels();
 
@@ -74,7 +77,7 @@ export default function PanelsPage() {
 
   const config: EntityConfig<IPanel> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/panels',
     searchFields: ['name', 'status'] as (keyof IPanel)[],
     onSearch: (searchText: string) => {
@@ -87,38 +90,38 @@ export default function PanelsPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('name'),
+        title: t(LOCALE_KEYS.NAME),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (panel: IPanel) => (
           <EntityActions
             onView={() => router.push(`/panels/${panel.id}`)}
             onViewModal={handleViewDetails}
-            viewText={t('view')}
-            editText={t('edit')}
-            deleteText={t('delete')}
-            viewModalText={t('quickView')}
+            viewText={t(LOCALE_KEYS.VIEW)}
+            editText={t(LOCALE_KEYS.EDIT)}
+            deleteText={t(LOCALE_KEYS.DELETE)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/panels/${panel.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removePanel(panel.id)}
             id={panel.id}
           />
@@ -133,7 +136,7 @@ export default function PanelsPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadPanels({ page: 1, limit: 10 })}

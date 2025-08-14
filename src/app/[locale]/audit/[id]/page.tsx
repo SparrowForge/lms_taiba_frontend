@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useCreateAuditDetailsConfig} from '@/components/audits/auditConfig';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -10,64 +11,41 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useAudit} from '@/hooks/useAudit';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAudit} from '@/types/audit';
 import {Status} from '@/types/common';
 
+export default function AuditDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { selectedAudit, detailsStatus, getAuditById } = useAudit();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.AUDIT, { defaultValue: 'Audit' });
 
-interface AuditDetailPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const AuditDetailPage: React.FC<AuditDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { audits, listStatus, loadAudits, getAuditById, loadAudit } = useAudit();
-  const [audit, setAudit] = useState<IAudit | null>(null);
-  const t = useTranslations();
-  const entityName = t('audit', { defaultValue: 'Audit' });
+  const auditId = parseInt(resolvedParams.id);
 
+  // Load audit if not already loaded
   useEffect(() => {
-    const auditId = parseInt(resolvedParams.id);
-    const foundAudit = getAuditById(auditId);
-    if (foundAudit) {
-      setAudit(foundAudit);
-    } else {
-      loadAudit(auditId);
-    }
-  }, [resolvedParams.id, getAuditById, loadAudit]);
-
-  useEffect(() => {
-    if (audits.length === 0) {
-      loadAudits();
-    }
-  }, [audits.length, loadAudits]);
-
-  useEffect(() => {
-    if (audits.length > 0) {
-      const foundAudit = getAuditById(parseInt(resolvedParams.id));
-      if (foundAudit) {
-        setAudit(foundAudit);
-      }
-    }
-  }, [audits, resolvedParams.id, getAuditById]);
+    getAuditById(auditId);
+  }, [getAuditById, auditId]);
 
   const config = useCreateAuditDetailsConfig(
-    audit,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedAudit,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IAudit>} />
+          <EntityDetails config={config as EntityDetailsConfig<IAudit>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default AuditDetailPage;
+}

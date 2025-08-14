@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
 
 import {semesterService} from '@/services/semesterService';
@@ -66,8 +66,8 @@ export const useSemesters = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: ISemester = await semesterService.getSemester(id);
-        dispatch(setSelectedSemester(response));
+        const response: IBaseResponse<ISemester> = await semesterService.getSemester(id);
+        dispatch(setSelectedSemester(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -148,10 +148,19 @@ export const useSemesters = () => {
 
   // Get semester by ID from the current list
   const getSemesterById = useCallback(
-    (id: number): ISemester | undefined => {
-      return semesters.find((semester) => semester.id === id);
+    (id: number) => {
+      if (selectedSemester && selectedSemester.id === id) {
+        return;
+      }
+
+      const semester = semesters.find((semester) => semester.id === id);
+      if (semester) {
+        dispatch(setSelectedSemester(semester));
+      } else {
+        loadSemester(id);
+      }
     },
-    [semesters],
+    [semesters, selectedSemester, dispatch, loadSemester],
   );
 
   // Clear action status

@@ -1,17 +1,21 @@
 import {Button, Form, Input, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IPanel} from '@/types/panel';
+
+import FormLayout from '../layout/FormLayout';
 
 
 interface PanelFormProps {
@@ -34,14 +38,8 @@ const PanelForm: React.FC<PanelFormProps> = ({
   const router = useRouter();
   const [form] = Form.useForm();
   const { createPanel, editPanel, actionStatus } = usePanels();
-  const t = useTranslations();
-  const entityName = t('panel', { defaultValue: 'Panel' });
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
 
   useEffect(() => {
     if (mode === 'create') {
@@ -53,7 +51,7 @@ const PanelForm: React.FC<PanelFormProps> = ({
     try {
       if (mode === 'create') {
         await createPanel(values);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -61,7 +59,7 @@ const PanelForm: React.FC<PanelFormProps> = ({
         }
       } else if (mode === 'edit' && panelId) {
         await editPanel(panelId, values);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -69,7 +67,7 @@ const PanelForm: React.FC<PanelFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -95,29 +93,29 @@ const PanelForm: React.FC<PanelFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
-      initialValues={initialValues}
-      aria-label={`${mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })} form`}
+      initialValues={mode === 'edit' ? initialValues : undefined}
+      aria-label={`${mode === 'create' ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName }) : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} form`}
       role="form"
     >
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('pleaseEnterName_name', { name: entityName }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
-        <Input placeholder={t('name')} aria-label={t('name')} aria-required="true" />
+        <Input placeholder={t(LOCALE_KEYS.NAME)} aria-label={t(LOCALE_KEYS.NAME)} aria-required="true" />
       </Form.Item>
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -137,9 +135,9 @@ const PanelForm: React.FC<PanelFormProps> = ({
             onClick={handleCancel}
             size={embedded ? 'middle' : 'large'}
             style={{ minWidth: embedded ? '80px' : '120px' }}
-            aria-label={t('cancel', { defaultValue: 'Cancel' }) + ' button'}
+            aria-label={t(LOCALE_KEYS.CANCEL) + ' button'}
           >
-            {t('cancel', { defaultValue: 'Cancel' })}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>
@@ -149,22 +147,9 @@ const PanelForm: React.FC<PanelFormProps> = ({
   return embedded ? (
     formContent
   ) : (
-    <div style={{ padding: '24px' }}>
-      <div
-        style={{
-          maxWidth: '600px',
-          margin: '0 auto',
-          backgroundColor: '#fff',
-          padding: '24px',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        }}
-        role="main"
-        aria-labelledby="form-title"
-      >
-        {formContent}
-      </div>
-    </div>
+    <FormLayout>
+      {formContent}
+    </FormLayout>
   );
 };
 

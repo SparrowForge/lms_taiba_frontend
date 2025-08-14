@@ -1,7 +1,9 @@
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect, useState} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';
 
 import {IUserRole} from '@/types/userRole';
@@ -25,8 +27,8 @@ const UserRoleFormDrawer: React.FC<UserRoleFormDrawerProps> = ({
 }) => {
   const [initialValues, setInitialValues] = useState<Partial<IUserRole> | undefined>();
   const { selectedUserRole, loadUserRole } = useUserRoles();
-  const t = useTranslations();
-  const entityName = t('userRole', { defaultValue: 'User Role' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER_ROLE, { defaultValue: 'User Role' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && userRoleId) {
@@ -57,9 +59,9 @@ const UserRoleFormDrawer: React.FC<UserRoleFormDrawerProps> = ({
 
   const getTitle = () => {
     if (mode === 'create') {
-      return t('create_name', { name: entityName });
+      return t(LOCALE_KEYS.CREATE_NAME, { name: entityName });
     }
-    return t('edit_name', { name: entityName });
+    return t(LOCALE_KEYS.EDIT_NAME, { name: entityName });
   };
 
   return (

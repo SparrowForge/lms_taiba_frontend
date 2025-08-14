@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateFacultyDetailsConfig} from '@/components/faculties/facultyConfig';
@@ -10,63 +11,41 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IFaculty} from '@/types/faculty';
 
-interface FacultyDetailPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
+export default function FacultyDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { selectedFaculty, detailsStatus, getFacultyById } = useFaculties();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
 
-const FacultyDetailPage: React.FC<FacultyDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { faculties, listStatus, loadFaculties, getFacultyById, loadFaculty } = useFaculties();
-  const [faculty, setFaculty] = useState<IFaculty | null>(null);
-  const t = useTranslations();
-  const entityName = t('faculty', { defaultValue: 'Faculty' });
+  const facultyId = parseInt(resolvedParams.id);
 
+  // Load faculty if not already loaded
   useEffect(() => {
-    const facultyId = parseInt(resolvedParams.id);
-    const foundFaculty = getFacultyById(facultyId);
-    if (foundFaculty) {
-      setFaculty(foundFaculty);
-    } else {
-      loadFaculty(facultyId);
-    }
-  }, [resolvedParams.id, getFacultyById, loadFaculty]);
-
-  useEffect(() => {
-    if (faculties.length === 0) {
-      loadFaculties();
-    }
-  }, [faculties.length, loadFaculties]);
-
-  useEffect(() => {
-    if (faculties.length > 0) {
-      const foundFaculty = getFacultyById(parseInt(resolvedParams.id));
-      if (foundFaculty) {
-        setFaculty(foundFaculty);
-      }
-    }
-  }, [faculties, resolvedParams.id, getFacultyById]);
+    getFacultyById(facultyId);
+  }, [getFacultyById, facultyId]);
 
   const config = useCreateFacultyDetailsConfig(
-    faculty,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedFaculty,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IFaculty>} />
+          <EntityDetails config={config as EntityDetailsConfig<IFaculty>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default FacultyDetailPage;
+}

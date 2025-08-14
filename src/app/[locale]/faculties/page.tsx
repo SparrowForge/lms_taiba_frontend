@@ -1,9 +1,9 @@
 'use client';
 
-import {Tag} from 'antd';
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -12,8 +12,10 @@ import FacultyFormDrawer from '@/components/faculties/FacultyFormDrawer';
 import {MainLayout} from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
 import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBranch} from '@/types/branch';
 import {Status} from '@/types/common';
@@ -21,8 +23,8 @@ import {IDepartment} from '@/types/department';
 import {IFaculty} from '@/types/faculty';
 
 export default function FacultyPage() {
-  const t = useTranslations();
-  const entityName = t('faculty', { defaultValue: 'Faculty' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -76,7 +78,7 @@ export default function FacultyPage() {
 
   const config: EntityConfig<IFaculty> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/faculties',
     searchFields: ['fullName', 'email', 'employeeCode'] as (keyof IFaculty)[],
     onSearch: (searchText: string) => {
@@ -89,70 +91,68 @@ export default function FacultyPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('fullName'),
+        title: t(LOCALE_KEYS.FULL_NAME),
         dataIndex: 'fullName',
         key: 'fullName',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('email'),
+        title: t(LOCALE_KEYS.EMAIL),
         dataIndex: 'email',
         key: 'email',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('employeeCode'),
+        title: t(LOCALE_KEYS.EMPLOYEE_CODE),
         dataIndex: 'employeeCode',
         key: 'employeeCode',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('employmentType'),
+        title: t(LOCALE_KEYS.EMPLOYMENT_TYPE),
         dataIndex: 'employmentType',
         key: 'employmentType',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('status'),
-        dataIndex: 'isActive',
-        key: 'isActive',
-        render: (isActive: boolean) => (
-          <Tag color={isActive ? 'green' : 'red'}>{isActive ? t('active') : t('inactive')}</Tag>
-        ),
+        title: t(LOCALE_KEYS.STATUS),
+        dataIndex: 'status',
+        key: 'status',
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('branch'),
+        title: t(LOCALE_KEYS.BRANCH),
         dataIndex: 'branch',
         key: 'branch',
         render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
       },
       {
-        title: t('department'),
+        title: t(LOCALE_KEYS.DEPARTMENT),
         dataIndex: 'department',
         key: 'department',
         render: (department: IDepartment) => <span>{department?.name || 'N/A'}</span>,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (faculty: IFaculty) => (
           <EntityActions
             onView={() => router.push(`/faculties/${faculty.id}`)}
             onViewModal={handleViewDetails}
-            viewText={t('view')}
-            editText={t('edit')}
-            deleteText={t('delete')}
-            viewModalText={t('quickView')}
+            viewText={t(LOCALE_KEYS.VIEW)}
+            editText={t(LOCALE_KEYS.EDIT)}
+            deleteText={t(LOCALE_KEYS.DELETE)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/faculties/${faculty.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeFaculty(faculty.id)}
             id={faculty.id}
           />
@@ -167,7 +167,7 @@ export default function FacultyPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadFaculties({ page: 1, limit: 10 })}

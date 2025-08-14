@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateDepartmentDetailsConfig} from '@/components/departments/departmentConfig';
@@ -10,62 +11,41 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useDepartments} from '@/hooks/useDepartments';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IDepartment} from '@/types/department';
 
-interface DepartmentDetailPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
+export default function DepartmentDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { selectedDepartment, detailsStatus, getDepartmentById } = useDepartments();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
 
-const DepartmentDetailPage: React.FC<DepartmentDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { departments, listStatus, loadDepartments, getDepartmentById, loadDepartment } =
-    useDepartments();
-  const [department, setDepartment] = useState<IDepartment | null>(null);
-  const t = useTranslations();
-  const entityName = t('department', { defaultValue: 'Department' });
+  const departmentId = parseInt(resolvedParams.id);
 
+  // Load department if not already loaded
   useEffect(() => {
-    const departmentId = parseInt(resolvedParams.id);
-    const foundDepartment = getDepartmentById(departmentId);
-    if (foundDepartment) {
-      setDepartment(foundDepartment);
-    } else {
-      loadDepartment(departmentId);
-    }
-  }, [resolvedParams.id, getDepartmentById, loadDepartment]);
-
-  useEffect(() => {
-    if (departments.length === 0) {
-      loadDepartments();
-    }
-  }, [departments.length, loadDepartments]);
-
-  useEffect(() => {
-    if (departments.length > 0) {
-      const foundDepartment = getDepartmentById(parseInt(resolvedParams.id));
-      if (foundDepartment) {
-        setDepartment(foundDepartment);
-      }
-    }
-  }, [departments, resolvedParams.id, getDepartmentById]);
+    getDepartmentById(departmentId);
+  }, [getDepartmentById, departmentId]);
 
   const config = useCreateDepartmentDetailsConfig(
-    department,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedDepartment,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IDepartment>} />
+          <EntityDetails config={config as EntityDetailsConfig<IDepartment>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default DepartmentDetailPage;
+}

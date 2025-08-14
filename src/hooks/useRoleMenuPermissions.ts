@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate,} from '@/types/roleMenuPermission';
 
 import {roleMenuPermissionService} from '@/services/roleMenuPermissionService';
@@ -59,14 +59,12 @@ export const useRoleMenuPermissions = () => {
 
   // Load a single role menu permission
   const loadRoleMenuPermission = useCallback(
-    async (roleId: number, menuId: number) => {
+    async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IRoleMenuPermission = await roleMenuPermissionService.getRoleMenuPermission(
-          roleId,
-          menuId,
-        );
-        dispatch(setSelectedRoleMenuPermission(response));
+        const response: IBaseResponse<IRoleMenuPermission> =
+          await roleMenuPermissionService.getRoleMenuPermission(id);
+        dispatch(setSelectedRoleMenuPermission(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -111,11 +109,11 @@ export const useRoleMenuPermissions = () => {
 
   // Edit an existing role menu permission
   const editRoleMenuPermission = useCallback(
-    async (roleId: number, menuId: number, data: IRoleMenuPermissionUpdate) => {
+    async (id: number, data: IRoleMenuPermissionUpdate) => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
         const response: IRoleMenuPermission =
-          await roleMenuPermissionService.updateRoleMenuPermission(roleId, menuId, data);
+          await roleMenuPermissionService.updateRoleMenuPermission(id, data);
         dispatch(updateRoleMenuPermission(response));
         dispatch(
           setActionStatus({
@@ -139,11 +137,11 @@ export const useRoleMenuPermissions = () => {
 
   // Remove a role menu permission
   const removeRoleMenuPermission = useCallback(
-    async (roleId: number, menuId: number) => {
+    async (id: number) => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
-        await roleMenuPermissionService.deleteRoleMenuPermission(roleId, menuId);
-        dispatch(deleteRoleMenuPermission({ roleId, menuId }));
+        await roleMenuPermissionService.deleteRoleMenuPermission(id);
+        dispatch(deleteRoleMenuPermission(id));
         dispatch(
           setActionStatus({
             status: Status.SUCCESS,
@@ -166,12 +164,19 @@ export const useRoleMenuPermissions = () => {
 
   // Get role menu permission by roleId and menuId from the current list
   const getRoleMenuPermissionById = useCallback(
-    (roleId: number, menuId: number): IRoleMenuPermission | undefined => {
-      return roleMenuPermissions.find(
-        (permission) => permission.roleId === roleId && permission.menuId === menuId,
-      );
+    (id: number) => {
+      if (selectedRoleMenuPermission && selectedRoleMenuPermission.id === id) {
+        return;
+      }
+
+      const roleMenuPermission = roleMenuPermissions.find((item) => item.id === id);
+      if (roleMenuPermission) {
+        dispatch(setSelectedRoleMenuPermission(roleMenuPermission));
+      } else {
+        loadRoleMenuPermission(id);
+      }
     },
-    [roleMenuPermissions],
+    [roleMenuPermissions, selectedRoleMenuPermission, dispatch, loadRoleMenuPermission],
   );
 
   // Clear action status

@@ -1,4 +1,6 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IPanel} from '@/types/panel';
 
@@ -14,8 +16,8 @@ export const useCreatePanelDetailsConfig = (
   } = {},
 ) => {
   const { embedded = false, onEdit } = options;
-  const t = useTranslations();
-  const entityName = t('panel', { defaultValue: 'Panel' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
   return {
     name: entityName,
     route: '/panels',
@@ -27,16 +29,16 @@ export const useCreatePanelDetailsConfig = (
     embedded,
     onEdit,
     fields: [
-      { key: 'id', label: t('id') },
-      { key: 'name', label: t('name') },
+      { key: 'id', label: t(LOCALE_KEYS.ID) },
+      { key: 'name', label: t(LOCALE_KEYS.NAME) },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

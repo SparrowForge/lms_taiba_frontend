@@ -1,10 +1,12 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
-
-import {IPanel} from '@/types/panel';
 
 import PanelForm from './PanelForm';
 
@@ -12,62 +14,55 @@ import PanelForm from './PanelForm';
 interface PanelFormDrawerProps {
   mode: 'create' | 'edit';
   panelId?: number;
-  initialValues?: Partial<IPanel>;
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
   mode,
   panelId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
-  const { getPanelById, loadPanel } = usePanels();
-  const [panel, setPanel] = useState<IPanel | null>(null);
-  const t = useTranslations();
-  const entityName = t('panel', { defaultValue: 'Panel' });
+
+  const { getPanelById, selectedPanel } = usePanels();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
   useEffect(() => {
-    if (mode === 'edit' && panelId && visible) {
-      const foundPanel = getPanelById(panelId);
-      if (foundPanel) {
-        setPanel(foundPanel);
-      } else {
-        loadPanel(panelId);
-      }
+    if (visible && mode === 'edit' && panelId) {
+      getPanelById(panelId);
     }
-  }, [mode, panelId, visible, getPanelById, loadPanel]);
+  }, [visible, mode, panelId, getPanelById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+  const handleSuccess = () => {
+    onSuccess();
+  };
 
-  const handleDrawerSuccess = () => {
-    if (onSuccess) onSuccess();
+  const handleCancel = () => {
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && panel) {
-      return {
-        name: panel.name,
-      };
-    }
-    return initialValues;
-  };
-
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      key={panelId} // Force remount when panelId changes
+      title={
+        mode === 'create'
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <PanelForm
         mode={mode}
         panelId={panelId}
-        initialValues={getFormInitialValues()}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        initialValues={selectedPanel || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>

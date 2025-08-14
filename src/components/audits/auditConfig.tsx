@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAudit} from '@/types/audit';
 
@@ -23,7 +25,7 @@ export const useCreateAuditDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<IAudit> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
     name: t('audit'),
     route: '/audit',
@@ -36,41 +38,40 @@ export const useCreateAuditDetailsConfig = (
     onEdit,
     onBack,
     fields: [
-      { key: 'id', label: 'ID' },
-      { key: 'userId', label: t('userId') },
-      { key: 'username', label: t('username') },
-      { key: 'action', label: t('action') },
-      { key: 'resource', label: t('resource') },
+      { key: 'userId', label: t(LOCALE_KEYS.USER_ID) },
+      { key: 'username', label: t(LOCALE_KEYS.USERNAME) },
+      { key: 'action', label: t(LOCALE_KEYS.ACTION) },
+      { key: 'resource', label: t(LOCALE_KEYS.RESOURCE) },
       {
         key: 'resourceId',
-        label: t('resourceId'),
+        label: t(LOCALE_KEYS.RESOURCE_ID),
         render: (value: number | null) => value || 'N/A',
       },
-      { key: 'method', label: t('method') },
-      { key: 'url', label: t('url') },
-      { key: 'ip', label: t('ip') },
-      { key: 'userAgent', label: t('userAgent') },
+      { key: 'method', label: t(LOCALE_KEYS.METHOD) },
+      { key: 'url', label: t(LOCALE_KEYS.URL) },
+      { key: 'ip', label: t(LOCALE_KEYS.IP) },
+      { key: 'userAgent', label: t(LOCALE_KEYS.USER_AGENT) },
       {
         key: 'requestBody',
-        label: t('requestBody'),
+        label: t(LOCALE_KEYS.REQUEST_BODY),
         render: (value: string | null) => value || 'N/A',
       },
-      { key: 'responseStatus', label: t('responseStatus') },
-      { key: 'responseTime', label: t('responseTime') },
+      { key: 'responseStatus', label: t(LOCALE_KEYS.RESPONSE_STATUS) },
+      { key: 'responseTime', label: t(LOCALE_KEYS.RESPONSE_TIME) },
       {
         key: 'success',
-        label: t('success'),
-        render: (value: boolean) => (value ? t('yes') : t('no')),
+        label: t(LOCALE_KEYS.SUCCESS),
+        render: (value: boolean) => (value ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)),
       },
-      { key: 'error', label: t('error'), render: (value: string | null) => value || 'N/A' },
+      { key: 'error', label: t(LOCALE_KEYS.ERROR), render: (value: string | null) => value || 'N/A' },
       {
         key: 'timestamp',
-        label: t('timestamp'),
+        label: t(LOCALE_KEYS.TIMESTAMP),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

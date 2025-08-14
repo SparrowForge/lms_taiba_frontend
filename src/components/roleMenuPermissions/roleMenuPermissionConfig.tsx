@@ -1,4 +1,6 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
@@ -15,8 +17,8 @@ export const useCreateRoleMenuPermissionDetailsConfig = (
   } = {},
 ) => {
   const { embedded = false, onEdit } = options;
-  const t = useTranslations();
-  const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   return {
     name: entityName,
     route: '/role-menu-permissions',
@@ -30,38 +32,38 @@ export const useCreateRoleMenuPermissionDetailsConfig = (
     fields: [
       {
         key: 'role.name',
-        label: t('role'),
+        label: t(LOCALE_KEYS.ROLE),
         render: (value: string, item: IRoleMenuPermission) => item?.role?.name || 'N/A',
       },
       {
         key: 'menu.name',
-        label: t('menu'),
+        label: t(LOCALE_KEYS.MENU),
         render: (value: string, item: IRoleMenuPermission) => item?.menu?.name || 'N/A',
       },
-      { key: 'view', label: t('view'), render: (value: boolean) => (value ? t('yes') : t('no')) },
+      { key: 'view', label: t(LOCALE_KEYS.VIEW), render: (value: boolean) => (value ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)) },
       {
         key: 'insert',
-        label: t('insert'),
-        render: (value: boolean) => (value ? t('yes') : t('no')),
+        label: t(LOCALE_KEYS.INSERT),
+        render: (value: boolean) => (value ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)),
       },
       {
         key: 'update',
-        label: t('update'),
-        render: (value: boolean) => (value ? t('yes') : t('no')),
+        label: t(LOCALE_KEYS.UPDATE),
+        render: (value: boolean) => (value ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)),
       },
       {
         key: 'delete',
-        label: t('delete'),
-        render: (value: boolean) => (value ? t('yes') : t('no')),
+        label: t(LOCALE_KEYS.DELETE),
+        render: (value: boolean) => (value ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)),
       },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

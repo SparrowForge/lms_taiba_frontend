@@ -1,8 +1,11 @@
 import {IPanel} from './panel';
 
 export interface IMenu {
+  
   id: number;
   name: string;
+  localName:string;
+  icon: string;
   route: string;
   panelId: number;
   parentId: number | null;
@@ -32,4 +35,11 @@ export interface IMenuUpdate {
   parentId?: number | null;
   sortOrder?: number;
   status?: string;
+}
+
+export interface IMyMenusResponse {
+  success: boolean;
+  message: string;
+  data: IMenu[];    
+  timestamp: string;
 }

@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IFacultySubject} from '@/types/facultySubject';
 
@@ -23,9 +25,9 @@ export const useCreateFacultySubjectDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<IFacultySubject> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
-    name: t('facultySubject'),
+    name: t(LOCALE_KEYS.FACULTY_SUBJECT),
     route: '/faculty-subjects',
     getDisplayName: getFacultySubjectDisplayName,
     getInitials: getFacultySubjectInitials,
@@ -39,39 +41,39 @@ export const useCreateFacultySubjectDetailsConfig = (
       { key: 'id', label: 'ID' },
       {
         key: 'faculty.fullName',
-        label: t('faculty'),
+        label: t(LOCALE_KEYS.FACULTY),
         render: (value: string, item: IFacultySubject) => item?.faculty?.fullName || 'N/A',
       },
       {
         key: 'subject.name',
-        label: t('subject'),
+        label: t(LOCALE_KEYS.SUBJECT),
         render: (value: string, item: IFacultySubject) => item?.subject?.name || 'N/A',
       },
       {
         key: 'subject.code',
-        label: t('subjectCode'),
+        label: t(LOCALE_KEYS.SUBJECT_CODE),
         render: (value: string, item: IFacultySubject) => item?.subject?.code || 'N/A',
       },
       {
         key: 'semester.name',
-        label: t('semester'),
+        label: t(LOCALE_KEYS.SEMESTER),
         render: (value: string, item: IFacultySubject) => item?.semester?.name || 'N/A',
       },
       {
         key: 'batch.name',
-        label: t('batch'),
+        label: t(LOCALE_KEYS.BATCH),
         render: (value: string, item: IFacultySubject) => item?.batch?.name || 'N/A',
       },
-      { key: 'hoursPerWeek', label: t('hoursPerWeek') },
-      { key: 'role', label: t('role') },
+      { key: 'hoursPerWeek', label: t(LOCALE_KEYS.HOURS_PER_WEEK) },
+      { key: 'role', label: t(LOCALE_KEYS.ROLE) },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

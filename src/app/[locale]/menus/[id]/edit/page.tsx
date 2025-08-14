@@ -1,79 +1,58 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import MenuForm from '@/components/menus/MenuForm';
 import {PageHeader} from '@/components/ui/PageHeader';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
-import {IMenu} from '@/types/menu';
+import {Status} from '@/types/common';
 
-interface MenuEditPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
 
-const MenuEditPage: React.FC<MenuEditPageProps> = ({ params }) => {
+const MenuEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { menus, listStatus, loadMenus, getMenuById, loadMenu } = useMenus();
-  const [menu, setMenu] = useState<IMenu | null>(null);
-  const t = useTranslations();
-  const entityName = t('menu', { defaultValue: 'Menu' });
+  const { selectedMenu, detailsStatus, getMenuById } = useMenus();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
 
   useEffect(() => {
     const menuId = parseInt(resolvedParams.id);
-    const foundMenu = getMenuById(menuId);
-    if (foundMenu) {
-      setMenu(foundMenu);
-    } else {
-      loadMenu(menuId);
-    }
-  }, [resolvedParams.id, getMenuById, loadMenu]);
+    getMenuById(menuId);
+  }, [resolvedParams.id, getMenuById]);
 
-  useEffect(() => {
-    if (menus.length === 0) {
-      loadMenus();
-    }
-  }, [menus.length, loadMenus]);
 
-  useEffect(() => {
-    if (menus.length > 0) {
-      const foundMenu = getMenuById(parseInt(resolvedParams.id));
-      if (foundMenu) {
-        setMenu(foundMenu);
-      }
-    }
-  }, [menus, resolvedParams.id, getMenuById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!menu) {
+  if (!selectedMenu || selectedMenu.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/menus')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -82,31 +61,15 @@ const MenuEditPage: React.FC<MenuEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
-  const getInitialValues = () => ({
-    panelId: menu.panelId,
-    parentId: menu.parentId,
-    name: menu.name,
-    route: menu.route,
-    sortOrder: menu.sortOrder,
-  });
-
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <MenuForm
             mode="edit"
-            menuId={menu.id}
-            initialValues={getInitialValues()}
-            embedded={false}
-            onCancel={handleBack}
-          />
-        </div>
+            menuId={parseInt(resolvedParams.id)}
+            initialValues={selectedMenu}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

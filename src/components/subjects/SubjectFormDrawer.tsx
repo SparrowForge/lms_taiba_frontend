@@ -1,10 +1,12 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSubjects} from '@/hooks/useSubjects';
-
-import {ISubject} from '@/types/subject';
 
 import SubjectForm from './SubjectForm';
 
@@ -12,69 +14,55 @@ import SubjectForm from './SubjectForm';
 interface SubjectFormDrawerProps {
   mode: 'create' | 'edit';
   subjectId?: number;
-  initialValues?: Partial<ISubject>;
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
   mode,
   subjectId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
-  const { getSubjectById, loadSubject } = useSubjects();
-  const [subject, setSubject] = useState<ISubject | null>(null);
-  const t = useTranslations();
-  const entityName = t('subject', { defaultValue: 'Subject' });
 
+  const { getSubjectById, selectedSubject } = useSubjects();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
   useEffect(() => {
-    if (mode === 'edit' && subjectId && visible) {
-      const foundSubject = getSubjectById(subjectId);
-      if (foundSubject) {
-        setSubject(foundSubject);
-      } else {
-        loadSubject(subjectId);
-      }
+    if (visible && mode === 'edit' && subjectId) {
+      getSubjectById(subjectId);
     }
-  }, [mode, subjectId, visible, getSubjectById, loadSubject]);
+  }, [visible, mode, subjectId, getSubjectById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+  const handleSuccess = () => {
+    onSuccess();
+  };
 
-  const handleDrawerSuccess = () => {
-    if (onSuccess) onSuccess();
+  const handleCancel = () => {
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && subject) {
-      return {
-        courseId: subject.courseId,
-        name: subject.name,
-        code: subject.code,
-        creditHours: subject.creditHours,
-        theoryHours: subject.theoryHours,
-        practicalHours: subject.practicalHours,
-        description: subject.description,
-      };
-    }
-    return initialValues;
-  };
-
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      key={subjectId} // Force remount when subjectId changes
+      title={
+        mode === 'create'
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <SubjectForm
         mode={mode}
         subjectId={subjectId}
-        initialValues={getFormInitialValues()}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        initialValues={selectedSubject || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>

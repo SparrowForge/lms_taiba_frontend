@@ -53,7 +53,7 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
       onChange={onChange as (val: string) => void}
       allowClear={allowClear}
       disabled={disabled}
-      placeholder={placeholder ?? t('pleaseSelectStatus')}
+      placeholder={placeholder ?? t('please_select_status')}
       optionFilterProp="label"
       options={localizedOptions}
       size={size}

@@ -4,7 +4,10 @@ import {FileExcelOutlined, SearchOutlined, UserAddOutlined} from '@ant-design/ic
 import {Alert, Button, Card, Input, Pagination, Table, Typography} from 'antd';
 import {TableProps} from 'antd/es/table';
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -29,7 +32,7 @@ export interface EntityConfig<T> {
 
 // Generic EntityList component
 export const EntityList = <T extends { id: number }>({ config }: { config: EntityConfig<T> }) => {
-  const t = useTranslations();
+  const { t } = useLocalization();
   const router = useRouter();
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -54,7 +57,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
   };
 
   return (
-    <div style={{ padding: '24px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ padding: '8px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Card style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Fixed Top Section */}
         <div
@@ -88,7 +91,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
                   onClick={handleAddItem}
                   style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
                 >
-                  {t('add_name', { name: config.name })}
+                  {t(LOCALE_KEYS.ADD_NAME, { name: config.name })}
                 </Button>
               )}
 
@@ -99,12 +102,12 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
                   onClick={config.onQuickAdd}
                   style={{ backgroundColor: '#722ed1', borderColor: '#722ed1' }}
                 >
-                  {t('quickAdd_name', { name: config.name })}
+                  {t(LOCALE_KEYS.QUICK_ADD_NAME, { name: config.name })}
                 </Button>
               )}
               {config.exportUrl && (
                 <Button type="primary" icon={<FileExcelOutlined />} onClick={handleExport}>
-                  {t('export')}
+                  {t(LOCALE_KEYS.EXPORT)}
                 </Button>
               )}
             </div>
@@ -112,7 +115,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
 
           {config.error && (
             <Alert
-              message={t('error')}
+              message={t(LOCALE_KEYS.ERROR)}
               description={config.error}
               type="error"
               showIcon
@@ -122,7 +125,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
 
           {config.onSearch && (
             <Search
-              placeholder={t('search_name', {
+              placeholder={t(LOCALE_KEYS.SEARCH_NAME, {
                 name: config.name,
                 fields: config.searchFields.join(', '),
               })}
@@ -138,9 +141,9 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
         </div>
 
         {/* Scrollable Table Section */}
-        <div style={{ flex: 1, overflow: 'auto', marginBottom: '16px' }}>
+        <div style={{ flex: 1, overflow: 'auto', marginBottom: '16px', height: 'calc(100vh - 200px)' }}>
           <Table
-            scroll={{ y: 'calc(100vh - 400px)' }}
+            scroll={{ y: 'calc(100vh - 360px)' }}
             loading={config.loading}
             columns={config.columns}
             dataSource={config.items}
@@ -157,11 +160,11 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
             bottom: 0,
             zIndex: 10,
             backgroundColor: '#fff',
-            paddingTop: '16px',
-            // borderTop: '1px solid #f0f0f0',
+            paddingTop: '12px',
+            borderTop: '1px solid #f0f0f0',
             display: 'flex',
             justifyContent: 'center',
-            paddingBottom: '16px',
+            paddingBottom: '12px',
           }}
         >
           <Pagination
@@ -171,7 +174,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
             showSizeChanger={true}
             showQuickJumper={true}
             showTotal={(total, range) =>
-              `${range[0]}-${range[1]} ${t('of')} ${total} ${config.name}`
+              `${range[0]}-${range[1]} ${t(LOCALE_KEYS.OF)} ${total} ${config.name}`
             }
             onChange={(page, pageSize) => {
               router.push(`${config.route}?skip=${(page - 1) * pageSize}&limit=${pageSize}`);

@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -9,62 +10,42 @@ import {useCreateRoleDetailsConfig} from '@/components/roles/roleConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 
 import {Status} from '@/types/common';
 import {IRole} from '@/types/role';
 
-interface RoleDetailPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
+export default function RoleDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { selectedRole, detailsStatus, getRoleById } = useRoles();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
 
-const RoleDetailPage: React.FC<RoleDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { roles, listStatus, loadRoles, getRoleById, loadRole } = useRoles();
-  const [role, setRole] = useState<IRole | null>(null);
-  const t = useTranslations();
-  const entityName = t('role', { defaultValue: 'Role' });
+  const roleId = parseInt(resolvedParams.id);
 
+  // Load role if not already loaded
   useEffect(() => {
-    const roleId = parseInt(resolvedParams.id);
-    const foundRole = getRoleById(roleId);
-    if (foundRole) {
-      setRole(foundRole);
-    } else {
-      loadRole(roleId);
-    }
-  }, [resolvedParams.id, getRoleById, loadRole]);
-
-  useEffect(() => {
-    if (roles.length === 0) {
-      loadRoles();
-    }
-  }, [roles.length, loadRoles]);
-
-  useEffect(() => {
-    if (roles.length > 0) {
-      const foundRole = getRoleById(parseInt(resolvedParams.id));
-      if (foundRole) {
-        setRole(foundRole);
-      }
-    }
-  }, [roles, resolvedParams.id, getRoleById]);
+    getRoleById(roleId);
+  }, [getRoleById, roleId]);
 
   const config = useCreateRoleDetailsConfig(
-    role,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedRole,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IRole>} />
+          <EntityDetails config={config as EntityDetailsConfig<IRole>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default RoleDetailPage;
+}

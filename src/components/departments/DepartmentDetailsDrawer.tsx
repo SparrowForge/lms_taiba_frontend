@@ -1,10 +1,14 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useDepartments} from '@/hooks/useDepartments';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IDepartment} from '@/types/department';
@@ -16,7 +20,7 @@ interface DepartmentDetailsDrawerProps {
   departmentId?: number;
   visible: boolean;
   onClose: () => void;
-  onEdit?: (departmentId: number) => void;
+  onEdit: (departmentId: number) => void;
 }
 
 const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
@@ -25,52 +29,38 @@ const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { departments, listStatus, loadDepartments, getDepartmentById, loadDepartment } =
-    useDepartments();
-  const [department, setDepartment] = useState<IDepartment | null>(null);
-  const t = useTranslations();
-  const entityName = t('department', { defaultValue: 'Department' });
 
+  const { selectedDepartment, getDepartmentById, detailsStatus } = useDepartments();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
   useEffect(() => {
-    if (departmentId && visible) {
-      const foundDepartment = getDepartmentById(departmentId);
-      if (foundDepartment) {
-        setDepartment(foundDepartment);
-      } else {
-        loadDepartment(departmentId);
-      }
+    if (visible && departmentId) {
+      getDepartmentById(departmentId);
     }
-  }, [departmentId, visible, getDepartmentById, loadDepartment]);
+  }, [visible, departmentId, getDepartmentById]);
 
-  useEffect(() => {
-    if (departments.length === 0) {
-      loadDepartments();
-    }
-  }, [departments.length, loadDepartments]);
-
-  useEffect(() => {
-    if (departments.length > 0 && departmentId) {
-      const foundDepartment = getDepartmentById(departmentId);
-      if (foundDepartment) {
-        setDepartment(foundDepartment);
-      }
-    }
-  }, [departments, departmentId, getDepartmentById]);
+  const handleEdit = (department: IDepartment) => {
+    onEdit(department.id);
+  };
 
   const config = useCreateDepartmentDetailsConfig(
-    department,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
+    selectedDepartment,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={departmentId} // Force remount when departmentId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
+      width={800}
       open={visible}
       onClose={onClose}
-      width={500}
-      placement="right"
+      destroyOnHidden={true}
     >
       <EntityDetailsContent config={config} />
     </Drawer>

@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateCourseDetailsConfig} from '@/components/courses/courseConfig';
@@ -10,61 +11,41 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 
-interface CourseDetailPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
+export default function CourseDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { selectedCourse, detailsStatus, getCourseById } = useCourses();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
 
-const CourseDetailPage: React.FC<CourseDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { courses, listStatus, loadCourses, getCourseById, loadCourse } = useCourses();
-  const [course, setCourse] = useState<ICourse | null>(null);
-  const t = useTranslations();
-  const entityName = t('course', { defaultValue: 'Course' });
+  const courseId = parseInt(resolvedParams.id);
 
+  // Load course if not already loaded
   useEffect(() => {
-    const courseId = parseInt(resolvedParams.id);
-    const foundCourse = getCourseById(courseId);
-    if (foundCourse) {
-      setCourse(foundCourse);
-    } else {
-      loadCourse(courseId);
-    }
-  }, [resolvedParams.id, getCourseById, loadCourse]);
-
-  useEffect(() => {
-    if (courses.length === 0) {
-      loadCourses();
-    }
-  }, [courses.length, loadCourses]);
-
-  useEffect(() => {
-    if (courses.length > 0) {
-      const foundCourse = getCourseById(parseInt(resolvedParams.id));
-      if (foundCourse) {
-        setCourse(foundCourse);
-      }
-    }
-  }, [courses, resolvedParams.id, getCourseById]);
+    getCourseById(courseId);
+  }, [getCourseById, courseId]);
 
   const config = useCreateCourseDetailsConfig(
-    course,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedCourse,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<ICourse>} />
+          <EntityDetails config={config as EntityDetailsConfig<ICourse>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default CourseDetailPage;
+}

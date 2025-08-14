@@ -2,19 +2,23 @@
 
 import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 import {usePanels} from '@/hooks/usePanels';
 
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
+
+import FormLayout from '../layout/FormLayout';
 
 
 interface MenuFormProps {
@@ -34,18 +38,12 @@ const MenuForm: React.FC<MenuFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('menu');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   const router = useRouter();
   const [form] = Form.useForm();
-  const { createMenu, editMenu, actionStatus, menus, loadMenus } = useMenus();
+  const { createMenu, editMenu, actionStatus, menus } = useMenus();
   const { panels, loadPanels } = usePanels();
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -55,21 +53,15 @@ const MenuForm: React.FC<MenuFormProps> = ({
 
   useEffect(() => {
     if (panels.length === 0) {
-      loadPanels();
+      loadPanels({ page: 1, limit: 100 });
     }
   }, [panels.length, loadPanels]);
-
-  useEffect(() => {
-    if (menus.length === 0) {
-      loadMenus();
-    }
-  }, [menus.length, loadMenus]);
 
   const handleSubmit = async (values: Partial<IMenu>) => {
     try {
       if (mode === 'create') {
         await createMenu(values as IMenuCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -77,7 +69,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
         }
       } else if (mode === 'edit' && menuId) {
         await editMenu(menuId, values as IMenuUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -85,7 +77,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -115,18 +107,18 @@ const MenuForm: React.FC<MenuFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       <Form.Item
         name="panelId"
-        label={t('panel')}
-        rules={[{ required: true, message: t('required_field', { field: t('panel') }) }]}
+        label={t(LOCALE_KEYS.PANEL)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PANEL) }) }]}
       >
         <Select
-          placeholder={t('select_panel')}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.PANEL) })}
           loading={panels.length === 0}
           showSearch
           filterOption={(input, option) =>
@@ -141,9 +133,9 @@ const MenuForm: React.FC<MenuFormProps> = ({
         </Select>
       </Form.Item>
 
-      <Form.Item name="parentId" label={t('parent')}>
+      <Form.Item name="parentId" label={t(LOCALE_KEYS.PARENT)}>
         <Select
-          placeholder={t('select_parent')}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.PARENT) })}
           allowClear
           showSearch
           filterOption={(input, option) =>
@@ -160,32 +152,32 @@ const MenuForm: React.FC<MenuFormProps> = ({
 
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_field', { field: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
-        <Input placeholder={t('enter_name', { name: t('name') })} />
+        <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.NAME) })} />
       </Form.Item>
 
       <Form.Item
         name="route"
-        label={t('route')}
-        rules={[{ required: true, message: t('required_field', { field: t('route') }) }]}
+        label={t(LOCALE_KEYS.ROUTE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ROUTE) }) }]}
       >
-        <Input placeholder={t('enter_route')} />
+        <Input placeholder={t(LOCALE_KEYS.ENTER_ROUTE)} />
       </Form.Item>
 
       <Form.Item
         name="sortOrder"
-        label={t('sortOrder')}
-        rules={[{ required: true, message: t('required_field', { field: t('sortOrder') }) }]}
+        label={t(LOCALE_KEYS.SORT_ORDER)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SORT_ORDER) }) }]}
       >
-        <InputNumber placeholder={t('enter_sortOrder')} min={1} style={{ width: '100%' }} />
+        <InputNumber placeholder={t(LOCALE_KEYS.ENTER_SORT_ORDER)} min={1} style={{ width: '100%' }} />
       </Form.Item>
 
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -195,7 +187,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>{t('cancel')}</Button>
+          <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>
       </Form.Item>
     </Form>
@@ -204,22 +196,9 @@ const MenuForm: React.FC<MenuFormProps> = ({
   return embedded ? (
     formContent
   ) : (
-    <div style={{ padding: '24px' }}>
-      <div
-        style={{
-          maxWidth: '600px',
-          margin: '0 auto',
-          backgroundColor: '#fff',
-          padding: '24px',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        }}
-        role="main"
-        aria-labelledby="form-title"
-      >
-        {formContent}
-      </div>
-    </div>
+    <FormLayout>
+      {formContent}
+    </FormLayout>
   );
 };
 

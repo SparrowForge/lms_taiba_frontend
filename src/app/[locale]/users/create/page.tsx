@@ -1,26 +1,26 @@
 'use client';
 
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 import UserForm from '@/components/users/UserForm';
 
+import {useLocalization} from '@/hooks/useLocalization';
 
 export default function CreateUserPage() {
-  const t = useTranslations();
+  const { t } = useLocalization();
   const router = useRouter();
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
-          <PageHeader title={t('create_name', { name: t('user') })} onBack={() => router.back()} />
+          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: t(LOCALE_KEYS.USER) })} onBack={() => router.back()} />
           <UserForm mode="create" />
-        </div>
       </MainLayout>
     </ProtectedRoute>
   );

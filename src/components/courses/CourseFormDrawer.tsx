@@ -1,10 +1,12 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useCourses} from '@/hooks/useCourses';
-
-import {ICourse} from '@/types/course';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import CourseForm from './CourseForm';
 
@@ -12,68 +14,55 @@ import CourseForm from './CourseForm';
 interface CourseFormDrawerProps {
   mode: 'create' | 'edit';
   courseId?: number;
-  initialValues?: Partial<ICourse>;
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
   mode,
   courseId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
-  const { getCourseById, loadCourse } = useCourses();
-  const [course, setCourse] = useState<ICourse | null>(null);
-  const t = useTranslations();
-  const entityName = t('course', { defaultValue: 'Course' });
 
+  const { getCourseById, selectedCourse } = useCourses();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   useEffect(() => {
-    if (mode === 'edit' && courseId && visible) {
-      const foundCourse = getCourseById(courseId);
-      if (foundCourse) {
-        setCourse(foundCourse);
-      } else {
-        loadCourse(courseId);
-      }
+    if (visible && mode === 'edit' && courseId) {
+      getCourseById(courseId);
     }
-  }, [mode, courseId, visible, getCourseById, loadCourse]);
+  }, [visible, mode, courseId, getCourseById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+  const handleSuccess = () => {
+    onSuccess();
+  };
 
-  const handleDrawerSuccess = () => {
-    if (onSuccess) onSuccess();
+  const handleCancel = () => {
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && course) {
-      return {
-        departmentId: course.departmentId,
-        name: course.name,
-        code: course.code,
-        courseType: course.courseType,
-        durationInSemesters: course.durationInSemesters,
-        description: course.description,
-      };
-    }
-    return initialValues;
-  };
-
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      key={courseId} // Force remount when courseId changes
+      title={
+        mode === 'create'
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <CourseForm
         mode={mode}
         courseId={courseId}
-        initialValues={getFormInitialValues()}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        initialValues={selectedCourse || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>

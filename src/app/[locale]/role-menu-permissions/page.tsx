@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -12,6 +13,7 @@ import RoleMenuPermissionFormDrawer from '@/components/roleMenuPermissions/RoleM
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
 import {Status} from '@/types/common';
@@ -20,16 +22,14 @@ import {IRole} from '@/types/role';
 import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
 export default function RoleMenuPermissionsPage() {
-  const t = useTranslations();
-  const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedRoleId, setSelectedRoleId] = useState<number | undefined>();
-  const [selectedMenuId, setSelectedMenuId] = useState<number | undefined>();
+  const [selectedId, setSelectedId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsRoleId, setSelectedDetailsRoleId] = useState<number | undefined>();
-  const [selectedDetailsMenuId, setSelectedDetailsMenuId] = useState<number | undefined>();
+  const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
   const {
     roleMenuPermissions,
@@ -53,16 +53,14 @@ export default function RoleMenuPermissionsPage() {
     }
   }, [skip, limit, loadRoleMenuPermissions]);
 
-  const handleEditDrawer = (roleId: number, menuId: number) => {
-    setSelectedRoleId(roleId);
-    setSelectedMenuId(menuId);
+  const handleEditDrawer = (id: number) => {
+    setSelectedId(id);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
 
   const handleCreateDrawer = () => {
-    setSelectedRoleId(undefined);
-    setSelectedMenuId(undefined);
+    setSelectedId(undefined);
     setDrawerMode('create');
     setDrawerVisible(true);
   };
@@ -71,23 +69,21 @@ export default function RoleMenuPermissionsPage() {
     loadRoleMenuPermissions({ page: 1, limit: 10 });
   };
 
-  const handleViewDetails = (roleId: number, menuId: number) => {
-    setSelectedDetailsRoleId(roleId);
-    setSelectedDetailsMenuId(menuId);
+  const handleViewDetails = (id: number) => {
+    setSelectedDetailsId(id);
     setDetailsDrawerVisible(true);
   };
 
-  const handleDetailsEdit = (roleId: number, menuId: number) => {
+  const handleDetailsEdit = (id: number) => {
     setDetailsDrawerVisible(false);
-    setSelectedRoleId(roleId);
-    setSelectedMenuId(menuId);
+    setSelectedId(id);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
 
   const config: EntityConfig<IRoleMenuPermission> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/role-menu-permissions',
     searchFields: [] as (keyof IRoleMenuPermission)[],
     onSearch: (searchText: string) => {
@@ -100,68 +96,68 @@ export default function RoleMenuPermissionsPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('role'),
+        title: t(LOCALE_KEYS.ROLE),
         dataIndex: 'role',
         key: 'role',
         render: (role: IRole) => <span>{role?.name || 'N/A'}</span>,
       },
       {
-        title: t('menu'),
+        title: t(LOCALE_KEYS.MENU),
         dataIndex: 'menu',
         key: 'menu',
         render: (menu: IMenu) => <span>{menu?.name || 'N/A'}</span>,
       },
       {
-        title: t('view'),
+        title: t(LOCALE_KEYS.VIEW),
         dataIndex: 'view',
         key: 'view',
         render: (value: boolean) => <span>{value ? t('yes') : t('no')}</span>,
       },
       {
-        title: t('insert'),
+        title: t(LOCALE_KEYS.INSERT),
         dataIndex: 'insert',
         key: 'insert',
         render: (value: boolean) => <span>{value ? t('yes') : t('no')}</span>,
       },
       {
-        title: t('update'),
+        title: t(LOCALE_KEYS.UPDATE),
         dataIndex: 'update',
         key: 'update',
         render: (value: boolean) => <span>{value ? t('yes') : t('no')}</span>,
       },
       {
-        title: t('delete'),
+        title: t(LOCALE_KEYS.DELETE),
         dataIndex: 'delete',
         key: 'delete',
         render: (value: boolean) => <span>{value ? t('yes') : t('no')}</span>,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (permission: IRoleMenuPermission) => (
           <EntityActions
             onView={() =>
-              router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}`)
+              router.push(`/role-menu-permissions/${permission.id}`)
             }
-            onViewModal={() => handleViewDetails(permission.roleId, permission.menuId)}
-            viewText={t('view')}
-            editText={t('edit')}
-            deleteText={t('delete')}
-            viewModalText={t('quickView')}
+            onViewModal={() => handleViewDetails(permission.id)}
+            viewText={t(LOCALE_KEYS.VIEW)}
+            editText={t(LOCALE_KEYS.EDIT)}
+            deleteText={t(LOCALE_KEYS.DELETE)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() =>
-              router.push(`/role-menu-permissions/${permission.roleId}/${permission.menuId}/edit`)
+              router.push(`/role-menu-permissions/${permission.id}/edit`)
             }
-            onEditModal={() => handleEditDrawer(permission.roleId, permission.menuId)}
-            editModalText={t('quickEdit')}
-            onDelete={() => removeRoleMenuPermission(permission.roleId, permission.menuId)}
-            id={permission.roleId}
+            onEditModal={() => handleEditDrawer(permission.id)}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
+            onDelete={() => removeRoleMenuPermission(permission.id)}
+            id={permission.id}
           />
         ),
       },
@@ -174,7 +170,7 @@ export default function RoleMenuPermissionsPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadRoleMenuPermissions({ page: 1, limit: 10 })}
@@ -184,16 +180,14 @@ export default function RoleMenuPermissionsPage() {
 
         <RoleMenuPermissionFormDrawer
           mode={drawerMode}
-          roleId={selectedRoleId}
-          menuId={selectedMenuId}
+          roleMenuPermissionId={selectedId}
           visible={drawerVisible}
           onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}
         />
 
         <RoleMenuPermissionDetailsDrawer
-          roleId={selectedDetailsRoleId}
-          menuId={selectedDetailsMenuId}
+          roleMenuPermissionId={selectedDetailsId}
           visible={detailsDrawerVisible}
           onClose={() => setDetailsDrawerVisible(false)}
           onEdit={handleDetailsEdit}

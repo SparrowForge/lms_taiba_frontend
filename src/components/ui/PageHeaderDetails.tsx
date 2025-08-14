@@ -1,7 +1,13 @@
 import {ArrowLeftOutlined, EditOutlined} from '@ant-design/icons';
-import {Button, Card} from 'antd';
-import {useTranslations} from 'next-intl';
+import {Button, Card, Typography} from 'antd';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
+
+
+const { Title } = Typography;
 
 interface PageHeaderDetailsProps {
   title: string;
@@ -18,10 +24,10 @@ const PageHeaderDetails: React.FC<PageHeaderDetailsProps> = ({
   editText,
   backText,
 }) => {
-  const t = useTranslations();
+  const { t } = useLocalization();
 
   return (
-    <Card>
+    <Card size="small">
       <div
         style={{
           display: 'flex',
@@ -32,14 +38,16 @@ const PageHeaderDetails: React.FC<PageHeaderDetailsProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           {onBack && (
             <Button icon={<ArrowLeftOutlined />} onClick={onBack} type="text">
-              {backText || t('back')}
+              {backText || t(LOCALE_KEYS.BACK)}
             </Button>
           )}
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>{title}</h1>
+          <Title level={4} style={{ margin: 0}}>
+              {title}
+          </Title>
         </div>
         {onEdit && (
           <Button type="primary" icon={<EditOutlined />} onClick={onEdit}>
-            {editText || t('edit')}
+            {editText || t(LOCALE_KEYS.EDIT)}
           </Button>
         )}
       </div>

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
 
 import {menuService} from '@/services/menuService';
@@ -18,6 +18,8 @@ import {
     setDetailsStatus,
     setListStatus,
     setMenus,
+    setMyMenus,
+    setMyMenusStatus,
     setPagination,
     setSelectedMenu,
     updateMenu,
@@ -25,8 +27,26 @@ import {
 
 export const useMenus = () => {
   const dispatch = useDispatch();
-  const { menus, selectedMenu, listStatus, detailsStatus, actionStatus, pagination } = useSelector(
+  const { menus, selectedMenu, listStatus, detailsStatus, actionStatus, pagination , myMenus,myMenusStatus } = useSelector(
     (state: RootState) => state.menus,
+  );
+  // my menu
+  const loadMyMenus = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setMyMenusStatus({ status: Status.LOADING }));
+        const response = await menuService.getMyMenus(params);
+        dispatch(setMyMenus(response?.data ?? []));
+        dispatch(setMyMenusStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load my menus'
+            : 'Failed to load my menus';
+        dispatch(setMyMenusStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
   );
 
   // Load menus with pagination and search
@@ -55,8 +75,8 @@ export const useMenus = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IMenu = await menuService.getMenu(id);
-        dispatch(setSelectedMenu(response));
+        const response: IBaseResponse<IMenu> = await menuService.getMenu(id);
+        dispatch(setSelectedMenu(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -131,10 +151,19 @@ export const useMenus = () => {
 
   // Get menu by ID from the current list
   const getMenuById = useCallback(
-    (id: number): IMenu | undefined => {
-      return menus.find((menu) => menu.id === id);
+    (id: number) => {
+      if (selectedMenu && selectedMenu.id === id) {
+        return;
+      }
+
+      const menu = menus.find((menu) => menu.id === id);
+      if (menu) {
+        dispatch(setSelectedMenu(menu));
+      } else {
+        loadMenu(id);
+      }
     },
-    [menus],
+    [menus, selectedMenu, dispatch, loadMenu],
   );
 
   // Clear action status
@@ -163,6 +192,8 @@ export const useMenus = () => {
     detailsStatus,
     actionStatus,
     pagination,
+    myMenus, //my menu
+    myMenusStatus,
 
     // Actions
     loadMenus,
@@ -174,5 +205,6 @@ export const useMenus = () => {
     clearAction,
     clearDetails,
     setSelected,
+    loadMyMenus, //my menu
   };
 };

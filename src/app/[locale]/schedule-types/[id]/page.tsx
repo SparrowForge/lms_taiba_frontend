@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -9,56 +10,42 @@ import {useCreateScheduleTypeDetailsConfig} from '@/components/scheduleTypes/sch
 import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
 import {Status} from '@/types/common';
 import {IScheduleType} from '@/types/scheduleType';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
+export default function ScheduleTypeDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { selectedScheduleType, detailsStatus, getScheduleTypeById } = useScheduleTypes();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
-const ScheduleTypeDetailPage: React.FC<PageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { scheduleTypes, listStatus, loadScheduleTypes, getScheduleTypeById, loadScheduleType } =
-    useScheduleTypes();
-  const [item, setItem] = useState<IScheduleType | null>(null);
-  const t = useTranslations();
-  const entityName = t('scheduleType');
+  const scheduleTypeId = parseInt(resolvedParams.id);
 
+  // Load schedule type if not already loaded
   useEffect(() => {
-    const itemId = parseInt(resolvedParams.id);
-    const found = getScheduleTypeById(itemId);
-    if (found) setItem(found);
-    else loadScheduleType(itemId);
-  }, [resolvedParams.id, getScheduleTypeById, loadScheduleType]);
-
-  useEffect(() => {
-    if (scheduleTypes.length === 0) loadScheduleTypes();
-  }, [scheduleTypes.length, loadScheduleTypes]);
-
-  useEffect(() => {
-    if (scheduleTypes.length > 0) {
-      const found = getScheduleTypeById(parseInt(resolvedParams.id));
-      if (found) setItem(found);
-    }
-  }, [scheduleTypes, resolvedParams.id, getScheduleTypeById]);
+    getScheduleTypeById(scheduleTypeId);
+  }, [getScheduleTypeById, scheduleTypeId]);
 
   const config = useCreateScheduleTypeDetailsConfig(
-    item,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedScheduleType,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IScheduleType>} />
+          <EntityDetails config={config as EntityDetailsConfig<IScheduleType>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default ScheduleTypeDetailPage;
+}

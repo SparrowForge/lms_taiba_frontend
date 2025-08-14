@@ -1,9 +1,10 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import BranchForm from '@/components/branches/BranchForm';
@@ -11,72 +12,47 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useBranches} from '@/hooks/useBranches';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import {IBranch} from '@/types/branch';
+import {Status} from '@/types/common';
 
 
-interface BranchEditPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const BranchEditPage: React.FC<BranchEditPageProps> = ({ params }) => {
+const BranchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { branches, listStatus, loadBranches, getBranchById, loadBranch } = useBranches();
-  const [branch, setBranch] = useState<IBranch | null>(null);
-  const t = useTranslations();
-  const entityName = t('branch');
+  const { selectedBranch, detailsStatus, getBranchById } = useBranches();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
 
   useEffect(() => {
     const branchId = parseInt(resolvedParams.id);
-    const foundBranch = getBranchById(branchId);
-    if (foundBranch) {
-      setBranch(foundBranch);
-    } else {
-      loadBranch(branchId);
-    }
-  }, [resolvedParams.id, getBranchById, loadBranch]);
+    getBranchById(branchId);
+  }, [resolvedParams.id, getBranchById]);
 
-  useEffect(() => {
-    if (branches.length === 0) {
-      loadBranches();
-    }
-  }, [branches.length, loadBranches]);
 
-  useEffect(() => {
-    if (branches.length > 0) {
-      const foundBranch = getBranchById(parseInt(resolvedParams.id));
-      if (foundBranch) {
-        setBranch(foundBranch);
-      }
-    }
-  }, [branches, resolvedParams.id, getBranchById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!branch) {
+  if (!selectedBranch || selectedBranch.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/branches')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -85,25 +61,15 @@ const BranchEditPage: React.FC<BranchEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <BranchForm
             mode="edit"
             branchId={parseInt(resolvedParams.id)}
-            initialValues={{
-              name: branch.name,
-              location: branch.location,
-              code: branch.code,
-            }}
-          />
-        </div>
+            initialValues={selectedBranch}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

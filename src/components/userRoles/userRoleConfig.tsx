@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IUserRole} from '@/types/userRole';
 
@@ -25,9 +27,9 @@ export const useCreateUserRoleDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<IUserRole> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
-    name: t('userRole'),
+    name: t(LOCALE_KEYS.USER_ROLE),
     route: '/user-roles',
     getDisplayName: getUserRoleDisplayName,
     getInitials: getUserRoleInitials,
@@ -41,43 +43,43 @@ export const useCreateUserRoleDetailsConfig = (
       { key: 'id', label: 'ID' },
       {
         key: 'user.fullName',
-        label: t('user'),
+        label: t(LOCALE_KEYS.USER),
         render: (value: string, item: IUserRole) =>
           item?.user ? `${item.user.firstName} ${item.user.lastName}` : 'N/A',
       },
       {
         key: 'user.email',
-        label: t('email'),
+        label: t(LOCALE_KEYS.EMAIL),
         render: (value: string, item: IUserRole) => item?.user?.email || 'N/A',
       },
       {
         key: 'user.phone',
-        label: t('phone'),
+        label: t(LOCALE_KEYS.PHONE),
         render: (value: string, item: IUserRole) => item?.user?.phone || 'N/A',
       },
       {
         key: 'user.status',
-        label: t('status'),
+        label: t(LOCALE_KEYS.STATUS),
         render: (value: string, item: IUserRole) => item?.user?.status || 'N/A',
       },
       {
         key: 'role.name',
-        label: t('role'),
+        label: t(LOCALE_KEYS.ROLE),
         render: (value: string, item: IUserRole) => item?.role?.name || 'N/A',
       },
       {
         key: 'role.description',
-        label: t('description'),
+        label: t(LOCALE_KEYS.DESCRIPTION),
         render: (value: string, item: IUserRole) => item?.role?.description || 'N/A',
       },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

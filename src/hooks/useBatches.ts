@@ -4,8 +4,8 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBatch, IBatchCreate, IBatchUpdate} from '@/types/batch';
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBatch, IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate} from '@/types/batch';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 
 import {batchService} from '@/services/batchService';
 
@@ -64,8 +64,8 @@ export const useBatches = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBatch = await batchService.getBatch(id);
-        dispatch(setSelectedBatch(response));
+        const response: IBaseResponse<IBatch> = await batchService.getBatch(id);
+        dispatch(setSelectedBatch(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -93,6 +93,28 @@ export const useBatches = () => {
           error instanceof AxiosError
             ? error?.response?.data?.message || error?.message || 'Failed to create batch'
             : 'Failed to create batch';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  // Create a new batch with semesters
+  const createBatchWithSemesters = useCallback(
+    async (data: IBatchWithSemestersCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IBatch = await batchService.createBatchWithSemesters(data);
+        dispatch(addBatch(response));
+        dispatch(
+          setActionStatus({ status: Status.SUCCESS, message: 'Batch with semesters created successfully' }),
+        );
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to create batch with semesters'
+            : 'Failed to create batch with semesters';
         dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;
       }
@@ -146,10 +168,19 @@ export const useBatches = () => {
 
   // Get batch by ID from the current list
   const getBatchById = useCallback(
-    (id: number): IBatch | undefined => {
-      return batches.find((batch) => batch.id === id);
+    (id: number) => {
+      if (selectedBatch && selectedBatch.id === id) {
+        return;
+      }
+
+      const batch = batches.find((batch) => batch.id === id);
+      if (batch) {
+        dispatch(setSelectedBatch(batch));
+      } else {
+        loadBatch(id);
+      }
     },
-    [batches],
+    [batches, selectedBatch, dispatch, loadBatch],
   );
 
   // Clear action status
@@ -183,6 +214,7 @@ export const useBatches = () => {
     loadBatches,
     loadBatch,
     createBatch,
+    createBatchWithSemesters,
     editBatch,
     removeBatch,
     getBatchById,

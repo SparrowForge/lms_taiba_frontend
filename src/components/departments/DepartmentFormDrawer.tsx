@@ -1,10 +1,10 @@
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useDepartments} from '@/hooks/useDepartments';
-
-import {IDepartment} from '@/types/department';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import DepartmentForm from './DepartmentForm';
 
@@ -12,7 +12,6 @@ import DepartmentForm from './DepartmentForm';
 interface DepartmentFormDrawerProps {
   mode: 'create' | 'edit';
   departmentId?: number;
-  initialValues?: Partial<IDepartment>;
   visible: boolean;
   onCancel: () => void;
   onSuccess?: () => void;
@@ -21,56 +20,48 @@ interface DepartmentFormDrawerProps {
 const DepartmentFormDrawer: React.FC<DepartmentFormDrawerProps> = ({
   mode,
   departmentId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
-  const { getDepartmentById, loadDepartment } = useDepartments();
-  const [department, setDepartment] = useState<IDepartment | null>(null);
-  const t = useTranslations();
-  const entityName = t('department', { defaultValue: 'Department' });
+  const { getDepartmentById, selectedDepartment } = useDepartments();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
 
   useEffect(() => {
     if (mode === 'edit' && departmentId && visible) {
-      const foundDepartment = getDepartmentById(departmentId);
-      if (foundDepartment) {
-        setDepartment(foundDepartment);
-      } else {
-        loadDepartment(departmentId);
-      }
+      getDepartmentById(departmentId);
     }
-  }, [mode, departmentId, visible, getDepartmentById, loadDepartment]);
+  }, [mode, departmentId, visible, getDepartmentById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
-
-  const handleDrawerSuccess = () => {
+  const handleSuccess = () => {
     if (onSuccess) onSuccess();
+  };
+
+  const handleCancel = () => {
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && department) {
-      return {
-        branchId: department.branchId,
-        name: department.name,
-        code: department.code,
-      };
-    }
-    return initialValues;
-  };
 
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      key={departmentId} // Force remount when departmentId changes
+      title={
+        mode === 'create'
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <DepartmentForm
         mode={mode}
         departmentId={departmentId}
-        initialValues={getFormInitialValues()}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        initialValues={selectedDepartment || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>

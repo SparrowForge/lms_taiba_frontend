@@ -1,4 +1,6 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {ISubject} from '@/types/subject';
 
@@ -14,8 +16,8 @@ export const useCreateSubjectDetailsConfig = (
   } = {},
 ) => {
   const { embedded = false, onEdit } = options;
-  const t = useTranslations();
-  const entityName = t('subject', { defaultValue: 'Subject' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
   return {
     name: entityName,
     route: '/subjects',
@@ -27,29 +29,29 @@ export const useCreateSubjectDetailsConfig = (
     embedded,
     onEdit,
     fields: [
-      { key: 'id', label: t('id') },
-      { key: 'name', label: t('name') },
-      { key: 'code', label: t('code') },
-      { key: 'creditHours', label: t('creditHours') },
-      { key: 'theoryHours', label: t('theoryHours') },
-      { key: 'practicalHours', label: t('practicalHours') },
-      { key: 'description', label: t('description') },
-      { key: 'prerequisite', label: t('prerequisite') },
-      { key: 'status', label: t('status') },
-      { key: 'remarks', label: t('remarks') },
+      { key: 'id', label: t(LOCALE_KEYS.ID) },
+      { key: 'name', label: t(LOCALE_KEYS.NAME) },
+      { key: 'code', label: t(LOCALE_KEYS.CODE) },
+      { key: 'creditHours', label: t(LOCALE_KEYS.CREDIT_HOURS) },
+      { key: 'theoryHours', label: t(LOCALE_KEYS.THEORY_HOURS) },
+      { key: 'practicalHours', label: t(LOCALE_KEYS.PRACTICAL_HOURS) },
+      { key: 'description', label: t(LOCALE_KEYS.DESCRIPTION) },
+      { key: 'prerequisite', label: t(LOCALE_KEYS.PREREQUISITE) },
+      { key: 'status', label: t(LOCALE_KEYS.STATUS) },
+      { key: 'remarks', label: t(LOCALE_KEYS.REMARKS) },
       {
         key: 'course.name',
-        label: t('course'),
+        label: t(LOCALE_KEYS.COURSE),
         render: (value: string, item: ISubject) => item?.course?.name || 'N/A',
       },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

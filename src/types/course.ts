@@ -1,4 +1,6 @@
+import {ICourseType} from './courseType';
 import {IDepartment} from './department';
+import {IScheduleType} from './scheduleType';
 
 export interface ICourse {
   id: number;
@@ -15,6 +17,8 @@ export interface ICourse {
   updatedAt: string;
   deletedAt: string | null;
   department: IDepartment;
+  courseType: ICourseType;
+  scheduleType: IScheduleType;
 }
 
 export interface ICourseCreate {

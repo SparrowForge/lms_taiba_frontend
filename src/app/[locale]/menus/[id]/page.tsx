@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -9,62 +10,42 @@ import {useCreateMenuDetailsConfig} from '@/components/menus/menuConfig';
 import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
 import {Status} from '@/types/common';
 import {IMenu} from '@/types/menu';
 
-interface MenuDetailPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
+export default function MenuDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { selectedMenu, detailsStatus, getMenuById } = useMenus();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
 
-const MenuDetailPage: React.FC<MenuDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { menus, listStatus, loadMenus, getMenuById, loadMenu } = useMenus();
-  const [menu, setMenu] = useState<IMenu | null>(null);
-  const t = useTranslations();
-  const entityName = t('menu', { defaultValue: 'Menu' });
+  const menuId = parseInt(resolvedParams.id);
 
+  // Load menu if not already loaded
   useEffect(() => {
-    const menuId = parseInt(resolvedParams.id);
-    const foundMenu = getMenuById(menuId);
-    if (foundMenu) {
-      setMenu(foundMenu);
-    } else {
-      loadMenu(menuId);
-    }
-  }, [resolvedParams.id, getMenuById, loadMenu]);
-
-  useEffect(() => {
-    if (menus.length === 0) {
-      loadMenus();
-    }
-  }, [menus.length, loadMenus]);
-
-  useEffect(() => {
-    if (menus.length > 0) {
-      const foundMenu = getMenuById(parseInt(resolvedParams.id));
-      if (foundMenu) {
-        setMenu(foundMenu);
-      }
-    }
-  }, [menus, resolvedParams.id, getMenuById]);
+    getMenuById(menuId);
+  }, [getMenuById, menuId]);
 
   const config = useCreateMenuDetailsConfig(
-    menu,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedMenu,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IMenu>} />
+          <EntityDetails config={config as EntityDetailsConfig<IMenu>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default MenuDetailPage;
+}

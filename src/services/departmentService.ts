@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IDepartment, IDepartmentCreate, IDepartmentUpdate} from '@/types/department';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const departmentService = {
   },
 
   // Get a single department by ID
-  getDepartment: async (id: number): Promise<IDepartment> => {
-    const response = await api.get<IDepartment>(`/departments/${id}`);
+  getDepartment: async (id: number): Promise<IBaseResponse<IDepartment>> => {
+    const response = await api.get<IBaseResponse<IDepartment>>(`/departments/${id}`);
     return response.data;
   },
 

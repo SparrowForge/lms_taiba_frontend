@@ -1,14 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
-
 import {useCourseTypes} from '@/hooks/useCourseTypes';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {ICourseType} from '@/types/courseType';
@@ -16,48 +16,47 @@ import {ICourseType} from '@/types/courseType';
 import {useCreateCourseTypeDetailsConfig} from './courseTypeConfig';
 
 
-interface Props {
+interface CourseTypeDetailsDrawerProps {
   courseTypeId?: number;
   visible: boolean;
   onClose: () => void;
   onEdit: (courseTypeId: number) => void;
 }
 
-const CourseTypeDetailsDrawer: React.FC<Props> = ({ courseTypeId, visible, onClose, onEdit }) => {
-  const [courseType, setCourseType] = useState<ICourseType | null>(null);
-  const { courseTypes, getCourseTypeById, loadCourseType, detailsStatus } = useCourseTypes();
-  const t = useTranslations();
-  const entityName = t('courseType', { defaultValue: 'Course Type' });
+const CourseTypeDetailsDrawer: React.FC<CourseTypeDetailsDrawerProps> = ({
+  courseTypeId,
+  visible,
+  onClose,
+  onEdit,
+}) => {
 
+  const { selectedCourseType, getCourseTypeById, detailsStatus } = useCourseTypes();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
   useEffect(() => {
     if (visible && courseTypeId) {
-      const existing = getCourseTypeById(courseTypeId);
-      if (existing) setCourseType(existing);
-      else loadCourseType(courseTypeId);
-    } else {
-      setCourseType(null);
+      getCourseTypeById(courseTypeId);
     }
-  }, [visible, courseTypeId, getCourseTypeById, loadCourseType]);
+  }, [visible, courseTypeId, getCourseTypeById]);
 
-  useEffect(() => {
-    if (courseTypeId && courseTypes.length > 0) {
-      const found = getCourseTypeById(courseTypeId);
-      if (found) setCourseType(found);
-    }
-  }, [courseTypes, courseTypeId, getCourseTypeById]);
-
-  const handleEdit = (ct: ICourseType) => onEdit(ct.id);
+  const handleEdit = (courseType: ICourseType) => {
+    onEdit(courseType.id);
+  };
 
   const config = useCreateCourseTypeDetailsConfig(
-    courseType,
+    selectedCourseType,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
-    { embedded: true, onEdit: handleEdit },
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={courseTypeId} // Force remount when courseTypeId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

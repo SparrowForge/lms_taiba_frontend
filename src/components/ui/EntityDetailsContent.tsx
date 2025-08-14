@@ -1,7 +1,11 @@
 import {UserOutlined} from '@ant-design/icons';
 import {Alert, Avatar, Card, Col, Row, Spin, Typography} from 'antd';
-import {useTranslations} from 'next-intl';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useAudit} from '@/hooks/useAudit';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import PageHeaderDetails from './PageHeaderDetails';
 
@@ -32,13 +36,14 @@ export const EntityDetailsContent = <T extends { id: number }>({
 }: {
   config: EntityDetailsConfig<T>;
 }) => {
-  const t = useTranslations();
+  const { t } = useLocalization();
+  const { auditsByResource } = useAudit();
   if (config.loading) {
     return (
       <div style={{ padding: config.embedded ? '0' : '24px', textAlign: 'center' }}>
         <Spin size="large" />
         <div style={{ marginTop: '16px' }}>
-          {t('loading')} {config.name} {t('details_name', { name: config.name })}...
+          {t(LOCALE_KEYS.LOADING)} {config.name} {t(LOCALE_KEYS.DETAILS_NAME, { name: config.name })}...
         </div>
       </div>
     );
@@ -46,7 +51,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
   if (config.error) {
     return (
       <div style={{ padding: config.embedded ? '0' : '24px' }}>
-        <Alert message={t('error')} description={config.error} type="error" showIcon />
+        <Alert message={t(LOCALE_KEYS.ERROR)} description={config.error} type="error" showIcon />
       </div>
     );
   }
@@ -54,8 +59,8 @@ export const EntityDetailsContent = <T extends { id: number }>({
     return (
       <div style={{ padding: config.embedded ? '0' : '24px' }}>
         <Alert
-          message={t('notFound_name', { name: config.name })}
-          description={t('notFound_description', { name: config.name })}
+          message={t(LOCALE_KEYS.NOT_FOUND_NAME, { name: config.name })}
+          description={t(LOCALE_KEYS.NOT_FOUND_DESCRIPTION, { name: config.name })}
           type="warning"
           showIcon
         />
@@ -63,11 +68,11 @@ export const EntityDetailsContent = <T extends { id: number }>({
     );
   }
   const content = (
-    <div style={{ marginTop: config.embedded ? '0' : '24px' }}>
-      <Row gutter={[24, 24]}>
+    <div style={{ marginTop: config.embedded ? '0' : '8px' }}>
+      <Row gutter={[8, 8]}>
         {/* Profile Card */}
-        <Col xs={24} lg={config.embedded ? 24 : 8}>
-          <Card title={`${config.name} ${t('profile')}`}>
+        <Col xs={8} lg={config.embedded ? 24 : 8}>
+          <Card title={`${config.name} ${t(LOCALE_KEYS.PROFILE)}`}>
             <div style={{ textAlign: 'center' }}>
               <Avatar
                 size={config.embedded ? 60 : 80}
@@ -84,8 +89,8 @@ export const EntityDetailsContent = <T extends { id: number }>({
           </Card>
         </Col>
         {/* Details Table */}
-        <Col xs={24} lg={config.embedded ? 24 : 16}>
-          <Card title={`${config.name} ${t('information')}`}>
+        <Col xs={8} lg={config.embedded ? 24 : 16}>
+          <Card title={`${config.name} ${t(LOCALE_KEYS.INFORMATION)}`}>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <tbody>
@@ -134,13 +139,13 @@ export const EntityDetailsContent = <T extends { id: number }>({
   }
   // If not embedded, return with header actions
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ padding: '8px' }}>
       {/* Header */}
       <PageHeaderDetails
-        title={t('details_name', { name: config.name })}
+        title={t(LOCALE_KEYS.DETAILS_NAME, { name: config.name })}
         onBack={config.onBack}
         onEdit={config.onEdit ? () => config.onEdit!(config.item!) : undefined}
-        editText={t('edit_name', { name: config.name })}
+        editText={t(LOCALE_KEYS.EDIT_NAME, { name: config.name })}
       />
       {content}
     </div>

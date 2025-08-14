@@ -1,17 +1,20 @@
 'use client';
 
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import SemesterForm from '@/components/semesters/SemesterForm';
 import {PageHeader} from '@/components/ui/PageHeader';
 
+import {useLocalization} from '@/hooks/useLocalization';
+
 const SemesterCreatePage: React.FC = () => {
-  const t = useTranslations();
-  const entityName = t('semester');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   const router = useRouter();
 
   const handleBack = () => {
@@ -21,11 +24,8 @@ const SemesterCreatePage: React.FC = () => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
-          <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
-
+          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={handleBack} />
           <SemesterForm mode="create" embedded={false} />
-        </div>
       </MainLayout>
     </ProtectedRoute>
   );

@@ -1,88 +1,58 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import SemesterSubjectForm from '@/components/semesterSubjects/SemesterSubjectForm';
 import {PageHeader} from '@/components/ui/PageHeader';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 
-import {ISemesterSubject} from '@/types/semesterSubject';
+import {Status} from '@/types/common';
 
 
-interface SemesterSubjectEditPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const SemesterSubjectEditPage: React.FC<SemesterSubjectEditPageProps> = ({ params }) => {
+const SemesterSubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const {
-    semesterSubjects,
-    listStatus,
-    loadSemesterSubjects,
-    getSemesterSubjectById,
-    loadSemesterSubject,
-  } = useSemesterSubjects();
-  const [semesterSubject, setSemesterSubject] = useState<ISemesterSubject | null>(null);
-  const t = useTranslations();
-  const entityName = t('semesterSubject', { defaultValue: 'Semester Subject' });
+  const { selectedSemesterSubject, detailsStatus, getSemesterSubjectById } = useSemesterSubjects();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
 
   useEffect(() => {
     const semesterSubjectId = parseInt(resolvedParams.id);
-    const foundSemesterSubject = getSemesterSubjectById(semesterSubjectId);
-    if (foundSemesterSubject) {
-      setSemesterSubject(foundSemesterSubject);
-    } else {
-      loadSemesterSubject(semesterSubjectId);
-    }
-  }, [resolvedParams.id, getSemesterSubjectById, loadSemesterSubject]);
+    getSemesterSubjectById(semesterSubjectId);
+  }, [resolvedParams.id, getSemesterSubjectById]);
 
-  useEffect(() => {
-    if (semesterSubjects.length === 0) {
-      loadSemesterSubjects();
-    }
-  }, [semesterSubjects.length, loadSemesterSubjects]);
 
-  useEffect(() => {
-    if (semesterSubjects.length > 0) {
-      const foundSemesterSubject = getSemesterSubjectById(parseInt(resolvedParams.id));
-      if (foundSemesterSubject) {
-        setSemesterSubject(foundSemesterSubject);
-      }
-    }
-  }, [semesterSubjects, resolvedParams.id, getSemesterSubjectById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!semesterSubject) {
+  if (!selectedSemesterSubject || selectedSemesterSubject.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/semester-subjects')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -91,22 +61,15 @@ const SemesterSubjectEditPage: React.FC<SemesterSubjectEditPageProps> = ({ param
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
-        <div style={{ maxWidth: 600, margin: '0 auto' }}>
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <SemesterSubjectForm
             mode="edit"
-            semesterSubjectId={semesterSubject.id}
-            initialValues={semesterSubject}
-            onCancel={handleBack}
-          />
-        </div>
+            semesterSubjectId={parseInt(resolvedParams.id)}
+            initialValues={selectedSemesterSubject}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

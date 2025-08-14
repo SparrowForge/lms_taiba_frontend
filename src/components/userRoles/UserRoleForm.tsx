@@ -2,10 +2,12 @@
 
 import {Button, Form, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 import {useUserRoles} from '@/hooks/useUserRoles';
 import {useUsers} from '@/hooks/useUsers';
@@ -13,6 +15,8 @@ import {useUsers} from '@/hooks/useUsers';
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IUserRole, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
+
+import FormLayout from '../layout/FormLayout';
 
 interface UserRoleFormProps {
   mode: 'create' | 'edit';
@@ -31,8 +35,8 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('userRole');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER_ROLE);
   const router = useRouter();
   const [form] = Form.useForm();
   const { createUserRole, editUserRole, actionStatus } = useUserRoles();
@@ -45,12 +49,6 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
   }, [loadUsers, loadRoles]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -60,7 +58,7 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
     try {
       if (mode === 'create') {
         await createUserRole(values as IUserRoleCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -68,7 +66,7 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
         }
       } else if (mode === 'edit' && userRoleId) {
         await editUserRole(userRoleId, values as IUserRoleUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -76,7 +74,7 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -102,8 +100,8 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
@@ -115,12 +113,12 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
     >
       <Form.Item
         name="userId"
-        label={t('user')}
-        rules={[{ required: true, message: t('pleaseSelectUser') }]}
+        label={t(LOCALE_KEYS.USER)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_USER) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_user')}
+          placeholder={t(LOCALE_KEYS.SELECT_USER)}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -135,12 +133,12 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
       </Form.Item>
       <Form.Item
         name="roleId"
-        label={t('role')}
-        rules={[{ required: true, message: t('pleaseSelectRole') }]}
+        label={t(LOCALE_KEYS.ROLE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_ROLE) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_role')}
+          placeholder={t(LOCALE_KEYS.SELECT_ROLE)}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -159,7 +157,7 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
             {getSubmitText()}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-            {t('cancel')}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>
@@ -169,22 +167,9 @@ const UserRoleForm: React.FC<UserRoleFormProps> = ({
   return embedded ? (
     formContent
   ) : (
-    <div style={{ padding: '24px' }}>
-      <div
-        style={{
-          maxWidth: '600px',
-          margin: '0 auto',
-          backgroundColor: '#fff',
-          padding: '24px',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        }}
-        role="main"
-        aria-labelledby="form-title"
-      >
-        {formContent}
-      </div>
-    </div>
+    <FormLayout>
+      {formContent}
+    </FormLayout>
   );
 };
 

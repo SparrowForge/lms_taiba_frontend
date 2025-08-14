@@ -1,27 +1,30 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
 
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import EmploymentTypeFormDrawer from '@/components/employmentTypes/EmploymentTypeFormDrawer';
 import EmploymentTypeDetailsDrawer from '@/components/employmentTypes/EmploymentTypeDetailsDrawer';
+import EmploymentTypeFormDrawer from '@/components/employmentTypes/EmploymentTypeFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {MainLayout} from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IEmploymentType} from '@/types/employmentType';
 
 
 export default function EmploymentTypesPage() {
-  const t = useTranslations();
-  const entityName = t('employmentType', { defaultValue: 'Employment Type' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -71,7 +74,7 @@ export default function EmploymentTypesPage() {
 
   const config: EntityConfig<IEmploymentType> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/employment-types',
     searchFields: ['name', 'status'] as (keyof IEmploymentType)[],
     onSearch: (searchText: string) => {
@@ -84,35 +87,35 @@ export default function EmploymentTypesPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('name'),
+        title: t(LOCALE_KEYS.NAME),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (item: IEmploymentType) => (
           <EntityActions
             onView={() => router.push(`/employment-types/${item.id}`)}
             onViewModal={handleViewDetails}
-            viewModalText={t('quickView')}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/employment-types/${item.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeEmploymentType(item.id)}
             id={item.id}
           />
@@ -127,7 +130,7 @@ export default function EmploymentTypesPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadEmploymentTypes({ page: 1, limit: 10 })}

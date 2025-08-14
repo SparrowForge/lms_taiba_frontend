@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -11,7 +12,9 @@ import MenuDetailsDrawer from '@/components/menus/MenuDetailsDrawer';
 import MenuFormDrawer from '@/components/menus/MenuFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import StatusTag from '@/components/ui/StatusTag';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
 import {Status} from '@/types/common';
@@ -19,8 +22,8 @@ import {IMenu} from '@/types/menu';
 import {IPanel} from '@/types/panel';
 
 export default function MenusPage() {
-  const t = useTranslations();
-  const entityName = t('menu', { defaultValue: 'Menu' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -74,7 +77,7 @@ export default function MenusPage() {
 
   const config: EntityConfig<IMenu> = {
     name: entityName,
-    title: t('managemen_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/menus',
     searchFields: ['name', 'route', 'status'] as (keyof IMenu)[],
     onSearch: (searchText: string) => {
@@ -87,49 +90,49 @@ export default function MenusPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('name'),
+        title: t(LOCALE_KEYS.NAME),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('route'),
+        title: t(LOCALE_KEYS.ROUTE),
         dataIndex: 'route',
         key: 'route',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('panel'),
+        title: t(LOCALE_KEYS.PANEL),
         dataIndex: 'panel',
         key: 'panel',
         render: (panel: IPanel) => <span>{panel?.name || 'N/A'}</span>,
       },
       {
-        title: t('parent'),
+        title: t(LOCALE_KEYS.PARENT),
         dataIndex: 'parent',
         key: 'parent',
         render: (parent: IMenu) => <span>{parent?.name || 'N/A'}</span>,
       },
       {
-        title: t('sortOrder'),
+        title: t(LOCALE_KEYS.SORT_ORDER),
         dataIndex: 'sortOrder',
         key: 'sortOrder',
         render: (text: number) => <span>{text}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (menu: IMenu) => (
@@ -137,12 +140,12 @@ export default function MenusPage() {
             onView={() => router.push(`/menus/${menu.id}`)}
             onViewModal={handleViewDetails}
             viewText={t('view')}
-            editText={t('edit')}
-            deleteText={t('delete')}
-            viewModalText={t('quickView')}
+            editText={t(LOCALE_KEYS.EDIT)}
+            deleteText={t(LOCALE_KEYS.DELETE)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/menus/${menu.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeMenu(menu.id)}
             id={menu.id}
           />
@@ -157,7 +160,7 @@ export default function MenusPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadMenus({ page: 1, limit: 10 })}

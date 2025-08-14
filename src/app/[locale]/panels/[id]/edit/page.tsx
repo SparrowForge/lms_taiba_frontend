@@ -1,82 +1,58 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import PanelForm from '@/components/panels/PanelForm';
 import {PageHeader} from '@/components/ui/PageHeader';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
-import {IPanel} from '@/types/panel';
+import {Status} from '@/types/common';
 
 
-interface PanelEditPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const PanelEditPage: React.FC<PanelEditPageProps> = ({ params }) => {
+const PanelEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { panels, listStatus, loadPanels, getPanelById, loadPanel } = usePanels();
-  const [panel, setPanel] = useState<IPanel | null>(null);
-  const t = useTranslations();
-  const entityName = t('panel', { defaultValue: 'Panel' });
+  const { selectedPanel, detailsStatus, getPanelById } = usePanels();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
 
   useEffect(() => {
     const panelId = parseInt(resolvedParams.id);
-    const foundPanel = getPanelById(panelId);
-    if (foundPanel) {
-      setPanel(foundPanel);
-    } else {
-      loadPanel(panelId);
-    }
-  }, [resolvedParams.id, getPanelById, loadPanel]);
+    getPanelById(panelId);
+  }, [resolvedParams.id, getPanelById]);
 
-  useEffect(() => {
-    if (panels.length === 0) {
-      loadPanels();
-    }
-  }, [panels.length, loadPanels]);
 
-  useEffect(() => {
-    if (panels.length > 0) {
-      const foundPanel = getPanelById(parseInt(resolvedParams.id));
-      if (foundPanel) {
-        setPanel(foundPanel);
-      }
-    }
-  }, [panels, resolvedParams.id, getPanelById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!panel) {
+  if (!selectedPanel || selectedPanel.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/panels')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -85,23 +61,15 @@ const PanelEditPage: React.FC<PanelEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <PanelForm
             mode="edit"
             panelId={parseInt(resolvedParams.id)}
-            initialValues={{
-              name: panel.name,
-            }}
-          />
-        </div>
+            initialValues={selectedPanel}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -2,18 +2,22 @@
 
 import {Button, Form, Input, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useInstitutes} from '@/hooks/useInstitutes';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IInstitute, IInstituteCreate, IInstituteUpdate} from '@/types/institute';
+
+import FormLayout from '../layout/FormLayout';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -32,15 +36,12 @@ const InstituteForm: React.FC<Props> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('institute');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createInstitute, editInstitute, actionStatus } = useInstitutes();
 
-  useEffect(() => {
-    if (initialValues) form.setFieldsValue(initialValues);
-  }, [initialValues, form]);
   useEffect(() => {
     if (mode === 'create') form.resetFields();
   }, [mode, form]);
@@ -79,28 +80,28 @@ const InstituteForm: React.FC<Props> = ({
   };
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_name', { name: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -110,7 +111,7 @@ const InstituteForm: React.FC<Props> = ({
             {getSubmitText()}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-            {t('cancel')}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>
@@ -120,20 +121,9 @@ const InstituteForm: React.FC<Props> = ({
   return embedded ? (
     formContent
   ) : (
-    <div style={{ padding: '24px' }}>
-      <div
-        style={{
-          maxWidth: 600,
-          margin: '0 auto',
-          background: '#fff',
-          padding: 24,
-          borderRadius: 8,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        }}
-      >
-        {formContent}
-      </div>
-    </div>
+    <FormLayout>
+      {formContent}
+    </FormLayout>
   );
 };
 

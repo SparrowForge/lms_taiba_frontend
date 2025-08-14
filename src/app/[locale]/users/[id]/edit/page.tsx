@@ -1,84 +1,58 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 import UserForm from '@/components/users/UserForm';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
 import {Status} from '@/types/common';
-import {IUser} from '@/types/user';
 
-interface UserEditPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
 
-const UserEditPage: React.FC<UserEditPageProps> = ({ params }) => {
+const UserEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { users, listStatus, loadUsers, getUserById, loadUser } = useUsers();
-  const [user, setUser] = useState<IUser | null>(null);
+  const { selectedUser, detailsStatus, getUserById } = useUsers();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
 
   useEffect(() => {
     const userId = parseInt(resolvedParams.id);
+    getUserById(userId);
+  }, [resolvedParams.id, getUserById]);
 
-    // First try to get user from the list
-    const foundUser = getUserById(userId);
-    if (foundUser) {
-      setUser(foundUser);
-    } else {
-      // If not in list, load it individually
-      loadUser(userId);
-    }
-  }, [resolvedParams.id, getUserById, loadUser]);
 
-  useEffect(() => {
-    if (users.length === 0) {
-      loadUsers();
-    }
-  }, [users.length, loadUsers]);
-
-  // Update user when it's loaded individually
-  useEffect(() => {
-    if (users.length > 0) {
-      const foundUser = getUserById(parseInt(resolvedParams.id));
-      if (foundUser) {
-        setUser(foundUser);
-      }
-    }
-  }, [users, resolvedParams.id, getUserById]);
-
-  if (listStatus.status === Status.LOADING) {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>Loading user details...</div>
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!user) {
+  if (!selectedUser || selectedUser.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>User not found</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/users')}>
-                  Back to Users
-                </Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -87,27 +61,15 @@ const UserEditPage: React.FC<UserEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div style={{ padding: '24px' }}>
-          <PageHeader title="Edit User" onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <UserForm
             mode="edit"
             userId={parseInt(resolvedParams.id)}
-            initialValues={{
-              firstName: user.firstName,
-              lastName: user.lastName,
-              email: user.email,
-              phone: user.phone,
-              status: user.status as 'active' | 'inactive' | 'pending',
-            }}
-          />
-        </div>
+            initialValues={selectedUser}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

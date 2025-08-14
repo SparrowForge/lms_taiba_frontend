@@ -1,10 +1,12 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
-
-import {IMenu} from '@/types/menu';
 
 import MenuForm from './MenuForm';
 
@@ -12,67 +14,55 @@ import MenuForm from './MenuForm';
 interface MenuFormDrawerProps {
   mode: 'create' | 'edit';
   menuId?: number;
-  initialValues?: Partial<IMenu>;
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
   mode,
   menuId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
-  const { getMenuById, loadMenu } = useMenus();
-  const [menu, setMenu] = useState<IMenu | null>(null);
-  const t = useTranslations();
-  const entityName = t('menu', { defaultValue: 'Menu' });
 
+  const { getMenuById, selectedMenu } = useMenus();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   useEffect(() => {
-    if (mode === 'edit' && menuId && visible) {
-      const foundMenu = getMenuById(menuId);
-      if (foundMenu) {
-        setMenu(foundMenu);
-      } else {
-        loadMenu(menuId);
-      }
+    if (visible && mode === 'edit' && menuId) {
+      getMenuById(menuId);
     }
-  }, [mode, menuId, visible, getMenuById, loadMenu]);
+  }, [visible, mode, menuId, getMenuById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+  const handleSuccess = () => {
+    onSuccess();
+  };
 
-  const handleDrawerSuccess = () => {
-    if (onSuccess) onSuccess();
+  const handleCancel = () => {
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && menu) {
-      return {
-        panelId: menu.panelId,
-        parentId: menu.parentId,
-        name: menu.name,
-        route: menu.route,
-        sortOrder: menu.sortOrder,
-      };
-    }
-    return initialValues;
-  };
-
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      key={menuId} // Force remount when menuId changes
+      title={
+        mode === 'create'
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <MenuForm
         mode={mode}
         menuId={menuId}
-        initialValues={getFormInitialValues()}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        initialValues={selectedMenu || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>

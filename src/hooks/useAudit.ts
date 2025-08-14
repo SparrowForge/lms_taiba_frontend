@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IAudit} from '@/types/audit';
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 
 import {auditService} from '@/services/auditService';
 
@@ -15,6 +15,7 @@ import {
     clearDetailsStatus,
     setActionStatus,
     setAudits,
+    setAuditsByResource,
     setDetailsStatus,
     setListStatus,
     setPagination,
@@ -23,7 +24,7 @@ import {
 
 export const useAudit = () => {
   const dispatch = useDispatch();
-  const { audits, selectedAudit, listStatus, detailsStatus, actionStatus, pagination } =
+  const { audits, auditsByResource, selectedAudit, listStatus, detailsStatus, actionStatus, pagination } =
     useSelector((state: RootState) => state.audits);
 
   // Load audit logs with pagination and search
@@ -57,13 +58,38 @@ export const useAudit = () => {
     [dispatch],
   );
 
+  // Load audit logs by resource/resourceId
+  const loadAuditsByResource = useCallback(
+    async (resource: string, resourceId: number, params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response: IBasePaginatedResponse<IAudit> = await auditService.getAuditByResource(resource, resourceId, params);
+        dispatch(setAuditsByResource(response?.data?.items ?? []));
+        dispatch(setPagination(response?.data?.meta ?? {
+          page: 1,
+          limit: 10,
+          total: 0,
+          totalPages: 0,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        }));
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load audit logs by resource'
+            : 'Failed to load audit logs by resource';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+  }, [dispatch]);
+
   // Load a single audit log
   const loadAudit = useCallback(
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IAudit = await auditService.getAuditById(id);
-        dispatch(setSelectedAudit(response));
+        const response: IBaseResponse<IAudit> = await auditService.getAuditById(id);
+        dispatch(setSelectedAudit(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -100,10 +126,19 @@ export const useAudit = () => {
 
   // Get audit by ID from the current list
   const getAuditById = useCallback(
-    (id: number): IAudit | undefined => {
-      return audits.find((audit) => audit.id === id);
+    (id: number) => {
+      if (selectedAudit && selectedAudit.id === id) {
+        return;
+      }
+
+      const audit = audits.find((audit) => audit.id === id);
+      if (audit) {
+        dispatch(setSelectedAudit(audit));
+      } else {
+        loadAudit(id);
+      }
     },
-    [audits],
+    [audits, selectedAudit, dispatch, loadAudit],
   );
 
   // Clear action status
@@ -127,6 +162,7 @@ export const useAudit = () => {
   return {
     // State
     audits,
+    auditsByResource,
     selectedAudit,
     listStatus,
     detailsStatus,
@@ -135,6 +171,7 @@ export const useAudit = () => {
 
     // Actions
     loadAudits,
+    loadAuditsByResource,
     loadAudit,
     cleanAudit,
     getAuditById,

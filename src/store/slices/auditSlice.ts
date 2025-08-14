@@ -5,6 +5,7 @@ import {IPaginationMeta, IStatusState, Status} from '@/types/common';
 
 interface AuditState {
   audits: IAudit[];
+  auditsByResource: IAudit[];
   selectedAudit: IAudit | null;
   listStatus: IStatusState;
   detailsStatus: IStatusState;
@@ -14,6 +15,7 @@ interface AuditState {
 
 const initialState: AuditState = {
   audits: [],
+  auditsByResource: [],
   selectedAudit: null,
   listStatus: { status: Status.INITIAL },
   detailsStatus: { status: Status.INITIAL },
@@ -34,6 +36,9 @@ const auditSlice = createSlice({
   reducers: {
     setAudits: (state, action: PayloadAction<IAudit[]>) => {
       state.audits = action.payload;
+    },
+    setAuditsByResource: (state, action: PayloadAction<IAudit[]>) => {
+      state.auditsByResource = action.payload;
     },
     setSelectedAudit: (state, action: PayloadAction<IAudit | null>) => {
       state.selectedAudit = action.payload;
@@ -76,6 +81,7 @@ const auditSlice = createSlice({
 
 export const {
   setAudits,
+  setAuditsByResource,
   setSelectedAudit,
   addAudit,
   updateAudit,

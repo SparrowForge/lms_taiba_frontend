@@ -1,12 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useBatches} from '@/hooks/useBatches';
-
-import {IBatch} from '@/types/batch';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import BatchForm from './BatchForm';
 
@@ -26,51 +26,31 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<IBatch> | undefined>();
-  const { batches, getBatchById, loadBatch } = useBatches();
-  const t = useTranslations();
-  const entityName = t('batch', { defaultValue: 'Batch' });
+
+  const { getBatchById, selectedBatch } = useBatches();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   useEffect(() => {
     if (visible && mode === 'edit' && batchId) {
-      // Try to get from current list first
-      const existingBatch = getBatchById(batchId);
-      if (existingBatch) {
-        setInitialValues(existingBatch);
-      } else {
-        // Load from API if not in current list
-        loadBatch(batchId);
-      }
-    } else {
-      setInitialValues(undefined);
+      getBatchById(batchId);
     }
-  }, [visible, mode, batchId, getBatchById, loadBatch]);
-
-  // Update initial values when batches list changes
-  useEffect(() => {
-    if (mode === 'edit' && batchId && batches.length > 0) {
-      const batch = getBatchById(batchId);
-      if (batch) {
-        setInitialValues(batch);
-      }
-    }
-  }, [batches, batchId, mode, getBatchById]);
+  }, [visible, mode, batchId, getBatchById]);
 
   const handleSuccess = () => {
     onSuccess();
-    setInitialValues(undefined);
   };
 
   const handleCancel = () => {
     onCancel();
-    setInitialValues(undefined);
   };
 
   return (
     <Drawer
+      key={batchId} // Force remount when batchId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}
@@ -80,7 +60,7 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
       <BatchForm
         mode={mode}
         batchId={batchId}
-        initialValues={initialValues}
+        initialValues={selectedBatch || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded={true}

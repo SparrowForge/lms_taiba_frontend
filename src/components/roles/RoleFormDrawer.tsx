@@ -1,10 +1,12 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
-
-import {IRole} from '@/types/role';
 
 import RoleForm from './RoleForm';
 
@@ -12,65 +14,55 @@ import RoleForm from './RoleForm';
 interface RoleFormDrawerProps {
   mode: 'create' | 'edit';
   roleId?: number;
-  initialValues?: Partial<IRole>;
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
   mode,
   roleId,
-  initialValues,
   visible,
   onCancel,
   onSuccess,
 }) => {
-  const { getRoleById, loadRole } = useRoles();
-  const [role, setRole] = useState<IRole | null>(null);
-  const t = useTranslations();
-  const entityName = t('role', { defaultValue: 'Role' });
 
+  const { getRoleById, selectedRole } = useRoles();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
   useEffect(() => {
-    if (mode === 'edit' && roleId && visible) {
-      const foundRole = getRoleById(roleId);
-      if (foundRole) {
-        setRole(foundRole);
-      } else {
-        loadRole(roleId);
-      }
+    if (visible && mode === 'edit' && roleId) {
+      getRoleById(roleId);
     }
-  }, [mode, roleId, visible, getRoleById, loadRole]);
+  }, [visible, mode, roleId, getRoleById]);
 
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+  const handleSuccess = () => {
+    onSuccess();
+  };
 
-  const handleDrawerSuccess = () => {
-    if (onSuccess) onSuccess();
+  const handleCancel = () => {
     onCancel();
   };
 
-  const getFormInitialValues = () => {
-    if (mode === 'edit' && role) {
-      return {
-        branchId: role.branchId,
-        name: role.name,
-        description: role.description,
-      };
-    }
-    return initialValues;
-  };
-
   return (
-    <Drawer title={getTitle()} open={visible} onClose={onCancel} width={500} placement="right">
+    <Drawer
+      key={roleId} // Force remount when roleId changes
+      title={
+        mode === 'create'
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
+      }
+      width={600}
+      open={visible}
+      onClose={handleCancel}
+      destroyOnHidden={true}
+    >
       <RoleForm
         mode={mode}
         roleId={roleId}
-        initialValues={getFormInitialValues()}
-        onSuccess={handleDrawerSuccess}
-        onCancel={onCancel}
+        initialValues={selectedRole || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
         embedded={true}
       />
     </Drawer>
