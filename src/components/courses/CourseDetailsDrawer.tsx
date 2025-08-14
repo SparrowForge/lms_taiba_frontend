@@ -1,10 +1,14 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
@@ -16,7 +20,7 @@ interface CourseDetailsDrawerProps {
   courseId?: number;
   visible: boolean;
   onClose: () => void;
-  onEdit?: (courseId: number) => void;
+  onEdit: (courseId: number) => void;
 }
 
 const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
@@ -25,51 +29,38 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { courses, listStatus, loadCourses, getCourseById, loadCourse } = useCourses();
-  const [course, setCourse] = useState<ICourse | null>(null);
-  const t = useTranslations();
-  const entityName = t('course', { defaultValue: 'Course' });
 
+  const { selectedCourse, getCourseById, detailsStatus } = useCourses();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   useEffect(() => {
-    if (courseId && visible) {
-      const foundCourse = getCourseById(courseId);
-      if (foundCourse) {
-        setCourse(foundCourse);
-      } else {
-        loadCourse(courseId);
-      }
+    if (visible && courseId) {
+      getCourseById(courseId);
     }
-  }, [courseId, visible, getCourseById, loadCourse]);
+  }, [visible, courseId, getCourseById]);
 
-  useEffect(() => {
-    if (courses.length === 0) {
-      loadCourses();
-    }
-  }, [courses.length, loadCourses]);
-
-  useEffect(() => {
-    if (courses.length > 0 && courseId) {
-      const foundCourse = getCourseById(courseId);
-      if (foundCourse) {
-        setCourse(foundCourse);
-      }
-    }
-  }, [courses, courseId, getCourseById]);
+  const handleEdit = (course: ICourse) => {
+    onEdit(course.id);
+  };
 
   const config = useCreateCourseDetailsConfig(
-    course,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
+    selectedCourse,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={courseId} // Force remount when courseId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
+      width={800}
       open={visible}
       onClose={onClose}
-      width={500}
-      placement="right"
+      destroyOnHidden={true}
     >
       <EntityDetailsContent config={config} />
     </Drawer>

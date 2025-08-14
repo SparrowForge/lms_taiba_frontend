@@ -1,9 +1,10 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import AddressForm from '@/components/addresses/AddressForm';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -11,71 +12,48 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useAddresses} from '@/hooks/useAddresses';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import {IAddress} from '@/types/address';
+import {Status} from '@/types/common';
 
 
-interface AddressEditPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const AddressEditPage: React.FC<AddressEditPageProps> = ({ params }) => {
+const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { addresses, listStatus, loadAddresses, getAddressById, loadAddress } = useAddresses();
-  const [address, setAddress] = useState<IAddress | null>(null);
-  const t = useTranslations();
-  const entityName = t('address');
+  const { selectedAddress, detailsStatus, getAddressById } = useAddresses();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
+
+  const addressId = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    const addressId = parseInt(resolvedParams.id);
-    const found = getAddressById(addressId);
-    if (found) {
-      setAddress(found);
-    } else {
-      loadAddress(addressId);
-    }
-  }, [resolvedParams.id, getAddressById, loadAddress]);
+    getAddressById(addressId);
+  }, [addressId, getAddressById]);
 
-  useEffect(() => {
-    if (addresses.length === 0) {
-      loadAddresses();
-    }
-  }, [addresses.length, loadAddresses]);
 
-  useEffect(() => {
-    if (addresses.length > 0) {
-      const found = getAddressById(parseInt(resolvedParams.id));
-      if (found) {
-        setAddress(found);
-      }
-    }
-  }, [addresses, resolvedParams.id, getAddressById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!address) {
+  if (!selectedAddress || selectedAddress.id !== addressId) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/addresses')}>
-                  {t('backToList_name', { name: entityName })}
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}
                 </Button>
               </div>
             </Card>
@@ -85,27 +63,14 @@ const AddressEditPage: React.FC<AddressEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <AddressForm
             mode="edit"
-            addressId={parseInt(resolvedParams.id)}
-            initialValues={{
-              name: address.name,
-              address: address.address,
-              city: address.city,
-              state: address.state,
-              zipCode: address.zipCode,
-              country: address.country,
-              phone: address.phone,
-              email: address.email,
-          }}
+            addressId={addressId}
+            initialValues={selectedAddress}
         />
       </MainLayout>
     </ProtectedRoute>

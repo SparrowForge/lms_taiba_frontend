@@ -1,17 +1,20 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import {useRouter} from 'next/navigation';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
-import { PageHeader } from '@/components/ui/PageHeader';
+import {PageHeader} from '@/components/ui/PageHeader';
 import UserRoleForm from '@/components/userRoles/UserRoleForm';
 
+import {useLocalization} from '@/hooks/useLocalization';
+
 const UserRoleCreatePage: React.FC = () => {
-  const t = useTranslations();
-  const entityName = t('userRole', { defaultValue: 'User Role' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER_ROLE, { defaultValue: 'User Role' });
   const router = useRouter();
 
   const handleBack = () => {
@@ -21,7 +24,7 @@ const UserRoleCreatePage: React.FC = () => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t('create_name', { name: entityName })} onBack={handleBack} />
+        <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={handleBack} />
         <UserRoleForm mode="create" />
       </MainLayout>
     </ProtectedRoute>

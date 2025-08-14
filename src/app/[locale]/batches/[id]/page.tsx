@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateBatchDetailsConfig} from '@/components/batches/batchConfig';
@@ -10,64 +11,41 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useBatches} from '@/hooks/useBatches';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
 import {Status} from '@/types/common';
 
+export default function BatchDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { selectedBatch, detailsStatus, getBatchById } = useBatches();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
 
-interface BatchDetailPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const BatchDetailPage: React.FC<BatchDetailPageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { batches, listStatus, loadBatches, getBatchById, loadBatch } = useBatches();
-  const [batch, setBatch] = useState<IBatch | null>(null);
-  const t = useTranslations();
-  const entityName = t('batch');
+  const batchId = parseInt(resolvedParams.id);
 
+  // Load batch if not already loaded
   useEffect(() => {
-    const batchId = parseInt(resolvedParams.id);
-    const foundBatch = getBatchById(batchId);
-    if (foundBatch) {
-      setBatch(foundBatch);
-    } else {
-      loadBatch(batchId);
-    }
-  }, [resolvedParams.id, getBatchById, loadBatch]);
-
-  useEffect(() => {
-    if (batches.length === 0) {
-      loadBatches();
-    }
-  }, [batches.length, loadBatches]);
-
-  useEffect(() => {
-    if (batches.length > 0) {
-      const foundBatch = getBatchById(parseInt(resolvedParams.id));
-      if (foundBatch) {
-        setBatch(foundBatch);
-      }
-    }
-  }, [batches, resolvedParams.id, getBatchById]);
+    getBatchById(batchId);
+  }, [getBatchById, batchId]);
 
   const config = useCreateBatchDetailsConfig(
-    batch,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedBatch,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IBatch>} />
+          <EntityDetails config={config as EntityDetailsConfig<IBatch>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default BatchDetailPage;
+}

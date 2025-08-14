@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 
 import {branchService} from '@/services/branchService';
 
@@ -64,8 +64,8 @@ export const useBranches = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBranch = await branchService.getBranch(id);
-        dispatch(setSelectedBranch(response));
+        const response: IBaseResponse<IBranch> = await branchService.getBranch(id);
+        dispatch(setSelectedBranch(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -146,10 +146,19 @@ export const useBranches = () => {
 
   // Get branch by ID from the current list
   const getBranchById = useCallback(
-    (id: number): IBranch | undefined => {
-      return branches.find((branch) => branch.id === id);
+    (id: number) => {
+      if (selectedBranch && selectedBranch.id === id) {
+        return;
+      }
+
+      const branch = branches.find((branch) => branch.id === id);
+      if (branch) {
+        dispatch(setSelectedBranch(branch));
+      } else {
+        loadBranch(id);
+      }
     },
-    [branches],
+    [branches, selectedBranch, dispatch, loadBranch],
   );
 
   // Clear action status

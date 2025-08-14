@@ -1,64 +1,58 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useFacultySubjects} from '@/hooks/useFacultySubjects';
-
-import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate,} from '@/types/facultySubject';
-
+import {useLocalization} from '@/hooks/useLocalization';
 
 import FacultySubjectForm from './FacultySubjectForm';
 
 interface FacultySubjectFormDrawerProps {
-  open: boolean;
+  visible: boolean;
   mode: 'create' | 'edit';
   facultySubjectId?: number;
-  initialValues?: Partial<IFacultySubjectCreate | IFacultySubjectUpdate>;
-  onClose: () => void;
-  onSuccess?: (facultySubject?: IFacultySubject) => void;
+  onCancel: () => void;
+  onSuccess: () => void;
 }
 
 const FacultySubjectFormDrawer: React.FC<FacultySubjectFormDrawerProps> = ({
-  open,
+  visible,
   mode,
   facultySubjectId,
-  initialValues,
-  onClose,
+  onCancel,
   onSuccess,
 }) => {
-  const t = useTranslations();
-  const entityName = t('facultySubject');
-  const { clearAction } = useFacultySubjects();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
+  const { selectedFacultySubject, getFacultySubjectById } = useFacultySubjects();
 
   useEffect(() => {
-    if (!open) {
-      clearAction();
+    if (visible && mode === 'edit' && facultySubjectId) {
+      getFacultySubjectById(facultySubjectId);
     }
-  }, [open, clearAction]);
+  }, [visible, mode, facultySubjectId, getFacultySubjectById]);
 
   const handleSuccess = () => {
-    if (onSuccess) {
-      onSuccess();
-    }
-    onClose();
+    onSuccess();
   };
 
   const handleCancel = () => {
-    onClose();
+    onCancel();
   };
-
-  const getTitle = () =>
-    mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
 
   return (
     <Drawer
-      title={getTitle()}
+      key={facultySubjectId} // Force remount when facultySubjectId changes
+      title={
+        mode === 'create'
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
+      }
       width={720}
-      open={open}
+      open={visible}
       onClose={handleCancel}
       destroyOnHidden={true}
       maskClosable={false}
@@ -67,7 +61,7 @@ const FacultySubjectFormDrawer: React.FC<FacultySubjectFormDrawerProps> = ({
       <FacultySubjectForm
         mode={mode}
         facultySubjectId={facultySubjectId}
-        initialValues={initialValues}
+        initialValues={selectedFacultySubject || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded={true}

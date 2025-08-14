@@ -1,9 +1,11 @@
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';
 
 import {Status} from '@/types/common';
@@ -26,8 +28,8 @@ const UserRoleDetailsDrawer: React.FC<UserRoleDetailsDrawerProps> = ({
 }) => {
   const [userRole, setUserRole] = useState<IUserRole | null>(null);
   const { userRoles, selectedUserRole, loadUserRole, detailsStatus } = useUserRoles();
-  const t = useTranslations();
-  const entityName = t('userRole', { defaultValue: 'User Role' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER_ROLE, { defaultValue: 'User Role' });
 
   useEffect(() => {
     if (visible && userRoleId) {
@@ -67,7 +69,7 @@ const UserRoleDetailsDrawer: React.FC<UserRoleDetailsDrawerProps> = ({
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

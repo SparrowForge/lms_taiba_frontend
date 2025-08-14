@@ -2,14 +2,16 @@
 
 import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSubjects} from '@/hooks/useSubjects';
 
 import {Status} from '@/types/common';
@@ -35,18 +37,12 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('subject');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createSubject, editSubject, actionStatus } = useSubjects();
   const { courses, loadCourses } = useCourses();
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -55,16 +51,14 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
   }, [mode, form]);
 
   useEffect(() => {
-    if (courses.length === 0) {
-      loadCourses();
-    }
-  }, [courses.length, loadCourses]);
+    loadCourses({ page: 1, limit: 100 });
+  }, [loadCourses]);
 
   const handleSubmit = async (values: Partial<ISubject>) => {
     try {
       if (mode === 'create') {
         await createSubject(values as ISubjectCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -72,7 +66,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
         }
       } else if (mode === 'edit' && subjectId) {
         await editSubject(subjectId, values as ISubjectUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -80,7 +74,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -110,18 +104,18 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       <Form.Item
         name="courseId"
-        label={t('course')}
-        rules={[{ required: true, message: t('required_field', { field: t('course') }) }]}
+        label={t(LOCALE_KEYS.COURSE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.COURSE) }) }]}
       >
         <Select
-          placeholder={t('select_course')}
+          placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
           loading={courses.length === 0}
           showSearch
           filterOption={(input, option) =>
@@ -138,35 +132,35 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
 
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_field', { field: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
-        <Input placeholder={t('enter_name', { name: t('name') })} />
+        <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.NAME) })} />
       </Form.Item>
 
       <Form.Item
         name="code"
-        label={t('code')}
-        rules={[{ required: true, message: t('required_field', { field: t('code') }) }]}
+        label={t(LOCALE_KEYS.CODE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.CODE) }) }]}
       >
-        <Input placeholder={t('enter_code')} />
+        <Input placeholder={t(LOCALE_KEYS.ENTER_CODE)} />
       </Form.Item>
 
       <Form.Item
         name="creditHours"
-        label={t('creditHours')}
-        rules={[{ required: true, message: t('required_field', { field: t('creditHours') }) }]}
+        label={t(LOCALE_KEYS.CREDIT_HOURS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.CREDIT_HOURS) }) }]}
       >
-        <Input placeholder={t('enter_creditHours')} />
+        <Input placeholder={t(LOCALE_KEYS.ENTER_CREDIT_HOURS)} />
       </Form.Item>
 
       <Form.Item
         name="theoryHours"
-        label={t('theoryHours')}
-        rules={[{ required: true, message: t('required_field', { field: t('theoryHours') }) }]}
+        label={t(LOCALE_KEYS.THEORY_HOURS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.THEORY_HOURS) }) }]}
       >
         <InputNumber
-          placeholder={t('enter_theoryHours')}
+          placeholder={t(LOCALE_KEYS.ENTER_THEORY_HOURS)}
           min={0}
           max={20}
           style={{ width: '100%' }}
@@ -175,11 +169,11 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
 
       <Form.Item
         name="practicalHours"
-        label={t('practicalHours')}
-        rules={[{ required: true, message: t('required_field', { field: t('practicalHours') }) }]}
+        label={t(LOCALE_KEYS.PRACTICAL_HOURS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PRACTICAL_HOURS) }) }]}
       >
         <InputNumber
-          placeholder={t('enter_practicalHours')}
+          placeholder={t(LOCALE_KEYS.ENTER_PRACTICAL_HOURS)}
           min={0}
           max={20}
           style={{ width: '100%' }}
@@ -188,25 +182,25 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
 
       <Form.Item
         name="description"
-        label={t('description')}
-        rules={[{ required: true, message: t('required_field', { field: t('description') }) }]}
+        label={t(LOCALE_KEYS.DESCRIPTION)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }) }]}
       >
-        <Input.TextArea placeholder={t('enter_description')} rows={4} />
+        <Input.TextArea placeholder={t(LOCALE_KEYS.ENTER_DESCRIPTION)} rows={4} />
       </Form.Item>
 
-      <Form.Item name="prerequisite" label={t('prerequisite')}>
+      <Form.Item name="prerequisite" label={t(LOCALE_KEYS.PREREQUISITE)}>
         <Input />
       </Form.Item>
 
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="lifecycle" />
       </Form.Item>
 
-      <Form.Item name="remarks" label={t('remarks')}>
+      <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
         <Input.TextArea rows={3} />
       </Form.Item>
 
@@ -215,7 +209,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>{t('cancel')}</Button>
+          <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>
       </Form.Item>
     </Form>

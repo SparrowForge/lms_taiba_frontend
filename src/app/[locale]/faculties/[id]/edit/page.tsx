@@ -1,9 +1,10 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import FacultyForm from '@/components/faculties/FacultyForm';
@@ -11,72 +12,47 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import {IFaculty} from '@/types/faculty';
+import {Status} from '@/types/common';
 
 
-interface FacultyEditPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const FacultyEditPage: React.FC<FacultyEditPageProps> = ({ params }) => {
+const FacultyEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { faculties, listStatus, loadFaculties, getFacultyById, loadFaculty } = useFaculties();
-  const [faculty, setFaculty] = useState<IFaculty | null>(null);
-  const t = useTranslations();
-  const entityName = t('faculty', { defaultValue: 'Faculty' });
+  const { selectedFaculty, detailsStatus, getFacultyById } = useFaculties();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
 
   useEffect(() => {
     const facultyId = parseInt(resolvedParams.id);
-    const foundFaculty = getFacultyById(facultyId);
-    if (foundFaculty) {
-      setFaculty(foundFaculty);
-    } else {
-      loadFaculty(facultyId);
-    }
-  }, [resolvedParams.id, getFacultyById, loadFaculty]);
+    getFacultyById(facultyId);
+  }, [resolvedParams.id, getFacultyById]);
 
-  useEffect(() => {
-    if (faculties.length === 0) {
-      loadFaculties();
-    }
-  }, [faculties.length, loadFaculties]);
 
-  useEffect(() => {
-    if (faculties.length > 0) {
-      const foundFaculty = getFacultyById(parseInt(resolvedParams.id));
-      if (foundFaculty) {
-        setFaculty(foundFaculty);
-      }
-    }
-  }, [faculties, resolvedParams.id, getFacultyById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!faculty) {
+  if (!selectedFaculty || selectedFaculty.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
-                <Button type="primary" onClick={() => router.push('/faculty')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
+                <Button type="primary" onClick={() => router.push('/faculties')}>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -85,19 +61,14 @@ const FacultyEditPage: React.FC<FacultyEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <FacultyForm
             mode="edit"
-            facultyId={faculty.id}
-            initialValues={faculty}
-          onCancel={handleBack}
+            facultyId={parseInt(resolvedParams.id)}
+            initialValues={selectedFaculty}
         />
       </MainLayout>
     </ProtectedRoute>

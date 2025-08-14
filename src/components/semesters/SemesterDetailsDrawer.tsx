@@ -1,13 +1,13 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
-
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
 import {Status} from '@/types/common';
@@ -29,41 +29,22 @@ const SemesterDetailsDrawer: React.FC<SemesterDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [semester, setSemester] = useState<ISemester | null>(null);
-  const { semesters, getSemesterById, loadSemester, detailsStatus } = useSemesters();
-  const t = useTranslations();
-  const entityName = t('semester', { defaultValue: 'Semester' });
+
+  const { selectedSemester, getSemesterById, detailsStatus } = useSemesters();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   useEffect(() => {
     if (visible && semesterId) {
-      // Try to get from current list first
-      const existingSemester = getSemesterById(semesterId);
-      if (existingSemester) {
-        setSemester(existingSemester);
-      } else {
-        // Load from API if not in current list
-        loadSemester(semesterId);
-      }
-    } else {
-      setSemester(null);
+      getSemesterById(semesterId);
     }
-  }, [visible, semesterId, getSemesterById, loadSemester]);
-
-  // Update semester when semesters list changes
-  useEffect(() => {
-    if (semesterId && semesters.length > 0) {
-      const foundSemester = getSemesterById(semesterId);
-      if (foundSemester) {
-        setSemester(foundSemester);
-      }
-    }
-  }, [semesters, semesterId, getSemesterById]);
+  }, [visible, semesterId, getSemesterById]);
 
   const handleEdit = (semester: ISemester) => {
     onEdit(semester.id);
   };
 
   const config = useCreateSemesterDetailsConfig(
-    semester,
+    selectedSemester,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {
@@ -74,7 +55,8 @@ const SemesterDetailsDrawer: React.FC<SemesterDetailsDrawerProps> = ({
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={semesterId} // Force remount when semesterId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

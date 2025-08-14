@@ -1,8 +1,11 @@
-import {useTranslations} from 'next-intl';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import UserStatusTag from '@/components/users/UserStatusTag';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IUser} from '@/types/user';
 
@@ -27,9 +30,9 @@ export const useCreateUserDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<IUser> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
-    name: t('user'),
+    name: t(LOCALE_KEYS.USER),
     route: '/users',
     getDisplayName: getUserDisplayName,
     getInitials: getUserInitials,
@@ -46,33 +49,33 @@ export const useCreateUserDetailsConfig = (
       },
       {
         key: 'firstName',
-        label: t('firstName'),
+        label: t(LOCALE_KEYS.FIRST_NAME),
       },
       {
         key: 'lastName',
-        label: t('lastName'),
+        label: t(LOCALE_KEYS.LAST_NAME),
       },
       {
         key: 'email',
-        label: t('email'),
+        label: t(LOCALE_KEYS.EMAIL),
       },
       {
         key: 'phone',
-        label: t('phone'),
+        label: t(LOCALE_KEYS.PHONE),
       },
       {
         key: 'status',
-        label: t('status'),
+        label: t(LOCALE_KEYS.STATUS),
         render: (value: string) => <UserStatusTag status={value} />,
       },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleDateString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleDateString() : 'N/A'),
       },
     ],

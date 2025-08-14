@@ -1,9 +1,13 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
 import {Status} from '@/types/common';
@@ -13,71 +17,50 @@ import {useCreateRoleMenuPermissionDetailsConfig} from './roleMenuPermissionConf
 
 
 interface RoleMenuPermissionDetailsDrawerProps {
-  roleId?: number;
-  menuId?: number;
+  roleMenuPermissionId?: number;
   visible: boolean;
   onClose: () => void;
-  onEdit?: (roleId: number, menuId: number) => void;
+  onEdit: (roleMenuPermissionId: number) => void;
 }
 
 const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerProps> = ({
-  roleId,
-  menuId,
+  roleMenuPermissionId,
   visible,
   onClose,
   onEdit,
 }) => {
-  const {
-    roleMenuPermissions,
-    listStatus,
-    loadRoleMenuPermissions,
-    getRoleMenuPermissionById,
-    loadRoleMenuPermission,
-  } = useRoleMenuPermissions();
-  const [permission, setPermission] = useState<IRoleMenuPermission | null>(null);
-  const t = useTranslations();
-  const entityName = t('roleMenuPermission', { defaultValue: 'Role Menu Permission' });
 
+  const { selectedRoleMenuPermission, getRoleMenuPermissionById, detailsStatus } = useRoleMenuPermissions();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   useEffect(() => {
-    if (roleId && menuId && visible) {
-      const foundPermission = getRoleMenuPermissionById(roleId, menuId);
-      if (foundPermission) {
-        setPermission(foundPermission);
-      } else {
-        loadRoleMenuPermission(roleId, menuId);
-      }
+    if (visible && roleMenuPermissionId) {
+      getRoleMenuPermissionById(roleMenuPermissionId);
     }
-  }, [roleId, menuId, visible, getRoleMenuPermissionById, loadRoleMenuPermission]);
+  }, [visible, roleMenuPermissionId, getRoleMenuPermissionById]);
 
-  useEffect(() => {
-    if (roleMenuPermissions.length === 0) {
-      loadRoleMenuPermissions();
-    }
-  }, [roleMenuPermissions.length, loadRoleMenuPermissions]);
-
-  useEffect(() => {
-    if (roleMenuPermissions.length > 0 && roleId && menuId) {
-      const foundPermission = getRoleMenuPermissionById(roleId, menuId);
-      if (foundPermission) {
-        setPermission(foundPermission);
-      }
-    }
-  }, [roleMenuPermissions, roleId, menuId, getRoleMenuPermissionById]);
+  const handleEdit = (roleMenuPermission: IRoleMenuPermission) => {
+    onEdit(roleMenuPermission.id);
+  };
 
   const config = useCreateRoleMenuPermissionDetailsConfig(
-    permission,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.roleId, p.menuId) : undefined },
+    selectedRoleMenuPermission,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={roleMenuPermissionId} // Force remount when roleMenuPermissionId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
+      width={800}
       open={visible}
       onClose={onClose}
-      width={500}
-      placement="right"
+      destroyOnHidden={true}
     >
       <EntityDetailsContent config={config} />
     </Drawer>

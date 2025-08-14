@@ -1,24 +1,27 @@
 'use client';
 
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseTypeForm from '@/components/courseTypes/CourseTypeForm';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
+import {useLocalization} from '@/hooks/useLocalization';
+
 
 export default function CreateCourseTypePage() {
-  const t = useTranslations();
+  const { t } = useLocalization();
   const router = useRouter();
-  const entityName = t('courseType', { defaultValue: 'Course Type' });
+  const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
 
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('create_name', { name: entityName })} onBack={() => router.back()} />
+          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
           <CourseTypeForm mode="create" />
       </MainLayout>
     </ProtectedRoute>

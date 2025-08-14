@@ -6,7 +6,7 @@ import {RootState} from '@/store';
 
 
 import {IAddress, IAddressCreate, IAddressUpdate} from '@/types/address';
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 
 import {addressService} from '@/services/addressService';
 
@@ -64,8 +64,8 @@ export const useAddresses = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IAddress = await addressService.getAddress(id);
-        dispatch(setSelectedAddress(response));
+        const response: IBaseResponse<IAddress> = await addressService.getAddress(id);
+        dispatch(setSelectedAddress(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -142,10 +142,19 @@ export const useAddresses = () => {
   );
 
   const getAddressById = useCallback(
-    (id: number): IAddress | undefined => {
-      return addresses.find((address) => address.id === id);
+    (id: number) => {
+      if (selectedAddress && selectedAddress.id === id) {
+        return;
+      }
+
+      const address = addresses.find((address) => address.id === id);
+      if (address) {
+        dispatch(setSelectedAddress(address));
+      } else {
+        loadAddress(id);
+      }
     },
-    [addresses],
+    [addresses, selectedAddress, dispatch, loadAddress],
   );
 
   const clearAction = useCallback(() => {

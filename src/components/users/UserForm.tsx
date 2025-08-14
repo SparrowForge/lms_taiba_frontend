@@ -2,10 +2,12 @@
 
 import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
 import {Status} from '@/types/common';
@@ -31,23 +33,23 @@ const UserForm: React.FC<UserFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('user', { defaultValue: 'User' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { addUser, editUser, actionStatus } = useUsers();
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
+    if (mode === 'create') {
+      form.resetFields();
     }
-  }, [initialValues, form]);
+  }, [mode, form]);
 
   const handleSubmit = async (values: IUserCreate | IUserUpdate) => {
     try {
       if (mode === 'create') {
         await addUser(values as IUserCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -55,7 +57,7 @@ const UserForm: React.FC<UserFormProps> = ({
         }
       } else if (mode === 'edit' && userId) {
         await editUser(userId, values as IUserUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -63,7 +65,7 @@ const UserForm: React.FC<UserFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      const errorMessage = getErrorMessage(error) || t('failed_name', { name: entityName });
+      const errorMessage = getErrorMessage(error) || t(LOCALE_KEYS.FAILED_NAME, { name: entityName });
       toast.error(errorMessage);
     }
   };
@@ -78,8 +80,8 @@ const UserForm: React.FC<UserFormProps> = ({
 
   const getSubmitText = () => {
     return mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
   };
 
   const formContent = (
@@ -88,18 +90,18 @@ const UserForm: React.FC<UserFormProps> = ({
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        initialValues={initialValues}
-        aria-label={`${mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })} form`}
+        initialValues={mode === 'edit' ? initialValues : undefined}
+        aria-label={`${mode === 'create' ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName }) : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} form`}
         role="form"
       >
         <Form.Item
           name="firstName"
-          label={t('firstName')}
-          rules={[{ required: true, message: t('pleaseEnterFirstName') }]}
+          label={t(LOCALE_KEYS.FIRST_NAME)}
+          rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_FIRST_NAME) }]}
         >
           <Input
-            placeholder={t('firstName')}
-            aria-label={t('firstName')}
+            placeholder={t(LOCALE_KEYS.FIRST_NAME)}
+            aria-label={t(LOCALE_KEYS.FIRST_NAME)}
             aria-required="true"
             aria-describedby="firstName-help"
           />
@@ -107,12 +109,12 @@ const UserForm: React.FC<UserFormProps> = ({
 
         <Form.Item
           name="lastName"
-          label={t('lastName')}
-          rules={[{ required: true, message: t('pleaseEnterLastName') }]}
+          label={t(LOCALE_KEYS.LAST_NAME)}
+          rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_LAST_NAME) }]}
         >
           <Input
-            placeholder={t('lastName')}
-            aria-label={t('lastName')}
+            placeholder={t(LOCALE_KEYS.LAST_NAME)}
+            aria-label={t(LOCALE_KEYS.LAST_NAME)}
             aria-required="true"
             aria-describedby="lastName-help"
           />
@@ -120,16 +122,16 @@ const UserForm: React.FC<UserFormProps> = ({
 
         <Form.Item
           name="email"
-          label={t('email')}
+          label={t(LOCALE_KEYS.EMAIL)}
           rules={[
-            { required: true, message: t('pleaseEnterEmail') },
-            { type: 'email', message: t('pleaseEnterValidEmail') },
+            { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_EMAIL) },
+            { type: 'email', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL) },
           ]}
         >
           <Input
-            placeholder={t('email')}
+            placeholder={t(LOCALE_KEYS.EMAIL)}
             type="email"
-            aria-label={t('email')}
+            aria-label={t(LOCALE_KEYS.EMAIL)}
             aria-required="true"
             aria-describedby="email-help"
           />
@@ -137,13 +139,13 @@ const UserForm: React.FC<UserFormProps> = ({
 
         <Form.Item
           name="phone"
-          label={t('phone')}
-          rules={[{ pattern: /^[0-9+\-\s()]*$/, message: t('pleaseEnterValidPhone') }]}
+          label={t(LOCALE_KEYS.PHONE)}
+          rules={[{ pattern: /^[0-9+\-\s()]*$/, message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_PHONE) }]}
         >
           <Input
-            placeholder={t('phone')}
+            placeholder={t(LOCALE_KEYS.PHONE)}
             type="tel"
-            aria-label={t('phone')}
+            aria-label={t(LOCALE_KEYS.PHONE)}
             aria-describedby="phone-help"
           />
         </Form.Item>
@@ -151,15 +153,15 @@ const UserForm: React.FC<UserFormProps> = ({
         {mode === 'create' && (
           <Form.Item
             name="password"
-            label={t('password')}
+            label={t(LOCALE_KEYS.PASSWORD)}
             rules={[
-              { required: true, message: t('pleaseEnterPassword') },
-              { min: 6, message: t('passwordMinLength') },
+              { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_PASSWORD) },
+              { min: 6, message: t(LOCALE_KEYS.PASSWORD_MIN_LENGTH) },
             ]}
           >
             <Input.Password
-              placeholder={t('password')}
-              aria-label={t('password')}
+              placeholder={t(LOCALE_KEYS.PASSWORD)}
+              aria-label={t(LOCALE_KEYS.PASSWORD)}
               aria-required="true"
               aria-describedby="password-help"
             />
@@ -168,23 +170,23 @@ const UserForm: React.FC<UserFormProps> = ({
 
         <Form.Item
           name="status"
-          label={t('status')}
-          rules={[{ required: true, message: t('pleaseSelectStatus') }]}
+          label={t(LOCALE_KEYS.STATUS)}
+          rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_STATUS) }]}
         >
           <Select
-            placeholder={t('status')}
-            aria-label={t('status')}
+            placeholder={t(LOCALE_KEYS.STATUS)}
+            aria-label={t(LOCALE_KEYS.STATUS)}
             aria-required="true"
             aria-describedby="status-help"
           >
-            <Select.Option value="active" aria-label={t('active')}>
-              {t('active')}
+            <Select.Option value="active" aria-label={t(LOCALE_KEYS.ACTIVE)}>
+              {t(LOCALE_KEYS.ACTIVE)}
             </Select.Option>
-            <Select.Option value="inactive" aria-label={t('inactive')}>
-              {t('inactive')}
+            <Select.Option value="inactive" aria-label={t(LOCALE_KEYS.INACTIVE)}>
+              {t(LOCALE_KEYS.INACTIVE)}
             </Select.Option>
-            <Select.Option value="pending" aria-label={t('pending')}>
-              {t('pending')}
+            <Select.Option value="pending" aria-label={t(LOCALE_KEYS.PENDING)}>
+              {t(LOCALE_KEYS.PENDING)}
             </Select.Option>
           </Select>
         </Form.Item>
@@ -206,9 +208,9 @@ const UserForm: React.FC<UserFormProps> = ({
                 onClick={handleCancel}
                 size={embedded ? 'middle' : 'large'}
                 style={{ minWidth: embedded ? '80px' : '120px' }}
-                aria-label={t('cancel') + ' button'}
+                aria-label={t(LOCALE_KEYS.CANCEL) + ' button'}
               >
-                {t('cancel')}
+                {t(LOCALE_KEYS.CANCEL)}
               </Button>
             </Space>
           </div>
@@ -223,7 +225,7 @@ const UserForm: React.FC<UserFormProps> = ({
         formContent
       ) : (
         <FormLayout>
-          
+
             {/* <h1
               id="form-title"
               style={{

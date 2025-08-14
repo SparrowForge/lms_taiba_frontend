@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IFaculty} from '@/types/faculty';
 
@@ -23,9 +25,9 @@ export const useCreateFacultyDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<IFaculty> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
-    name: t('faculty'),
+    name: t(LOCALE_KEYS.FACULTY),
     route: '/faculties',
     getDisplayName: getFacultyDisplayName,
     getInitials: getFacultyInitials,
@@ -37,38 +39,38 @@ export const useCreateFacultyDetailsConfig = (
     onBack,
     fields: [
       { key: 'id', label: 'ID' },
-      { key: 'fullName', label: t('fullName') },
-      { key: 'email', label: t('email') },
-      { key: 'employeeCode', label: t('employeeCode') },
-      { key: 'employmentType', label: t('employmentType') },
+      { key: 'fullName', label: t(LOCALE_KEYS.FULL_NAME) },
+      { key: 'email', label: t(LOCALE_KEYS.EMAIL) },
+      { key: 'employeeCode', label: t(LOCALE_KEYS.EMPLOYEE_CODE) },
+      { key: 'employmentType', label: t(LOCALE_KEYS.EMPLOYMENT_TYPE) },
       {
         key: 'isActive',
-        label: t('status'),
-        render: (value: boolean) => (value ? t('active') : t('inactive')),
+        label: t(LOCALE_KEYS.STATUS),
+        render: (value: boolean) => (value ? t(LOCALE_KEYS.ACTIVE) : t(LOCALE_KEYS.INACTIVE)),
       },
       {
         key: 'joinedDate',
-        label: t('joinedDate'),
+        label: t(LOCALE_KEYS.JOINED_DATE),
         render: (value: string) => (value ? new Date(value).toLocaleDateString() : 'N/A'),
       },
       {
         key: 'branch.name',
-        label: t('branch'),
+        label: t(LOCALE_KEYS.BRANCH),
         render: (value: string, item: IFaculty) => item?.branch?.name || 'N/A',
       },
       {
         key: 'department.name',
-        label: t('department'),
+        label: t(LOCALE_KEYS.DEPARTMENT),
         render: (value: string, item: IFaculty) => item?.department?.name || 'N/A',
       },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

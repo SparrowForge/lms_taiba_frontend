@@ -11,6 +11,8 @@ import departmentReducer from './slices/departmentSlice';
 import employmentTypeReducer from './slices/employmentTypeSlice';
 import facultyReducer from './slices/facultySlice';
 import facultySubjectReducer from './slices/facultySubjectSlice';
+import feeInstallmentPlanReducer from './slices/feeInstallmentPlanSlice';
+import feeStructureReducer from './slices/feeStructureSlice';
 import instituteReducer from './slices/instituteSlice';
 import menuReducer from './slices/menuSlice';
 import panelReducer from './slices/panelSlice';
@@ -19,6 +21,10 @@ import roleReducer from './slices/roleSlice';
 import scheduleTypeReducer from './slices/scheduleTypeSlice';
 import semesterReducer from './slices/semesterSlice';
 import semesterSubjectReducer from './slices/semesterSubjectSlice';
+import studentEducationReducer from './slices/studentEducationSlice';
+import studentFamilyReducer from './slices/studentFamilySlice';
+import studentProfileReducer from './slices/studentProfileSlice';
+import studentReducer from './slices/studentSlice';
 import subjectReducer from './slices/subjectSlice';
 import userRoleReducer from './slices/userRoleSlice';
 import userReducer from './slices/userSlice';
@@ -40,6 +46,8 @@ export interface RootState {
   semesterSubjects: ReturnType<typeof semesterSubjectReducer>;
   faculties: ReturnType<typeof facultyReducer>;
   facultySubjects: ReturnType<typeof facultySubjectReducer>;
+  feeInstallmentPlans: ReturnType<typeof feeInstallmentPlanReducer>;
+  feeStructures: ReturnType<typeof feeStructureReducer>;
   audits: ReturnType<typeof auditReducer>;
   userRoles: ReturnType<typeof userRoleReducer>;
   addresses: ReturnType<typeof addressReducer>;
@@ -47,6 +55,10 @@ export interface RootState {
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
   employmentTypes: ReturnType<typeof employmentTypeReducer>;
   institutes: ReturnType<typeof instituteReducer>;
+  students: ReturnType<typeof studentReducer>;
+  studentEducations: ReturnType<typeof studentEducationReducer>;
+  studentFamilies: ReturnType<typeof studentFamilyReducer>;
+  studentProfiles: ReturnType<typeof studentProfileReducer>;
 }
 
 // Create store
@@ -67,6 +79,8 @@ export const store = configureStore({
     semesterSubjects: semesterSubjectReducer,
     faculties: facultyReducer,
     facultySubjects: facultySubjectReducer,
+    feeInstallmentPlans: feeInstallmentPlanReducer,
+    feeStructures: feeStructureReducer,
     audits: auditReducer,
     userRoles: userRoleReducer,
     addresses: addressReducer,
@@ -74,6 +88,10 @@ export const store = configureStore({
     scheduleTypes: scheduleTypeReducer,
     employmentTypes: employmentTypeReducer,
     institutes: instituteReducer,
+    students: studentReducer,
+    studentEducations: studentEducationReducer,
+    studentFamilies: studentFamilyReducer,
+    studentProfiles: studentProfileReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

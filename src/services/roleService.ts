@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const roleService = {
   },
 
   // Get a single role by ID
-  getRole: async (id: number): Promise<IRole> => {
-    const response = await api.get<IRole>(`/roles/${id}`);
+  getRole: async (id: number): Promise<IBaseResponse<IRole>> => {
+    const response = await api.get<IBaseResponse<IRole>>(`/roles/${id}`);
     return response.data;
   },
 

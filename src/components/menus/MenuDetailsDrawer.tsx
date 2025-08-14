@@ -1,9 +1,13 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
 import {Status} from '@/types/common';
@@ -16,7 +20,7 @@ interface MenuDetailsDrawerProps {
   menuId?: number;
   visible: boolean;
   onClose: () => void;
-  onEdit?: (menuId: number) => void;
+  onEdit: (menuId: number) => void;
 }
 
 const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
@@ -25,51 +29,38 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { menus, listStatus, loadMenus, getMenuById, loadMenu } = useMenus();
-  const [menu, setMenu] = useState<IMenu | null>(null);
-  const t = useTranslations();
-  const entityName = t('menu', { defaultValue: 'Menu' });
 
+  const { selectedMenu, getMenuById, detailsStatus } = useMenus();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   useEffect(() => {
-    if (menuId && visible) {
-      const foundMenu = getMenuById(menuId);
-      if (foundMenu) {
-        setMenu(foundMenu);
-      } else {
-        loadMenu(menuId);
-      }
+    if (visible && menuId) {
+      getMenuById(menuId);
     }
-  }, [menuId, visible, getMenuById, loadMenu]);
+  }, [visible, menuId, getMenuById]);
 
-  useEffect(() => {
-    if (menus.length === 0) {
-      loadMenus();
-    }
-  }, [menus.length, loadMenus]);
-
-  useEffect(() => {
-    if (menus.length > 0 && menuId) {
-      const foundMenu = getMenuById(menuId);
-      if (foundMenu) {
-        setMenu(foundMenu);
-      }
-    }
-  }, [menus, menuId, getMenuById]);
+  const handleEdit = (menu: IMenu) => {
+    onEdit(menu.id);
+  };
 
   const config = useCreateMenuDetailsConfig(
-    menu,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
+    selectedMenu,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={menuId} // Force remount when menuId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
+      width={800}
       open={visible}
       onClose={onClose}
-      width={500}
-      placement="right"
+      destroyOnHidden={true}
     >
       <EntityDetailsContent config={config} />
     </Drawer>

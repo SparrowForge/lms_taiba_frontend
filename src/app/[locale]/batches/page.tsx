@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import BatchDetailsDrawer from '@/components/batches/BatchDetailsDrawer';
@@ -14,14 +15,15 @@ import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
 import {useBatches} from '@/hooks/useBatches';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
 import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 
 export default function BatchesPage() {
-  const t = useTranslations();
-  const entityName = t('batch', { defaultValue: 'Batch' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -75,7 +77,7 @@ export default function BatchesPage() {
 
   const config: EntityConfig<IBatch> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/batches',
     searchFields: ['name', 'year', 'session'] as (keyof IBatch)[],
     onSearch: (searchText: string) => {
@@ -88,49 +90,49 @@ export default function BatchesPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('name'),
+        title: t(LOCALE_KEYS.NAME),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('startDate'),
+        title: t(LOCALE_KEYS.START_DATE),
         dataIndex: 'startDate',
         key: 'startDate',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('endDate'),
+        title: t(LOCALE_KEYS.END_DATE),
         dataIndex: 'endDate',
         key: 'endDate',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('year'),
+        title: t(LOCALE_KEYS.YEAR),
         dataIndex: 'year',
         key: 'year',
         render: (text: number) => <span>{text}</span>,
       },
       {
-        title: t('session'),
+        title: t(LOCALE_KEYS.SESSION),
         dataIndex: 'session',
         key: 'session',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('intakeCapacity'),
+        title: t(LOCALE_KEYS.INTAKE_CAPACITY),
         dataIndex: 'intakeCapacity',
         key: 'intakeCapacity',
         render: (text: number) => <span>{text}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
         render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('remarks'),
+        title: t(LOCALE_KEYS.REMARKS),
         dataIndex: 'remarks',
         key: 'remarks',
         render: (text: string) => <span>{text}</span>,
@@ -142,26 +144,26 @@ export default function BatchesPage() {
         render: (course: ICourse) => <span>{course?.name || 'N/A'}</span>,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (batch: IBatch) => (
           <EntityActions
             onView={() => router.push(`/batches/${batch.id}`)}
             onViewModal={handleViewDetails}
-            viewText={t('view')}
-            editText={t('edit')}
-            deleteText={t('delete')}
-            viewModalText={t('quickView')}
+            viewText={t(LOCALE_KEYS.VIEW)}
+            editText={t(LOCALE_KEYS.EDIT)}
+            deleteText={t(LOCALE_KEYS.DELETE)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/batches/${batch.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeBatch(batch.id)}
             id={batch.id}
           />
@@ -176,7 +178,7 @@ export default function BatchesPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadBatches({ page: 1, limit: 10 })}

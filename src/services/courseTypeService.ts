@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {ICourseType, ICourseTypeCreate, ICourseTypeUpdate} from '@/types/courseType';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const courseTypeService = {
     return response.data;
   },
 
-  getCourseType: async (id: number): Promise<ICourseType> => {
-    const response = await api.get<ICourseType>(`/course-types/${id}`);
+  getCourseType: async (id: number): Promise<IBaseResponse<ICourseType>> => {
+    const response = await api.get<IBaseResponse<ICourseType>>(`/course-types/${id}`);
     return response.data;
   },
 

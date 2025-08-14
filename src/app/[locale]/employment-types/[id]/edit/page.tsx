@@ -1,9 +1,10 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import EmploymentTypeForm from '@/components/employmentTypes/EmploymentTypeForm';
@@ -11,69 +12,47 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import {IEmploymentType} from '@/types/employmentType';
+import {Status} from '@/types/common';
 
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-const EmploymentTypeEditPage: React.FC<PageProps> = ({ params }) => {
+const EmploymentTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const {
-    employmentTypes,
-    listStatus,
-    loadEmploymentTypes,
-    getEmploymentTypeById,
-    loadEmploymentType,
-  } = useEmploymentTypes();
-  const [item, setItem] = useState<IEmploymentType | null>(null);
-  const t = useTranslations();
-  const entityName = t('employmentType');
+  const { selectedEmploymentType, detailsStatus, getEmploymentTypeById } = useEmploymentTypes();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
 
   useEffect(() => {
-    const itemId = parseInt(resolvedParams.id);
-    const found = getEmploymentTypeById(itemId);
-    if (found) setItem(found);
-    else loadEmploymentType(itemId);
-  }, [resolvedParams.id, getEmploymentTypeById, loadEmploymentType]);
+    const employmentTypeId = parseInt(resolvedParams.id);
+    getEmploymentTypeById(employmentTypeId);
+  }, [resolvedParams.id, getEmploymentTypeById]);
 
-  useEffect(() => {
-    if (employmentTypes.length === 0) loadEmploymentTypes();
-  }, [employmentTypes.length, loadEmploymentTypes]);
 
-  useEffect(() => {
-    if (employmentTypes.length > 0) {
-      const found = getEmploymentTypeById(parseInt(resolvedParams.id));
-      if (found) setItem(found);
-    }
-  }, [employmentTypes, resolvedParams.id, getEmploymentTypeById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            {t('loading', { defaultValue: 'Loading...' })}
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!item) {
+  if (!selectedEmploymentType || selectedEmploymentType.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/employment-types')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -82,16 +61,14 @@ const EmploymentTypeEditPage: React.FC<PageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => router.back();
-
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <EmploymentTypeForm
             mode="edit"
             employmentTypeId={parseInt(resolvedParams.id)}
-          initialValues={{ name: item.name, status: item.status }}
+            initialValues={selectedEmploymentType}
         />
       </MainLayout>
     </ProtectedRoute>

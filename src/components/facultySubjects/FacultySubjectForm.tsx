@@ -2,13 +2,15 @@
 
 import {Button, Form, InputNumber, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useFaculties} from '@/hooks/useFaculties';
 import {useFacultySubjects} from '@/hooks/useFacultySubjects';
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useSubjects} from '@/hooks/useSubjects';
 
@@ -36,8 +38,8 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('facultySubject');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createFacultySubject, editFacultySubject, actionStatus } = useFacultySubjects();
@@ -54,12 +56,6 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
   }, [loadFaculties, loadSubjects, loadSemesters, loadBatches]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -69,7 +65,7 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
     try {
       if (mode === 'create') {
         await createFacultySubject(values as IFacultySubjectCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -77,7 +73,7 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
         }
       } else if (mode === 'edit' && facultySubjectId) {
         await editFacultySubject(facultySubjectId, values as IFacultySubjectUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -85,7 +81,7 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -111,25 +107,25 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
       <Form.Item
         name="facultyId"
-        label={t('faculty')}
-        rules={[{ required: true, message: t('required_name', { name: t('faculty') }) }]}
+        label={t(LOCALE_KEYS.FACULTY)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.FACULTY) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('faculty') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -144,12 +140,12 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       </Form.Item>
       <Form.Item
         name="subjectId"
-        label={t('subject')}
-        rules={[{ required: true, message: t('required_name', { name: t('subject') }) }]}
+        label={t(LOCALE_KEYS.SUBJECT)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SUBJECT) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('subject') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -164,12 +160,12 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       </Form.Item>
       <Form.Item
         name="semesterId"
-        label={t('semester')}
-        rules={[{ required: true, message: t('required_name', { name: t('semester') }) }]}
+        label={t(LOCALE_KEYS.SEMESTER)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('semester') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -184,12 +180,12 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       </Form.Item>
       <Form.Item
         name="batchId"
-        label={t('batch')}
-        rules={[{ required: true, message: t('required_name', { name: t('batch') }) }]}
+        label={t(LOCALE_KEYS.BATCH)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('batch') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -204,21 +200,21 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       </Form.Item>
       <Form.Item
         name="hoursPerWeek"
-        label={t('hoursPerWeek')}
-        rules={[{ required: true, message: t('required_name', { name: t('hoursPerWeek') }) }]}
+        label={t(LOCALE_KEYS.HOURS_PER_WEEK)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.HOURS_PER_WEEK) }) }]}
       >
         <InputNumber min={1} max={40} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="role"
-        label={t('role')}
-        rules={[{ required: true, message: t('required_name', { name: t('role') }) }]}
+        label={t(LOCALE_KEYS.ROLE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ROLE) }) }]}
       >
-        <Select placeholder={t('select_name', { name: t('role') })}>
-          <Select.Option value="instructor">{t('instructor')}</Select.Option>
-          <Select.Option value="assistant">{t('assistant')}</Select.Option>
-          <Select.Option value="coordinator">{t('coordinator')}</Select.Option>
-          <Select.Option value="lecturer">{t('lecturer')}</Select.Option>
+        <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}>
+          <Select.Option value="instructor">{t(LOCALE_KEYS.INSTRUCTOR)}</Select.Option>
+          <Select.Option value="assistant">{t(LOCALE_KEYS.ASSISTANT)}</Select.Option>
+          <Select.Option value="coordinator">{t(LOCALE_KEYS.COORDINATOR)}</Select.Option>
+          <Select.Option value="lecturer">{t(LOCALE_KEYS.LECTURER)}</Select.Option>
         </Select>
       </Form.Item>
       <Form.Item>
@@ -227,7 +223,7 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
             {getSubmitText()}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-            {t('cancel')}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>

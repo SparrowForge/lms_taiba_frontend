@@ -1,9 +1,10 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseForm from '@/components/courses/CourseForm';
@@ -11,69 +12,47 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import {ICourse} from '@/types/course';
+import {Status} from '@/types/common';
 
-interface CourseEditPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
 
-const CourseEditPage: React.FC<CourseEditPageProps> = ({ params }) => {
+const CourseEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { courses, listStatus, loadCourses, getCourseById, loadCourse } = useCourses();
-  const [course, setCourse] = useState<ICourse | null>(null);
-  const t = useTranslations();
-  const entityName = t('course', { defaultValue: 'Course' });
+  const { selectedCourse, detailsStatus, getCourseById } = useCourses();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
 
   useEffect(() => {
     const courseId = parseInt(resolvedParams.id);
-    const foundCourse = getCourseById(courseId);
-    if (foundCourse) {
-      setCourse(foundCourse);
-    } else {
-      loadCourse(courseId);
-    }
-  }, [resolvedParams.id, getCourseById, loadCourse]);
+    getCourseById(courseId);
+  }, [resolvedParams.id, getCourseById]);
 
-  useEffect(() => {
-    if (courses.length === 0) {
-      loadCourses();
-    }
-  }, [courses.length, loadCourses]);
 
-  useEffect(() => {
-    if (courses.length > 0) {
-      const foundCourse = getCourseById(parseInt(resolvedParams.id));
-      if (foundCourse) {
-        setCourse(foundCourse);
-      }
-    }
-  }, [courses, resolvedParams.id, getCourseById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!course) {
+  if (!selectedCourse || selectedCourse.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/courses')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -82,32 +61,14 @@ const CourseEditPage: React.FC<CourseEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
-  const getInitialValues = () => ({
-    departmentId: course.departmentId,
-    name: course.name,
-    code: course.code,
-    courseTypeId: course.courseTypeId,
-    scheduleTypeId: course.scheduleTypeId,
-    status: course.status,
-    remarks: course.remarks,
-    durationInSemesters: course.durationInSemesters,
-    description: course.description,
-  });
-
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <CourseForm
             mode="edit"
-            courseId={course.id}
-            initialValues={getInitialValues()}
-            embedded={false}
-          onCancel={handleBack}
+            courseId={parseInt(resolvedParams.id)}
+            initialValues={selectedCourse}
         />
       </MainLayout>
     </ProtectedRoute>

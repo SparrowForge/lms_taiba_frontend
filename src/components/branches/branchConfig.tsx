@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBranch} from '@/types/branch';
 
@@ -19,7 +21,7 @@ export const useCreateBranchDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<IBranch> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
 
   return {
     name: t('branch'),
@@ -35,44 +37,47 @@ export const useCreateBranchDetailsConfig = (
     fields: [
       {
         key: 'id',
-        label: 'ID',
+        label: t(LOCALE_KEYS.ID),
       },
       {
         key: 'name',
-        label: t('name'),
+        label: t(LOCALE_KEYS.NAME),
       },
       {
         key: 'code',
-        label: t('code'),
+        label: t(LOCALE_KEYS.CODE),
       },
       {
-        key: 'instituteId',
-        label: t('instituteId'),
+        key: 'institute.name',
+        label: t(LOCALE_KEYS.INSTITUTE),
+        render: (value: string, item: IBranch) => item?.institute?.name || 'N/A',
       },
       {
-        key: 'addressId',
-        label: t('address'),
+        key: 'address.name',
+        label: t(LOCALE_KEYS.ADDRESS),
+        render: (value: string, item: IBranch) => item?.address?.name || 'N/A',
       },
       {
         key: 'externalInstituteIdNo',
-        label: t('externalInstituteIdNo'),
+        label: t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO),
       },
       {
-        key: 'campusDirectorUserId',
-        label: t('campusDirectorUserId'),
+        key: 'campusDirector.firstName',
+        label: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID),
+        render: (value: string, item: IBranch) => item?.campusDirector?.firstName || 'N/A',
       },
       {
         key: 'status',
-        label: t('status'),
+        label: t(LOCALE_KEYS.STATUS),
       },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

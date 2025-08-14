@@ -5,7 +5,7 @@ import {useCallback} from 'react';
 
 import {RootState} from '@/store';
 
-import {Status} from '@/types/common';
+import {IBaseResponse, Status} from '@/types/common';
 import {IUser, IUserCreate, IUserFilters, IUserUpdate} from '@/types/user';
 
 import {userService} from '@/services/userService';
@@ -60,15 +60,15 @@ export const useUsers = () => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
 
-        const response = await userService.getUser(id);
-        dispatch(setSelectedUser(response));
+        const response: IBaseResponse<IUser> = await userService.getUser(id);
+        dispatch(setSelectedUser(response.data));
 
         // Update user in the list if exists, otherwise add
-        const index = users.findIndex((user: IUser) => user.id === response.id);
+        const index = users.findIndex((user: IUser) => user.id === response.data.id);
         if (index !== -1) {
-          dispatch(updateUser(response));
+          dispatch(updateUser(response.data));
         } else {
-          dispatch(addUser(response));
+          dispatch(addUser(response.data));
         }
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
@@ -189,9 +189,18 @@ export const useUsers = () => {
   // Get user by ID
   const getUserById = useCallback(
     (id: number) => {
-      return users.find((user: IUser) => user.id === id);
+      if (selectedUser && selectedUser.id === id) {
+        return;
+      }
+
+      const user = users.find((user: IUser) => user.id === id);
+      if (user) {
+        dispatch(setSelectedUser(user));
+      } else {
+        loadUser(id);
+      }
     },
-    [users],
+    [users, selectedUser, dispatch, loadUser],
   );
 
   // // Get users by role

@@ -1,7 +1,10 @@
 import {DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined} from '@ant-design/icons';
 import {Button, Dropdown, MenuProps, Spin} from 'antd';
-import {useTranslations} from 'next-intl';
 import React, {useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 interface EntityActionsProps {
   id: number;
@@ -38,7 +41,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
   deleteText,
   loadingStates = {},
 }) => {
-  const t = useTranslations();
+  const { t } = useLocalization();
   const [localLoading, setLocalLoading] = useState<{
     view: boolean;
     edit: boolean;
@@ -79,7 +82,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
     menuItems.push({
       key: 'view',
       icon: isLoading('view') ? <Spin size="small" /> : <EyeOutlined />,
-      label: viewText || t('view'),
+      label: viewText || t(LOCALE_KEYS.VIEW),
       onClick: () => handleAction('view', onView),
       disabled: isLoading('view'),
       style: {
@@ -96,7 +99,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
     menuItems.push({
       key: 'viewModal',
       icon: isLoading('viewModal') ? <Spin size="small" /> : <EyeOutlined />,
-      label: viewModalText || t('quickView'),
+      label: viewModalText || t(LOCALE_KEYS.QUICK_VIEW),
       onClick: () => handleAction('viewModal', onViewModal),
       disabled: isLoading('viewModal'),
       style: {
@@ -113,7 +116,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
     menuItems.push({
       key: 'edit',
       icon: isLoading('edit') ? <Spin size="small" /> : <EditOutlined />,
-      label: editText || t('edit'),
+      label: editText || t(LOCALE_KEYS.EDIT),
       onClick: () => handleAction('edit', onEdit),
       disabled: isLoading('edit'),
       style: {
@@ -130,7 +133,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
     menuItems.push({
       key: 'editModal',
       icon: isLoading('editModal') ? <Spin size="small" /> : <EditOutlined />,
-      label: editModalText || t('quickEdit'),
+      label: editModalText || t(LOCALE_KEYS.QUICK_EDIT),
       onClick: () => handleAction('editModal', onEditModal),
       disabled: isLoading('editModal'),
       style: {
@@ -147,7 +150,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
     menuItems.push({
       key: 'delete',
       icon: isLoading('delete') ? <Spin size="small" /> : <DeleteOutlined />,
-      label: deleteText || t('delete'),
+      label: deleteText || t(LOCALE_KEYS.DELETE),
       onClick: () => handleAction('delete', onDelete),
       disabled: isLoading('delete'),
       danger: true,

@@ -1,12 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
-
-import {IScheduleType} from '@/types/scheduleType';
 
 import ScheduleTypeForm from './ScheduleTypeForm';
 
@@ -26,43 +26,30 @@ const ScheduleTypeFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<IScheduleType> | undefined>();
-  const { scheduleTypes, getScheduleTypeById, loadScheduleType } = useScheduleTypes();
-  const t = useTranslations();
-  const entityName = t('scheduleType', { defaultValue: 'Schedule Type' });
+  const { getScheduleTypeById, selectedScheduleType } = useScheduleTypes();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && scheduleTypeId) {
-      const existing = getScheduleTypeById(scheduleTypeId);
-      if (existing) setInitialValues(existing);
-      else loadScheduleType(scheduleTypeId);
-    } else {
-      setInitialValues(undefined);
+      getScheduleTypeById(scheduleTypeId);
     }
-  }, [visible, mode, scheduleTypeId, getScheduleTypeById, loadScheduleType]);
-
-  useEffect(() => {
-    if (mode === 'edit' && scheduleTypeId && scheduleTypes.length > 0) {
-      const found = getScheduleTypeById(scheduleTypeId);
-      if (found) setInitialValues(found);
-    }
-  }, [scheduleTypes, scheduleTypeId, mode, getScheduleTypeById]);
+  }, [visible, mode, scheduleTypeId, getScheduleTypeById]);
 
   const handleSuccess = () => {
     onSuccess();
-    setInitialValues(undefined);
   };
   const handleCancel = () => {
     onCancel();
-    setInitialValues(undefined);
   };
 
   return (
     <Drawer
+      key={scheduleTypeId} // Force remount when scheduleTypeId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}
@@ -72,7 +59,7 @@ const ScheduleTypeFormDrawer: React.FC<Props> = ({
       <ScheduleTypeForm
         mode={mode}
         scheduleTypeId={scheduleTypeId}
-        initialValues={initialValues}
+        initialValues={selectedScheduleType || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded

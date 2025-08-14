@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const facultyService = {
   },
 
   // Get a single faculty by ID
-  getFaculty: async (id: number): Promise<IFaculty> => {
-    const response = await api.get<IFaculty>(`/faculty/${id}`);
+  getFaculty: async (id: number): Promise<IBaseResponse<IFaculty>> => {
+    const response = await api.get<IBaseResponse<IFaculty>>(`/faculty/${id}`);
     return response.data;
   },
 

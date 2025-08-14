@@ -1,5 +1,5 @@
 import {IAddress, IAddressCreate, IAddressUpdate} from '@/types/address';
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
 import {api} from '@/lib/axios';
 
@@ -9,8 +9,8 @@ export const addressService = {
     return response.data;
   },
 
-  getAddress: async (id: number): Promise<IAddress> => {
-    const response = await api.get<IAddress>(`/addresses/${id}`);
+  getAddress: async (id: number): Promise<IBaseResponse<IAddress>> => {
+    const response = await api.get<IBaseResponse<IAddress>>(`/addresses/${id}`);
     return response.data;
   },
 

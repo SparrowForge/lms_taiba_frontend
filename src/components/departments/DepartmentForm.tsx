@@ -2,15 +2,17 @@
 
 import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useBranches} from '@/hooks/useBranches';
 import {useDepartments} from '@/hooks/useDepartments';
 import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {IDepartment, IDepartmentCreate, IDepartmentUpdate} from '@/types/department';
@@ -36,19 +38,13 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('department');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createDepartment, editDepartment, actionStatus } = useDepartments();
   const { branches, loadBranches } = useBranches();
   const { faculties, loadFaculties } = useFaculties();
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -57,20 +53,15 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   }, [mode, form]);
 
   useEffect(() => {
-    if (branches.length === 0) {
-      loadBranches();
-    }
-  }, [branches.length, loadBranches]);
-
-  useEffect(() => {
     loadFaculties({ page: 1, limit: 100 });
-  }, [loadFaculties]);
+    loadBranches({ page: 1, limit: 100 });
+  }, [loadFaculties, loadBranches]);
 
   const handleSubmit = async (values: Partial<IDepartment>) => {
     try {
       if (mode === 'create') {
         await createDepartment(values as IDepartmentCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -78,7 +69,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
         }
       } else if (mode === 'edit' && departmentId) {
         await editDepartment(departmentId, values as IDepartmentUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -86,7 +77,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -116,18 +107,18 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       <Form.Item
         name="branchId"
-        label={t('branch')}
-        rules={[{ required: true, message: t('required_field', { field: t('branch') }) }]}
+        label={t(LOCALE_KEYS.BRANCH)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BRANCH) }) }]}
       >
         <Select
-          placeholder={t('select_branch')}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
           loading={branches.length === 0}
           showSearch
           filterOption={(input, option) =>
@@ -144,28 +135,28 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
 
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_field', { field: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
-        <Input placeholder={t('enter_name', { name: t('name') })} />
+        <Input placeholder={t(LOCALE_KEYS.NAME)} />
       </Form.Item>
 
       <Form.Item
         name="code"
-        label={t('code')}
-        rules={[{ required: true, message: t('required_field', { field: t('code') }) }]}
+        label={t(LOCALE_KEYS.CODE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.CODE) }) }]}
       >
-        <Input placeholder={t('enter_code')} />
+        <Input placeholder={t(LOCALE_KEYS.CODE)} />
       </Form.Item>
 
       <Form.Item
         name="headId"
-        label={t('head')}
-        rules={[{ required: true, message: t('required_name', { name: t('head') }) }]}
+        label={t(LOCALE_KEYS.HEAD)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.HEAD) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('head') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.HEAD) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -181,24 +172,24 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
 
       <Form.Item
         name="email"
-        label={t('email')}
-        rules={[{ required: true, message: t('required_name', { name: t('email') }) }]}
+        label={t(LOCALE_KEYS.EMAIL)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EMAIL) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="phone"
-        label={t('phone')}
-        rules={[{ required: true, message: t('required_name', { name: t('phone') }) }]}
+        label={t(LOCALE_KEYS.PHONE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PHONE) }) }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -208,7 +199,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>{t('cancel')}</Button>
+          <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>
       </Form.Item>
     </Form>

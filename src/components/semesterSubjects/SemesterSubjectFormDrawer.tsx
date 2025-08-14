@@ -1,12 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
-
-import {ISemesterSubject} from '@/types/semesterSubject';
 
 import SemesterSubjectForm from './SemesterSubjectForm';
 
@@ -26,51 +26,29 @@ const SemesterSubjectFormDrawer: React.FC<SemesterSubjectFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<ISemesterSubject> | undefined>();
-  const { semesterSubjects, getSemesterSubjectById, loadSemesterSubject } = useSemesterSubjects();
-  const t = useTranslations();
-  const entityName = t('semesterSubject', { defaultValue: 'Semester Subject' });
+  const { getSemesterSubjectById, selectedSemesterSubject } = useSemesterSubjects();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
   useEffect(() => {
     if (visible && mode === 'edit' && semesterSubjectId) {
-      // Try to get from current list first
-      const existingSemesterSubject = getSemesterSubjectById(semesterSubjectId);
-      if (existingSemesterSubject) {
-        setInitialValues(existingSemesterSubject);
-      } else {
-        // Load from API if not in current list
-        loadSemesterSubject(semesterSubjectId);
-      }
-    } else {
-      setInitialValues(undefined);
+      getSemesterSubjectById(semesterSubjectId);
     }
-  }, [visible, mode, semesterSubjectId, getSemesterSubjectById, loadSemesterSubject]);
-
-  // Update initial values when semester subjects list changes
-  useEffect(() => {
-    if (mode === 'edit' && semesterSubjectId && semesterSubjects.length > 0) {
-      const semesterSubject = getSemesterSubjectById(semesterSubjectId);
-      if (semesterSubject) {
-        setInitialValues(semesterSubject);
-      }
-    }
-  }, [semesterSubjects, semesterSubjectId, mode, getSemesterSubjectById]);
+  }, [visible, mode, semesterSubjectId, getSemesterSubjectById]);
 
   const handleSuccess = () => {
     onSuccess();
-    setInitialValues(undefined);
   };
 
   const handleCancel = () => {
     onCancel();
-    setInitialValues(undefined);
   };
 
   return (
     <Drawer
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}
@@ -80,7 +58,7 @@ const SemesterSubjectFormDrawer: React.FC<SemesterSubjectFormDrawerProps> = ({
       <SemesterSubjectForm
         mode={mode}
         semesterSubjectId={semesterSubjectId}
-        initialValues={initialValues}
+        initialValues={selectedSemesterSubject || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded={true}

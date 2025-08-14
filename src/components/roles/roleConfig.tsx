@@ -1,4 +1,6 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IRole} from '@/types/role';
 
@@ -14,8 +16,8 @@ export const useCreateRoleDetailsConfig = (
   } = {},
 ) => {
   const { embedded = false, onEdit } = options;
-  const t = useTranslations();
-  const entityName = t('role', { defaultValue: 'Role' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
   return {
     name: entityName,
     route: '/roles',
@@ -27,22 +29,22 @@ export const useCreateRoleDetailsConfig = (
     embedded,
     onEdit,
     fields: [
-      { key: 'id', label: t('id') },
-      { key: 'name', label: t('name') },
-      { key: 'description', label: t('description') },
+      { key: 'id', label: t(LOCALE_KEYS.ID) },
+      { key: 'name', label: t(LOCALE_KEYS.NAME) },
+      { key: 'description', label: t(LOCALE_KEYS.DESCRIPTION) },
       {
         key: 'branch.name',
-        label: t('branch'),
+        label: t(LOCALE_KEYS.BRANCH),
         render: (value: string, item: IRole) => item?.branch?.name || 'N/A',
       },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (value: string) => (value ? new Date(value).toLocaleString() : 'N/A'),
       },
     ],

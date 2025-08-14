@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useAddresses} from '@/hooks/useAddresses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAddress} from '@/types/address';
 import {Status} from '@/types/common';
@@ -27,38 +29,22 @@ const AddressDetailsDrawer: React.FC<AddressDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [address, setAddress] = useState<IAddress | null>(null);
-  const { addresses, getAddressById, loadAddress, detailsStatus } = useAddresses();
-  const t = useTranslations();
-  const entityName = t('address', { defaultValue: 'Address' });
+
+  const { selectedAddress, getAddressById, detailsStatus } = useAddresses();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
   useEffect(() => {
     if (visible && addressId) {
-      const existing = getAddressById(addressId);
-      if (existing) {
-        setAddress(existing);
-      } else {
-        loadAddress(addressId);
-      }
-    } else {
-      setAddress(null);
+      getAddressById(addressId);
     }
-  }, [visible, addressId, getAddressById, loadAddress]);
-
-  useEffect(() => {
-    if (addressId && addresses.length > 0) {
-      const found = getAddressById(addressId);
-      if (found) {
-        setAddress(found);
-      }
-    }
-  }, [addresses, addressId, getAddressById]);
+  }, [visible, addressId, getAddressById]);
 
   const handleEdit = (address: IAddress) => {
     onEdit(address.id);
   };
 
   const config = useCreateAddressDetailsConfig(
-    address,
+    selectedAddress,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {
@@ -69,7 +55,8 @@ const AddressDetailsDrawer: React.FC<AddressDetailsDrawerProps> = ({
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={addressId} // Force remount when addressId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

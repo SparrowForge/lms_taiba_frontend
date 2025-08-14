@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -13,6 +14,7 @@ import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
 import {Status} from '@/types/common';
@@ -20,8 +22,8 @@ import {IScheduleType} from '@/types/scheduleType';
 
 
 export default function ScheduleTypesPage() {
-  const t = useTranslations();
-  const entityName = t('scheduleType', { defaultValue: 'Schedule Type' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -71,7 +73,7 @@ export default function ScheduleTypesPage() {
 
   const config: EntityConfig<IScheduleType> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/schedule-types',
     searchFields: ['name', 'status'] as (keyof IScheduleType)[],
     onSearch: (searchText: string) => {
@@ -84,35 +86,35 @@ export default function ScheduleTypesPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('name'),
+        title: t(LOCALE_KEYS.NAME),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
         render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (item: IScheduleType) => (
           <EntityActions
             onView={() => router.push(`/schedule-types/${item.id}`)}
             onViewModal={handleViewDetails}
-            viewModalText={t('quickView')}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/schedule-types/${item.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeScheduleType(item.id)}
             id={item.id}
           />
@@ -127,7 +129,7 @@ export default function ScheduleTypesPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadScheduleTypes({ page: 1, limit: 10 })}

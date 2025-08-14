@@ -2,13 +2,15 @@
 
 import {Button, Form, Input, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useCourseTypes} from '@/hooks/useCourseTypes';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {ICourseType, ICourseTypeCreate, ICourseTypeUpdate} from '@/types/courseType';
@@ -34,17 +36,11 @@ const CourseTypeForm: React.FC<Props> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('courseType');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createCourseType, editCourseType, actionStatus } = useCourseTypes();
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -56,17 +52,17 @@ const CourseTypeForm: React.FC<Props> = ({
     try {
       if (mode === 'create') {
         await createCourseType(values as ICourseTypeCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) onSuccess();
         else router.push('/course-types');
       } else if (mode === 'edit' && courseTypeId) {
         await editCourseType(courseTypeId, values as ICourseTypeUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) onSuccess();
         else router.push(`/course-types/${courseTypeId}`);
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -87,28 +83,28 @@ const CourseTypeForm: React.FC<Props> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_name', { name: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -118,7 +114,7 @@ const CourseTypeForm: React.FC<Props> = ({
             {getSubmitText()}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-            {t('cancel')}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>

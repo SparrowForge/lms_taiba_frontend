@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import AddressDetailsDrawer from '@/components/addresses/AddressDetailsDrawer';
 import AddressFormDrawer from '@/components/addresses/AddressFormDrawer';
@@ -13,14 +14,15 @@ import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 
 import {useAddresses} from '@/hooks/useAddresses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAddress} from '@/types/address';
 import {Status} from '@/types/common';
 
 
 export default function AddressesPage() {
-  const t = useTranslations();
-  const entityName = t('address', { defaultValue: 'Address' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -73,7 +75,7 @@ export default function AddressesPage() {
 
   const config: EntityConfig<IAddress> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/addresses',
     searchFields: ['name', 'city', 'state'] as (keyof IAddress)[],
     onSearch: (searchText: string) => {
@@ -86,53 +88,53 @@ export default function AddressesPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('name'),
+        title: t(LOCALE_KEYS.NAME),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('address'),
+        title: t(LOCALE_KEYS.ADDRESS),
         dataIndex: 'address',
         key: 'address',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('city'),
+        title: t(LOCALE_KEYS.CITY),
         dataIndex: 'city',
         key: 'city',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('state'),
+        title: t(LOCALE_KEYS.STATE),
         dataIndex: 'state',
         key: 'state',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('country'),
+        title: t(LOCALE_KEYS.COUNTRY),
         dataIndex: 'country',
         key: 'country',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (address: IAddress) => (
           <EntityActions
             onView={() => router.push(`/addresses/${address.id}`)}
             onViewModal={handleViewDetails}
-            viewModalText={t('quickView')}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/addresses/${address.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeAddress(address.id)}
             id={address.id}
           />
@@ -147,7 +149,7 @@ export default function AddressesPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadAddresses({ page: 1, limit: 10 })}

@@ -1,9 +1,13 @@
+'use client';
+
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
 import {Status} from '@/types/common';
@@ -11,11 +15,12 @@ import {IPanel} from '@/types/panel';
 
 import {useCreatePanelDetailsConfig} from './panelConfig';
 
+
 interface PanelDetailsDrawerProps {
   panelId?: number;
   visible: boolean;
   onClose: () => void;
-  onEdit?: (panelId: number) => void;
+  onEdit: (panelId: number) => void;
 }
 
 const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
@@ -24,50 +29,38 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { panels, listStatus, loadPanels, getPanelById, loadPanel } = usePanels();
-  const [panel, setPanel] = useState<IPanel | null>(null);
-  const t = useTranslations();
-  const entityName = t('panel', { defaultValue: 'Panel' });
-  useEffect(() => {
-    if (panelId && visible) {
-      const foundPanel = getPanelById(panelId);
-      if (foundPanel) {
-        setPanel(foundPanel);
-      } else {
-        loadPanel(panelId);
-      }
-    }
-  }, [panelId, visible, getPanelById, loadPanel]);
 
+  const { selectedPanel, getPanelById, detailsStatus } = usePanels();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
   useEffect(() => {
-    if (panels.length === 0) {
-      loadPanels();
+    if (visible && panelId) {
+      getPanelById(panelId);
     }
-  }, [panels.length, loadPanels]);
+  }, [visible, panelId, getPanelById]);
 
-  useEffect(() => {
-    if (panels.length > 0 && panelId) {
-      const foundPanel = getPanelById(panelId);
-      if (foundPanel) {
-        setPanel(foundPanel);
-      }
-    }
-  }, [panels, panelId, getPanelById]);
+  const handleEdit = (panel: IPanel) => {
+    onEdit(panel.id);
+  };
 
   const config = useCreatePanelDetailsConfig(
-    panel,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED ? listStatus.message || null : null,
-    { embedded: true, onEdit: onEdit ? (p) => onEdit(p.id) : undefined },
+    selectedPanel,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
+    {
+      embedded: true,
+      onEdit: handleEdit,
+    },
   );
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={panelId} // Force remount when panelId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
+      width={800}
       open={visible}
       onClose={onClose}
-      width={500}
-      placement="right"
+      destroyOnHidden={true}
     >
       <EntityDetailsContent config={config} />
     </Drawer>

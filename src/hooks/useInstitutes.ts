@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IInstitute, IInstituteCreate, IInstituteUpdate} from '@/types/institute';
 
 import {instituteService} from '@/services/instituteService';
@@ -64,8 +64,8 @@ export const useInstitutes = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IInstitute = await instituteService.getInstitute(id);
-        dispatch(setSelectedInstitute(response));
+        const response: IBaseResponse<IInstitute> = await instituteService.getInstitute(id);
+        dispatch(setSelectedInstitute(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -142,10 +142,19 @@ export const useInstitutes = () => {
   );
 
   const getInstituteById = useCallback(
-    (id: number): IInstitute | undefined => {
-      return institutes.find((item) => item.id === id);
+    (id: number) => {
+      if (selectedInstitute && selectedInstitute.id === id) {
+        return;
+      }
+
+      const institute = institutes.find((item) => item.id === id);
+      if (institute) {
+        dispatch(setSelectedInstitute(institute));
+      } else {
+        loadInstitute(id);
+      }
     },
-    [institutes],
+    [institutes, selectedInstitute, dispatch, loadInstitute],
   );
 
   const clearAction = useCallback(() => {

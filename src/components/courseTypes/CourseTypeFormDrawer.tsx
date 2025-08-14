@@ -1,12 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useCourseTypes} from '@/hooks/useCourseTypes';
-
-import {ICourseType} from '@/types/courseType';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import CourseTypeForm from './CourseTypeForm';
 
@@ -26,43 +26,30 @@ const CourseTypeFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<ICourseType> | undefined>();
-  const { courseTypes, getCourseTypeById, loadCourseType } = useCourseTypes();
-  const t = useTranslations();
-  const entityName = t('courseType', { defaultValue: 'Course Type' });
+  const { getCourseTypeById, selectedCourseType } = useCourseTypes();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && courseTypeId) {
-      const existing = getCourseTypeById(courseTypeId);
-      if (existing) setInitialValues(existing);
-      else loadCourseType(courseTypeId);
-    } else {
-      setInitialValues(undefined);
+      getCourseTypeById(courseTypeId);
     }
-  }, [visible, mode, courseTypeId, getCourseTypeById, loadCourseType]);
-
-  useEffect(() => {
-    if (mode === 'edit' && courseTypeId && courseTypes.length > 0) {
-      const found = getCourseTypeById(courseTypeId);
-      if (found) setInitialValues(found);
-    }
-  }, [courseTypes, courseTypeId, mode, getCourseTypeById]);
+  }, [visible, mode, courseTypeId, getCourseTypeById]);
 
   const handleSuccess = () => {
     onSuccess();
-    setInitialValues(undefined);
   };
   const handleCancel = () => {
     onCancel();
-    setInitialValues(undefined);
   };
 
   return (
     <Drawer
+      key={courseTypeId} // Force remount when courseTypeId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}
@@ -72,7 +59,7 @@ const CourseTypeFormDrawer: React.FC<Props> = ({
       <CourseTypeForm
         mode={mode}
         courseTypeId={courseTypeId}
-        initialValues={initialValues}
+        initialValues={selectedCourseType || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded

@@ -2,11 +2,13 @@
 
 import {Button, Form, Input, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
 import {useAddresses} from '@/hooks/useAddresses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAddress, IAddressCreate, IAddressUpdate} from '@/types/address';
 import {Status} from '@/types/common';
@@ -17,7 +19,7 @@ import FormLayout from '../layout/FormLayout';
 interface AddressFormProps {
   mode: 'create' | 'edit';
   addressId?: number;
-  initialValues?: Partial<IAddressCreate | IAddressUpdate>;
+  initialValues?: Partial<IAddress>;
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
@@ -31,17 +33,11 @@ const AddressForm: React.FC<AddressFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('address');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createAddress, editAddress, actionStatus } = useAddresses();
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue({ ...initialValues });
-    }
-  }, [initialValues, form]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -54,7 +50,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
       const payload = { ...values };
       if (mode === 'create') {
         await createAddress(payload as IAddressCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -62,7 +58,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
         }
       } else if (mode === 'edit' && addressId) {
         await editAddress(addressId, payload as IAddressUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -70,7 +66,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -96,70 +92,70 @@ const AddressForm: React.FC<AddressFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_name', { name: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="address"
-        label={t('address')}
-        rules={[{ required: true, message: t('required_name', { name: t('address') }) }]}
+        label={t(LOCALE_KEYS.ADDRESS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ADDRESS) }) }]}
       >
         <Input.TextArea rows={3} />
       </Form.Item>
       <Form.Item
         name="city"
-        label={t('city')}
-        rules={[{ required: true, message: t('required_name', { name: t('city') }) }]}
+        label={t(LOCALE_KEYS.CITY)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.CITY) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="state"
-        label={t('state')}
-        rules={[{ required: true, message: t('required_name', { name: t('state') }) }]}
+        label={t(LOCALE_KEYS.STATE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATE) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="zipCode"
-        label={t('zipCode')}
-        rules={[{ required: true, message: t('required_name', { name: t('zipCode') }) }]}
+        label={t(LOCALE_KEYS.ZIP_CODE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ZIP_CODE) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="country"
-        label={t('country')}
-        rules={[{ required: true, message: t('required_name', { name: t('country') }) }]}
+        label={t(LOCALE_KEYS.COUNTRY)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.COUNTRY) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="phone"
-        label={t('phone')}
-        rules={[{ required: true, message: t('required_name', { name: t('phone') }) }]}
+        label={t(LOCALE_KEYS.PHONE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PHONE) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="email"
-        label={t('email')}
-        rules={[{ required: true, message: t('required_name', { name: t('email') }) }]}
+        label={t(LOCALE_KEYS.EMAIL)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EMAIL) }) }]}
       >
         <Input />
       </Form.Item>
@@ -169,7 +165,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
             {getSubmitText()}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-            {t('cancel')}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>

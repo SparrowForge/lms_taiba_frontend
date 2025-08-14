@@ -1,3 +1,7 @@
+import {IAddress} from './address';
+import {IInstitute} from './institute';
+import {IUser} from './user';
+
 export interface IBranch {
   id: number;
   name: string;
@@ -10,6 +14,9 @@ export interface IBranch {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  address: IAddress;
+  institute: IInstitute;
+  campusDirector: IUser;
 }
 
 export interface IBranchCreate {

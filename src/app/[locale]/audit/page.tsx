@@ -3,9 +3,10 @@
 import {DeleteOutlined} from '@ant-design/icons';
 import {Button, Modal, Tag} from 'antd';
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import AuditDetailsDrawer from '@/components/audits/AuditDetailsDrawer';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -15,15 +16,15 @@ import EntityActions from '@/components/ui/EntityActions';
 import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 
 import {useAudit} from '@/hooks/useAudit';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAudit} from '@/types/audit';
 import {Status} from '@/types/common';
 
 
-
 export default function AuditPage() {
-  const t = useTranslations();
-  const entityName = t('audit', { defaultValue: 'Audit' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.AUDIT, { defaultValue: 'Audit' });
   const router = useRouter();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsAuditId, setSelectedDetailsAuditId] = useState<number | undefined>();
@@ -46,10 +47,10 @@ export default function AuditPage() {
 
   useEffect(() => {
     if (actionStatus.status === Status.SUCCESS) {
-      toast.success(actionStatus.message || t('action_successful'));
+      toast.success(actionStatus.message || t(LOCALE_KEYS.ACTION_SUCCESSFUL));
       loadAudits({ page: 1, limit: 10 });
     } else if (actionStatus.status === Status.FAILED) {
-      toast.error(actionStatus.message || t('action_failed'));
+      toast.error(actionStatus.message || t(LOCALE_KEYS.ACTION_FAILED));
     }
   }, [actionStatus, loadAudits, t]);
 
@@ -66,10 +67,10 @@ export default function AuditPage() {
 
   const handleCleanAudit = () => {
     Modal.confirm({
-      title: t('confirm_clean_audit'),
-      content: t('confirm_clean_audit_message'),
-      okText: t('yes'),
-      cancelText: t('no'),
+      title: t(LOCALE_KEYS.CONFIRM_CLEAN_AUDIT),
+      content: t(LOCALE_KEYS.CONFIRM_CLEAN_AUDIT_MESSAGE),
+      okText: t(LOCALE_KEYS.YES),
+      cancelText: t(LOCALE_KEYS.NO),
       onOk: async () => {
         await cleanAudit();
       },
@@ -78,7 +79,7 @@ export default function AuditPage() {
 
   const config: EntityConfig<IAudit> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/audit',
     searchFields: ['username', 'action', 'resource', 'method', 'ip'] as (keyof IAudit)[],
     onSearch: (searchText: string) => {
@@ -93,7 +94,7 @@ export default function AuditPage() {
         onClick={handleCleanAudit}
         loading={actionStatus.status === Status.LOADING}
       >
-        {t('clean_audit')}
+        {t(LOCALE_KEYS.CLEAN_AUDIT)}
       </Button>,
     ],
     disableAddNew: true,
@@ -103,13 +104,13 @@ export default function AuditPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('username'),
+        title: t(LOCALE_KEYS.USERNAME),
         dataIndex: 'username',
         key: 'username',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('action'),
+        title: t(LOCALE_KEYS.ACTION),
         dataIndex: 'action',
         key: 'action',
         render: (action: string) => (
@@ -129,13 +130,13 @@ export default function AuditPage() {
         ),
       },
       {
-        title: t('resource'),
+        title: t(LOCALE_KEYS.RESOURCE),
         dataIndex: 'resource',
         key: 'resource',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('method'),
+        title: t(LOCALE_KEYS.METHOD),
         dataIndex: 'method',
         key: 'method',
         render: (method: string) => (
@@ -157,7 +158,7 @@ export default function AuditPage() {
         ),
       },
       {
-        title: t('responseStatus'),
+        title: t(LOCALE_KEYS.RESPONSE_STATUS),
         dataIndex: 'responseStatus',
         key: 'responseStatus',
         render: (status: number) => (
@@ -177,13 +178,13 @@ export default function AuditPage() {
         ),
       },
       {
-        title: t('responseTime'),
+        title: t(LOCALE_KEYS.RESPONSE_TIME),
         dataIndex: 'responseTime',
         key: 'responseTime',
         render: (time: number) => <span>{time}ms</span>,
       },
       {
-        title: t('success'),
+        title: t(LOCALE_KEYS.SUCCESS),
         dataIndex: 'success',
         key: 'success',
         render: (success: boolean) => (
@@ -191,27 +192,27 @@ export default function AuditPage() {
         ),
       },
       {
-        title: t('ip'),
+        title: t(LOCALE_KEYS.IP),
         dataIndex: 'ip',
         key: 'ip',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('timestamp'),
+        title: t(LOCALE_KEYS.TIMESTAMP),
         dataIndex: 'timestamp',
         key: 'timestamp',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (audit: IAudit) => (
           <EntityActions
             onView={() => router.push(`/audit/${audit.id}`)}
             onViewModal={handleViewDetails}
-            viewText={t('view')}
-            viewModalText={t('quickView')}
+            viewText={t(LOCALE_KEYS.VIEW)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={undefined} // No edit for audit logs
             onDelete={undefined} // No delete for individual audit logs
             id={audit.id}
@@ -227,7 +228,7 @@ export default function AuditPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadAudits({ page: 1, limit: 10 })}

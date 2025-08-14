@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IUser, IUserCreate, IUserUpdate} from '@/types/user';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const userService = {
   },
 
   // Get single user by ID
-  async getUser(id: number): Promise<IUser> {
-    const response = await api.get<IUser>(`/users/${id}`);
+  async getUser(id: number): Promise<IBaseResponse<IUser>> {
+    const response = await api.get<IBaseResponse<IUser>>(`/users/${id}`);
     return response.data;
   },
 

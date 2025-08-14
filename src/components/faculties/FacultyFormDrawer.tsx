@@ -1,12 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useFaculties} from '@/hooks/useFaculties';
-
-import {IFaculty} from '@/types/faculty';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import FacultyForm from './FacultyForm';
 
@@ -26,51 +26,31 @@ const FacultyFormDrawer: React.FC<FacultyFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<IFaculty> | undefined>();
-  const { faculties, getFacultyById, loadFaculty } = useFaculties();
-  const t = useTranslations();
-  const entityName = t('faculty', { defaultValue: 'Faculty' });
+
+  const { getFacultyById, selectedFaculty } = useFaculties();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
   useEffect(() => {
     if (visible && mode === 'edit' && facultyId) {
-      // Try to get from current list first
-      const existingFaculty = getFacultyById(facultyId);
-      if (existingFaculty) {
-        setInitialValues(existingFaculty);
-      } else {
-        // Load from API if not in current list
-        loadFaculty(facultyId);
-      }
-    } else {
-      setInitialValues(undefined);
+      getFacultyById(facultyId);
     }
-  }, [visible, mode, facultyId, getFacultyById, loadFaculty]);
-
-  // Update initial values when faculties list changes
-  useEffect(() => {
-    if (mode === 'edit' && facultyId && faculties.length > 0) {
-      const faculty = getFacultyById(facultyId);
-      if (faculty) {
-        setInitialValues(faculty);
-      }
-    }
-  }, [faculties, facultyId, mode, getFacultyById]);
+  }, [visible, mode, facultyId, getFacultyById]);
 
   const handleSuccess = () => {
     onSuccess();
-    setInitialValues(undefined);
   };
 
   const handleCancel = () => {
     onCancel();
-    setInitialValues(undefined);
   };
 
   return (
     <Drawer
+      key={facultyId} // Force remount when facultyId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}
@@ -80,7 +60,7 @@ const FacultyFormDrawer: React.FC<FacultyFormDrawerProps> = ({
       <FacultyForm
         mode={mode}
         facultyId={facultyId}
-        initialValues={initialValues}
+        initialValues={selectedFaculty || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded={true}

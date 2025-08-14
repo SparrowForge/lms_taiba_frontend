@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
 
 import {menuService} from '@/services/menuService';
@@ -75,8 +75,8 @@ export const useMenus = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IMenu = await menuService.getMenu(id);
-        dispatch(setSelectedMenu(response));
+        const response: IBaseResponse<IMenu> = await menuService.getMenu(id);
+        dispatch(setSelectedMenu(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -151,10 +151,19 @@ export const useMenus = () => {
 
   // Get menu by ID from the current list
   const getMenuById = useCallback(
-    (id: number): IMenu | undefined => {
-      return menus.find((menu) => menu.id === id);
+    (id: number) => {
+      if (selectedMenu && selectedMenu.id === id) {
+        return;
+      }
+
+      const menu = menus.find((menu) => menu.id === id);
+      if (menu) {
+        dispatch(setSelectedMenu(menu));
+      } else {
+        loadMenu(id);
+      }
     },
-    [menus],
+    [menus, selectedMenu, dispatch, loadMenu],
   );
 
   // Clear action status

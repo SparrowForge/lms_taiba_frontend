@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {ISubject, ISubjectCreate, ISubjectUpdate} from '@/types/subject';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const subjectService = {
   },
 
   // Get a single subject by ID
-  getSubject: async (id: number): Promise<ISubject> => {
-    const response = await api.get<ISubject>(`/subjects/${id}`);
+  getSubject: async (id: number): Promise<IBaseResponse<ISubject>> => {
+    const response = await api.get<IBaseResponse<ISubject>>(`/subjects/${id}`);
     return response.data;
   },
 

@@ -2,15 +2,17 @@
 
 import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useAddresses} from '@/hooks/useAddresses';
 import {useBranches} from '@/hooks/useBranches';
 import {useInstitutes} from '@/hooks/useInstitutes';
+import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
 import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
@@ -37,8 +39,8 @@ const BranchForm: React.FC<BranchFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('branch');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createBranch, editBranch, actionStatus } = useBranches();
@@ -54,12 +56,6 @@ const BranchForm: React.FC<BranchFormProps> = ({
   }, [loadAddresses, loadUsers, loadInstitutes]);
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
@@ -69,7 +65,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
     try {
       if (mode === 'create') {
         await createBranch(values as IBranchCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -77,7 +73,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         }
       } else if (mode === 'edit' && branchId) {
         await editBranch(branchId, values as IBranchUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -85,7 +81,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -115,42 +111,42 @@ const BranchForm: React.FC<BranchFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       aria-label={`${mode === 'create' ? t('create_name', { name: entityName }) : t('edit_name', { name: entityName })} form`}
       role="form"
     >
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('pleaseEnterName_name', { name: entityName }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
-        <Input placeholder={t('name')} aria-label={t('name')} aria-required="true" />
+        <Input placeholder={t(LOCALE_KEYS.NAME)} aria-label={t(LOCALE_KEYS.NAME)} aria-required="true" />
       </Form.Item>
 
       <Form.Item
         name="code"
-        label={t('code')}
-        rules={[{ required: true, message: t('pleaseEnterCode') }]}
+        label={t(LOCALE_KEYS.CODE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_CODE) }]}
       >
-        <Input placeholder={t('code')} aria-label={t('code')} aria-required="true" />
+        <Input placeholder={t(LOCALE_KEYS.CODE)} aria-label={t(LOCALE_KEYS.CODE)} aria-required="true" />
       </Form.Item>
 
       <Form.Item
         name="instituteId"
-        label={t('institute')}
-        rules={[{ required: true, message: t('required_name', { name: t('institute') }) }]}
+        label={t(LOCALE_KEYS.INSTITUTE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTE) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('institute') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.INSTITUTE) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -166,12 +162,12 @@ const BranchForm: React.FC<BranchFormProps> = ({
 
       <Form.Item
         name="addressId"
-        label={t('address')}
-        rules={[{ required: true, message: t('required_name', { name: t('address') }) }]}
+        label={t(LOCALE_KEYS.ADDRESS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ADDRESS) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('address') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ADDRESS) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -187,9 +183,9 @@ const BranchForm: React.FC<BranchFormProps> = ({
 
       <Form.Item
         name="externalInstituteIdNo"
-        label={t('externalInstituteIdNo')}
+        label={t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO)}
         rules={[
-          { required: true, message: t('required_name', { name: t('externalInstituteIdNo') }) },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO) }) },
         ]}
       >
         <Input />
@@ -197,14 +193,14 @@ const BranchForm: React.FC<BranchFormProps> = ({
 
       <Form.Item
         name="campusDirectorUserId"
-        label={t('campusDirectorUserId')}
+        label={t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID)}
         rules={[
-          { required: true, message: t('required_name', { name: t('campusDirectorUserId') }) },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID) }) },
         ]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('user') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.USER) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -220,8 +216,8 @@ const BranchForm: React.FC<BranchFormProps> = ({
 
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -242,9 +238,9 @@ const BranchForm: React.FC<BranchFormProps> = ({
             onClick={handleCancel}
             size={embedded ? 'middle' : 'large'}
             style={{ minWidth: embedded ? '80px' : '120px' }}
-            aria-label={t('cancel', { defaultValue: 'Cancel' }) + ' button'}
+            aria-label={t(LOCALE_KEYS.CANCEL) + ' button'}
           >
-            {t('cancel', { defaultValue: 'Cancel' })}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>

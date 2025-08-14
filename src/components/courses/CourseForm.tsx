@@ -2,15 +2,17 @@
 
 import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useCourses} from '@/hooks/useCourses';
 import {useCourseTypes} from '@/hooks/useCourseTypes';
 import {useDepartments} from '@/hooks/useDepartments';
+import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
 import {Status} from '@/types/common';
@@ -37,8 +39,8 @@ const CourseForm: React.FC<CourseFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('course');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createCourse, editCourse, actionStatus } = useCourses();
@@ -47,33 +49,22 @@ const CourseForm: React.FC<CourseFormProps> = ({
   const { scheduleTypes, loadScheduleTypes } = useScheduleTypes();
 
   useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
-
-  useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
     }
   }, [mode, form]);
 
   useEffect(() => {
-    if (departments.length === 0) {
-      loadDepartments();
-    }
-  }, [departments.length, loadDepartments]);
-
-  useEffect(() => {
     loadCourseTypes({ page: 1, limit: 100 });
     loadScheduleTypes({ page: 1, limit: 100 });
-  }, [loadCourseTypes, loadScheduleTypes]);
+    loadDepartments({ page: 1, limit: 100 });
+  }, [loadCourseTypes, loadScheduleTypes, loadDepartments]);
 
   const handleSubmit = async (values: Partial<ICourse>) => {
     try {
       if (mode === 'create') {
         await createCourse(values as ICourseCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -81,7 +72,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
         }
       } else if (mode === 'edit' && courseId) {
         await editCourse(courseId, values as ICourseUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -89,7 +80,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -119,18 +110,18 @@ const CourseForm: React.FC<CourseFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('edit_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
+    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
       <Form.Item
         name="departmentId"
-        label={t('department')}
-        rules={[{ required: true, message: t('required_field', { field: t('department') }) }]}
+        label={t(LOCALE_KEYS.DEPARTMENT)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) }) }]}
       >
         <Select
-          placeholder={t('select_department')}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) })}
           loading={departments.length === 0}
           showSearch
           filterOption={(input, option) =>
@@ -147,27 +138,27 @@ const CourseForm: React.FC<CourseFormProps> = ({
 
       <Form.Item
         name="name"
-        label={t('name')}
-        rules={[{ required: true, message: t('required_field', { field: t('name') }) }]}
+        label={t(LOCALE_KEYS.NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
-        <Input placeholder={t('enter_name', { name: t('name') })} />
+        <Input placeholder={t(LOCALE_KEYS.NAME)} />
       </Form.Item>
 
       <Form.Item
         name="code"
-        label={t('code')}
-        rules={[{ required: true, message: t('required_field', { field: t('code') }) }]}
+        label={t(LOCALE_KEYS.CODE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_CODE) }]}
       >
-        <Input placeholder={t('enter_code')} />
+        <Input placeholder={t(LOCALE_KEYS.CODE)} />
       </Form.Item>
 
       <Form.Item
         name="courseTypeId"
-        label={t('courseType')}
-        rules={[{ required: true, message: t('required_field', { field: t('courseType') }) }]}
+        label={t(LOCALE_KEYS.COURSE_TYPE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.COURSE_TYPE) }) }]}
       >
         <Select
-          placeholder={t('select_courseType')}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE_TYPE) })}
           showSearch
           optionFilterProp="children"
           filterOption={(input, option) =>
@@ -184,11 +175,11 @@ const CourseForm: React.FC<CourseFormProps> = ({
 
       <Form.Item
         name="scheduleTypeId"
-        label={t('scheduleType')}
-        rules={[{ required: true, message: t('required_name', { name: t('scheduleType') }) }]}
+        label={t(LOCALE_KEYS.SCHEDULE_TYPE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SCHEDULE_TYPE) }) }]}
       >
         <Select
-          placeholder={t('select_name', { name: t('scheduleType') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SCHEDULE_TYPE) })}
           showSearch
           optionFilterProp="children"
           filterOption={(input, option) =>
@@ -205,13 +196,13 @@ const CourseForm: React.FC<CourseFormProps> = ({
 
       <Form.Item
         name="durationInSemesters"
-        label={t('durationInSemesters')}
+        label={t(LOCALE_KEYS.DURATION_IN_SEMESTERS)}
         rules={[
-          { required: true, message: t('required_field', { field: t('durationInSemesters') }) },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DURATION_IN_SEMESTERS) }) },
         ]}
       >
         <InputNumber
-          placeholder={t('enter_durationInSemesters')}
+          placeholder={t(LOCALE_KEYS.DURATION_IN_SEMESTERS)}
           min={1}
           max={20}
           style={{ width: '100%' }}
@@ -220,21 +211,21 @@ const CourseForm: React.FC<CourseFormProps> = ({
 
       <Form.Item
         name="description"
-        label={t('description')}
-        rules={[{ required: true, message: t('required_field', { field: t('description') }) }]}
+        label={t(LOCALE_KEYS.DESCRIPTION)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }) }]}
       >
-        <Input.TextArea placeholder={t('enter_description')} rows={4} />
+        <Input.TextArea placeholder={t(LOCALE_KEYS.DESCRIPTION)} rows={4} />
       </Form.Item>
 
       <Form.Item
         name="status"
-        label={t('status')}
-        rules={[{ required: true, message: t('required_name', { name: t('status') }) }]}
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="lifecycle" />
       </Form.Item>
 
-      <Form.Item name="remarks" label={t('remarks')}>
+      <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
         <Input.TextArea rows={3} />
       </Form.Item>
 
@@ -243,7 +234,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>{t('cancel')}</Button>
+          <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>
       </Form.Item>
     </Form>

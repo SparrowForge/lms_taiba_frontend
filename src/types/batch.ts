@@ -1,4 +1,5 @@
 import {ICourse} from './course';
+import {ISemesterCreate} from './semester';
 
 export interface IBatch {
   id: number;
@@ -39,4 +40,10 @@ export interface IBatchUpdate {
   endDate?: string;
   status?: string;
   remarks?: string;
+}
+
+// New interface for creating batch with semesters
+export interface IBatchWithSemestersCreate {
+  batch: IBatchCreate;
+  semesters: Omit<ISemesterCreate, 'batchId'>[];
 }

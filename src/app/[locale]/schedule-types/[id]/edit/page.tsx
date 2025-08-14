@@ -1,74 +1,58 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import ScheduleTypeForm from '@/components/scheduleTypes/ScheduleTypeForm';
 import {PageHeader} from '@/components/ui/PageHeader';
 
+import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
-import {IScheduleType} from '@/types/scheduleType';
+import {Status} from '@/types/common';
 
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-const ScheduleTypeEditPage: React.FC<PageProps> = ({ params }) => {
+const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { scheduleTypes, listStatus, loadScheduleTypes, getScheduleTypeById, loadScheduleType } =
-    useScheduleTypes();
-  const [item, setItem] = useState<IScheduleType | null>(null);
-  const t = useTranslations();
-  const entityName = t('scheduleType');
+  const { selectedScheduleType, detailsStatus, getScheduleTypeById } = useScheduleTypes();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
   useEffect(() => {
-    const itemId = parseInt(resolvedParams.id);
-    const found = getScheduleTypeById(itemId);
-    if (found) setItem(found);
-    else loadScheduleType(itemId);
-  }, [resolvedParams.id, getScheduleTypeById, loadScheduleType]);
+    const scheduleTypeId = parseInt(resolvedParams.id);
+    getScheduleTypeById(scheduleTypeId);
+  }, [resolvedParams.id, getScheduleTypeById]);
 
-  useEffect(() => {
-    if (scheduleTypes.length === 0) loadScheduleTypes();
-  }, [scheduleTypes.length, loadScheduleTypes]);
 
-  useEffect(() => {
-    if (scheduleTypes.length > 0) {
-      const found = getScheduleTypeById(parseInt(resolvedParams.id));
-      if (found) setItem(found);
-    }
-  }, [scheduleTypes, resolvedParams.id, getScheduleTypeById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            {t('loading', { defaultValue: 'Loading...' })}
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!item) {
+  if (!selectedScheduleType || selectedScheduleType.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/schedule-types')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -77,16 +61,14 @@ const ScheduleTypeEditPage: React.FC<PageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => router.back();
-
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <ScheduleTypeForm
             mode="edit"
             scheduleTypeId={parseInt(resolvedParams.id)}
-          initialValues={{ name: item.name, status: item.status }}
+            initialValues={selectedScheduleType}
         />
       </MainLayout>
     </ProtectedRoute>

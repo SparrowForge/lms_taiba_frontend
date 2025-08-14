@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useAudit} from '@/hooks/useAudit';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAudit} from '@/types/audit';
 import {Status} from '@/types/common';
@@ -27,42 +29,22 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [audit, setAudit] = useState<IAudit | null>(null);
-  const { audits, getAuditById, loadAudit, detailsStatus } = useAudit();
-  const t = useTranslations();
-  const entityName = t('audit', { defaultValue: 'Audit' });
 
+  const { selectedAudit, getAuditById, detailsStatus } = useAudit();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.AUDIT, { defaultValue: 'Audit' });
   useEffect(() => {
     if (visible && auditId) {
-      // Try to get from current list first
-      const existingAudit = getAuditById(auditId);
-      if (existingAudit) {
-        setAudit(existingAudit);
-      } else {
-        // Load from API if not in current list
-        loadAudit(auditId);
-      }
-    } else {
-      setAudit(null);
+      getAuditById(auditId);
     }
-  }, [visible, auditId, getAuditById, loadAudit]);
-
-  // Update audit when audits list changes
-  useEffect(() => {
-    if (auditId && audits.length > 0) {
-      const foundAudit = getAuditById(auditId);
-      if (foundAudit) {
-        setAudit(foundAudit);
-      }
-    }
-  }, [audits, auditId, getAuditById]);
+  }, [visible, auditId, getAuditById]);
 
   const handleEdit = (audit: IAudit) => {
     onEdit(audit.id);
   };
 
   const config = useCreateAuditDetailsConfig(
-    audit,
+    selectedAudit,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {
@@ -73,7 +55,7 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

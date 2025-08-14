@@ -1,5 +1,5 @@
 import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
 import {api} from '@/lib/axios';
 
@@ -11,8 +11,8 @@ export const branchService = {
   },
 
   // Get a single branch by ID
-  getBranch: async (id: number): Promise<IBranch> => {
-    const response = await api.get<IBranch>(`/branches/${id}`);
+  getBranch: async (id: number): Promise<IBaseResponse<IBranch>> => {
+    const response = await api.get<IBaseResponse<IBranch>>(`/branches/${id}`);
     return response.data;
   },
 

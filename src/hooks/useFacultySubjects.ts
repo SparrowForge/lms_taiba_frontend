@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate,} from '@/types/facultySubject';
 
 import {facultySubjectService} from '@/services/facultySubjectService';
@@ -71,8 +71,8 @@ export const useFacultySubjects = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IFacultySubject = await facultySubjectService.getFacultySubject(id);
-        dispatch(setSelectedFacultySubject(response));
+        const response: IBaseResponse<IFacultySubject> = await facultySubjectService.getFacultySubject(id);
+        dispatch(setSelectedFacultySubject(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -165,10 +165,19 @@ export const useFacultySubjects = () => {
 
   // Get faculty subject by ID from the current list
   const getFacultySubjectById = useCallback(
-    (id: number): IFacultySubject | undefined => {
-      return facultySubjects.find((facultySubject) => facultySubject.id === id);
+    (id: number) => {
+      if (selectedFacultySubject && selectedFacultySubject.id === id) {
+        return;
+      }
+
+      const facultySubject = facultySubjects.find((facultySubject) => facultySubject.id === id);
+      if (facultySubject) {
+        dispatch(setSelectedFacultySubject(facultySubject));
+      } else {
+        loadFacultySubject(id);
+      }
     },
-    [facultySubjects],
+    [facultySubjects, selectedFacultySubject, dispatch, loadFacultySubject],
   );
 
   // Clear action status

@@ -1,12 +1,14 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useBranches} from '@/hooks/useBranches';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBranch} from '@/types/branch';
 import {Status} from '@/types/common';
@@ -27,41 +29,22 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const [branch, setBranch] = useState<IBranch | null>(null);
-  const { branches, getBranchById, loadBranch, detailsStatus } = useBranches();
-  const t = useTranslations();
-  const entityName = t('branch', { defaultValue: 'Branch' });
+
+  const { selectedBranch, getBranchById, detailsStatus } = useBranches();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
   useEffect(() => {
     if (visible && branchId) {
-      // Try to get from current list first
-      const existingBranch = getBranchById(branchId);
-      if (existingBranch) {
-        setBranch(existingBranch);
-      } else {
-        // Load from API if not in current list
-        loadBranch(branchId);
-      }
-    } else {
-      setBranch(null);
+      getBranchById(branchId);
     }
-  }, [visible, branchId, getBranchById, loadBranch]);
-
-  // Update branch when branches list changes
-  useEffect(() => {
-    if (branchId && branches.length > 0) {
-      const foundBranch = getBranchById(branchId);
-      if (foundBranch) {
-        setBranch(foundBranch);
-      }
-    }
-  }, [branches, branchId, getBranchById]);
+  }, [visible, branchId, getBranchById]);
 
   const handleEdit = (branch: IBranch) => {
     onEdit(branch.id);
   };
 
   const config = useCreateBranchDetailsConfig(
-    branch,
+    selectedBranch,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     {
@@ -72,7 +55,8 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
 
   return (
     <Drawer
-      title={t('details_name', { name: entityName })}
+      key={branchId} // Force remount when branchId changes
+      title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}
       onClose={onClose}

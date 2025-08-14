@@ -3,13 +3,15 @@
 import {Button, DatePicker, Form, Input, Select, Space, Switch} from 'antd';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useBranches} from '@/hooks/useBranches';
 import {useDepartments} from '@/hooks/useDepartments';
 import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
@@ -35,8 +37,8 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const t = useTranslations();
-  const entityName = t('faculty');
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
   const router = useRouter();
   const [form] = Form.useForm();
   const { createFaculty, editFaculty, actionStatus } = useFaculties();
@@ -47,15 +49,6 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
     loadBranches({ page: 1, limit: 100 });
     loadDepartments({ page: 1, limit: 100 });
   }, [loadBranches, loadDepartments]);
-
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue({
-        ...initialValues,
-        joinedDate: initialValues.joinedDate ? dayjs(initialValues.joinedDate) : undefined,
-      });
-    }
-  }, [initialValues, form]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -71,7 +64,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       };
       if (mode === 'create') {
         await createFaculty(payload as IFacultyCreate);
-        toast.success(t('created_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -79,7 +72,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
         }
       } else if (mode === 'edit' && facultyId) {
         await editFaculty(facultyId, payload as IFacultyUpdate);
-        toast.success(t('updated_name', { name: entityName }));
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
@@ -87,7 +80,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      let errorMessage = t('failed_name', {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
@@ -113,25 +106,25 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
 
   const getSubmitText = () =>
     mode === 'create'
-      ? t('create_name', { name: entityName })
-      : t('update_name', { name: entityName });
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
-      initialValues={initialValues}
+      initialValues={mode === 'edit' ? initialValues : undefined}
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
       <Form.Item
         name="branchId"
-        label={t('branch')}
-        rules={[{ required: true, message: t('required_name', { name: t('branch') }) }]}
+        label={t(LOCALE_KEYS.BRANCH)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BRANCH) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('branch') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -146,12 +139,12 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       </Form.Item>
       <Form.Item
         name="departmentId"
-        label={t('department')}
-        rules={[{ required: true, message: t('required_name', { name: t('department') }) }]}
+        label={t(LOCALE_KEYS.DEPARTMENT)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) }) }]}
       >
         <Select
           showSearch
-          placeholder={t('select_name', { name: t('department') })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) })}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
@@ -166,49 +159,49 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       </Form.Item>
       <Form.Item
         name="fullName"
-        label={t('fullName')}
-        rules={[{ required: true, message: t('required_name', { name: t('fullName') }) }]}
+        label={t(LOCALE_KEYS.FULL_NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.FULL_NAME) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="email"
-        label={t('email')}
+        label={t(LOCALE_KEYS.EMAIL)}
         rules={[
-          { required: true, message: t('required_name', { name: t('email') }) },
-          { type: 'email', message: t('pleaseEnterValidEmail') },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EMAIL) }) },
+          { type: 'email', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL) },
         ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="employeeCode"
-        label={t('employeeCode')}
-        rules={[{ required: true, message: t('required_name', { name: t('employeeCode') }) }]}
+        label={t(LOCALE_KEYS.EMPLOYEE_CODE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EMPLOYEE_CODE) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="employmentType"
-        label={t('employmentType')}
-        rules={[{ required: true, message: t('required_name', { name: t('employmentType') }) }]}
+        label={t(LOCALE_KEYS.EMPLOYMENT_TYPE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) }) }]}
       >
-        <Select placeholder={t('select_name', { name: t('employmentType') })}>
-          <Select.Option value="full-time">{t('fullTime')}</Select.Option>
-          <Select.Option value="part-time">{t('partTime')}</Select.Option>
-          <Select.Option value="visiting">{t('visiting')}</Select.Option>
-          <Select.Option value="contract">{t('contract')}</Select.Option>
+        <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) })}>
+          <Select.Option value="full-time">{t(LOCALE_KEYS.FULL_TIME)}</Select.Option>
+          <Select.Option value="part-time">{t(LOCALE_KEYS.PART_TIME)}</Select.Option>
+          <Select.Option value="visiting">{t(LOCALE_KEYS.VISITING)}</Select.Option>
+          <Select.Option value="contract">{t(LOCALE_KEYS.CONTRACT)}</Select.Option>
         </Select>
       </Form.Item>
       <Form.Item
         name="joinedDate"
-        label={t('joinedDate')}
-        rules={[{ required: true, message: t('required_name', { name: t('joinedDate') }) }]}
+        label={t(LOCALE_KEYS.JOINED_DATE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.JOINED_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
-      <Form.Item name="isActive" label={t('status')} valuePropName="checked">
-        <Switch checkedChildren={t('active')} unCheckedChildren={t('inactive')} />
+      <Form.Item name="isActive" label={t(LOCALE_KEYS.STATUS)} valuePropName="checked">
+        <Switch checkedChildren={t(LOCALE_KEYS.ACTIVE)} unCheckedChildren={t(LOCALE_KEYS.INACTIVE)} />
       </Form.Item>
       <Form.Item>
         <Space>
@@ -216,7 +209,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
             {getSubmitText()}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-            {t('cancel')}
+            {t(LOCALE_KEYS.CANCEL)}
           </Button>
         </Space>
       </Form.Item>

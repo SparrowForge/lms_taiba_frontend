@@ -1,6 +1,8 @@
-import {useTranslations} from 'next-intl';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {ICourseType} from '@/types/courseType';
 
@@ -20,9 +22,9 @@ export const useCreateCourseTypeDetailsConfig = (
   } = {},
 ): EntityDetailsConfig<ICourseType> => {
   const { embedded = false, onEdit, onBack } = options;
-  const t = useTranslations();
+  const { t } = useLocalization();
   return {
-    name: t('courseType'),
+    name: t(LOCALE_KEYS.COURSE_TYPE),
     route: '/course-types',
     getDisplayName: getCourseTypeDisplayName,
     getInitials: getCourseTypeInitials,
@@ -34,16 +36,16 @@ export const useCreateCourseTypeDetailsConfig = (
     onBack,
     fields: [
       { key: 'id', label: 'ID' },
-      { key: 'name', label: t('name') },
-      { key: 'status', label: t('status') },
+      { key: 'name', label: t(LOCALE_KEYS.NAME) },
+      { key: 'status', label: t(LOCALE_KEYS.STATUS) },
       {
         key: 'createdAt',
-        label: t('createdAt'),
+        label: t(LOCALE_KEYS.CREATED_AT),
         render: (v: string) => (v ? new Date(v).toLocaleString() : 'N/A'),
       },
       {
         key: 'updatedAt',
-        label: t('updatedAt'),
+        label: t(LOCALE_KEYS.UPDATED_AT),
         render: (v: string) => (v ? new Date(v).toLocaleString() : 'N/A'),
       },
     ],

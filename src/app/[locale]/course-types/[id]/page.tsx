@@ -1,7 +1,8 @@
 'use client';
 
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateCourseTypeDetailsConfig} from '@/components/courseTypes/courseTypeConfig';
@@ -10,55 +11,41 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
 import {useCourseTypes} from '@/hooks/useCourseTypes';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {ICourseType} from '@/types/courseType';
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
+export default function CourseTypeDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { selectedCourseType, detailsStatus, getCourseTypeById } = useCourseTypes();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
 
-const CourseTypeDetailPage: React.FC<PageProps> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { courseTypes, listStatus, loadCourseTypes, getCourseTypeById, loadCourseType } =
-    useCourseTypes();
-  const [item, setItem] = useState<ICourseType | null>(null);
-  const t = useTranslations();
-  const entityName = t('courseType');
+  const courseTypeId = parseInt(resolvedParams.id);
 
+  // Load course type if not already loaded
   useEffect(() => {
-    const itemId = parseInt(resolvedParams.id);
-    const found = getCourseTypeById(itemId);
-    if (found) setItem(found);
-    else loadCourseType(itemId);
-  }, [resolvedParams.id, getCourseTypeById, loadCourseType]);
-
-  useEffect(() => {
-    if (courseTypes.length === 0) loadCourseTypes();
-  }, [courseTypes.length, loadCourseTypes]);
-
-  useEffect(() => {
-    if (courseTypes.length > 0) {
-      const found = getCourseTypeById(parseInt(resolvedParams.id));
-      if (found) setItem(found);
-    }
-  }, [courseTypes, resolvedParams.id, getCourseTypeById]);
+    getCourseTypeById(courseTypeId);
+  }, [getCourseTypeById, courseTypeId]);
 
   const config = useCreateCourseTypeDetailsConfig(
-    item,
-    listStatus.status === Status.LOADING,
-    listStatus.status === Status.FAILED
-      ? listStatus.message || t('failed_name', { name: entityName })
+    selectedCourseType,
+    detailsStatus.status === Status.LOADING,
+    detailsStatus.status === Status.FAILED
+      ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
       : null,
   );
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<ICourseType>} />
+          <EntityDetails config={config as EntityDetailsConfig<ICourseType>} />
       </MainLayout>
     </ProtectedRoute>
   );
-};
-
-export default CourseTypeDetailPage;
+}

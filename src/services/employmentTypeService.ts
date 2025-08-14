@@ -1,4 +1,4 @@
-import {IBasePaginatedResponse} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IEmploymentType, IEmploymentTypeCreate, IEmploymentTypeUpdate,} from '@/types/employmentType';
 
 import {api} from '@/lib/axios';
@@ -11,8 +11,8 @@ export const employmentTypeService = {
     return response.data;
   },
 
-  getEmploymentType: async (id: number): Promise<IEmploymentType> => {
-    const response = await api.get<IEmploymentType>(`/employment-types/${id}`);
+  getEmploymentType: async (id: number): Promise<IBaseResponse<IEmploymentType>> => {
+    const response = await api.get<IBaseResponse<IEmploymentType>>(`/employment-types/${id}`);
     return response.data;
   },
 

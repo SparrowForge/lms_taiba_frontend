@@ -1,9 +1,10 @@
 'use client';
 
 import {useRouter, useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
 import {useEffect, useState} from 'react';
 
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseDetailsDrawer from '@/components/courses/CourseDetailsDrawer';
@@ -15,14 +16,15 @@ import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
 import {useCourses} from '@/hooks/useCourses';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 import {IDepartment} from '@/types/department';
 
 export default function CoursesPage() {
-  const t = useTranslations();
-  const entityName = t('course', { defaultValue: 'Course' });
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -76,7 +78,7 @@ export default function CoursesPage() {
 
   const config: EntityConfig<ICourse> = {
     name: entityName,
-    title: t('management_name', { name: entityName }),
+    title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/courses',
     searchFields: ['name', 'code', 'status'] as (keyof ICourse)[],
     onSearch: (searchText: string) => {
@@ -89,68 +91,66 @@ export default function CoursesPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t('name'),
+        title: t(LOCALE_KEYS.NAME),
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('code'),
+        title: t(LOCALE_KEYS.CODE),
         dataIndex: 'code',
         key: 'code',
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t('courseType'),
-        dataIndex: 'courseTypeId',
-        key: 'courseTypeId',
-        render: (val: number) => <span>{val}</span>,
+        title: t(LOCALE_KEYS.COURSE_TYPE),
+        key: 'courseType',
+        render: (course: ICourse) => <span>{course.courseType.name}</span>,
       },
       {
-        title: t('scheduleType'),
-        dataIndex: 'scheduleTypeId',
-        key: 'scheduleTypeId',
-        render: (val: number) => <span>{val}</span>,
+        title: t(LOCALE_KEYS.SCHEDULE_TYPE),
+        key: 'scheduleType',
+        render: (course: ICourse) => <span>{course.scheduleType.name}</span>,
       },
       {
-        title: t('durationInSemesters'),
+        title: t(LOCALE_KEYS.DURATION_IN_SEMESTERS),
         dataIndex: 'durationInSemesters',
         key: 'durationInSemesters',
         render: (text: number) => <span>{text}</span>,
       },
       {
-        title: t('department'),
+        title: t(LOCALE_KEYS.DEPARTMENT),
         dataIndex: 'department',
         key: 'department',
         render: (department: IDepartment) => <span>{department?.name || 'N/A'}</span>,
       },
       {
-        title: t('status'),
+        title: t(LOCALE_KEYS.STATUS),
         dataIndex: 'status',
         key: 'status',
         render: (text: string) => <StatusTag status={text} />,
       },
       {
-        title: t('createdAt'),
+        title: t(LOCALE_KEYS.CREATED_AT),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (text: string) => new Date(text).toLocaleString(),
       },
       {
-        title: t('actions'),
+        title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
         render: (course: ICourse) => (
           <EntityActions
             onView={() => router.push(`/courses/${course.id}`)}
             onViewModal={handleViewDetails}
-            viewText={t('view')}
-            editText={t('edit')}
-            deleteText={t('delete')}
-            viewModalText={t('quickView')}
+            viewText={t(LOCALE_KEYS.VIEW)}
+            editText={t(LOCALE_KEYS.EDIT)}
+            deleteText={t(LOCALE_KEYS.DELETE)}
+            viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/courses/${course.id}/edit`)}
             onEditModal={handleEditDrawer}
-            editModalText={t('quickEdit')}
+            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeCourse(course.id)}
             id={course.id}
           />
@@ -165,7 +165,7 @@ export default function CoursesPage() {
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t('failed_name', { name: entityName }))
+              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
           onRetry={() => loadCourses({ page: 1, limit: 10 })}

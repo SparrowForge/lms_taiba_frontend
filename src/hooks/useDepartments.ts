@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IDepartment, IDepartmentCreate, IDepartmentUpdate} from '@/types/department';
 
 import {departmentService} from '@/services/departmentService';
@@ -55,8 +55,8 @@ export const useDepartments = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IDepartment = await departmentService.getDepartment(id);
-        dispatch(setSelectedDepartment(response));
+        const response: IBaseResponse<IDepartment> = await departmentService.getDepartment(id);
+        dispatch(setSelectedDepartment(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -139,10 +139,19 @@ export const useDepartments = () => {
 
   // Get department by ID from the current list
   const getDepartmentById = useCallback(
-    (id: number): IDepartment | undefined => {
-      return departments.find((department) => department.id === id);
+    (id: number) => {
+      if (selectedDepartment && selectedDepartment.id === id) {
+        return;
+      }
+
+      const department = departments.find((department) => department.id === id);
+      if (department) {
+        dispatch(setSelectedDepartment(department));
+      } else {
+        loadDepartment(id);
+      }
     },
-    [departments],
+    [departments, selectedDepartment, dispatch, loadDepartment],
   );
 
   // Clear action status

@@ -1,9 +1,10 @@
 'use client';
 
-import {Button, Card} from 'antd';
+import {Button, Card, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import DepartmentForm from '@/components/departments/DepartmentForm';
@@ -11,70 +12,47 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useDepartments} from '@/hooks/useDepartments';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import {IDepartment} from '@/types/department';
+import {Status} from '@/types/common';
 
-interface DepartmentEditPageProps {
-  params: Promise<{ id: string; locale: string }>;
-}
 
-const DepartmentEditPage: React.FC<DepartmentEditPageProps> = ({ params }) => {
+const DepartmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { departments, listStatus, loadDepartments, getDepartmentById, loadDepartment } =
-    useDepartments();
-  const [department, setDepartment] = useState<IDepartment | null>(null);
-  const t = useTranslations();
-  const entityName = t('department', { defaultValue: 'Department' });
+  const { selectedDepartment, detailsStatus, getDepartmentById } = useDepartments();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
 
   useEffect(() => {
     const departmentId = parseInt(resolvedParams.id);
-    const foundDepartment = getDepartmentById(departmentId);
-    if (foundDepartment) {
-      setDepartment(foundDepartment);
-    } else {
-      loadDepartment(departmentId);
-    }
-  }, [resolvedParams.id, getDepartmentById, loadDepartment]);
+    getDepartmentById(departmentId);
+  }, [resolvedParams.id, getDepartmentById]);
 
-  useEffect(() => {
-    if (departments.length === 0) {
-      loadDepartments();
-    }
-  }, [departments.length, loadDepartments]);
 
-  useEffect(() => {
-    if (departments.length > 0) {
-      const foundDepartment = getDepartmentById(parseInt(resolvedParams.id));
-      if (foundDepartment) {
-        setDepartment(foundDepartment);
-      }
-    }
-  }, [departments, resolvedParams.id, getDepartmentById]);
-
-  if (listStatus.status === 'loading') {
+  if (detailsStatus.status === Status.LOADING) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px', textAlign: 'center' }}>
-            <div>{t('loading', { defaultValue: 'Loading...' })}</div>
+            <Spin />
+            <div>{t(LOCALE_KEYS.LOADING, { defaultValue: 'Loading...' })} {entityName}</div>
           </div>
         </MainLayout>
       </ProtectedRoute>
     );
   }
 
-  if (!department) {
+  if (!selectedDepartment || selectedDepartment.id !== parseInt(resolvedParams.id)) {
     return (
       <ProtectedRoute>
         <MainLayout>
           <div style={{ padding: '24px' }}>
             <Card>
               <div style={{ textAlign: 'center', padding: '50px' }}>
-                <h2>{t('notFound_name', { name: entityName })}</h2>
+                <h2>{t(LOCALE_KEYS.NOT_FOUND_NAME, { name: entityName })}</h2>
                 <Button type="primary" onClick={() => router.push('/departments')}>
-                  {t('backToList_name', { name: entityName })}
-                </Button>
+                  {t(LOCALE_KEYS.BACK_TO_LIST_NAME, { name: entityName })}</Button>
               </div>
             </Card>
           </div>
@@ -83,30 +61,14 @@ const DepartmentEditPage: React.FC<DepartmentEditPageProps> = ({ params }) => {
     );
   }
 
-  const handleBack = () => {
-    router.back();
-  };
-
-  const getInitialValues = () => ({
-    branchId: department.branchId,
-    name: department.name,
-    code: department.code,
-    headId: department.headId,
-    email: department.email,
-    phone: department.phone,
-    status: department.status,
-  });
-
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t('edit_name', { name: entityName })} onBack={handleBack} />
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
           <DepartmentForm
             mode="edit"
-            departmentId={department.id}
-            initialValues={getInitialValues()}
-            embedded={false}
-          onCancel={handleBack}
+            departmentId={parseInt(resolvedParams.id)}
+            initialValues={selectedDepartment}
         />
       </MainLayout>
     </ProtectedRoute>

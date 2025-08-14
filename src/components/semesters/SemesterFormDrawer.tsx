@@ -1,12 +1,12 @@
 'use client';
 
 import {Drawer} from 'antd';
-import {useTranslations} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
-
-import {ISemester} from '@/types/semester';
 
 import SemesterForm from './SemesterForm';
 
@@ -26,51 +26,31 @@ const SemesterFormDrawer: React.FC<SemesterFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const [initialValues, setInitialValues] = useState<Partial<ISemester> | undefined>();
-  const { semesters, getSemesterById, loadSemester } = useSemesters();
-  const t = useTranslations();
-  const entityName = t('semester', { defaultValue: 'Semester' });
+
+  const { getSemesterById, selectedSemester } = useSemesters();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   useEffect(() => {
     if (visible && mode === 'edit' && semesterId) {
-      // Try to get from current list first
-      const existingSemester = getSemesterById(semesterId);
-      if (existingSemester) {
-        setInitialValues(existingSemester);
-      } else {
-        // Load from API if not in current list
-        loadSemester(semesterId);
-      }
-    } else {
-      setInitialValues(undefined);
+      getSemesterById(semesterId);
     }
-  }, [visible, mode, semesterId, getSemesterById, loadSemester]);
-
-  // Update initial values when semesters list changes
-  useEffect(() => {
-    if (mode === 'edit' && semesterId && semesters.length > 0) {
-      const semester = getSemesterById(semesterId);
-      if (semester) {
-        setInitialValues(semester);
-      }
-    }
-  }, [semesters, semesterId, mode, getSemesterById]);
+  }, [visible, mode, semesterId, getSemesterById]);
 
   const handleSuccess = () => {
     onSuccess();
-    setInitialValues(undefined);
   };
 
   const handleCancel = () => {
     onCancel();
-    setInitialValues(undefined);
   };
 
   return (
     <Drawer
+      key={semesterId} // Force remount when semesterId changes
       title={
         mode === 'create'
-          ? t('create_name', { name: entityName })
-          : t('edit_name', { name: entityName })
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
       }
       width={600}
       open={visible}
@@ -80,7 +60,7 @@ const SemesterFormDrawer: React.FC<SemesterFormDrawerProps> = ({
       <SemesterForm
         mode={mode}
         semesterId={semesterId}
-        initialValues={initialValues}
+        initialValues={selectedSemester || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded={true}

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IScheduleType, IScheduleTypeCreate, IScheduleTypeUpdate} from '@/types/scheduleType';
 
 import {scheduleTypeService} from '@/services/scheduleTypeService';
@@ -70,8 +70,8 @@ export const useScheduleTypes = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IScheduleType = await scheduleTypeService.getScheduleType(id);
-        dispatch(setSelectedScheduleType(response));
+        const response: IBaseResponse<IScheduleType> = await scheduleTypeService.getScheduleType(id);
+        dispatch(setSelectedScheduleType(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -157,10 +157,19 @@ export const useScheduleTypes = () => {
   );
 
   const getScheduleTypeById = useCallback(
-    (id: number): IScheduleType | undefined => {
-      return scheduleTypes.find((item) => item.id === id);
+    (id: number) => {
+      if (selectedScheduleType && selectedScheduleType.id === id) {
+        return;
+      }
+
+      const scheduleType = scheduleTypes.find((item) => item.id === id);
+      if (scheduleType) {
+        dispatch(setSelectedScheduleType(scheduleType));
+      } else {
+        loadScheduleType(id);
+      }
     },
-    [scheduleTypes],
+    [scheduleTypes, selectedScheduleType, dispatch, loadScheduleType],
   );
 
   const clearAction = useCallback(() => {
