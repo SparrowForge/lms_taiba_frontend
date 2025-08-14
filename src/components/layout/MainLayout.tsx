@@ -79,13 +79,13 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
           className="bg-white border-b border-gray-200 px-4 flex items-center justify-between h-16"
           style={headerStyle}
         >
-          <Button
+          {/* <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={handleToggleCollapse}
             className="text-lg bg-white hover:bg-gray-50"
             style={buttonStyle}
-          />
+          /> */}
           <div className="flex-1" />
           <div className="flex items-center gap-4">
             <LanguageSwitcher />

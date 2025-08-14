@@ -1,7 +1,7 @@
 'use client';
 
 import { BellOutlined, BookOutlined, LeftOutlined, LeftSquareOutlined, LogoutOutlined, MehOutlined, MenuFoldOutlined, MenuUnfoldOutlined, RightOutlined, RightSquareOutlined, SettingOutlined, SignatureOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Layout, Menu, Typography, Spin, MenuProps, Dropdown, Button } from 'antd';
+import { Avatar, Layout, Menu, Typography, Spin, MenuProps, Dropdown, Button, Divider } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useCallback, useMemo, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
@@ -9,6 +9,8 @@ import { useMenus } from '@/hooks/useMenus';
 import { Status } from '@/types/common';
 import { IMenu } from '@/types/menu';
 import { ItemType, MenuItemType } from 'antd/es/menu/interface';
+import { useLocalization } from '@/hooks/useLocalization';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -19,6 +21,7 @@ interface SidebarProps {
 }
 
 export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
+    const { t } = useLocalization();
     const { user, logout, getUserFullName } = useAuth();
     const { myMenus, myMenusStatus, loadMyMenus } = useMenus();
     const router = useRouter();
@@ -118,65 +121,57 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
     //settings 
 
     // Settings dropdown menu content
-    const settingsMenuItemsDropdown: MenuProps['items'] = [
-        {
-            key: 'profile',
-            icon: <UserOutlined />,
-            label: 'Profile',
-            onClick: () => router.push('/settings/profile'),
-        },
-        {
-            type: 'divider',
-        },
-        {
-            key: 'upgrade',
-            icon: <SignatureOutlined />,
-            label: 'Upgrade Plan',
-            onClick: () => router.push('/upgrade'),
-        },
-        {
-            key: 'signout',
-            icon: <LogoutOutlined />,
-            label: 'Logout',
-            onClick: handleLogout,
-        },
-    ];
+  const settingsMenuItemsDropdown: MenuProps['items'] = [
+    {
+      key: 'profile',
+      icon: <UserOutlined />,
+      label: t(LOCALE_KEYS.PROFILE),
+      onClick: () => router.push('/settings/profile'),
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'upgrade',
+      icon: <SignatureOutlined />,
+      label: t(LOCALE_KEYS.UPGRADE_PLAN),
+      onClick: () => router.push('/upgrade'),
+    },
+    {
+      key: 'signout',
+      icon: <LogoutOutlined />,
+      label: t(LOCALE_KEYS.LOGOUT),
+      onClick: handleLogout,
+    },
+  ];
 
-    const settingsMenuItems = useMemo(
-        () => [
-            {
-                key: 'notification',
-                icon: <BellOutlined />,
-                label: collapsed ? '' : 'Notification',
-                onClick: () => router.push('/notifications'),
-            },
-            {
-                key: 'settings',
-                icon: <SettingOutlined />,
-                label: (
-
-                    <Dropdown
-                        menu={{ items: settingsMenuItemsDropdown }}
-                        trigger={['click']}
-                        placement="topRight"
-                    >
-                        <span className="cursor-pointer">
-                            {collapsed ? '' : 'Settings'}
-                        </span>
-                    </Dropdown>
-
-                ),
-            },
-        ],
-        [collapsed, router]
-    );
+  const settingsMenuItems = useMemo(
+    () => [
+      {
+        key: 'notification',
+        icon: <BellOutlined />,
+        label: collapsed ? '' : t(LOCALE_KEYS.NOTIFICATION),
+        onClick: () => router.push('/notifications'),
+      },
+      {
+        key: 'settings',
+        icon: <SettingOutlined />,
+        label: (
+          <Dropdown menu={{ items: settingsMenuItemsDropdown }} trigger={['click']} placement="topRight">
+            <span className="cursor-pointer">{collapsed ? '' : t(LOCALE_KEYS.SETTINGS)}</span>
+          </Dropdown>
+        ),
+      },
+    ],
+    [collapsed, settingsMenuItemsDropdown, t]
+  );
 
     const logoutMenuItems = useMemo(
         () => [
             {
                 key: 'logout',
                 icon: <LogoutOutlined />,
-                label: collapsed ? '' : 'Logout',
+                label: collapsed ? '' : t(LOCALE_KEYS.LOGOUT),
                 onClick: handleLogout,
                 className: 'text-red-600 hover:text-red-700',
             },
@@ -266,9 +261,17 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
 
                 {/* User Profile */}
                 <div className="shrink-0">{userProfileSection}</div>
-                <div className={`absolute right-0 z-20 ${
-    collapsed ? 'bottom-[460px]' : 'bottom-[400px]'
-  }`}>
+                <div
+  className={`absolute right-0 z-20 ${
+    collapsed
+      ? locale === 'ar'
+        ? 'bottom-[475px]'
+        : 'bottom-[460px]'
+      : locale === 'ar'
+        ? 'bottom-[400px]'
+        : 'bottom-[398px]'
+  }`}
+>
                     <Button
                         type="primary"
                         icon={collapsed ? <RightOutlined /> :<LeftOutlined />}
@@ -284,12 +287,12 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
                     />
                 </div>
                 {/* Navigation Menu - scrollable */}
-                <div className="flex-1 overflow-hidden
-                 min-h-0 scroll-smooth" style={{
+                <div className="flex-1 " style={{
                     overflow : "auto"
 
                  }}>
-                    <h1 className="py-4 px-2 text-gray-400 uppercase">Main</h1>
+                    {/* main  */}
+                    <h1 className="pt-4 px-2 text-gray-400 uppercase">{t(LOCALE_KEYS.MAIN)}</h1>
                     {myMenusStatus.status === Status.LOADING ? (
                         <div className="flex justify-center items-center p-4">
                             <Spin />
@@ -307,13 +310,15 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
 
                 {/* Logout and Settings */}
                 <div className="py-4 border-t border-gray-100 shrink-0">
-                    <h1 className="px-4 text-gray-500 uppercase text-xs tracking-wider mb-2">Settings</h1>
+                    {/* settings */}
+                    <h1 className="pl-1 text-gray-500 uppercase text-xs tracking-wider mb-2">{t(LOCALE_KEYS.SETTINGS)}</h1>
                     <Menu
                         mode="inline"
                         items={settingsMenuItems}
                         className="border-0"
                         style={{ backgroundColor: 'transparent' }}
                     />
+                    <Divider/>
                     <Menu
                         mode="inline"
                         items={logoutMenuItems}

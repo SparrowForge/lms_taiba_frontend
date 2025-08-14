@@ -303,5 +303,10 @@
   "enter_email": "أدخل البريد الإلكتروني",
   "enter_transfer_info": "أدخل معلومات التحويل",
   "select_identity_type": "اختر نوع الهوية",
-  "enter_identity_no": "أدخل رقم الهوية"
+  "enter_identity_no": "أدخل رقم الهوية",
+    "main": "الرئيسية",
+  "settings": "الإعدادات",
+  "notification": "الإشعارات",
+  "upgradePlan": "ترقية الخطة",
+  "logout": "تسجيل الخروج"
 }

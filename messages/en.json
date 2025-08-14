@@ -303,5 +303,10 @@
   "enter_email": "Enter email address",
   "enter_transfer_info": "Enter transfer information",
   "select_identity_type": "Select identity type",
-  "enter_identity_no": "Enter identity number"
+  "enter_identity_no": "Enter identity number",
+  "main": "Main",
+  "settings": "Settings",
+  "notification": "Notification",
+  "upgradePlan": "Upgrade Plan",
+  "logout": "Logout"
 }
