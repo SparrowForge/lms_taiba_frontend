@@ -5,7 +5,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
-import {ISemesterSubject, ISemesterSubjectCreate, ISemesterSubjectUpdate,} from '@/types/semesterSubject';
+import {
+    ISemesterSubject,
+    ISemesterSubjectCreate,
+    ISemesterSubjectMultipleCreate,
+    ISemesterSubjectUpdate
+} from '@/types/semesterSubject';
 
 import {semesterSubjectService} from '@/services/semesterSubjectService';
 
@@ -105,6 +110,29 @@ export const useSemesterSubjects = () => {
               error?.message ||
               'Failed to create semester subject'
             : 'Failed to create semester subject';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  // Create multiple semester subjects with faculty assignments
+  const createMultipleSemesterSubjects = useCallback(
+    async (data: ISemesterSubjectMultipleCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response = await semesterSubjectService.createMultipleSemesterSubjects(data);
+        // Add all created semester subjects to the store
+        response.forEach(semesterSubject => {
+          dispatch(addSemesterSubject(semesterSubject));
+        });
+        dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Semester subjects created successfully' }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to create semester subjects'
+            : 'Failed to create semester subjects';
         dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;
       }
@@ -217,6 +245,7 @@ export const useSemesterSubjects = () => {
     loadSemesterSubjects,
     loadSemesterSubject,
     createSemesterSubject,
+    createMultipleSemesterSubjects,
     editSemesterSubject,
     removeSemesterSubject,
     getSemesterSubjectById,

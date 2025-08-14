@@ -21,3 +21,20 @@ export interface ISemesterSubjectUpdate {
   semesterId?: number;
   subjectId?: number;
 }
+
+// New interfaces for multiple faculty assignment
+export interface IFacultyAssignment {
+  facultyId: number;
+  hoursPerWeek: number;
+  role: string;
+}
+
+export interface ISemesterSubjectWithFaculty {
+  subjectId: number;
+  faculty: IFacultyAssignment[];
+}
+
+export interface ISemesterSubjectMultipleCreate {
+  semesterId: number;
+  subjects: ISemesterSubjectWithFaculty[];
+}

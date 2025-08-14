@@ -69,8 +69,11 @@ const BatchForm: React.FC<BatchFormProps> = ({
     const course = courses.find(c => c.id === courseId);
     if (course) {
       setSelectedCourse(course);
-      generateSemesters(course.durationInSemesters);
-      setShowSemesterSection(true);
+      // Only generate semesters in create mode
+      if (mode === 'create') {
+        generateSemesters(course.durationInSemesters);
+        setShowSemesterSection(true);
+      }
     } else {
       setSelectedCourse(null);
       setSemesters([]);
@@ -149,7 +152,8 @@ const BatchForm: React.FC<BatchFormProps> = ({
 
   // Recalculate semester dates when batch dates change
   const handleBatchDateChange = () => {
-    if (selectedCourse && semesters.length > 0) {
+    // Only recalculate semesters in create mode
+    if (mode === 'create' && selectedCourse && semesters.length > 0) {
       generateSemesters(selectedCourse.durationInSemesters);
     }
   };
@@ -488,6 +492,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
           </Card>
         </Col>
         <Col span={12}>
+          {/* Semester section - only shown in create mode */}
           {showSemesterSection && semesterSectionContent}
         </Col>
       </Row>
