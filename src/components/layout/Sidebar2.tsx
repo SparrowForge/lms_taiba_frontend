@@ -23,6 +23,7 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
     const { myMenus, myMenusStatus, loadMyMenus } = useMenus();
     const router = useRouter();
     const pathname = usePathname();
+    const locale = pathname.split('/')[1];
 
     const [currentPath, setCurrentPath] = useState<string>('');
 
@@ -30,11 +31,11 @@ export const Sidebar2 = ({ collapsed }: SidebarProps) => {
         setCurrentPath(pathname.split('?')[0]);
     }, [pathname]);
 
-useEffect(() => {
-    if (!myMenus || myMenus.length === 0) {
-        loadMyMenus();
-    }
-}, [myMenus, loadMyMenus]);
+    useEffect(() => {
+        if (!myMenus || myMenus.length === 0) {
+            loadMyMenus();
+        }
+    }, [myMenus, loadMyMenus]);
 
 
     const handleLogout = useCallback(async () => {
@@ -60,7 +61,7 @@ useEffect(() => {
                 return {
                     key,
                     icon: <BookOutlined />,
-                    label: menu.name,
+                    label:locale === 'ar' ? menu.localName : menu.name,
                     children: hasChildren ? transformMenus(menu.children) : undefined
                 };
             });
@@ -117,34 +118,29 @@ useEffect(() => {
     //settings 
 
     // Settings dropdown menu content
-    const settingsDropdownMenu = (
-        <Menu
-            items={[
-                {
-                    key: 'profile',
-                    icon: <UserOutlined />,
-                    label: 'Profile',
-                    onClick: () => router.push('/settings/profile'),
-                },
-                {
-                    type: 'divider',
-                },
-                {
-                    key: 'upgrade',
-                    icon: <SignatureOutlined />,
-                    label: 'Upgrade Plan',
-                    onClick: () => router.push('/upgrade'),
-                },
-                {
-                    key: 'signout',
-                    icon: <LogoutOutlined />,
-                    // label: <span className="text-red-500">Logout</span>,
-                    label: "Logout",
-                    onClick: handleLogout,
-                },
-            ]}
-        />
-    );
+const settingsMenuItemsDropdown: MenuProps['items'] = [
+    {
+        key: 'profile',
+        icon: <UserOutlined />,
+        label: 'Profile',
+        onClick: () => router.push('/settings/profile'),
+    },
+    {
+        type: 'divider',
+    },
+    {
+        key: 'upgrade',
+        icon: <SignatureOutlined />,
+        label: 'Upgrade Plan',
+        onClick: () => router.push('/upgrade'),
+    },
+    {
+        key: 'signout',
+        icon: <LogoutOutlined />,
+        label: 'Logout',
+        onClick: handleLogout,
+    },
+];
 
     const settingsMenuItems = useMemo(
         () => [
@@ -158,8 +154,9 @@ useEffect(() => {
                 key: 'settings',
                 icon: <SettingOutlined />,
                 label: (
+
                     <Dropdown
-                        overlay={settingsDropdownMenu}
+                        menu={{ items: settingsMenuItemsDropdown }}
                         trigger={['click']}
                         placement="topRight"
                     >
@@ -167,6 +164,7 @@ useEffect(() => {
                             {collapsed ? '' : 'Settings'}
                         </span>
                     </Dropdown>
+
                 ),
             },
         ],
