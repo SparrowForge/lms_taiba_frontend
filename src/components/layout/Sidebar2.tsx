@@ -1,8 +1,8 @@
 'use client';
 
+import * as Icons from '@ant-design/icons';
 import {
   BellOutlined,
-  BookOutlined,
   DashOutlined,
   LeftOutlined,
   LogoutOutlined,
@@ -11,29 +11,20 @@ import {
   SignatureOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import * as Icons from '@ant-design/icons';
-import {
-  Avatar,
-  Layout,
-  Menu,
-  Typography,
-  Spin,
-  MenuProps,
-  Dropdown,
-  Button,
-  Divider,
-  Select, // ✅ ADD
-} from 'antd';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useCallback, useMemo, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { useMenus } from '@/hooks/useMenus';
-import { Status } from '@/types/common';
-import { IMenu } from '@/types/menu';
-import { ItemType, MenuItemType } from 'antd/es/menu/interface';
-import { useLocalization } from '@/hooks/useLocalization';
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { useBranches } from '@/hooks/useBranches'; // ✅ ADD
+import {Avatar, Button, Divider, Dropdown, Layout, Menu, MenuProps, Select, Spin, Typography,} from 'antd';
+import {usePathname, useRouter} from 'next/navigation';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useAuth} from '@/hooks/useAuth';
+import {useBranches} from '@/hooks/useBranches'; // ✅ ADD
+import {useLocalization} from '@/hooks/useLocalization';
+import {useMenus} from '@/hooks/useMenus';
+
+import {Status} from '@/types/common';
+import {IMenu} from '@/types/menu';
+
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -41,9 +32,27 @@ const { Text } = Typography;
 interface SidebarProps {
   collapsed: boolean;
   onCollapse: (collapsed: boolean) => void;
+  openKeys: string[];
+  selectedKeys: string[];
+  setSelectedKeys: (keys: string[]) => void;
+  scrollTop: number;
+  setScrollTop: (scrollTop: number) => void;
+  handleOpenChange: (keys: string[]) => void;
+  currentPath: string;
 }
 
-export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
+// eslint-disable-next-line react/display-name
+export const Sidebar2 = React.memo(({
+    collapsed,
+    onCollapse,
+    openKeys,
+    selectedKeys,
+    setSelectedKeys,
+    scrollTop,
+    setScrollTop,
+    handleOpenChange,
+    currentPath,
+  }: SidebarProps) => {
   const { t } = useLocalization();
   const { user, logout, getUserFullName } = useAuth();
   const { myMenus, myMenusStatus, loadMyMenus } = useMenus();
@@ -60,12 +69,9 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
     getBranchById,
   } = useBranches();
 
-  const [currentPath, setCurrentPath] = useState<string>('');
   const [showBranchSelect, setShowBranchSelect] = useState(false);
 
-  useEffect(() => {
-    setCurrentPath(pathname.split('?')[0]);
-  }, [pathname]);
+
 
   useEffect(() => {
     if (!myMenus || myMenus.length === 0) {
@@ -116,6 +122,8 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
         ? menu.route
         : `/${menu.route}`;
 
+
+
       return {
         key,
         icon: getAntIcon(menu.icon),
@@ -130,11 +138,62 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
 
   const menuItems = useMemo(() => transformMenus(myMenus || []), [myMenus, transformMenus]);
 
+  // Update selected keys and open keys when route changes
+  useEffect(() => {
+    const currentRoute = pathname.split('?')[0];
+    // Remove locale from path (e.g., '/en/semesters' -> '/semesters')
+    const pathParts = currentRoute.split('/');
+    let routeWithoutLocale = currentRoute;
+
+    // Check if the second part is the locale
+    if (pathParts.length > 2 && pathParts[1] === locale) {
+      routeWithoutLocale = '/' + pathParts.slice(2).join('/');
+    }
+
+    // Find the menu item that matches the current route and its parent
+    const findSelectedKeyAndParent = (items: any[]): { selectedKey: string[], parentKey: string | null } => {
+      for (const item of items || []) {
+        // Check exact match
+        if (item?.key === routeWithoutLocale) {
+          return { selectedKey: [item.key], parentKey: null };
+        }
+
+        // Check if route starts with menu key (for nested routes)
+        if (item?.key && routeWithoutLocale.startsWith(item.key)) {
+          return { selectedKey: [item.key], parentKey: null };
+        }
+
+        // Check children
+        if (item?.children) {
+          const childResult = findSelectedKeyAndParent(item.children);
+          if (childResult.selectedKey.length > 0) {
+            // If we found a match in children, this item is the parent
+            return {
+              selectedKey: childResult.selectedKey,
+              parentKey: item.key
+            };
+          }
+        }
+      }
+      return { selectedKey: [], parentKey: null };
+    };
+
+    const { selectedKey, parentKey } = findSelectedKeyAndParent(menuItems || []);
+    setSelectedKeys(selectedKey);
+
+    // If we found a parent key, open that section (only when sidebar is not collapsed)
+    if (parentKey && !openKeys.includes(parentKey) && !collapsed) {
+      handleOpenChange([parentKey]);
+    }
+  }, [pathname, menuItems, setSelectedKeys, locale, openKeys, handleOpenChange]);
+
+
+
+
   const handleMenuClick = useCallback(
     ({ key }: { key: string }) => {
       if (key && !key.startsWith('parent-') && key !== currentPath) {
         router.push(key);
-        setCurrentPath(key);
       }
     },
     [router, currentPath]
@@ -167,7 +226,7 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
     <DashOutlined
       onClick={() => setShowBranchSelect((prev) => !prev)}
       className="cursor-pointer bg-gray-50 p-[2px] rounded-md  text-lg"
-     
+
     />
   </div>
 
@@ -275,49 +334,6 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
     [collapsed, handleLogout, t]
   );
 
-  const defaultOpenKeys = useMemo(() => {
-    if (!menuItems) return [];
-
-    const openKey = menuItems.find(
-      (item): item is MenuItemType & { children: ItemType<MenuItemType>[] } =>
-        !!item &&
-        'children' in item &&
-        Array.isArray(item.children) &&
-        item.children.some(
-          (child): child is MenuItemType => !!child && 'key' in child && child.key === currentPath
-        )
-    )?.key;
-
-    return openKey ? [String(openKey)] : [];
-  }, [menuItems, currentPath]);
-
-//   <>
-//     {/* Floating Toggle Button (top) */}
-//     <Button
-//       type="primary"
-//       shape="default"
-//       icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-//       onClick={() => onCollapse(!collapsed)}
-//       className={`absolute shadow-md ${
-//         locale === 'en'
-//           ? collapsed
-//             ? 'top-[100px] left-16'
-//             : 'top-[170px] left-[264px]'
-//           : collapsed
-//           ? 'top-[100px] left-4'
-//           : 'top-[170px] left-4'
-//       }`}
-//       style={{
-//         width: 28,
-//         height: 28,
-//         padding: 0,
-//         backgroundColor: '#fff',
-//         color: '#333',
-//         border: '1px solid #ddd',
-//       }}
-//     />
-//   </>;
-
   return (
     <>
       <Sider
@@ -361,17 +377,7 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
         <div className="shrink-0">{userProfileSection}</div>
 
         {/* Side toggle (middle-right) */}
-        <div
-          className={`absolute right-0 z-20 ${
-            collapsed
-              ? locale === 'ar'
-                ? 'bottom-[475px]'
-                : 'bottom-[475px]'
-              : locale === 'ar'
-              ? 'bottom-[470px]'
-              : 'bottom-[470px]'
-          }`}
-        >
+        <div className={'absolute right-0 z-20'}>
           <Button
             type="primary"
             icon={collapsed ? <RightOutlined /> : <LeftOutlined />}
@@ -379,7 +385,6 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
             style={{
               width: 28,
               height: 28,
-              padding: 0,
               backgroundColor: '#fff',
               color: '#333',
               border: '1px solid #ddd',
@@ -388,7 +393,22 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
         </div>
 
         {/* Navigation Menu */}
-        <div className="flex-1" style={{ overflow: 'auto' }}>
+        <div
+          className="flex-1"
+          style={{ overflow: 'auto' }}
+          ref={(el) => {
+            if (el) {
+              // Restore scroll position when component mounts
+              if (scrollTop > 0) {
+                el.scrollTop = scrollTop;
+              }
+              // Save scroll position on scroll
+              el.onscroll = () => {
+                setScrollTop(el.scrollTop);
+              };
+            }
+          }}
+        >
           <h1 className="pt-4 px-2 text-gray-400 uppercase">{t(LOCALE_KEYS.MAIN)}</h1>
           {myMenusStatus.status === Status.LOADING ? (
             <div className="flex justify-center items-center p-4">
@@ -397,8 +417,9 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
           ) : (
             <Menu
               mode="inline"
-              selectedKeys={[currentPath]}
-              defaultOpenKeys={defaultOpenKeys}
+              selectedKeys={selectedKeys}
+              openKeys={openKeys}
+              onOpenChange={handleOpenChange}
               items={menuItems}
               onClick={handleMenuClick}
             />
@@ -417,4 +438,6 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
       </Sider>
     </>
   );
-};
+});
+
+

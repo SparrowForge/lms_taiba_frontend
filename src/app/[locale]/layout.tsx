@@ -15,6 +15,7 @@ import {getMessages} from 'next-intl/server';
 import {routing} from '@/i18n/routing';
 
 import {AuthInitializer} from '@/components/auth/AuthInitializer';
+import {SidebarProvider} from '@/components/layout/SidebarContext';
 import {AntdProvider} from '@/components/providers/AntdProvider';
 import {ReduxProvider} from '@/components/providers/ReduxProvider';
 
@@ -61,9 +62,11 @@ export default async function LocaleLayout({
         <ReduxProvider>
           <AntdProvider>
             <AuthInitializer>
-              <NextIntlClientProvider locale={locale} messages={messages}>
-                {children}
-              </NextIntlClientProvider>
+              <SidebarProvider>
+                <NextIntlClientProvider locale={locale} messages={messages}>
+                  {children}
+                </NextIntlClientProvider>
+              </SidebarProvider>
             </AuthInitializer>
           </AntdProvider>
         </ReduxProvider>
