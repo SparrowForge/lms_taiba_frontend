@@ -6,13 +6,12 @@ import {
   DashOutlined,
   LeftOutlined,
   LogoutOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   RightOutlined,
   SettingOutlined,
   SignatureOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import * as Icons from '@ant-design/icons';
 import {
   Avatar,
   Layout,
@@ -90,6 +89,13 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
     }
   }, [logout]);
 
+  //icon
+  const getAntIcon = (iconName?: string) => {
+  if (!iconName) return null;
+  const IconComponent = (Icons as any)[iconName];
+  return IconComponent ? <IconComponent /> : null;
+};
+
   // ✅ Branch change handler
   const handleBranchChange = useCallback(
     (branchId: number) => {
@@ -100,26 +106,27 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
   );
 
   // Transform API menus into Ant Design Menu items
-  const transformMenus = useCallback(
-    (menus: IMenu[]): MenuProps['items'] => {
-      return menus.map((menu) => {
-        const hasChildren = menu.children && menu.children.length > 0;
-        const key = hasChildren
-          ? `parent-${menu.id}`
-          : menu.route?.startsWith('/')
-          ? menu.route
-          : `/${menu.route}`;
+ const transformMenus = useCallback(
+  (menus: IMenu[]): MenuProps['items'] => {
+    return menus.map((menu) => {
+      const hasChildren = menu.children && menu.children.length > 0;
+      const key = hasChildren
+        ? `parent-${menu.id}`
+        : menu.route?.startsWith('/')
+        ? menu.route
+        : `/${menu.route}`;
 
-        return {
-          key,
-          icon: <BookOutlined />,
-          label: locale === 'ar' ? menu.localName : menu.name,
-          children: hasChildren ? transformMenus(menu.children) : undefined,
-        };
-      });
-    },
-    [locale]
-  );
+      return {
+        key,
+        icon: getAntIcon(menu.icon),
+        label: locale === 'ar' ? menu.localName : menu.name,
+        children: hasChildren ? transformMenus(menu.children) : undefined,
+      };
+    });
+  },
+  [locale]
+);
+
 
   const menuItems = useMemo(() => transformMenus(myMenus || []), [myMenus, transformMenus]);
 
