@@ -1,6 +1,6 @@
 'use client';
 
-import { BellOutlined, BookOutlined, LogoutOutlined, MehOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SettingOutlined, SignatureOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined, BookOutlined, LeftOutlined, LeftSquareOutlined, LogoutOutlined, MehOutlined, MenuFoldOutlined, MenuUnfoldOutlined, RightOutlined, RightSquareOutlined, SettingOutlined, SignatureOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Menu, Typography, Spin, MenuProps, Dropdown, Button } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useCallback, useMemo, useState } from 'react';
@@ -271,8 +271,7 @@ export const Sidebar2 = ({ collapsed, onCollapse }: SidebarProps) => {
   }`}>
                     <Button
                         type="primary"
-                        shape="default"
-                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        icon={collapsed ? <RightOutlined /> :<LeftOutlined />}
                         onClick={() => onCollapse(!collapsed)}
                         style={{
                             width: 28,
