@@ -24,3 +24,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+.ant-menu-light .ant-menu-item-selected {
+  background-color: #e6f4ff !important; /* light blue background */
+  color: #1677ff !important; /* Ant Design blue text */
+}
+
+.ant-menu-light .ant-menu-item-selected .anticon {
+  color: #1677ff !important;
+}
+

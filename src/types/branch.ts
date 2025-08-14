@@ -3,6 +3,7 @@ import {IInstitute} from './institute';
 import {IUser} from './user';
 
 export interface IBranch {
+  localName: string;
   id: number;
   name: string;
   code: string;
