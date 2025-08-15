@@ -35,7 +35,7 @@ export const useMenus = () => {
     async (params = {}) => {
       try {
         dispatch(setMyMenusStatus({ status: Status.LOADING }));
-        const response = await menuService.getMyMenus(params);
+        const response: IBaseResponse<IMenu[]> = await menuService.getMyMenus(params);
         dispatch(setMyMenus(response?.data ?? []));
         dispatch(setMyMenusStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {

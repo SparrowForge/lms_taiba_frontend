@@ -308,12 +308,17 @@ export const LOCALE_KEYS = {
   SELECT_IDENTITY_TYPE: 'select_identity_type',
   ENTER_IDENTITY_NO: 'enter_identity_no',
 
-  // sidebar 
+  // sidebar
   MAIN: 'main',
   SETTINGS: 'settings',
   NOTIFICATION: 'notification',
   UPGRADE_PLAN: 'upgradePlan',
   LOGOUT: 'logout',
+
+  LOCAL_NAME: 'local_name',
+  ICON: 'icon',
+  ENTER_ICON: 'enter_icon',
+
 } as const;
 
 // Type for the keys

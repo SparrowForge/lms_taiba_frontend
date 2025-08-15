@@ -308,5 +308,8 @@
   "settings": "Settings",
   "notification": "Notification",
   "upgradePlan": "Upgrade Plan",
-  "logout": "Logout"
+  "logout": "Logout",
+  "local_name": "Local Name",
+  "icon": "Icon",
+  "enter_icon": "Enter icon name (e.g., UserOutlined)"
 }
