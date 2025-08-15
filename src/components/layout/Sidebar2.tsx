@@ -178,16 +178,24 @@ export const Sidebar2 = React.memo(({
       return { selectedKey: [], parentKey: null };
     };
 
-    const { selectedKey, parentKey } = findSelectedKeyAndParent(menuItems || []);
+        const { selectedKey } = findSelectedKeyAndParent(menuItems || []);
+    
+    // Only update selected keys (don't auto-expand sections)
     setSelectedKeys(selectedKey);
+  }, [pathname, menuItems, setSelectedKeys, locale]);
 
-    // If we found a parent key, open that section (only when sidebar is not collapsed)
-    if (parentKey && !openKeys.includes(parentKey) && !collapsed) {
-      handleOpenChange([parentKey]);
+  // Local handleOpenChange for manual menu expansion
+  const handleLocalOpenChange = useCallback((keys: string[]) => {
+    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+    
+    if (latestOpenKey) {
+      // Close all other sections and open only the clicked one
+      handleOpenChange([latestOpenKey]);
+    } else {
+      // If closing a section, keep it closed
+      handleOpenChange([]);
     }
-  }, [pathname, menuItems, setSelectedKeys, locale, openKeys, handleOpenChange]);
-
-
+  }, [openKeys, handleOpenChange]);
 
 
   const handleMenuClick = useCallback(
@@ -419,7 +427,7 @@ export const Sidebar2 = React.memo(({
               mode="inline"
               selectedKeys={selectedKeys}
               openKeys={openKeys}
-              onOpenChange={handleOpenChange}
+              onOpenChange={handleLocalOpenChange}
               items={menuItems}
               onClick={handleMenuClick}
             />

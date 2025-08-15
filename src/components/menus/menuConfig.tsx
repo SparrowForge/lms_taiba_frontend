@@ -31,6 +31,8 @@ export const useCreateMenuDetailsConfig = (
     fields: [
       { key: 'id', label: t(LOCALE_KEYS.ID) },
       { key: 'name', label: t(LOCALE_KEYS.NAME) },
+      { key: 'localName', label: t(LOCALE_KEYS.LOCAL_NAME) },
+      { key: 'icon', label: t(LOCALE_KEYS.ICON) },
       { key: 'route', label: t(LOCALE_KEYS.ROUTE) },
       {
         key: 'panel.name',
