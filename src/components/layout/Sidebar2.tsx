@@ -179,7 +179,7 @@ export const Sidebar2 = React.memo(({
     };
 
         const { selectedKey } = findSelectedKeyAndParent(menuItems || []);
-    
+
     // Only update selected keys (don't auto-expand sections)
     setSelectedKeys(selectedKey);
   }, [pathname, menuItems, setSelectedKeys, locale]);
@@ -187,7 +187,7 @@ export const Sidebar2 = React.memo(({
   // Local handleOpenChange for manual menu expansion
   const handleLocalOpenChange = useCallback((keys: string[]) => {
     const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
-    
+
     if (latestOpenKey) {
       // Close all other sections and open only the clicked one
       handleOpenChange([latestOpenKey]);

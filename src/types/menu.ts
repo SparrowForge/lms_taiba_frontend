@@ -1,7 +1,7 @@
 import {IPanel} from './panel';
 
 export interface IMenu {
-  
+
   id: number;
   name: string;
   localName:string;
