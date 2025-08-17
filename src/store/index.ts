@@ -5,6 +5,7 @@ import auditReducer from './slices/auditSlice';
 import authReducer from './slices/authSlice';
 import batchReducer from './slices/batchSlice';
 import branchReducer from './slices/branchSlice';
+import classScheduleReducer from './slices/classScheduleSlice';
 import courseReducer from './slices/courseSlice';
 import courseTypeReducer from './slices/courseTypeSlice';
 import departmentReducer from './slices/departmentSlice';
@@ -18,6 +19,8 @@ import menuReducer from './slices/menuSlice';
 import panelReducer from './slices/panelSlice';
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice';
 import roleReducer from './slices/roleSlice';
+import roomReducer from './slices/roomSlice';
+import roomTypeReducer from './slices/roomTypeSlice';
 import scheduleTypeReducer from './slices/scheduleTypeSlice';
 import semesterReducer from './slices/semesterSlice';
 import semesterSubjectReducer from './slices/semesterSubjectSlice';
@@ -26,8 +29,10 @@ import studentFamilyReducer from './slices/studentFamilySlice';
 import studentProfileReducer from './slices/studentProfileSlice';
 import studentReducer from './slices/studentSlice';
 import subjectReducer from './slices/subjectSlice';
+import timeSlotReducer from './slices/timeSlotSlice';
 import userRoleReducer from './slices/userRoleSlice';
 import userReducer from './slices/userSlice';
+import weekDayReducer from './slices/weekDaySlice';
 
 // Root state type
 export interface RootState {
@@ -52,6 +57,8 @@ export interface RootState {
   userRoles: ReturnType<typeof userRoleReducer>;
   addresses: ReturnType<typeof addressReducer>;
   courseTypes: ReturnType<typeof courseTypeReducer>;
+  rooms: ReturnType<typeof roomReducer>;
+  roomTypes: ReturnType<typeof roomTypeReducer>;
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
   employmentTypes: ReturnType<typeof employmentTypeReducer>;
   institutes: ReturnType<typeof instituteReducer>;
@@ -59,6 +66,9 @@ export interface RootState {
   studentEducations: ReturnType<typeof studentEducationReducer>;
   studentFamilies: ReturnType<typeof studentFamilyReducer>;
   studentProfiles: ReturnType<typeof studentProfileReducer>;
+  timeSlots: ReturnType<typeof timeSlotReducer>;
+  weekDays: ReturnType<typeof weekDayReducer>;
+  classSchedules: ReturnType<typeof classScheduleReducer>;
 }
 
 // Create store
@@ -85,6 +95,8 @@ export const store = configureStore({
     userRoles: userRoleReducer,
     addresses: addressReducer,
     courseTypes: courseTypeReducer,
+    rooms: roomReducer,
+    roomTypes: roomTypeReducer,
     scheduleTypes: scheduleTypeReducer,
     employmentTypes: employmentTypeReducer,
     institutes: instituteReducer,
@@ -92,6 +104,9 @@ export const store = configureStore({
     studentEducations: studentEducationReducer,
     studentFamilies: studentFamilyReducer,
     studentProfiles: studentProfileReducer,
+    timeSlots: timeSlotReducer,
+    weekDays: weekDayReducer,
+    classSchedules: classScheduleReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

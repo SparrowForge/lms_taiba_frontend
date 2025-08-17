@@ -1,15 +1,16 @@
 'use client';
 
-import {Button, Form, Input, Space} from 'antd';
+import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
-
+import {INSTITUTE_TYPE_OPTIONS} from '@/constants/instituteTypes';
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
+import {useAddresses} from '@/hooks/useAddresses';
 import {useInstitutes} from '@/hooks/useInstitutes';
 import {useLocalization} from '@/hooks/useLocalization';
 
@@ -41,10 +42,12 @@ const InstituteForm: React.FC<Props> = ({
   const router = useRouter();
   const [form] = Form.useForm();
   const { createInstitute, editInstitute, actionStatus } = useInstitutes();
+  const { addresses, loadAddresses } = useAddresses();
 
   useEffect(() => {
     if (mode === 'create') form.resetFields();
-  }, [mode, form]);
+    loadAddresses();
+  }, [mode, form, loadAddresses]);
 
   const handleSubmit = async (values: Partial<IInstitute>) => {
     try {
@@ -98,6 +101,55 @@ const InstituteForm: React.FC<Props> = ({
       >
         <Input />
       </Form.Item>
+
+      <Form.Item
+        name="code"
+        label={t(LOCALE_KEYS.INSTITUTE_CODE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTE_CODE) }) }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="type"
+        label={t(LOCALE_KEYS.INSTITUTE_TYPE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTE_TYPE) }) }]}
+      >
+        <Select
+          options={INSTITUTE_TYPE_OPTIONS}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTE_TYPE) })}
+        />
+      </Form.Item>
+
+      <Form.Item
+        name="addressId"
+        label={t(LOCALE_KEYS.ADDRESS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ADDRESS) }) }]}
+      >
+        <Select
+          options={addresses.map(addr => ({ label: addr.name, value: addr.id }))}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME_NAME, { name: t(LOCALE_KEYS.ADDRESS) })}
+        />
+      </Form.Item>
+
+      <Form.Item
+        name="website"
+        label={t(LOCALE_KEYS.WEBSITE)}
+        rules={[
+          { type: 'url', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_NAME_NAME, { name: t(LOCALE_KEYS.WEBSITE) }) }
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="institutionCode"
+        label={t(LOCALE_KEYS.INSTITUTION_CODE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTION_CODE) }) }]}
+      >
+        <Input />
+      </Form.Item>
+
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
@@ -105,6 +157,7 @@ const InstituteForm: React.FC<Props> = ({
       >
         <StatusSelect preset="binary" />
       </Form.Item>
+
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
