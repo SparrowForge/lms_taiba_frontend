@@ -96,6 +96,18 @@ export default function MenusPage() {
         render: (text: string) => <span>{text}</span>,
       },
       {
+        title: t(LOCALE_KEYS.LOCAL_NAME),
+        dataIndex: 'localName',
+        key: 'localName',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t(LOCALE_KEYS.ICON),
+        dataIndex: 'icon',
+        key: 'icon',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
         title: t(LOCALE_KEYS.ROUTE),
         dataIndex: 'route',
         key: 'route',

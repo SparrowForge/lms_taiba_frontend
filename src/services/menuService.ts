@@ -34,17 +34,9 @@ export const menuService = {
     return response.data;
   },
 
-  //get my menus
-  // getMyMenus: async (params = {}): Promise<IBasePaginatedResponse<IMenu>> => {
-  //   const response = await api.get<IBasePaginatedResponse<IMenu>>('/menus/my-menus', { params });
-  //   return response.data;
-  // },
-
-
-
-getMyMenus: async (params = {}): Promise<IMyMenusResponse> => {
-  const response = await api.get<IMyMenusResponse>('/menus/my-menus', { params });
-  return response.data;
-},
+  getMyMenus: async (params = {}): Promise<IBaseResponse<IMenu[]>> => {
+    const response = await api.get<IBaseResponse<IMenu[]>>('/menus/my-menus', { params });
+    return response.data;
+  },
 
 };

@@ -159,6 +159,22 @@ const MenuForm: React.FC<MenuFormProps> = ({
       </Form.Item>
 
       <Form.Item
+        name="localName"
+        label={t(LOCALE_KEYS.LOCAL_NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.LOCAL_NAME) }) }]}
+      >
+        <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.LOCAL_NAME) })} />
+      </Form.Item>
+
+      <Form.Item
+        name="icon"
+        label={t(LOCALE_KEYS.ICON)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ICON) }) }]}
+      >
+        <Input placeholder={t(LOCALE_KEYS.ENTER_ICON)} />
+      </Form.Item>
+
+      <Form.Item
         name="route"
         label={t(LOCALE_KEYS.ROUTE)}
         rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ROUTE) }) }]}

@@ -1,10 +1,11 @@
 'use client';
 
-import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
-import {Button, Layout} from 'antd';
-import {useCallback, useMemo, useState} from 'react';
+import {Layout} from 'antd';
+import {usePathname} from 'next/navigation';
+import {useCallback, useMemo} from 'react';
 
-import {Sidebar} from './Sidebar';
+import {Sidebar2} from './Sidebar2';
+import {useSidebar} from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
 import {LanguageSwitcher} from '../ui/LanguageSwitcher';
 import { Sidebar2 } from './Sidebar2';
@@ -16,15 +17,16 @@ interface MainLayoutProps {
 }
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const { collapsed, setCollapsed, openKeys, selectedKeys, setSelectedKeys, scrollTop, setScrollTop, isClient, handleOpenChange } = useSidebar();
+  const pathname = usePathname();
 
   // Memoize sidebar width calculation
   const sidebarWidth = useMemo(() => (collapsed ? 80 : 280), [collapsed]);
 
   // Memoize toggle function to prevent unnecessary re-renders
   const handleToggleCollapse = useCallback(() => {
-    setCollapsed((prev) => !prev);
-  }, []);
+    setCollapsed(!collapsed);
+  }, [collapsed, setCollapsed]);
 
   // Memoize layout styles to prevent recalculation
   const layoutStyle = useMemo(
@@ -69,10 +71,50 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     [],
   );
 
+  // Determine which section should be open based on current route
+  const currentPath = useMemo(() => pathname.split('?')[0], [pathname]);
+
+
+
+
+
+  // Memoize Sidebar2 component to prevent unnecessary re-renders
+  const memoizedSidebar = useMemo(
+    () => (
+      <Sidebar2
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        openKeys={openKeys}
+        selectedKeys={selectedKeys}
+        setSelectedKeys={setSelectedKeys}
+        scrollTop={scrollTop}
+        setScrollTop={setScrollTop}
+        handleOpenChange={handleOpenChange}
+        currentPath={currentPath}
+      />
+    ),
+    [collapsed, openKeys, selectedKeys, setSelectedKeys, scrollTop, setScrollTop, handleOpenChange, currentPath]
+  );
+
+  // Don't render anything until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <div className="h-screen overflow-hidden w-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <span className="text-white font-bold text-lg">L</span>
+          </div>
+          <h1 className="text-xl font-bold text-gray-900 mb-1">LMS Taiba</h1>
+          <p className="text-sm text-gray-500">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Layout className="h-screen overflow-hidden w-full">
       {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
-      <Sidebar2 collapsed={collapsed} onCollapse={setCollapsed} />
+      {memoizedSidebar}
 
       <Layout style={layoutStyle}>
         <Header

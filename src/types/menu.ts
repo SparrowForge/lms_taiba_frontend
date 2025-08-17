@@ -1,7 +1,7 @@
 import {IPanel} from './panel';
 
 export interface IMenu {
-  
+
   id: number;
   name: string;
   localName:string;
@@ -21,6 +21,8 @@ export interface IMenu {
 
 export interface IMenuCreate {
   name: string;
+  localName: string;
+  icon: string;
   route: string;
   panelId: number;
   parentId?: number | null;
@@ -30,6 +32,8 @@ export interface IMenuCreate {
 
 export interface IMenuUpdate {
   name?: string;
+  localName?: string;
+  icon?: string;
   route?: string;
   panelId?: number;
   parentId?: number | null;
