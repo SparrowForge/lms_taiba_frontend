@@ -336,6 +336,7 @@
   "logout": "Logout",
   "local_name": "Local Name",
   "icon": "Icon",
+
   "enter_icon": "Enter icon name (e.g., UserOutlined)",
   "select_name_name": "Select {name}",
   "please_enter_valid_name_name": "Please enter a valid {name}"

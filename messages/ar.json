@@ -321,6 +321,7 @@
   "enter_transfer_info": "أدخل معلومات التحويل",
   "select_identity_type": "اختر نوع الهوية",
   "enter_identity_no": "أدخل رقم الهوية",
+
   "room": "غرفة",
   "rooms": "غرف",
   "room_type": "نوع الغرفة",
@@ -329,6 +330,7 @@
   "level_floor": "الطابق/المستوى",
   "sitting_capacity": "سعة الجلوس",
   "exam_capacity": "سعة الامتحان",
+
   "main": "الرئيسية",
   "settings": "الإعدادات",
   "notification": "الإشعارات",
@@ -336,7 +338,9 @@
   "logout": "تسجيل الخروج",
   "local_name": "الاسم المحلي",
   "icon": "الأيقونة",
+
   "enter_icon": "أدخل اسم الأيقونة (مثل UserOutlined)",
   "select_name_name": "اختر {name}",
   "please_enter_valid_name_name": "يرجى إدخال {name} صحيح"
+
 }
