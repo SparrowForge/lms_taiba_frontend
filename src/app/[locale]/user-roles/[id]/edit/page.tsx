@@ -1,60 +1,52 @@
 'use client';
 
 import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
+import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
+import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
 import {PageHeader} from '@/components/ui/PageHeader';
 import UserRoleForm from '@/components/userRoles/UserRoleForm';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';
 
-import {IUserRole} from '@/types/userRole';
+import {Status} from '@/types/common';
 
 
-interface UserRoleEditPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-const UserRoleEditPage: React.FC<UserRoleEditPageProps> = ({ params }) => {
+const UserRoleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
-  const { selectedUserRole, loadUserRole } = useUserRoles();
-  const [initialValues, setInitialValues] = useState<Partial<IUserRole> | undefined>();
+  const router = useRouter();
+  const { selectedUserRole, detailsStatus, getUserRoleById } = useUserRoles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER_ROLE, { defaultValue: 'User Role' });
-  const router = useRouter();
-  const handleBack = () => {
-    router.back();
-  };
 
   useEffect(() => {
     const userRoleId = parseInt(resolvedParams.id);
-    loadUserRole(userRoleId);
-  }, [resolvedParams.id, loadUserRole]);
+    getUserRoleById(userRoleId);
+  }, [resolvedParams.id, getUserRoleById]);
 
-  useEffect(() => {
-    if (selectedUserRole && selectedUserRole.id === parseInt(resolvedParams.id)) {
-      setInitialValues({
-        userId: selectedUserRole.userId,
-        roleId: selectedUserRole.roleId,
-      });
-    }
-  }, [selectedUserRole, resolvedParams.id]);
+
+  if (detailsStatus.status === Status.LOADING) {
+    return <EntityEditLoadingView entityName={entityName} />;
+  }
+
+  if (!selectedUserRole || selectedUserRole.id !== parseInt(resolvedParams.id)) {
+    return <EntityEditNotFoundView entityName={entityName} backRoute="/user-roles" />;
+  }
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={handleBack} />
-        <UserRoleForm
-          mode="edit"
-          userRoleId={parseInt(resolvedParams.id)}
-          initialValues={initialValues}
+          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
+          <UserRoleForm
+            mode="edit"
+            userRoleId={parseInt(resolvedParams.id)}
+            initialValues={selectedUserRole}
         />
       </MainLayout>
     </ProtectedRoute>
