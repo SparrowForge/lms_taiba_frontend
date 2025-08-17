@@ -15,7 +15,7 @@ import {useWeekDays} from '@/hooks/useWeekDays';
 
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
-import {IWeekDayCreate, IWeekDayUpdate} from '@/types/weekDay';
+import {IWeekDay, IWeekDayCreate, IWeekDayUpdate} from '@/types/weekDay';
 
 import FormLayout from '../layout/FormLayout';
 
@@ -46,7 +46,7 @@ const WeekDayForm: React.FC<Props> = ({
     if (mode === 'create') form.resetFields();
   }, [mode, form]);
 
-  const handleSubmit = async (values: Partial<IRoomType>) => {
+  const handleSubmit = async (values: Partial<IWeekDay>) => {
     try {
       if (mode === 'create') {
         await createWeekDay(values as IWeekDayCreate);

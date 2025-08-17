@@ -55,7 +55,7 @@ const WeekDayDetailsDrawer: React.FC<WeekDayDetailsDrawerProps> = ({
 
   return (
     <Drawer
-      key={weekDayId} // Force remount when weekDayId changes
+      key={weekDayId}
       title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
       width={800}
       open={visible}

@@ -45,7 +45,7 @@ const WeekDayFormDrawer: React.FC<Props> = ({
 
   return (
     <Drawer
-      key={roomTypeId} // Force remount when roomTypeId changes
+      key={weekDayId}
       title={
         mode === 'create'
           ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
