@@ -1,7 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
 
 
@@ -33,11 +33,21 @@ export default function UserRolesPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsUserRoleId, setSelectedDetailsUserRoleId] = useState<number | null>(null);
 
-  useEffect(() => {
-    loadUserRoles({ page: 1, limit: 10 });
-  }, [loadUserRoles]);
+  //get skip & limit from url
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
 
-  const handleCreate = () => {
+  useEffect(() => {
+    if (skip && limit) {
+      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
+      loadUserRoles({ page, limit: parseInt(limit ?? '10') });
+    } else {
+      loadUserRoles({ page: 1, limit: 10 });
+    }
+  }, [skip, limit, loadUserRoles]);
+
+  const handleCreateDrawer = () => {
     setDrawerMode('create');
     setSelectedUserRoleId(undefined);
     setDrawerVisible(true);
@@ -74,7 +84,7 @@ export default function UserRolesPage() {
     onSearch: (searchText: string) => {
       loadUserRoles({ page: 1, limit: 10, search: searchText });
     },
-    onQuickAdd: handleCreate,
+    onQuickAdd: handleCreateDrawer,
     items: userRoles,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
