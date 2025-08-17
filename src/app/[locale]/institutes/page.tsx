@@ -74,7 +74,7 @@ export default function InstitutesPage() {
     name: entityName,
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/institutes',
-    searchFields: ['name', 'status'] as (keyof IInstitute)[],
+    searchFields: ['name', 'code', 'type', 'status'] as (keyof IInstitute)[],
     onSearch: (searchText: string) => {
       loadInstitutes({ page: 1, limit: 10, search: searchText });
     },
@@ -89,6 +89,24 @@ export default function InstitutesPage() {
         dataIndex: 'name',
         key: 'name',
         render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t(LOCALE_KEYS.INSTITUTE_CODE),
+        dataIndex: 'code',
+        key: 'code',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t(LOCALE_KEYS.INSTITUTE_TYPE),
+        dataIndex: 'type',
+        key: 'type',
+        render: (text: string) => <span>{text}</span>,
+      },
+      {
+        title: t(LOCALE_KEYS.WEBSITE),
+        dataIndex: 'website',
+        key: 'website',
+        render: (text: string) => text ? <a href={text} target="_blank" rel="noopener noreferrer">{text}</a> : 'N/A',
       },
       {
         title: t(LOCALE_KEYS.STATUS),

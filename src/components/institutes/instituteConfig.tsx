@@ -32,7 +32,16 @@ export const useCreateInstituteDetailsConfig = (
     fields: [
       { key: 'id', label: 'ID' },
       { key: 'name', label: t(LOCALE_KEYS.NAME) },
+      { key: 'code', label: t(LOCALE_KEYS.INSTITUTE_CODE) },
+      { key: 'type', label: t(LOCALE_KEYS.INSTITUTE_TYPE) },
+      { key: 'institutionCode', label: t(LOCALE_KEYS.INSTITUTION_CODE) },
+      { key: 'website', label: t(LOCALE_KEYS.WEBSITE) },
       { key: 'status', label: t(LOCALE_KEYS.STATUS) },
+      {
+        key: 'address',
+        label: t(LOCALE_KEYS.ADDRESS),
+        render: (address: any) => address ? `${address.name} - ${address.address}` : 'N/A',
+      },
       {
         key: 'createdAt',
         label: t(LOCALE_KEYS.CREATED_AT),
