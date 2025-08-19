@@ -63,7 +63,8 @@ export default function FeeInstallmentPlansPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadFeeInstallmentPlans({ page: 1, limit: 10 });
   };
 

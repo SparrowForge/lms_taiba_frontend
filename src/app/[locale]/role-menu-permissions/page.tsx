@@ -65,7 +65,8 @@ export default function RoleMenuPermissionsPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+    setDrawerVisible(false)
     loadRoleMenuPermissions({ page: 1, limit: 10 });
   };
 
