@@ -57,7 +57,8 @@ export default function AddressesPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadAddresses({ page: 1, limit: 10 });
   };
 

@@ -7,6 +7,7 @@ import {useCallback, useMemo} from 'react';
 import {useSidebar} from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
 import {LanguageSwitcher} from '../ui/LanguageSwitcher';
+import { ToastContainer } from 'react-toastify';
 import { Sidebar2 } from './Sidebar2';
 
 const { Header, Content } = Layout;
@@ -111,6 +112,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   }
 
   return (
+ <>
     <Layout className="h-screen overflow-hidden w-full">
       {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
       {memoizedSidebar}
@@ -141,5 +143,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         </Content>
       </Layout>
     </Layout>
+
+    <ToastContainer/>
+ </>
   );
 };

@@ -59,7 +59,8 @@ export default function MenusPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadMenus({ page: 1, limit: 10 });
   };
 

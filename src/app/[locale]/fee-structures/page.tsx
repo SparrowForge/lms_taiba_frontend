@@ -58,7 +58,8 @@ export default function FeeStructuresPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadFeeStructures({ page: 1, limit: 10 });
   };
 

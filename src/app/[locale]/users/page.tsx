@@ -59,7 +59,8 @@ export default function UsersPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+    setDrawerVisible(false)
     loadUsers({ page: 1, limit: 10 }); // Refresh the list
   };
 
