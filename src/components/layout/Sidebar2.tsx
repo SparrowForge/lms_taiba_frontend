@@ -364,7 +364,7 @@ export const Sidebar2 = React.memo(({
         }}
       >
         {/* Logo */}
-        <div className="p-6 border-b border-gray-100 shrink-0">
+        <div className="py-6 border-b border-gray-100 shrink-0">
           <div className="flex items-center justify-center">
             {!collapsed ? (
               <div className="text-center">
