@@ -1,12 +1,12 @@
 'use client';
 
-import {Layout} from 'antd';
-import {usePathname} from 'next/navigation';
-import {useCallback, useMemo} from 'react';
+import { Layout } from 'antd';
+import { usePathname } from 'next/navigation';
+import { useCallback, useMemo } from 'react';
 
-import {useSidebar} from './SidebarContext';
+import { useSidebar } from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
-import {LanguageSwitcher} from '../ui/LanguageSwitcher';
+import { LanguageSwitcher } from '../ui/LanguageSwitcher';
 import { ToastContainer } from 'react-toastify';
 import { Sidebar2 } from './Sidebar2';
 
@@ -28,6 +28,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     setCollapsed(!collapsed);
   }, [collapsed, setCollapsed]);
 
+  //smooth transation 
+  const COLLAPSE_MS = 1000;
   // Memoize layout styles to prevent recalculation
   const layoutStyle = useMemo(
     () => ({
@@ -35,6 +37,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
       width: `calc(100vw - ${sidebarWidth}px)`,
       minWidth: 0,
       overflow: 'hidden',
+      transition: `margin-left ${COLLAPSE_MS}ms ease, width ${COLLAPSE_MS}ms ease`,
     }),
     [sidebarWidth],
   );
@@ -112,39 +115,39 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   }
 
   return (
- <>
-    <Layout className="h-screen overflow-hidden w-full">
-      {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
-      {memoizedSidebar}
+    <>
+      <Layout className="h-screen overflow-hidden w-full">
+        {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
+        {memoizedSidebar}
 
-      <Layout style={layoutStyle}>
-        <Header
-          className="bg-white border-b border-gray-200 px-4 flex items-center justify-between h-16"
-          style={headerStyle}
-        >
-          {/* <Button
+        <Layout style={layoutStyle}>
+          <Header
+            className="bg-white border-b border-gray-200 px-4 flex items-center justify-between h-16"
+            style={headerStyle}
+          >
+            {/* <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={handleToggleCollapse}
             className="text-lg bg-white hover:bg-gray-50"
             style={buttonStyle}
           /> */}
-          <div className="flex-1" />
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            {/* Add any other header content here like notifications, user menu, etc. */}
-          </div>
-        </Header>
+            <div className="flex-1" />
+            <div className="flex items-center gap-4">
+              <LanguageSwitcher />
+              {/* Add any other header content here like notifications, user menu, etc. */}
+            </div>
+          </Header>
 
-        <Content className="bg-gray-50" style={contentStyle}>
-          <ErrorBoundary>
-            <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
-          </ErrorBoundary>
-        </Content>
+          <Content className="bg-gray-50" style={contentStyle}>
+            <ErrorBoundary>
+              <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
+            </ErrorBoundary>
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
 
-    <ToastContainer/>
- </>
+      <ToastContainer />
+    </>
   );
 };

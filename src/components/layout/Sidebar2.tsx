@@ -11,19 +11,19 @@ import {
   SignatureOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import {Avatar, Button, Divider, Dropdown, Layout, Menu, MenuProps, Select, Spin, Typography,} from 'antd';
-import {usePathname, useRouter} from 'next/navigation';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import { Avatar, Button, Divider, Dropdown, Layout, Menu, MenuProps, Select, Spin, Typography, } from 'antd';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useAuth} from '@/hooks/useAuth';
-import {useBranches} from '@/hooks/useBranches'; // ✅ ADD
-import {useLocalization} from '@/hooks/useLocalization';
-import {useMenus} from '@/hooks/useMenus';
+import { useAuth } from '@/hooks/useAuth';
+import { useBranches } from '@/hooks/useBranches'; // ✅ ADD
+import { useLocalization } from '@/hooks/useLocalization';
+import { useMenus } from '@/hooks/useMenus';
 
-import {Status} from '@/types/common';
-import {IMenu} from '@/types/menu';
+import { Status } from '@/types/common';
+import { IMenu } from '@/types/menu';
 
 
 const { Sider } = Layout;
@@ -43,16 +43,16 @@ interface SidebarProps {
 
 // eslint-disable-next-line react/display-name
 export const Sidebar2 = React.memo(({
-    collapsed,
-    onCollapse,
-    openKeys,
-    selectedKeys,
-    setSelectedKeys,
-    scrollTop,
-    setScrollTop,
-    handleOpenChange,
-    currentPath,
-  }: SidebarProps) => {
+  collapsed,
+  onCollapse,
+  openKeys,
+  selectedKeys,
+  setSelectedKeys,
+  scrollTop,
+  setScrollTop,
+  handleOpenChange,
+  currentPath,
+}: SidebarProps) => {
   const { t } = useLocalization();
   const { user, logout, getUserFullName } = useAuth();
   const { myMenus, myMenusStatus, loadMyMenus } = useMenus();
@@ -97,10 +97,10 @@ export const Sidebar2 = React.memo(({
 
   //icon
   const getAntIcon = (iconName?: string) => {
-  if (!iconName) return null;
-  const IconComponent = (Icons as any)[iconName];
-  return IconComponent ? <IconComponent /> : null;
-};
+    if (!iconName) return null;
+    const IconComponent = (Icons as any)[iconName];
+    return IconComponent ? <IconComponent /> : null;
+  };
 
   // ✅ Branch change handler
   const handleBranchChange = useCallback(
@@ -112,28 +112,28 @@ export const Sidebar2 = React.memo(({
   );
 
   // Transform API menus into Ant Design Menu items
- const transformMenus = useCallback(
-  (menus: IMenu[]): MenuProps['items'] => {
-    return menus.map((menu) => {
-      const hasChildren = menu.children && menu.children.length > 0;
-      const key = hasChildren
-        ? `parent-${menu.id}`
-        : menu.route?.startsWith('/')
-        ? menu.route
-        : `/${menu.route}`;
+  const transformMenus = useCallback(
+    (menus: IMenu[]): MenuProps['items'] => {
+      return menus.map((menu) => {
+        const hasChildren = menu.children && menu.children.length > 0;
+        const key = hasChildren
+          ? `parent-${menu.id}`
+          : menu.route?.startsWith('/')
+            ? menu.route
+            : `/${menu.route}`;
 
 
 
-      return {
-        key,
-        icon: getAntIcon(menu.icon),
-        label: locale === 'ar' ? menu.localName : menu.name,
-        children: hasChildren ? transformMenus(menu.children) : undefined,
-      };
-    });
-  },
-  [locale]
-);
+        return {
+          key,
+          icon: getAntIcon(menu.icon),
+          label: locale === 'ar' ? menu.localName : menu.name,
+          children: hasChildren ? transformMenus(menu.children) : undefined,
+        };
+      });
+    },
+    [locale]
+  );
 
 
   const menuItems = useMemo(() => transformMenus(myMenus || []), [myMenus, transformMenus]);
@@ -178,7 +178,7 @@ export const Sidebar2 = React.memo(({
       return { selectedKey: [], parentKey: null };
     };
 
-        const { selectedKey } = findSelectedKeyAndParent(menuItems || []);
+    const { selectedKey } = findSelectedKeyAndParent(menuItems || []);
 
     // Only update selected keys (don't auto-expand sections)
     setSelectedKeys(selectedKey);
@@ -210,59 +210,59 @@ export const Sidebar2 = React.memo(({
   // ✅ USER PROFILE with Branch dropdown
   const userProfileSection = useMemo(
     () => (
-   <div className="p-4 border-b border-gray-100">
-  <div className={`flex ${collapsed ? "flex-col gap-2" : "flex-row"}  items-center space-x-3`}>
-    <Avatar
-      size={collapsed ? 22 : 40}
-      icon={<UserOutlined />}
-      className="bg-gradient-to-r from-blue-500 to-purple-600 "
-    />
-    {!collapsed && (
-      <div className="flex-1 min-w-0">
-        <Text strong className="block text-sm truncate text-gray-900">
-          {getUserFullName()}
-        </Text>
-        <Text type="secondary" className="text-xs truncate">
-          {user?.email}
-        </Text>
-        <div className="flex items-center mt-1">
-          <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-          <Text className="text-xs text-green-600">Online</Text>
+      <div className="p-4 border-b border-gray-100">
+        <div className={`flex ${collapsed ? "flex-col gap-2" : "flex-row"}  items-center space-x-3`}>
+          <Avatar
+            size={collapsed ? 22 : 40}
+            icon={<UserOutlined />}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 "
+          />
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <Text strong className="block text-sm truncate text-gray-900">
+                {getUserFullName()}
+              </Text>
+              <Text type="secondary" className="text-xs truncate">
+                {user?.email}
+              </Text>
+              <div className="flex items-center mt-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                <Text className="text-xs text-green-600">Online</Text>
+              </div>
+            </div>
+          )}
+          <DashOutlined
+            onClick={() => setShowBranchSelect((prev) => !prev)}
+            className="cursor-pointer bg-gray-50 p-[2px] rounded-md  text-lg"
+
+          />
         </div>
+
+        {/* ✅ Separate row for branch select */}
+        {showBranchSelect && (
+          <div className="mt-3">
+            <Select
+              size="small"
+              className="w-full"
+              placeholder={t(LOCALE_KEYS.SELECT_BRANCH)}
+              value={selectedBranch?.id}
+              loading={branchListStatus.status === Status.LOADING}
+              showSearch
+              optionFilterProp="label"
+              onChange={(val) => handleBranchChange(Number(val))}
+              onDropdownVisibleChange={(open) => {
+                if (open && (!branches || branches.length === 0)) {
+                  loadBranches({ page: 1, limit: 100 });
+                }
+              }}
+              options={(branches || []).map((b) => ({
+                value: b.id,
+                label: locale === 'ar' ? b.localName ?? b.name : b.name,
+              }))}
+            />
+          </div>
+        )}
       </div>
-    )}
-    <DashOutlined
-      onClick={() => setShowBranchSelect((prev) => !prev)}
-      className="cursor-pointer bg-gray-50 p-[2px] rounded-md  text-lg"
-
-    />
-  </div>
-
-  {/* ✅ Separate row for branch select */}
-  {showBranchSelect && (
-    <div className="mt-3">
-      <Select
-        size="small"
-        className="w-full"
-        placeholder={t(LOCALE_KEYS.SELECT_BRANCH)}
-        value={selectedBranch?.id}
-        loading={branchListStatus.status === Status.LOADING}
-        showSearch
-        optionFilterProp="label"
-        onChange={(val) => handleBranchChange(Number(val))}
-        onDropdownVisibleChange={(open) => {
-          if (open && (!branches || branches.length === 0)) {
-            loadBranches({ page: 1, limit: 100 });
-          }
-        }}
-        options={(branches || []).map((b) => ({
-          value: b.id,
-          label: locale === 'ar' ? b.localName ?? b.name : b.name,
-        }))}
-      />
-    </div>
-  )}
-</div>
 
     ),
     [
@@ -346,6 +346,8 @@ export const Sidebar2 = React.memo(({
     <>
       <Sider
         collapsed={collapsed}
+        collapsedWidth={80}
+        trigger={null}
         theme="light"
         width={280}
         className="border-r border-gray-200 shadow-sm flex flex-col"
@@ -358,6 +360,7 @@ export const Sidebar2 = React.memo(({
           bottom: 0,
           zIndex: 1000,
           backgroundColor: '#ffffff',
+    transition: '1000ms ease', // ✅ match content transition
         }}
       >
         {/* Logo */}
@@ -380,7 +383,7 @@ export const Sidebar2 = React.memo(({
             )}
           </div>
         </div>
-  {/* Side toggle (middle-right) */}
+        {/* Side toggle (middle-right) */}
         <div className={`absolute  ${collapsed ? "top-40" : "top-36"} right-0 z-20`}>
           <Button
             type="primary"
@@ -398,11 +401,11 @@ export const Sidebar2 = React.memo(({
         {/* User Profile + Branch */}
         <div className="shrink-0">{userProfileSection}</div>
 
-      
+
 
         {/* Navigation Menu */}
         <div
-          className="flex-1"
+          className="flex-1 min-h-0 overflow-auto"
           style={{ overflow: 'auto' }}
           ref={(el) => {
             if (el) {
@@ -436,7 +439,7 @@ export const Sidebar2 = React.memo(({
 
         {/* Settings & Logout */}
         <div className="py-4 border-t border-gray-100 shrink-0">
-          <h1 className={` ${collapsed? "pl-1" : "pl-4"} text-gray-400 uppercase text-xs tracking-wider mb-2`}>
+          <h1 className={` ${collapsed ? "pl-1" : "pl-4"} text-gray-400 uppercase text-xs tracking-wider mb-2`}>
             {t(LOCALE_KEYS.SETTINGS)}
           </h1>
           <Menu mode="inline" items={settingsMenuItems} className="border-0" style={{ backgroundColor: 'transparent' }} />
