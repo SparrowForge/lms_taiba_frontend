@@ -309,25 +309,27 @@ export const Sidebar2 = React.memo(({
       {
         key: 'notification',
         icon: <BellOutlined />,
-        label: collapsed ? '' : t(LOCALE_KEYS.NOTIFICATION),
+        label: t(LOCALE_KEYS.NOTIFICATION), 
         onClick: () => router.push('/notifications'),
       },
       {
         key: 'settings',
-        icon: <SettingOutlined />,
-        label: (
+        label: t(LOCALE_KEYS.SETTINGS),
+        icon: 
           <Dropdown
             menu={{ items: settingsMenuItemsDropdown }}
             trigger={['click']}
             placement="topRight"
           >
-            <span className="cursor-pointer">{collapsed ? '' : t(LOCALE_KEYS.SETTINGS)}</span>
+            <SettingOutlined className="cursor-pointer" />
           </Dropdown>
-        ),
-      },
+       
+      }
     ],
-    [collapsed, t]
+    [collapsed, t, router, settingsMenuItemsDropdown]
   );
+
+
 
   const logoutMenuItems = useMemo(
     () => [
@@ -360,7 +362,7 @@ export const Sidebar2 = React.memo(({
           bottom: 0,
           zIndex: 1000,
           backgroundColor: '#ffffff',
-    transition: '1000ms ease', 
+          transition: '1000ms ease',
         }}
       >
         {/* Logo */}
@@ -439,7 +441,10 @@ export const Sidebar2 = React.memo(({
 
         {/* Settings & Logout */}
         <div className="py-4 border-t border-gray-100 shrink-0">
-          <h1 className={` ${collapsed ? "pl-1" : "pl-4"} text-gray-400 uppercase text-xs tracking-wider mb-2`}>
+          <h1 className={`${collapsed
+            ? (locale === "ar" ? "px-4" : "px-2")
+            : "pl-4"
+            } text-gray-400 uppercase text-xs tracking-wider mb-2`}>
             {t(LOCALE_KEYS.SETTINGS)}
           </h1>
           <Menu mode="inline" items={settingsMenuItems} className="border-0" style={{ backgroundColor: 'transparent' }} />
@@ -447,7 +452,7 @@ export const Sidebar2 = React.memo(({
           <Menu mode="inline" items={logoutMenuItems} className="border-0 mt-2" style={{ backgroundColor: 'transparent' }} />
         </div>
       </Sider>
-            <style jsx global>{`
+      <style jsx global>{`
         aside::-webkit-scrollbar {
           width: 4px;
         }
