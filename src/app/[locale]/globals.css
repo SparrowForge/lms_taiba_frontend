@@ -35,3 +35,10 @@ body {
   color: #1677ff !important;
 }
 
+/* scrollbar fixing  */
+/* aside {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+} */
+
+

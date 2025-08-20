@@ -360,7 +360,7 @@ export const Sidebar2 = React.memo(({
           bottom: 0,
           zIndex: 1000,
           backgroundColor: '#ffffff',
-    transition: '1000ms ease', // ✅ match content transition
+    transition: '1000ms ease', 
         }}
       >
         {/* Logo */}
@@ -447,6 +447,18 @@ export const Sidebar2 = React.memo(({
           <Menu mode="inline" items={logoutMenuItems} className="border-0 mt-2" style={{ backgroundColor: 'transparent' }} />
         </div>
       </Sider>
+            <style jsx global>{`
+        aside::-webkit-scrollbar {
+          width: 4px;
+        }
+        aside::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        aside::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.2);
+          border-radius: 3px;
+        }
+      `}</style>
     </>
   );
 });
