@@ -40,3 +40,10 @@ export interface IMenuUpdate {
   sortOrder?: number;
   status?: string;
 }
+
+export interface IMyMenusResponse {
+  success: boolean;
+  message: string;
+  data: IMenu[];    
+  timestamp: string;
+}

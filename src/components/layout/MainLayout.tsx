@@ -4,11 +4,11 @@ import {Layout} from 'antd';
 import {usePathname} from 'next/navigation';
 import {useCallback, useMemo} from 'react';
 
-import {Sidebar2} from './Sidebar2';
 import {useSidebar} from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
 import {LanguageSwitcher} from '../ui/LanguageSwitcher';
 import { ToastContainer } from 'react-toastify';
+import { Sidebar2 } from './Sidebar2';
 
 const { Header, Content } = Layout;
 
