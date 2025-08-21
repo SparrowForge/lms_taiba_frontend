@@ -77,7 +77,7 @@ export const LoginForm = () => {
           <Form.Item
             name="email"
             label={
-              <div className="flex flex-col text-gray-600 text-[15px]">
+              <div className="flex flex-col text-gray-500 text-[15px]">
                 <h1>Email / Username | <span className=" ">البريد الإلكتروني / اسم<br /> المستخدم</span></h1>
               </div>
             }
@@ -99,7 +99,7 @@ export const LoginForm = () => {
           <Form.Item
             name="password"
             label={
-              <div className='text-gray-600 text-[15px]'>
+              <div className='text-gray-500 text-[15px]'>
                 <h1>Password | كلمة المرور</h1>
               </div>
             }
