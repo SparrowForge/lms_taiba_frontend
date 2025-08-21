@@ -1,15 +1,17 @@
 'use client';
 
-import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, Card, Form, Input, Spin} from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, Spin } from 'antd';
 import Link from 'next/link';
-import {useEffect, useState} from 'react';
-import {toast, ToastContainer} from 'react-toastify';
+import { useEffect, useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
-import {useAuth} from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
-import type {LoginCredentials} from '@/types/auth';
-import {getErrorMessage} from '@/types/errors';
+import type { LoginCredentials } from '@/types/auth';
+import { getErrorMessage } from '@/types/errors';
+import Image from 'next/image';
+import SocialLogin from './SocialLogin';
 
 
 export const LoginForm = () => {
@@ -56,17 +58,14 @@ export const LoginForm = () => {
 
   return (
     <>
-      <ToastContainer position="bottom-right" autoClose={2000} hideProgressBar={true} />
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
       <Card
-        title={
-          <div className="text-center py-10">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Sign in to your account</h2>
-            <p className="text-sm text-gray-600">Welcome back to LMS Taiba Admin Panel</p>
-          </div>
-        }
-        style={{ width: 600 }}
+        style={{ width: 380 }}
         className="shadow-lg rounded-lg"
       >
+         <div className="flex justify-center items-center py-6">
+            <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
+          </div>
         <Form
           form={form}
           name="login"
@@ -77,10 +76,16 @@ export const LoginForm = () => {
         >
           <Form.Item
             name="email"
-            label="Email Address"
+            label={
+              <div className="flex flex-col text-gray-600 text-[15px]">
+                <h1>Email / Username | <span className=" ">البريد الإلكتروني / اسم<br /> المستخدم</span></h1>
+              </div>
+            }
             rules={[
-              { required: true, message: 'Please enter your email!' },
-              { type: 'email', message: 'Please enter a valid email!' },
+              { 
+                // required: true,
+                 message: "Please enter your email!" },
+              { type: "email", message: "Please enter a valid email!" },
             ]}
           >
             <Input
@@ -90,11 +95,19 @@ export const LoginForm = () => {
             />
           </Form.Item>
 
+
           <Form.Item
             name="password"
-            label="Password"
+            label={
+              <div className='text-gray-600 text-[15px]'>
+                <h1>Password | كلمة المرور</h1>
+              </div>
+            }
+              
             rules={[
-              { required: true, message: 'Please enter your password!' },
+              { 
+                // required: true, 
+                message: 'Please enter your password!' },
               { min: 6, message: 'Password must be at least 6 characters!' },
             ]}
           >
@@ -113,7 +126,12 @@ export const LoginForm = () => {
               </div>
             </div>
           )}
-
+          <div className="text-center flex justify-end mt-4">
+            <p className="text-sm text-[#1e45bf]">
+             
+            Forget password? | نسيت كلمة المرور؟ 
+            </p>
+          </div>
           <Form.Item>
             <Button
               type="primary"
@@ -129,7 +147,7 @@ export const LoginForm = () => {
         </Form>
 
         {/* Footer */}
-        <div className="text-center mt-4">
+        {/* <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
             {`Don't have an account?{' '}`}
             <Link
@@ -139,7 +157,8 @@ export const LoginForm = () => {
               Contact administrator
             </Link>
           </p>
-        </div>
+        </div> */}
+        <SocialLogin />
       </Card>
     </>
   );
