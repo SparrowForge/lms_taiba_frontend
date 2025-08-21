@@ -24,6 +24,7 @@ import { useMenus } from '@/hooks/useMenus';
 
 import { Status } from '@/types/common';
 import { IMenu } from '@/types/menu';
+import { styleText } from 'util';
 
 
 const { Sider } = Layout;
@@ -225,15 +226,15 @@ export const Sidebar2 = React.memo(({
               <Text type="secondary" className="text-xs truncate">
                 {user?.email}
               </Text>
-              <div className="flex items-center mt-1">
+              <div className="flex items-center mt-1 ml-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                <Text className="text-xs text-green-600">Online</Text>
+                <Text className="text-xs" style={{ color: "#ffffff" }}>Online</Text>
               </div>
             </div>
           )}
           <DashOutlined
             onClick={() => setShowBranchSelect((prev) => !prev)}
-            className="cursor-pointer bg-gray-50 p-[2px] rounded-md  text-lg"
+            className="cursor-pointer bg-blue-500 p-[2px] rounded-md  text-lg"
 
           />
         </div>
@@ -309,22 +310,28 @@ export const Sidebar2 = React.memo(({
       {
         key: 'notification',
         icon: <BellOutlined />,
-        label: t(LOCALE_KEYS.NOTIFICATION), 
+        label: t(LOCALE_KEYS.NOTIFICATION),
         onClick: () => router.push('/notifications'),
+        style: {
+          color: "#FFFFFF",
+        }
       },
-      {
-        key: 'settings',
-        label: t(LOCALE_KEYS.SETTINGS),
-        icon: 
-          <Dropdown
-            menu={{ items: settingsMenuItemsDropdown }}
-            trigger={['click']}
-            placement="topRight"
-          >
-            <SettingOutlined className="cursor-pointer" />
-          </Dropdown>
-       
-      }
+    {
+  key: 'settings',
+  label: (
+    <Dropdown
+      menu={{ items: settingsMenuItemsDropdown }}
+      trigger={['click']}
+      placement="topRight"
+    >
+      <span style={{  cursor: "pointer" }}>
+        <SettingOutlined style={{ marginRight: 8 }} />
+        {t(LOCALE_KEYS.SETTINGS)}
+      </span>
+    </Dropdown>
+  ),
+}
+
     ],
     [collapsed, t, router, settingsMenuItemsDropdown]
   );
@@ -338,7 +345,9 @@ export const Sidebar2 = React.memo(({
         icon: <LogoutOutlined />,
         label: collapsed ? '' : t(LOCALE_KEYS.LOGOUT),
         onClick: handleLogout,
-        className: 'text-red-600 hover:text-red-700',
+        style: {
+          color: "#FFFFFF",
+        }
       },
     ],
     [collapsed, handleLogout, t]
@@ -350,9 +359,8 @@ export const Sidebar2 = React.memo(({
         collapsed={collapsed}
         collapsedWidth={80}
         trigger={null}
-        theme="light"
         width={280}
-        className="border-r border-gray-200 shadow-sm flex flex-col"
+        className="border-r border-gray-200 shadow-sm flex flex-col "
         style={{
           overflow: 'auto',
           height: '100vh',
@@ -361,20 +369,20 @@ export const Sidebar2 = React.memo(({
           top: 0,
           bottom: 0,
           zIndex: 1000,
-          backgroundColor: '#ffffff',
+          backgroundColor: '#1F4BCA',
           transition: '1000ms ease',
         }}
       >
         {/* Logo */}
-        <div className="py-6 border-b border-gray-100 shrink-0">
+        <div className="py-6 border-b border-gray-100 shrink-0 text-white">
           <div className="flex items-center justify-center">
             {!collapsed ? (
               <div className="text-center">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-2">
                   <span className="text-white font-bold text-lg">L</span>
                 </div>
-                <h1 className="text-xl font-bold text-gray-900 mb-1">LMS Taiba</h1>
-                <Text type="secondary" className="text-xs">
+                <h1 className="text-xl font-bold mb-1">LMS Taiba</h1>
+                <Text className="text-xs " style={{ color: '#ffffff' }}>
                   Admin Panel
                 </Text>
               </div>
@@ -407,7 +415,7 @@ export const Sidebar2 = React.memo(({
 
         {/* Navigation Menu */}
         <div
-          className="flex-1 min-h-0 overflow-auto"
+          className="flex-1 min-h-0 overflow-auto "
           style={{ overflow: 'auto' }}
           ref={(el) => {
             if (el) {
@@ -435,6 +443,10 @@ export const Sidebar2 = React.memo(({
               onOpenChange={handleLocalOpenChange}
               items={menuItems}
               onClick={handleMenuClick}
+              style={{
+                backgroundColor: "transparent",
+                color: "#ffffff"
+              }}
             />
           )}
         </div>
@@ -447,9 +459,9 @@ export const Sidebar2 = React.memo(({
             } text-gray-400 uppercase text-xs tracking-wider mb-2`}>
             {t(LOCALE_KEYS.SETTINGS)}
           </h1>
-          <Menu mode="inline" items={settingsMenuItems} className="border-0" style={{ backgroundColor: 'transparent' }} />
-          <Divider />
-          <Menu mode="inline" items={logoutMenuItems} className="border-0 mt-2" style={{ backgroundColor: 'transparent' }} />
+          <Menu mode="inline" items={settingsMenuItems} className="border-0" style={{ backgroundColor: 'transparent', color: "#ffffff" }} />
+
+          <Menu mode="inline" items={logoutMenuItems} className="text-white" style={{ backgroundColor: 'transparent', color: "#ffffff" }} />
         </div>
       </Sider>
       <style jsx global>{`
@@ -463,6 +475,16 @@ export const Sidebar2 = React.memo(({
           background-color: rgba(0, 0, 0, 0.2);
           border-radius: 3px;
         }
+
+        .ant-menu-item,
+        .ant-menu-submenu-title {
+        color: #ffffff !important;
+        }
+        .ant-menu-item-selected {
+        background-color: #163a99 !important; /* darker shade */
+        color: #ffffff !important;
+        }
+
       `}</style>
     </>
   );
