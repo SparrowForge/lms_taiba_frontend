@@ -2,12 +2,11 @@
 import React from "react";
 import { Card, Row, Col, Typography} from "antd";
 import {
-  UserOutlined,
-  TeamOutlined,
-  BookOutlined,
-  DashboardOutlined,
   LineChartOutlined,
 } from "@ant-design/icons";
+import { PiStudentFill } from "react-icons/pi";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { IoIosPeople } from "react-icons/io";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
@@ -19,25 +18,25 @@ const LeftComponent = () => {
   const portals = [
     {
       key: "teacher",
-      icon: <UserOutlined style={{ fontSize: 24, color: "#fff" }} />,
+      icon: <FaChalkboardTeacher style={{ fontSize: 28, color: "#92c4fc" }} />,
       title: t("Teacher Portal"),
       subtitle: t("بوابة المعلم"),
     },
     {
       key: "student",
-      icon: <BookOutlined style={{ fontSize: 24, color: "#fff" }} />,
+      icon: <PiStudentFill style={{ fontSize: 28, color: "#92c4fc" }} />,
       title: t("Student Portal"),
       subtitle: t("بوابة الطالب"),
     },
     {
       key: "parent",
-      icon: <TeamOutlined style={{ fontSize: 24, color: "#fff" }} />,
+      icon: <IoIosPeople style={{ fontSize: 28, color: "#92c4fc" }} />,
       title: t("Parent Portal"),
       subtitle: t("بوابة ولي الأمر"),
     },
     {
       key: "admin",
-      icon: <LineChartOutlined  style={{ fontSize: 24, color: "#fff" }} />,
+      icon: <LineChartOutlined  style={{ fontSize: 28, color: "#92c4fc" }} />,
       title: t("Admin Dashboard"),
       subtitle: t("لوحة الإدارة"),
     },
