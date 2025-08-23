@@ -219,11 +219,11 @@ export const Sidebar2 = React.memo(({
             className="bg-gradient-to-r from-blue-500 to-purple-600 "
           />
           {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <Text strong className="block text-sm truncate text-gray-900">
+            <div className="flex-1 min-w-0 text-white">
+              <Text strong className="block text-sm truncate text-white">
                 {getUserFullName()}
               </Text>
-              <Text type="secondary" className="text-xs truncate">
+              <Text type="secondary" className="text-xs truncate text-white">
                 {user?.email}
               </Text>
               <div className="flex items-center mt-1 ml-2">
@@ -244,7 +244,7 @@ export const Sidebar2 = React.memo(({
           <div className="mt-3">
             <Select
               size="small"
-              className="w-full"
+              className="w-full bg-[#92c4fc]"
               placeholder={t(LOCALE_KEYS.SELECT_BRANCH)}
               value={selectedBranch?.id}
               loading={branchListStatus.status === Status.LOADING}
@@ -316,21 +316,23 @@ export const Sidebar2 = React.memo(({
           color: "#FFFFFF",
         }
       },
-    {
-  key: 'settings',
-  label: (
-    <Dropdown
-      menu={{ items: settingsMenuItemsDropdown }}
-      trigger={['click']}
-      placement="topRight"
-    >
-      <span style={{  cursor: "pointer" }}>
-        <SettingOutlined style={{ marginRight: 8 }} />
-        {t(LOCALE_KEYS.SETTINGS)}
-      </span>
-    </Dropdown>
-  ),
-}
+      {
+        key: 'settings',
+        label: (
+          <Dropdown
+            menu={{ items: settingsMenuItemsDropdown }}
+            trigger={['click']}
+            placement="topRight"
+          
+          >
+            <span style={{ cursor: "pointer" }}>
+              <SettingOutlined style={{ marginRight: 8 }} />
+              {!collapsed && t(LOCALE_KEYS.SETTINGS)}
+            </span>
+
+          </Dropdown>
+        ),
+      }
 
     ],
     [collapsed, t, router, settingsMenuItemsDropdown]
@@ -402,7 +404,7 @@ export const Sidebar2 = React.memo(({
             style={{
               width: 28,
               height: 28,
-              backgroundColor: '#fff',
+              backgroundColor: '#92c4fc',
               color: '#333',
               border: '1px solid #ddd',
             }}
