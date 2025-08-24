@@ -33,7 +33,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
       marginLeft: sidebarWidth,
       width: `calc(100vw - ${sidebarWidth}px)`,
       minWidth: 0,
-      overflow: 'hidden',
+      // overflow: 'hidden',
     }),
     [sidebarWidth],
   );
@@ -54,6 +54,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   // Memoize content styles
   const contentStyle = useMemo(
     () => ({
+    
       width: '100%',
       minWidth: 0,
       maxWidth: '100%',
@@ -134,7 +135,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
           </div>
         </Header>
 
-        <Content className="bg-gray-50" style={contentStyle}>
+        <Content className="bg-gray-50 overflow-y-auto" style={contentStyle}>
           <ErrorBoundary>
             <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
           </ErrorBoundary>

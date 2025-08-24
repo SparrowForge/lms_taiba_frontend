@@ -7,6 +7,7 @@ import {QuickActionsSection} from '@/components/dashboard/QuickActionsSection';
 // import {StatsSection} from '@/components/dashboard/StatsSection';
 import {MainLayout} from '@/components/layout/MainLayout';
 import RecentAnnouncenments from '@/components/dashboard/newComponents/RecentAnnouncenments';
+import WeeklySchedule from '@/components/dashboard/newComponents/WeeklySchedule';
 
 export default function HomePage() {
   return (
@@ -16,7 +17,8 @@ export default function HomePage() {
         {/* <StatsSection /> */}
         <Row gutter={[24, 24]} className="pl-6" style={{ width: '100%', minWidth: 0, height:"100%" }}>
           <Col xs={24} lg={16}>
-            <ActivitySection />
+          <WeeklySchedule/>
+            {/* <ActivitySection /> */}
           </Col>
           <Col xs={24} lg={8}>
           <RecentAnnouncenments/>

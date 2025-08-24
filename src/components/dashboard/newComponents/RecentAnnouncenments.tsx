@@ -81,18 +81,18 @@ const RecentAnnouncenments = () => {
         </div>
 
         {/* Announcements list */}
-        <div className="grid grid-cols-1 gap-4 max-h-80 overflow-y-auto pr-2">
+        <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto pr-2">
           {sortedData.map((item, index) => (
             <div
               key={index}
-              className="p-4 rounded-lg"
+              className="py-2 px-4 rounded-lg"
               style={{ background: item.color }}
             >
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="font-semibold">{item.title}</h2>
+              <div className="flex justify-between items-center">
+                <h2 className="text-[16px] font-semibold">{item.title}</h2>
                 <p className="text-sm text-gray-600">{formatDay(item.date)}</p>
               </div>
-              <p className="text-sm text-gray-700">{item.text}</p>
+              <p className="text-[13px] text-gray-700">{item.text}</p>
             </div>
           ))}
         </div>
