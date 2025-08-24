@@ -1,5 +1,5 @@
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IUserRole, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
+import {IUserRole, IUserRoleCreate, IUserRoleUpdate, IUserRoleBulkCreate, IUserRoleBulkCreateResponse} from '@/types/userRole';
 
 import {api} from '@/lib/axios';
 
@@ -19,6 +19,12 @@ export const userRoleService = {
   // Create a new user role
   createUserRole: async (data: IUserRoleCreate): Promise<IUserRole> => {
     const response = await api.post<IUserRole>('/user-roles', data);
+    return response.data;
+  },
+
+  // Create multiple user roles for a single user
+  createUserRolesBulk: async (data: IUserRoleBulkCreate): Promise<IBaseResponse<IUserRoleBulkCreateResponse>> => {
+    const response = await api.post<IBaseResponse<IUserRoleBulkCreateResponse>>('/user-roles/bulk', data);
     return response.data;
   },
 

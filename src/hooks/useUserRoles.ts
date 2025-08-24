@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
-import {IUserRole, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
+import {IUserRole, IUserRoleCreate, IUserRoleUpdate, IUserRoleBulkCreate, IUserRoleBulkCreateResponse} from '@/types/userRole';
 
 import {userRoleService} from '@/services/userRoleService';
 
@@ -100,6 +100,26 @@ export const useUserRoles = () => {
     [dispatch],
   );
 
+  // Create multiple user roles for a single user
+  const createUserRolesBulk = useCallback(
+    async (data: IUserRoleBulkCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IUserRoleBulkCreateResponse> = await userRoleService.createUserRolesBulk(data);
+        dispatch(setUserRoles(response.data.newAssignments));
+        dispatch(setActionStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to create user roles'
+            : 'Failed to create user roles';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   // edit an existing user role
   const editUserRole = useCallback(
     async (id: number, data: IUserRoleUpdate) => {
@@ -180,6 +200,7 @@ export const useUserRoles = () => {
     loadUserRoles,
     loadUserRole,
     createUserRole,
+    createUserRolesBulk,
     editUserRole,
     removeUserRole,
     getUserRoleById,
