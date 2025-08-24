@@ -1,7 +1,7 @@
 "use client"
 import { Button, Card, Typography } from "antd";
 
-import {useAuth} from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { useRole } from "@/hooks/useRole";
 
 const { Title, Text } = Typography;
@@ -29,7 +29,10 @@ const WelcomeSection = () => {
                 className={`mx-10 ${role === "teacher" ? "border-l-4 border-l-[#1F4BCA]" : "text-white"
                     }`}
                 style={{
-                    backgroundColor: role === "teacher" ? "white" : "#1F4BCA",
+                    borderRadius: 16 ,
+                    background: role === "teacher"
+                        ? "white"
+                        : "linear-gradient(to right, #3a80f5, #1F4BCA)",
                     color: role === "teacher" ? "inherit" : "#fff",
                 }}
                 styles={{
@@ -54,28 +57,28 @@ const WelcomeSection = () => {
                         </Text>
                     </div>
                     {/* Right side content (only for student) */}
-                      {
+                    {
                         role === "teacher" ? (
                             <Button style={{
                                 backgroundColor: "#1F4BCA",
                                 color: "#fff"
                             }}>View Schedule</Button>
                         )
-                        :
-                        (
-                            <div className="text-right">
-                            <Title level={2} style={{ color: "#fff" }}>
-                                {today.getDate()}
-                            </Title>
-                            <Text style={{ color: "#fff" }}>
-                                {today.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-                            </Text>
-                        </div>
-                        )
+                            :
+                            (
+                                <div className="text-right">
+                                    <Title level={2} style={{ color: "#fff" }}>
+                                        {today.getDate()}
+                                    </Title>
+                                    <Text style={{ color: "#fff" }}>
+                                        {today.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                                    </Text>
+                                </div>
+                            )
                     }
-                 
 
-                  
+
+
                 </div>
 
 
