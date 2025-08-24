@@ -2,6 +2,7 @@
 import { Button, Card, Typography } from "antd";
 
 import {useAuth} from '@/hooks/useAuth';
+import { useRole } from "@/hooks/useRole";
 
 const { Title, Text } = Typography;
 
@@ -10,7 +11,7 @@ const WelcomeSection = () => {
     const { getUserFullName } = useAuth();
 
     // will get role form the localstorage to chage the layout
-    const role: "teacher" | "student" = "teacher";
+    const role = useRole();
 
     // Get today’s date
     const today = new Date();
@@ -63,10 +64,10 @@ const WelcomeSection = () => {
                         :
                         (
                             <div className="text-right">
-                            <Title level={2} style={{ color: role === "teacher" ? "#1f2937" : "#fff" }}>
+                            <Title level={2} style={{ color: "#fff" }}>
                                 {today.getDate()}
                             </Title>
-                            <Text style={{ color: role === "teacher" ? "#1f2937" : "#fff" }}>
+                            <Text style={{ color: "#fff" }}>
                                 {today.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
                             </Text>
                         </div>

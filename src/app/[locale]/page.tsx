@@ -2,10 +2,10 @@ import {Col, Row} from 'antd';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {ActivitySection} from '@/components/dashboard/ActivitySection';
+import DashboardStartSection from '@/components/dashboard/newComponents/DashboardStartSection';
 import {QuickActionsSection} from '@/components/dashboard/QuickActionsSection';
 import {StatsSection} from '@/components/dashboard/StatsSection';
 import {MainLayout} from '@/components/layout/MainLayout';
-import DashboardStartSection from '@/components/dashboard/newComponents/DashboardStartSection';
 
 export default function HomePage() {
   return (
