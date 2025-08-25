@@ -13,7 +13,7 @@ import {
     SignatureOutlined,
     UserOutlined
 } from '@ant-design/icons';
-import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, Select, Spin, Typography, } from 'antd';
+import { Avatar, Button, Layout, Menu, MenuProps, Select, Spin, Typography, } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -242,8 +242,8 @@ export const Sidebar2 = React.memo(({
     // Update selected keys
     setSelectedKeys(finalSelectedKeys);
 
-    // Auto-expand parent menu if a child is selected, but only if user hasn't manually changed menu
-    if (parentKey && !openKeys.includes(parentKey) && !userManuallyChangedMenu) {
+    // Auto-expand parent menu if a child is selected, but only if user hasn't manually changed menu and sidebar is not collapsed
+    if (parentKey && !openKeys.includes(parentKey) && !userManuallyChangedMenu && !collapsed) {
       handleOpenChange([parentKey]);
     }
   }, [pathname, menuItems, setSelectedKeys, locale, openKeys, handleOpenChange, userManuallyChangedMenu]);
@@ -368,6 +368,19 @@ export const Sidebar2 = React.memo(({
   const settingsMenuItems = useMemo(
     () => [
       {
+        key: 'settings',
+        icon: <SettingOutlined />,
+        label: collapsed ? null : t(LOCALE_KEYS.SETTINGS),
+        children: settingsMenuItemsDropdown,
+      }
+
+    ],
+    [collapsed, t, router, settingsMenuItemsDropdown]
+  );
+
+  const notificationMenuItems = useMemo(
+    () => [
+      {
         key: 'notification',
         icon: <BellOutlined />,
         label: t(LOCALE_KEYS.NOTIFICATION),
@@ -375,28 +388,10 @@ export const Sidebar2 = React.memo(({
         style: {
           color: "#FFFFFF",
         }
-      },
-      {
-        key: 'settings',
-        label: (
-          <Dropdown
-            menu={{ items: settingsMenuItemsDropdown }}
-            trigger={['click']}
-            placement="topRight"
-
-          >
-            <span style={{ cursor: "pointer" }}>
-              <SettingOutlined style={{ marginRight: 8 }} />
-              {!collapsed && t(LOCALE_KEYS.SETTINGS)}
-            </span>
-
-          </Dropdown>
-        ),
       }
-
     ],
-    [collapsed, t, router, settingsMenuItemsDropdown]
-  );
+    [t, router]
+  )
 
 
 
@@ -405,7 +400,7 @@ export const Sidebar2 = React.memo(({
       {
         key: 'logout',
         icon: <LogoutOutlined />,
-        label: collapsed ? '' : t(LOCALE_KEYS.LOGOUT),
+        label: t(LOCALE_KEYS.LOGOUT),
         onClick: handleLogout,
         style: {
           color: "#FFFFFF",
@@ -500,7 +495,7 @@ export const Sidebar2 = React.memo(({
             </div>
           ) : (
             <Menu
-              mode="inline"
+              mode={collapsed ? "vertical" : "inline"}
               selectedKeys={selectedKeys}
               openKeys={openKeys}
               onOpenChange={handleLocalOpenChange}
@@ -522,8 +517,8 @@ export const Sidebar2 = React.memo(({
             } text-gray-400 uppercase text-xs tracking-wider mb-2`}>
             {t(LOCALE_KEYS.SETTINGS)}
           </h1>
-          <Menu mode="inline" items={settingsMenuItems} className="border-0" style={{ backgroundColor: 'transparent', color: "#ffffff" }} />
-
+          <Menu mode="inline" items={notificationMenuItems} className="text-white" style={{ backgroundColor: 'transparent', color: "#ffffff" }} />
+          <Menu mode="vertical" items={settingsMenuItems} className="text-white" style={{ backgroundColor: 'transparent', color: "#ffffff", paddingLeft: collapsed ? "0px" : "10px" }} />
           <Menu mode="inline" items={logoutMenuItems} className="text-white" style={{ backgroundColor: 'transparent', color: "#ffffff" }} />
         </div>
       </Sider>
@@ -559,7 +554,12 @@ export const Sidebar2 = React.memo(({
         background-color: #163a99 !important;
         color: #ffffff !important;
         }
-
+        
+        /* Highlight selected submenu titles in collapsed state */
+        .ant-layout-sider-collapsed .ant-menu-submenu-selected > .ant-menu-submenu-title {
+        background-color: #163a99 !important;
+        color: #ffffff !important;
+        }
       `}</style>
     </>
   );
