@@ -211,7 +211,7 @@ export const Sidebar2 = React.memo(({
   const userProfileSection = useMemo(
     () => (
    <div className="p-4 border-b border-gray-100">
-  <div className="flex items-center space-x-3">
+  <div className={`flex ${collapsed ? "flex-col gap-2" : "flex-row"}  items-center space-x-3`}>
     <Avatar
       size={collapsed ? 22 : 40}
       icon={<UserOutlined />}
@@ -380,12 +380,8 @@ export const Sidebar2 = React.memo(({
             )}
           </div>
         </div>
-
-        {/* User Profile + Branch */}
-        <div className="shrink-0">{userProfileSection}</div>
-
-        {/* Side toggle (middle-right) */}
-        <div className={'absolute right-0 z-20'}>
+  {/* Side toggle (middle-right) */}
+        <div className={`absolute  ${collapsed ? "top-40" : "top-36"} right-0 z-20`}>
           <Button
             type="primary"
             icon={collapsed ? <RightOutlined /> : <LeftOutlined />}
@@ -399,6 +395,10 @@ export const Sidebar2 = React.memo(({
             }}
           />
         </div>
+        {/* User Profile + Branch */}
+        <div className="shrink-0">{userProfileSection}</div>
+
+      
 
         {/* Navigation Menu */}
         <div
@@ -417,7 +417,7 @@ export const Sidebar2 = React.memo(({
             }
           }}
         >
-          <h1 className="pt-4 px-2 text-gray-400 uppercase">{t(LOCALE_KEYS.MAIN)}</h1>
+          <h1 className="pt-4 px-4 text-gray-400 uppercase text-xs tracking-wider">{t(LOCALE_KEYS.MAIN)}</h1>
           {myMenusStatus.status === Status.LOADING ? (
             <div className="flex justify-center items-center p-4">
               <Spin />
@@ -436,7 +436,7 @@ export const Sidebar2 = React.memo(({
 
         {/* Settings & Logout */}
         <div className="py-4 border-t border-gray-100 shrink-0">
-          <h1 className="pl-1 text-gray-500 uppercase text-xs tracking-wider mb-2">
+          <h1 className={` ${collapsed? "pl-1" : "pl-4"} text-gray-400 uppercase text-xs tracking-wider mb-2`}>
             {t(LOCALE_KEYS.SETTINGS)}
           </h1>
           <Menu mode="inline" items={settingsMenuItems} className="border-0" style={{ backgroundColor: 'transparent' }} />

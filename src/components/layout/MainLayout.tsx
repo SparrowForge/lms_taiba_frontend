@@ -5,10 +5,11 @@ import {usePathname} from 'next/navigation';
 import {useCallback, useMemo} from 'react';
 import {ToastContainer} from "react-toastify";
 
-import {Sidebar2} from './Sidebar2';
 import {useSidebar} from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
 import {LanguageSwitcher} from '../ui/LanguageSwitcher';
+import { ToastContainer } from 'react-toastify';
+import { Sidebar2 } from './Sidebar2';
 
 const { Header, Content } = Layout;
 
@@ -112,6 +113,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   }
 
   return (
+
     <><ToastContainer/><Layout className="h-screen overflow-hidden w-full">
       {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
       {memoizedSidebar}
@@ -141,6 +143,9 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
           </ErrorBoundary>
         </Content>
       </Layout>
-    </Layout></>
+    </Layout>
+
+    <ToastContainer/>
+ </>
   );
 };

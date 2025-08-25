@@ -59,7 +59,8 @@ export default function PanelsPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadPanels({ page: 1, limit: 10 });
   };
 

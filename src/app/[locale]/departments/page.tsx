@@ -62,7 +62,8 @@ export default function DepartmentsPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadDepartments({ page: 1, limit: 10 });
   };
 
