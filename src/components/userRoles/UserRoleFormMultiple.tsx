@@ -1,7 +1,7 @@
 'use client';
 
-import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
-import {Button, Form, Select, Space, Alert, Modal} from 'antd';
+import {DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined} from '@ant-design/icons';
+import {Alert, Button, Form, Modal, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
@@ -15,7 +15,7 @@ import {useUsers} from '@/hooks/useUsers';
 
 import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
-import {IUserRoleCreate, IUserRoleUpdate, IUserRoleBulkCreate} from '@/types/userRole';
+import {IUserRoleBulkCreate, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
 
 
 interface UserRoleFormProps {
@@ -77,14 +77,13 @@ function UserRoleFormMultiple({
       console.log('=== MULTIPLE ROLES SUBMISSION START ===');
 
       // Get selected user from form and roles from local state
-      const selectedUserId = multipleForm.getFieldValue('userId');
       const selectedRoleIds = localSelectedRoles;
 
       console.log('Selected user ID:', selectedUserId);
       console.log('Selected role IDs:', selectedRoleIds);
 
       const submitData = {
-        userId: selectedUserId,
+        userId: selectedUserId || 0,
         roleIds: selectedRoleIds || []
       };
 
@@ -253,7 +252,7 @@ function UserRoleFormMultiple({
         borderRadius: '6px',
         padding: '16px',
         overflowY: 'auto',
-        maxHeight: '50vh',
+        height: 'calc(100vh - 448px)',
         marginBottom: '16px'
       }}>
         {rolesWithPermissionsStatus.status === Status.LOADING ? (

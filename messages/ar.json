@@ -14,7 +14,7 @@
   "created_name": "تم إنشاء {name} بنجاح!",
   "updated_name": "تم تحديث {name} بنجاح!",
   "deleted_name": "تم حذف {name} بنجاح!",
-  "please_enter_name_name": "يرجى إدخال اسم {name}",
+  "please_enter_name": "يرجى إدخال اسم {name}",
   "failed_name": "فشل في معالجة {name}.",
   "loading": "جار التحميل...",
   "quick_view": "عرض سريع",
@@ -343,8 +343,7 @@
   "icon": "الأيقونة",
 
   "enter_icon": "أدخل اسم الأيقونة (مثل UserOutlined)",
-  "select_name_name": "اختر {name}",
-  "please_enter_valid_name_name": "يرجى إدخال {name} صحيح",
+  "please_enter_valid_name": "يرجى إدخال {name} صحيح",
   "legend": "المفتاح",
   "lab": "مختبر",
   "tutorial": "درس تعليمي",
