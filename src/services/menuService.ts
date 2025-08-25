@@ -1,7 +1,8 @@
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
+import {IPanelWithMenus} from '@/types/panel';
 
-import { api } from '@/lib/axios';
+import {api} from '@/lib/axios';
 
 export const menuService = {
   // Get all menus with pagination and search
@@ -36,6 +37,12 @@ export const menuService = {
 
   getMyMenus: async (params = {}): Promise<IBaseResponse<IMenu[]>> => {
     const response = await api.get<IBaseResponse<IMenu[]>>('/menus/my-menus', { params });
+    return response.data;
+  },
+
+  // Get all panels with menu information
+  getPanelsWithMenus: async (params = {}): Promise<IBaseResponse<IPanelWithMenus[]>> => {
+    const response = await api.get<IBaseResponse<IPanelWithMenus[]>>('/menus/panels-with-menus', { params });
     return response.data;
   },
 
