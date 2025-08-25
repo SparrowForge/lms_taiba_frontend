@@ -33,8 +33,6 @@ export default function TwofaPage() {
     <ProtectedRoute>
       <MainLayout>
         <PageHeader title={t('Two Factor Authentication', { name: entityName })} onBack={() => router.back()} />
-
-
         <div className="flex justify-center items-center min-h-[80vh] gap-4">
           <MailSettings />
           <AuthSettings />
