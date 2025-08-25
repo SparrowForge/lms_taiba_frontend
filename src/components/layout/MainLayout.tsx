@@ -1,14 +1,14 @@
 'use client';
 
-import {Layout} from 'antd';
-import {usePathname} from 'next/navigation';
-import {useCallback, useMemo} from 'react';
+import { Layout } from 'antd';
+import { usePathname } from 'next/navigation';
+import { useCallback, useMemo } from 'react';
 import {ToastContainer} from "react-toastify";
 
-import {Sidebar2} from './Sidebar2';
-import {useSidebar} from './SidebarContext';
+import { Sidebar2 } from './Sidebar2';
+import { useSidebar } from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
-import {LanguageSwitcher} from '../ui/LanguageSwitcher';
+import { LanguageSwitcher } from '../ui/LanguageSwitcher';
 
 const { Header, Content } = Layout;
 
@@ -28,6 +28,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     setCollapsed(!collapsed);
   }, [collapsed, setCollapsed]);
 
+  //smooth transation
+  const COLLAPSE_MS = 1000;
   // Memoize layout styles to prevent recalculation
   const layoutStyle = useMemo(
     () => ({
@@ -35,6 +37,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
       width: `calc(100vw - ${sidebarWidth}px)`,
       minWidth: 0,
       overflow: 'hidden',
+      transition: `margin-left ${COLLAPSE_MS}ms ease, width ${COLLAPSE_MS}ms ease`,
     }),
     [sidebarWidth],
   );
@@ -129,12 +132,12 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             className="text-lg bg-white hover:bg-gray-50"
             style={buttonStyle}
           /> */}
-          <div className="flex-1" />
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            {/* Add any other header content here like notifications, user menu, etc. */}
-          </div>
-        </Header>
+            <div className="flex-1" />
+            <div className="flex items-center gap-4">
+              <LanguageSwitcher />
+              {/* Add any other header content here like notifications, user menu, etc. */}
+            </div>
+          </Header>
 
         <Content style={contentStyle}>
           <ErrorBoundary>
@@ -143,8 +146,6 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         </Content>
       </Layout>
     </Layout>
-
-    <ToastContainer/>
  </>
   );
 };

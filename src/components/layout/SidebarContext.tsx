@@ -30,16 +30,9 @@ export const SidebarProvider = ({ children }: SidebarProviderProps) => {
   const [isClient, setIsClient] = useState(false);
 
   const handleOpenChange = useCallback((keys: string[]) => {
-    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
-
-    if (latestOpenKey) {
-      // Close all other sections and open only the clicked one
-      setOpenKeys([latestOpenKey]);
-    } else {
-      // If closing a section, keep it closed
-      setOpenKeys([]);
-    }
-  }, [openKeys]);
+    // Allow multiple menus to be open - just set the keys directly
+    setOpenKeys(keys);
+  }, []);
 
   // Set isClient to true after hydration
   useEffect(() => {
