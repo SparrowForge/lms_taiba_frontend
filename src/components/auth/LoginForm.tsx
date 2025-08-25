@@ -1,16 +1,16 @@
 'use client';
 
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input, Spin } from 'antd';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-
-import { useAuth } from '@/hooks/useAuth';
-
-import type { LoginCredentials } from '@/types/auth';
-import { getErrorMessage } from '@/types/errors';
+import {LockOutlined, UserOutlined} from '@ant-design/icons';
+import {Button, Card, Form, Input, Spin} from 'antd';
 import Image from 'next/image';
+import {useEffect, useState} from 'react';
+import {toast, ToastContainer} from 'react-toastify';
+
+import {useAuth} from '@/hooks/useAuth';
+
+import type {LoginCredentials} from '@/types/auth';
+import {getErrorMessage} from '@/types/errors';
+
 import SocialLogin from './SocialLogin';
 
 
@@ -82,7 +82,7 @@ export const LoginForm = () => {
               </div>
             }
             rules={[
-              { 
+              {
                 // required: true,
                  message: "Please enter your email!" },
               { type: "email", message: "Please enter a valid email!" },
@@ -103,10 +103,10 @@ export const LoginForm = () => {
                 <h1>Password | كلمة المرور</h1>
               </div>
             }
-              
+
             rules={[
-              { 
-                // required: true, 
+              {
+                // required: true,
                 message: 'Please enter your password!' },
               { min: 6, message: 'Password must be at least 6 characters!' },
             ]}
@@ -128,8 +128,8 @@ export const LoginForm = () => {
           )}
           <div className="text-center flex justify-end mt-4">
             <p className="text-sm text-[#1e45bf]">
-             
-            Forget password? | نسيت كلمة المرور؟ 
+
+            Forget password? | نسيت كلمة المرور؟
             </p>
           </div>
           <Form.Item>

@@ -1,6 +1,7 @@
-import { LanguageSwitcher } from "../ui/LanguageSwitcher";
-import { LoginForm } from "./LoginForm";
 import Link from "next/link";
+
+import {LoginForm} from "./LoginForm";
+import {LanguageSwitcher} from "../ui/LanguageSwitcher";
 
 const RightComponent = () => {
   return (

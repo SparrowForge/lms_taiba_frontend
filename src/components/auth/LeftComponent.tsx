@@ -1,14 +1,12 @@
 "use client"
-import React from "react";
-import { Card, Row, Col, Typography} from "antd";
-import {
-  LineChartOutlined,
-} from "@ant-design/icons";
-import { PiStudentFill } from "react-icons/pi";
-import { FaChalkboardTeacher } from "react-icons/fa";
-import { IoIosPeople } from "react-icons/io";
-import { useTranslation } from "react-i18next";
+import {LineChartOutlined,} from "@ant-design/icons";
+import {Card, Col, Row, Typography} from "antd";
 import Image from "next/image";
+import React from "react";
+import {useTranslation} from "react-i18next";
+import {FaChalkboardTeacher} from "react-icons/fa";
+import {IoIosPeople} from "react-icons/io";
+import {PiStudentFill} from "react-icons/pi";
 
 const { Title, Text } = Typography;
 
