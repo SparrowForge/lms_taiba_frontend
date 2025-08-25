@@ -1,61 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
-import { Calendar, Card, Tag, Segmented, Row, Col } from "antd";
-import type { Dayjs } from "dayjs";
+import { Card, Tag, Segmented, Row, Col } from "antd";
+import { useState } from "react";
+import MonthSchedule from "./MonthSchedule";
+import TodaysClasses from "./TodaysClasses";
 
-import dayjs from "dayjs";
-
-const classes = {
-  Mon: [
-    { title: "Programming", time: "9:30 - 11:00", color: "blue" },
-    { title: "Database", time: "12:30 - 2:00", color: "green" },
-  ],
-  Tue: [
-    { title: "Web Dev", time: "11:30 - 1:00", color: "geekblue" },
-    { title: "UI Design", time: "2:30 - 4:00", color: "cyan" },
-  ],
-  Wed: [{ title: "Data Science", time: "10:00 - 11:30", color: "purple" }],
-  Thu: [{ title: "Python", time: "9:00 - 10:30", color: "green" }],
-};
+const weekDays = [
+  { key: "Sun", label: "Sun |الأحد", classes: [] },
+  {
+    key: "Mon",
+    label: "Mon | الاثنين",
+    classes: [
+      { title: "Programming", time: "9:30 - 11:00", color: "blue" },
+      { title: "Database", time: "12:30 - 2:00", color: "green" },
+    ],
+  },
+  {
+    key: "Tue",
+    label: "Tue | الثلاثاء",
+    classes: [
+      { title: "Web Dev", time: "11:30 - 1:00", color: "geekblue" },
+      { title: "UI Design", time: "2:30 - 4:00", color: "cyan" },
+    ],
+  },
+  {
+    key: "Wed",
+    label: "Wed | الأربعاء",
+    classes: [{ title: "Data Science", time: "10:00 - 11:30", color: "purple" }],
+  },
+  {
+    key: "Thu",
+    label: "Thu | الخميس",
+    classes: [{ title: "Python", time: "9:00 - 10:30", color: "green" }],
+  },
+   
+];
 
 const WeeklySchedule: React.FC = () => {
-  const [view, setView] = useState("Week");
-
-  const dateCellRender = (date: Dayjs) => {
-    const weekday = date.format("ddd"); // Mon, Tue, ...
-    const dayClasses = classes[weekday as keyof typeof classes] || [];
-    return (
-      <ul className="m-0 p-0 list-none">
-        {dayClasses.map((cls, index) => (
-          <li key={index}>
-            <Tag color={cls.color} className="block text-center mb-1">
-              {cls.title} <br /> {cls.time}
-            </Tag>
-          </li>
-        ))}
-      </ul>
-    );
-  };
-
-  // Fake today's classes
-  const todaysClasses = [
-    {
-      time: "11:30 AM",
-      duration: "50 min",
-      title: "Web Development",
-      room: "Room 305 • 28 students",
-    },
-    {
-      time: "2:30 PM",
-      duration: "90 min",
-      title: "UI Design Fundamentals",
-      room: "Lab 102 • 24 students",
-    },
-  ];
+  const [view, setView] = useState<"Week" | "Month">("Week");
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   return (
-    <Card className="shadow-md rounded-xl">
+    <Card className="shadow-md rounded-xl min-h-screen">
       {/* Header */}
       <Row justify="space-between" align="middle" className="mb-4">
         <Col>
@@ -68,34 +54,55 @@ const WeeklySchedule: React.FC = () => {
           <Segmented
             options={["Week", "Month"]}
             value={view}
-            onChange={(val) => setView(val as string)}
+            onChange={(val) => setView(val as "Week" | "Month")}
           />
         </Col>
       </Row>
 
-      {/* Calendar */}
-      <Calendar
-        fullscreen={false}
-        headerRender={() => null}
-        dateCellRender={dateCellRender}
-      />
-
-      {/* Today's Classes */}
-      <h4 className="mt-4 mb-2 font-semibold">Today&apos;s Classes | دروس اليوم</h4>
-      <Row gutter={16}>
-        {todaysClasses.map((cls, idx) => (
-          <Col span={12} key={idx}>
-            <Card className="shadow-sm rounded-lg">
-              <div className="flex justify-between mb-2">
-                <Tag color="blue">{cls.time}</Tag>
-                <span className="text-gray-500">{cls.duration}</span>
-              </div>
-              <div className="font-medium">{cls.title}</div>
-              <div className="text-gray-400 text-sm">{cls.room}</div>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      {/* Switch Views */}
+      {view === "Week" ? (
+        <>
+          <Row gutter={8} justify="start" className="mb-4">
+            {weekDays.map((day) => (
+              <Col key={day.key} flex="1">
+                <div
+                  className={`text-center rounded-lg min-h-[80px] ${
+                    selectedDate && day.label.startsWith(selectedDate)
+                      ? "bg-yellow-50 border border-yellow-300"
+                      : ""
+                  }`}
+                >
+                  <div className="font-medium mb-2 bg-[#f9fafb] p-4 rounded-lg ">
+                    {day.label}
+                  </div>
+                  {day.classes.length === 0 ? (
+                    <span className="text-gray-400 text-xs ">No Classes</span>
+                  ) : (
+                    day.classes.map((cls, idx) => (
+                      <Tag
+                        key={idx}
+                        color={cls.color}
+                        className="block mb-1 rounded-md px-2 py-1 text-xs"
+                      >
+                        <div className="font-medium">{cls.title}</div>
+                        <div>{cls.time}</div>
+                      </Tag>
+                    ))
+                  )}
+                </div>
+              </Col>
+            ))}
+          </Row>
+          <TodaysClasses />
+        </>
+      ) : (
+        <MonthSchedule
+          onSelectClass={(date) => {
+            setSelectedDate(date);
+            setView("Week"); // switch to week view
+          }}
+        />
+      )}
     </Card>
   );
 };
