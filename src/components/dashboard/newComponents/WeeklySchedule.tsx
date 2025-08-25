@@ -41,7 +41,7 @@ const WeeklySchedule: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   return (
-    <Card className="shadow-md rounded-xl min-h-screen">
+    <Card className="shadow-md rounded-xl min-h-[103vh]">
       {/* Header */}
       <Row justify="space-between" align="middle" className="mb-4">
         <Col>

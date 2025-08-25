@@ -65,7 +65,7 @@ const RecentAnnouncenments = () => {
   const sortedData = sortData(data);
 
   return (
-    <div>
+    <div className="mb-5">
       <Card>
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
