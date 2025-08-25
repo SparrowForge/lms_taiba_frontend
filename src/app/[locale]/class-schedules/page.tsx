@@ -1,5 +1,7 @@
 'use client';
 
+import {CalendarOutlined} from '@ant-design/icons';
+import {Button} from 'antd';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
@@ -150,6 +152,17 @@ export default function ClassSchedulesPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
+        <div className="mb-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold">{t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName })}</h1>
+          <Button
+            type="primary"
+            icon={<CalendarOutlined />}
+            onClick={() => router.push('/class-schedules/calendar')}
+          >
+            {t(LOCALE_KEYS.CALENDAR_VIEW, { defaultValue: 'Calendar View' })}
+          </Button>
+        </div>
+
         <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
