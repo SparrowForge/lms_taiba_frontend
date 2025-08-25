@@ -35,3 +35,7 @@ body {
   color: #1677ff !important;
 }
 
+.ant-picker-calendar-mode-switch{
+  display: none;
+}
+
