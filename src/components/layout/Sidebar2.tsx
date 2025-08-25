@@ -2,14 +2,14 @@
 
 import * as Icons from '@ant-design/icons';
 import {
-  BellOutlined,
-  DashOutlined,
-  LeftOutlined,
-  LogoutOutlined,
-  RightOutlined,
-  SettingOutlined,
-  SignatureOutlined,
-  UserOutlined,
+    BellOutlined,
+    DashOutlined,
+    LeftOutlined,
+    LogoutOutlined,
+    RightOutlined,
+    SettingOutlined,
+    SignatureOutlined,
+    UserOutlined
 } from '@ant-design/icons';
 import { Avatar, Button, Divider, Dropdown, Layout, Menu, MenuProps, Select, Spin, Typography, } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
@@ -323,7 +323,7 @@ export const Sidebar2 = React.memo(({
             menu={{ items: settingsMenuItemsDropdown }}
             trigger={['click']}
             placement="topRight"
-          
+
           >
             <span style={{ cursor: "pointer" }}>
               <SettingOutlined style={{ marginRight: 8 }} />
@@ -362,7 +362,8 @@ export const Sidebar2 = React.memo(({
         collapsedWidth={80}
         trigger={null}
         width={280}
-        className="border-r border-gray-200 shadow-sm flex flex-col "
+        theme="light"
+        className="border-r flex flex-col "
         style={{
           overflow: 'auto',
           height: '100vh',

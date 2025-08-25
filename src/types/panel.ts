@@ -1,3 +1,5 @@
+import {IMenu} from './menu';
+
 export interface IPanel {
   id: number;
   name: string;
@@ -15,4 +17,8 @@ export interface IPanelCreate {
 export interface IPanelUpdate {
   name?: string;
   status?: string;
+}
+
+export interface IPanelWithMenus extends IPanel {
+  menus: IMenu[];
 }
