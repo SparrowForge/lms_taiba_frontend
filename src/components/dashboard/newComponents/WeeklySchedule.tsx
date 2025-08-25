@@ -33,7 +33,7 @@ const weekDays = [
     label: "Thu | الخميس",
     classes: [{ title: "Python", time: "9:00 - 10:30", color: "green" }],
   },
-   
+
 ];
 
 const WeeklySchedule: React.FC = () => {
@@ -66,11 +66,10 @@ const WeeklySchedule: React.FC = () => {
             {weekDays.map((day) => (
               <Col key={day.key} flex="1">
                 <div
-                  className={`text-center rounded-lg min-h-[80px] ${
-                    selectedDate && day.label.startsWith(selectedDate)
+                  className={`text-center rounded-lg min-h-[80px] ${selectedDate && day.label.startsWith(selectedDate)
                       ? "bg-yellow-50 border border-yellow-300"
                       : ""
-                  }`}
+                    }`}
                 >
                   <div className="font-medium mb-2 bg-[#f9fafb] p-4 rounded-lg ">
                     {day.label}
@@ -82,11 +81,20 @@ const WeeklySchedule: React.FC = () => {
                       <Tag
                         key={idx}
                         color={cls.color}
-                        className="block mb-1 rounded-md px-2 py-1 text-xs"
+                        style={{
+                          borderRadius:'6px',
+                          borderLeft: `3px solid ${cls.color}`, // only left border
+                          borderTop: "none",
+                          borderRight: "none",
+                          borderBottom: "none",
+                          marginBottom: "4px", // gap
+                        }}
+                        className="block rounded-lg px-2 py-1 text-xs"
                       >
                         <div className="font-medium">{cls.title}</div>
                         <div>{cls.time}</div>
                       </Tag>
+
                     ))
                   )}
                 </div>
