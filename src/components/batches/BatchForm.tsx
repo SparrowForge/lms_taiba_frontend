@@ -278,7 +278,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
       <Form.Item
         name="courseId"
         label={t(LOCALE_KEYS.COURSE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.COURSE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }) }]}
       >
         <Select
           showSearch
@@ -299,56 +299,56 @@ const BatchForm: React.FC<BatchFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="year"
         label={t(LOCALE_KEYS.YEAR)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.YEAR) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.YEAR) }) }]}
       >
         <InputNumber min={2000} max={2100} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="session"
         label={t(LOCALE_KEYS.SESSION)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SESSION) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SESSION) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="intakeCapacity"
         label={t(LOCALE_KEYS.INTAKE_CAPACITY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INTAKE_CAPACITY) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INTAKE_CAPACITY) }) }]}
       >
         <InputNumber min={1} max={10000} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="startDate"
         label={t(LOCALE_KEYS.START_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.START_DATE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.START_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" onChange={handleBatchDateChange} />
       </Form.Item>
       <Form.Item
         name="endDate"
         label={t(LOCALE_KEYS.END_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.END_DATE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.END_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" onChange={handleBatchDateChange} />
       </Form.Item>
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect />
       </Form.Item>
       <Form.Item
         name="remarks"
         label={t(LOCALE_KEYS.REMARKS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.REMARKS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.REMARKS) }) }]}
       >
         <Input.TextArea rows={3} />
       </Form.Item>

@@ -124,7 +124,7 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
       <Form.Item
         name="batchId"
         label={t(LOCALE_KEYS.BATCH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
       >
         <Select
           showSearch
@@ -144,35 +144,35 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="termNo"
         label={t(LOCALE_KEYS.TERM_NO)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.TERM_NO) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TERM_NO) }) }]}
       >
         <InputNumber min={1} max={20} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="startDate"
         label={t(LOCALE_KEYS.START_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.START_DATE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.START_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
       <Form.Item
         name="endDate"
         label={t(LOCALE_KEYS.END_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.END_DATE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.END_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="lifecycle" />
       </Form.Item>

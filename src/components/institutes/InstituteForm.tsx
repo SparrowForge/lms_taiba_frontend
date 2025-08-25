@@ -97,7 +97,7 @@ const InstituteForm: React.FC<Props> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input />
       </Form.Item>
@@ -105,7 +105,7 @@ const InstituteForm: React.FC<Props> = ({
       <Form.Item
         name="code"
         label={t(LOCALE_KEYS.INSTITUTE_CODE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTE_CODE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INSTITUTE_CODE) }) }]}
       >
         <Input />
       </Form.Item>
@@ -113,22 +113,22 @@ const InstituteForm: React.FC<Props> = ({
       <Form.Item
         name="type"
         label={t(LOCALE_KEYS.INSTITUTE_TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTE_TYPE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INSTITUTE_TYPE) }) }]}
       >
         <Select
           options={INSTITUTE_TYPE_OPTIONS}
-          placeholder={t(LOCALE_KEYS.SELECT_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTE_TYPE) })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.INSTITUTE_TYPE) })}
         />
       </Form.Item>
 
       <Form.Item
         name="addressId"
         label={t(LOCALE_KEYS.ADDRESS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ADDRESS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }) }]}
       >
         <Select
           options={addresses.map(addr => ({ label: addr.name, value: addr.id }))}
-          placeholder={t(LOCALE_KEYS.SELECT_NAME_NAME, { name: t(LOCALE_KEYS.ADDRESS) })}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ADDRESS) })}
         />
       </Form.Item>
 
@@ -136,7 +136,7 @@ const InstituteForm: React.FC<Props> = ({
         name="website"
         label={t(LOCALE_KEYS.WEBSITE)}
         rules={[
-          { type: 'url', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_NAME_NAME, { name: t(LOCALE_KEYS.WEBSITE) }) }
+          { type: 'url', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_NAME, { name: t(LOCALE_KEYS.WEBSITE) }) }
         ]}
       >
         <Input />
@@ -145,7 +145,7 @@ const InstituteForm: React.FC<Props> = ({
       <Form.Item
         name="institutionCode"
         label={t(LOCALE_KEYS.INSTITUTION_CODE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTION_CODE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INSTITUTION_CODE) }) }]}
       >
         <Input />
       </Form.Item>
@@ -153,7 +153,7 @@ const InstituteForm: React.FC<Props> = ({
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>

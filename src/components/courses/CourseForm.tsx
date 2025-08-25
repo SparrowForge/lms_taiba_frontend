@@ -118,7 +118,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
       <Form.Item
         name="departmentId"
         label={t(LOCALE_KEYS.DEPARTMENT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) })}
@@ -139,7 +139,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.NAME)} />
       </Form.Item>
@@ -155,7 +155,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
       <Form.Item
         name="courseTypeId"
         label={t(LOCALE_KEYS.COURSE_TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.COURSE_TYPE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE_TYPE) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE_TYPE) })}
@@ -176,7 +176,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
       <Form.Item
         name="scheduleTypeId"
         label={t(LOCALE_KEYS.SCHEDULE_TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SCHEDULE_TYPE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SCHEDULE_TYPE) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SCHEDULE_TYPE) })}
@@ -198,7 +198,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
         name="durationInSemesters"
         label={t(LOCALE_KEYS.DURATION_IN_SEMESTERS)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DURATION_IN_SEMESTERS) }) },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DURATION_IN_SEMESTERS) }) },
         ]}
       >
         <InputNumber
@@ -212,7 +212,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
       <Form.Item
         name="description"
         label={t(LOCALE_KEYS.DESCRIPTION)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }) }]}
       >
         <Input.TextArea placeholder={t(LOCALE_KEYS.DESCRIPTION)} rows={4} />
       </Form.Item>
@@ -220,7 +220,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="lifecycle" />
       </Form.Item>
