@@ -21,3 +21,14 @@ export interface IUserRoleUpdate {
   userId?: number;
   roleId?: number;
 }
+
+export interface IUserRoleBulkCreate {
+  userId: number;
+  roleIds: number[];
+}
+
+export interface IUserRoleBulkCreateResponse {
+  removedCount: number;
+  assignedCount: number;
+  newAssignments: IUserRole[];
+}

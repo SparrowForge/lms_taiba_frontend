@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {IPaginationMeta, IStatusState, Status} from '@/types/common';
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
+import {IRoleMenuPermission, IRoleWithMenuPermission} from '@/types/roleMenuPermission';
 
 // State interface
 interface IRoleMenuPermissionsState {
@@ -11,6 +11,8 @@ interface IRoleMenuPermissionsState {
   roleMenuPermissions: IRoleMenuPermission[];
   selectedRoleMenuPermission: IRoleMenuPermission | null;
   pagination: IPaginationMeta;
+  rolesWithPermissionsStatus: IStatusState;
+  rolesWithPermissions: IRoleWithMenuPermission[];
 }
 
 // Initial state
@@ -28,6 +30,8 @@ const initialState: IRoleMenuPermissionsState = {
     hasNextPage: false,
     hasPreviousPage: false,
   },
+  rolesWithPermissionsStatus: { status: Status.INITIAL },
+  rolesWithPermissions: [],
 };
 
 // Slice
@@ -76,6 +80,12 @@ const roleMenuPermissionSlice = createSlice({
     setPagination: (state, action: PayloadAction<IPaginationMeta>) => {
       state.pagination = action.payload;
     },
+    setRolesWithPermissionsStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.rolesWithPermissionsStatus = action.payload;
+    },
+    setRolesWithPermissions: (state, action: PayloadAction<IRoleWithMenuPermission[]>) => {
+      state.rolesWithPermissions = action.payload;
+    },
     clearActionStatus: (state) => {
       state.actionStatus = { status: Status.INITIAL };
     },
@@ -95,6 +105,8 @@ export const {
   deleteRoleMenuPermission,
   setSelectedRoleMenuPermission,
   setPagination,
+  setRolesWithPermissionsStatus,
+  setRolesWithPermissions,
   clearActionStatus,
   clearDetailsStatus,
 } = roleMenuPermissionSlice.actions;

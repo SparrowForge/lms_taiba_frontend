@@ -3,6 +3,7 @@
 import {Layout} from 'antd';
 import {usePathname} from 'next/navigation';
 import {useCallback, useMemo} from 'react';
+import {ToastContainer} from "react-toastify";
 
 import {useSidebar} from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
@@ -112,14 +113,14 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   }
 
   return (
- <>
-    <Layout className="h-screen overflow-hidden w-full">
+
+    <><ToastContainer/><Layout className="h-screen overflow-hidden w-full">
       {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
       {memoizedSidebar}
 
       <Layout style={layoutStyle}>
         <Header
-          className="bg-white border-b border-gray-200 px-4 flex items-center justify-between h-16"
+          className="px-4 flex items-center justify-between h-16"
           style={headerStyle}
         >
           {/* <Button
@@ -136,7 +137,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
           </div>
         </Header>
 
-        <Content className="bg-gray-50" style={contentStyle}>
+        <Content style={contentStyle}>
           <ErrorBoundary>
             <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
           </ErrorBoundary>

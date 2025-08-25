@@ -31,3 +31,7 @@ export interface IRoleMenuPermissionUpdate {
   update?: boolean;
   delete?: boolean;
 }
+
+export interface IRoleWithMenuPermission extends IRole {
+  menuPermissions: IRoleMenuPermission[];
+}

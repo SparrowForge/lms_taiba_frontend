@@ -2,14 +2,14 @@
 
 import * as Icons from '@ant-design/icons';
 import {
-  BellOutlined,
-  DashOutlined,
-  LeftOutlined,
-  LogoutOutlined,
-  RightOutlined,
-  SettingOutlined,
-  SignatureOutlined,
-  UserOutlined,
+    BellOutlined,
+    DashOutlined,
+    LeftOutlined,
+    LogoutOutlined,
+    RightOutlined,
+    SettingOutlined,
+    SignatureOutlined,
+    UserOutlined
 } from '@ant-design/icons';
 import {Avatar, Button, Divider, Dropdown, Layout, Menu, MenuProps, Select, Spin, Typography,} from 'antd';
 import {usePathname, useRouter} from 'next/navigation';
@@ -346,9 +346,9 @@ export const Sidebar2 = React.memo(({
     <>
       <Sider
         collapsed={collapsed}
-        theme="light"
         width={280}
-        className="border-r border-gray-200 shadow-sm flex flex-col"
+        theme="light"
+        className="border-r flex flex-col"
         style={{
           overflow: 'auto',
           height: '100vh',
@@ -357,7 +357,7 @@ export const Sidebar2 = React.memo(({
           top: 0,
           bottom: 0,
           zIndex: 1000,
-          backgroundColor: '#ffffff',
+          // backgroundColor: '#ffffff',
         }}
       >
         {/* Logo */}
