@@ -1,5 +1,7 @@
 'use client';
 
+import { styleText } from 'util';
+
 import * as Icons from '@ant-design/icons';
 import {
     BellOutlined,
@@ -11,7 +13,7 @@ import {
     SignatureOutlined,
     UserOutlined
 } from '@ant-design/icons';
-import { Avatar, Button, Divider, Dropdown, Layout, Menu, MenuProps, Select, Spin, Typography, } from 'antd';
+import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, Select, Spin, Typography, } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -24,7 +26,6 @@ import { useMenus } from '@/hooks/useMenus';
 
 import { Status } from '@/types/common';
 import { IMenu } from '@/types/menu';
-import { styleText } from 'util';
 
 
 const { Sider } = Layout;
@@ -71,6 +72,26 @@ export const Sidebar2 = React.memo(({
   } = useBranches();
 
   const [showBranchSelect, setShowBranchSelect] = useState(false);
+  const [userManuallyChangedMenu, setUserManuallyChangedMenu] = useState(false);
+
+  // Helper function to find parent key for a child menu
+  const findParentKeyForChild = useCallback((childKey: string, items: any[]): string | null => {
+    for (const item of items || []) {
+      if (item?.children) {
+        // Check if any child matches the clicked key
+        const hasChild = item.children.some((child: any) => child.key === childKey);
+        if (hasChild) {
+          return item.key;
+        }
+        // Recursively check nested children
+        const nestedParent = findParentKeyForChild(childKey, item.children);
+        if (nestedParent) {
+          return nestedParent;
+        }
+      }
+    }
+    return null;
+  }, []);
 
 
 
@@ -117,13 +138,21 @@ export const Sidebar2 = React.memo(({
     (menus: IMenu[]): MenuProps['items'] => {
       return menus.map((menu) => {
         const hasChildren = menu.children && menu.children.length > 0;
-        const key = hasChildren
-          ? `parent-${menu.id}`
-          : menu.route?.startsWith('/')
-            ? menu.route
-            : `/${menu.route}`;
 
-
+        // Generate proper key for menu items
+        let key: string;
+        if (hasChildren) {
+          // Parent menu items get a special key
+          key = `parent-${menu.id}`;
+        } else {
+          // Child menu items get their route as key
+          if (menu.route) {
+            key = menu.route.startsWith('/') ? menu.route : `/${menu.route}`;
+          } else {
+            // Fallback to ID if no route
+            key = `menu-${menu.id}`;
+          }
+        }
 
         return {
           key,
@@ -151,16 +180,39 @@ export const Sidebar2 = React.memo(({
       routeWithoutLocale = '/' + pathParts.slice(2).join('/');
     }
 
+    // Handle root path
+    if (routeWithoutLocale === '/' || routeWithoutLocale === `/${locale}`) {
+      routeWithoutLocale = '/';
+    }
+
+    // Reset manual interaction flag when route changes
+    setUserManuallyChangedMenu(false);
+
     // Find the menu item that matches the current route and its parent
     const findSelectedKeyAndParent = (items: any[]): { selectedKey: string[], parentKey: string | null } => {
       for (const item of items || []) {
-        // Check exact match
+        // Skip parent menu items (they don't have routes)
+        if (item?.key?.startsWith('parent-')) {
+          // Check children of parent items
+          if (item?.children) {
+            const childResult = findSelectedKeyAndParent(item.children);
+            if (childResult.selectedKey.length > 0) {
+              return {
+                selectedKey: childResult.selectedKey,
+                parentKey: item.key
+              };
+            }
+          }
+          continue;
+        }
+
+        // Check exact match for non-parent items
         if (item?.key === routeWithoutLocale) {
           return { selectedKey: [item.key], parentKey: null };
         }
 
-        // Check if route starts with menu key (for nested routes)
-        if (item?.key && routeWithoutLocale.startsWith(item.key)) {
+        // Check if route starts with menu key (for nested routes like /users/123)
+        if (item?.key && routeWithoutLocale.startsWith(item.key + '/')) {
           return { selectedKey: [item.key], parentKey: null };
         }
 
@@ -168,7 +220,6 @@ export const Sidebar2 = React.memo(({
         if (item?.children) {
           const childResult = findSelectedKeyAndParent(item.children);
           if (childResult.selectedKey.length > 0) {
-            // If we found a match in children, this item is the parent
             return {
               selectedKey: childResult.selectedKey,
               parentKey: item.key
@@ -179,29 +230,38 @@ export const Sidebar2 = React.memo(({
       return { selectedKey: [], parentKey: null };
     };
 
-    const { selectedKey } = findSelectedKeyAndParent(menuItems || []);
+    const { selectedKey, parentKey } = findSelectedKeyAndParent(menuItems || []);
 
-    // Only update selected keys (don't auto-expand sections)
-    setSelectedKeys(selectedKey);
-  }, [pathname, menuItems, setSelectedKeys, locale]);
+    // Create final selected keys array - include parent if submenu is selected
+    const finalSelectedKeys = [...selectedKey];
+    if (parentKey) {
+      // Add parent key to selected keys for highlighting
+      finalSelectedKeys.push(parentKey);
+    }
+
+    // Update selected keys
+    setSelectedKeys(finalSelectedKeys);
+
+    // Auto-expand parent menu if a child is selected, but only if user hasn't manually changed menu
+    if (parentKey && !openKeys.includes(parentKey) && !userManuallyChangedMenu) {
+      handleOpenChange([parentKey]);
+    }
+  }, [pathname, menuItems, setSelectedKeys, locale, openKeys, handleOpenChange, userManuallyChangedMenu]);
 
   // Local handleOpenChange for manual menu expansion
   const handleLocalOpenChange = useCallback((keys: string[]) => {
-    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+    // Mark that user has manually interacted with the menu
+    setUserManuallyChangedMenu(true);
 
-    if (latestOpenKey) {
-      // Close all other sections and open only the clicked one
-      handleOpenChange([latestOpenKey]);
-    } else {
-      // If closing a section, keep it closed
-      handleOpenChange([]);
-    }
-  }, [openKeys, handleOpenChange]);
+    // Simple behavior: just pass the keys directly, allow multiple menus to be open
+    handleOpenChange(keys);
+  }, [handleOpenChange]);
 
 
   const handleMenuClick = useCallback(
     ({ key }: { key: string }) => {
-      if (key && !key.startsWith('parent-') && key !== currentPath) {
+      // Only navigate if it's not a parent menu item and not already on the same path
+      if (key && !key.startsWith('parent-') && !key.startsWith('menu-') && key !== currentPath) {
         router.push(key);
       }
     },
@@ -485,6 +545,18 @@ export const Sidebar2 = React.memo(({
         }
         .ant-menu-item-selected {
         background-color: #163a99 !important; /* darker shade */
+        color: #ffffff !important;
+        }
+        
+        /* Highlight parent submenu when child is selected */
+        .ant-menu-submenu.ant-menu-item-selected > .ant-menu-submenu-title {
+        background-color: #163a99 !important;
+        color: #ffffff !important;
+        }
+        
+        /* Alternative: highlight parent when it contains selected child */
+        .ant-menu-submenu:has(.ant-menu-item-selected) > .ant-menu-submenu-title {
+        background-color: #163a99 !important;
         color: #ffffff !important;
         }
 
