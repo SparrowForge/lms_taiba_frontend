@@ -4,9 +4,9 @@ import { useState } from "react";
 import { FileDoneOutlined, FundProjectionScreenOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useRole } from '@/hooks/useRole';
 
-import WelcomeSection from '../dashboardui/WelcomeSection';
-import UpBorderCard from './cards/UpBorderCard';
-import LeftBorderCard from './cards/LeftBorderCard';
+import WelcomeSection from './WelcomeSection';
+import UpBorderCard from '../dashboardui/cards/UpBorderCard';
+import LeftBorderCard from '../dashboardui/cards/LeftBorderCard';
 
 // dnd-kit imports
 import {

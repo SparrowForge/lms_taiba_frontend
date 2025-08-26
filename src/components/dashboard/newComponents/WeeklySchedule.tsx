@@ -2,6 +2,7 @@
 
 import { Card, Tag, Segmented, Row, Col } from "antd";
 import { useState } from "react";
+
 import MonthSchedule from "./MonthSchedule";
 import TodaysClasses from "./TodaysClasses";
 
@@ -75,7 +76,7 @@ const WeeklySchedule: React.FC = () => {
                     {day.label}
                   </div>
                   {day.classes.length === 0 ? (
-                    <span className="text-gray-400 text-xs ">No Classes</span>
+                    <span className="text-gray-400 text-xs " style={{ marginTop:"4px"}}>No Classes</span>
                   ) : (
                     day.classes.map((cls, idx) => (
                       <Tag
@@ -83,11 +84,13 @@ const WeeklySchedule: React.FC = () => {
                         color={cls.color}
                         style={{
                           borderRadius:'6px',
-                          borderLeft: `3px solid ${cls.color}`, // only left border
+                          borderLeft: `3px solid ${cls.color}`, 
                           borderTop: "none",
                           borderRight: "none",
                           borderBottom: "none",
-                          marginBottom: "4px", // gap
+                          marginBottom: "4px", 
+                          width: "100%",
+                          padding:"4px"
                         }}
                         className="block rounded-lg px-2 py-1 text-xs"
                       >

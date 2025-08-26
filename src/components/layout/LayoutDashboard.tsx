@@ -1,10 +1,17 @@
 "use client"
-import { useRole } from '@/hooks/useRole';
-import React from 'react';
+import { Col, Row } from 'antd';
+
 import RecentAnnouncenments from "@/components/dashboard/newComponents/RecentAnnouncenments";
 import StudentPerformance from "@/components/dashboard/newComponents/StudentPerformance";
 import WeeklySchedule from "@/components/dashboard/newComponents/WeeklySchedule";
-import { Col, Row } from 'antd';
+
+import { useRole } from '@/hooks/useRole';
+
+import AcademicProgress from '../dashboard/newComponents/AcademicProgress';
+import MonthlyAttendance from '../dashboard/newComponents/MonthlyAttendance';
+import NotificationsStudent from '../dashboard/newComponents/NotificationsStudent';
+import UpcomingAssignments from '../dashboard/newComponents/UpcomingAssignments';
+
 const LayoutDashboard = () => {
     const role = useRole();
     return (
@@ -26,13 +33,17 @@ const LayoutDashboard = () => {
                     </>
                 ) : (
                     <>
-                        <Col xs={24} lg={16}>
+                        <Col xs={24} lg={8}>
                             {/* For students, maybe show performance more prominently */}
-                            <StudentPerformance />
-                            <WeeklySchedule />
+                           <AcademicProgress/>
                         </Col>
                         <Col xs={24} lg={8}>
-                            <RecentAnnouncenments />
+                           <UpcomingAssignments/>
+                           
+                        </Col>
+                        <Col xs={24} lg={8}>
+                            <MonthlyAttendance/>
+                            <NotificationsStudent/>
                         </Col>
                     </>
                 )}</Row>
