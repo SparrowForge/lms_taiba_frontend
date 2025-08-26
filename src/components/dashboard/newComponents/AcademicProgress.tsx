@@ -18,7 +18,10 @@ const AcademicProgress = () => {
       </div>
       {subjects.map((sub, index) => (
         <div key={index} className="mb-3">
-          <p className="text-sm font-medium mb-1">{sub.name}</p>
+          <div className="flex justify-between items-center text-sm font-medium">
+            <h1>{sub.name}</h1>
+            <p>{sub.percent}%</p>
+          </div>
           <Progress percent={sub.percent} showInfo={false} strokeColor="#1F4BCA" />
         </div>
       ))}
