@@ -4,9 +4,11 @@ import {
   CodeOutlined,
   FileTextOutlined,
 } from "@ant-design/icons";
-import { Card } from "antd";
+import { Button, Card } from "antd";
 
 import IconBgColoredCard from "../dashboardui/cards/IconBgColoredCard";
+import { useLocalization } from "@/hooks/useLocalization";
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
 
 const assignments = [
   {
@@ -48,15 +50,18 @@ const assignments = [
 ];
 
 const UpcomingAssignments = () => {
+  const {t} = useLocalization();
   return (
     <Card className="rounded-2xl shadow-sm">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-base font-semibold">
-          Upcoming Assignments | الواجبات القادمة
+          {t(LOCALE_KEYS.UPCOMING_ASSIGNMENT)}
         </h2>
+        <Button type="text" >
         <span className="text-blue-600 cursor-pointer">
-          All Tasks | جميع المهام
+          {t(LOCALE_KEYS.ALL_TASKS)}
         </span>
+        </Button>
       </div>
 
       <div className="flex flex-col gap-3">

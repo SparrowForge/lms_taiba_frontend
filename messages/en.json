@@ -368,5 +368,11 @@
   "thu": "Thu",
   "today-classes-title": "Today's Classes",
   "recent-announcement": "Recent Announcements",
-  "student-performance": "Student Performance"
+  "student-performance": "Student Performance",
+  "academic-progress": "Academic Progress",
+  "view-all":"View All",
+  "upcoming-assignment": "Upcoming Assignment",
+  "all-tasks": "All Tasks",
+  "monthly-attendance": "Monthly Attendance",
+  "mark-all-read": "Mark All Read"
 }

@@ -361,5 +361,11 @@
   "wed": "الأربعاء",
   "thu": "الخميس",
   "today-classes-title": "دروس اليوم",
-  "recent-announcement": "اإلعالنات األخيرة"
+  "recent-announcement": "اإلعالنات األخيرة",
+  "academic-progress": "التقدم الأكاديمي",
+  "view-all": "عرض الكل",
+  "upcoming-assignment": "المهمة القادمة",
+  "all-tasks": "كل المهام",
+  "monthly-attendance": "الحضور الشهري",
+  "mark-all-read": "تعيين الكل كمقروء"
 }

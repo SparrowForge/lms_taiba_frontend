@@ -5,6 +5,10 @@ import {
 } from "@ant-design/icons";
 import { Card } from "antd";
 
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
+
+import { useLocalization } from "@/hooks/useLocalization";
+
 import IconBgColoredCard from "../dashboardui/cards/IconBgColoredCard";
 
 const notifications = [
@@ -35,13 +39,15 @@ const notifications = [
 ];
 
 const NotificationsStudent = () => {
+    const { t } = useLocalization();
     return (
-        <Card className="rounded-2xl shadow-sm">
+        <Card className="rounded-2xl shadow-sm" style={{ marginTop: "14px" }}>
             <div className="flex justify-between items-center mb-2">
-                <h2 className="text-base font-semibold">Notifications | الإشعارات</h2>
+                <h2 className="text-base font-semibold">{t(LOCALE_KEYS.NOTIFICATION)}</h2>
                 <span className="text-blue-600 cursor-pointer">
-                    Mark All Read | تعيين الكل كمقروء
+                    {t(LOCALE_KEYS.MARK_ALL_READ)}
                 </span>
+
             </div>
             <div className="flex flex-col gap-3">
                 {notifications.map((n, i) => (

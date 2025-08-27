@@ -378,7 +378,15 @@ export const LOCALE_KEYS = {
   THU: "thu",
   TODAY_CLASSES_TITLE: "today-classes-title",
   RECENT_ANNOUNCEMENT: "recent-announcement",
-  STUDENT_PERFORMANCE: "student-performance"
+  STUDENT_PERFORMANCE: "student-performance",
+
+  ACADEMIC_PROGRESS: "academic-progress",
+  VIEW_ALL: "view-all",
+
+  UPCOMING_ASSIGNMENT: "upcoming-assignment",
+  ALL_TASKS: "all-tasks",
+  MONTHLY_ATTENDANCE: "monthly-attendance",
+   MARK_ALL_READ: "mark-all-read"
 
 } as const;
 

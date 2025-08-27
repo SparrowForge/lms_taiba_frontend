@@ -1,6 +1,8 @@
 import { Card } from "antd";
 
 import ColumnGraph from "../dashboardui/graphs/ColumnGraph";
+import { useLocalization } from "@/hooks/useLocalization";
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
 
 const data = [
   { week: "Week 1", attendance: 80 },
@@ -10,10 +12,11 @@ const data = [
 ];
 
 const MonthlyAttendance = () => {
+  const {t} = useLocalization();
   return (
     <Card className="rounded-2xl shadow-sm">
       <h2 className="text-base font-semibold mb-3">
-        Monthly Attendance | الحضور الشهري
+         {t(LOCALE_KEYS.MONTHLY_ATTENDANCE)}
       </h2>
       <div style={{ height: 250 }}>
         <ColumnGraph data={data} color="#1F4BCA" />
