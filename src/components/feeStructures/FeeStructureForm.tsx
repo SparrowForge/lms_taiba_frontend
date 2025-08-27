@@ -16,7 +16,6 @@ import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IFeeStructure, IFeeStructureCreate, IFeeStructureUpdate} from '@/types/feeStructure';
 
-import FeeStructureFormBulk from './FeeStructureFormBulk';
 import FormLayout from '../layout/FormLayout';
 
 interface FeeStructureFormProps {
@@ -284,4 +283,4 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
   );
 };
 
-export default FeeStructureFormBulk;
+export default FeeStructureForm;
