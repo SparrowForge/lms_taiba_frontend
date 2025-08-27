@@ -1,14 +1,15 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { FileDoneOutlined, FundProjectionScreenOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useRole } from '@/hooks/useRole';
+import { useLocalization } from "@/hooks/useLocalization";
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
 
 import WelcomeSection from './WelcomeSection';
 import UpBorderCard from '../dashboardui/cards/UpBorderCard';
 import LeftBorderCard from '../dashboardui/cards/LeftBorderCard';
 
-// dnd-kit imports
 import {
   DndContext,
   closestCenter,
@@ -44,79 +45,79 @@ const SortableCard = ({ id, children }: { id: string; children: React.ReactNode 
   );
 };
 
-// ===== DATA =====
-const teacherInitial = [
-  {
-    id: "classes",
-    title: "Today's Classes | اليوم الدروس",
-    subTitle: "Next: Web Development at 11:30 AM",
-    number: 3,
-    icon: <FundProjectionScreenOutlined />,
-    color: "#1F4BCA",
-    iconColor: "#1F4BCA"
-  },
-  {
-    id: "assignments",
-    title: "Pending Assignments | المعلقة الواجبات",
-    subTitle: "4 need grading, 4 due this week",
-    number: 8,
-    icon: <ProfileOutlined />,
-    color: "#e5e7eb",
-    iconColor: "#000000"
-  },
-  {
-    id: "evaluations",
-    title: "Student Evaluations | الطالب تقييمات",
-    subTitle: "Mid-term evaluations due Friday",
-    number: 12,
-    icon: <FileDoneOutlined />,
-    color: "#1dbc87",
-    iconColor: "#1dbc87"
-  },
-];
-
-const studentInitial = [
-  {
-    id: "courses1",
-    title: "Active Courses | المقررات النشطة",
-    subTitle: "2 courses have upcoming deadlines",
-    number: "6",
-    icon: <FundProjectionScreenOutlined />,
-    color: "#1F4BCA",
-    iconColor: "#1F4BCA"
-  },
-  {
-    id: "courses2",
-    title: "Active Courses | المقررات النشطة",
-    subTitle: "2 courses have upcoming deadlines",
-    number: "4",
-    icon: <FundProjectionScreenOutlined />,
-    color: "#d97706",
-    iconColor: "#d97706"
-  },
-  {
-    id: "courses3",
-    title: "Active Courses | المقررات النشطة",
-    subTitle: "2 courses have upcoming deadlines",
-    number: "92%",
-    icon: <FundProjectionScreenOutlined />,
-    color: "#10b981",
-    iconColor: "#10b981"
-  },
-  {
-    id: "courses4",
-    title: "Active Courses | المقررات النشطة",
-    subTitle: "2 courses have upcoming deadlines",
-    number: "3.7",
-    icon: <FundProjectionScreenOutlined />,
-    color: "#7c3aed",
-    iconColor: "#7c3aed"
-  },
-];
-
 // ===== MAIN COMPONENT =====
 const DashboardStartSection = () => {
   const role = useRole();
+  const { t } = useLocalization();
+
+  const teacherInitial = [
+    {
+      id: "classes",
+      title: t(LOCALE_KEYS.TEACHER_CLASSES_TITLE, { defaultValue: "Today's Classes" }),
+      subTitle: t(LOCALE_KEYS.TEACHER_CLASSES_SUBTITLE, { defaultValue: "Next: Web Development at 11:30 AM" }),
+      number: 3,
+      icon: <FundProjectionScreenOutlined />,
+      color: "#1F4BCA",
+      iconColor: "#1F4BCA"
+    },
+    {
+      id: "assignments",
+      title: t(LOCALE_KEYS.TEACHER_ASSIGNMENTS_TITLE, { defaultValue: "Pending Assignments" }),
+      subTitle: t(LOCALE_KEYS.TEACHER_ASSIGNMENTS_SUBTITLE, { defaultValue: "4 need grading, 4 due this week" }),
+      number: 8,
+      icon: <ProfileOutlined />,
+      color: "#e5e7eb",
+      iconColor: "#000000"
+    },
+    {
+      id: "evaluations",
+      title: t(LOCALE_KEYS.TEACHER_EVALUATIONS_TITLE, { defaultValue: "Student Evaluations" }),
+      subTitle: t(LOCALE_KEYS.TEACHER_EVALUATIONS_SUBTITLE, { defaultValue: "Mid-term evaluations due Friday" }),
+      number: 12,
+      icon: <FileDoneOutlined />,
+      color: "#1dbc87",
+      iconColor: "#1dbc87"
+    },
+  ];
+
+  const studentInitial = [
+    {
+      id: "courses1",
+      title: t(LOCALE_KEYS.STUDENT_COURSES_TITLE, { defaultValue: "Active Courses" }),
+      subTitle: t(LOCALE_KEYS.STUDENT_COURSES_SUBTITLE, { defaultValue: "2 courses have upcoming deadlines" }),
+      number: "6",
+      icon: <FundProjectionScreenOutlined />,
+      color: "#1F4BCA",
+      iconColor: "#1F4BCA"
+    },
+    {
+      id: "courses2",
+      title: t(LOCALE_KEYS.STUDENT_COURSES_TITLE, { defaultValue: "Active Courses" }),
+      subTitle: t(LOCALE_KEYS.STUDENT_COURSES_SUBTITLE, { defaultValue: "2 courses have upcoming deadlines" }),
+      number: "4",
+      icon: <FundProjectionScreenOutlined />,
+      color: "#d97706",
+      iconColor: "#d97706"
+    },
+    {
+      id: "courses3",
+      title: t(LOCALE_KEYS.STUDENT_COURSES_TITLE, { defaultValue: "Active Courses" }),
+      subTitle: t(LOCALE_KEYS.STUDENT_COURSES_SUBTITLE, { defaultValue: "2 courses have upcoming deadlines" }),
+      number: "92%",
+      icon: <FundProjectionScreenOutlined />,
+      color: "#10b981",
+      iconColor: "#10b981"
+    },
+    {
+      id: "courses4",
+      title: t(LOCALE_KEYS.STUDENT_COURSES_TITLE, { defaultValue: "Active Courses" }),
+      subTitle: t(LOCALE_KEYS.STUDENT_COURSES_SUBTITLE, { defaultValue: "2 courses have upcoming deadlines" }),
+      number: "3.7",
+      icon: <FundProjectionScreenOutlined />,
+      color: "#7c3aed",
+      iconColor: "#7c3aed"
+    },
+  ];
 
   const [dataTeacher, setDataTeacher] = useState(teacherInitial);
   const [dataStudent, setDataStudent] = useState(studentInitial);
@@ -152,14 +153,7 @@ const DashboardStartSection = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 m-6">
               {dataTeacher.map((item) => (
                 <SortableCard key={item.id} id={item.id}>
-                  <UpBorderCard
-                    title={item.title}
-                    subTitle={item.subTitle}
-                    number={item.number}
-                    icon={item.icon}
-                    color={item.color}
-                    iconColor={item.iconColor}
-                  />
+                  <UpBorderCard {...item} />
                 </SortableCard>
               ))}
             </div>
@@ -171,14 +165,7 @@ const DashboardStartSection = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 m-6">
               {dataStudent.map((item) => (
                 <SortableCard key={item.id} id={item.id}>
-                  <LeftBorderCard
-                    title={item.title}
-                    subTitle={item.subTitle}
-                    number={item.number}
-                    icon={item.icon}
-                    color={item.color}
-                    iconColor={item.iconColor}
-                  />
+                  <LeftBorderCard {...item} />
                 </SortableCard>
               ))}
             </div>

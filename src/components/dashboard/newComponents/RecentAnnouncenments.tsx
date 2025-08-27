@@ -1,3 +1,5 @@
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
+import { useLocalization } from "@/hooks/useLocalization";
 import { Button, Card } from "antd";
 
 const data = [
@@ -63,18 +65,19 @@ const sortData = (items: typeof data) => {
 
 const RecentAnnouncenments = () => {
   const sortedData = sortData(data);
+  const {t} = useLocalization();
 
   return (
     <div className="mb-5">
       <Card>
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-[16px] font-semibold">
-            Recent Announcements | اإلعالنات األخيرة
+          <h1 className="text-lg font-semibold">
+              {t(LOCALE_KEYS.RECENT_ANNOUNCEMENT)}
           </h1>
           <Button
             type="text"
-            style={{ color: "#1F4BCA", fontSize: "16px" }}
+            style={{ color: "#1F4BCA", fontSize: "14px" , fontWeight: "400"}}
           >
             View All
           </Button>
@@ -89,10 +92,10 @@ const RecentAnnouncenments = () => {
               style={{ background: item.color }}
             >
               <div className="flex justify-between items-center">
-                <h2 className="text-[16px] font-semibold">{item.title}</h2>
+                <h2 className="text-[14px] font-semibold">{item.title}</h2>
                 <p className="text-sm text-gray-600">{formatDay(item.date)}</p>
               </div>
-              <p className="text-[13px] text-gray-700">{item.text}</p>
+              <p className="text-[12px] text-gray-700">{item.text}</p>
             </div>
           ))}
         </div>

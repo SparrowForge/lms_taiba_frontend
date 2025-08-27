@@ -1,4 +1,6 @@
 "use client";
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
+import { useLocalization } from "@/hooks/useLocalization";
 import { Card, Tag, Row, Col } from "antd";
 
 const todaysClasses = [
@@ -16,10 +18,11 @@ const todaysClasses = [
     },
 ];
 const TodaysClasses = () => {
+    const {t} = useLocalization();
     return (
         <div className="py-4">
             {/* Today's Classes */}
-            <h4 className="mt-4 mb-2 font-semibold text-lg">Today&apos;s Classes | دروس اليوم</h4>
+            <h4 className="mt-4 mb-2 font-semibold text-lg">  {t(LOCALE_KEYS.TODAY_CLASSES_TITLE)}</h4>
             <Row gutter={16}>
                 {todaysClasses.map((cls, idx) => (
                     <Col span={8} key={idx}>

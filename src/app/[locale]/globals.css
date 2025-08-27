@@ -35,3 +35,12 @@ body {
   color: #1677ff !important;
 }
 
+/* weekly schedule */
+.weekly-segmented .ant-segmented-item {
+  color: #1677ff;
+}
+
+.weekly-segmented .ant-segmented-item-selected {
+  background-color: #dbeafe !important;
+  color: #1677ff !important;
+}
