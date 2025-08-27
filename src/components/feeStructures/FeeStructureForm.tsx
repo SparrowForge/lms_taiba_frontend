@@ -284,4 +284,4 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
   );
 };
 
-export default FeeStructureFormBulk;
+export default FeeStructureForm;

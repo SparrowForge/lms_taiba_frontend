@@ -7,7 +7,6 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
-import RoleMenuPermissionForm from '@/components/roleMenuPermissions/RoleMenuPermissionForm';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
 import {PageHeader} from '@/components/ui/PageHeader';
@@ -17,7 +16,7 @@ import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
 import {Status} from '@/types/common';
 import {IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
-
+import RoleMenuPermissionFormMultiple from '@/components/roleMenuPermissions/RoleMenuPermissionFormMultiple';
 
 const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
@@ -44,7 +43,7 @@ const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ id: string }> }> 
     <ProtectedRoute>
       <MainLayout>
           <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <RoleMenuPermissionForm
+          <RoleMenuPermissionFormMultiple
             mode="edit"
             roleMenuPermissionId={selectedRoleMenuPermission.id}
             initialValues={selectedRoleMenuPermission as IRoleMenuPermissionUpdate}
