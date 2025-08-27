@@ -194,15 +194,15 @@
   "time_slots": "الفترات الزمنية",
   "start_time": "وقت البداية",
   "end_time": "وقت النهاية",
-      "week_day": "يوم الأسبوع",
-    "week_days": "أيام الأسبوع",
-    "day_number": "رقم اليوم",
-    "is_working_day": "يوم عمل",
-    "class_schedule": "جدول الحصص",
-    "class_schedules": "جداول الحصص",
-    "is_recurring": "متكرر",
-    "class_schedule_type": "نوع جدول الحصص",
-    "max_capacity": "السعة القصوى",
+  "week_day": "يوم الأسبوع",
+  "week_days": "أيام الأسبوع",
+  "day_number": "رقم اليوم",
+  "is_working_day": "يوم عمل",
+  "class_schedule": "جدول الحصص",
+  "class_schedules": "جداول الحصص",
+  "is_recurring": "متكرر",
+  "class_schedule_type": "نوع جدول الحصص",
+  "max_capacity": "السعة القصوى",
   "clean_audit": "تنظيف سجلات التدقيق",
   "confirm_clean_audit": "تأكيد تنظيف التدقيق",
   "confirm_clean_audit_message": "هل أنت متأكد من أنك تريد تنظيف جميع سجلات التدقيق؟ لا يمكن التراجع عن هذا الإجراء.",
@@ -321,7 +321,6 @@
   "enter_transfer_info": "أدخل معلومات التحويل",
   "select_identity_type": "اختر نوع الهوية",
   "enter_identity_no": "أدخل رقم الهوية",
-
   "room": "غرفة",
   "rooms": "غرف",
   "room_type": "نوع الغرفة",
@@ -330,7 +329,6 @@
   "level_floor": "الطابق/المستوى",
   "sitting_capacity": "سعة الجلوس",
   "exam_capacity": "سعة الامتحان",
-
   "main": "الرئيسية",
   "settings": "الإعدادات",
   "notification": "الإشعارات",
@@ -338,9 +336,11 @@
   "logout": "تسجيل الخروج",
   "local_name": "الاسم المحلي",
   "icon": "الأيقونة",
-
   "enter_icon": "أدخل اسم الأيقونة (مثل UserOutlined)",
   "select_name_name": "اختر {name}",
-  "please_enter_valid_name_name": "يرجى إدخال {name} صحيح"
-
+  "please_enter_valid_name_name": "يرجى إدخال {name} صحيح",
+  "welcome-back": "مرحبًا بعودتك، {name}!",
+  "teacher-dashboard-subtitle": "{date} | لديك 3 حصص اليوم",
+  "student-dashboard-subtitle": "الفصل الأول، العام الأكاديمي 2023-2024 | {date}",
+  "view-schedule": "عرض الجدول"
 }

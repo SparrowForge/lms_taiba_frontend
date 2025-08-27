@@ -347,6 +347,13 @@ export const LOCALE_KEYS = {
   ICON: 'icon',
   ENTER_ICON: 'enter_icon',
 
+  // dashboard
+  WELCOME_BACK: "welcome-back",
+  TEACHER_DASHBOARD_SUBTITLE: "teacher-dashboard-subtitle",
+  STUDENT_DASHBOARD_SUBTITLE: "student-dashboard-subtitle",
+  VIEW_SCHEDULE: "view-schedule",
+
+
 } as const;
 
 // Type for the keys
