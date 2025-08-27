@@ -7,10 +7,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
-import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
-import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
-import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
-import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
+import RoleMenuPermissionFormMultiple from '@/components/roleMenuPermissions/RoleMenuPermissionFormMultiple';
+import EntityEditLoadingView from "@/components/ui/EntityEditLoadingView";
+import EntityEditNotFoundView from "@/components/ui/EntityEditNotFoundView";
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useLocalization} from '@/hooks/useLocalization';
@@ -18,7 +17,7 @@ import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
 import {Status} from '@/types/common';
 import {IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
-import RoleMenuPermissionFormMultiple from '@/components/roleMenuPermissions/RoleMenuPermissionFormMultiple';
+
 
 const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
