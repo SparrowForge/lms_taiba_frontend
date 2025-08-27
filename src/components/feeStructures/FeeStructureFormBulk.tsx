@@ -1,0 +1,1242 @@
+'use client';
+
+import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space} from 'antd';
+import {useRouter} from 'next/navigation';
+import React, {useCallback, useEffect, useState} from 'react';
+import {toast} from 'react-toastify';
+
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useBatches} from '@/hooks/useBatches';
+import {useFeeStructures} from '@/hooks/useFeeStructures';
+import {useLocalization} from '@/hooks/useLocalization';
+import {useSemesters} from '@/hooks/useSemesters';
+
+import {Status} from '@/types/common';
+import {getErrorMessage} from '@/types/errors';
+import {IFeeInstallmentPlanCreate} from '@/types/feeInstallmentPlan';
+import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate} from '@/types/feeStructure';
+
+import type {Dayjs} from 'dayjs';
+
+interface FeeStructureFormBulkProps {
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+interface PaymentRow {
+  id: string;
+  semester: string | number; // Can be string (from UI) or number (when mapped)
+  sequenceNo: number;
+  paymentLabel: string;
+  durationMonths: number;
+  amount: number;
+  discountAmount: number;
+  dueDate: Dayjs | null;
+}
+
+interface MonthlyPaymentRow {
+  id: string;
+  semesterId: number;
+  semesterName: string;
+  monthNumber: number;
+  monthName: string;
+  sequenceNo: number;
+  paymentLabel: string;
+  amount: number;
+  discountAmount: number;
+  dueDate: Dayjs | null;
+  startDate: Dayjs;
+  endDate: Dayjs;
+}
+
+const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
+  onSuccess,
+  onCancel,
+}) => {
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
+  const router = useRouter();
+  const [form] = Form.useForm();
+  const { createFeeStructure, createFeeStructureBulk, actionStatus } = useFeeStructures();
+  const { batches, loadBatches } = useBatches();
+  const { semesters, loadSemesters, listStatus } = useSemesters();
+
+  // New state for installment logic
+  const [paymentRows, setPaymentRows] = useState<PaymentRow[]>([]);
+  const [monthlyPaymentRows, setMonthlyPaymentRows] = useState<MonthlyPaymentRow[]>([]);
+  const [selectedBatch, setSelectedBatch] = useState<any>(null);
+  const [semesterOptions, setSemesterOptions] = useState<{label: string, value: string}[]>([]);
+  // const [loadingSemesters, setLoadingSemesters] = useState(false);
+
+  useEffect(() => {
+    loadBatches({ page: 1, limit: 100 });
+  }, [loadBatches]);
+
+  useEffect(() => {
+    form.resetFields();
+  }, [form]);
+
+    // Watch for payment type changes using Form.useWatch
+  const currentPaymentType = Form.useWatch('paymentType', form);
+  const totalFees = Form.useWatch('totalFees', form);
+
+
+
+    // Generate monthly payment rows when payment type is monthly
+  const generateMonthlyPaymentRows = useCallback(() => {
+    if (currentPaymentType === 'monthly' && selectedBatch && semesters.length > 0) {
+      const monthlyRows: MonthlyPaymentRow[] = [];
+      let globalSequenceNo = 1;
+
+      semesters.forEach((semester, semesterIndex) => {
+        const semesterStartDate = new Date(semester.startDate);
+        const semesterEndDate = new Date(semester.endDate);
+
+        // Calculate months between start and end dates
+        const months = [];
+        const currentDate = new Date(semesterStartDate);
+
+        while (currentDate <= semesterEndDate) {
+          const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+          const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+          months.push({
+            start: monthStart,
+            end: monthEnd,
+            monthNumber: currentDate.getMonth() + 1,
+            monthName: currentDate.toLocaleDateString('en-US', { month: 'long' })
+          });
+
+          currentDate.setMonth(currentDate.getMonth() + 1);
+        }
+
+        // Create monthly rows for this semester
+        months.forEach((month, monthIndex) => {
+          monthlyRows.push({
+            id: `monthly_${semester.id}_${month.monthNumber}`,
+            semesterId: semester.id,
+            semesterName: semester.name,
+            monthNumber: month.monthNumber,
+            monthName: month.monthName,
+            sequenceNo: globalSequenceNo++,
+            paymentLabel: `${semester.name} - ${month.monthName}`,
+            amount: 0, // Will be calculated based on total fees
+            discountAmount: 0,
+            dueDate: null,
+            startDate: month.start as any, // Convert to Dayjs
+            endDate: month.end as any
+          });
+        });
+      });
+
+      setMonthlyPaymentRows(monthlyRows);
+    }
+  }, [currentPaymentType, selectedBatch, semesters]);
+
+  // Get missing semester numbers
+  const getMissingSemesterNumbers = useCallback(() => {
+    if (!selectedBatch || !semesters.length) return '';
+
+    const expectedSemesters = selectedBatch.course.durationInSemesters;
+    const existingTermNumbers = semesters.map((s: any) => s.termNo).sort((a, b) => a - b);
+    const missingNumbers = [];
+
+    for (let i = 1; i <= expectedSemesters; i++) {
+      if (!existingTermNumbers.includes(i)) {
+        missingNumbers.push(i);
+      }
+    }
+
+    if (missingNumbers.length === 0) return '';
+
+    return missingNumbers.length === 1
+      ? `Semester ${missingNumbers[0]}`
+      : `Semesters ${missingNumbers.join(', ')}`;
+  }, [selectedBatch, semesters]);
+
+  // Reset payment rows when payment type changes
+  useEffect(() => {
+    if (currentPaymentType && currentPaymentType !== 'installment') {
+      setPaymentRows([]);
+    }
+    if (currentPaymentType && currentPaymentType !== 'monthly') {
+      setMonthlyPaymentRows([]);
+    }
+
+    // Generate monthly rows when payment type becomes monthly
+    if (currentPaymentType === 'monthly') {
+      generateMonthlyPaymentRows();
+    }
+  }, [currentPaymentType, generateMonthlyPaymentRows]);
+
+  // Auto-distribute total fees across semesters when totalFees changes
+  useEffect(() => {
+    if (currentPaymentType === 'installment' && selectedBatch && paymentRows.length > 0 && totalFees) {
+      const totalFeesNumber = Number(totalFees);
+      if (totalFeesNumber > 0) {
+        const semesterCount = selectedBatch.course.durationInSemesters;
+        const amountPerSemester = totalFeesNumber / semesterCount;
+
+        setPaymentRows(prev => prev.map(row => ({
+          ...row,
+          amount: amountPerSemester
+        })));
+      }
+    }
+  }, [totalFees, currentPaymentType, selectedBatch, paymentRows.length]);
+
+  // Auto-distribute total fees across monthly payments when totalFees changes
+  useEffect(() => {
+    if (currentPaymentType === 'monthly' && monthlyPaymentRows.length > 0 && totalFees) {
+      const totalFeesNumber = Number(totalFees);
+      if (totalFeesNumber > 0) {
+        const totalMonths = monthlyPaymentRows.length;
+        const amountPerMonth = totalFeesNumber / totalMonths;
+
+        setMonthlyPaymentRows(prev => prev.map(row => ({
+          ...row,
+          amount: amountPerMonth
+        })));
+      }
+    }
+  }, [totalFees, currentPaymentType, monthlyPaymentRows.length]);
+
+  // Generate payment rows when semesters are loaded and payment type is installment or monthly
+  useEffect(() => {
+    if (selectedBatch) {
+      if (currentPaymentType === 'installment') {
+        // Generate installment payment rows only for existing semesters
+        const semesterOptions: {label: string, value: string}[] = [];
+        const newPaymentRows: PaymentRow[] = [];
+
+        // Sort semesters by termNo to maintain proper sequence
+        const sortedSemesters = [...semesters].sort((a: any, b: any) => a.termNo - b.termNo);
+
+        sortedSemesters.forEach((semester: any, index: number) => {
+          semesterOptions.push({
+            label: semester.name,
+            value: semester.id.toString()
+          });
+
+          // Create payment row with real semester data
+          newPaymentRows.push({
+            id: semester.id.toString(),
+            semester: semester.id.toString(),
+            sequenceNo: index + 1, // Use index + 1 for proper sequence
+            paymentLabel: `${semester.name} Fee`,
+            durationMonths: 6, // Default duration, can be enhanced later
+            amount: 0,
+            discountAmount: 0,
+            dueDate: null
+          });
+        });
+
+        setSemesterOptions(semesterOptions);
+        setPaymentRows(newPaymentRows);
+      } else if (currentPaymentType === 'monthly') {
+        // Generate monthly payment rows
+        generateMonthlyPaymentRows();
+      }
+    }
+  }, [semesters, currentPaymentType, selectedBatch, generateMonthlyPaymentRows]);
+
+  // Handle batch selection to load semesters
+  const handleBatchChange = async (batchId: string | number) => {
+    const batch = batches.find(b => String(b.id) === String(batchId));
+    setSelectedBatch(batch);
+
+    if (batch?.course?.durationInSemesters) {
+              try {
+          // Load semesters for this specific batch
+          await loadSemesters({ batchId: Number(batchId), page: 1, limit: 100 });
+        } catch (error) {
+          console.error('Failed to load semesters for batch:', error);
+        }
+    } else {
+      setSemesterOptions([]);
+      setPaymentRows([]);
+      setMonthlyPaymentRows([]);
+    }
+  };
+
+  // Payment rows are automatically generated based on batch selection
+  // No need for add/delete functionality since batch has fixed number of semesters
+
+  // Update payment row
+  const updatePaymentRow = (id: string, field: keyof PaymentRow, value: any) => {
+    setPaymentRows(prev => prev.map(row =>
+      row.id === id ? { ...row, [field]: value } : row
+    ));
+  };
+
+  // Submit function for one-time payment
+  const handleOneTimeSubmit = async (values: Partial<IFeeStructure>) => {
+    try {
+      const payload = { ...values };
+      await createFeeStructure(payload as IFeeStructureCreate);
+      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push('/fee-structures');
+      }
+    } catch (error: unknown) {
+      handleSubmitError(error);
+    }
+  };
+
+  // Submit function for installment payments
+  const handleInstallmentSubmit = async (values: Partial<IFeeStructure>) => {
+    try {
+      // Validate that all installment rows have required fields
+      const invalidRows = paymentRows.filter(row =>
+        !row.paymentLabel || row.amount <= 0 || !row.dueDate
+      );
+
+      if (invalidRows.length > 0) {
+        const errorDetails = invalidRows.map((row) => {
+          const missingFields = [];
+          if (!row.paymentLabel) missingFields.push('Payment Label');
+          if (row.amount <= 0) missingFields.push('Amount');
+          if (!row.dueDate) missingFields.push('Due Date');
+
+          return `Row ${row.sequenceNo}: Missing ${missingFields.join(', ')}`;
+        }).join('\n');
+
+        toast.error(`Please fill in all required fields:\n${errorDetails}`);
+        return;
+      }
+
+      // Validate that sum of semester amounts equals total fees
+      const totalSemesterAmounts = paymentRows.reduce((sum, row) => sum + row.amount, 0);
+      const formTotalFees = Number(values.totalFees) || 0;
+
+      if (Math.abs(totalSemesterAmounts - formTotalFees) > 0.01) {
+        toast.error(`Total fees mismatch: Form total is ${formTotalFees}, but sum of semester amounts is ${totalSemesterAmounts}`);
+        return;
+      }
+
+      // Create single fee structure with installment plans
+      const payload: IFeeStructureBulkCreate = {
+        ...values,
+        totalFees: Number(values.totalFees) || 0,
+        admissionFee: Number(values.admissionFee) || 0,
+        discountAmount: Number(values.discountAmount) || 0,
+        feeInstallmentPlans: paymentRows.map(row => ({
+          sequenceNo: row.sequenceNo,
+          paymentLabel: row.paymentLabel,
+          semesterId: Number(row.semester) || 0,
+          durationMonths: row.durationMonths,
+          amount: String(row.amount),
+          discountAmount: String(row.discountAmount),
+          dueDate: row.dueDate ? row.dueDate.format('YYYY-MM-DD') : ''
+        } as Omit<IFeeInstallmentPlanCreate, 'feeStructureId'>))
+      } as IFeeStructureBulkCreate;
+
+      console.log('Creating fee structure with installment plans:', payload);
+      await createFeeStructureBulk(payload);
+      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: `${entityName} with Installment Plans` }));
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push('/fee-structures');
+      }
+    } catch (error: unknown) {
+      handleSubmitError(error);
+    }
+  };
+
+  // Submit function for monthly payments
+  const handleMonthlySubmit = async (values: Partial<IFeeStructure>) => {
+    try {
+      // Validate that all monthly rows have required fields
+      const invalidRows = monthlyPaymentRows.filter(row =>
+        !row.paymentLabel || row.amount <= 0 || !row.dueDate
+      );
+
+      if (invalidRows.length > 0) {
+        const errorDetails = invalidRows.map((row) => {
+          const missingFields = [];
+          if (!row.paymentLabel) missingFields.push('Payment Label');
+          if (row.amount <= 0) missingFields.push('Amount');
+          if (!row.dueDate) missingFields.push('Due Date');
+
+          return `Row ${row.sequenceNo}: Missing ${missingFields.join(', ')}`;
+        }).join('\n');
+
+        toast.error(`Please fill in all required fields:\n${errorDetails}`);
+        return;
+      }
+
+      // Validate that sum of monthly amounts equals total fees
+      const totalMonthlyAmounts = monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0);
+      const formTotalFees = Number(values.totalFees) || 0;
+
+      if (Math.abs(totalMonthlyAmounts - formTotalFees) > 0.01) {
+        toast.error(`Total fees mismatch: Form total is ${formTotalFees}, but sum of monthly amounts is ${totalMonthlyAmounts}`);
+        return;
+      }
+
+      // Create single fee structure with monthly installment plans
+      const payload: IFeeStructureBulkCreate = {
+        ...values,
+        totalFees: Number(values.totalFees) || 0,
+        admissionFee: Number(values.admissionFee) || 0,
+        discountAmount: Number(values.discountAmount) || 0,
+        feeInstallmentPlans: monthlyPaymentRows.map(row => ({
+          sequenceNo: row.sequenceNo,
+          paymentLabel: row.paymentLabel,
+          semesterId: row.semesterId,
+          durationMonths: 1, // Monthly payments are always 1 month
+          amount: String(row.amount),
+          discountAmount: String(row.discountAmount),
+          dueDate: row.dueDate ? row.dueDate.format('YYYY-MM-DD') : ''
+        } as Omit<IFeeInstallmentPlanCreate, 'feeStructureId'>))
+      } as IFeeStructureBulkCreate;
+
+      console.log('Creating fee structure with monthly plans:', payload);
+      await createFeeStructureBulk(payload);
+      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: `${entityName} with Monthly Plans` }));
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push('/fee-structures');
+      }
+    } catch (error: unknown) {
+      handleSubmitError(error);
+    }
+  };
+
+  // Main submit handler that routes to appropriate function based on payment type
+  const handleSubmit = async (values: Partial<IFeeStructure>) => {
+    const paymentType = values.paymentType;
+
+    if (paymentType === 'one_time') {
+      await handleOneTimeSubmit(values);
+    } else if (paymentType === 'installment') {
+      await handleInstallmentSubmit(values);
+    } else if (paymentType === 'monthly') {
+      await handleMonthlySubmit(values);
+    } else {
+      toast.error('Please select a valid payment type');
+    }
+  };
+
+  // Helper function to handle submit errors
+  const handleSubmitError = (error: unknown) => {
+    let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+      name: entityName,
+      defaultValue: `Failed to create ${entityName.toLowerCase()}`,
+    });
+
+    if (error && typeof error === 'object' && 'response' in error) {
+      const apiError = error as { response?: { data?: { message?: string } } };
+      if (apiError.response?.data?.message) {
+        errorMessage = apiError.response.data.message;
+      }
+    } else {
+      errorMessage = getErrorMessage(error);
+    }
+
+    toast.error(errorMessage);
+  };
+
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    } else {
+      router.back();
+    }
+  };
+
+  const saveAsDraft = () => {
+    console.log('saveAsDraft');
+  };
+
+  return (
+    <div style={{ padding: '12px', height: 'calc(100vh - 128px)', overflow: 'auto' }}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      disabled={actionStatus.status === Status.LOADING}
+    >
+      <Card title="Fee Template Configuration" style={{ marginBottom: 16 }}>
+        <>
+        <Row gutter={16}>
+        <Col span={8}>
+        <Form.Item
+        name="templateName"
+        label={t(LOCALE_KEYS.TEMPLATE_NAME)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TEMPLATE_NAME) }) }]}
+      >
+        <Input />
+      </Form.Item>
+
+        </Col>
+        <Col span={8}>
+        <Form.Item
+        name="batchId"
+        label={t(LOCALE_KEYS.BATCH)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
+      >
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
+          showSearch
+          filterOption={(input, option) =>
+            String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+          }
+          onChange={handleBatchChange}
+        >
+          {batches.map((batch) => (
+            <Select.Option key={batch.id} value={batch.id} label={batch.name}>
+              {batch.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+        </Col>
+        <Col span={8}>
+        <Form.Item
+        name="academicYear"
+        label={t(LOCALE_KEYS.ACADEMIC_YEAR)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ACADEMIC_YEAR) }) }]}
+      >
+        <Input placeholder="e.g., 2025-2026" />
+      </Form.Item>
+        </Col>
+      </Row>
+
+
+      <Row gutter={16}>
+        {/* <Col span={8}>
+        <Form.Item
+        name="semesterId"
+        label={t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
+      >
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
+          options={semesters.map((semester) => ({
+            label: semester.name,
+            value: semester.id,
+          }))}
+        />
+      </Form.Item>
+        </Col> */}
+        <Col span={8}>
+        <Form.Item
+        name="paymentType"
+        label={t(LOCALE_KEYS.PAYMENT_TYPE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PAYMENT_TYPE) }) }]}
+      >
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_PAYMENT_TYPE)}
+        >
+          <Select.Option value="one_time">{t(LOCALE_KEYS.ONE_TIME)}</Select.Option>
+          <Select.Option value="installment">{t(LOCALE_KEYS.INSTALLMENT)}</Select.Option>
+          <Select.Option value="monthly">{t(LOCALE_KEYS.MONTHLY)}</Select.Option>
+        </Select>
+      </Form.Item>
+        </Col>
+        <Col span={8}>
+        <Form.Item
+        name="totalFees"
+        label={t(LOCALE_KEYS.TOTAL_FEES)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TOTAL_FEES) }) }]}
+      >
+        <InputNumber
+          style={{ width: '100%' }}
+          min={0}
+          step={0.01}
+          placeholder="0.00"
+          formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        />
+      </Form.Item>
+        </Col>
+        <Col span={8}>
+        <Form.Item
+        name="admissionFee"
+        label={t(LOCALE_KEYS.ADMISSION_FEE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADMISSION_FEE) }) }]}
+      >
+        <InputNumber
+          style={{ width: '100%' }}
+          min={0}
+          step={0.01}
+          placeholder="0.00"
+          formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        />
+      </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col span={8}>
+        <Form.Item
+        name="discountType"
+        label={t(LOCALE_KEYS.DISCOUNT_TYPE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_TYPE) }) }]}
+      >
+        <Select placeholder={t(LOCALE_KEYS.SELECT_DISCOUNT_TYPE)}>
+          <Select.Option value="percent">{t(LOCALE_KEYS.PERCENT)}</Select.Option>
+          <Select.Option value="fixed">{t(LOCALE_KEYS.FIXED)}</Select.Option>
+          <Select.Option value="none">{t(LOCALE_KEYS.NONE)}</Select.Option>
+        </Select>
+      </Form.Item>
+        </Col>
+        <Col span={8}>
+        <Form.Item
+        name="discountAmount"
+        label={t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' })}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_AMOUNT) }) }]}
+      >
+        <InputNumber
+          style={{ width: '100%' }}
+          min={0}
+          step={0.01}
+        />
+      </Form.Item>
+        </Col>
+        <Col span={8}>
+        <Form.Item
+        name="currency"
+        label={t(LOCALE_KEYS.CURRENCY)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CURRENCY) }) }]}
+      >
+        <Select placeholder={t(LOCALE_KEYS.SELECT_CURRENCY)}>
+          <Select.Option value="SAR">SAR</Select.Option>
+          <Select.Option value="USD">USD</Select.Option>
+          <Select.Option value="EUR">EUR</Select.Option>
+          <Select.Option value="GBP">GBP</Select.Option>
+        </Select>
+      </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col span={12}>
+        <Form.Item
+        name="remarks"
+        label={t(LOCALE_KEYS.REMARKS)}
+      >
+        <Input.TextArea rows={3} />
+      </Form.Item>
+        </Col>
+        <Col span={12}>
+        <Form.Item
+        name="status"
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+      >
+        <Select placeholder={t(LOCALE_KEYS.SELECT_STATUS)}>
+          <Select.Option value="active">{t('active')}</Select.Option>
+          <Select.Option value="inactive">{t('inactive')}</Select.Option>
+          {/* <Select.Option value="draft">{t('draft')}</Select.Option> */}
+        </Select>
+      </Form.Item>
+        </Col>
+      </Row>
+        </>
+      </Card>
+
+
+
+
+
+      {/* Installment Payment Details Section - Only show when batch is selected AND payment type is installment */}
+      {selectedBatch && currentPaymentType === 'installment' && (
+        <Card
+          title="Fee Structure Details (Installment)"
+          style={{ marginBottom: 16 }}
+        >
+          {/* Show helpful note when no semesters exist */}
+          {semesters.length === 0 && (
+            <div style={{
+              padding: '12px 16px',
+              marginBottom: '16px',
+              borderRadius: '6px',
+              border: '1px solid #ffd591',
+              fontSize: '13px'
+            }}>
+              <p style={{ color: '#d46b08', margin: 0 }}>
+                <strong>Note:</strong> This batch is configured for {selectedBatch.course?.durationInSemesters || 0} semesters, but no semester records exist yet. You'll need to create the semester records first to generate fee structure rows.
+              </p>
+            </div>
+          )}
+
+          {/* Show warning when some semesters are missing */}
+          {semesters.length > 0 && semesters.length < selectedBatch.course?.durationInSemesters && (
+            <div style={{
+              padding: '12px 16px',
+              marginBottom: '16px',
+              borderRadius: '6px',
+              border: '1px solid #ffccc7',
+              fontSize: '13px'
+            }}>
+              <p style={{ color: '#cf1322', margin: 0, marginBottom: '8px' }}>
+                <strong>⚠️ Warning:</strong> This batch is configured for {selectedBatch.course?.durationInSemesters || 0} semesters, but only {semesters.length} semester records were found.
+              </p>
+              <p style={{ color: '#434343', margin: 0, marginBottom: '8px', fontSize: '12px' }}>
+                <strong>Missing semesters:</strong> {getMissingSemesterNumbers()}
+              </p>
+              <p style={{ color: '#666', margin: 0, fontSize: '12px' }}>
+                You can proceed with the available semesters, but consider creating the missing ones for a complete fee structure.
+              </p>
+              <div style={{ marginTop: '8px' }}>
+                <Button
+                  type="primary"
+                  danger
+                  size="small"
+                  onClick={() => {
+                    if (selectedBatch) {
+                      sessionStorage.setItem('batchForSemesterCreation', JSON.stringify({
+                        batchId: selectedBatch.id,
+                        batchName: selectedBatch.name,
+                        courseName: selectedBatch.course?.name,
+                        durationInSemesters: selectedBatch.course?.durationInSemesters,
+                        missingSemesters: getMissingSemesterNumbers()
+                      }));
+                    }
+                    router.push('/semesters/create');
+                  }}
+                  style={{ marginRight: '8px' }}
+                >
+                  Create Missing Semesters
+                </Button>
+                <Button
+                  type="default"
+                  size="small"
+                  onClick={() => window.open('/semesters', '_blank')}
+                >
+                  View All Semesters
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Show totals summary for installment payments */}
+          {paymentRows.length > 0 && (
+            <div style={{
+              padding: '12px',
+              marginBottom: '16px',
+              borderRadius: '6px',
+              border: '1px solid #e1e4e8'
+            }}>
+              <Row gutter={16}>
+                <Col span={8}>
+                  <strong>Form Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
+                </Col>
+                <Col span={8}>
+                  <strong>Semester Sum ({paymentRows.length} semesters):</strong> {paymentRows.reduce((sum, row) => sum + row.amount, 0).toFixed(2)}
+                </Col>
+                <Col span={8}>
+                  <strong>Difference:</strong> {Math.abs((Number(totalFees || 0) - paymentRows.reduce((sum, row) => sum + row.amount, 0))).toFixed(2)}
+                </Col>
+              </Row>
+              <Row style={{ marginTop: '12px' }}>
+                <Col span={24}>
+                  <Button
+                    type="dashed"
+                    size="small"
+                    onClick={() => {
+                      const totalFeesNumber = Number(totalFees || 0);
+                      if (totalFeesNumber > 0 && paymentRows.length > 0) {
+                        const semesterCount = paymentRows.length; // Use actual number of semesters found
+                        const amountPerSemester = totalFeesNumber / semesterCount;
+
+                        setPaymentRows(prev => prev.map(row => ({
+                          ...row,
+                          amount: amountPerSemester
+                        })));
+                      }
+                    }}
+                    disabled={!totalFees || paymentRows.length === 0}
+                  >
+                    Auto-Distribute Total Fees Across {paymentRows.length} Semesters
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          )}
+
+          {listStatus.status === Status.LOADING ? (
+            <div style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
+              <p>Loading semester data...</p>
+            </div>
+          ) : semesters.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '20px', color: '#ff4d4f', borderRadius: '6px', border: '1px solid #ffccc7' }}>
+              <p style={{ color: '#cf1322', fontWeight: 500, marginBottom: '12px' }}>
+                ⚠️ No semesters found for this batch
+              </p>
+              <p style={{ color: '#434343', marginBottom: '16px' }}>
+                This batch has {selectedBatch?.course?.durationInSemesters || 0} semesters configured, but no semester records exist.
+              </p>
+              <p style={{ color: '#666', fontSize: '12px', marginBottom: '16px' }}>
+                You need to create semester records before you can generate fee structure rows.
+              </p>
+              <Button
+                type="primary"
+                danger
+                onClick={() => {
+                  // Store the current batch info in sessionStorage for the semester creation form
+                  if (selectedBatch) {
+                    sessionStorage.setItem('batchForSemesterCreation', JSON.stringify({
+                      batchId: selectedBatch.id,
+                      batchName: selectedBatch.name,
+                      courseName: selectedBatch.course?.name,
+                      durationInSemesters: selectedBatch.course?.durationInSemesters
+                    }));
+                  }
+                  router.push('/semesters/create');
+                }}
+                style={{ marginRight: '8px' }}
+              >
+                Create Semesters
+              </Button>
+              <Button
+                type="default"
+                onClick={() => window.open('/semesters', '_blank')}
+              >
+                View All Semesters
+              </Button>
+            </div>
+          ) : paymentRows.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
+              <p>Select a batch to automatically generate fee structure rows for each semester</p>
+              <p style={{ fontSize: '12px', marginTop: '8px' }}>
+                Each row represents a fee structure for a specific semester
+              </p>
+            </div>
+          ) : (
+            <>
+              <div style={{
+                padding: '8px 12px',
+                marginBottom: '16px',
+                borderRadius: '4px',
+                border: '1px solid #91d5ff',
+                fontSize: '12px'
+              }}>
+                💡 <strong>Tip:</strong> Enter the total fees above, then use the "Auto-Distribute" button to evenly split the amount across all semesters. You can also manually adjust individual semester amounts.
+              </div>
+              <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Semester</th>
+                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Sequence No</th>
+                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Payment Label</th>
+                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Duration (Months)</th>
+                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Amount</th>
+                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Discount Amount</th>
+                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Due Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paymentRows.map((row) => (
+                    <tr key={row.id}>
+                      <td style={{ padding: '12px' }}>
+                        <Select
+                          style={{ width: '100%' }}
+                          placeholder="Select Semester"
+                          disabled={true}
+                          value={row.semester}
+                          onChange={(value) => updatePaymentRow(row.id, 'semester', value)}
+                          options={semesterOptions}
+                        />
+                      </td>
+                      <td style={{ padding: '12px' }}>
+                        <Input
+                          value={row.sequenceNo}
+                          disabled
+                          style={{ textAlign: 'center' }}
+                        />
+                      </td>
+                      <td style={{ padding: '12px' }}>
+                        <Input
+                          placeholder="e.g., Tuition Fee"
+                          value={row.paymentLabel}
+                          onChange={(e) => updatePaymentRow(row.id, 'paymentLabel', e.target.value)}
+                        />
+                      </td>
+                      <td style={{ padding: '12px' }}>
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          min={1}
+                          value={row.durationMonths}
+                          onChange={(value) => updatePaymentRow(row.id, 'durationMonths', value)}
+                        />
+                      </td>
+                      <td style={{ padding: '12px' }}>
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          min={0}
+                          step={0.01}
+                          placeholder="0.00"
+                          value={row.amount}
+                          onChange={(value) => updatePaymentRow(row.id, 'amount', value)}
+                          formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        />
+                      </td>
+                      <td style={{ padding: '12px' }}>
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          min={0}
+                          step={0.01}
+                          placeholder="0.00"
+                          value={row.discountAmount}
+                          onChange={(value) => updatePaymentRow(row.id, 'discountAmount', value)}
+                          formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        />
+                      </td>
+                      <td style={{ padding: '12px' }}>
+                        <DatePicker
+                          style={{ width: '100%' }}
+                          placeholder="mm/dd/yyyy"
+                          value={row.dueDate}
+                          onChange={(date) => updatePaymentRow(row.id, 'dueDate', date)}
+                          status={!row.dueDate ? 'error' : undefined}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            </>
+          )}
+        </Card>
+      )}
+
+      {/* Monthly Payment Details Section - Only show when batch is selected AND payment type is monthly */}
+      {selectedBatch && currentPaymentType === 'monthly' && (
+        <Card
+          title="Monthly Payment Details"
+          style={{ marginBottom: 16 }}
+        >
+          {/* Show helpful note when no semesters exist */}
+          {semesters.length === 0 && (
+            <div style={{
+              padding: '12px 16px',
+              marginBottom: '16px',
+              borderRadius: '6px',
+              border: '1px solid #ffd591',
+              fontSize: '13px'
+            }}>
+              <p style={{ color: '#d46b08', margin: 0 }}>
+                                <strong>Note:</strong> This batch is configured for {selectedBatch.course?.durationInSemesters || 0} semesters, but no semester records exist yet. You'll need to create the semester records first to generate monthly payment rows.
+              </p>
+            </div>
+          )}
+
+          {/* Show warning when some semesters are missing */}
+          {semesters.length > 0 && semesters.length < selectedBatch.course?.durationInSemesters && (
+            <div style={{
+              padding: '12px 16px',
+              marginBottom: '16px',
+              borderRadius: '6px',
+              border: '1px solid #ffccc7',
+              fontSize: '13px'
+            }}>
+              <p style={{ color: '#cf1322', margin: 0, marginBottom: '8px' }}>
+                <strong>⚠️ Warning:</strong> This batch is configured for {selectedBatch.course?.durationInSemesters || 0} semesters, but only {semesters.length} semester records were found.
+              </p>
+              <p style={{ color: '#434343', margin: 0, marginBottom: '8px', fontSize: '12px' }}>
+                <strong>Missing semesters:</strong> {getMissingSemesterNumbers()}
+              </p>
+              <p style={{ color: '#666', margin: 0, fontSize: '12px' }}>
+                You can proceed with the available semesters, but consider creating the missing ones for a complete fee structure.
+              </p>
+              <div style={{ marginTop: '8px' }}>
+                <Button
+                  type="primary"
+                  danger
+                  size="small"
+                  onClick={() => {
+                    if (selectedBatch) {
+                      sessionStorage.setItem('batchForSemesterCreation', JSON.stringify({
+                        batchId: selectedBatch.id,
+                        batchName: selectedBatch.name,
+                        courseName: selectedBatch.course?.name,
+                        durationInSemesters: selectedBatch.course?.durationInSemesters,
+                        missingSemesters: getMissingSemesterNumbers()
+                      }));
+                    }
+                    router.push('/semesters/create');
+                  }}
+                  style={{ marginRight: '8px' }}
+                >
+                  Create Missing Semesters
+                </Button>
+                <Button
+                  type="default"
+                  size="small"
+                  onClick={() => window.open('/semesters', '_blank')}
+                >
+                  View All Semesters
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Show monthly totals summary for monthly payments */}
+          {currentPaymentType === 'monthly' && monthlyPaymentRows.length > 0 && (
+            <div style={{
+              padding: '12px',
+              marginBottom: '16px',
+              borderRadius: '6px',
+              border: '1px solid #e1e4e8'
+            }}>
+              <Row gutter={16}>
+                <Col span={6}>
+                  <strong>Form Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
+                </Col>
+                <Col span={6}>
+                  <strong>Monthly Sum:</strong> {monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0).toFixed(2)}
+                </Col>
+                <Col span={6}>
+                  <strong>Difference:</strong> {Math.abs((Number(totalFees || 0) - monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0))).toFixed(2)}
+                </Col>
+                <Col span={6}>
+                  <strong>Semesters:</strong> {(() => {
+                    const uniqueSemesters = [...new Set(monthlyPaymentRows.map(row => row.semesterName))];
+                    return uniqueSemesters.length;
+                  })()} ({(() => {
+                    const uniqueSemesters = [...new Set(monthlyPaymentRows.map(row => row.semesterName))];
+                    return uniqueSemesters.join(', ');
+                  })()})
+                </Col>
+              </Row>
+              <Row style={{ marginTop: '12px' }}>
+                <Col span={24}>
+                  <Button
+                    type="dashed"
+                    size="small"
+                    onClick={() => {
+                      const totalFeesNumber = Number(totalFees || 0);
+                      if (totalFeesNumber > 0 && monthlyPaymentRows.length > 0) {
+                        const amountPerMonth = totalFeesNumber / monthlyPaymentRows.length;
+
+                        setMonthlyPaymentRows(prev => prev.map(row => ({
+                          ...row,
+                          amount: amountPerMonth
+                        })));
+                      }
+                    }}
+                    disabled={!totalFees || monthlyPaymentRows.length === 0}
+                  >
+                    Auto-Distribute Total Fees Across {monthlyPaymentRows.length} Months
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          )}
+
+          {listStatus.status === Status.LOADING ? (
+            <div style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
+              <p>Loading semester data...</p>
+            </div>
+          ) : semesters.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '20px', color: '#ff4d4f', borderRadius: '6px', border: '1px solid #ffccc7' }}>
+              <p style={{ color: '#cf1322', fontWeight: 500, marginBottom: '12px' }}>
+                ⚠️ No semesters found for this batch
+              </p>
+              <p style={{ color: '#434343', marginBottom: '16px' }}>
+                This batch has {selectedBatch?.course?.durationInSemesters || 0} semesters configured, but no semester records exist.
+              </p>
+                            <p style={{ color: '#666', fontSize: '12px', marginBottom: '16px' }}>
+                You need to create semester records before you can generate monthly payment rows.
+              </p>
+              <Button
+                type="primary"
+                danger
+                onClick={() => {
+                  // Store the current batch info in sessionStorage for the semester creation form
+                  if (selectedBatch) {
+                    sessionStorage.setItem('batchForSemesterCreation', JSON.stringify({
+                      batchId: selectedBatch.id,
+                      batchName: selectedBatch.name,
+                      courseName: selectedBatch.course?.name,
+                      durationInSemesters: selectedBatch.course?.durationInSemesters
+                    }));
+                  }
+                  router.push('/semesters/create');
+                }}
+                style={{ marginRight: '8px' }}
+              >
+                Create Semesters
+              </Button>
+              <Button
+                type="default"
+                onClick={() => window.open('/semesters', '_blank')}
+              >
+                View All Semesters
+              </Button>
+            </div>
+          ) : monthlyPaymentRows.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
+              <p>Select a batch to automatically generate monthly payment rows</p>
+              <p style={{ fontSize: '12px', marginTop: '8px' }}>
+                Each row represents a monthly payment within a semester
+              </p>
+            </div>
+          ) : (
+            <>
+              <div style={{
+                padding: '8px 12px',
+                marginBottom: '16px',
+                borderRadius: '4px',
+                border: '1px solid #91d5ff',
+                fontSize: '12px'
+              }}>
+                💡 <strong>Tip:</strong> Enter the total fees above, then use the "Auto-Distribute" button to evenly split the amount across all months. You can also manually adjust individual monthly amounts.
+              </div>
+              <div style={{ overflowX: 'auto' }}>
+                {(() => {
+                  // Group monthly payment rows by semester
+                  const groupedBySemester = monthlyPaymentRows.reduce((groups: any, row) => {
+                    const semesterName = row.semesterName;
+                    if (!groups[semesterName]) {
+                      groups[semesterName] = [];
+                    }
+                    groups[semesterName].push(row);
+                    return groups;
+                  }, {});
+
+                  return Object.entries(groupedBySemester).map(([semesterName, rows]: [string, any]) => (
+                    <div key={semesterName} style={{ marginBottom: '24px' }}>
+                      {/* Semester Header */}
+                      <div style={{
+                        padding: '12px 16px',
+                        border: '1px solid #e1e4e8',
+                        borderRadius: '6px 6px 0 0',
+                        borderBottom: 'none',
+                        fontWeight: 600,
+                        color: '#24292e',
+                        fontSize: '14px'
+                      }}>
+                        📚 {semesterName} - {rows.length} month{rows.length !== 1 ? 's' : ''}
+                      </div>
+
+                      {/* Monthly Payments Table for this Semester */}
+                      <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #e1e4e8' }}>
+                        <thead>
+                          <tr style={{ borderBottom: '1px solid #e1e4e8' }}>
+                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 600, fontSize: '13px' }}>Month</th>
+                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 600, fontSize: '13px' }}>Sequence No</th>
+                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 600, fontSize: '13px' }}>Payment Label</th>
+                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 600, fontSize: '13px' }}>Amount</th>
+                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 600, fontSize: '13px' }}>Discount Amount</th>
+                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 600, fontSize: '13px' }}>Due Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {rows.map((row: any) => (
+                            <tr key={row.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                              <td style={{ padding: '10px 12px' }}>
+                                <Input
+                                  value={row.monthName}
+                                  disabled
+                                  style={{ textAlign: 'center', border: 'none' }}
+                                />
+                              </td>
+                              <td style={{ padding: '10px 12px' }}>
+                                <Input
+                                  value={row.sequenceNo}
+                                  disabled
+                                  style={{ textAlign: 'center', border: 'none' }}
+                                />
+                              </td>
+                              <td style={{ padding: '10px 12px' }}>
+                                <Input
+                                  placeholder="e.g., Monthly Fee"
+                                  value={row.paymentLabel}
+                                  onChange={(e) => {
+                                    setMonthlyPaymentRows(prev => prev.map(r =>
+                                      r.id === row.id ? { ...r, paymentLabel: e.target.value } : r
+                                    ));
+                                  }}
+                                />
+                              </td>
+                              <td style={{ padding: '10px 12px' }}>
+                                <InputNumber
+                                  style={{ width: '100%' }}
+                                  min={0}
+                                  step={0.01}
+                                  placeholder="0.00"
+                                  value={row.amount}
+                                  onChange={(value) => {
+                                    setMonthlyPaymentRows(prev => prev.map(r =>
+                                      r.id === row.id ? { ...r, amount: value || 0 } : r
+                                    ));
+                                  }}
+                                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                />
+                              </td>
+                              <td style={{ padding: '10px 12px' }}>
+                                <InputNumber
+                                  style={{ width: '100%' }}
+                                  min={0}
+                                  step={0.01}
+                                  placeholder="0.00"
+                                  value={row.discountAmount}
+                                  onChange={(value) => {
+                                    setMonthlyPaymentRows(prev => prev.map(r =>
+                                      r.id === row.id ? { ...r, discountAmount: value || 0 } : r
+                                    ));
+                                  }}
+                                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                />
+                              </td>
+                              <td style={{ padding: '10px 12px' }}>
+                                <DatePicker
+                                  style={{ width: '100%' }}
+                                  placeholder="Select due date"
+                                  value={row.dueDate}
+                                  onChange={(date) => {
+                                    setMonthlyPaymentRows(prev => prev.map(r =>
+                                      r.id === row.id ? { ...r, dueDate: date } : r
+                                    ));
+                                  }}
+                                  status={!row.dueDate ? 'error' : undefined}
+                                />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ));
+                })()}
+              </div>
+            </>
+          )}
+        </Card>
+      )}
+
+
+
+      <Form.Item>
+        <Space>
+          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
+            {t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          </Button>
+          {/* <Button onClick={saveAsDraft} disabled={actionStatus.status === Status.LOADING}>
+            {t('draft')}
+          </Button> */}
+          <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
+            {t('cancel')}
+          </Button>
+        </Space>
+      </Form.Item>
+    </Form>
+  </div>
+  )
+};
+
+export default FeeStructureFormBulk;

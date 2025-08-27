@@ -34,28 +34,7 @@ body {
 .ant-menu-light .ant-menu-item-selected .anticon {
   color: #1677ff !important;
 }
-/* Selected box background + text */
-.ant-select-selector {
-  background-color: #1677ff !important;
-  color: #fff !important;
-  border: none !important; /* optional: cleaner look */
-}
 
-/* Selected value text inside */
-.ant-select-selection-item {
-  color: #fff !important;
-}
-
-/* Dropdown menu background */
-.ant-select-dropdown {
-  background-color: #1677ff !important;
-}
-
-/* Dropdown items */
-.ant-select-item {
-  background-color: #1677ff !important;
-  color: #fff !important;
-}
 
 /* Hover effect for items */
 .ant-select-item-option-active,
