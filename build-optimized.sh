@@ -26,9 +26,9 @@ print_error() {
 
 print_status "Starting optimized build process..."
 
-# Set memory options for Node.js and Bun
-export NODE_OPTIONS="--max-old-space-size=2048"
-export BUN_OPTIONS="--max-old-space-size=2048"
+# Set memory options for Node.js and Bun (reduced for 2GB RAM server)
+export NODE_OPTIONS="--max-old-space-size=1536"
+export BUN_OPTIONS="--max-old-space-size=1536"
 
 print_status "Memory options set:"
 print_status "  NODE_OPTIONS: $NODE_OPTIONS"

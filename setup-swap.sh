@@ -82,7 +82,24 @@ remove_existing_swap() {
 
 # Function to calculate optimal swap size
 calculate_swap_size() {
-    local total_ram=$(free -m | awk '/^Mem:/{print $2}')
+    # Get total RAM more robustly
+    local total_ram
+    
+    # Try to get RAM size from /proc/meminfo first (more reliable)
+    if [ -f /proc/meminfo ]; then
+        total_ram=$(grep '^MemTotal:' /proc/meminfo | awk '{print int($2/1024)}')
+    else
+        # Fallback to free command
+        total_ram=$(free -m | awk '/^Mem:/{print int($2)}')
+    fi
+    
+    # Validate RAM size
+    if [ -z "$total_ram" ] || [ "$total_ram" -le 0 ]; then
+        print_error "Could not determine RAM size. Using default 4GB swap."
+        echo "4096"
+        return
+    fi
+    
     local swap_size
     
     if [ $total_ram -le 2048 ]; then
@@ -224,8 +241,15 @@ main() {
     # Check current swap status
     check_swap_status
     
-    # Calculate optimal swap size
-    local swap_size=$(calculate_swap_size)
+    # Calculate optimal swap size with error handling
+    print_status "Calculating optimal swap size..."
+    local swap_size
+    if ! swap_size=$(calculate_swap_size); then
+        print_error "Failed to calculate swap size. Using default 4GB."
+        swap_size="4096"
+    fi
+    
+    print_status "Swap size calculated: ${swap_size}MB"
     
     # Create and configure swap
     create_swap_file $swap_size

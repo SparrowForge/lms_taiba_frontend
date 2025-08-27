@@ -20,8 +20,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-ENV NODE_OPTIONS="--max-old-space-size=2048"
-ENV BUN_OPTIONS="--max-old-space-size=2048"
+ENV NODE_OPTIONS="--max-old-space-size=1536"
+ENV BUN_OPTIONS="--max-old-space-size=1536"
 # Use optimized build script
 COPY build-optimized.sh ./
 RUN chmod +x build-optimized.sh
