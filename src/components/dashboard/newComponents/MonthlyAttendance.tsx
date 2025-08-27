@@ -1,4 +1,5 @@
 import { Card } from "antd";
+
 import ColumnGraph from "../dashboardui/graphs/ColumnGraph";
 
 const data = [
