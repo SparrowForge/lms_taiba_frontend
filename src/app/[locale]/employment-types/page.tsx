@@ -58,7 +58,8 @@ export default function EmploymentTypesPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadEmploymentTypes({ page: 1, limit: 10 });
   };
   const handleViewDetails = (id: number) => {

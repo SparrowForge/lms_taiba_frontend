@@ -8,7 +8,7 @@ import {useUserRoles} from '@/hooks/useUserRoles';
 
 import {IUserRole} from '@/types/userRole';
 
-import UserRoleForm from './UserRoleForm';
+import UserRoleFormSingle from './UserRoleFormSingle';
 
 interface UserRoleFormDrawerProps {
   mode: 'create' | 'edit';
@@ -72,7 +72,7 @@ const UserRoleFormDrawer: React.FC<UserRoleFormDrawerProps> = ({
       onClose={handleCancel}
       destroyOnHidden={true}
     >
-      <UserRoleForm
+      <UserRoleFormSingle
         mode={mode}
         userRoleId={userRoleId}
         initialValues={initialValues}

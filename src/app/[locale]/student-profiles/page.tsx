@@ -57,7 +57,8 @@ export default function StudentProfilesPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+    setDrawerVisible(false)
     loadStudentProfiles({ page: 1, limit: 10 });
   };
 

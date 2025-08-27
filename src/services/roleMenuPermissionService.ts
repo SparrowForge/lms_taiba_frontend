@@ -1,5 +1,10 @@
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate,} from '@/types/roleMenuPermission';
+import {
+    IRoleMenuPermission,
+    IRoleMenuPermissionCreate,
+    IRoleMenuPermissionUpdate,
+    IRoleWithMenuPermission
+} from '@/types/roleMenuPermission';
 
 import {api} from '@/lib/axios';
 
@@ -46,6 +51,29 @@ export const roleMenuPermissionService = {
   // Delete a role menu permission
   deleteRoleMenuPermission: async (id: number): Promise<void> => {
     const response = await api.delete(`/role-menu-permissions/${id}`);
+    return response.data;
+  },
+
+  // Get all roles with their menu permissions
+  getRolesWithPermissions: async (): Promise<IBaseResponse<IRoleWithMenuPermission[]>> => {
+    const response = await api.get<IBaseResponse<IRoleWithMenuPermission[]>>(
+      '/role-menu-permissions/roles-with-permissions',
+    );
+    return response.data;
+  },
+
+  // Bulk update role menu permissions (replace all permissions for a role)
+  bulkUpdateRoleMenuPermissions: async (data: {
+    roleId: number;
+    permissions: Array<{
+      menuId: number;
+      view: boolean;
+      insert: boolean;
+      update: boolean;
+      delete: boolean;
+    }>;
+  }): Promise<IBaseResponse<any>> => {
+    const response = await api.post<IBaseResponse<any>>('/role-menu-permissions/bulk', data);
     return response.data;
   },
 };

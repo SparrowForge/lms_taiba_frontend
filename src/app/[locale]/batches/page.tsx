@@ -59,7 +59,8 @@ export default function BatchesPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadBatches({ page: 1, limit: 10 });
   };
 

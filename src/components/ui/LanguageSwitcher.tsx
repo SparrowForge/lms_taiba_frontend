@@ -48,7 +48,7 @@ export const LanguageSwitcher: React.FC = React.memo(() => {
   return (
     <Dropdown menu={{ items: languageItems }} placement="bottomRight" trigger={['click']}>
       <Button
-        type="text"
+        type="primary"
         icon={<GlobalOutlined />}
         className="flex items-center gap-2"
         style={buttonStyle}

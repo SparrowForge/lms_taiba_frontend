@@ -58,7 +58,8 @@ export default function CourseTypesPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadCourseTypes({ page: 1, limit: 10 });
   };
   const handleViewDetails = (id: number) => {

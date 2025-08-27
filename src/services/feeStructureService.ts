@@ -1,5 +1,5 @@
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IFeeStructure, IFeeStructureCreate, IFeeStructureUpdate} from '@/types/feeStructure';
+import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate, IFeeStructureUpdate} from '@/types/feeStructure';
 
 import {api} from '@/lib/axios';
 
@@ -16,6 +16,12 @@ export const feeStructureService = {
 
   createFeeStructure: async (data: IFeeStructureCreate): Promise<IFeeStructure> => {
     const response = await api.post<IFeeStructure>('/fee-structures', data);
+    return response.data;
+  },
+
+  // Create fee structure with installment plans in bulk
+  createFeeStructureBulk: async (data: IFeeStructureBulkCreate): Promise<IFeeStructure> => {
+    const response = await api.post<IFeeStructure>('/fee-structures/bulk', data);
     return response.data;
   },
 

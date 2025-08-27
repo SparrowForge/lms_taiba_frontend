@@ -1,29 +1,31 @@
 'use client';
 
+import { styleText } from 'util';
+
 import * as Icons from '@ant-design/icons';
 import {
-  BellOutlined,
-  DashOutlined,
-  LeftOutlined,
-  LogoutOutlined,
-  RightOutlined,
-  SettingOutlined,
-  SignatureOutlined,
-  UserOutlined,
+    BellOutlined,
+    DashOutlined,
+    LeftOutlined,
+    LogoutOutlined,
+    RightOutlined,
+    SettingOutlined,
+    SignatureOutlined,
+    UserOutlined
 } from '@ant-design/icons';
-import {Avatar, Button, Divider, Dropdown, Layout, Menu, MenuProps, Select, Spin, Typography,} from 'antd';
-import {usePathname, useRouter} from 'next/navigation';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import { Avatar, Button, Layout, Menu, MenuProps, Select, Spin, Typography, } from 'antd';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useAuth} from '@/hooks/useAuth';
-import {useBranches} from '@/hooks/useBranches'; // ✅ ADD
-import {useLocalization} from '@/hooks/useLocalization';
-import {useMenus} from '@/hooks/useMenus';
+import { useAuth } from '@/hooks/useAuth';
+import { useBranches } from '@/hooks/useBranches'; // ✅ ADD
+import { useLocalization } from '@/hooks/useLocalization';
+import { useMenus } from '@/hooks/useMenus';
 
-import {Status} from '@/types/common';
-import {IMenu} from '@/types/menu';
+import { Status } from '@/types/common';
+import { IMenu } from '@/types/menu';
 
 
 const { Sider } = Layout;
@@ -43,16 +45,16 @@ interface SidebarProps {
 
 // eslint-disable-next-line react/display-name
 export const Sidebar2 = React.memo(({
-    collapsed,
-    onCollapse,
-    openKeys,
-    selectedKeys,
-    setSelectedKeys,
-    scrollTop,
-    setScrollTop,
-    handleOpenChange,
-    currentPath,
-  }: SidebarProps) => {
+  collapsed,
+  onCollapse,
+  openKeys,
+  selectedKeys,
+  setSelectedKeys,
+  scrollTop,
+  setScrollTop,
+  handleOpenChange,
+  currentPath,
+}: SidebarProps) => {
   const { t } = useLocalization();
   const { user, logout, getUserFullName } = useAuth();
   const { myMenus, myMenusStatus, loadMyMenus } = useMenus();
@@ -70,6 +72,26 @@ export const Sidebar2 = React.memo(({
   } = useBranches();
 
   const [showBranchSelect, setShowBranchSelect] = useState(false);
+  const [userManuallyChangedMenu, setUserManuallyChangedMenu] = useState(false);
+
+  // Helper function to find parent key for a child menu
+  const findParentKeyForChild = useCallback((childKey: string, items: any[]): string | null => {
+    for (const item of items || []) {
+      if (item?.children) {
+        // Check if any child matches the clicked key
+        const hasChild = item.children.some((child: any) => child.key === childKey);
+        if (hasChild) {
+          return item.key;
+        }
+        // Recursively check nested children
+        const nestedParent = findParentKeyForChild(childKey, item.children);
+        if (nestedParent) {
+          return nestedParent;
+        }
+      }
+    }
+    return null;
+  }, []);
 
 
 
@@ -97,10 +119,10 @@ export const Sidebar2 = React.memo(({
 
   //icon
   const getAntIcon = (iconName?: string) => {
-  if (!iconName) return null;
-  const IconComponent = (Icons as any)[iconName];
-  return IconComponent ? <IconComponent /> : null;
-};
+    if (!iconName) return null;
+    const IconComponent = (Icons as any)[iconName];
+    return IconComponent ? <IconComponent /> : null;
+  };
 
   // ✅ Branch change handler
   const handleBranchChange = useCallback(
@@ -112,28 +134,36 @@ export const Sidebar2 = React.memo(({
   );
 
   // Transform API menus into Ant Design Menu items
- const transformMenus = useCallback(
-  (menus: IMenu[]): MenuProps['items'] => {
-    return menus.map((menu) => {
-      const hasChildren = menu.children && menu.children.length > 0;
-      const key = hasChildren
-        ? `parent-${menu.id}`
-        : menu.route?.startsWith('/')
-        ? menu.route
-        : `/${menu.route}`;
+  const transformMenus = useCallback(
+    (menus: IMenu[]): MenuProps['items'] => {
+      return menus.map((menu) => {
+        const hasChildren = menu.children && menu.children.length > 0;
 
+        // Generate proper key for menu items
+        let key: string;
+        if (hasChildren) {
+          // Parent menu items get a special key
+          key = `parent-${menu.id}`;
+        } else {
+          // Child menu items get their route as key
+          if (menu.route) {
+            key = menu.route.startsWith('/') ? menu.route : `/${menu.route}`;
+          } else {
+            // Fallback to ID if no route
+            key = `menu-${menu.id}`;
+          }
+        }
 
-
-      return {
-        key,
-        icon: getAntIcon(menu.icon),
-        label: locale === 'ar' ? menu.localName : menu.name,
-        children: hasChildren ? transformMenus(menu.children) : undefined,
-      };
-    });
-  },
-  [locale]
-);
+        return {
+          key,
+          icon: getAntIcon(menu.icon),
+          label: locale === 'ar' ? menu.localName : menu.name,
+          children: hasChildren ? transformMenus(menu.children) : undefined,
+        };
+      });
+    },
+    [locale]
+  );
 
 
   const menuItems = useMemo(() => transformMenus(myMenus || []), [myMenus, transformMenus]);
@@ -150,16 +180,39 @@ export const Sidebar2 = React.memo(({
       routeWithoutLocale = '/' + pathParts.slice(2).join('/');
     }
 
+    // Handle root path
+    if (routeWithoutLocale === '/' || routeWithoutLocale === `/${locale}`) {
+      routeWithoutLocale = '/';
+    }
+
+    // Reset manual interaction flag when route changes
+    setUserManuallyChangedMenu(false);
+
     // Find the menu item that matches the current route and its parent
     const findSelectedKeyAndParent = (items: any[]): { selectedKey: string[], parentKey: string | null } => {
       for (const item of items || []) {
-        // Check exact match
+        // Skip parent menu items (they don't have routes)
+        if (item?.key?.startsWith('parent-')) {
+          // Check children of parent items
+          if (item?.children) {
+            const childResult = findSelectedKeyAndParent(item.children);
+            if (childResult.selectedKey.length > 0) {
+              return {
+                selectedKey: childResult.selectedKey,
+                parentKey: item.key
+              };
+            }
+          }
+          continue;
+        }
+
+        // Check exact match for non-parent items
         if (item?.key === routeWithoutLocale) {
           return { selectedKey: [item.key], parentKey: null };
         }
 
-        // Check if route starts with menu key (for nested routes)
-        if (item?.key && routeWithoutLocale.startsWith(item.key)) {
+        // Check if route starts with menu key (for nested routes like /users/123)
+        if (item?.key && routeWithoutLocale.startsWith(item.key + '/')) {
           return { selectedKey: [item.key], parentKey: null };
         }
 
@@ -167,7 +220,6 @@ export const Sidebar2 = React.memo(({
         if (item?.children) {
           const childResult = findSelectedKeyAndParent(item.children);
           if (childResult.selectedKey.length > 0) {
-            // If we found a match in children, this item is the parent
             return {
               selectedKey: childResult.selectedKey,
               parentKey: item.key
@@ -178,29 +230,38 @@ export const Sidebar2 = React.memo(({
       return { selectedKey: [], parentKey: null };
     };
 
-        const { selectedKey } = findSelectedKeyAndParent(menuItems || []);
+    const { selectedKey, parentKey } = findSelectedKeyAndParent(menuItems || []);
 
-    // Only update selected keys (don't auto-expand sections)
-    setSelectedKeys(selectedKey);
-  }, [pathname, menuItems, setSelectedKeys, locale]);
+    // Create final selected keys array - include parent if submenu is selected
+    const finalSelectedKeys = [...selectedKey];
+    if (parentKey) {
+      // Add parent key to selected keys for highlighting
+      finalSelectedKeys.push(parentKey);
+    }
+
+    // Update selected keys
+    setSelectedKeys(finalSelectedKeys);
+
+    // Auto-expand parent menu if a child is selected, but only if user hasn't manually changed menu and sidebar is not collapsed
+    if (parentKey && !openKeys.includes(parentKey) && !userManuallyChangedMenu && !collapsed) {
+      handleOpenChange([parentKey]);
+    }
+  }, [pathname, menuItems, setSelectedKeys, locale, openKeys, handleOpenChange, userManuallyChangedMenu]);
 
   // Local handleOpenChange for manual menu expansion
   const handleLocalOpenChange = useCallback((keys: string[]) => {
-    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+    // Mark that user has manually interacted with the menu
+    setUserManuallyChangedMenu(true);
 
-    if (latestOpenKey) {
-      // Close all other sections and open only the clicked one
-      handleOpenChange([latestOpenKey]);
-    } else {
-      // If closing a section, keep it closed
-      handleOpenChange([]);
-    }
-  }, [openKeys, handleOpenChange]);
+    // Simple behavior: just pass the keys directly, allow multiple menus to be open
+    handleOpenChange(keys);
+  }, [handleOpenChange]);
 
 
   const handleMenuClick = useCallback(
     ({ key }: { key: string }) => {
-      if (key && !key.startsWith('parent-') && key !== currentPath) {
+      // Only navigate if it's not a parent menu item and not already on the same path
+      if (key && !key.startsWith('parent-') && !key.startsWith('menu-') && key !== currentPath) {
         router.push(key);
       }
     },
@@ -210,59 +271,59 @@ export const Sidebar2 = React.memo(({
   // ✅ USER PROFILE with Branch dropdown
   const userProfileSection = useMemo(
     () => (
-   <div className="p-4 border-b border-gray-100">
-  <div className="flex items-center space-x-3">
-    <Avatar
-      size={collapsed ? 22 : 40}
-      icon={<UserOutlined />}
-      className="bg-gradient-to-r from-blue-500 to-purple-600 "
-    />
-    {!collapsed && (
-      <div className="flex-1 min-w-0">
-        <Text strong className="block text-sm truncate text-gray-900">
-          {getUserFullName()}
-        </Text>
-        <Text type="secondary" className="text-xs truncate">
-          {user?.email}
-        </Text>
-        <div className="flex items-center mt-1">
-          <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-          <Text className="text-xs text-green-600">Online</Text>
+      <div className="p-4 border-b border-gray-100">
+        <div className={`flex ${collapsed ? "flex-col gap-2" : "flex-row"}  items-center space-x-3`}>
+          <Avatar
+            size={collapsed ? 22 : 40}
+            icon={<UserOutlined />}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 "
+          />
+          {!collapsed && (
+            <div className="flex-1 min-w-0 text-white">
+              <Text strong className="block text-sm truncate text-white">
+                {getUserFullName()}
+              </Text>
+              <Text type="secondary" className="text-xs truncate text-white">
+                {user?.email}
+              </Text>
+              <div className="flex items-center mt-1 ml-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                <Text className="text-xs" style={{ color: "#ffffff" }}>Online</Text>
+              </div>
+            </div>
+          )}
+          <DashOutlined
+            onClick={() => setShowBranchSelect((prev) => !prev)}
+            className="cursor-pointer bg-blue-500 p-[2px] rounded-md  text-lg"
+
+          />
         </div>
+
+        {/* ✅ Separate row for branch select */}
+        {showBranchSelect && (
+          <div className="mt-3">
+            <Select
+              size="small"
+              className="w-full bg-[#92c4fc]"
+              placeholder={t(LOCALE_KEYS.SELECT_BRANCH)}
+              value={selectedBranch?.id}
+              loading={branchListStatus.status === Status.LOADING}
+              showSearch
+              optionFilterProp="label"
+              onChange={(val) => handleBranchChange(Number(val))}
+              onDropdownVisibleChange={(open) => {
+                if (open && (!branches || branches.length === 0)) {
+                  loadBranches({ page: 1, limit: 100 });
+                }
+              }}
+              options={(branches || []).map((b) => ({
+                value: b.id,
+                label: locale === 'ar' ? b.localName ?? b.name : b.name,
+              }))}
+            />
+          </div>
+        )}
       </div>
-    )}
-    <DashOutlined
-      onClick={() => setShowBranchSelect((prev) => !prev)}
-      className="cursor-pointer bg-gray-50 p-[2px] rounded-md  text-lg"
-
-    />
-  </div>
-
-  {/* ✅ Separate row for branch select */}
-  {showBranchSelect && (
-    <div className="mt-3">
-      <Select
-        size="small"
-        className="w-full"
-        placeholder={t(LOCALE_KEYS.SELECT_BRANCH)}
-        value={selectedBranch?.id}
-        loading={branchListStatus.status === Status.LOADING}
-        showSearch
-        optionFilterProp="label"
-        onChange={(val) => handleBranchChange(Number(val))}
-        onDropdownVisibleChange={(open) => {
-          if (open && (!branches || branches.length === 0)) {
-            loadBranches({ page: 1, limit: 100 });
-          }
-        }}
-        options={(branches || []).map((b) => ({
-          value: b.id,
-          label: locale === 'ar' ? b.localName ?? b.name : b.name,
-        }))}
-      />
-    </div>
-  )}
-</div>
 
     ),
     [
@@ -307,36 +368,43 @@ export const Sidebar2 = React.memo(({
   const settingsMenuItems = useMemo(
     () => [
       {
-        key: 'notification',
-        icon: <BellOutlined />,
-        label: collapsed ? '' : t(LOCALE_KEYS.NOTIFICATION),
-        onClick: () => router.push('/notifications'),
-      },
-      {
         key: 'settings',
         icon: <SettingOutlined />,
-        label: (
-          <Dropdown
-            menu={{ items: settingsMenuItemsDropdown }}
-            trigger={['click']}
-            placement="topRight"
-          >
-            <span className="cursor-pointer">{collapsed ? '' : t(LOCALE_KEYS.SETTINGS)}</span>
-          </Dropdown>
-        ),
-      },
+        label: collapsed ? null : t(LOCALE_KEYS.SETTINGS),
+        children: settingsMenuItemsDropdown,
+      }
+
     ],
-    [collapsed, t]
+    [collapsed, t, router, settingsMenuItemsDropdown]
   );
+
+  const notificationMenuItems = useMemo(
+    () => [
+      {
+        key: 'notification',
+        icon: <BellOutlined />,
+        label: t(LOCALE_KEYS.NOTIFICATION),
+        onClick: () => router.push('/notifications'),
+        style: {
+          color: "#FFFFFF",
+        }
+      }
+    ],
+    [t, router]
+  )
+
+
 
   const logoutMenuItems = useMemo(
     () => [
       {
         key: 'logout',
         icon: <LogoutOutlined />,
-        label: collapsed ? '' : t(LOCALE_KEYS.LOGOUT),
+        label: t(LOCALE_KEYS.LOGOUT),
         onClick: handleLogout,
-        className: 'text-red-600 hover:text-red-700',
+        style: {
+          color: "#FFFFFF",
+        }
       },
     ],
     [collapsed, handleLogout, t]
@@ -346,9 +414,11 @@ export const Sidebar2 = React.memo(({
     <>
       <Sider
         collapsed={collapsed}
-        theme="light"
+        collapsedWidth={80}
+        trigger={null}
         width={280}
-        className="border-r border-gray-200 shadow-sm flex flex-col"
+        theme="light"
+        className="border-r flex flex-col "
         style={{
           overflow: 'auto',
           height: '100vh',
@@ -357,19 +427,20 @@ export const Sidebar2 = React.memo(({
           top: 0,
           bottom: 0,
           zIndex: 1000,
-          backgroundColor: '#ffffff',
+          backgroundColor: '#1F4BCA',
+          transition: '1000ms ease',
         }}
       >
         {/* Logo */}
-        <div className="p-6 border-b border-gray-100 shrink-0">
+        <div className="py-6 border-b border-gray-100 shrink-0 text-white">
           <div className="flex items-center justify-center">
             {!collapsed ? (
               <div className="text-center">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-2">
                   <span className="text-white font-bold text-lg">L</span>
                 </div>
-                <h1 className="text-xl font-bold text-gray-900 mb-1">LMS Taiba</h1>
-                <Text type="secondary" className="text-xs">
+                <h1 className="text-xl font-bold mb-1">LMS Taiba</h1>
+                <Text className="text-xs " style={{ color: '#ffffff' }}>
                   Admin Panel
                 </Text>
               </div>
@@ -380,12 +451,8 @@ export const Sidebar2 = React.memo(({
             )}
           </div>
         </div>
-
-        {/* User Profile + Branch */}
-        <div className="shrink-0">{userProfileSection}</div>
-
         {/* Side toggle (middle-right) */}
-        <div className={'absolute right-0 z-20'}>
+        <div className={`absolute  ${collapsed ? "top-40" : "top-36"} right-0 z-20`}>
           <Button
             type="primary"
             icon={collapsed ? <RightOutlined /> : <LeftOutlined />}
@@ -393,16 +460,20 @@ export const Sidebar2 = React.memo(({
             style={{
               width: 28,
               height: 28,
-              backgroundColor: '#fff',
+              backgroundColor: '#92c4fc',
               color: '#333',
               border: '1px solid #ddd',
             }}
           />
         </div>
+        {/* User Profile + Branch */}
+        <div className="shrink-0">{userProfileSection}</div>
+
+
 
         {/* Navigation Menu */}
         <div
-          className="flex-1"
+          className="flex-1 min-h-0 overflow-auto "
           style={{ overflow: 'auto' }}
           ref={(el) => {
             if (el) {
@@ -417,33 +488,79 @@ export const Sidebar2 = React.memo(({
             }
           }}
         >
-          <h1 className="pt-4 px-2 text-gray-400 uppercase">{t(LOCALE_KEYS.MAIN)}</h1>
+          <h1 className="pt-4 px-4 text-gray-400 uppercase text-xs tracking-wider">{t(LOCALE_KEYS.MAIN)}</h1>
           {myMenusStatus.status === Status.LOADING ? (
             <div className="flex justify-center items-center p-4">
               <Spin />
             </div>
           ) : (
             <Menu
-              mode="inline"
+              mode={collapsed ? "vertical" : "inline"}
               selectedKeys={selectedKeys}
               openKeys={openKeys}
               onOpenChange={handleLocalOpenChange}
               items={menuItems}
               onClick={handleMenuClick}
+              style={{
+                backgroundColor: "transparent",
+                color: "#ffffff"
+              }}
             />
           )}
         </div>
 
         {/* Settings & Logout */}
         <div className="py-4 border-t border-gray-100 shrink-0">
-          <h1 className="pl-1 text-gray-500 uppercase text-xs tracking-wider mb-2">
+          <h1 className={`${collapsed
+            ? (locale === "ar" ? "px-4" : "px-2")
+            : "pl-4"
+            } text-gray-400 uppercase text-xs tracking-wider mb-2`}>
             {t(LOCALE_KEYS.SETTINGS)}
           </h1>
-          <Menu mode="inline" items={settingsMenuItems} className="border-0" style={{ backgroundColor: 'transparent' }} />
-          <Divider />
-          <Menu mode="inline" items={logoutMenuItems} className="border-0 mt-2" style={{ backgroundColor: 'transparent' }} />
+          <Menu mode="inline" items={notificationMenuItems} className="text-white" style={{ backgroundColor: 'transparent', color: "#ffffff" }} />
+          <Menu mode="vertical" items={settingsMenuItems} className="text-white" style={{ backgroundColor: 'transparent', color: "#ffffff", paddingLeft: collapsed ? "0px" : "10px" }} />
+          <Menu mode="inline" items={logoutMenuItems} className="text-white" style={{ backgroundColor: 'transparent', color: "#ffffff" }} />
         </div>
       </Sider>
+      <style jsx global>{`
+        aside::-webkit-scrollbar {
+          width: 4px;
+        }
+        aside::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        aside::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.2);
+          border-radius: 3px;
+        }
+
+        .ant-menu-item,
+        .ant-menu-submenu-title {
+        color: #ffffff !important;
+        }
+        .ant-menu-item-selected {
+        background-color: #163a99 !important; /* darker shade */
+        color: #ffffff !important;
+        }
+        
+        /* Highlight parent submenu when child is selected */
+        .ant-menu-submenu.ant-menu-item-selected > .ant-menu-submenu-title {
+        background-color: #163a99 !important;
+        color: #ffffff !important;
+        }
+        
+        /* Alternative: highlight parent when it contains selected child */
+        .ant-menu-submenu:has(.ant-menu-item-selected) > .ant-menu-submenu-title {
+        background-color: #163a99 !important;
+        color: #ffffff !important;
+        }
+        
+        /* Highlight selected submenu titles in collapsed state */
+        .ant-layout-sider-collapsed .ant-menu-submenu-selected > .ant-menu-submenu-title {
+        background-color: #163a99 !important;
+        color: #ffffff !important;
+        }
+      `}</style>
     </>
   );
 });
