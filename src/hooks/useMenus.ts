@@ -6,6 +6,7 @@ import {RootState} from '@/store';
 
 import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
+import {IPanelWithMenus} from '@/types/panel';
 
 import {menuService} from '@/services/menuService';
 
@@ -21,13 +22,15 @@ import {
     setMyMenus,
     setMyMenusStatus,
     setPagination,
+    setPanelsWithMenus,
+    setPanelsWithMenusStatus,
     setSelectedMenu,
     updateMenu,
 } from '@/store/slices/menuSlice';
 
 export const useMenus = () => {
   const dispatch = useDispatch();
-  const { menus, selectedMenu, listStatus, detailsStatus, actionStatus, pagination , myMenus,myMenusStatus } = useSelector(
+  const { menus, selectedMenu, listStatus, detailsStatus, actionStatus, pagination , myMenus,myMenusStatus, panelsWithMenus, panelsWithMenusStatus } = useSelector(
     (state: RootState) => state.menus,
   );
   // my menu
@@ -48,6 +51,35 @@ export const useMenus = () => {
     },
     [dispatch],
   );
+
+  // Load panels with menus
+  const loadPanelsWithMenus = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setPanelsWithMenusStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IPanelWithMenus[]> = await menuService.getPanelsWithMenus(params);
+
+        // Sort panels by menu count (descending - most menus first)
+        const sortedPanels = (response?.data ?? []).sort((a, b) => {
+          const aMenuCount = a.menus?.length || 0;
+          const bMenuCount = b.menus?.length || 0;
+          return bMenuCount - aMenuCount;
+        });
+
+        dispatch(setPanelsWithMenus(sortedPanels));
+        dispatch(setPanelsWithMenusStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load panels with menus'
+            : 'Failed to load panels with menus';
+        dispatch(setPanelsWithMenusStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
+
 
   // Load menus with pagination and search
   const loadMenus = useCallback(
@@ -194,6 +226,8 @@ export const useMenus = () => {
     pagination,
     myMenus, //my menu
     myMenusStatus,
+    panelsWithMenus,
+    panelsWithMenusStatus,
 
     // Actions
     loadMenus,
@@ -206,5 +240,6 @@ export const useMenus = () => {
     clearDetails,
     setSelected,
     loadMyMenus, //my menu
+    loadPanelsWithMenus,
   };
 };

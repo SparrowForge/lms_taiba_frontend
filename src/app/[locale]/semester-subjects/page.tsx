@@ -62,7 +62,8 @@ export default function SemesterSubjectsPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+    setDrawerVisible(false)
     loadSemesterSubjects({ page: 1, limit: 10 });
   };
 

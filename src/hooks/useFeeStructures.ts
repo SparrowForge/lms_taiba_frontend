@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
-import {IFeeStructure, IFeeStructureCreate, IFeeStructureUpdate} from '@/types/feeStructure';
+import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate, IFeeStructureUpdate} from '@/types/feeStructure';
 
 import {feeStructureService} from '@/services/feeStructureService';
 
@@ -98,6 +98,27 @@ export const useFeeStructures = () => {
     [dispatch],
   );
 
+  const createFeeStructureBulk = useCallback(
+    async (data: IFeeStructureBulkCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IFeeStructure = await feeStructureService.createFeeStructureBulk(data);
+        dispatch(addFeeStructure(response));
+        dispatch(
+          setActionStatus({ status: Status.SUCCESS, message: 'Fee structure with installment plans created successfully' }),
+        );
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to create fee structure with installment plans'
+            : 'Failed to create fee structure with installment plans';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   const editFeeStructure = useCallback(
     async (id: number, data: IFeeStructureUpdate) => {
       try {
@@ -182,6 +203,7 @@ export const useFeeStructures = () => {
     loadFeeStructures,
     loadFeeStructure,
     createFeeStructure,
+    createFeeStructureBulk,
     editFeeStructure,
     removeFeeStructure,
     getFeeStructureById,

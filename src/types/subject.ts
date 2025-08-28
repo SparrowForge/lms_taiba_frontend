@@ -5,7 +5,7 @@ export interface ISubject {
   courseId: number;
   name: string;
   code: string;
-  creditHours: string;
+  creditHours: number;
   theoryHours: number;
   practicalHours: number;
   description: string;
@@ -22,7 +22,7 @@ export interface ISubjectCreate {
   courseId: number;
   name: string;
   code: string;
-  creditHours: string;
+  creditHours: number;
   theoryHours: number;
   practicalHours: number;
   description: string;
@@ -35,7 +35,7 @@ export interface ISubjectUpdate {
   courseId?: number;
   name?: string;
   code?: string;
-  creditHours?: string;
+  creditHours?: number;
   theoryHours?: number;
   practicalHours?: number;
   description?: string;

@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+  // Memory optimization settings
+  experimental: {
+    // Reduce memory usage during build
+    optimizePackageImports: ['antd', 'dayjs', 'react-toastify'],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin();

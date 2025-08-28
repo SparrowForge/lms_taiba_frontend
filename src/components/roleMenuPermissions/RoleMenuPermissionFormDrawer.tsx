@@ -8,7 +8,7 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
-import RoleMenuPermissionForm from './RoleMenuPermissionForm';
+import RoleMenuPermissionFormSingle from './RoleMenuPermissionFormSingle';
 
 
 interface RoleMenuPermissionFormDrawerProps {
@@ -57,7 +57,7 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
       onClose={handleCancel}
       destroyOnHidden={true}
     >
-      <RoleMenuPermissionForm
+      <RoleMenuPermissionFormSingle
         mode={mode}
         roleMenuPermissionId={roleMenuPermissionId}
         initialValues={selectedRoleMenuPermission || undefined}

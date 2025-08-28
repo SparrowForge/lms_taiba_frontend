@@ -59,10 +59,15 @@ export const LoginForm = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
       <Card
+        style={{ width: 380 }}
         style={{ width: 380 }}
         className="shadow-lg rounded-lg"
       >
+         <div className="flex justify-center items-center py-6">
+            <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
+          </div>
          <div className="flex justify-center items-center py-6">
             <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
           </div>
@@ -81,6 +86,11 @@ export const LoginForm = () => {
                 <h1>Email / Username | <span className=" ">البريد الإلكتروني / اسم<br /> المستخدم</span></h1>
               </div>
             }
+            label={
+              <div className="flex flex-col text-gray-500 text-[15px]">
+                <h1>Email / Username | <span className=" ">البريد الإلكتروني / اسم<br /> المستخدم</span></h1>
+              </div>
+            }
             rules={[
               { 
                 // required: true,
@@ -94,6 +104,7 @@ export const LoginForm = () => {
               disabled={isLoading}
             />
           </Form.Item>
+
 
 
           <Form.Item
@@ -148,6 +159,7 @@ export const LoginForm = () => {
 
         {/* Footer */}
         {/* <div className="text-center mt-4">
+        {/* <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
             {`Don't have an account?{' '}`}
             <Link
@@ -157,6 +169,8 @@ export const LoginForm = () => {
               Contact administrator
             </Link>
           </p>
+        </div> */}
+        <SocialLogin />
         </div> */}
         <SocialLogin />
       </Card>

@@ -35,3 +35,55 @@ body {
   color: #1677ff !important;
 }
 
+
+/* Hover effect for items */
+.ant-select-item-option-active,
+.ant-select-item-option-selected {
+  background-color: #3b82f6 !important; /* slightly lighter blue */
+  color: #fff !important;
+}
+
+
+/* side bar  */
+/* Force submenu background in collapsed sidebar */
+.ant-menu-submenu-popup.ant-menu {
+  background-color: #1F4BCA !important;
+}
+
+/* Submenu items */
+.ant-menu-submenu-popup.ant-menu .ant-menu-item {
+  background-color: #1F4BCA !important;
+  color: #fff !important;
+}
+
+/* Hover state */
+.ant-menu-submenu-popup.ant-menu .ant-menu-item:hover {
+  background-color: #163a99 !important;
+  color: #fff !important;
+}
+
+/* Selected state */
+.ant-menu-submenu-popup.ant-menu .ant-menu-item-selected {
+  background-color: #163a99 !important;
+  color: #fff !important;
+}
+
+/* Submenu title inside popup */
+.ant-menu-submenu-popup.ant-menu .ant-menu-submenu-title {
+  background-color: #1F4BCA !important;
+  color: #fff !important;
+}
+
+
+
+/* scrollbar fixing  */
+/* aside {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+} */
+
+
+.ant-picker-calendar-mode-switch{
+  display: none;
+}
+

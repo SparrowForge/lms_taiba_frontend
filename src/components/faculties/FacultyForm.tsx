@@ -120,7 +120,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       <Form.Item
         name="branchId"
         label={t(LOCALE_KEYS.BRANCH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.BRANCH) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }) }]}
       >
         <Select
           showSearch
@@ -140,7 +140,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       <Form.Item
         name="departmentId"
         label={t(LOCALE_KEYS.DEPARTMENT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) }) }]}
       >
         <Select
           showSearch
@@ -160,7 +160,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       <Form.Item
         name="fullName"
         label={t(LOCALE_KEYS.FULL_NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.FULL_NAME) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FULL_NAME) }) }]}
       >
         <Input />
       </Form.Item>
@@ -168,7 +168,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
         name="email"
         label={t(LOCALE_KEYS.EMAIL)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EMAIL) }) },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMAIL) }) },
           { type: 'email', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL) },
         ]}
       >
@@ -177,14 +177,14 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       <Form.Item
         name="employeeCode"
         label={t(LOCALE_KEYS.EMPLOYEE_CODE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EMPLOYEE_CODE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMPLOYEE_CODE) }) }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="employmentType"
         label={t(LOCALE_KEYS.EMPLOYMENT_TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) }) }]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) })}>
           <Select.Option value="full-time">{t(LOCALE_KEYS.FULL_TIME)}</Select.Option>
@@ -196,7 +196,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       <Form.Item
         name="joinedDate"
         label={t(LOCALE_KEYS.JOINED_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.JOINED_DATE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.JOINED_DATE) }) }]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>

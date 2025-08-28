@@ -7,7 +7,7 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
-import RoleMenuPermissionForm from '@/components/roleMenuPermissions/RoleMenuPermissionForm';
+import RoleMenuPermissionFormTabView from '@/components/roleMenuPermissions/RoleMenuPermissionFormTabView';
 import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useLocalization} from '@/hooks/useLocalization';
@@ -22,7 +22,7 @@ export default function CreateRoleMenuPermissionPage() {
     <ProtectedRoute>
       <MainLayout>
           <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <RoleMenuPermissionForm mode="create" embedded={false} />
+          <RoleMenuPermissionFormTabView mode="create" embedded={false} />
       </MainLayout>
     </ProtectedRoute>
   );

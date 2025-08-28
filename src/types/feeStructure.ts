@@ -1,4 +1,5 @@
 import {IBatch} from './batch';
+import {IFeeInstallmentPlanCreate} from './feeInstallmentPlan';
 import {ISemester} from './semester';
 
 export interface IFeeStructure {
@@ -8,10 +9,10 @@ export interface IFeeStructure {
   semesterId: number;
   academicYear: string;
   paymentType: string;
-  totalFees: string;
-  admissionFee: string;
+  totalFees: number;
+  admissionFee: number;
   discountType: string;
-  discountAmount: string;
+  discountAmount: number;
   currency: string;
   remarks: string;
   status: string;
@@ -28,10 +29,10 @@ export interface IFeeStructureCreate {
   semesterId: number;
   academicYear: string;
   paymentType: string;
-  totalFees: string;
-  admissionFee: string;
+  totalFees: number;
+  admissionFee: number;
   discountType: string;
-  discountAmount: string;
+  discountAmount: number;
   currency: string;
   remarks: string;
   status: string;
@@ -43,11 +44,15 @@ export interface IFeeStructureUpdate {
   semesterId?: number;
   academicYear?: string;
   paymentType?: string;
-  totalFees?: string;
-  admissionFee?: string;
+  totalFees?: number;
+  admissionFee?: number;
   discountType?: string;
-  discountAmount?: string;
+  discountAmount?: number;
   currency?: string;
   remarks?: string;
   status?: string;
+}
+
+export interface IFeeStructureBulkCreate extends IFeeStructureCreate {
+  feeInstallmentPlans: Omit<IFeeInstallmentPlanCreate, 'feeStructureId'>[];
 }

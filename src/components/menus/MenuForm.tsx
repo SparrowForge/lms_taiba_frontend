@@ -115,7 +115,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="panelId"
         label={t(LOCALE_KEYS.PANEL)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PANEL) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PANEL) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.PANEL) })}
@@ -153,7 +153,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.NAME) })} />
       </Form.Item>
@@ -161,7 +161,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="localName"
         label={t(LOCALE_KEYS.LOCAL_NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.LOCAL_NAME) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.LOCAL_NAME) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.LOCAL_NAME) })} />
       </Form.Item>
@@ -169,7 +169,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="icon"
         label={t(LOCALE_KEYS.ICON)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ICON) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ICON) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_ICON)} />
       </Form.Item>
@@ -177,7 +177,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="route"
         label={t(LOCALE_KEYS.ROUTE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ROUTE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROUTE) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_ROUTE)} />
       </Form.Item>
@@ -185,7 +185,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="sortOrder"
         label={t(LOCALE_KEYS.SORT_ORDER)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.SORT_ORDER) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SORT_ORDER) }) }]}
       >
         <InputNumber placeholder={t(LOCALE_KEYS.ENTER_SORT_ORDER)} min={1} style={{ width: '100%' }} />
       </Form.Item>
@@ -193,7 +193,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
