@@ -41,7 +41,7 @@ const notifications = [
 const NotificationsStudent = () => {
     const { t } = useLocalization();
     return (
-        <Card className="rounded-2xl shadow-sm" style={{ marginTop: "14px" }}>
+        <Card className="rounded-2xl shadow-sm" style={{ marginTop: "14px", padding:"0px" }}>
             <div className="flex justify-between items-center mb-2">
                 <h2 className="text-base font-semibold">{t(LOCALE_KEYS.NOTIFICATION)}</h2>
                 <span className="text-blue-600 cursor-pointer">
@@ -49,7 +49,7 @@ const NotificationsStudent = () => {
                 </span>
 
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
                 {notifications.map((n, i) => (
                     <IconBgColoredCard
                         key={i}
@@ -60,6 +60,8 @@ const NotificationsStudent = () => {
                         bgColor={n.bgColor}
                         bgColorIcon={n.bgColorIcon}
                         rounded="full"
+                        textSize="12px"
+
                     />
                 ))}
             </div>

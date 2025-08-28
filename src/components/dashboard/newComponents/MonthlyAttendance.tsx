@@ -18,7 +18,7 @@ const MonthlyAttendance = () => {
       <h2 className="text-base font-semibold mb-3">
          {t(LOCALE_KEYS.MONTHLY_ATTENDANCE)}
       </h2>
-      <div style={{ height: 250 }}>
+      <div style={{ height: 160 }}>
         <ColumnGraph data={data} color="#1F4BCA" />
       </div>
     </Card>

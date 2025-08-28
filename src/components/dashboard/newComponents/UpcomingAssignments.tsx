@@ -52,12 +52,12 @@ const assignments = [
 const UpcomingAssignments = () => {
   const {t} = useLocalization();
   return (
-    <Card className="rounded-2xl shadow-sm">
+    <Card className="rounded-2xl shadow-sm min-h-full">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-base font-semibold">
           {t(LOCALE_KEYS.UPCOMING_ASSIGNMENT)}
         </h2>
-        <Button type="text" >
+        <Button type="text" style={{padding:0}}>
         <span className="text-blue-600 cursor-pointer">
           {t(LOCALE_KEYS.ALL_TASKS)}
         </span>
