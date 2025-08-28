@@ -1,7 +1,7 @@
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
-import { useLocalization } from "@/hooks/useLocalization";
 import { Card, Progress, Button } from "antd";
 import { useLocale } from "next-intl";
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
+import { useLocalization } from "@/hooks/useLocalization";
 
 const subjects = [
   { name: "Mathematics", local_name: "الرياضيات", percent: 86 },
