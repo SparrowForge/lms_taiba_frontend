@@ -11,7 +11,7 @@ const RightComponent = () => {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <div className="flex justify-around items-center px-6  pt-4 pb-2">
+      <div className="flex justify-between md:justify-around items-center px-2 md:px-6  pt-4 ">
         <h1 className="text-black text-center" >
          {t(LOCALE_KEYS.WELCOME_BACK)}
         </h1>
