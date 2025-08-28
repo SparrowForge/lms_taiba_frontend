@@ -1,44 +1,48 @@
 "use client"
-import React from "react";
-import { Card, Row, Col, Typography} from "antd";
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
+import { useLocalization } from "@/hooks/useLocalization";
 import {
   LineChartOutlined,
 } from "@ant-design/icons";
-import { PiStudentFill } from "react-icons/pi";
+import { Card, Row, Col, Typography} from "antd";
+import { useLocale } from "next-intl";
+import Image from "next/image";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { IoIosPeople } from "react-icons/io";
-import { useTranslation } from "react-i18next";
-import Image from "next/image";
+import { PiStudentFill } from "react-icons/pi";
 
 const { Title, Text } = Typography;
 
 const LeftComponent = () => {
-  const { t } = useTranslation();
+  const { t } = useLocalization();
+  const locale = useLocale();
 
   const portals = [
     {
       key: "teacher",
       icon: <FaChalkboardTeacher style={{ fontSize: 28, color: "#92c4fc" }} />,
-      title: t("Teacher Portal"),
-      subtitle: t("بوابة المعلم"),
+      title: "Teacher Portal",
+      subtitle: "بوابة المعلم",
     },
     {
       key: "student",
       icon: <PiStudentFill style={{ fontSize: 28, color: "#92c4fc" }} />,
-      title: t("Student Portal"),
-      subtitle: t("بوابة الطالب"),
+      title: "Student Portal",
+      subtitle: "بوابة الطالب",
     },
     {
       key: "parent",
       icon: <IoIosPeople style={{ fontSize: 28, color: "#92c4fc" }} />,
-      title: t("Parent Portal"),
-      subtitle: t("بوابة ولي الأمر"),
+      title: "Parent Portal",
+      subtitle: "بوابة ولي الأمر",
     },
     {
       key: "admin",
       icon: <LineChartOutlined  style={{ fontSize: 28, color: "#92c4fc" }} />,
-      title: t("Admin Dashboard"),
-      subtitle: t("لوحة الإدارة"),
+      title: "Admin Dashboard",
+      subtitle: "لوحة الإدارة",
     },
   ];
 
@@ -53,7 +57,7 @@ const LeftComponent = () => {
         EduTrain Institute
       </Title>
       <Text style={{ color: "#fff", fontSize:"18px" }}>
-        {t("Education ERP System | نظام تخطيط موارد التعليم")}
+        {t(LOCALE_KEYS.ERP_TAGLINE)}
       </Text>
 
       <Card className="shadow-2xl "
@@ -70,7 +74,7 @@ const LeftComponent = () => {
         }}
       >
         <Title level={5} style={{ color: "#fff",fontSize:"20px"  }}>
-          {t("Complete Education Management Solution")}
+          Complete Education Management Solution
         </Title>
 
         <Row gutter={[16, 16]} style={{ marginTop: 20 }}>
@@ -80,12 +84,10 @@ const LeftComponent = () => {
                 {item.icon}
                 <div>
                   <Text style={{ color: "#fff", fontWeight: 500 }}>
-                    {item.title}
+                   {locale === 'en' ?  item.title : item.subtitle }
                   </Text>
                   <br />
-                  <Text style={{ color: "#fff", fontSize: 12 }}>
-                    {item.subtitle}
-                  </Text>
+                
                 </div>
               </div>
             </Col>

@@ -362,5 +362,23 @@
   "september": "September",
   "october": "October",
   "november": "November",
-  "december": "December"
+  "december": "December",
+  "erp-tagline": "Education ERP System",
+  "welcome-back": "Welcome back",
+  "copyright": "© 2023 EduTrain Institute. All rights reserved",
+  "email-username": "Email / Username",
+  "forget-password": "Forget password?",
+  "sign-in": "Sign In",
+  "signing-in": "Signing in...",
+  "login-success": "Login successful!",
+  "login-failed": "Login failed!",
+  "email-required": "Please enter your email!",
+  "email-invalid": "Please enter a valid email!",
+  "password-required": "Please enter your password!",
+  "password-min": "Password must be at least 6 characters!",
+  "or-continue-with": "Or continue with",
+  "sign-in-microsoft": "Sign in with Microsoft",
+  "no-account": "Don't have an account?",
+  "contact-admin": "Contact administrator"
+
 }
