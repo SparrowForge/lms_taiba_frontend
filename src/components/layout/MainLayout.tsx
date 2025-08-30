@@ -45,7 +45,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   // Memoize header styles
   const headerStyle = useMemo(
     () => ({
-      backgroundColor: '#ffffff',
+      // backgroundColor: '#ffffff',
       padding: '0 16px',
       height: '64px',
       lineHeight: '64px',
@@ -139,7 +139,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             </div>
           </Header>
 
-        <Content className="bg-gray-50 overflow-y-auto" style={contentStyle}>
+        <Content className=" overflow-y-auto" style={contentStyle}>
           <ErrorBoundary>
             <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
           </ErrorBoundary>

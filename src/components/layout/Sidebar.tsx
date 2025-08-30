@@ -250,7 +250,7 @@ export const Sidebar = ({ collapsed }: SidebarProps) => {
         top: 0,
         bottom: 0,
         zIndex: 1000,
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#ffffff',
       }}
     >
       {/* Logo/Brand */}

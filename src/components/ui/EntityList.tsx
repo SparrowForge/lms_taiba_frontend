@@ -60,7 +60,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
     <div className="p-2 h-screen flex flex-col">
       <Card className="flex flex-col flex-1">
         {/* Fixed Top Section */}
-        <div className="sticky top-0 z-10 pb-4 border-b mb-4 bg-white">
+        <div className="sticky top-0 z-10 pb-4 border-b mb-4 ">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
             {/* Title */}
             <Title level={2} className="!mb-0">
@@ -147,7 +147,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
         </div>
 
         {/* Fixed Bottom Pagination */}
-        <div className="sticky bottom-0 z-10 border-t py-3 bg-white flex justify-center">
+        <div className="sticky bottom-0 z-10 border-t py-3  flex justify-center">
           <Pagination
             current={skip ? parseInt(skip ?? '0') / parseInt(limit ?? '10') + 1 : 1}
             total={config.itemsCount ?? config.items.length}
