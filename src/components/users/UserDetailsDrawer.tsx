@@ -1,6 +1,6 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Grid} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
@@ -23,6 +23,7 @@ interface UserDetailsDrawerProps {
   onEdit: (userId: number) => void;
 }
 
+const { useBreakpoint } = Grid;
 const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
   userId,
   visible,
@@ -53,11 +54,22 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
     },
   );
 
+    const screens = useBreakpoint();
+
+  // Decide width based on breakpoint
+  const getDrawerWidth = () => {
+    if (screens.xl) return 500; // large desktops
+    if (screens.lg) return 450; // tablets / laptops
+    if (screens.md) return 500; // small laptops
+    if (screens.sm) return "100%"; // mobile
+    return "100%";
+  };
+
   return (
     <Drawer
       key={userId} // Force remount when userId changes
       title={t(LOCALE_KEYS.DETAILS_NAME, { name: entityName })}
-      width={800}
+      width={getDrawerWidth()}
       open={visible}
       onClose={onClose}
       destroyOnHidden={true}

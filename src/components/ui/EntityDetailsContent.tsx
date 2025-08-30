@@ -1,11 +1,11 @@
-import {UserOutlined} from '@ant-design/icons';
-import {Alert, Avatar, Card, Col, Row, Spin, Typography} from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { Alert, Avatar, Card, Col, Row, Spin, Typography } from 'antd';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useAudit} from '@/hooks/useAudit';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAudit } from '@/hooks/useAudit';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import PageHeaderDetails from './PageHeaderDetails';
 
@@ -69,9 +69,12 @@ export const EntityDetailsContent = <T extends { id: number }>({
   }
   const content = (
     <div style={{ marginTop: config.embedded ? '0' : '8px' }}>
-      <Row gutter={[8, 8]}>
+      <Row gutter={[16, 16]}>
         {/* Profile Card */}
-        <Col xs={8} lg={config.embedded ? 24 : 8}>
+        <Col xs={24}   // mobile: full width
+          sm={24}   // small tablets: full width
+          md={16}   // tablets: 10/24
+          lg={config.embedded ? 24 : 8} >
           <Card title={`${config.name} ${t(LOCALE_KEYS.PROFILE)}`}>
             <div style={{ textAlign: 'center' }}>
               <Avatar
@@ -89,7 +92,10 @@ export const EntityDetailsContent = <T extends { id: number }>({
           </Card>
         </Col>
         {/* Details Table */}
-        <Col xs={8} lg={config.embedded ? 24 : 16}>
+        <Col xs={24}   // mobile: full width
+          sm={24}   // small tablets: full width
+          md={16}   // tablets: 10/24
+          lg={config.embedded ? 24 : 8} >
           <Card title={`${config.name} ${t(LOCALE_KEYS.INFORMATION)}`}>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>

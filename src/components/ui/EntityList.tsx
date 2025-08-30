@@ -1,13 +1,13 @@
 'use client';
 
-import {FileExcelOutlined, SearchOutlined, UserAddOutlined} from '@ant-design/icons';
-import {Alert, Button, Card, Input, Pagination, Table, Typography} from 'antd';
-import {TableProps} from 'antd/es/table';
-import {useRouter, useSearchParams} from 'next/navigation';
+import { FileExcelOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Input, Pagination, Table, Typography } from 'antd';
+import { TableProps } from 'antd/es/table';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -57,38 +57,28 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
   };
 
   return (
-    <div style={{ padding: '8px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Card style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+    <div className="p-2 h-screen flex flex-col">
+      <Card className="flex flex-col flex-1">
         {/* Fixed Top Section */}
-        <div
-          style={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 10,
-            paddingBottom: '16px',
-            borderBottom: '1px solid #f0f0f0',
-            marginBottom: '16px',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '16px',
-            }}
-          >
-            <Title level={2}>{config.title}</Title>
-            <div style={{ display: 'flex', gap: '16px' }}>
+        <div className="sticky top-0 z-10 pb-4 border-b mb-4 bg-white">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+            {/* Title */}
+            <Title level={2} className="!mb-0">
+              {config.title}
+            </Title>
+
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
               {config.extraActions?.map((action, index) => (
                 <div key={index}>{action}</div>
               ))}
+
               {!config.disableAddNew && (
                 <Button
                   type="primary"
                   icon={<UserAddOutlined />}
                   onClick={handleAddItem}
-                  style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
+                  className="bg-blue-500 border-blue-500 w-full sm:w-auto"
                 >
                   {t(LOCALE_KEYS.ADD_NAME, { name: config.name })}
                 </Button>
@@ -104,8 +94,14 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
                   {t(LOCALE_KEYS.QUICK_ADD_NAME, { name: config.name })}
                 </Button>
               )}
+
               {config.exportUrl && (
-                <Button type="primary" icon={<FileExcelOutlined />} onClick={handleExport}>
+                <Button
+                  type="primary"
+                  icon={<FileExcelOutlined />}
+                  onClick={handleExport}
+                  className="w-full sm:w-auto"
+                >
                   {t(LOCALE_KEYS.EXPORT)}
                 </Button>
               )}
@@ -118,7 +114,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
               description={config.error}
               type="error"
               showIcon
-              style={{ marginBottom: '16px' }}
+              className="mb-4"
             />
           )}
 
@@ -130,48 +126,34 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
               })}
               allowClear
               enterButton={<SearchOutlined />}
-              onSearch={(value) => {
-                config.onSearch?.(value);
-              }}
+              onSearch={(value) => config.onSearch?.(value)}
               size="large"
-              style={{ maxWidth: '400px' }}
+              className="w-full md:max-w-md"
             />
           )}
         </div>
 
         {/* Scrollable Table Section */}
-        <div style={{ flex: 1, overflow: 'auto', marginBottom: '16px', height: 'calc(100vh - 200px)' }}>
+        <div className="flex-1 overflow-auto mb-4">
           <Table
-            scroll={{ y: 'calc(100vh - 360px)' }}
+            scroll={{ x: true, y: 'calc(100vh - 360px)' }}
             loading={config.loading}
             columns={config.columns}
             dataSource={config.items}
             rowKey="id"
-            style={{ border: '1px solid #e0e0e0', borderRadius: '8px' }}
             pagination={false}
+            className="border border-gray-200 rounded-md"
           />
         </div>
 
         {/* Fixed Bottom Pagination */}
-        <div
-          style={{
-            position: 'sticky',
-            bottom: 0,
-            zIndex: 10,
-            // backgroundColor: '#fff',
-            paddingTop: '12px',
-            borderTop: '1px solid #f0f0f0',
-            display: 'flex',
-            justifyContent: 'center',
-            paddingBottom: '12px',
-          }}
-        >
+        <div className="sticky bottom-0 z-10 border-t py-3 bg-white flex justify-center">
           <Pagination
             current={skip ? parseInt(skip ?? '0') / parseInt(limit ?? '10') + 1 : 1}
             total={config.itemsCount ?? config.items.length}
             pageSize={parseInt(limit ?? '10')}
-            showSizeChanger={true}
-            showQuickJumper={true}
+            showSizeChanger
+            showQuickJumper
             showTotal={(total, range) =>
               `${range[0]}-${range[1]} ${t(LOCALE_KEYS.OF)} ${total} ${config.name}`
             }
@@ -182,5 +164,6 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
         </div>
       </Card>
     </div>
+
   );
 };
