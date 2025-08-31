@@ -6,6 +6,8 @@ import authReducer from './slices/authSlice';
 import batchReducer from './slices/batchSlice';
 import branchReducer from './slices/branchSlice';
 import classScheduleReducer from './slices/classScheduleSlice';
+import courseAssignmentReducer from './slices/courseAssignmentSlice';
+import courseMaterialReducer from './slices/courseMaterialSlice';
 import courseReducer from './slices/courseSlice';
 import courseTypeReducer from './slices/courseTypeSlice';
 import departmentReducer from './slices/departmentSlice';
@@ -45,6 +47,8 @@ export interface RootState {
   menus: ReturnType<typeof menuReducer>;
   roleMenuPermissions: ReturnType<typeof roleMenuPermissionReducer>;
   courses: ReturnType<typeof courseReducer>;
+  courseAssignments: ReturnType<typeof courseAssignmentReducer>;
+  courseMaterials: ReturnType<typeof courseMaterialReducer>;
   subjects: ReturnType<typeof subjectReducer>;
   batches: ReturnType<typeof batchReducer>;
   semesters: ReturnType<typeof semesterReducer>;
@@ -83,6 +87,8 @@ export const store = configureStore({
     menus: menuReducer,
     roleMenuPermissions: roleMenuPermissionReducer,
     courses: courseReducer,
+    courseAssignments: courseAssignmentReducer,
+    courseMaterials: courseMaterialReducer,
     subjects: subjectReducer,
     batches: batchReducer,
     semesters: semesterReducer,

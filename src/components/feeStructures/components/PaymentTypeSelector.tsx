@@ -1,7 +1,10 @@
+import {Form, Select} from 'antd';
 import React from 'react';
-import { Form, Select } from 'antd';
-import { useLocalization } from '@/hooks/useLocalization';
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
+
 
 interface PaymentTypeSelectorProps {
   disabled?: boolean;
@@ -16,7 +19,7 @@ const PaymentTypeSelector: React.FC<PaymentTypeSelectorProps> = ({ disabled = fa
       label={t(LOCALE_KEYS.PAYMENT_TYPE)}
       rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PAYMENT_TYPE) }) }]}
     >
-      <Select 
+      <Select
         placeholder={t(LOCALE_KEYS.SELECT_PAYMENT_TYPE)}
         disabled={disabled}
       >

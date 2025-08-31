@@ -1,9 +1,11 @@
+import {Button, Card, Col, Row} from 'antd';
 import React from 'react';
-import { Card, Row, Col, Button } from 'antd';
-import { Status } from '@/types/common';
-import { PaymentRow } from '../types';
-import { IBatch } from '@/types/batch';
-import { ISemester } from '@/types/semester';
+
+import {IBatch} from '@/types/batch';
+import {Status} from '@/types/common';
+import {ISemester} from '@/types/semester';
+
+import {PaymentRow} from '../types';
 
 interface InstallmentSectionProps {
   selectedBatch: IBatch;
@@ -27,7 +29,7 @@ const InstallmentSection: React.FC<InstallmentSectionProps> = ({
   if (!selectedBatch) return null;
 
   return (
-    <Card 
+    <Card
       title="Fee Structure Details (Installment)"
       style={{ marginBottom: 16 }}
     >
@@ -46,7 +48,7 @@ const InstallmentSection: React.FC<InstallmentSectionProps> = ({
           </p>
         </div>
       )}
-      
+
       {/* Show warning when some semesters are missing */}
       {semesters.length > 0 && semesters.length < selectedBatch.course?.durationInSemesters && (
         <div style={{
@@ -68,7 +70,7 @@ const InstallmentSection: React.FC<InstallmentSectionProps> = ({
           </p>
         </div>
       )}
-      
+
       {/* Show totals summary for installment payments */}
       {paymentRows.length > 0 && (
         <div style={{
@@ -90,15 +92,15 @@ const InstallmentSection: React.FC<InstallmentSectionProps> = ({
           </Row>
           <Row style={{ marginTop: '12px' }}>
             <Col span={24}>
-              <Button 
-                type="dashed" 
+              <Button
+                type="dashed"
                 size="small"
                 onClick={() => {
                   const totalFeesNumber = Number(totalFees || 0);
                   if (totalFeesNumber > 0 && paymentRows.length > 0) {
                     const semesterCount = paymentRows.length;
                     const amountPerSemester = totalFeesNumber / semesterCount;
-                    
+
                     const updatedRows = paymentRows.map(row => ({
                       ...row,
                       amount: amountPerSemester
