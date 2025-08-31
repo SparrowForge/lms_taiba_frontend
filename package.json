@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky",
+    "commit": "git-cz",
+    "commit:check": "commitlint --edit .git/COMMIT_EDITMSG"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
@@ -28,15 +31,25 @@
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9",
     "eslint-config-next": "15.4.2",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
+    "husky": "^9.1.7",
     "prettier": "^3.3.3",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
