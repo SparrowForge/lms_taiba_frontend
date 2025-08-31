@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const PanelEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedPanel, detailsStatus, getPanelById } = usePanels();
+  const { selectedPanel, detailsStatus, loadPanel } = usePanels();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
 
   useEffect(() => {
     const panelId = parseInt(resolvedParams.id);
-    getPanelById(panelId);
-  }, [resolvedParams.id, getPanelById]);
+    //getPanelById(panelId);
+    loadPanel(panelId);
+  }, [resolvedParams.id, loadPanel]);
 
 
   if (detailsStatus.status === Status.LOADING) {

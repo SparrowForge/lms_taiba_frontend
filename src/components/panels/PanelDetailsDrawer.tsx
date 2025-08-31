@@ -30,14 +30,15 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedPanel, getPanelById, detailsStatus } = usePanels();
+  const { selectedPanel, loadPanel, detailsStatus } = usePanels();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
   useEffect(() => {
     if (visible && panelId) {
-      getPanelById(panelId);
+      //getPanelById(panelId);
+      loadPanel(panelId);
     }
-  }, [visible, panelId, getPanelById]);
+  }, [visible, panelId, loadPanel]);
 
   const handleEdit = (panel: IPanel) => {
     onEdit(panel.id);

@@ -21,7 +21,7 @@ export default function UserDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedUser, detailsStatus, getUserById } = useUsers();
+  const { selectedUser, detailsStatus, loadUser } = useUsers();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
 
@@ -30,8 +30,9 @@ export default function UserDetailPage({
 
   // Load user if not already loaded
   useEffect(() => {
-    getUserById(userId);
-  }, [getUserById, userId]);
+    //getUserById(userId);
+    loadUser(userId);
+  }, [loadUser, userId]);
 
   const config = useCreateUserDetailsConfig(
     selectedUser,

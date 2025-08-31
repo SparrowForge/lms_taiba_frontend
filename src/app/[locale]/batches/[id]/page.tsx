@@ -21,7 +21,7 @@ export default function BatchDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedBatch, detailsStatus, getBatchById } = useBatches();
+  const { selectedBatch, detailsStatus, loadBatch } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
 
@@ -30,8 +30,9 @@ export default function BatchDetailPage({
 
   // Load batch if not already loaded
   useEffect(() => {
-    getBatchById(batchId);
-  }, [getBatchById, batchId]);
+    //getBatchById(batchId);
+    loadBatch(batchId);
+  }, [loadBatch, batchId]);
 
   const config = useCreateBatchDetailsConfig(
     selectedBatch,

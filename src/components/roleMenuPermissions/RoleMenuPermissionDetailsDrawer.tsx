@@ -30,14 +30,15 @@ const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerP
   onEdit,
 }) => {
 
-  const { selectedRoleMenuPermission, getRoleMenuPermissionById, detailsStatus } = useRoleMenuPermissions();
+  const { selectedRoleMenuPermission, loadRoleMenuPermission, detailsStatus } = useRoleMenuPermissions();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   useEffect(() => {
     if (visible && roleMenuPermissionId) {
-      getRoleMenuPermissionById(roleMenuPermissionId);
+      //getRoleMenuPermissionById(roleMenuPermissionId);
+      loadRoleMenuPermission(roleMenuPermissionId);
     }
-  }, [visible, roleMenuPermissionId, getRoleMenuPermissionById]);
+  }, [visible, roleMenuPermissionId, loadRoleMenuPermission]);
 
   const handleEdit = (roleMenuPermission: IRoleMenuPermission) => {
     onEdit(roleMenuPermission.id);

@@ -19,7 +19,7 @@ export default function CourseMaterialDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedCourseMaterial, detailsStatus, getCourseMaterialById } = useCourseMaterials();
+  const { selectedCourseMaterial, detailsStatus, loadCourseMaterial } = useCourseMaterials();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_MATERIAL, { defaultValue: 'Course Material' });
 
@@ -27,8 +27,9 @@ export default function CourseMaterialDetailPage({
   const courseMaterialId = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    getCourseMaterialById(courseMaterialId);
-  }, [getCourseMaterialById, courseMaterialId]);
+    //getCourseMaterialById(courseMaterialId);
+    loadCourseMaterial(courseMaterialId);
+  }, [loadCourseMaterial, courseMaterialId]);
 
   const config = useCreateCourseMaterialDetailsConfig(
     selectedCourseMaterial,

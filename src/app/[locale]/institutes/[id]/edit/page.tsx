@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const InstituteEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedInstitute, detailsStatus, getInstituteById } = useInstitutes();
+  const { selectedInstitute, detailsStatus, getInstituteById, loadInstitute } = useInstitutes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
 
   useEffect(() => {
     const instituteId = parseInt(resolvedParams.id);
-    getInstituteById(instituteId);
-  }, [resolvedParams.id, getInstituteById]);
+   // getInstituteById(instituteId);
+   loadInstitute(instituteId);
+  }, [resolvedParams.id, loadInstitute]);
 
 
   if (detailsStatus.status === Status.LOADING) {

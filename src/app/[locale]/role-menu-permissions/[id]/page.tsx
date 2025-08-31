@@ -21,7 +21,7 @@ export default function RoleMenuPermissionDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedRoleMenuPermission, detailsStatus, getRoleMenuPermissionById } = useRoleMenuPermissions();
+  const { selectedRoleMenuPermission, detailsStatus, loadRoleMenuPermission } = useRoleMenuPermissions();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
 
@@ -30,8 +30,9 @@ export default function RoleMenuPermissionDetailPage({
 
   // Load role menu permission if not already loaded
   useEffect(() => {
-    getRoleMenuPermissionById(roleMenuPermissionId);
-  }, [getRoleMenuPermissionById, roleMenuPermissionId]);
+    //getRoleMenuPermissionById(roleMenuPermissionId);
+    loadRoleMenuPermission(roleMenuPermissionId);
+  }, [loadRoleMenuPermission, roleMenuPermissionId]);
 
   const config = useCreateRoleMenuPermissionDetailsConfig(
     selectedRoleMenuPermission,

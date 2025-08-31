@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useBranches} from '@/hooks/useBranches';
 import {useLocalization} from '@/hooks/useLocalization';
+
+import { Status } from '@/types/common';
 
 import BranchForm from './BranchForm';
 
@@ -27,14 +29,15 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
   onSuccess,
 }) => {
 
-  const { getBranchById, selectedBranch } = useBranches();
+  const { getBranchById, selectedBranch, loadBranch, detailsStatus } = useBranches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
   useEffect(() => {
     if (visible && mode === 'edit' && branchId) {
-      getBranchById(branchId);
+      //getBranchById(branchId);
+      loadBranch(branchId);
     }
-  }, [visible, mode, branchId, getBranchById]);
+  }, [visible, mode, branchId, loadBranch]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +46,10 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

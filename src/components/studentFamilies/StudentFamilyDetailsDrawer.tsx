@@ -28,15 +28,16 @@ const StudentFamilyDetailsDrawer: React.FC<StudentFamilyDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { getStudentFamilyById, selectedStudentFamily, detailsStatus } = useStudentFamilies();
+  const { loadStudentFamily, selectedStudentFamily, detailsStatus } = useStudentFamilies();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_FAMILY, { defaultValue: 'Student Family' });
 
   useEffect(() => {
     if (visible && studentFamilyId) {
-      getStudentFamilyById(studentFamilyId);
+      //getStudentFamilyById(studentFamilyId);
+      loadStudentFamily(studentFamilyId);
     }
-  }, [visible, studentFamilyId, getStudentFamilyById]);
+  }, [visible, studentFamilyId, loadStudentFamily]);
 
   const handleEdit = (studentFamily: IStudentFamily) => {
     onEdit(studentFamily.id);

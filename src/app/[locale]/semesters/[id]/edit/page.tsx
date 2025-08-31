@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const SemesterEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedSemester, detailsStatus, getSemesterById } = useSemesters();
+  const { selectedSemester, detailsStatus, loadSemester } = useSemesters();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
 
   useEffect(() => {
     const semesterId = parseInt(resolvedParams.id);
-    getSemesterById(semesterId);
-  }, [resolvedParams.id, getSemesterById]);
+    //getSemesterById(semesterId);
+    loadSemester(semesterId);
+  }, [resolvedParams.id, loadSemester]);
 
 
   if (detailsStatus.status === Status.LOADING) {

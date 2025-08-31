@@ -30,14 +30,15 @@ const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedDepartment, getDepartmentById, detailsStatus } = useDepartments();
+  const { selectedDepartment, loadDepartment, detailsStatus } = useDepartments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
   useEffect(() => {
     if (visible && departmentId) {
-      getDepartmentById(departmentId);
+      //getDepartmentById(departmentId);
+      loadDepartment(departmentId);
     }
-  }, [visible, departmentId, getDepartmentById]);
+  }, [visible, departmentId, loadDepartment]);
 
   const handleEdit = (department: IDepartment) => {
     onEdit(department.id);

@@ -20,14 +20,15 @@ import {Status} from '@/types/common';
 const RoomEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedRoom, detailsStatus, getRoomById } = useRooms();
+  const { selectedRoom, detailsStatus, loadRoom } = useRooms();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM, { defaultValue: 'Room' });
 
   useEffect(() => {
     const roomId = parseInt(resolvedParams.id);
-    getRoomById(roomId);
-  }, [resolvedParams.id, getRoomById]);
+    //getRoomById(roomId);
+    loadRoom(roomId);
+  }, [resolvedParams.id, loadRoom]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;

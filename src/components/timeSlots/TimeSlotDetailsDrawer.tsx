@@ -28,15 +28,16 @@ const TimeSlotDetailsDrawer: React.FC<TimeSlotDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { selectedTimeSlot, getTimeSlotById, detailsStatus } = useTimeSlots();
+  const { selectedTimeSlot, loadTimeSlot, detailsStatus } = useTimeSlots();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.TIME_SLOT, { defaultValue: 'Time Slot' });
 
   useEffect(() => {
     if (visible && timeSlotId) {
-      getTimeSlotById(timeSlotId);
+      //getTimeSlotById(timeSlotId);
+      loadTimeSlot(timeSlotId);
     }
-  }, [visible, timeSlotId, getTimeSlotById]);
+  }, [visible, timeSlotId, loadTimeSlot]);
 
   const handleEdit = (timeSlot: ITimeSlot) => {
     onEdit(timeSlot.id);

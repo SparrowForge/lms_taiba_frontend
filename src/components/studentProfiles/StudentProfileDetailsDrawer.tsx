@@ -28,15 +28,16 @@ const StudentProfileDetailsDrawer: React.FC<StudentProfileDetailsDrawerProps> = 
   onClose,
   onEdit,
 }) => {
-  const { getStudentProfileById, selectedStudentProfile, detailsStatus } = useStudentProfiles();
+  const { loadStudentProfile, selectedStudentProfile, detailsStatus } = useStudentProfiles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_PROFILE, { defaultValue: 'Student Profile' });
 
   useEffect(() => {
     if (visible && studentProfileId) {
-      getStudentProfileById(studentProfileId);
+      //getStudentProfileById(studentProfileId);
+      loadStudentProfile(studentProfileId);
     }
-  }, [visible, studentProfileId, getStudentProfileById]);
+  }, [visible, studentProfileId, loadStudentProfile]);
 
   const handleEdit = (studentProfile: IStudentProfile) => {
     onEdit(studentProfile.id);

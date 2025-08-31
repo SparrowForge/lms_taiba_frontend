@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const RoomTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedRoomType, detailsStatus, getRoomTypeById } = useRoomTypes();
+  const { selectedRoomType, detailsStatus, loadRoomType } = useRoomTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' });
 
   useEffect(() => {
     const roomTypeId = parseInt(resolvedParams.id);
-    getRoomTypeById(roomTypeId);
-  }, [resolvedParams.id, getRoomTypeById]);
+    //getRoomTypeById(roomTypeId);
+    loadRoomType(roomTypeId);
+  }, [resolvedParams.id, loadRoomType]);
 
 
   if (detailsStatus.status === Status.LOADING) {

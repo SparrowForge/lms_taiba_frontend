@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const FeeStructureEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedFeeStructure, detailsStatus, getFeeStructureById } = useFeeStructures();
+  const { selectedFeeStructure, detailsStatus, loadFeeStructure } = useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
 
   useEffect(() => {
     const feeStructureId = parseInt(resolvedParams.id);
-    getFeeStructureById(feeStructureId);
-  }, [resolvedParams.id, getFeeStructureById]);
+    //getFeeStructureById(feeStructureId);
+    loadFeeStructure(feeStructureId);
+  }, [resolvedParams.id, loadFeeStructure]);
 
 
   if (detailsStatus.status === Status.LOADING) {

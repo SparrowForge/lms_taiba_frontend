@@ -21,7 +21,7 @@ export default function ScheduleTypeDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedScheduleType, detailsStatus, getScheduleTypeById } = useScheduleTypes();
+  const { selectedScheduleType, detailsStatus, loadScheduleType } = useScheduleTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
@@ -30,8 +30,9 @@ export default function ScheduleTypeDetailPage({
 
   // Load schedule type if not already loaded
   useEffect(() => {
-    getScheduleTypeById(scheduleTypeId);
-  }, [getScheduleTypeById, scheduleTypeId]);
+    //getScheduleTypeById(scheduleTypeId);
+    loadScheduleType(scheduleTypeId);
+  }, [loadScheduleType, scheduleTypeId]);
 
   const config = useCreateScheduleTypeDetailsConfig(
     selectedScheduleType,

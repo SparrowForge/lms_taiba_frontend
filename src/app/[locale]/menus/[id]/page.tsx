@@ -21,7 +21,7 @@ export default function MenuDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedMenu, detailsStatus, getMenuById } = useMenus();
+  const { selectedMenu, detailsStatus, loadMenu } = useMenus();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
 
@@ -30,8 +30,9 @@ export default function MenuDetailPage({
 
   // Load menu if not already loaded
   useEffect(() => {
-    getMenuById(menuId);
-  }, [getMenuById, menuId]);
+    //getMenuById(menuId);
+    loadMenu(menuId);
+  }, [loadMenu, menuId]);
 
   const config = useCreateMenuDetailsConfig(
     selectedMenu,

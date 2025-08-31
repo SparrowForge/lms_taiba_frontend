@@ -30,14 +30,15 @@ const WeekDayDetailsDrawer: React.FC<WeekDayDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedWeekDay, getWeekDayById, detailsStatus } = useWeekDays();
+  const { selectedWeekDay, loadWeekDay, detailsStatus } = useWeekDays();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
   useEffect(() => {
     if (visible && weekDayId) {
-      getWeekDayById(weekDayId);
+      //getWeekDayById(weekDayId);
+      loadWeekDay(weekDayId);
     }
-  }, [visible, weekDayId, getWeekDayById]);
+  }, [visible, weekDayId, loadWeekDay]);
 
   const handleEdit = (weekDay: IWeekDay) => {
     onEdit(weekDay.id);

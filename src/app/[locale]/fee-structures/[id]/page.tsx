@@ -21,7 +21,7 @@ export default function FeeStructureDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedFeeStructure, detailsStatus, getFeeStructureById } = useFeeStructures();
+  const { selectedFeeStructure, detailsStatus, loadFeeStructure } = useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
 
@@ -30,8 +30,9 @@ export default function FeeStructureDetailPage({
 
   // Load fee structure if not already loaded
   useEffect(() => {
-    getFeeStructureById(feeStructureId);
-  }, [getFeeStructureById, feeStructureId]);
+    //getFeeStructureById(feeStructureId);
+    loadFeeStructure(feeStructureId);
+  }, [loadFeeStructure, feeStructureId]);
 
   const config = useCreateFeeStructureDetailsConfig(
     selectedFeeStructure,

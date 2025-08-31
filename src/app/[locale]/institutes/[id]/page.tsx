@@ -21,7 +21,7 @@ export default function InstituteDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedInstitute, detailsStatus, getInstituteById } = useInstitutes();
+  const { selectedInstitute, detailsStatus, getInstituteById, loadInstitute } = useInstitutes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
 
@@ -30,8 +30,9 @@ export default function InstituteDetailPage({
 
   // Load institute if not already loaded
   useEffect(() => {
-    getInstituteById(instituteId);
-  }, [getInstituteById, instituteId]);
+    //getInstituteById(instituteId);
+    loadInstitute(instituteId);
+  }, [loadInstitute, instituteId]);
 
   const config = useCreateInstituteDetailsConfig(
     selectedInstitute,

@@ -21,7 +21,7 @@ export default function ClassScheduleDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedClassSchedule, detailsStatus, getClassScheduleById } = useClassSchedules();
+  const { selectedClassSchedule, detailsStatus, loadClassSchedule } = useClassSchedules();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });
 
@@ -30,8 +30,9 @@ export default function ClassScheduleDetailPage({
 
   // Load class schedule if not already loaded
   useEffect(() => {
-    getClassScheduleById(classScheduleId);
-  }, [getClassScheduleById, classScheduleId]);
+    //getClassScheduleById(classScheduleId);
+    loadClassSchedule(classScheduleId);
+  }, [loadClassSchedule, classScheduleId]);
 
   const config = useCreateClassScheduleDetailsConfig(
     selectedClassSchedule,

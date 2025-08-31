@@ -30,14 +30,15 @@ const InstituteDetailsDrawer: React.FC<InstituteDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedInstitute, getInstituteById, detailsStatus } = useInstitutes();
+  const { selectedInstitute, getInstituteById, detailsStatus, loadInstitute } = useInstitutes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
   useEffect(() => {
     if (visible && instituteId) {
-      getInstituteById(instituteId);
+      //getInstituteById(instituteId);
+      loadInstitute(instituteId);
     }
-  }, [visible, instituteId, getInstituteById]);
+  }, [visible, instituteId, loadInstitute]);
 
   const handleEdit = (institute: IInstitute) => {
     onEdit(institute.id);

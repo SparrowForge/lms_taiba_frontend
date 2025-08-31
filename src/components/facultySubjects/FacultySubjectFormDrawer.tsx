@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useFacultySubjects} from '@/hooks/useFacultySubjects';
 import {useLocalization} from '@/hooks/useLocalization';
+
+import { Status } from '@/types/common';
 
 import FacultySubjectForm from './FacultySubjectForm';
 
@@ -27,13 +29,14 @@ const FacultySubjectFormDrawer: React.FC<FacultySubjectFormDrawerProps> = ({
 }) => {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
-  const { selectedFacultySubject, getFacultySubjectById } = useFacultySubjects();
+  const { selectedFacultySubject, getFacultySubjectById, loadFacultySubject, detailsStatus } = useFacultySubjects();
 
   useEffect(() => {
     if (visible && mode === 'edit' && facultySubjectId) {
-      getFacultySubjectById(facultySubjectId);
+      //getFacultySubjectById(facultySubjectId);
+      loadFacultySubject(facultySubjectId);
     }
-  }, [visible, mode, facultySubjectId, getFacultySubjectById]);
+  }, [visible, mode, facultySubjectId, loadFacultySubject]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +45,10 @@ const FacultySubjectFormDrawer: React.FC<FacultySubjectFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

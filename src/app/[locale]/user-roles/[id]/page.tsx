@@ -21,7 +21,7 @@ export default function UserRoleDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedUserRole, detailsStatus, getUserRoleById } = useUserRoles();
+  const { selectedUserRole, detailsStatus, loadUserRole } = useUserRoles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER_ROLE, { defaultValue: 'User Role' });
 
@@ -30,8 +30,9 @@ export default function UserRoleDetailPage({
 
   // Load user role if not already loaded
   useEffect(() => {
-    getUserRoleById(userRoleId);
-  }, [getUserRoleById, userRoleId]);
+    //getUserRoleById(userRoleId);
+    loadUserRole(userRoleId);
+  }, [loadUserRole, userRoleId]);
 
   const config = useCreateUserRoleDetailsConfig(
     selectedUserRole,

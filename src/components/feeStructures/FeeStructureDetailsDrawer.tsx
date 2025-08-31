@@ -30,14 +30,15 @@ const FeeStructureDetailsDrawer: React.FC<FeeStructureDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedFeeStructure, getFeeStructureById, detailsStatus } = useFeeStructures();
+  const { selectedFeeStructure, loadFeeStructure, detailsStatus } = useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
   useEffect(() => {
     if (visible && feeStructureId) {
-      getFeeStructureById(feeStructureId);
+      //getFeeStructureById(feeStructureId);
+      loadFeeStructure(feeStructureId);
     }
-  }, [visible, feeStructureId, getFeeStructureById]);
+  }, [visible, feeStructureId, loadFeeStructure]);
 
   const handleEdit = (feeStructure: IFeeStructure) => {
     onEdit(feeStructure.id);

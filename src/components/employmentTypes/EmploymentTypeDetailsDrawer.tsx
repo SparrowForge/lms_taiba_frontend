@@ -30,14 +30,15 @@ const EmploymentTypeDetailsDrawer: React.FC<EmploymentTypeDetailsDrawerProps> = 
   onEdit,
 }) => {
 
-  const { selectedEmploymentType, getEmploymentTypeById, detailsStatus } = useEmploymentTypes();
+  const { selectedEmploymentType, loadEmploymentType, detailsStatus } = useEmploymentTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
   useEffect(() => {
     if (visible && employmentTypeId) {
-      getEmploymentTypeById(employmentTypeId);
+      //getEmploymentTypeById(employmentTypeId);
+      loadEmploymentType(employmentTypeId);
     }
-  }, [visible, employmentTypeId, getEmploymentTypeById]);
+  }, [visible, employmentTypeId, loadEmploymentType]);
 
   const handleEdit = (employmentType: IEmploymentType) => {
     onEdit(employmentType.id);

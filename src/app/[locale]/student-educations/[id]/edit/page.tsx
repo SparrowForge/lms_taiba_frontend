@@ -26,11 +26,12 @@ export default function StudentEducationEditPage({ params }: { params: Promise<{
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_EDUCATION, { defaultValue: 'Student Education' });
 
-  const { selectedStudentEducation, detailsStatus, getStudentEducationById } = useStudentEducations();
+  const { selectedStudentEducation, detailsStatus, loadStudentEducation } = useStudentEducations();
 
   React.useEffect(() => {
-    getStudentEducationById(studentEducationId);
-  }, [studentEducationId, getStudentEducationById]);
+    //getStudentEducationById(studentEducationId);
+    loadStudentEducation(studentEducationId);
+  }, [studentEducationId, loadStudentEducation]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;

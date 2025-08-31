@@ -21,7 +21,7 @@ export default function SubjectDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedSubject, detailsStatus, getSubjectById } = useSubjects();
+  const { selectedSubject, detailsStatus, loadSubject } = useSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
 
@@ -30,8 +30,9 @@ export default function SubjectDetailPage({
 
   // Load subject if not already loaded
   useEffect(() => {
-    getSubjectById(subjectId);
-  }, [getSubjectById, subjectId]);
+    //getSubjectById(subjectId);
+    loadSubject(subjectId);
+  }, [loadSubject, subjectId]);
 
   const config = useCreateSubjectDetailsConfig(
     selectedSubject,

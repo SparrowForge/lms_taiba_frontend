@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const MenuEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedMenu, detailsStatus, getMenuById } = useMenus();
+  const { selectedMenu, detailsStatus, loadMenu } = useMenus();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
 
   useEffect(() => {
     const menuId = parseInt(resolvedParams.id);
-    getMenuById(menuId);
-  }, [resolvedParams.id, getMenuById]);
+    //getMenuById(menuId);
+    loadMenu(menuId);
+  }, [resolvedParams.id, loadMenu]);
 
 
   if (detailsStatus.status === Status.LOADING) {

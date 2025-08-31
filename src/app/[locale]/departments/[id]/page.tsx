@@ -21,7 +21,7 @@ export default function DepartmentDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedDepartment, detailsStatus, getDepartmentById } = useDepartments();
+  const { selectedDepartment, detailsStatus, loadDepartment } = useDepartments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
 
@@ -30,8 +30,9 @@ export default function DepartmentDetailPage({
 
   // Load department if not already loaded
   useEffect(() => {
-    getDepartmentById(departmentId);
-  }, [getDepartmentById, departmentId]);
+    //getDepartmentById(departmentId);
+    loadDepartment(departmentId);
+  }, [loadDepartment, departmentId]);
 
   const config = useCreateDepartmentDetailsConfig(
     selectedDepartment,

@@ -21,14 +21,15 @@ import {ICourseAssignment, ICourseAssignmentUpdate} from '@/types/courseAssignme
 const CourseAssignmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedCourseAssignment, detailsStatus, getCourseAssignmentById } = useCourseAssignments();
+  const { selectedCourseAssignment, detailsStatus, loadCourseAssignment } = useCourseAssignments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
 
   useEffect(() => {
     const courseAssignmentId = parseInt(resolvedParams.id);
-    getCourseAssignmentById(courseAssignmentId);
-  }, [resolvedParams.id, getCourseAssignmentById]);
+    //getCourseAssignmentById(courseAssignmentId);
+    loadCourseAssignment(courseAssignmentId);
+  }, [resolvedParams.id, loadCourseAssignment]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;

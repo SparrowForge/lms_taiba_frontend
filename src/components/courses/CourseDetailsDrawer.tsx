@@ -30,14 +30,15 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedCourse, getCourseById, detailsStatus } = useCourses();
+  const { selectedCourse, loadCourse, detailsStatus } = useCourses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   useEffect(() => {
     if (visible && courseId) {
-      getCourseById(courseId);
+      //getCourseById(courseId);
+      loadCourse(courseId);
     }
-  }, [visible, courseId, getCourseById]);
+  }, [visible, courseId, loadCourse]);
 
   const handleEdit = (course: ICourse) => {
     onEdit(course.id);

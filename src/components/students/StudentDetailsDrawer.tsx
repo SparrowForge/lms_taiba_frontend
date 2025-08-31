@@ -30,15 +30,16 @@ const StudentDetailsDrawer: React.FC<StudentDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedStudent, getStudentById, detailsStatus } = useStudents();
+  const { selectedStudent, loadStudent, detailsStatus } = useStudents();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
 
   useEffect(() => {
     if (visible && studentId) {
-      getStudentById(studentId);
+      //getStudentById(studentId);
+      loadStudent(studentId);
     }
-  }, [visible, studentId, getStudentById]);
+  }, [visible, studentId, loadStudent]);
 
   const handleEdit = (student: IStudent) => {
     onEdit(student.id);

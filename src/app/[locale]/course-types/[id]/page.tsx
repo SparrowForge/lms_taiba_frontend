@@ -21,7 +21,7 @@ export default function CourseTypeDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedCourseType, detailsStatus, getCourseTypeById } = useCourseTypes();
+  const { selectedCourseType, detailsStatus, loadCourseType } = useCourseTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
 
@@ -30,8 +30,9 @@ export default function CourseTypeDetailPage({
 
   // Load course type if not already loaded
   useEffect(() => {
-    getCourseTypeById(courseTypeId);
-  }, [getCourseTypeById, courseTypeId]);
+    //getCourseTypeById(courseTypeId);
+    loadCourseType(courseTypeId);
+  }, [loadCourseType, courseTypeId]);
 
   const config = useCreateCourseTypeDetailsConfig(
     selectedCourseType,

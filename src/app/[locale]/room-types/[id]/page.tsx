@@ -21,7 +21,7 @@ export default function RoomTypeDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedRoomType, detailsStatus, getRoomTypeById } = useRoomTypes();
+  const { selectedRoomType, detailsStatus, loadRoomType } = useRoomTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' });
 
@@ -30,8 +30,9 @@ export default function RoomTypeDetailPage({
 
   // Load room type if not already loaded
   useEffect(() => {
-    getRoomTypeById(roomTypeId);
-  }, [getRoomTypeById, roomTypeId]);
+    //getRoomTypeById(roomTypeId);
+    loadRoomType(roomTypeId);
+  }, [loadRoomType, roomTypeId]);
 
   const config = useCreateRoomTypeDetailsConfig(
     selectedRoomType,

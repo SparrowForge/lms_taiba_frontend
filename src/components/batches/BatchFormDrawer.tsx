@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
+
+import { Status } from '@/types/common';
 
 import BatchForm from './BatchForm';
 
@@ -27,14 +29,15 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
   onSuccess,
 }) => {
 
-  const { getBatchById, selectedBatch } = useBatches();
+  const { getBatchById, selectedBatch, loadBatch, detailsStatus } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   useEffect(() => {
     if (visible && mode === 'edit' && batchId) {
-      getBatchById(batchId);
+      //getBatchById(batchId);
+      loadBatch(batchId);
     }
-  }, [visible, mode, batchId, getBatchById]);
+  }, [visible, mode, batchId, loadBatch]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +46,10 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

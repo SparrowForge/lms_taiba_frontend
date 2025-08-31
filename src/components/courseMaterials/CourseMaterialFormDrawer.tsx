@@ -1,6 +1,6 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
@@ -9,6 +9,7 @@ import {useCourseMaterials} from '@/hooks/useCourseMaterials';
 import {useLocalization} from '@/hooks/useLocalization';
 
 
+import { Status } from '@/types/common';
 import {ICourseMaterial} from '@/types/courseMaterial';
 
 import CourseMaterialForm from './CourseMaterialForm';
@@ -29,14 +30,15 @@ const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
   onSuccess,
 }) => {
   const { t } = useLocalization();
-  const { selectedCourseMaterial, getCourseMaterialById } = useCourseMaterials();
+  const { selectedCourseMaterial, getCourseMaterialById, loadCourseMaterial, detailsStatus } = useCourseMaterials();
   const entityName = t(LOCALE_KEYS.COURSE_MATERIAL, { defaultValue: 'Course Material' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && courseMaterialId) {
-      getCourseMaterialById(courseMaterialId);
+      //getCourseMaterialById(courseMaterialId);
+      loadCourseMaterial(courseMaterialId);
     }
-  }, [visible, mode, courseMaterialId, getCourseMaterialById]);
+  }, [visible, mode, courseMaterialId, loadCourseMaterial]);
 
   const getTitle = () => {
     if (mode === 'create') {
@@ -54,6 +56,10 @@ const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
       fileId: courseMaterial.fileId ?? undefined,
     };
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

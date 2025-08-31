@@ -30,14 +30,15 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedMenu, getMenuById, detailsStatus } = useMenus();
+  const { selectedMenu, loadMenu, detailsStatus } = useMenus();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   useEffect(() => {
     if (visible && menuId) {
-      getMenuById(menuId);
+      //getMenuById(menuId);
+      loadMenu(menuId);
     }
-  }, [visible, menuId, getMenuById]);
+  }, [visible, menuId, loadMenu]);
 
   const handleEdit = (menu: IMenu) => {
     onEdit(menu.id);

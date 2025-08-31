@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useClassSchedules} from '@/hooks/useClassSchedules';
 import {useLocalization} from '@/hooks/useLocalization';
+
+import { Status } from '@/types/common';
 
 import ClassScheduleForm from './ClassScheduleForm';
 
@@ -26,15 +28,16 @@ const ClassScheduleFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getClassScheduleById, selectedClassSchedule } = useClassSchedules();
+  const { getClassScheduleById, selectedClassSchedule, loadClassSchedule, detailsStatus } = useClassSchedules();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && classScheduleId) {
-      getClassScheduleById(classScheduleId);
+      //getClassScheduleById(classScheduleId);
+      loadClassSchedule(classScheduleId);
     }
-  }, [visible, mode, classScheduleId, getClassScheduleById]);
+  }, [visible, mode, classScheduleId, loadClassSchedule]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +45,10 @@ const ClassScheduleFormDrawer: React.FC<Props> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

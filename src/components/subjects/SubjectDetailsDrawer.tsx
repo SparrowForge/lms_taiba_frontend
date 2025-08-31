@@ -30,14 +30,15 @@ const SubjectDetailsDrawer: React.FC<SubjectDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedSubject, getSubjectById, detailsStatus } = useSubjects();
+  const { selectedSubject, loadSubject, detailsStatus } = useSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
   useEffect(() => {
     if (visible && subjectId) {
-      getSubjectById(subjectId);
+      //getSubjectById(subjectId);
+      loadSubject(subjectId);
     }
-  }, [visible, subjectId, getSubjectById]);
+  }, [visible, subjectId, loadSubject]);
 
   const handleEdit = (subject: ISubject) => {
     onEdit(subject.id);

@@ -28,15 +28,16 @@ const RoomDetailsDrawer: React.FC<RoomDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { selectedRoom, getRoomById, detailsStatus } = useRooms();
+  const { selectedRoom, loadRoom, detailsStatus } = useRooms();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM, { defaultValue: 'Room' });
 
   React.useEffect(() => {
     if (visible && roomId) {
-      getRoomById(roomId);
+      //getRoomById(roomId);
+      loadRoom(roomId);
     }
-  }, [visible, roomId, getRoomById]);
+  }, [visible, roomId, loadRoom]);
 
   const handleEdit = (room: IRoom) => {
     onEdit(room.id);

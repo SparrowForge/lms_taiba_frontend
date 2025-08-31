@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 import {useLocalization} from '@/hooks/useLocalization';
+
+import { Status } from '@/types/common';
 
 import EmploymentTypeForm from './EmploymentTypeForm';
 
@@ -26,15 +28,16 @@ const EmploymentTypeFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getEmploymentTypeById, selectedEmploymentType } = useEmploymentTypes();
+  const { getEmploymentTypeById, selectedEmploymentType, loadEmploymentType, detailsStatus } = useEmploymentTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && employmentTypeId) {
-      getEmploymentTypeById(employmentTypeId);
+      //getEmploymentTypeById(employmentTypeId);
+      loadEmploymentType(employmentTypeId);
     }
-  }, [visible, mode, employmentTypeId, getEmploymentTypeById]);
+  }, [visible, mode, employmentTypeId, loadEmploymentType]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +45,10 @@ const EmploymentTypeFormDrawer: React.FC<Props> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

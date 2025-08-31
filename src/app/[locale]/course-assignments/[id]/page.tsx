@@ -21,7 +21,7 @@ export default function CourseAssignmentDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedCourseAssignment, detailsStatus, getCourseAssignmentById } = useCourseAssignments();
+  const { selectedCourseAssignment, detailsStatus, loadCourseAssignment } = useCourseAssignments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
 
@@ -30,8 +30,9 @@ export default function CourseAssignmentDetailPage({
 
   // Load course assignment if not already loaded
   useEffect(() => {
-    getCourseAssignmentById(courseAssignmentId);
-  }, [getCourseAssignmentById, courseAssignmentId]);
+    //getCourseAssignmentById(courseAssignmentId);
+    loadCourseAssignment(courseAssignmentId);
+  }, [loadCourseAssignment, courseAssignmentId]);
 
   const config = useCreateCourseAssignmentDetailsConfig(
     selectedCourseAssignment,

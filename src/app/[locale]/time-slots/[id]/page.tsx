@@ -21,7 +21,7 @@ export default function TimeSlotDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedTimeSlot, detailsStatus, getTimeSlotById } = useTimeSlots();
+  const { selectedTimeSlot, detailsStatus, loadTimeSlot } = useTimeSlots();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.TIME_SLOT, { defaultValue: 'Time Slot' });
 
@@ -29,8 +29,9 @@ export default function TimeSlotDetailPage({
   const timeSlotId = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    getTimeSlotById(timeSlotId);
-  }, [getTimeSlotById, timeSlotId]);
+    //getTimeSlotById(timeSlotId);
+    loadTimeSlot(timeSlotId);
+  }, [loadTimeSlot, timeSlotId]);
 
   const config = useCreateTimeSlotDetailsConfig(
     selectedTimeSlot,

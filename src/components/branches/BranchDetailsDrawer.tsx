@@ -30,14 +30,15 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedBranch, getBranchById, detailsStatus } = useBranches();
+  const { selectedBranch, loadBranch, detailsStatus } = useBranches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
   useEffect(() => {
     if (visible && branchId) {
-      getBranchById(branchId);
+      //getBranchById(branchId);
+      loadBranch(branchId);
     }
-  }, [visible, branchId, getBranchById]);
+  }, [visible, branchId, loadBranch]);
 
   const handleEdit = (branch: IBranch) => {
     onEdit(branch.id);

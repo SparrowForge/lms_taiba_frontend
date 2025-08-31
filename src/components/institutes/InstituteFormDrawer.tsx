@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useInstitutes} from '@/hooks/useInstitutes';
 import {useLocalization} from '@/hooks/useLocalization';
+
+import {Status} from '@/types/common';
 
 import InstituteForm from './InstituteForm';
 
@@ -26,15 +28,16 @@ const InstituteFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getInstituteById, selectedInstitute } = useInstitutes();
+  const { getInstituteById, selectedInstitute, detailsStatus, loadInstitute } = useInstitutes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && instituteId) {
-      getInstituteById(instituteId);
+      //getInstituteById(instituteId);
+      loadInstitute(instituteId);
     }
-  }, [visible, mode, instituteId, getInstituteById]);
+  }, [visible, mode, instituteId, loadInstitute]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +45,10 @@ const InstituteFormDrawer: React.FC<Props> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const ClassScheduleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedClassSchedule, detailsStatus, getClassScheduleById } = useClassSchedules();
+  const { selectedClassSchedule, detailsStatus, loadClassSchedule } = useClassSchedules();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });
 
   useEffect(() => {
     const classScheduleId = parseInt(resolvedParams.id);
-    getClassScheduleById(classScheduleId);
-  }, [resolvedParams.id, getClassScheduleById]);
+    //getClassScheduleById(classScheduleId);
+    loadClassSchedule(classScheduleId);
+  }, [resolvedParams.id, loadClassSchedule]);
 
 
   if (detailsStatus.status === Status.LOADING) {

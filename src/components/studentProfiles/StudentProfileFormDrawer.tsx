@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentProfiles} from '@/hooks/useStudentProfiles';
+
+import { Status } from '@/types/common';
 
 import StudentProfileForm from './StudentProfileForm';
 
@@ -25,15 +27,16 @@ const StudentProfileFormDrawer: React.FC<StudentProfileFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getStudentProfileById, selectedStudentProfile } = useStudentProfiles();
+  const { getStudentProfileById, selectedStudentProfile, loadStudentProfile, detailsStatus } = useStudentProfiles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_PROFILE, { defaultValue: 'Student Profile' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && studentProfileId) {
-      getStudentProfileById(studentProfileId);
+      //getStudentProfileById(studentProfileId);
+      loadStudentProfile(studentProfileId);
     }
-  }, [visible, mode, studentProfileId, getStudentProfileById]);
+  }, [visible, mode, studentProfileId, loadStudentProfile]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +45,10 @@ const StudentProfileFormDrawer: React.FC<StudentProfileFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

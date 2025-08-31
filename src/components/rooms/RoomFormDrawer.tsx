@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRooms} from '@/hooks/useRooms';
+
+import { Status } from '@/types/common';
 
 import RoomForm from './RoomForm';
 
@@ -25,15 +27,20 @@ const RoomFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getRoomById, selectedRoom } = useRooms();
+  const { getRoomById, selectedRoom, loadRoom, detailsStatus } = useRooms();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM, { defaultValue: 'Room' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && roomId) {
-      getRoomById(roomId);
+      //getRoomById(roomId);
+      loadRoom(roomId);
     }
-  }, [visible, mode, roomId, getRoomById]);
+  }, [visible, mode, roomId, loadRoom]);
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

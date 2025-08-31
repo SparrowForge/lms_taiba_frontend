@@ -23,11 +23,12 @@ export default function StudentFamilyDetailPage({ params }: { params: Promise<{ 
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_FAMILY, { defaultValue: 'Student Family' });
 
-  const { selectedStudentFamily, detailsStatus, getStudentFamilyById } = useStudentFamilies();
+  const { selectedStudentFamily, detailsStatus, loadStudentFamily } = useStudentFamilies();
 
   React.useEffect(() => {
-    getStudentFamilyById(studentFamilyId);
-  }, [studentFamilyId, getStudentFamilyById]);
+    //getStudentFamilyById(studentFamilyId);
+    loadStudentFamily(studentFamilyId);
+  }, [studentFamilyId, loadStudentFamily]);
 
   const config = useCreateStudentFamilyDetailsConfig(
     selectedStudentFamily,

@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const FacultySubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedFacultySubject, detailsStatus, getFacultySubjectById } = useFacultySubjects();
+  const { selectedFacultySubject, detailsStatus, loadFacultySubject } = useFacultySubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
 
   useEffect(() => {
     const facultySubjectId = parseInt(resolvedParams.id);
-    getFacultySubjectById(facultySubjectId);
-  }, [resolvedParams.id, getFacultySubjectById]);
+    //getFacultySubjectById(facultySubjectId);
+    loadFacultySubject(facultySubjectId);
+  }, [resolvedParams.id, loadFacultySubject]);
 
 
   if (detailsStatus.status === Status.LOADING) {

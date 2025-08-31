@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const EmploymentTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedEmploymentType, detailsStatus, getEmploymentTypeById } = useEmploymentTypes();
+  const { selectedEmploymentType, detailsStatus, loadEmploymentType } = useEmploymentTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
 
   useEffect(() => {
     const employmentTypeId = parseInt(resolvedParams.id);
-    getEmploymentTypeById(employmentTypeId);
-  }, [resolvedParams.id, getEmploymentTypeById]);
+    //getEmploymentTypeById(employmentTypeId);
+    loadEmploymentType(employmentTypeId);
+  }, [resolvedParams.id, loadEmploymentType]);
 
 
   if (detailsStatus.status === Status.LOADING) {

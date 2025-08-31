@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const CourseTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedCourseType, detailsStatus, getCourseTypeById } = useCourseTypes();
+  const { selectedCourseType, detailsStatus, loadCourseType } = useCourseTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
 
   useEffect(() => {
     const courseTypeId = parseInt(resolvedParams.id);
-    getCourseTypeById(courseTypeId);
-  }, [resolvedParams.id, getCourseTypeById]);
+    //getCourseTypeById(courseTypeId);
+    loadCourseType(courseTypeId);
+  }, [resolvedParams.id, loadCourseType]);
 
 
   if (detailsStatus.status === Status.LOADING) {

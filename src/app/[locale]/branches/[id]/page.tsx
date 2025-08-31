@@ -21,7 +21,7 @@ export default function BranchDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedBranch, detailsStatus, getBranchById } = useBranches();
+  const { selectedBranch, detailsStatus, loadBranch } = useBranches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
 
@@ -30,8 +30,9 @@ export default function BranchDetailPage({
 
   // Load branch if not already loaded
   useEffect(() => {
-    getBranchById(branchId);
-  }, [getBranchById, branchId]);
+    //getBranchById(branchId);
+    loadBranch(branchId);
+  }, [loadBranch, branchId]);
 
   const config = useCreateBranchDetailsConfig(
     selectedBranch,

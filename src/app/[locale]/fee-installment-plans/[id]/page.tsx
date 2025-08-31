@@ -21,7 +21,7 @@ export default function FeeInstallmentPlanDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedFeeInstallmentPlan, detailsStatus, getFeeInstallmentPlanById } = useFeeInstallmentPlans();
+  const { selectedFeeInstallmentPlan, detailsStatus, loadFeeInstallmentPlan } = useFeeInstallmentPlans();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
 
@@ -30,8 +30,9 @@ export default function FeeInstallmentPlanDetailPage({
 
   // Load fee installment plan if not already loaded
   useEffect(() => {
-    getFeeInstallmentPlanById(feeInstallmentPlanId);
-  }, [getFeeInstallmentPlanById, feeInstallmentPlanId]);
+    //getFeeInstallmentPlanById(feeInstallmentPlanId);
+    loadFeeInstallmentPlan(feeInstallmentPlanId);
+  }, [loadFeeInstallmentPlan, feeInstallmentPlanId]);
 
   const config = useCreateFeeInstallmentPlanDetailsConfig(
     selectedFeeInstallmentPlan,

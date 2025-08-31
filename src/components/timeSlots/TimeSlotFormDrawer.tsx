@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useTimeSlots} from '@/hooks/useTimeSlots';
+
+import { Status } from '@/types/common';
 
 import TimeSlotForm from './TimeSlotForm';
 
@@ -25,15 +27,16 @@ const TimeSlotFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getTimeSlotById, selectedTimeSlot } = useTimeSlots();
+  const { getTimeSlotById, selectedTimeSlot, loadTimeSlot, detailsStatus } = useTimeSlots();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.TIME_SLOT, { defaultValue: 'Time Slot' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && timeSlotId) {
-      getTimeSlotById(timeSlotId);
+      //getTimeSlotById(timeSlotId);
+      loadTimeSlot(timeSlotId);
     }
-  }, [visible, mode, timeSlotId, getTimeSlotById]);
+  }, [visible, mode, timeSlotId, loadTimeSlot]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -41,6 +44,10 @@ const TimeSlotFormDrawer: React.FC<Props> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

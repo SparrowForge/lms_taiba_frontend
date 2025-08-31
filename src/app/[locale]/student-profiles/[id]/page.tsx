@@ -23,11 +23,12 @@ export default function StudentProfileDetailPage({ params }: { params: Promise<{
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_PROFILE, { defaultValue: 'Student Profile' });
 
-  const { selectedStudentProfile, detailsStatus, getStudentProfileById } = useStudentProfiles();
+  const { selectedStudentProfile, detailsStatus, loadStudentProfile } = useStudentProfiles();
 
   React.useEffect(() => {
-    getStudentProfileById(studentProfileId);
-  }, [studentProfileId, getStudentProfileById]);
+    //getStudentProfileById(studentProfileId);
+    loadStudentProfile(studentProfileId);
+  }, [studentProfileId, loadStudentProfile]);
 
   const config = useCreateStudentProfileDetailsConfig(
     selectedStudentProfile,

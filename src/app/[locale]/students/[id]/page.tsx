@@ -21,7 +21,7 @@ export default function StudentDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedStudent, detailsStatus, getStudentById } = useStudents();
+  const { selectedStudent, detailsStatus, loadStudent } = useStudents();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
 
@@ -30,8 +30,9 @@ export default function StudentDetailPage({
 
   // Load student if not already loaded
   useEffect(() => {
-    getStudentById(studentId);
-  }, [getStudentById, studentId]);
+    //getStudentById(studentId);
+    loadStudent(studentId);
+  }, [loadStudent, studentId]);
 
   const config = useCreateStudentDetailsConfig(
     selectedStudent,

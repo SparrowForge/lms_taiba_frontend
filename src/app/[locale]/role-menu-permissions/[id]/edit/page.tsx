@@ -22,15 +22,16 @@ import {IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
 const RoleMenuPermissionEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedRoleMenuPermission, detailsStatus, getRoleMenuPermissionById } = useRoleMenuPermissions();
+  const { selectedRoleMenuPermission, detailsStatus, loadRoleMenuPermission } = useRoleMenuPermissions();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
 
   const id = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    getRoleMenuPermissionById(id);
-  }, [getRoleMenuPermissionById, id]);
+    //getRoleMenuPermissionById(id);
+    loadRoleMenuPermission(id);
+  }, [loadRoleMenuPermission, id]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;

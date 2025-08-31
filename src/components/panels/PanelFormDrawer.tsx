@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
+
+import { Status } from '@/types/common';
 
 import PanelForm from './PanelForm';
 
@@ -27,14 +29,15 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
   onSuccess,
 }) => {
 
-  const { getPanelById, selectedPanel } = usePanels();
+  const { getPanelById, selectedPanel, loadPanel, detailsStatus } = usePanels();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
   useEffect(() => {
     if (visible && mode === 'edit' && panelId) {
-      getPanelById(panelId);
+      //getPanelById(panelId);
+      loadPanel(panelId);
     }
-  }, [visible, mode, panelId, getPanelById]);
+  }, [visible, mode, panelId, loadPanel]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +46,10 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

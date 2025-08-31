@@ -21,7 +21,7 @@ export default function SemesterSubjectDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedSemesterSubject, detailsStatus, getSemesterSubjectById } = useSemesterSubjects();
+  const { selectedSemesterSubject, detailsStatus, loadSemesterSubject } = useSemesterSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
 
@@ -30,8 +30,9 @@ export default function SemesterSubjectDetailPage({
 
   // Load semester subject if not already loaded
   useEffect(() => {
-    getSemesterSubjectById(semesterSubjectId);
-  }, [getSemesterSubjectById, semesterSubjectId]);
+    //getSemesterSubjectById(semesterSubjectId);
+    loadSemesterSubject(semesterSubjectId);
+  }, [loadSemesterSubject, semesterSubjectId]);
 
   const config = useCreateSemesterSubjectDetailsConfig(
     selectedSemesterSubject,

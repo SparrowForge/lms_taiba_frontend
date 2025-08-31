@@ -30,14 +30,15 @@ const AddressDetailsDrawer: React.FC<AddressDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedAddress, getAddressById, detailsStatus } = useAddresses();
+  const { selectedAddress, loadAddress, detailsStatus } = useAddresses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
   useEffect(() => {
     if (visible && addressId) {
-      getAddressById(addressId);
+      //getAddressById(addressId);
+      loadAddress(addressId);
     }
-  }, [visible, addressId, getAddressById]);
+  }, [visible, addressId, loadAddress]);
 
   const handleEdit = (address: IAddress) => {
     onEdit(address.id);

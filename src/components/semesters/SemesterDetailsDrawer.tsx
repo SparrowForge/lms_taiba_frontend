@@ -30,14 +30,15 @@ const SemesterDetailsDrawer: React.FC<SemesterDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedSemester, getSemesterById, detailsStatus } = useSemesters();
+  const { selectedSemester, loadSemester, detailsStatus } = useSemesters();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   useEffect(() => {
     if (visible && semesterId) {
-      getSemesterById(semesterId);
+      //getSemesterById(semesterId);
+      loadSemester(semesterId);
     }
-  }, [visible, semesterId, getSemesterById]);
+  }, [visible, semesterId, loadSemester]);
 
   const handleEdit = (semester: ISemester) => {
     onEdit(semester.id);

@@ -21,15 +21,16 @@ import {Status} from '@/types/common';
 const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedAddress, detailsStatus, getAddressById } = useAddresses();
+  const { selectedAddress, detailsStatus, loadAddress } = useAddresses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
 
   const addressId = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    getAddressById(addressId);
-  }, [addressId, getAddressById]);
+    //getAddressById(addressId);
+    loadAddress(addressId);
+  }, [addressId, loadAddress]);
 
 
   if (detailsStatus.status === Status.LOADING) {

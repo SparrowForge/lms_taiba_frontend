@@ -30,14 +30,15 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedBatch, getBatchById, detailsStatus } = useBatches();
+  const { selectedBatch, loadBatch, detailsStatus } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   useEffect(() => {
     if (visible && batchId) {
-      getBatchById(batchId);
+      //getBatchById(batchId);
+      loadBatch(batchId);
     }
-  }, [visible, batchId, getBatchById]);
+  }, [visible, batchId, loadBatch]);
 
   const handleEdit = (batch: IBatch) => {
     onEdit(batch.id);

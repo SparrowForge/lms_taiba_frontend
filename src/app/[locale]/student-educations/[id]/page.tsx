@@ -23,11 +23,12 @@ export default function StudentEducationDetailPage({ params }: { params: Promise
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_EDUCATION, { defaultValue: 'Student Education' });
 
-  const { selectedStudentEducation, detailsStatus, getStudentEducationById } = useStudentEducations();
+  const { selectedStudentEducation, detailsStatus, loadStudentEducation } = useStudentEducations();
 
   React.useEffect(() => {
-    getStudentEducationById(studentEducationId);
-  }, [studentEducationId, getStudentEducationById]);
+    //getStudentEducationById(studentEducationId);
+    loadStudentEducation(studentEducationId);
+  }, [studentEducationId, loadStudentEducation]);
 
   const config = useCreateStudentEducationDetailsConfig(
     selectedStudentEducation,

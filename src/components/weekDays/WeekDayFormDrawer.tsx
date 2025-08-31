@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useWeekDays} from '@/hooks/useWeekDays';
+
+import { Status } from '@/types/common';
 
 import WeekDayForm from './WeekDayForm';
 
@@ -26,15 +28,16 @@ const WeekDayFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getWeekDayById, selectedWeekDay } = useWeekDays();
+  const { getWeekDayById, selectedWeekDay, loadWeekDay, detailsStatus } = useWeekDays();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && weekDayId) {
-      getWeekDayById(weekDayId);
+      //getWeekDayById(weekDayId);
+      loadWeekDay(weekDayId);
     }
-  }, [visible, mode, weekDayId, getWeekDayById]);
+  }, [visible, mode, weekDayId, loadWeekDay]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +45,10 @@ const WeekDayFormDrawer: React.FC<Props> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

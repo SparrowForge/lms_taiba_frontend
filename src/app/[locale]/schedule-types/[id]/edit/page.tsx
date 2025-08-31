@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedScheduleType, detailsStatus, getScheduleTypeById } = useScheduleTypes();
+  const { selectedScheduleType, detailsStatus, loadScheduleType } = useScheduleTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
   useEffect(() => {
     const scheduleTypeId = parseInt(resolvedParams.id);
-    getScheduleTypeById(scheduleTypeId);
-  }, [resolvedParams.id, getScheduleTypeById]);
+    //getScheduleTypeById(scheduleTypeId);
+    loadScheduleType(scheduleTypeId);
+  }, [resolvedParams.id, loadScheduleType]);
 
 
   if (detailsStatus.status === Status.LOADING) {

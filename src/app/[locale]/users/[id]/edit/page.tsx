@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const UserEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedUser, detailsStatus, getUserById } = useUsers();
+  const { selectedUser, detailsStatus, loadUser } = useUsers();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
 
   useEffect(() => {
     const userId = parseInt(resolvedParams.id);
-    getUserById(userId);
-  }, [resolvedParams.id, getUserById]);
+    //getUserById(userId);
+    loadUser(userId);
+  }, [resolvedParams.id, loadUser]);
 
 
   if (detailsStatus.status === Status.LOADING) {

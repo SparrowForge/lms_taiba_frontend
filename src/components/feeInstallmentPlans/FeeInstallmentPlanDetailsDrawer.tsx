@@ -30,14 +30,15 @@ const FeeInstallmentPlanDetailsDrawer: React.FC<FeeInstallmentPlanDetailsDrawerP
   onEdit,
 }) => {
 
-  const { selectedFeeInstallmentPlan, getFeeInstallmentPlanById, detailsStatus } = useFeeInstallmentPlans();
+  const { selectedFeeInstallmentPlan, loadFeeInstallmentPlan, detailsStatus } = useFeeInstallmentPlans();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
   useEffect(() => {
     if (visible && feeInstallmentPlanId) {
-      getFeeInstallmentPlanById(feeInstallmentPlanId);
+      //getFeeInstallmentPlanById(feeInstallmentPlanId);
+      loadFeeInstallmentPlan(feeInstallmentPlanId);
     }
-  }, [visible, feeInstallmentPlanId, getFeeInstallmentPlanById]);
+  }, [visible, feeInstallmentPlanId, loadFeeInstallmentPlan]);
 
   const handleEdit = (feeInstallmentPlan: IFeeInstallmentPlan) => {
     onEdit(feeInstallmentPlan.id);

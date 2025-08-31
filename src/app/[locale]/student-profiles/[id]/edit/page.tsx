@@ -26,11 +26,12 @@ export default function StudentProfileEditPage({ params }: { params: Promise<{ i
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_PROFILE, { defaultValue: 'Student Profile' });
 
-  const { selectedStudentProfile, detailsStatus, getStudentProfileById } = useStudentProfiles();
+  const { selectedStudentProfile, detailsStatus, loadStudentProfile } = useStudentProfiles();
 
   React.useEffect(() => {
-    getStudentProfileById(studentProfileId);
-  }, [studentProfileId, getStudentProfileById]);
+    //getStudentProfileById(studentProfileId);
+    loadStudentProfile(studentProfileId);
+  }, [studentProfileId, loadStudentProfile]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;

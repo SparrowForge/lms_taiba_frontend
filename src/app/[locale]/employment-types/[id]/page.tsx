@@ -21,7 +21,7 @@ export default function EmploymentTypeDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedEmploymentType, detailsStatus, getEmploymentTypeById } = useEmploymentTypes();
+  const { selectedEmploymentType, detailsStatus, loadEmploymentType } = useEmploymentTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
 
@@ -30,8 +30,9 @@ export default function EmploymentTypeDetailPage({
 
   // Load employment type if not already loaded
   useEffect(() => {
-    getEmploymentTypeById(employmentTypeId);
-  }, [getEmploymentTypeById, employmentTypeId]);
+    //getEmploymentTypeById(employmentTypeId);
+    loadEmploymentType(employmentTypeId);
+  }, [loadEmploymentType, employmentTypeId]);
 
   const config = useCreateEmploymentTypeDetailsConfig(
     selectedEmploymentType,

@@ -30,14 +30,15 @@ const CourseMaterialDetailsDrawer: React.FC<CourseMaterialDetailsDrawerProps> = 
   onEdit,
 }) => {
   const { t } = useLocalization();
-  const { selectedCourseMaterial, getCourseMaterialById, detailsStatus } = useCourseMaterials();
+  const { selectedCourseMaterial, loadCourseMaterial, detailsStatus } = useCourseMaterials();
   const entityName = t(LOCALE_KEYS.COURSE_MATERIAL, { defaultValue: 'Course Material' });
 
   useEffect(() => {
     if (visible && courseMaterialId) {
-      getCourseMaterialById(courseMaterialId);
+      //getCourseMaterialById(courseMaterialId);
+      loadCourseMaterial(courseMaterialId);
     }
-  }, [visible, courseMaterialId, getCourseMaterialById]);
+  }, [visible, courseMaterialId, loadCourseMaterial]);
 
   const handleEdit = (courseMaterial: ICourseMaterial) => {
     onEdit(courseMaterial.id);

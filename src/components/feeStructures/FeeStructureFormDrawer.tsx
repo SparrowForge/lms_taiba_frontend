@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
+
+import { Status } from '@/types/common';
 
 import FeeStructureForm from './FeeStructureForm';
 
@@ -27,14 +29,15 @@ const FeeStructureFormDrawer: React.FC<FeeStructureFormDrawerProps> = ({
   onSuccess,
 }) => {
 
-  const { getFeeStructureById, selectedFeeStructure } = useFeeStructures();
+  const { getFeeStructureById, selectedFeeStructure, loadFeeStructure, detailsStatus } = useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
   useEffect(() => {
     if (visible && mode === 'edit' && feeStructureId) {
-      getFeeStructureById(feeStructureId);
+      //getFeeStructureById(feeStructureId);
+      loadFeeStructure(feeStructureId);
     }
-  }, [visible, mode, feeStructureId, getFeeStructureById]);
+  }, [visible, mode, feeStructureId, loadFeeStructure]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +46,10 @@ const FeeStructureFormDrawer: React.FC<FeeStructureFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

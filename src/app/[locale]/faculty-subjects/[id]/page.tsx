@@ -21,7 +21,7 @@ export default function FacultySubjectDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedFacultySubject, detailsStatus, getFacultySubjectById } = useFacultySubjects();
+  const { selectedFacultySubject, detailsStatus, loadFacultySubject } = useFacultySubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
 
@@ -30,8 +30,9 @@ export default function FacultySubjectDetailPage({
 
   // Load faculty subject if not already loaded
   useEffect(() => {
-    getFacultySubjectById(facultySubjectId);
-  }, [getFacultySubjectById, facultySubjectId]);
+    //getFacultySubjectById(facultySubjectId);
+    loadFacultySubject(facultySubjectId);
+  }, [loadFacultySubject, facultySubjectId]);
 
   const config = useCreateFacultySubjectDetailsConfig(
     selectedFacultySubject,

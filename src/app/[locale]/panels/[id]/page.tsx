@@ -21,7 +21,7 @@ export default function PanelDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedPanel, detailsStatus, getPanelById } = usePanels();
+  const { selectedPanel, detailsStatus, loadPanel } = usePanels();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
 
@@ -30,8 +30,9 @@ export default function PanelDetailPage({
 
   // Load panel if not already loaded
   useEffect(() => {
-    getPanelById(panelId);
-  }, [getPanelById, panelId]);
+    //getPanelById(panelId);
+    loadPanel(panelId);
+  }, [loadPanel, panelId]);
 
   const config = useCreatePanelDetailsConfig(
     selectedPanel,

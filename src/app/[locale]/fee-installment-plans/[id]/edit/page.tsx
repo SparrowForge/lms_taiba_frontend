@@ -22,15 +22,16 @@ import {IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
 const FeeInstallmentPlanEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedFeeInstallmentPlan, detailsStatus, getFeeInstallmentPlanById } = useFeeInstallmentPlans();
+  const { selectedFeeInstallmentPlan, detailsStatus, loadFeeInstallmentPlan } = useFeeInstallmentPlans();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
 
   const id = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    getFeeInstallmentPlanById(id);
-  }, [getFeeInstallmentPlanById, id]);
+    //getFeeInstallmentPlanById(id);
+    loadFeeInstallmentPlan(id);
+  }, [loadFeeInstallmentPlan, id]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;

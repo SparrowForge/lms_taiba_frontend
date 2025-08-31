@@ -30,14 +30,15 @@ const ClassScheduleDetailsDrawer: React.FC<ClassScheduleDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedClassSchedule, getClassScheduleById, detailsStatus } = useClassSchedules();
+  const { selectedClassSchedule, loadClassSchedule, detailsStatus } = useClassSchedules();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });
   useEffect(() => {
     if (visible && classScheduleId) {
-      getClassScheduleById(classScheduleId);
+      //getClassScheduleById(classScheduleId);
+      loadClassSchedule(classScheduleId);
     }
-  }, [visible, classScheduleId, getClassScheduleById]);
+  }, [visible, classScheduleId, loadClassSchedule]);
 
   const handleEdit = (classSchedule: IClassSchedule) => {
     onEdit(classSchedule.id);

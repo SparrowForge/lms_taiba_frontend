@@ -21,14 +21,15 @@ import {ICourseMaterial, ICourseMaterialUpdate} from '@/types/courseMaterial';
 const CourseMaterialEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedCourseMaterial, detailsStatus, getCourseMaterialById } = useCourseMaterials();
+  const { selectedCourseMaterial, detailsStatus, loadCourseMaterial } = useCourseMaterials();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_MATERIAL, { defaultValue: 'Course Material' });
 
   useEffect(() => {
     const courseMaterialId = parseInt(resolvedParams.id);
-    getCourseMaterialById(courseMaterialId);
-  }, [resolvedParams.id, getCourseMaterialById]);
+    //getCourseMaterialById(courseMaterialId);
+    loadCourseMaterial(courseMaterialId);
+  }, [resolvedParams.id, loadCourseMaterial]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;

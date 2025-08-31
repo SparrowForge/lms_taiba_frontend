@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSubjects} from '@/hooks/useSubjects';
+
+import { Status } from '@/types/common';
 
 import SubjectForm from './SubjectForm';
 
@@ -27,14 +29,15 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
   onSuccess,
 }) => {
 
-  const { getSubjectById, selectedSubject } = useSubjects();
+  const { getSubjectById, selectedSubject, loadSubject, detailsStatus } = useSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
   useEffect(() => {
     if (visible && mode === 'edit' && subjectId) {
-      getSubjectById(subjectId);
+      //getSubjectById(subjectId);
+      loadSubject(subjectId);
     }
-  }, [visible, mode, subjectId, getSubjectById]);
+  }, [visible, mode, subjectId, loadSubject]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +46,10 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

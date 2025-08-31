@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const WeekDayEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedWeekDay, detailsStatus, getWeekDayById } = useWeekDays();
+  const { selectedWeekDay, detailsStatus, loadWeekDay } = useWeekDays();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
 
   useEffect(() => {
     const weekDayId = parseInt(resolvedParams.id);
-    getWeekDayById(weekDayId);
-  }, [resolvedParams.id, getWeekDayById]);
+    //getWeekDayById(weekDayId);
+    loadWeekDay(weekDayId);
+  }, [resolvedParams.id, loadWeekDay]);
 
 
   if (detailsStatus.status === Status.LOADING) {

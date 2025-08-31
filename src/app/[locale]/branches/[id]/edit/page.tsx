@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const BranchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedBranch, detailsStatus, getBranchById } = useBranches();
+  const { selectedBranch, detailsStatus, loadBranch } = useBranches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
 
   useEffect(() => {
     const branchId = parseInt(resolvedParams.id);
-    getBranchById(branchId);
-  }, [resolvedParams.id, getBranchById]);
+    //getBranchById(branchId);
+    loadBranch(branchId);
+  }, [resolvedParams.id, loadBranch]);
 
 
   if (detailsStatus.status === Status.LOADING) {

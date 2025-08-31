@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
+
+import { Status } from '@/types/common';
 
 import UserForm from './UserForm';
 
@@ -27,14 +29,15 @@ const UserFormDrawer: React.FC<UserFormDrawerProps> = ({
   onSuccess,
 }) => {
 
-  const { getUserById, selectedUser } = useUsers();
+  const { getUserById, selectedUser, loadUser, detailsStatus } = useUsers();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
   useEffect(() => {
     if (visible && mode === 'edit' && userId) {
-      getUserById(userId);
+      //getUserById(userId);
+      loadUser(userId);
     }
-  }, [visible, mode, userId, getUserById]);
+  }, [visible, mode, userId, loadUser]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +46,10 @@ const UserFormDrawer: React.FC<UserFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

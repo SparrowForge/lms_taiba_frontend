@@ -27,46 +27,49 @@ export default function InstitutesPage() {
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedId, setSelectedId] = useState<number | undefined>();
+  const [selectedInstituteId, setSelectedInstituteId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
-  const { institutes, listStatus, pagination, loadInstitutes, removeInstitute } = useInstitutes();
+  const { institutes, listStatus, pagination, loadInstitutes, removeInstitute, setSelected } = useInstitutes();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
-  useEffect(() => {
+  const loadListWithPagination = () => {
     if (skip && limit) {
       const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
       loadInstitutes({ page, limit: parseInt(limit ?? '10') });
     } else {
       loadInstitutes({ page: 1, limit: 10 });
     }
+  };
+
+  useEffect(() => {
+    loadListWithPagination();
   }, [skip, limit, loadInstitutes]);
 
   const handleEditDrawer = (id: number) => {
-    setSelectedId(id);
+    setSelectedInstituteId(id);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
   const handleCreateDrawer = () => {
-    setSelectedId(undefined);
+    setSelectedInstituteId(undefined);
     setDrawerMode('create');
     setDrawerVisible(true);
   };
    const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
-    loadInstitutes({ page: 1, limit: 10 });
-  };
+     setDrawerVisible(false);
+     loadListWithPagination();
+   };
   const handleViewDetails = (id: number) => {
-    setSelectedDetailsId(id);
+    setSelectedInstituteId(id);
     setDetailsDrawerVisible(true);
   };
   const handleDetailsEdit = (id: number) => {
     setDetailsDrawerVisible(false);
-    setSelectedId(id);
+    setSelectedInstituteId(id);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
@@ -157,14 +160,14 @@ export default function InstitutesPage() {
 
         <InstituteFormDrawer
           mode={drawerMode}
-          instituteId={selectedId}
+          instituteId={selectedInstituteId}
           visible={drawerVisible}
           onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}
         />
 
         <InstituteDetailsDrawer
-          instituteId={selectedDetailsId}
+          instituteId={selectedInstituteId}
           visible={detailsDrawerVisible}
           onClose={() => setDetailsDrawerVisible(false)}
           onEdit={handleDetailsEdit}

@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const BatchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedBatch, detailsStatus, getBatchById } = useBatches();
+  const { selectedBatch, detailsStatus, loadBatch } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
 
   useEffect(() => {
     const batchId = parseInt(resolvedParams.id);
-    getBatchById(batchId);
-  }, [resolvedParams.id, getBatchById]);
+    //getBatchById(batchId);
+    loadBatch(batchId);
+  }, [resolvedParams.id, loadBatch]);
 
 
   if (detailsStatus.status === Status.LOADING) {

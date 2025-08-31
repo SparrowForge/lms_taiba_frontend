@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const RoleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedRole, detailsStatus, getRoleById } = useRoles();
+  const { selectedRole, detailsStatus, loadRole } = useRoles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
 
   useEffect(() => {
     const roleId = parseInt(resolvedParams.id);
-    getRoleById(roleId);
-  }, [resolvedParams.id, getRoleById]);
+    //getRoleById(roleId);
+    loadRole(roleId);
+  }, [resolvedParams.id, loadRole]);
 
 
   if (detailsStatus.status === Status.LOADING) {

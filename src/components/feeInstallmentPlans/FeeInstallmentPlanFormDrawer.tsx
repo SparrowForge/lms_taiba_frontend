@@ -1,6 +1,6 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import dayjs from 'dayjs';
 import React, {useEffect} from 'react';
 
@@ -9,6 +9,7 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
 import {useLocalization} from '@/hooks/useLocalization';
 
+import { Status } from '@/types/common';
 import {IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
 
 import FeeInstallmentPlanForm from './FeeInstallmentPlanForm';
@@ -30,14 +31,15 @@ const FeeInstallmentPlanFormDrawer: React.FC<FeeInstallmentPlanFormDrawerProps> 
   onSuccess,
 }) => {
 
-  const { getFeeInstallmentPlanById, selectedFeeInstallmentPlan } = useFeeInstallmentPlans();
+  const { getFeeInstallmentPlanById, selectedFeeInstallmentPlan, loadFeeInstallmentPlan, detailsStatus } = useFeeInstallmentPlans();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
   useEffect(() => {
     if (visible && mode === 'edit' && feeInstallmentPlanId) {
-      getFeeInstallmentPlanById(feeInstallmentPlanId);
+      //getFeeInstallmentPlanById(feeInstallmentPlanId);
+      loadFeeInstallmentPlan(feeInstallmentPlanId);
     }
-  }, [visible, mode, feeInstallmentPlanId, getFeeInstallmentPlanById]);
+  }, [visible, mode, feeInstallmentPlanId, loadFeeInstallmentPlan]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -46,6 +48,10 @@ const FeeInstallmentPlanFormDrawer: React.FC<FeeInstallmentPlanFormDrawerProps> 
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer

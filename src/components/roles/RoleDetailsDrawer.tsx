@@ -30,14 +30,15 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedRole, getRoleById, detailsStatus } = useRoles();
+  const { selectedRole, loadRole, detailsStatus } = useRoles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
   useEffect(() => {
     if (visible && roleId) {
-      getRoleById(roleId);
+      //getRoleById(roleId);
+      loadRole(roleId);
     }
-  }, [visible, roleId, getRoleById]);
+  }, [visible, roleId, loadRole]);
 
   const handleEdit = (role: IRole) => {
     onEdit(role.id);

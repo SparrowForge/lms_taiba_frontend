@@ -30,14 +30,15 @@ const FacultySubjectDetailsDrawer: React.FC<FacultySubjectDetailsDrawerProps> = 
   onEdit,
 }) => {
 
-  const { selectedFacultySubject, getFacultySubjectById, detailsStatus } = useFacultySubjects();
+  const { selectedFacultySubject, loadFacultySubject, detailsStatus } = useFacultySubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
   useEffect(() => {
     if (visible && facultySubjectId) {
-      getFacultySubjectById(facultySubjectId);
+      //getFacultySubjectById(facultySubjectId);
+      loadFacultySubject(facultySubjectId);
     }
-  }, [visible, facultySubjectId, getFacultySubjectById]);
+  }, [visible, facultySubjectId, loadFacultySubject]);
 
   const handleEdit = (facultySubject: IFacultySubject) => {
     onEdit(facultySubject.id);

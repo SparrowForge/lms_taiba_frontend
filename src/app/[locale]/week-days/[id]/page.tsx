@@ -21,7 +21,7 @@ export default function WeekDayDetailPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { selectedWeekDay, detailsStatus, getWeekDayById } = useWeekDays();
+  const { selectedWeekDay, detailsStatus, loadWeekDay } = useWeekDays();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
 
@@ -30,8 +30,9 @@ export default function WeekDayDetailPage({
 
   // Load week day if not already loaded
   useEffect(() => {
-    getWeekDayById(weekDayId);
-  }, [getWeekDayById, weekDayId]);
+    //getWeekDayById(weekDayId);
+    loadWeekDay(weekDayId);
+  }, [loadWeekDay, weekDayId]);
 
   const config = useCreateWeekDayDetailsConfig(
     selectedWeekDay,

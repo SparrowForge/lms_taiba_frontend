@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const SubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedSubject, detailsStatus, getSubjectById } = useSubjects();
+  const { selectedSubject, detailsStatus, loadSubject } = useSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
 
   useEffect(() => {
     const subjectId = parseInt(resolvedParams.id);
-    getSubjectById(subjectId);
-  }, [resolvedParams.id, getSubjectById]);
+    //getSubjectById(subjectId);
+    loadSubject(subjectId);
+  }, [resolvedParams.id, loadSubject]);
 
 
   if (detailsStatus.status === Status.LOADING) {

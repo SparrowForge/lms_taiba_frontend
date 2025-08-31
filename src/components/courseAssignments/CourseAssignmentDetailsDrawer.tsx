@@ -28,15 +28,16 @@ const CourseAssignmentDetailsDrawer: React.FC<CourseAssignmentDetailsDrawerProps
   onClose,
   onEdit,
 }) => {
-  const { selectedCourseAssignment, getCourseAssignmentById, detailsStatus } = useCourseAssignments();
+  const { selectedCourseAssignment, loadCourseAssignment, detailsStatus } = useCourseAssignments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
 
   useEffect(() => {
     if (visible && courseAssignmentId) {
-      getCourseAssignmentById(courseAssignmentId);
+      //getCourseAssignmentById(courseAssignmentId);
+      loadCourseAssignment(courseAssignmentId);
     }
-  }, [visible, courseAssignmentId, getCourseAssignmentById]);
+  }, [visible, courseAssignmentId, loadCourseAssignment]);
 
   const handleEdit = (courseAssignment: ICourseAssignment) => {
     onEdit(courseAssignment.id);

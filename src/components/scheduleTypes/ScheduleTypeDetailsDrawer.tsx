@@ -30,14 +30,15 @@ const ScheduleTypeDetailsDrawer: React.FC<ScheduleTypeDetailsDrawerProps> = ({
   onEdit,
 }) => {
 
-  const { selectedScheduleType, getScheduleTypeById, detailsStatus } = useScheduleTypes();
+  const { selectedScheduleType, loadScheduleType, detailsStatus } = useScheduleTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
   useEffect(() => {
     if (visible && scheduleTypeId) {
-      getScheduleTypeById(scheduleTypeId);
+      //getScheduleTypeById(scheduleTypeId);
+      loadScheduleType(scheduleTypeId);
     }
-  }, [visible, scheduleTypeId, getScheduleTypeById]);
+  }, [visible, scheduleTypeId, loadScheduleType]);
 
   const handleEdit = (scheduleType: IScheduleType) => {
     onEdit(scheduleType.id);

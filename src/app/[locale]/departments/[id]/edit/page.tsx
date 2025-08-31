@@ -21,14 +21,15 @@ import {Status} from '@/types/common';
 const DepartmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedDepartment, detailsStatus, getDepartmentById } = useDepartments();
+  const { selectedDepartment, detailsStatus, loadDepartment } = useDepartments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
 
   useEffect(() => {
     const departmentId = parseInt(resolvedParams.id);
-    getDepartmentById(departmentId);
-  }, [resolvedParams.id, getDepartmentById]);
+    //getDepartmentById(departmentId);
+    loadDepartment(departmentId);
+  }, [resolvedParams.id, loadDepartment]);
 
 
   if (detailsStatus.status === Status.LOADING) {

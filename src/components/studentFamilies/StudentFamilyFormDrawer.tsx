@@ -1,12 +1,14 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentFamilies} from '@/hooks/useStudentFamilies';
+
+import { Status } from '@/types/common';
 
 import StudentFamilyForm from './StudentFamilyForm';
 
@@ -25,15 +27,16 @@ const StudentFamilyFormDrawer: React.FC<StudentFamilyFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getStudentFamilyById, selectedStudentFamily } = useStudentFamilies();
+  const { getStudentFamilyById, selectedStudentFamily, loadStudentFamily, detailsStatus } = useStudentFamilies();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_FAMILY, { defaultValue: 'Student Family' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && studentFamilyId) {
-      getStudentFamilyById(studentFamilyId);
+      //getStudentFamilyById(studentFamilyId);
+      loadStudentFamily(studentFamilyId);
     }
-  }, [visible, mode, studentFamilyId, getStudentFamilyById]);
+  }, [visible, mode, studentFamilyId, loadStudentFamily]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +45,10 @@ const StudentFamilyFormDrawer: React.FC<StudentFamilyFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin/>;
+  }
 
   return (
     <Drawer
