@@ -139,7 +139,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             </div>
           </Header>
 
-        <Content className=" overflow-y-auto" style={contentStyle}>
+        <Content className=" " style={contentStyle}>
           <ErrorBoundary>
             <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
           </ErrorBoundary>

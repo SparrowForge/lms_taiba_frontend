@@ -1,26 +1,26 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import CourseDetailsDrawer from '@/components/courses/CourseDetailsDrawer';
 import CourseFormDrawer from '@/components/courses/CourseFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useCourses} from '@/hooks/useCourses';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useCourses } from '@/hooks/useCourses';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
-import {ICourse} from '@/types/course';
-import {IDepartment} from '@/types/department';
+import { Status } from '@/types/common';
+import { ICourse } from '@/types/course';
+import { IDepartment } from '@/types/department';
 
 export default function CoursesPage() {
   const { t } = useLocalization();
@@ -60,8 +60,8 @@ export default function CoursesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false)
     loadCourses({ page: 1, limit: 10 });
   };
 
@@ -115,15 +115,32 @@ export default function CoursesPage() {
       },
       {
         title: t(LOCALE_KEYS.DURATION_IN_SEMESTERS),
-        dataIndex: 'durationInSemesters',
-        key: 'durationInSemesters',
+        dataIndex: "durationInSemesters",
+        width:160,
+        key: "durationInSemesters",
         render: (text: number) => <span>{text}</span>,
+        onHeaderCell: () => ({
+          style: {
+            whiteSpace: "nowrap",   // prevent line breaks
+            width: 200,          // force enough space
+          },
+        }),
+        onCell:() =>({
+          style:{
+            textAlign: "center"
+          }
+        })
       },
       {
         title: t(LOCALE_KEYS.DEPARTMENT),
         dataIndex: 'department',
         key: 'department',
         render: (department: IDepartment) => <span>{department?.name || 'N/A'}</span>,
+          onCell:() =>({
+          style:{
+            textAlign: "center"
+          }
+        })
       },
       {
         title: t(LOCALE_KEYS.STATUS),
@@ -141,6 +158,11 @@ export default function CoursesPage() {
         title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
+          onCell:() =>({
+          style:{
+            textAlign: "center"
+          }
+        }),
         render: (course: ICourse) => (
           <EntityActions
             onView={() => router.push(`/courses/${course.id}`)}

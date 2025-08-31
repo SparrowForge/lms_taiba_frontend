@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 import { useLocalization } from '@/hooks/useLocalization';
+import EntityListSmall from './EntityListSmall';
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -57,12 +58,13 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
   };
 
   return (
-    <div className="p-2 h-screen flex flex-col">
+    <div className="py-2 h-screen flex flex-col overflow-y-auto">
       <Card className="flex flex-col flex-1">
         {/* Fixed Top Section */}
         <div className="sticky top-0 z-10 pb-4 border-b mb-4 ">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
-            {/* Title */}
+          <div className="hidden md:flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+          
+            {/* Title */} 
             <Title level={2} className="!mb-0">
               {config.title}
             </Title>
@@ -106,6 +108,9 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
                 </Button>
               )}
             </div>
+          </div>
+          <div className='flex md:hidden'>
+              <EntityListSmall config={config}/>
           </div>
 
           {config.error && (
