@@ -94,12 +94,14 @@ export default function WeekDaysPage() {
       },
       {
         title: t(LOCALE_KEYS.DAY_NUMBER),
+        width: 130,
         dataIndex: 'dayNumber',
         key: 'dayNumber',
         render: (text: number) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.IS_WORKING_DAY),
+        width: 140,
         dataIndex: 'isWorkingDay',
         key: 'isWorkingDay',
         render: (text: boolean) => <span>{text ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)}</span>,

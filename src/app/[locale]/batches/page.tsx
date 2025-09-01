@@ -122,6 +122,7 @@ export default function BatchesPage() {
       },
       {
         title: t(LOCALE_KEYS.INTAKE_CAPACITY),
+        width: 100,
         dataIndex: 'intakeCapacity',
         key: 'intakeCapacity',
         render: (text: number) => <span>{text}</span>,

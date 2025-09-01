@@ -106,18 +106,21 @@ export default function SubjectsPage() {
         title: t(LOCALE_KEYS.CREDIT_HOURS),
         dataIndex: 'creditHours',
         key: 'creditHours',
+        width: 100,
         render: (text: string) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.THEORY_HOURS),
         dataIndex: 'theoryHours',
         key: 'theoryHours',
+        width: 100,
         render: (text: number) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.PRACTICAL_HOURS),
         dataIndex: 'practicalHours',
         key: 'practicalHours',
+        width: 100,
         render: (text: number) => <span>{text}</span>,
       },
       {
@@ -130,6 +133,7 @@ export default function SubjectsPage() {
         title: t(LOCALE_KEYS.PREREQUISITE),
         dataIndex: 'prerequisite',
         key: 'prerequisite',
+        width: 120,
         render: (text: string) => <span>{text}</span>,
       },
       {

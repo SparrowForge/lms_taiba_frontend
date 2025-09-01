@@ -96,6 +96,7 @@ export default function StudentEducationsPage() {
       },
       {
         title: t(LOCALE_KEYS.DEGREE_TYPE),
+        width: 160,
         dataIndex: 'degreeType',
         key: 'degreeType',
         render: (text: string) => <span>{text}</span>,
@@ -108,6 +109,7 @@ export default function StudentEducationsPage() {
       },
       {
         title: t(LOCALE_KEYS.PASSING_YEAR),
+        width: 120,
         dataIndex: 'passingYear',
         key: 'passingYear',
         render: (text: number) => <span>{text}</span>,

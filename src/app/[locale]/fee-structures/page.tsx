@@ -1,25 +1,25 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import FeeStructureDetailsDrawer from '@/components/feeStructures/FeeStructureDetailsDrawer';
 import FeeStructureFormDrawer from '@/components/feeStructures/FeeStructureFormDrawer';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
-import {useFeeStructures} from '@/hooks/useFeeStructures';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useFeeStructures } from '@/hooks/useFeeStructures';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IBatch} from '@/types/batch';
-import {Status} from '@/types/common';
-import {IFeeStructure} from '@/types/feeStructure';
-import {ISemester} from '@/types/semester';
+import { IBatch } from '@/types/batch';
+import { Status } from '@/types/common';
+import { IFeeStructure } from '@/types/feeStructure';
+import { ISemester } from '@/types/semester';
 
 export default function FeeStructuresPage() {
   const { t } = useLocalization();
@@ -58,8 +58,8 @@ export default function FeeStructuresPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false)
     loadFeeStructures({ page: 1, limit: 10 });
   };
 
@@ -109,30 +109,35 @@ export default function FeeStructuresPage() {
       },
       {
         title: t(LOCALE_KEYS.ACADEMIC_YEAR, { defaultValue: 'Academic Year' }),
+        width: 140,
         dataIndex: 'academicYear',
         key: 'academicYear',
         render: (text: string) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.PAYMENT_TYPE, { defaultValue: 'Payment Type' }),
+        width: 130,
         dataIndex: 'paymentType',
         key: 'paymentType',
         render: (text: string) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.TOTAL_FEES, { defaultValue: 'Total Fees' }),
+        width: 100,
         dataIndex: 'totalFees',
         key: 'totalFees',
         render: (text: string) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.CURRENCY),
+        width: 90,
         dataIndex: 'currency',
         key: 'currency',
         render: (text: string) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.STATUS),
+        width: 80,
         dataIndex: 'status',
         key: 'status',
         render: (text: string) => <span>{text}</span>,

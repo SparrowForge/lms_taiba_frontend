@@ -105,12 +105,14 @@ export default function FacultyPage() {
       },
       {
         title: t(LOCALE_KEYS.EMPLOYEE_CODE),
+        width: 120,
         dataIndex: 'employeeCode',
         key: 'employeeCode',
         render: (text: string) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.EMPLOYMENT_TYPE),
+        width: 120,
         dataIndex: 'employmentType',
         key: 'employmentType',
         render: (text: string) => <span>{text}</span>,

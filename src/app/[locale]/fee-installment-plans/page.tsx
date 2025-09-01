@@ -101,12 +101,14 @@ export default function FeeInstallmentPlansPage() {
       },
       {
         title: t(LOCALE_KEYS.SEQUENCE_NO, { defaultValue: 'Sequence No' }),
+        width: 120,
         dataIndex: 'sequenceNo',
         key: 'sequenceNo',
         render: (text: string) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.PAYMENT_LABEL, { defaultValue: 'Payment Label' }),
+        width: 140,
         dataIndex: 'paymentLabel',
         key: 'paymentLabel',
         render: (text: string) => <span>{text}</span>,
@@ -119,18 +121,21 @@ export default function FeeInstallmentPlansPage() {
       },
       {
         title: t(LOCALE_KEYS.DURATION_MONTHS, { defaultValue: 'Duration (Months)' }),
+        width: 100,
         dataIndex: 'durationMonths',
         key: 'durationMonths',
         render: (text: string) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.AMOUNT, { defaultValue: 'Amount' }),
+        width: 100,
         dataIndex: 'amount',
         key: 'amount',
         render: (text: string) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' }),
+        width: 100,
         dataIndex: 'discountAmount',
         key: 'discountAmount',
         render: (text: string) => <span>{text}</span>,

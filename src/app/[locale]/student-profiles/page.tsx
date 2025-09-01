@@ -96,12 +96,14 @@ export default function StudentProfilesPage() {
       },
       {
         title: t(LOCALE_KEYS.DATE_OF_BIRTH),
+        width: 160,
         dataIndex: 'dob',
         key: 'dob',
         render: (text: string) => <span>{text ? new Date(text).toLocaleDateString() : 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.GENDER),
+        width: 100,
         dataIndex: 'gender',
         key: 'gender',
         render: (text: string) => <span>{text}</span>,
@@ -126,6 +128,7 @@ export default function StudentProfilesPage() {
       },
       {
         title: t(LOCALE_KEYS.IDENTITY_TYPE),
+        width: 200,
         dataIndex: 'identityType',
         key: 'identityType',
         render: (text: string) => <span>{text}</span>,

@@ -127,12 +127,14 @@ export default function FacultySubjectsPage() {
       {
         title: t(LOCALE_KEYS.BATCH),
         key: 'batch',
+        width: 80,
         render: (facultySubject: IFacultySubject) => (
           <span>{facultySubject.batch?.name || 'N/A'}</span>
         ),
       },
       {
         title: t(LOCALE_KEYS.HOURS_PER_WEEK),
+        width: 140,
         dataIndex: 'hoursPerWeek',
         key: 'hoursPerWeek',
         render: (hoursPerWeek: number) => <span>{hoursPerWeek}</span>,

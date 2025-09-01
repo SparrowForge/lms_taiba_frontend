@@ -58,13 +58,13 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
   };
 
   return (
-    <div className="py-2 h-screen flex flex-col overflow-y-auto">
+    <div className="md:py-2 h-screen flex flex-col ">
       <Card className="flex flex-col flex-1">
         {/* Fixed Top Section */}
-        <div className="sticky top-0 z-10 pb-4 border-b mb-4 ">
+        <div className="sticky top-0 z-10 md:pb-4 md:border-b mb-4 ">
           <div className="hidden md:flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
-          
-            {/* Title */} 
+
+            {/* Title */}
             <Title level={2} className="!mb-0">
               {config.title}
             </Title>
@@ -110,7 +110,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
             </div>
           </div>
           <div className='flex md:hidden'>
-              <EntityListSmall config={config}/>
+            <EntityListSmall config={config} />
           </div>
 
           {config.error && (
@@ -139,9 +139,12 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
         </div>
 
         {/* Scrollable Table Section */}
-        <div className="flex-1 overflow-auto mb-4">
+        <div className="flex-1 mb-4">
           <Table
-            scroll={{ x: true, y: 'calc(100vh - 360px)' }}
+            scroll={{
+              x: "max-content",                 // 👈 forces horizontal scroll if columns overflow
+              y: "calc(100vh - 360px)",         // 👈 vertical scroll height
+            }}
             loading={config.loading}
             columns={config.columns}
             dataSource={config.items}
@@ -152,21 +155,39 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
         </div>
 
         {/* Fixed Bottom Pagination */}
-        <div className="sticky bottom-0 z-10 border-t py-3  flex justify-center">
-          <Pagination
-            current={skip ? parseInt(skip ?? '0') / parseInt(limit ?? '10') + 1 : 1}
-            total={config.itemsCount ?? config.items.length}
-            pageSize={parseInt(limit ?? '10')}
-            showSizeChanger
-            showQuickJumper
-            showTotal={(total, range) =>
-              `${range[0]}-${range[1]} ${t(LOCALE_KEYS.OF)} ${total} ${config.name}`
-            }
-            onChange={(page, pageSize) => {
-              router.push(`${config.route}?skip=${(page - 1) * pageSize}&limit=${pageSize}`);
-            }}
-          />
+        {/* Fixed Bottom Pagination */}
+        <div className="sticky bottom-0 z-10 md:border-t py-3 flex justify-center">
+          {/* Small devices → only page numbers */}
+          <div className="block md:hidden">
+            <Pagination
+              simple                 // 👈 compact mode (just page numbers + prev/next)
+              current={skip ? parseInt(skip ?? "0") / parseInt(limit ?? "10") + 1 : 1}
+              total={config.itemsCount ?? config.items.length}
+              pageSize={parseInt(limit ?? "10")}
+              onChange={(page, pageSize) => {
+                router.push(`${config.route}?skip=${(page - 1) * pageSize}&limit=${pageSize}`);
+              }}
+            />
+          </div>
+
+          {/* Tablet & larger → full controls */}
+          <div className="hidden md:block">
+            <Pagination
+              current={skip ? parseInt(skip ?? "0") / parseInt(limit ?? "10") + 1 : 1}
+              total={config.itemsCount ?? config.items.length}
+              pageSize={parseInt(limit ?? "10")}
+              showSizeChanger
+              showQuickJumper
+              showTotal={(total, range) =>
+                `${range[0]}-${range[1]} ${t(LOCALE_KEYS.OF)} ${total} ${config.name}`
+              }
+              onChange={(page, pageSize) => {
+                router.push(`${config.route}?skip=${(page - 1) * pageSize}&limit=${pageSize}`);
+              }}
+            />
+          </div>
         </div>
+
       </Card>
     </div>
 

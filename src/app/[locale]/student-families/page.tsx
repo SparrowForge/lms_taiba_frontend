@@ -120,6 +120,7 @@ export default function StudentFamiliesPage() {
       },
       {
         title: t(LOCALE_KEYS.NO_OF_SIBLINGS),
+        width: 100,
         dataIndex: 'noOfSiblings',
         key: 'noOfSiblings',
         render: (text: number) => <span>{text}</span>,

@@ -113,12 +113,14 @@ export default function RoomsPage() {
       },
       {
         title: t(LOCALE_KEYS.SITTING_CAPACITY, { defaultValue: 'Sitting Capacity' }),
+        width: 100,
         dataIndex: 'sittingCapacity',
         key: 'sittingCapacity',
         render: (text: number) => <span>{text}</span>,
       },
       {
         title: t(LOCALE_KEYS.EXAM_CAPACITY, { defaultValue: 'Exam Capacity' }),
+        width: 100,
         dataIndex: 'examCapacity',
         key: 'examCapacity',
         render: (text: number) => <span>{text}</span>,

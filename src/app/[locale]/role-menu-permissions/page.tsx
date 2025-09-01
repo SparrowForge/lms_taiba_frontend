@@ -122,6 +122,7 @@ export default function RoleMenuPermissionsPage() {
       },
       {
         title: t(LOCALE_KEYS.UPDATE),
+        width: 80,
         dataIndex: 'update',
         key: 'update',
         render: (value: boolean) => <span>{value ? t('yes') : t('no')}</span>,

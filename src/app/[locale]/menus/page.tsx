@@ -128,6 +128,7 @@ export default function MenusPage() {
       },
       {
         title: t(LOCALE_KEYS.SORT_ORDER),
+        width: 140,
         dataIndex: 'sortOrder',
         key: 'sortOrder',
         render: (text: number) => <span>{text}</span>,

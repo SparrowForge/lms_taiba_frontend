@@ -98,6 +98,7 @@ export default function SemestersPage() {
       },
       {
         title: t(LOCALE_KEYS.TERM_NO),
+        width: 100,
         dataIndex: 'termNo',
         key: 'termNo',
         render: (text: number) => <span>{text}</span>,
