@@ -386,6 +386,47 @@ export const LOCALE_KEYS = {
   ICON: 'icon',
   ENTER_ICON: 'enter_icon',
 
+  // dashboard
+  WELCOME_BACK: "welcome-back",
+  TEACHER_DASHBOARD_SUBTITLE: "teacher-dashboard-subtitle",
+  STUDENT_DASHBOARD_SUBTITLE: "student-dashboard-subtitle",
+  VIEW_SCHEDULE: "view-schedule",
+
+  // dashboard cards
+  TEACHER_CLASSES_TITLE: "teacher-classes-title",
+  TEACHER_CLASSES_SUBTITLE: "teacher-classes-subtitle",
+  TEACHER_ASSIGNMENTS_TITLE: "teacher-assignments-title",
+  TEACHER_ASSIGNMENTS_SUBTITLE: "teacher-assignments-subtitle",
+  TEACHER_EVALUATIONS_TITLE: "teacher-evaluations-title",
+  TEACHER_EVALUATIONS_SUBTITLE: "teacher-evaluations-subtitle",
+
+  STUDENT_COURSES_TITLE: "student-courses-title",
+  STUDENT_COURSES_SUBTITLE: "student-courses-subtitle",
+
+  // weekly schedule
+  WEEKLY_SCHEDULE_TITLE: "weekly-schedule-title",
+  VIEW_WEEK: "view-week",
+  VIEW_MONTH: "view-month",
+
+
+  // weekdays
+  SUN: "sun",
+  MON: "mon",
+  TUE: "tue",
+  WED: "wed",
+  THU: "thu",
+  TODAY_CLASSES_TITLE: "today-classes-title",
+  RECENT_ANNOUNCEMENT: "recent-announcement",
+  STUDENT_PERFORMANCE: "student-performance",
+
+  ACADEMIC_PROGRESS: "academic-progress",
+  VIEW_ALL: "view-all",
+
+  UPCOMING_ASSIGNMENT: "upcoming-assignment",
+  ALL_TASKS: "all-tasks",
+  MONTHLY_ATTENDANCE: "monthly-attendance",
+   MARK_ALL_READ: "mark-all-read"
+
 } as const;
 
 // Type for the keys
