@@ -1,24 +1,17 @@
-import {Col, Row} from 'antd';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {ActivitySection} from '@/components/dashboard/ActivitySection';
-import {QuickActionsSection} from '@/components/dashboard/QuickActionsSection';
-import {StatsSection} from '@/components/dashboard/StatsSection';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import DashboardStartSection from "@/components/dashboard/newComponents/DashboardStartSection";
+import LayoutDashboard from "@/components/layout/LayoutDashboard";
+import { MainLayout } from "@/components/layout/MainLayout";
 
 export default function HomePage() {
+
+
   return (
     <ProtectedRoute>
       <MainLayout>
-        <StatsSection />
-        <Row gutter={[24, 24]} className="px-6" style={{ width: '100%', minWidth: 0 }}>
-          <Col xs={24} lg={16}>
-            <ActivitySection />
-          </Col>
-          <Col xs={24} lg={8}>
-            <QuickActionsSection />
-          </Col>
-        </Row>
+        <DashboardStartSection />
+        <LayoutDashboard/>
       </MainLayout>
     </ProtectedRoute>
   );
