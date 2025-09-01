@@ -1,4 +1,4 @@
-import {IBatch, IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate} from '@/types/batch';
+import {IBatch, IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate, IBatchWithSemestersUpdate} from '@/types/batch';
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
 import {api} from '@/lib/axios';
@@ -31,6 +31,12 @@ export const batchService = {
   // Update an existing batch
   updateBatch: async (id: number, data: IBatchUpdate): Promise<IBatch> => {
     const response = await api.patch<IBatch>(`/batches/${id}`, data);
+    return response.data;
+  },
+
+  // Update an existing batch with semesters in a single API call
+  updateBatchWithSemesters: async (id: number, data: IBatchWithSemestersUpdate): Promise<IBatch> => {
+    const response = await api.patch<IBatch>(`/batches/${id}/batches-with-semesters`, data);
     return response.data;
   },
 

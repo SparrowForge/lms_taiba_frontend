@@ -124,9 +124,9 @@ export const useSemesterSubjects = () => {
         dispatch(setActionStatus({ status: Status.LOADING }));
         const response = await semesterSubjectService.createMultipleSemesterSubjects(data);
         // Add all created semester subjects to the store
-        response.forEach(semesterSubject => {
-          dispatch(addSemesterSubject(semesterSubject));
-        });
+        // response.forEach(semesterSubject => {
+        //   dispatch(addSemesterSubject(semesterSubject));
+        // });
         dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Semester subjects created successfully' }));
       } catch (error: unknown) {
         const errorMessage =

@@ -70,6 +70,56 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
   const [semesterOptions, setSemesterOptions] = useState<{label: string, value: string}[]>([]);
   // const [loadingSemesters, setLoadingSemesters] = useState(false);
 
+  // Helper function to calculate amount per semester/month after admission fee and discount
+  const calculateAmountPerPeriod = useCallback((totalFees: number, periodCount: number) => {
+    // Get current form values for admission fee and discount
+    const admissionFee = Number(form.getFieldValue('admissionFee') || 0);
+    const discountType = form.getFieldValue('discountType');
+    const discountAmount = Number(form.getFieldValue('discountAmount') || 0);
+    
+    // Calculate remaining fees after subtracting admission fee
+    const remainingFees = totalFees - admissionFee;
+    
+    // Apply discount to remaining fees
+    let discountedFees = remainingFees;
+    if (discountType === 'percent' && discountAmount > 0) {
+      discountedFees = remainingFees * (1 - discountAmount / 100);
+    } else if (discountType === 'fixed' && discountAmount > 0) {
+      discountedFees = remainingFees - discountAmount;
+    }
+    // If discountType is 'none', no discount is applied
+    
+    // Ensure discounted fees is not negative
+    discountedFees = Math.max(0, discountedFees);
+    
+    return discountedFees / periodCount;
+  }, [form]);
+
+  // Helper function to calculate discount amount per period
+  const calculateDiscountPerPeriod = useCallback((totalFees: number, periodCount: number) => {
+    // Get current form values for admission fee and discount
+    const admissionFee = Number(form.getFieldValue('admissionFee') || 0);
+    const discountType = form.getFieldValue('discountType');
+    const discountAmount = Number(form.getFieldValue('discountAmount') || 0);
+    
+    // Calculate remaining fees after subtracting admission fee
+    const remainingFees = totalFees - admissionFee;
+    
+    // Calculate discount per period
+    let discountPerPeriod = 0;
+    if (discountType === 'percent' && discountAmount > 0) {
+      // For percentage discount, calculate the discount amount per period
+      const totalDiscountAmount = remainingFees * (discountAmount / 100);
+      discountPerPeriod = totalDiscountAmount / periodCount;
+    } else if (discountType === 'fixed' && discountAmount > 0) {
+      // For fixed discount, divide the fixed amount across periods
+      discountPerPeriod = discountAmount / periodCount;
+    }
+    // If discountType is 'none', no discount is applied
+    
+    return Math.max(0, discountPerPeriod);
+  }, [form]);
+
   useEffect(() => {
     loadBatches({ page: 1, limit: 100 });
   }, [loadBatches]);
@@ -81,6 +131,9 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
     // Watch for payment type changes using Form.useWatch
   const currentPaymentType = Form.useWatch('paymentType', form);
   const totalFees = Form.useWatch('totalFees', form);
+  const admissionFee = Form.useWatch('admissionFee', form);
+  const discountType = Form.useWatch('discountType', form);
+  const discountAmount = Form.useWatch('discountAmount', form);
 
 
 
@@ -177,15 +230,17 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
       const totalFeesNumber = Number(totalFees);
       if (totalFeesNumber > 0) {
         const semesterCount = selectedBatch.course.durationInSemesters;
-        const amountPerSemester = totalFeesNumber / semesterCount;
+        const amountPerSemester = calculateAmountPerPeriod(totalFeesNumber, semesterCount);
+        const discountPerSemester = calculateDiscountPerPeriod(totalFeesNumber, semesterCount);
 
         setPaymentRows(prev => prev.map(row => ({
           ...row,
-          amount: amountPerSemester
+          amount: amountPerSemester,
+          discountAmount: discountPerSemester
         })));
       }
     }
-  }, [totalFees, currentPaymentType, selectedBatch, paymentRows.length]);
+  }, [totalFees, admissionFee, discountType, discountAmount, currentPaymentType, selectedBatch, paymentRows.length, calculateAmountPerPeriod, calculateDiscountPerPeriod]);
 
   // Auto-distribute total fees across monthly payments when totalFees changes
   useEffect(() => {
@@ -193,15 +248,17 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
       const totalFeesNumber = Number(totalFees);
       if (totalFeesNumber > 0) {
         const totalMonths = monthlyPaymentRows.length;
-        const amountPerMonth = totalFeesNumber / totalMonths;
+        const amountPerMonth = calculateAmountPerPeriod(totalFeesNumber, totalMonths);
+        const discountPerMonth = calculateDiscountPerPeriod(totalFeesNumber, totalMonths);
 
         setMonthlyPaymentRows(prev => prev.map(row => ({
           ...row,
-          amount: amountPerMonth
+          amount: amountPerMonth,
+          discountAmount: discountPerMonth
         })));
       }
     }
-  }, [totalFees, currentPaymentType, monthlyPaymentRows.length]);
+  }, [totalFees, admissionFee, discountType, discountAmount, currentPaymentType, monthlyPaymentRows.length, calculateAmountPerPeriod, calculateDiscountPerPeriod]);
 
   // Generate payment rows when semesters are loaded and payment type is installment or monthly
   useEffect(() => {
@@ -274,6 +331,35 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
   // Submit function for one-time payment
   const handleOneTimeSubmit = async (values: Partial<IFeeStructure>) => {
     try {
+      // Validate basic form values
+      const formTotalFees = Number(values.totalFees) || 0;
+      const formAdmissionFee = Number(values.admissionFee) || 0;
+      const formDiscountType = values.discountType;
+      const formDiscountAmount = Number(values.discountAmount) || 0;
+
+      // Validate admission fee doesn't exceed total fees
+      if (formAdmissionFee >= formTotalFees) {
+        toast.error('Admission fee cannot be greater than or equal to total fees');
+        return;
+      }
+
+      // Validate discount amounts
+      if (formDiscountType === 'percent' && (formDiscountAmount < 0 || formDiscountAmount > 100)) {
+        toast.error('Percentage discount must be between 0 and 100');
+        return;
+      }
+      if (formDiscountType === 'fixed' && formDiscountAmount < 0) {
+        toast.error('Fixed discount amount cannot be negative');
+        return;
+      }
+
+      // Validate that discount doesn't exceed remaining amount after admission fee
+      const remainingAfterAdmission = formTotalFees - formAdmissionFee;
+      if (formDiscountType === 'fixed' && formDiscountAmount > remainingAfterAdmission) {
+        toast.error(`Fixed discount amount (${formDiscountAmount}) cannot exceed the remaining amount after admission fee (${remainingAfterAdmission})`);
+        return;
+      }
+
       const payload = { ...values };
       await createFeeStructure(payload as IFeeStructureCreate);
       toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
@@ -291,6 +377,35 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
   // Submit function for installment payments
   const handleInstallmentSubmit = async (values: Partial<IFeeStructure>) => {
     try {
+      // Validate basic form values
+      const formTotalFees = Number(values.totalFees) || 0;
+      const formAdmissionFee = Number(values.admissionFee) || 0;
+      const formDiscountType = values.discountType;
+      const formDiscountAmount = Number(values.discountAmount) || 0;
+
+      // Validate admission fee doesn't exceed total fees
+      if (formAdmissionFee >= formTotalFees) {
+        toast.error('Admission fee cannot be greater than or equal to total fees');
+        return;
+      }
+
+      // Validate discount amounts
+      if (formDiscountType === 'percent' && (formDiscountAmount < 0 || formDiscountAmount > 100)) {
+        toast.error('Percentage discount must be between 0 and 100');
+        return;
+      }
+      if (formDiscountType === 'fixed' && formDiscountAmount < 0) {
+        toast.error('Fixed discount amount cannot be negative');
+        return;
+      }
+
+      // Validate that discount doesn't exceed remaining amount after admission fee
+      const remainingAfterAdmission = formTotalFees - formAdmissionFee;
+      if (formDiscountType === 'fixed' && formDiscountAmount > remainingAfterAdmission) {
+        toast.error(`Fixed discount amount (${formDiscountAmount}) cannot exceed the remaining amount after admission fee (${remainingAfterAdmission})`);
+        return;
+      }
+
       // Validate that all installment rows have required fields
       const invalidRows = paymentRows.filter(row =>
         !row.paymentLabel || row.amount <= 0 || !row.dueDate
@@ -310,12 +425,22 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
         return;
       }
 
-      // Validate that sum of semester amounts equals total fees
+      // Validate that sum of semester amounts equals the amount after admission fee and discount
       const totalSemesterAmounts = paymentRows.reduce((sum, row) => sum + row.amount, 0);
-      const formTotalFees = Number(values.totalFees) || 0;
 
-      if (Math.abs(totalSemesterAmounts - formTotalFees) > 0.01) {
-        toast.error(`Total fees mismatch: Form total is ${formTotalFees}, but sum of semester amounts is ${totalSemesterAmounts}`);
+      // Calculate expected amount after admission fee and discount
+      let expectedAmountAfterDiscount = remainingAfterAdmission;
+      
+      if (formDiscountType === 'percent' && formDiscountAmount > 0) {
+        expectedAmountAfterDiscount = remainingAfterAdmission * (1 - formDiscountAmount / 100);
+      } else if (formDiscountType === 'fixed' && formDiscountAmount > 0) {
+        expectedAmountAfterDiscount = remainingAfterAdmission - formDiscountAmount;
+      }
+      
+      expectedAmountAfterDiscount = Math.max(0, expectedAmountAfterDiscount);
+
+      if (Math.abs(totalSemesterAmounts - expectedAmountAfterDiscount) > 0.01) {
+        toast.error(`Amount mismatch: Expected ${expectedAmountAfterDiscount.toFixed(2)} after admission fee (${formAdmissionFee}) and discount (${formDiscountType === 'percent' ? formDiscountAmount + '%' : formDiscountAmount}), but sum of semester amounts is ${totalSemesterAmounts.toFixed(2)}`);
         return;
       }
 
@@ -353,6 +478,35 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
   // Submit function for monthly payments
   const handleMonthlySubmit = async (values: Partial<IFeeStructure>) => {
     try {
+      // Validate basic form values
+      const formTotalFees = Number(values.totalFees) || 0;
+      const formAdmissionFee = Number(values.admissionFee) || 0;
+      const formDiscountType = values.discountType;
+      const formDiscountAmount = Number(values.discountAmount) || 0;
+
+      // Validate admission fee doesn't exceed total fees
+      if (formAdmissionFee >= formTotalFees) {
+        toast.error('Admission fee cannot be greater than or equal to total fees');
+        return;
+      }
+
+      // Validate discount amounts
+      if (formDiscountType === 'percent' && (formDiscountAmount < 0 || formDiscountAmount > 100)) {
+        toast.error('Percentage discount must be between 0 and 100');
+        return;
+      }
+      if (formDiscountType === 'fixed' && formDiscountAmount < 0) {
+        toast.error('Fixed discount amount cannot be negative');
+        return;
+      }
+
+      // Validate that discount doesn't exceed remaining amount after admission fee
+      const remainingAfterAdmission = formTotalFees - formAdmissionFee;
+      if (formDiscountType === 'fixed' && formDiscountAmount > remainingAfterAdmission) {
+        toast.error(`Fixed discount amount (${formDiscountAmount}) cannot exceed the remaining amount after admission fee (${remainingAfterAdmission})`);
+        return;
+      }
+
       // Validate that all monthly rows have required fields
       const invalidRows = monthlyPaymentRows.filter(row =>
         !row.paymentLabel || row.amount <= 0 || !row.dueDate
@@ -372,12 +526,22 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
         return;
       }
 
-      // Validate that sum of monthly amounts equals total fees
+      // Validate that sum of monthly amounts equals the amount after admission fee and discount
       const totalMonthlyAmounts = monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0);
-      const formTotalFees = Number(values.totalFees) || 0;
 
-      if (Math.abs(totalMonthlyAmounts - formTotalFees) > 0.01) {
-        toast.error(`Total fees mismatch: Form total is ${formTotalFees}, but sum of monthly amounts is ${totalMonthlyAmounts}`);
+      // Calculate expected amount after admission fee and discount
+      let expectedAmountAfterDiscount = remainingAfterAdmission;
+      
+      if (formDiscountType === 'percent' && formDiscountAmount > 0) {
+        expectedAmountAfterDiscount = remainingAfterAdmission * (1 - formDiscountAmount / 100);
+      } else if (formDiscountType === 'fixed' && formDiscountAmount > 0) {
+        expectedAmountAfterDiscount = remainingAfterAdmission - formDiscountAmount;
+      }
+      
+      expectedAmountAfterDiscount = Math.max(0, expectedAmountAfterDiscount);
+
+      if (Math.abs(totalMonthlyAmounts - expectedAmountAfterDiscount) > 0.01) {
+        toast.error(`Amount mismatch: Expected ${expectedAmountAfterDiscount.toFixed(2)} after admission fee (${formAdmissionFee}) and discount (${formDiscountType === 'percent' ? formDiscountAmount + '%' : formDiscountAmount}), but sum of monthly amounts is ${totalMonthlyAmounts.toFixed(2)}`);
         return;
       }
 
@@ -729,13 +893,46 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
               border: '1px solid #e1e4e8'
             }}>
               <Row gutter={16}>
-                <Col span={8}>
-                  <strong>Form Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
+                <Col span={6}>
+                  <strong>Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
                 </Col>
-                <Col span={8}>
+                <Col span={6}>
+                  <strong>Admission Fee:</strong> {Number(form.getFieldValue('admissionFee') || 0).toFixed(2)}
+                </Col>
+                <Col span={6}>
+                  <strong>Remaining After Admission:</strong> {Math.max(0, Number(totalFees || 0) - Number(form.getFieldValue('admissionFee') || 0)).toFixed(2)}
+                </Col>
+                <Col span={6}>
+                  <strong>After Discount:</strong> {(() => {
+                    const totalFeesNumber = Number(totalFees || 0);
+                    const admissionFee = Number(form.getFieldValue('admissionFee') || 0);
+                    const discountType = form.getFieldValue('discountType');
+                    const discountAmount = Number(form.getFieldValue('discountAmount') || 0);
+                    
+                    const remainingFees = totalFeesNumber - admissionFee;
+                    let discountedFees = remainingFees;
+                    
+                    if (discountType === 'percent' && discountAmount > 0) {
+                      discountedFees = remainingFees * (1 - discountAmount / 100);
+                    } else if (discountType === 'fixed' && discountAmount > 0) {
+                      discountedFees = remainingFees - discountAmount;
+                    }
+                    
+                    return Math.max(0, discountedFees).toFixed(2);
+                  })()}
+                </Col>
+              </Row>
+              <Row gutter={16} style={{ marginTop: '8px' }}>
+                <Col span={6}>
                   <strong>Semester Sum ({paymentRows.length} semesters):</strong> {paymentRows.reduce((sum, row) => sum + row.amount, 0).toFixed(2)}
                 </Col>
-                <Col span={8}>
+                <Col span={6}>
+                  <strong>Amount Per Semester:</strong> {paymentRows.length > 0 ? (paymentRows.reduce((sum, row) => sum + row.amount, 0) / paymentRows.length).toFixed(2) : '0.00'}
+                </Col>
+                <Col span={6}>
+                  <strong>Total Discount Applied:</strong> {paymentRows.reduce((sum, row) => sum + row.discountAmount, 0).toFixed(2)}
+                </Col>
+                <Col span={6}>
                   <strong>Difference:</strong> {Math.abs((Number(totalFees || 0) - paymentRows.reduce((sum, row) => sum + row.amount, 0))).toFixed(2)}
                 </Col>
               </Row>
@@ -748,17 +945,19 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
                       const totalFeesNumber = Number(totalFees || 0);
                       if (totalFeesNumber > 0 && paymentRows.length > 0) {
                         const semesterCount = paymentRows.length; // Use actual number of semesters found
-                        const amountPerSemester = totalFeesNumber / semesterCount;
+                        const amountPerSemester = calculateAmountPerPeriod(totalFeesNumber, semesterCount);
+                        const discountPerSemester = calculateDiscountPerPeriod(totalFeesNumber, semesterCount);
 
                         setPaymentRows(prev => prev.map(row => ({
                           ...row,
-                          amount: amountPerSemester
+                          amount: amountPerSemester,
+                          discountAmount: discountPerSemester
                         })));
                       }
                     }}
                     disabled={!totalFees || paymentRows.length === 0}
                   >
-                    Auto-Distribute Total Fees Across {paymentRows.length} Semesters
+                    Auto-Distribute Remaining Fees Across {paymentRows.length} Semesters
                   </Button>
                 </Col>
               </Row>
@@ -822,7 +1021,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
                 border: '1px solid #91d5ff',
                 fontSize: '12px'
               }}>
-                💡 <strong>Tip:</strong> Enter the total fees above, then use the "Auto-Distribute" button to evenly split the amount across all semesters. You can also manually adjust individual semester amounts.
+                💡 <strong>Tip:</strong> The auto-distribute function will: 1) Subtract admission fee from total fees, 2) Apply discount (percent or fixed), 3) Divide remaining amount across all semesters, 4) Set discount amount per semester. You can also manually adjust individual semester amounts.
               </div>
               <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -994,15 +1193,50 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
             }}>
               <Row gutter={16}>
                 <Col span={6}>
-                  <strong>Form Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
+                  <strong>Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
                 </Col>
+                <Col span={6}>
+                  <strong>Admission Fee:</strong> {Number(form.getFieldValue('admissionFee') || 0).toFixed(2)}
+                </Col>
+                <Col span={6}>
+                  <strong>Remaining After Admission:</strong> {Math.max(0, Number(totalFees || 0) - Number(form.getFieldValue('admissionFee') || 0)).toFixed(2)}
+                </Col>
+                <Col span={6}>
+                  <strong>After Discount:</strong> {(() => {
+                    const totalFeesNumber = Number(totalFees || 0);
+                    const admissionFee = Number(form.getFieldValue('admissionFee') || 0);
+                    const discountType = form.getFieldValue('discountType');
+                    const discountAmount = Number(form.getFieldValue('discountAmount') || 0);
+                    
+                    const remainingFees = totalFeesNumber - admissionFee;
+                    let discountedFees = remainingFees;
+                    
+                    if (discountType === 'percent' && discountAmount > 0) {
+                      discountedFees = remainingFees * (1 - discountAmount / 100);
+                    } else if (discountType === 'fixed' && discountAmount > 0) {
+                      discountedFees = remainingFees - discountAmount;
+                    }
+                    
+                    return Math.max(0, discountedFees).toFixed(2);
+                  })()}
+                </Col>
+              </Row>
+              <Row gutter={16} style={{ marginTop: '8px' }}>
                 <Col span={6}>
                   <strong>Monthly Sum:</strong> {monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0).toFixed(2)}
                 </Col>
                 <Col span={6}>
-                  <strong>Difference:</strong> {Math.abs((Number(totalFees || 0) - monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0))).toFixed(2)}
+                  <strong>Amount Per Month:</strong> {monthlyPaymentRows.length > 0 ? (monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0) / monthlyPaymentRows.length).toFixed(2) : '0.00'}
                 </Col>
                 <Col span={6}>
+                  <strong>Total Discount Applied:</strong> {monthlyPaymentRows.reduce((sum, row) => sum + row.discountAmount, 0).toFixed(2)}
+                </Col>
+                <Col span={6}>
+                  <strong>Difference:</strong> {Math.abs((Number(totalFees || 0) - monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0))).toFixed(2)}
+                </Col>
+              </Row>
+              <Row gutter={16} style={{ marginTop: '8px' }}>
+                <Col span={24}>
                   <strong>Semesters:</strong> {(() => {
                     const uniqueSemesters = [...new Set(monthlyPaymentRows.map(row => row.semesterName))];
                     return uniqueSemesters.length;
@@ -1020,17 +1254,19 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
                     onClick={() => {
                       const totalFeesNumber = Number(totalFees || 0);
                       if (totalFeesNumber > 0 && monthlyPaymentRows.length > 0) {
-                        const amountPerMonth = totalFeesNumber / monthlyPaymentRows.length;
+                        const amountPerMonth = calculateAmountPerPeriod(totalFeesNumber, monthlyPaymentRows.length);
+                        const discountPerMonth = calculateDiscountPerPeriod(totalFeesNumber, monthlyPaymentRows.length);
 
                         setMonthlyPaymentRows(prev => prev.map(row => ({
                           ...row,
-                          amount: amountPerMonth
+                          amount: amountPerMonth,
+                          discountAmount: discountPerMonth
                         })));
                       }
                     }}
                     disabled={!totalFees || monthlyPaymentRows.length === 0}
                   >
-                    Auto-Distribute Total Fees Across {monthlyPaymentRows.length} Months
+                    Auto-Distribute Remaining Fees Across {monthlyPaymentRows.length} Months
                   </Button>
                 </Col>
               </Row>
@@ -1094,7 +1330,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({
                 border: '1px solid #91d5ff',
                 fontSize: '12px'
               }}>
-                💡 <strong>Tip:</strong> Enter the total fees above, then use the "Auto-Distribute" button to evenly split the amount across all months. You can also manually adjust individual monthly amounts.
+                💡 <strong>Tip:</strong> The auto-distribute function will: 1) Subtract admission fee from total fees, 2) Apply discount (percent or fixed), 3) Divide remaining amount across all months, 4) Set discount amount per month. You can also manually adjust individual monthly amounts.
               </div>
               <div style={{ overflowX: 'auto' }}>
                 {(() => {

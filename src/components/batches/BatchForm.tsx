@@ -356,7 +356,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
       {/* Summary section for semester creation */}
       {!embedded && showSemesterSection && semesters.length > 0 && (
         <Form.Item>
-          <Card size="small" style={{ backgroundColor: '#f6ffed', borderColor: '#b7eb8f' }}>
+          <Card size="small">
             <Text strong>Summary:</Text>
             <br />
             <Text>• {entityName}: {form.getFieldValue('name') || 'N/A'}</Text>

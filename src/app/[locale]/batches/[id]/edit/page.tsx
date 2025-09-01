@@ -6,7 +6,7 @@ import React, {useEffect} from 'react';
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import BatchForm from '@/components/batches/BatchForm';
+import BatchEditForm from '@/components/batches/BatchEditForm';
 import {MainLayout} from '@/components/layout/MainLayout';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
@@ -44,8 +44,7 @@ const BatchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
     <ProtectedRoute>
       <MainLayout>
           <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <BatchForm
-            mode="edit"
+          <BatchEditForm
             batchId={parseInt(resolvedParams.id)}
             initialValues={selectedBatch}
         />

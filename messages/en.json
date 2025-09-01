@@ -158,6 +158,7 @@
   "year": "Year",
   "update_name": "Update {name}",
   "select_name": "Select {name}",
+  "please_select_name": "Please select {name}",
   "required_name": "{name} is required",
   "semester": "Semester",
   "semesters": "Semesters",
