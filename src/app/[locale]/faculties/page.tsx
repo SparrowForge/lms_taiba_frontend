@@ -60,7 +60,8 @@ export default function FacultyPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadFaculties({ page: 1, limit: 10 });
   };
 

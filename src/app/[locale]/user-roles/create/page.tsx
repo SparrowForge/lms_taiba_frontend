@@ -8,7 +8,7 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
-import UserRoleForm from '@/components/userRoles/UserRoleForm';
+import UserRoleFormTabView from '@/components/userRoles/UserRoleFormTabView';
 
 import {useLocalization} from '@/hooks/useLocalization';
 
@@ -25,7 +25,7 @@ const UserRoleCreatePage: React.FC = () => {
     <ProtectedRoute>
       <MainLayout>
         <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={handleBack} />
-        <UserRoleForm mode="create" />
+        <UserRoleFormTabView mode="create" embedded={false} />
       </MainLayout>
     </ProtectedRoute>
   );

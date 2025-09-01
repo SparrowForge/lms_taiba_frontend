@@ -106,7 +106,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
                         style={{
                           padding: '12px 16px',
                           fontWeight: '600',
-                          backgroundColor: '#fafafa',
+                          // backgroundColor: '#fafafa',
                           width: '30%',
                           verticalAlign: 'top',
                         }}

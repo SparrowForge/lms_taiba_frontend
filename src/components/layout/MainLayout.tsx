@@ -1,13 +1,14 @@
 'use client';
 
-import {Layout} from 'antd';
-import {usePathname} from 'next/navigation';
-import {useCallback, useMemo} from 'react';
+import { Layout } from 'antd';
+import { usePathname } from 'next/navigation';
+import { useCallback, useMemo } from 'react';
+import {ToastContainer} from "react-toastify";
 
-import {Sidebar2} from './Sidebar2';
-import {useSidebar} from './SidebarContext';
+import { Sidebar2 } from './Sidebar2';
+import { useSidebar } from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
-import {LanguageSwitcher} from '../ui/LanguageSwitcher';
+import { LanguageSwitcher } from '../ui/LanguageSwitcher';
 
 const { Header, Content } = Layout;
 
@@ -27,13 +28,16 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     setCollapsed(!collapsed);
   }, [collapsed, setCollapsed]);
 
+  //smooth transation
+  const COLLAPSE_MS = 1000;
   // Memoize layout styles to prevent recalculation
   const layoutStyle = useMemo(
     () => ({
       marginLeft: sidebarWidth,
       width: `calc(100vw - ${sidebarWidth}px)`,
       minWidth: 0,
-      // overflow: 'hidden',
+      overflow: 'hidden',
+      transition: `margin-left ${COLLAPSE_MS}ms ease, width ${COLLAPSE_MS}ms ease`,
     }),
     [sidebarWidth],
   );
@@ -54,7 +58,6 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   // Memoize content styles
   const contentStyle = useMemo(
     () => ({
-    
       width: '100%',
       minWidth: 0,
       maxWidth: '100%',
@@ -112,13 +115,14 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   }
 
   return (
-    <Layout className="h-screen overflow-hidden w-full">
+
+    <><ToastContainer/><Layout className="h-screen overflow-hidden w-full">
       {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
       {memoizedSidebar}
 
       <Layout style={layoutStyle}>
         <Header
-          className="bg-white border-b border-gray-200 px-4 flex items-center justify-between h-16"
+          className="px-4 flex items-center justify-between h-16"
           style={headerStyle}
         >
           {/* <Button
@@ -128,19 +132,20 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             className="text-lg bg-white hover:bg-gray-50"
             style={buttonStyle}
           /> */}
-          <div className="flex-1" />
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            {/* Add any other header content here like notifications, user menu, etc. */}
-          </div>
-        </Header>
+            <div className="flex-1" />
+            <div className="flex items-center gap-4">
+              <LanguageSwitcher />
+              {/* Add any other header content here like notifications, user menu, etc. */}
+            </div>
+          </Header>
 
-        <Content className="bg-gray-50 overflow-y-auto" style={contentStyle}>
+        <Content style={contentStyle}>
           <ErrorBoundary>
             <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
           </ErrorBoundary>
         </Content>
       </Layout>
     </Layout>
+ </>
   );
 };

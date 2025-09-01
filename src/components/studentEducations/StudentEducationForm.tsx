@@ -116,7 +116,7 @@ const StudentEducationForm: React.FC<StudentEducationFormProps> = ({
       <Form.Item
         name="studentId"
         label={t(LOCALE_KEYS.STUDENT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STUDENT) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STUDENT) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_STUDENT, { defaultValue: 'Select Student' })}
@@ -130,7 +130,7 @@ const StudentEducationForm: React.FC<StudentEducationFormProps> = ({
       <Form.Item
         name="degreeType"
         label={t(LOCALE_KEYS.DEGREE_TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DEGREE_TYPE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DEGREE_TYPE) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_DEGREE_TYPE, { defaultValue: 'Select Degree Type' })}
@@ -154,7 +154,7 @@ const StudentEducationForm: React.FC<StudentEducationFormProps> = ({
       <Form.Item
         name="degreeName"
         label={t(LOCALE_KEYS.DEGREE_NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DEGREE_NAME) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DEGREE_NAME) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_DEGREE_NAME, { defaultValue: 'Enter degree name' })} />
       </Form.Item>
@@ -162,7 +162,7 @@ const StudentEducationForm: React.FC<StudentEducationFormProps> = ({
       <Form.Item
         name="passingYear"
         label={t(LOCALE_KEYS.PASSING_YEAR)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PASSING_YEAR) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PASSING_YEAR) }) }]}
       >
         <InputNumber
           placeholder={t(LOCALE_KEYS.ENTER_PASSING_YEAR, { defaultValue: 'Enter passing year' })}
@@ -175,7 +175,7 @@ const StudentEducationForm: React.FC<StudentEducationFormProps> = ({
       <Form.Item
         name="institute"
         label={t(LOCALE_KEYS.INSTITUTE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INSTITUTE) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_INSTITUTE, { defaultValue: 'Enter institute' })} />
       </Form.Item>
@@ -183,7 +183,7 @@ const StudentEducationForm: React.FC<StudentEducationFormProps> = ({
       <Form.Item
         name="result"
         label={t(LOCALE_KEYS.RESULT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.RESULT) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.RESULT) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_RESULT, { defaultValue: 'Enter result (e.g., 3.7 GPA)' })} />
       </Form.Item>
@@ -191,7 +191,7 @@ const StudentEducationForm: React.FC<StudentEducationFormProps> = ({
       <Form.Item
         name="groupMajor"
         label={t(LOCALE_KEYS.GROUP_MAJOR)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.GROUP_MAJOR) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.GROUP_MAJOR) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_GROUP_MAJOR, { defaultValue: 'Enter group/major' })} />
       </Form.Item>

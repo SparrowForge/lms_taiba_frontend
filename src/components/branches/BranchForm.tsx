@@ -126,7 +126,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.NAME)} aria-label={t(LOCALE_KEYS.NAME)} aria-required="true" />
       </Form.Item>
@@ -142,7 +142,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
       <Form.Item
         name="instituteId"
         label={t(LOCALE_KEYS.INSTITUTE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.INSTITUTE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INSTITUTE) }) }]}
       >
         <Select
           showSearch
@@ -163,7 +163,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
       <Form.Item
         name="addressId"
         label={t(LOCALE_KEYS.ADDRESS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.ADDRESS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }) }]}
       >
         <Select
           showSearch
@@ -185,7 +185,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         name="externalInstituteIdNo"
         label={t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO) }) },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO) }) },
         ]}
       >
         <Input />
@@ -195,7 +195,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         name="campusDirectorUserId"
         label={t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID) }) },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID) }) },
         ]}
       >
         <Select
@@ -217,7 +217,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>

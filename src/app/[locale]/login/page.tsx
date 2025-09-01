@@ -1,11 +1,13 @@
-import {LoginForm} from '@/components/auth/LoginForm';
-import {PublicRoute} from '@/components/auth/PublicRoute';
+import LeftComponent from '@/components/auth/LeftComponent';
+import { PublicRoute } from '@/components/auth/PublicRoute';
+import RightComponent from '@/components/auth/RightComponet';
 
 export default function LoginPage() {
   return (
     <PublicRoute>
-      <div className="h-screen bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
-        <LoginForm />
+      <div className="min-h-screen flex items-center justify-center bg-[#1F4BCA]">
+        <LeftComponent />
+        <RightComponent />
       </div>
     </PublicRoute>
   );

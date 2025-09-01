@@ -253,7 +253,7 @@ const ClassScheduleForm: React.FC<Props> = ({
         name="maxCapacity"
         label={t(LOCALE_KEYS.MAX_CAPACITY)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.MAX_CAPACITY) }) },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MAX_CAPACITY) }) },
           { type: 'number', min: 1, message: 'Max capacity must be at least 1' }
         ]}
       >
@@ -263,7 +263,7 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>

@@ -57,7 +57,8 @@ export default function WeekDaysPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+    setDrawerVisible(false)
     loadWeekDays({ page: 1, limit: 10 });
   };
   const handleViewDetails = (id: number) => {

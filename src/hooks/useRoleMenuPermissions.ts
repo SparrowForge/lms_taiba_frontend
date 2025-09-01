@@ -5,12 +5,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
-import {IRoleMenuPermission, IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate,} from '@/types/roleMenuPermission';
+import {
+    IRoleMenuPermission,
+    IRoleMenuPermissionCreate,
+    IRoleMenuPermissionUpdate,
+    IRoleWithMenuPermission
+} from '@/types/roleMenuPermission';
 
 import {roleMenuPermissionService} from '@/services/roleMenuPermissionService';
 
 import {
-    addRoleMenuPermission,
     clearActionStatus,
     clearDetailsStatus,
     deleteRoleMenuPermission,
@@ -19,6 +23,8 @@ import {
     setListStatus,
     setPagination,
     setRoleMenuPermissions,
+    setRolesWithPermissions,
+    setRolesWithPermissionsStatus,
     setSelectedRoleMenuPermission,
     updateRoleMenuPermission,
 } from '@/store/slices/roleMenuPermissionSlice';
@@ -32,6 +38,8 @@ export const useRoleMenuPermissions = () => {
     detailsStatus,
     actionStatus,
     pagination,
+    rolesWithPermissionsStatus,
+    rolesWithPermissions,
   } = useSelector((state: RootState) => state.roleMenuPermissions);
 
   // Load role menu permissions with pagination and search
@@ -79,20 +87,36 @@ export const useRoleMenuPermissions = () => {
     [dispatch],
   );
 
+  // Load roles with their menu permissions
+  const loadRolesWithPermissions = useCallback(
+    async () => {
+      try {
+        dispatch(setRolesWithPermissionsStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IRoleWithMenuPermission[]> =
+          await roleMenuPermissionService.getRolesWithPermissions();
+        dispatch(setRolesWithPermissions(response.data));
+        dispatch(setRolesWithPermissionsStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load roles with permissions'
+            : 'Failed to load roles with permissions';
+        dispatch(setRolesWithPermissionsStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
   // Create a new role menu permission
   const createRoleMenuPermission = useCallback(
     async (data: IRoleMenuPermissionCreate) => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
-        const response: IRoleMenuPermission =
-          await roleMenuPermissionService.createRoleMenuPermission(data);
-        dispatch(addRoleMenuPermission(response));
-        dispatch(
-          setActionStatus({
-            status: Status.SUCCESS,
-            message: 'Role menu permission created successfully',
-          }),
-        );
+        const response = await roleMenuPermissionService.createRoleMenuPermission(data);
+        dispatch(setActionStatus({ status: Status.SUCCESS }));
+        return response;
       } catch (error: unknown) {
         const errorMessage =
           error instanceof AxiosError
@@ -100,6 +124,37 @@ export const useRoleMenuPermissions = () => {
               error?.message ||
               'Failed to create role menu permission'
             : 'Failed to create role menu permission';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  // Bulk update role menu permissions (replace all permissions for a role)
+  const bulkUpdateRoleMenuPermissions = useCallback(
+    async (data: {
+      roleId: number;
+      permissions: Array<{
+        menuId: number;
+        view: boolean;
+        insert: boolean;
+        update: boolean;
+        delete: boolean;
+      }>;
+    }) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response = await roleMenuPermissionService.bulkUpdateRoleMenuPermissions(data);
+        dispatch(setActionStatus({ status: Status.SUCCESS }));
+        return response;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to update role menu permissions'
+            : 'Failed to update role menu permissions';
         dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;
       }
@@ -205,11 +260,15 @@ export const useRoleMenuPermissions = () => {
     detailsStatus,
     actionStatus,
     pagination,
+    rolesWithPermissionsStatus,
+    rolesWithPermissions,
 
     // Actions
     loadRoleMenuPermissions,
     loadRoleMenuPermission,
+    loadRolesWithPermissions,
     createRoleMenuPermission,
+    bulkUpdateRoleMenuPermissions,
     editRoleMenuPermission,
     removeRoleMenuPermission,
     getRoleMenuPermissionById,

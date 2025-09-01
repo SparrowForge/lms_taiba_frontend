@@ -56,7 +56,8 @@ export default function InstitutesPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadInstitutes({ page: 1, limit: 10 });
   };
   const handleViewDetails = (id: number) => {

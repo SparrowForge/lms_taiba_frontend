@@ -6,7 +6,7 @@ import React from 'react';
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import FeeStructureForm from '@/components/feeStructures/FeeStructureForm';
+import FeeStructureFormBulk from '@/components/feeStructures/FeeStructureFormBulk';
 import {MainLayout} from '@/components/layout/MainLayout';
 import {PageHeader} from '@/components/ui/PageHeader';
 
@@ -21,7 +21,7 @@ export default function CreateFeeStructurePage() {
     <ProtectedRoute>
       <MainLayout>
           <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <FeeStructureForm mode="create" />
+          <FeeStructureFormBulk/>
       </MainLayout>
     </ProtectedRoute>
   );

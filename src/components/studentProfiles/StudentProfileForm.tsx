@@ -123,7 +123,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="studentId"
         label={t(LOCALE_KEYS.STUDENT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.STUDENT) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STUDENT) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_STUDENT, { defaultValue: 'Select Student' })}
@@ -137,7 +137,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="dob"
         label={t(LOCALE_KEYS.DATE_OF_BIRTH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.DATE_OF_BIRTH) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DATE_OF_BIRTH) }) }]}
       >
         <DatePicker
           placeholder={t(LOCALE_KEYS.SELECT_DATE_OF_BIRTH, { defaultValue: 'Select date of birth' })}
@@ -148,7 +148,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="gender"
         label={t(LOCALE_KEYS.GENDER)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.GENDER) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.GENDER) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_GENDER, { defaultValue: 'Select gender' })}
@@ -163,7 +163,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="maritalStatus"
         label={t(LOCALE_KEYS.MARITAL_STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.MARITAL_STATUS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MARITAL_STATUS) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_MARITAL_STATUS, { defaultValue: 'Select marital status' })}
@@ -179,7 +179,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="presentAddressId"
         label={t(LOCALE_KEYS.PRESENT_ADDRESS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PRESENT_ADDRESS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PRESENT_ADDRESS) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_PRESENT_ADDRESS, { defaultValue: 'Select present address' })}
@@ -193,7 +193,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="permanentAddressId"
         label={t(LOCALE_KEYS.PERMANENT_ADDRESS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PERMANENT_ADDRESS) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PERMANENT_ADDRESS) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_PERMANENT_ADDRESS, { defaultValue: 'Select permanent address' })}
@@ -207,7 +207,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="phone"
         label={t(LOCALE_KEYS.PHONE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.PHONE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PHONE) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_PHONE, { defaultValue: 'Enter phone number' })} />
       </Form.Item>
@@ -215,7 +215,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="mobile"
         label={t(LOCALE_KEYS.MOBILE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.MOBILE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MOBILE) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_MOBILE, { defaultValue: 'Enter mobile number' })} />
       </Form.Item>
@@ -224,7 +224,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
         name="email"
         label={t(LOCALE_KEYS.EMAIL)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.EMAIL) }) },
+          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMAIL) }) },
           { type: 'email', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL, { defaultValue: 'Please enter a valid email' }) }
         ]}
       >
@@ -257,7 +257,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="identityType"
         label={t(LOCALE_KEYS.IDENTITY_TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.IDENTITY_TYPE) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.IDENTITY_TYPE) }) }]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_IDENTITY_TYPE, { defaultValue: 'Select identity type' })}
@@ -273,7 +273,7 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       <Form.Item
         name="identityNo"
         label={t(LOCALE_KEYS.IDENTITY_NO)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME_NAME, { name: t(LOCALE_KEYS.IDENTITY_NO) }) }]}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.IDENTITY_NO) }) }]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_IDENTITY_NO, { defaultValue: 'Enter identity number' })} />
       </Form.Item>

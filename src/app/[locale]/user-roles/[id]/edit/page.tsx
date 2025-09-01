@@ -10,7 +10,7 @@ import {MainLayout} from '@/components/layout/MainLayout';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
 import {PageHeader} from '@/components/ui/PageHeader';
-import UserRoleForm from '@/components/userRoles/UserRoleForm';
+import UserRoleForm from '@/components/userRoles/UserRoleFormSingle';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';

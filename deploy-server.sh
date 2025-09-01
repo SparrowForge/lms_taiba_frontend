@@ -139,6 +139,10 @@ pull_changes() {
 rebuild_services() {
     print_status "Rebuilding Docker Compose services..."
     
+    # Set memory optimization for build process (reduced for 2GB RAM server)
+    export NODE_OPTIONS="--max-old-space-size=1536"
+    export BUN_OPTIONS="--max-old-space-size=1536"
+    
     # Build and start services
     if $COMPOSE_CMD up --build -d; then
         print_success "Docker Compose services rebuilt and started successfully"

@@ -57,7 +57,8 @@ export default function StudentFamiliesPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+    setDrawerVisible(false)
     loadStudentFamilies({ page: 1, limit: 10 });
   };
 

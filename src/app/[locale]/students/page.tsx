@@ -57,7 +57,8 @@ export default function StudentsPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+    setDrawerVisible(false)
     loadStudents({ page: 1, limit: 10 });
   };
 

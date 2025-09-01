@@ -59,7 +59,8 @@ export default function BranchesPage() {
     setDrawerVisible(true);
   };
 
-  const handleDrawerSuccess = () => {
+   const handleDrawerSuccess = () => {
+     setDrawerVisible(false)
     loadBranches({ page: 1, limit: 10 });
   };
 
