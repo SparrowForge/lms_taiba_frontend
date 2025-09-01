@@ -137,6 +137,7 @@ export default function AuditPage() {
       },
       {
         title: t(LOCALE_KEYS.METHOD),
+        width: 90,
         dataIndex: 'method',
         key: 'method',
         render: (method: string) => (
@@ -159,6 +160,7 @@ export default function AuditPage() {
       },
       {
         title: t(LOCALE_KEYS.RESPONSE_STATUS),
+        width: 160,
         dataIndex: 'responseStatus',
         key: 'responseStatus',
         render: (status: number) => (
@@ -179,12 +181,14 @@ export default function AuditPage() {
       },
       {
         title: t(LOCALE_KEYS.RESPONSE_TIME),
+        width: 160,
         dataIndex: 'responseTime',
         key: 'responseTime',
         render: (time: number) => <span>{time}ms</span>,
       },
       {
         title: t(LOCALE_KEYS.SUCCESS),
+        width: 100,
         dataIndex: 'success',
         key: 'success',
         render: (success: boolean) => (
