@@ -1,11 +1,12 @@
 "use client"
 
+import { Col } from "antd";
+
 import AcademicProgress from '../dashboard/newComponents/AcademicProgress';
 import MonthlyAttendance from '../dashboard/newComponents/MonthlyAttendance';
 import NotificationsStudent from '../dashboard/newComponents/NotificationsStudent';
 import UpcomingAssignments from '../dashboard/newComponents/UpcomingAssignments';
 
-import { Col } from "antd";
 
 const StudentLayout = () => {
     return (
