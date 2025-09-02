@@ -9,7 +9,7 @@ import TeacherLayout from './TeacherLayout';
 const LayoutDashboard = () => {
     const role = useRole();
     return (
-        <div>
+        <div className='h-[600px] overflow-auto'>
             <Row
                 gutter={[24, 24]}
                 className="pl-6"

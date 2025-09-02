@@ -1,121 +1,113 @@
 "use client";
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
-import LeftBorderCard from "../dashboard/dashboardui/cards/LeftBorderCard";
-import { useLocalization } from "@/hooks/useLocalization";
-import { FundProjectionScreenOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
-
+import React from "react";
+import { Button, Select, Tag, Card } from "antd";
 import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors
-} from "@dnd-kit/core";
+  FilePdfOutlined,
+  VideoCameraOutlined,
+  FileTextOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-  useSortable,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+type MaterialType = "Lecture" | "Video" | "Assignment";
 
-// 🔹 Sortable wrapper for each card
-const SortableCard = ({ id, children }: { id: string; children: React.ReactNode }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+interface CourseMaterial {
+  id: string;
+  title: string; // English
+  localTitle: string; // Arabic
+  type: MaterialType;
+  course: string;
+  size: string;
+  uploaded: string;
+  icon: "pdf" | "video" | "assignment";
+}
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    cursor: "grab",
+interface Props {
+  locale: "en" | "ar";
+  materials?: CourseMaterial[]; // make it optional
+}
+
+const CourseMaterials: React.FC<Props> = ({ locale, materials = [] }) => {
+  const getIcon = (icon: string) => {
+    switch (icon) {
+      case "pdf":
+        return <FilePdfOutlined style={{ fontSize: 22, color: "#1677ff" }} />;
+      case "video":
+        return <VideoCameraOutlined style={{ fontSize: 22, color: "#ff4d4f" }} />;
+      case "assignment":
+        return <FileTextOutlined style={{ fontSize: 22, color: "#52c41a" }} />;
+      default:
+        return null;
+    }
+  };
+
+  const getTagColor = (type: MaterialType) => {
+    switch (type) {
+      case "Lecture":
+        return "blue";
+      case "Video":
+        return "red";
+      case "Assignment":
+        return "green";
+    }
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {children}
-    </div>
-  );
-};
+    <Card style={{margin:"0px"}}>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold">
+          {locale === "ar" ? "المواد الدراسية" : "Course Materials"}
+        </h2>
+        <Button type="primary">
+          {locale === "ar" ? "رفع جديد" : "Upload New"}
+        </Button>
+      </div>
 
-const CourseMaterials = () => {
-  const { t } = useLocalization();
+      <div className="flex gap-2 mb-4">
+        <Select defaultValue="all" style={{ width: 160 }}>
+          <Select.Option value="all">
+            {locale === "ar" ? "جميع الدورات" : "All Courses"}
+          </Select.Option>
+        </Select>
+        <Select defaultValue="all" style={{ width: 160 }}>
+          <Select.Option value="all">
+            {locale === "ar" ? "جميع الأنواع" : "All Types"}
+          </Select.Option>
+        </Select>
+      </div>
 
-  const studentInitial = [
-    {
-      id: "courses1",
-      title: t(LOCALE_KEYS.STUDENT_COURSES_TITLE, { defaultValue: "Active Courses" }),
-      subTitle: t(LOCALE_KEYS.STUDENT_COURSES_SUBTITLE, { defaultValue: "2 courses have upcoming deadlines" }),
-      number: "6",
-      icon: <FundProjectionScreenOutlined />,
-      color: "#1F4BCA",
-      iconColor: "#1F4BCA"
-    },
-    {
-      id: "courses2",
-      title: t(LOCALE_KEYS.STUDENT_COURSES_TITLE, { defaultValue: "Active Courses" }),
-      subTitle: t(LOCALE_KEYS.STUDENT_COURSES_SUBTITLE, { defaultValue: "2 courses have upcoming deadlines" }),
-      number: "4",
-      icon: <FundProjectionScreenOutlined />,
-      color: "#d97706",
-      iconColor: "#d97706"
-    },
-    {
-      id: "courses3",
-      title: t(LOCALE_KEYS.STUDENT_COURSES_TITLE, { defaultValue: "Active Courses" }),
-      subTitle: t(LOCALE_KEYS.STUDENT_COURSES_SUBTITLE, { defaultValue: "2 courses have upcoming deadlines" }),
-      number: "92%",
-      icon: <FundProjectionScreenOutlined />,
-      color: "#10b981",
-      iconColor: "#10b981"
-    },
-    {
-      id: "courses4",
-      title: t(LOCALE_KEYS.STUDENT_COURSES_TITLE, { defaultValue: "Active Courses" }),
-      subTitle: t(LOCALE_KEYS.STUDENT_COURSES_SUBTITLE, { defaultValue: "2 courses have upcoming deadlines" }),
-      number: "3.7",
-      icon: <FundProjectionScreenOutlined />,
-      color: "#7c3aed",
-      iconColor: "#7c3aed"
-    },
-  ];
-
-  // 🔹 State for cards
-  const [dataTeacher, setDataTeacher] = useState(studentInitial);
-
-  // 🔹 DnD sensors
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { distance: 5 }, // drag starts after 5px
-    })
-  );
-
-  // 🔹 Handle drag & drop reorder
-  const handleDragEnd = (event: any) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-
-    setDataTeacher((items) => {
-      const oldIndex = items.findIndex((item) => item.id === active.id);
-      const newIndex = items.findIndex((item) => item.id === over.id);
-      return arrayMove(items, oldIndex, newIndex);
-    });
-  };
-
-  return (
-    <div>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={dataTeacher.map((item) => item.id)} strategy={verticalListSortingStrategy}>
-          <div className="grid grid-cols-1 md:grid-cols-4 md:gap-6 md:m-6">
-            {dataTeacher.map((item) => (   // ✅ use state, not initial
-              <SortableCard key={item.id} id={item.id}>
-                <LeftBorderCard {...item} />
-              </SortableCard>
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
-    </div>
+      <div className="flex flex-col gap-3">
+        {materials.map((m) => (
+          <Card
+            key={m.id}
+            className="shadow-sm"
+            bodyStyle={{ padding: "12px 16px" }}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {getIcon(m.icon)}
+                <div>
+                  <h3 className="font-medium">
+                    {locale === "ar" ? m.localTitle : m.title}
+                    <Tag color={getTagColor(m.type)} className="ml-2">
+                      {m.type}
+                    </Tag>
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {m.course} | {m.size} |{" "}
+                    {locale === "ar" ? "تم الرفع:" : "Uploaded:"} {m.uploaded}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <EditOutlined style={{ fontSize: 18, cursor: "pointer" }} />
+                <DeleteOutlined style={{ fontSize: 18, cursor: "pointer" }} />
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </Card>
   );
 };
 

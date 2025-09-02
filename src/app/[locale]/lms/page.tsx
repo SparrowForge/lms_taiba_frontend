@@ -8,8 +8,10 @@ const LMSDashboard = () => {
     return (
         <ProtectedRoute>
             <MainLayout >
-               <LMSMainComponent/>
-               <h1>done</h1>
+
+                <div className="h-[600px] overflow-y-auto">
+                    <LMSMainComponent />
+                </div>
 
             </MainLayout>
         </ProtectedRoute>
