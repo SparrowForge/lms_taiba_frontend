@@ -27,8 +27,10 @@ body {
 
 
 .ant-menu-light .ant-menu-item-selected {
-  background-color: #e6f4ff !important; /* light blue background */
-  color: #1677ff !important; /* Ant Design blue text */
+  background-color: #e6f4ff !important;
+  /* light blue background */
+  color: #1677ff !important;
+  /* Ant Design blue text */
 }
 
 .ant-menu-light .ant-menu-item-selected .anticon {
@@ -48,7 +50,8 @@ body {
 /* Hover effect for items */
 .ant-select-item-option-active,
 .ant-select-item-option-selected {
-  background-color: #3b82f6 !important; /* slightly lighter blue */
+  background-color: #3b82f6 !important;
+  /* slightly lighter blue */
   color: #fff !important;
 }
 
@@ -92,7 +95,18 @@ body {
 } */
 
 
-.ant-picker-calendar-mode-switch{
+.ant-picker-calendar-mode-switch {
   display: none;
 }
 
+.uppertab .ant-tabs-nav-list {
+  margin: 0px 20px;
+  display: flex;
+  width: 100%;
+}
+
+.uppertab .ant-tabs-tab {
+  margin: 0px 10px;
+  flex: 1;
+  justify-content: center;
+}

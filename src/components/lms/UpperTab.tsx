@@ -35,9 +35,10 @@ const UpperTab: React.FC<{ onTabChange: (key: string) => void }> = ({ onTabChang
     ];
 
     return (
-        <div className="max-w-full flex justify-around   mb-4">
+        // <div className=" w-[100%] flex justify-around mb-4">
             <Tabs
                 size="large"
+                className="uppertab full-width-tabs"
                 defaultActiveKey="courses"
                 items={items.map((item) => ({
                     key: item.key,
@@ -56,7 +57,7 @@ const UpperTab: React.FC<{ onTabChange: (key: string) => void }> = ({ onTabChang
                 }}
             />
 
-        </div>
+        // </div>
     );
 };
 
