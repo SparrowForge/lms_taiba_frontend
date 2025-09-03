@@ -425,7 +425,9 @@ export const LOCALE_KEYS = {
   UPCOMING_ASSIGNMENT: "upcoming-assignment",
   ALL_TASKS: "all-tasks",
   MONTHLY_ATTENDANCE: "monthly-attendance",
-   MARK_ALL_READ: "mark-all-read"
+  MARK_ALL_READ: "mark-all-read",
+  STUDENT_PROGRESS: "student-progress",
+  RECENT_ACTIVITY: "recent_activity"
 
 } as const;
 

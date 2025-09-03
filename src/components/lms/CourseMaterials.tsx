@@ -56,6 +56,26 @@ const materials: CourseMaterial[] = [
     uploaded: "1 week ago",
     icon: "assignment",
   },
+  {
+    id: "4",
+    title: "UI Design Principles",
+    localTitle: "مبادئ تصميم واجهة المستخدم",
+    type: "Assignment",
+    course: "UI/UX Design",
+    size: "1.4 MB",
+    uploaded: "1 week ago",
+    icon: "assignment",
+  },
+  {
+    id: "5",
+    title: "UI Design Principles",
+    localTitle: "مبادئ تصميم واجهة المستخدم",
+    type: "Assignment",
+    course: "UI/UX Design",
+    size: "1.4 MB",
+    uploaded: "1 week ago",
+    icon: "assignment",
+  },
 ];
 
 const CourseMaterials = () => {
@@ -99,7 +119,7 @@ const getIcon = (icon: string) => {
   };
 
   return (
-    <Card style={{ margin: 0 }}>
+    <Card style={{ marginBottom: "10px" }} className="rounded-xl shadow-sm">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">
@@ -130,7 +150,7 @@ const getIcon = (icon: string) => {
       </div>
 
       {/* Materials List */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4 overflow-y-auto "  style={{ maxHeight: "420px" }}>
         {materials.map((m) => (
           <Card
             key={m.id}

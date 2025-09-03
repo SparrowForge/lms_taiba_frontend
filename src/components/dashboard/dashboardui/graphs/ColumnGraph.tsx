@@ -1,15 +1,15 @@
 import { Column } from "@ant-design/plots";
 
 interface ColumnGraphProps {
-  data: { week: string; attendance: number }[];
+  data: { xdata: string; ydata: number }[];
   color?: string; // hex or rgba
 }
 
 const ColumnGraph: React.FC<ColumnGraphProps> = ({ data, color = "#1F4BCA" }) => {
   const config = {
     data,
-    xField: "week",
-    yField: "attendance",
+    xField: "xdata",
+    yField: "ydata",
     columnWidthRatio: 0.5, 
     intervalPadding: 20,
     columnStyle: {
@@ -18,7 +18,7 @@ const ColumnGraph: React.FC<ColumnGraphProps> = ({ data, color = "#1F4BCA" }) =>
     },
    
     // label: {
-    //   text: (originData: { attendance: any; }) => `${originData.attendance}%`,
+    //   text: (originData: { ydata: any; }) => `${originData.attendance}%`,
     //   offset: 10,
     //   style: {
     //     fill: "#333",
