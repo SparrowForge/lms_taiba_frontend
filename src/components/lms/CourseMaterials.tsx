@@ -17,11 +17,13 @@ import { useLocale } from "next-intl";
 import { Status } from "@/types/common";
 import { useCourseMaterials } from "@/hooks/useCourseMaterials";
 import { ICourseMaterial } from "@/types/courseMaterial";
+import { useRouter } from "next/navigation";
 
 const materialTypes = ["pdf", "lecture", "video", "slide", "assignment", "material"];
 
 const CourseMaterials = () => {
   const locale = useLocale();
+  const router = useRouter();
   const { courseMaterials, listStatus, loadCourseMaterials } = useCourseMaterials();
   const [selectedCourse, setSelectedCourse] = useState<string>("allCourses");
   const [selectedType, setSelectedType] = useState<string>("allTypes");
@@ -109,7 +111,7 @@ const CourseMaterials = () => {
         <h2 className="text-2xl font-semibold">
           {locale === "ar" ? "المواد الدراسية" : "Course Materials"}
         </h2>
-        <Button type="primary">
+        <Button type="primary" onClick={() => router.push("/course-materials/create")}>
           <PlusOutlined />
           {locale === "ar" ? "رفع جديد" : "Upload New"}
         </Button>
@@ -189,9 +191,20 @@ const CourseMaterials = () => {
                     </p>
                   </div>
                   <div className="flex gap-1">
-                    <EditOutlined style={{ fontSize: 18, cursor: "pointer" }} />
-                    <EyeOutlined style={{ fontSize: 18, cursor: "pointer" }} />
-                    <DeleteOutlined style={{ fontSize: 18, cursor: "pointer" }} />
+
+                    <EditOutlined
+                      style={{ fontSize: 18, cursor: "pointer" }}
+                      onClick={() => router.push(`/course-materials/${m.id}/edit`)}
+                    />
+                    <EyeOutlined
+                      style={{ fontSize: 18, cursor: "pointer" }}
+                      onClick={() => router.push(`/course-materials/${m.id}`)}
+                    />
+                    <DeleteOutlined
+                      style={{ fontSize: 18, cursor: "pointer" }}
+                      onClick={() => router.push('/course-materials')}
+                    />
+
                   </div>
                 </div>
               </div>
