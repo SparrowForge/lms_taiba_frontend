@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSubjects} from '@/hooks/useSubjects';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import SubjectForm from './SubjectForm';
-
 
 interface SubjectFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getSubjectById, selectedSubject, loadSubject, detailsStatus } = useSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
@@ -47,8 +45,8 @@ const SubjectFormDrawer: React.FC<SubjectFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

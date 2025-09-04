@@ -41,7 +41,19 @@ const CourseMaterialEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({
 
   // Convert ICourseMaterial to ICourseMaterialUpdate for form compatibility
   const convertToFormValues = (courseMaterial: ICourseMaterial): Partial<ICourseMaterialUpdate> => {
-    const { id, createdAt, updatedAt, deletedAt, course, subject, semester, batch, faculty, file, ...formValues } = courseMaterial;
+    const {
+      id,
+      createdAt,
+      updatedAt,
+      deletedAt,
+      course,
+      subject,
+      semester,
+      batch,
+      faculty,
+      file,
+      ...formValues
+    } = courseMaterial;
     return {
       ...formValues,
       fileId: formValues.fileId ?? undefined,
@@ -51,7 +63,10 @@ const CourseMaterialEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
         <CourseMaterialForm
           mode="edit"
           courseMaterialId={parseInt(resolvedParams.id)}

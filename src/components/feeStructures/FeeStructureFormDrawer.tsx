@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import FeeStructureForm from './FeeStructureForm';
-
 
 interface FeeStructureFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,8 +27,8 @@ const FeeStructureFormDrawer: React.FC<FeeStructureFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
-  const { getFeeStructureById, selectedFeeStructure, loadFeeStructure, detailsStatus } = useFeeStructures();
+  const { getFeeStructureById, selectedFeeStructure, loadFeeStructure, detailsStatus } =
+    useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
   useEffect(() => {
@@ -47,8 +46,8 @@ const FeeStructureFormDrawer: React.FC<FeeStructureFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

@@ -59,8 +59,8 @@ export default function RolesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadRoles({ page: 1, limit: 10 });
   };
 

@@ -17,7 +17,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const InstituteEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -27,10 +26,9 @@ const InstituteEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ para
 
   useEffect(() => {
     const instituteId = parseInt(resolvedParams.id);
-   // getInstituteById(instituteId);
-   loadInstitute(instituteId);
+    // getInstituteById(instituteId);
+    loadInstitute(instituteId);
   }, [resolvedParams.id, loadInstitute]);
-
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -43,11 +41,14 @@ const InstituteEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ para
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <InstituteForm
-            mode="edit"
-            instituteId={parseInt(resolvedParams.id)}
-            initialValues={selectedInstitute}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <InstituteForm
+          mode="edit"
+          instituteId={parseInt(resolvedParams.id)}
+          initialValues={selectedInstitute}
         />
       </MainLayout>
     </ProtectedRoute>

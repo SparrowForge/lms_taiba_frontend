@@ -16,11 +16,7 @@ import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 import {Status} from '@/types/common';
 import {IScheduleType} from '@/types/scheduleType';
 
-export default function ScheduleTypeDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function ScheduleTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedScheduleType, detailsStatus, loadScheduleType } = useScheduleTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
@@ -45,7 +41,7 @@ export default function ScheduleTypeDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IScheduleType>} />
+        <EntityDetails config={config as EntityDetailsConfig<IScheduleType>} />
       </MainLayout>
     </ProtectedRoute>
   );

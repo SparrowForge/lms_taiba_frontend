@@ -16,11 +16,7 @@ import {useTimeSlots} from '@/hooks/useTimeSlots';
 import {Status} from '@/types/common';
 import {ITimeSlot} from '@/types/timeSlot';
 
-export default function TimeSlotDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function TimeSlotDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedTimeSlot, detailsStatus, loadTimeSlot } = useTimeSlots();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.TIME_SLOT, { defaultValue: 'Time Slot' });

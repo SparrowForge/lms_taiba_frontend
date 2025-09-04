@@ -17,11 +17,12 @@ import {Status} from '@/types/common';
 import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
 export default function RoleMenuPermissionDetailPage({
-  params
+  params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
-  const { selectedRoleMenuPermission, detailsStatus, loadRoleMenuPermission } = useRoleMenuPermissions();
+  const { selectedRoleMenuPermission, detailsStatus, loadRoleMenuPermission } =
+    useRoleMenuPermissions();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
 
@@ -45,7 +46,7 @@ export default function RoleMenuPermissionDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IRoleMenuPermission>} />
+        <EntityDetails config={config as EntityDetailsConfig<IRoleMenuPermission>} />
       </MainLayout>
     </ProtectedRoute>
   );

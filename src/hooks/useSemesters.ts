@@ -23,7 +23,6 @@ import {
     updateSemester,
 } from '@/store/slices/semesterSlice';
 
-
 export const useSemesters = () => {
   const dispatch = useDispatch();
   const { semesters, selectedSemester, listStatus, detailsStatus, actionStatus, pagination } =

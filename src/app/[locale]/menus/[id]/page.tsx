@@ -16,11 +16,7 @@ import {useMenus} from '@/hooks/useMenus';
 import {Status} from '@/types/common';
 import {IMenu} from '@/types/menu';
 
-export default function MenuDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function MenuDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedMenu, detailsStatus, loadMenu } = useMenus();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
@@ -45,7 +41,7 @@ export default function MenuDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IMenu>} />
+        <EntityDetails config={config as EntityDetailsConfig<IMenu>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -8,8 +8,8 @@ export interface IFeeInstallmentPlan {
   paymentLabel: string;
   semesterId: number;
   durationMonths: number;
-  amount: string;
-  discountAmount: string;
+  amount: number;
+  discountAmount: number;
   dueDate: string;
   createdAt: string;
   updatedAt: string;
@@ -24,8 +24,8 @@ export interface IFeeInstallmentPlanCreate {
   paymentLabel: string;
   semesterId: number;
   durationMonths: number;
-  amount: string;
-  discountAmount: string;
+  amount: number;
+  discountAmount: number;
   dueDate: string;
 }
 
@@ -34,7 +34,7 @@ export interface IFeeInstallmentPlanUpdate {
   paymentLabel?: string;
   semesterId?: number;
   durationMonths?: number;
-  amount?: string;
-  discountAmount?: string;
+  amount?: number;
+  discountAmount?: number;
   dueDate?: string;
 }

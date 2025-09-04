@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useAddresses} from '@/hooks/useAddresses';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import AddressForm from './AddressForm';
-
 
 interface AddressFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const AddressFormDrawer: React.FC<AddressFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getAddressById, selectedAddress, loadAddress, detailsStatus } = useAddresses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
@@ -47,8 +45,8 @@ const AddressFormDrawer: React.FC<AddressFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

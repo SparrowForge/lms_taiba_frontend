@@ -8,7 +8,7 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useCourseAssignments} from '@/hooks/useCourseAssignments';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 import {ICourseAssignment} from '@/types/courseAssignment';
 
 import CourseAssignmentForm from './CourseAssignmentForm';
@@ -28,7 +28,8 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getCourseAssignmentById, selectedCourseAssignment, loadCourseAssignment, detailsStatus } = useCourseAssignments();
+  const { getCourseAssignmentById, selectedCourseAssignment, loadCourseAssignment, detailsStatus } =
+    useCourseAssignments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
 
@@ -58,8 +59,8 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

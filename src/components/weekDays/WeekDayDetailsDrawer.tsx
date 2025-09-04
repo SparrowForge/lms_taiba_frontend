@@ -15,7 +15,6 @@ import {IWeekDay} from '@/types/weekDay';
 
 import {useCreateWeekDayDetailsConfig} from './weekDayConfig';
 
-
 interface WeekDayDetailsDrawerProps {
   weekDayId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const WeekDayDetailsDrawer: React.FC<WeekDayDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedWeekDay, loadWeekDay, detailsStatus } = useWeekDays();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });

@@ -17,7 +17,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -32,7 +31,6 @@ const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
     loadAddress(addressId);
   }, [addressId, loadAddress]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -44,12 +42,11 @@ const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <AddressForm
-            mode="edit"
-            addressId={addressId}
-            initialValues={selectedAddress}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
         />
+        <AddressForm mode="edit" addressId={addressId} initialValues={selectedAddress} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -3,7 +3,6 @@
 import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
-
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -60,8 +59,8 @@ export default function CoursesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadCourses({ page: 1, limit: 10 });
   };
 

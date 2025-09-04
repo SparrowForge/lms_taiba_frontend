@@ -17,7 +17,6 @@ import {usePanels} from '@/hooks/usePanels';
 
 import {Status} from '@/types/common';
 
-
 const PanelEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const PanelEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
     loadPanel(panelId);
   }, [resolvedParams.id, loadPanel]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const PanelEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <PanelForm
-            mode="edit"
-            panelId={parseInt(resolvedParams.id)}
-            initialValues={selectedPanel}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <PanelForm
+          mode="edit"
+          panelId={parseInt(resolvedParams.id)}
+          initialValues={selectedPanel}
         />
       </MainLayout>
     </ProtectedRoute>

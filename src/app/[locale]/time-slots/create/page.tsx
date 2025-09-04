@@ -12,7 +12,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 export default function CreateTimeSlotPage() {
   const { t } = useLocalization();
   const router = useRouter();

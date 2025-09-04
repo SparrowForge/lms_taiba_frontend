@@ -28,9 +28,12 @@ export default function StudentProfilesPage() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedStudentProfileId, setSelectedStudentProfileId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsStudentProfileId, setSelectedDetailsStudentProfileId] = useState<number | undefined>();
+  const [selectedDetailsStudentProfileId, setSelectedDetailsStudentProfileId] = useState<
+    number | undefined
+  >();
 
-  const { studentProfiles, listStatus, pagination, loadStudentProfiles, removeStudentProfile } = useStudentProfiles();
+  const { studentProfiles, listStatus, pagination, loadStudentProfiles, removeStudentProfile } =
+    useStudentProfiles();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -57,8 +60,8 @@ export default function StudentProfilesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadStudentProfiles({ page: 1, limit: 10 });
   };
 
@@ -78,7 +81,13 @@ export default function StudentProfilesPage() {
     name: entityName,
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/student-profiles',
-    searchFields: ['student.name', 'phone', 'mobile', 'email', 'identityNo'] as (keyof IStudentProfile)[],
+    searchFields: [
+      'student.name',
+      'phone',
+      'mobile',
+      'email',
+      'identityNo',
+    ] as (keyof IStudentProfile)[],
     onSearch: (searchText: string) => {
       loadStudentProfiles({ page: 1, limit: 10, search: searchText });
     },

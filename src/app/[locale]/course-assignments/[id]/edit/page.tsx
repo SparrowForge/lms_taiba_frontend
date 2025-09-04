@@ -40,8 +40,21 @@ const CourseAssignmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = 
   }
 
   // Convert ICourseAssignment to ICourseAssignmentUpdate for form compatibility
-  const convertToFormValues = (courseAssignment: ICourseAssignment): Partial<ICourseAssignmentUpdate> => {
-    const { id, createdAt, updatedAt, deletedAt, course, subject, semester, batch, faculty, ...formValues } = courseAssignment;
+  const convertToFormValues = (
+    courseAssignment: ICourseAssignment,
+  ): Partial<ICourseAssignmentUpdate> => {
+    const {
+      id,
+      createdAt,
+      updatedAt,
+      deletedAt,
+      course,
+      subject,
+      semester,
+      batch,
+      faculty,
+      ...formValues
+    } = courseAssignment;
     return {
       ...formValues,
       latePenalty: formValues.latePenalty ?? undefined,
@@ -52,7 +65,10 @@ const CourseAssignmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
         <CourseAssignmentForm
           mode="edit"
           courseAssignmentId={parseInt(resolvedParams.id)}

@@ -20,7 +20,6 @@ import {usePanels} from '@/hooks/usePanels';
 import {Status} from '@/types/common';
 import {IPanel} from '@/types/panel';
 
-
 export default function PanelsPage() {
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -59,8 +58,8 @@ export default function PanelsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadPanels({ page: 1, limit: 10 });
   };
 

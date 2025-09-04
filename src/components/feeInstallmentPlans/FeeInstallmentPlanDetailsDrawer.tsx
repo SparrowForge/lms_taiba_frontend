@@ -15,7 +15,6 @@ import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
 
 import {useCreateFeeInstallmentPlanDetailsConfig} from './feeInstallmentPlanConfig';
 
-
 interface FeeInstallmentPlanDetailsDrawerProps {
   feeInstallmentPlanId?: number;
   visible: boolean;
@@ -29,8 +28,8 @@ const FeeInstallmentPlanDetailsDrawer: React.FC<FeeInstallmentPlanDetailsDrawerP
   onClose,
   onEdit,
 }) => {
-
-  const { selectedFeeInstallmentPlan, loadFeeInstallmentPlan, detailsStatus } = useFeeInstallmentPlans();
+  const { selectedFeeInstallmentPlan, loadFeeInstallmentPlan, detailsStatus } =
+    useFeeInstallmentPlans();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
   useEffect(() => {

@@ -15,7 +15,6 @@ import {ICourseType} from '@/types/courseType';
 
 import {useCreateCourseTypeDetailsConfig} from './courseTypeConfig';
 
-
 interface CourseTypeDetailsDrawerProps {
   courseTypeId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const CourseTypeDetailsDrawer: React.FC<CourseTypeDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedCourseType, loadCourseType, detailsStatus } = useCourseTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });

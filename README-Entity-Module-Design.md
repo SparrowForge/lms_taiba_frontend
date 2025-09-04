@@ -1,11 +1,13 @@
 # 📚 **LMS Taiba Admin Panel - Entity Module Development Guide**
 
 ## 🎯 **Overview**
+
 This document provides a comprehensive guide for creating and maintaining entity modules in the LMS Taiba Admin Panel. It serves as a reference for developers to understand the established patterns and architecture.
 
 ## 🏗️ **Architecture Overview**
 
 ### **Layered Architecture Pattern**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    UI Layer (React Components)              │
@@ -44,6 +46,7 @@ src/
 ## 🔧 **Implementation Details**
 
 ### **1. Type Definitions**
+
 ```typescript
 export interface I[EntityName] {
   id: number;
@@ -66,6 +69,7 @@ export interface I[EntityName]Update {
 ```
 
 ### **2. Service Layer**
+
 ```typescript
 export const [entityName]Service = {
   get[EntityName]s: async (params = {}): Promise<IBasePaginatedResponse<I[EntityName]>>,
@@ -77,6 +81,7 @@ export const [entityName]Service = {
 ```
 
 ### **3. Redux State Management**
+
 ```typescript
 interface I[EntityName]sState {
   listStatus: IStatusState;      // Loading states for list operations
@@ -89,6 +94,7 @@ interface I[EntityName]sState {
 ```
 
 ### **4. Custom Hooks**
+
 ```typescript
 export const use[EntityName]s = () => {
   const { [entityName]s, selected[EntityName], listStatus, detailsStatus, actionStatus, pagination } =
@@ -108,6 +114,7 @@ export const use[EntityName]s = () => {
 ```
 
 ### **5. Form Component Design Pattern**
+
 ```typescript
 interface [EntityName]FormProps {
   mode: 'create' | 'edit';
@@ -171,10 +178,10 @@ const [EntityName]Form: React.FC<[EntityName]FormProps> = ({
 
   // Form initial values only for edit mode
   const formContent = (
-    <Form 
-      form={form} 
-      layout="vertical" 
-      onFinish={handleSubmit} 
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
       {/* Form fields */}
@@ -194,6 +201,7 @@ const [EntityName]Form: React.FC<[EntityName]FormProps> = ({
 ```
 
 #### **Form Design Pattern Key Features:**
+
 - **Mode-based Form Reset**: Forms reset fields on create mode
 - **Enhanced Error Handling**: Sophisticated error handling with API response parsing
 - **Submit Button Helper**: `getSubmitText()` function for consistent button text
@@ -203,6 +211,7 @@ const [EntityName]Form: React.FC<[EntityName]FormProps> = ({
 - **Improved Placeholders**: Field-specific localization keys instead of generic messages
 
 #### **Select Component Pattern:**
+
 ```typescript
 <Select
   placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.[FIELD_NAME]) })}
@@ -221,6 +230,7 @@ const [EntityName]Form: React.FC<[EntityName]FormProps> = ({
 ```
 
 #### **StatusSelect Pattern:**
+
 ```typescript
 <Form.Item
   name="status"
@@ -230,7 +240,8 @@ const [EntityName]Form: React.FC<[EntityName]FormProps> = ({
   <StatusSelect preset="binary" />
 </Form.Item>
 ```
-```
+
+````
 
 ## 📋 **Checklist for New Entity Module**
 
@@ -292,15 +303,17 @@ rules={[
     message: t(LOCALE_KEYS.INVALID_EMAIL),
   },
 ]}
-```
+````
 
 ### **Pages**
+
 - [ ] `src/app/[locale]/[entity-name]s/page.tsx` - Main list page
 - [ ] `src/app/[locale]/[entity-name]s/create/page.tsx` - Create page
 - [ ] `src/app/[locale]/[entity-name]s/[id]/page.tsx` - Details page
 - [ ] `src/app/[locale]/[entity-name]s/[id]/edit/page.tsx` - Edit page
 
 ### **Integration**
+
 - [ ] Add to store (`src/store/index.ts`)
 - [ ] Add localization keys (`src/constants/localizationKeys.ts`)
 - [ ] Add translations to message files
@@ -310,6 +323,7 @@ rules={[
 ## 🚀 **Quick Start Template**
 
 ### **1. Copy Existing Entity**
+
 ```bash
 # Copy RoomTypes structure
 cp -r src/components/roomTypes src/components/[entityName]s
@@ -317,6 +331,7 @@ cp -r src/app/[locale]/room-types src/app/[locale]/[entity-name]s
 ```
 
 ### **2. Replace All Occurrences**
+
 ```bash
 # Replace in all files
 find . -name "*.tsx" -o -name "*.ts" | xargs sed -i 's/RoomType/[EntityName]/g'
@@ -325,36 +340,45 @@ find . -name "*.tsx" -o -name "*.ts" | xargs sed -i 's/room-type/[entity-name]/g
 ```
 
 ### **3. Update API Endpoint**
+
 ```typescript
 // In service file
-const response = await api.get<IBasePaginatedResponse<I[EntityName]>>('/[entity-name]s', { params });
+const response = await api.get<IBasePaginatedResponse<I[EntityName]>>('/[entity-name]s', {
+  params,
+});
 ```
 
 ## ⚠️ **Common Pitfalls to Avoid**
 
 ### **1. Component Naming**
+
 - ❌ **Wrong**: `RoomTypeForm` (should be `[EntityName]Form`)
 - ✅ **Correct**: `[EntityName]Form`
 
 ### **2. File Naming**
+
 - ❌ **Wrong**: `roomTypeService.ts` (should be `[entityName]Service.ts`)
 - ✅ **Correct**: `[entityName]Service.ts`
 
 ### **3. Route Paths**
+
 - ❌ **Wrong**: `/room-types` (should be `/[entity-name]s`)
 - ✅ **Correct**: `/[entity-name]s`
 
 ### **4. Import Paths**
+
 - ❌ **Wrong**: `import { RoomTypeForm } from '@/components/roomTypes'`
 - ✅ **Correct**: `import RoomTypeForm from '@/components/roomTypes/RoomTypeForm'`
 
 ### **5. Component Usage**
+
 - ❌ **Wrong**: Using `EntityDetails` in drawer (should be `EntityDetailsContent`)
 - ✅ **Correct**: Use `EntityDetailsContent` in drawer, `EntityDetails` in page
 
 ## 🔍 **Testing Checklist**
 
 ### **Functionality Tests**
+
 - [ ] Create new entity
 - [ ] Edit existing entity
 - [ ] Delete entity
@@ -365,6 +389,7 @@ const response = await api.get<IBasePaginatedResponse<I[EntityName]>>('/[entity-
 - [ ] Filtering
 
 ### **UI Tests**
+
 - [ ] Loading states display correctly
 - [ ] Error states display correctly
 - [ ] Success messages show
@@ -373,6 +398,7 @@ const response = await api.get<IBasePaginatedResponse<I[EntityName]>>('/[entity-
 - [ ] Navigation works correctly
 
 ### **Form-Specific Tests**
+
 - [ ] Form resets correctly on create mode
 - [ ] Initial values load correctly on edit mode
 - [ ] Select components show search and filtering
@@ -385,6 +411,7 @@ const response = await api.get<IBasePaginatedResponse<I[EntityName]>>('/[entity-
 ## 📚 **Reference Examples**
 
 ### **Working Entity Modules**
+
 - **RoomTypes** - Basic entity with name and status
 - **ScheduleTypes** - Similar to RoomTypes
 - **Addresses** - Complex entity with multiple fields
@@ -392,6 +419,7 @@ const response = await api.get<IBasePaginatedResponse<I[EntityName]>>('/[entity-
 - **Courses** - Academic entity with relationships
 
 ### **Key UI Components**
+
 - `EntityList` - Main list display
 - `EntityActions` - Action buttons
 - `StatusTag` - Status display
@@ -400,6 +428,7 @@ const response = await api.get<IBasePaginatedResponse<I[EntityName]>>('/[entity-
 - `AsyncErrorBoundary` - Error handling
 
 ### **Common Form Field Types**
+
 ```typescript
 // Text Input
 <Form.Item name="name" label={t(LOCALE_KEYS.NAME)}>
@@ -442,6 +471,7 @@ const response = await api.get<IBasePaginatedResponse<I[EntityName]>>('/[entity-
 ## 🔄 **Store Integration**
 
 ### **Add to Store Index**
+
 ```typescript
 // src/store/index.ts
 
@@ -466,6 +496,7 @@ export const store = configureStore({
 ## 🌐 **Localization Integration**
 
 ### **Add Localization Keys**
+
 ```typescript
 // src/constants/localizationKeys.ts
 

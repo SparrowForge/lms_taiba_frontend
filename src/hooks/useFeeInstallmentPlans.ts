@@ -13,13 +13,13 @@ import {
     addFeeInstallmentPlan,
     clearActionStatus,
     clearDetailsStatus,
+    deleteFeeInstallmentPlan,
     setActionStatus,
     setDetailsStatus,
+    setFeeInstallmentPlans,
     setListStatus,
     setPagination,
-    setFeeInstallmentPlans,
     setSelectedFeeInstallmentPlan,
-    deleteFeeInstallmentPlan,
     updateFeeInstallmentPlan,
 } from '@/store/slices/feeInstallmentPlanSlice';
 

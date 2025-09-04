@@ -5,7 +5,6 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
-
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
@@ -108,11 +107,21 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      initialValues={mode === 'edit' ? initialValues : undefined}
+    >
       <Form.Item
         name="courseId"
         label={t(LOCALE_KEYS.COURSE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
@@ -133,7 +142,12 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.NAME) })} />
       </Form.Item>
@@ -141,7 +155,12 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
       <Form.Item
         name="code"
         label={t(LOCALE_KEYS.CODE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CODE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CODE) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_CODE)} />
       </Form.Item>
@@ -149,7 +168,12 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
       <Form.Item
         name="creditHours"
         label={t(LOCALE_KEYS.CREDIT_HOURS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CREDIT_HOURS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CREDIT_HOURS) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_CREDIT_HOURS)} />
       </Form.Item>
@@ -157,7 +181,12 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
       <Form.Item
         name="theoryHours"
         label={t(LOCALE_KEYS.THEORY_HOURS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.THEORY_HOURS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.THEORY_HOURS) }),
+          },
+        ]}
       >
         <InputNumber
           placeholder={t(LOCALE_KEYS.ENTER_THEORY_HOURS)}
@@ -170,7 +199,12 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
       <Form.Item
         name="practicalHours"
         label={t(LOCALE_KEYS.PRACTICAL_HOURS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PRACTICAL_HOURS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PRACTICAL_HOURS) }),
+          },
+        ]}
       >
         <InputNumber
           placeholder={t(LOCALE_KEYS.ENTER_PRACTICAL_HOURS)}
@@ -183,7 +217,12 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
       <Form.Item
         name="description"
         label={t(LOCALE_KEYS.DESCRIPTION)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }),
+          },
+        ]}
       >
         <Input.TextArea placeholder={t(LOCALE_KEYS.ENTER_DESCRIPTION)} rows={4} />
       </Form.Item>
@@ -195,7 +234,12 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
+          },
+        ]}
       >
         <StatusSelect preset="lifecycle" />
       </Form.Item>
@@ -215,13 +259,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default SubjectForm;

@@ -15,7 +15,6 @@ import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
 import {useCreateRoleMenuPermissionDetailsConfig} from './roleMenuPermissionConfig';
 
-
 interface RoleMenuPermissionDetailsDrawerProps {
   roleMenuPermissionId?: number;
   visible: boolean;
@@ -29,8 +28,8 @@ const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerP
   onClose,
   onEdit,
 }) => {
-
-  const { selectedRoleMenuPermission, loadRoleMenuPermission, detailsStatus } = useRoleMenuPermissions();
+  const { selectedRoleMenuPermission, loadRoleMenuPermission, detailsStatus } =
+    useRoleMenuPermissions();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   useEffect(() => {

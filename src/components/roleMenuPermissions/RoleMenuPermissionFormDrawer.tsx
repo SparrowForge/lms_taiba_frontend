@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import RoleMenuPermissionFormSingle from './RoleMenuPermissionFormSingle';
-
 
 interface RoleMenuPermissionFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,8 +27,12 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
   onCancel,
   onSuccess,
 }) => {
-
-  const { getRoleMenuPermissionById, selectedRoleMenuPermission, loadRoleMenuPermission, detailsStatus } = useRoleMenuPermissions();
+  const {
+    getRoleMenuPermissionById,
+    selectedRoleMenuPermission,
+    loadRoleMenuPermission,
+    detailsStatus,
+  } = useRoleMenuPermissions();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   useEffect(() => {
@@ -47,8 +50,8 @@ const RoleMenuPermissionFormDrawer: React.FC<RoleMenuPermissionFormDrawerProps> 
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

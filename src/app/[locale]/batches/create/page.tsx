@@ -12,7 +12,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 const BatchCreatePage: React.FC = () => {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
@@ -25,8 +24,8 @@ const BatchCreatePage: React.FC = () => {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={handleBack} />
-          <BatchForm mode="create" onCancel={handleBack} />
+        <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={handleBack} />
+        <BatchForm mode="create" onCancel={handleBack} />
       </MainLayout>
     </ProtectedRoute>
   );

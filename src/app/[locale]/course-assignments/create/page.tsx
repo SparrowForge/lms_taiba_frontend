@@ -20,7 +20,10 @@ export default function CreateCourseAssignmentPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
         <CourseAssignmentForm mode="create" embedded={false} />
       </MainLayout>
     </ProtectedRoute>

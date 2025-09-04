@@ -69,7 +69,8 @@ export const useClassSchedules = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IClassSchedule> = await classScheduleService.getClassSchedule(id);
+        const response: IBaseResponse<IClassSchedule> =
+          await classScheduleService.getClassSchedule(id);
         dispatch(setSelectedClassSchedule(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {

@@ -17,7 +17,6 @@ import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 
 import {Status} from '@/types/common';
 
-
 const SemesterSubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const SemesterSubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = (
     loadSemesterSubject(semesterSubjectId);
   }, [resolvedParams.id, loadSemesterSubject]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const SemesterSubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = (
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <SemesterSubjectForm
-            mode="edit"
-            semesterSubjectId={parseInt(resolvedParams.id)}
-            initialValues={selectedSemesterSubject}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <SemesterSubjectForm
+          mode="edit"
+          semesterSubjectId={parseInt(resolvedParams.id)}
+          initialValues={selectedSemesterSubject}
         />
       </MainLayout>
     </ProtectedRoute>

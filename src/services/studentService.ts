@@ -3,7 +3,6 @@ import {IStudent, IStudentCreate, IStudentUpdate} from '@/types/student';
 
 import {api} from '@/lib/axios';
 
-
 export const studentService = {
   getStudents: async (params = {}): Promise<IBasePaginatedResponse<IStudent>> => {
     const response = await api.get('/students', { params });

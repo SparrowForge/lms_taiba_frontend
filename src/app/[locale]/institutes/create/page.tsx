@@ -20,8 +20,11 @@ export default function CreateInstitutePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <InstituteForm mode="create" />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <InstituteForm mode="create" />
       </MainLayout>
     </ProtectedRoute>
   );

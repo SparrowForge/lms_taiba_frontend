@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {Status} from '@/types/common';
 import {IInstitute} from '@/types/institute';
 
-export default function InstituteDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function InstituteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedInstitute, detailsStatus, getInstituteById, loadInstitute } = useInstitutes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
@@ -45,7 +41,7 @@ export default function InstituteDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IInstitute>} />
+        <EntityDetails config={config as EntityDetailsConfig<IInstitute>} />
       </MainLayout>
     </ProtectedRoute>
   );

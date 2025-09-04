@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import MenuForm from './MenuForm';
-
 
 interface MenuFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getMenuById, selectedMenu, loadMenu, detailsStatus } = useMenus();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
@@ -47,8 +45,8 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

@@ -17,9 +17,9 @@ import {Status} from '@/types/common';
 import {ICourseAssignment} from '@/types/courseAssignment';
 
 export default function CourseAssignmentDetailPage({
-  params
+  params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
   const { selectedCourseAssignment, detailsStatus, loadCourseAssignment } = useCourseAssignments();
   const { t } = useLocalization();

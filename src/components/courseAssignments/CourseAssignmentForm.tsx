@@ -19,7 +19,7 @@ import {useSemesters} from '@/hooks/useSemesters';
 import {useSubjects} from '@/hooks/useSubjects';
 
 import {Status} from '@/types/common';
-import {ICourseAssignment, ICourseAssignmentCreate, ICourseAssignmentUpdate} from '@/types/courseAssignment';
+import {ICourseAssignment, ICourseAssignmentCreate, ICourseAssignmentUpdate,} from '@/types/courseAssignment';
 import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
@@ -127,9 +127,17 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
-      initialValues={mode === 'edit' ? { ...initialValues,
-        publishDate: initialValues?.publishDate ? dayjs(initialValues.publishDate) : undefined,
-        dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined } : undefined}
+      initialValues={
+        mode === 'edit'
+          ? {
+              ...initialValues,
+              publishDate: initialValues?.publishDate
+                ? dayjs(initialValues.publishDate)
+                : undefined,
+              dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined,
+            }
+          : undefined
+      }
     >
       <Form.Item
         name="courseId"
@@ -284,10 +292,7 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
           },
         ]}
       >
-        <TextArea
-          rows={4}
-          placeholder={t(LOCALE_KEYS.ENTER_DESCRIPTION)}
-        />
+        <TextArea rows={4} placeholder={t(LOCALE_KEYS.ENTER_DESCRIPTION)} />
       </Form.Item>
 
       <Form.Item
@@ -424,7 +429,11 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
             validator: (_, value) => {
               const allowLateSubmit = form.getFieldValue('allowLateSubmit');
               if (allowLateSubmit && !value) {
-                return Promise.reject(new Error(t(LOCALE_KEYS.LATE_PENALTY) + ' is required when late submission is allowed'));
+                return Promise.reject(
+                  new Error(
+                    t(LOCALE_KEYS.LATE_PENALTY) + ' is required when late submission is allowed',
+                  ),
+                );
               }
               return Promise.resolve();
             },
@@ -440,10 +449,7 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="attachmentPath"
-        label={t(LOCALE_KEYS.ATTACHMENT_PATH)}
-      >
+      <Form.Item name="attachmentPath" label={t(LOCALE_KEYS.ATTACHMENT_PATH)}>
         <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.ATTACHMENT_PATH) })} />
       </Form.Item>
 

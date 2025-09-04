@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {Status} from '@/types/common';
-import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate} from '@/types/courseMaterial';
+import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate,} from '@/types/courseMaterial';
 
 import {courseMaterialService} from '@/services/courseMaterialService';
 
@@ -25,8 +25,14 @@ import {
 
 export const useCourseMaterials = () => {
   const dispatch = useDispatch();
-  const { courseMaterials, selectedCourseMaterial, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.courseMaterials);
+  const {
+    courseMaterials,
+    selectedCourseMaterial,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+  } = useSelector((state: RootState) => state.courseMaterials);
 
   const loadCourseMaterials = useCallback(
     async (params = {}) => {

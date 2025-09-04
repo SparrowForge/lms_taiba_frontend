@@ -1,7 +1,6 @@
 import {Button, Card, Col, Form, Input, InputNumber, Row, Select} from 'antd';
 import React from 'react';
 
-
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useBatches} from '@/hooks/useBatches';
@@ -27,7 +26,12 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
             <Form.Item
               name="name"
               label={t(LOCALE_KEYS.NAME)}
-              rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+                },
+              ]}
             >
               <Input placeholder={t(LOCALE_KEYS.ENTER_NAME)} />
             </Form.Item>
@@ -36,14 +40,21 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
             <Form.Item
               name="batchId"
               label={t(LOCALE_KEYS.BATCH)}
-              rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+                },
+              ]}
             >
               <Select
                 placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
                 loading={listStatus.status === Status.LOADING}
                 showSearch
                 filterOption={(input, option) =>
-                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                  (option?.children as unknown as string)
+                    ?.toLowerCase()
+                    .includes(input.toLowerCase())
                 }
               >
                 {batches.map((batch) => (
@@ -61,7 +72,12 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
             <Form.Item
               name="totalFees"
               label={t(LOCALE_KEYS.TOTAL_FEES)}
-              rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TOTAL_FEES) }) }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TOTAL_FEES) }),
+                },
+              ]}
             >
               <InputNumber
                 placeholder={t(LOCALE_KEYS.ENTER_AMOUNT)}
@@ -72,10 +88,7 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              name="admissionFee"
-              label={t(LOCALE_KEYS.ADMISSION_FEE)}
-            >
+            <Form.Item name="admissionFee" label={t(LOCALE_KEYS.ADMISSION_FEE)}>
               <InputNumber
                 placeholder={t(LOCALE_KEYS.ENTER_AMOUNT)}
                 style={{ width: '100%' }}
@@ -88,10 +101,7 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item
-              name="discountAmount"
-              label={t(LOCALE_KEYS.DISCOUNT_AMOUNT)}
-            >
+            <Form.Item name="discountAmount" label={t(LOCALE_KEYS.DISCOUNT_AMOUNT)}>
               <InputNumber
                 placeholder={t(LOCALE_KEYS.ENTER_AMOUNT)}
                 style={{ width: '100%' }}
@@ -104,7 +114,12 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
             <Form.Item
               name="paymentType"
               label={t(LOCALE_KEYS.PAYMENT_TYPE)}
-              rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PAYMENT_TYPE) }) }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PAYMENT_TYPE) }),
+                },
+              ]}
             >
               <Select placeholder={t(LOCALE_KEYS.SELECT_PAYMENT_TYPE)}>
                 <Select.Option value="one_time">{t(LOCALE_KEYS.ONE_TIME)}</Select.Option>

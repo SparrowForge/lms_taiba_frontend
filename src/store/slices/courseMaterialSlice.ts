@@ -86,5 +86,3 @@ export const {
 } = courseMaterialSlice.actions;
 
 export default courseMaterialSlice.reducer;
-
-

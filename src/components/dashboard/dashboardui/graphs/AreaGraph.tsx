@@ -1,5 +1,5 @@
 // AreaGraph.tsx
-import { Area, AreaConfig } from "@ant-design/plots";
+import {Area, AreaConfig} from '@ant-design/plots';
 
 export interface AreaGraphProps {
   data: { week: string; score: number }[];
@@ -8,12 +8,12 @@ export interface AreaGraphProps {
 const AreaGraph: React.FC<AreaGraphProps> = ({ data }) => {
   const config: AreaConfig = {
     data,
-    xField: "week",
-    yField: "score",
+    xField: 'week',
+    yField: 'score',
     height: 200,
-    shapeField: "smooth", // smooth curve
+    shapeField: 'smooth', // smooth curve
     style: {
-      fill: "l(270) 0:#ffffff 1:#3b82f6", // gradient fill
+      fill: 'l(270) 0:#ffffff 1:#3b82f6', // gradient fill
     },
     axis: {
       y: {
@@ -26,16 +26,16 @@ const AreaGraph: React.FC<AreaGraphProps> = ({ data }) => {
     },
     line: {
       style: {
-        stroke: "#3b82f6",
+        stroke: '#3b82f6',
         strokeWidth: 2,
       },
     },
     point: {
       size: 4,
-      shape: "circle",
+      shape: 'circle',
       style: {
-        fill: "#3b82f6",
-        stroke: "#fff",
+        fill: '#3b82f6',
+        stroke: '#fff',
         lineWidth: 1,
       },
     },

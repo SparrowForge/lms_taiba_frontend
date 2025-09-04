@@ -5,20 +5,19 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
-
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
-import { useBatches } from '@/hooks/useBatches';
+import {useBatches} from '@/hooks/useBatches';
 import {useClassSchedules} from '@/hooks/useClassSchedules';
-import { useFaculties } from '@/hooks/useFaculties';
+import {useFaculties} from '@/hooks/useFaculties';
 import {useLocalization} from '@/hooks/useLocalization';
-import { useRooms } from '@/hooks/useRooms';
-import { useSemesters } from '@/hooks/useSemesters';
-import { useSubjects } from '@/hooks/useSubjects';
-import { useTimeSlots } from '@/hooks/useTimeSlots';
-import { useWeekDays } from '@/hooks/useWeekDays';
+import {useRooms} from '@/hooks/useRooms';
+import {useSemesters} from '@/hooks/useSemesters';
+import {useSubjects} from '@/hooks/useSubjects';
+import {useTimeSlots} from '@/hooks/useTimeSlots';
+import {useWeekDays} from '@/hooks/useWeekDays';
 
 import {IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate} from '@/types/classSchedule';
 import {Status} from '@/types/common';
@@ -67,8 +66,15 @@ const ClassScheduleForm: React.FC<Props> = ({
     loadRooms({ page: 1, limit: 100 });
     loadFaculties({ page: 1, limit: 100 });
     loadTimeSlots({ page: 1, limit: 100 });
-   
-  }, [loadBatches, loadSemesters, loadSubjects, loadWeekDays, loadRooms, loadFaculties, loadTimeSlots]);
+  }, [
+    loadBatches,
+    loadSemesters,
+    loadSubjects,
+    loadWeekDays,
+    loadRooms,
+    loadFaculties,
+    loadTimeSlots,
+  ]);
 
   const handleSubmit = async (values: Partial<IClassSchedule>) => {
     try {
@@ -118,7 +124,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="batchId"
         label={t(LOCALE_KEYS.BATCH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}>
           {batches.map((batch) => (
@@ -132,7 +143,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="semesterId"
         label={t(LOCALE_KEYS.SEMESTER)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}>
           {semesters.map((semester) => (
@@ -146,7 +162,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="subjectId"
         label={t(LOCALE_KEYS.SUBJECT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) })}>
           {subjects.map((subject) => (
@@ -160,7 +181,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="weekDayId"
         label={t(LOCALE_KEYS.WEEK_DAY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.WEEK_DAY) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.WEEK_DAY) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.WEEK_DAY) })}>
           {weekDays.map((weekDay) => (
@@ -174,7 +200,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="roomId"
         label={t(LOCALE_KEYS.ROOM)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.ROOM) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.ROOM) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROOM) })}>
           {rooms.map((room) => (
@@ -188,7 +219,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="facultyId"
         label={t(LOCALE_KEYS.FACULTY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) })}>
           {faculties.map((faculty) => (
@@ -202,7 +238,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="timeSlotId"
         label={t(LOCALE_KEYS.TIME_SLOT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.TIME_SLOT) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.TIME_SLOT) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TIME_SLOT) })}>
           {timeSlots.map((timeSlot) => (
@@ -216,7 +257,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="startDate"
         label={t(LOCALE_KEYS.START_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.START_DATE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.START_DATE) }),
+          },
+        ]}
       >
         <DatePicker style={{ width: '100%' }} />
       </Form.Item>
@@ -224,25 +270,35 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="endDate"
         label={t(LOCALE_KEYS.END_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.END_DATE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.END_DATE) }),
+          },
+        ]}
       >
         <DatePicker style={{ width: '100%' }} />
       </Form.Item>
 
-      <Form.Item
-        name="isRecurring"
-        label={t(LOCALE_KEYS.IS_RECURRING)}
-        valuePropName="checked"
-      >
+      <Form.Item name="isRecurring" label={t(LOCALE_KEYS.IS_RECURRING)} valuePropName="checked">
         <Checkbox />
       </Form.Item>
 
       <Form.Item
         name="classScheduleType"
         label={t(LOCALE_KEYS.CLASS_SCHEDULE_TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.CLASS_SCHEDULE_TYPE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, {
+              name: t(LOCALE_KEYS.CLASS_SCHEDULE_TYPE),
+            }),
+          },
+        ]}
       >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.CLASS_SCHEDULE_TYPE) })}>
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.CLASS_SCHEDULE_TYPE) })}
+        >
           <Select.Option value="REGULAR">Regular</Select.Option>
           <Select.Option value="MAKEUP">Makeup</Select.Option>
           <Select.Option value="EXTRA">Extra</Select.Option>
@@ -253,8 +309,11 @@ const ClassScheduleForm: React.FC<Props> = ({
         name="maxCapacity"
         label={t(LOCALE_KEYS.MAX_CAPACITY)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MAX_CAPACITY) }) },
-          { type: 'number', min: 1, message: 'Max capacity must be at least 1' }
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MAX_CAPACITY) }),
+          },
+          { type: 'number', min: 1, message: 'Max capacity must be at least 1' },
         ]}
       >
         <InputNumber min={1} style={{ width: '100%' }} />
@@ -263,7 +322,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
+          },
+        ]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -280,13 +344,7 @@ const ClassScheduleForm: React.FC<Props> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default ClassScheduleForm;

@@ -13,7 +13,6 @@ import {getErrorMessage} from '@/types/errors';
 
 import SocialLogin from './SocialLogin';
 
-
 export const LoginForm = () => {
   const { login, isLoading, error, clearError } = useAuth();
   const [form] = Form.useForm();
@@ -59,13 +58,10 @@ export const LoginForm = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
-      <Card
-        style={{ width: 380 }}
-        className="shadow-lg rounded-lg"
-      >
-         <div className="flex justify-center items-center py-6">
-            <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
-          </div>
+      <Card style={{ width: 380 }} className="shadow-lg rounded-lg">
+        <div className="flex justify-center items-center py-6">
+          <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
+        </div>
         <Form
           form={form}
           name="login"
@@ -78,14 +74,21 @@ export const LoginForm = () => {
             name="email"
             label={
               <div className="flex flex-col text-gray-500 text-[15px]">
-                <h1>Email / Username | <span className=" ">البريد الإلكتروني / اسم<br /> المستخدم</span></h1>
+                <h1>
+                  Email / Username |{' '}
+                  <span className=" ">
+                    البريد الإلكتروني / اسم
+                    <br /> المستخدم
+                  </span>
+                </h1>
               </div>
             }
             rules={[
               {
                 // required: true,
-                 message: "Please enter your email!" },
-              { type: "email", message: "Please enter a valid email!" },
+                message: 'Please enter your email!',
+              },
+              { type: 'email', message: 'Please enter a valid email!' },
             ]}
           >
             <Input
@@ -95,19 +98,18 @@ export const LoginForm = () => {
             />
           </Form.Item>
 
-
           <Form.Item
             name="password"
             label={
-              <div className='text-gray-500 text-[15px]'>
+              <div className="text-gray-500 text-[15px]">
                 <h1>Password | كلمة المرور</h1>
               </div>
             }
-
             rules={[
               {
                 // required: true,
-                message: 'Please enter your password!' },
+                message: 'Please enter your password!',
+              },
               { min: 6, message: 'Password must be at least 6 characters!' },
             ]}
           >
@@ -127,10 +129,7 @@ export const LoginForm = () => {
             </div>
           )}
           <div className="text-center flex justify-end mt-4">
-            <p className="text-sm text-[#1e45bf]">
-
-            Forget password? | نسيت كلمة المرور؟
-            </p>
+            <p className="text-sm text-[#1e45bf]">Forget password? | نسيت كلمة المرور؟</p>
           </div>
           <Form.Item>
             <Button

@@ -5,6 +5,7 @@ This project uses Husky and commitlint to enforce structured git commits followi
 ## Setup
 
 The project is already configured with:
+
 - **Husky**: Git hooks manager
 - **commitlint**: Commit message linter
 - **commitizen**: Interactive commit interface
@@ -39,6 +40,7 @@ All commit messages must follow this format:
 ### Examples
 
 ✅ **Valid commits:**
+
 ```
 feat: add user authentication system
 fix(auth): resolve login validation issue
@@ -51,6 +53,7 @@ chore: update dependencies
 ```
 
 ❌ **Invalid commits:**
+
 ```
 added new feature
 fixed bug
@@ -88,10 +91,12 @@ git commit -m "feat: add new dashboard component" -m "This component provides re
 ## Git Hooks
 
 ### Pre-commit Hook
+
 - Runs `bun test` before each commit
 - Ensures all tests pass before allowing the commit
 
 ### Commit-msg Hook
+
 - Validates commit message format using commitlint
 - Rejects commits that don't follow the conventional format
 
@@ -104,13 +109,17 @@ git commit -m "feat: add new dashboard component" -m "This component provides re
 ## Troubleshooting
 
 ### Hook Not Working
+
 If hooks aren't working, ensure they're executable:
+
 ```bash
 chmod +x .husky/*
 ```
 
 ### Reinstall Husky
+
 If you encounter issues, reinstall Husky:
+
 ```bash
 bun remove husky
 bun add -D husky
@@ -118,7 +127,9 @@ bunx husky init
 ```
 
 ### Bypass Hooks (Emergency Only)
+
 In emergency situations, you can bypass hooks:
+
 ```bash
 git commit --no-verify -m "emergency: critical fix"
 ```
@@ -134,6 +145,7 @@ git commit --no-verify -m "emergency: critical fix"
 ## Examples by Category
 
 ### Features
+
 ```
 feat: implement dark mode toggle
 feat(auth): add OAuth2 support
@@ -141,6 +153,7 @@ feat(ui): create reusable button component
 ```
 
 ### Bug Fixes
+
 ```
 fix: resolve memory leak in data processing
 fix(api): handle null response gracefully
@@ -148,6 +161,7 @@ fix(ui): fix button alignment on mobile
 ```
 
 ### Documentation
+
 ```
 docs: add setup instructions
 docs(api): document new endpoints
@@ -155,6 +169,7 @@ docs: update deployment guide
 ```
 
 ### Refactoring
+
 ```
 refactor: extract utility functions
 refactor(auth): simplify authentication logic
@@ -162,6 +177,7 @@ refactor: improve error handling
 ```
 
 ### Performance
+
 ```
 perf: optimize image loading
 perf(db): add database indexes
@@ -169,6 +185,7 @@ perf: reduce bundle size
 ```
 
 ### Testing
+
 ```
 test: add unit tests for utils
 test(api): add integration tests
@@ -176,6 +193,7 @@ test: increase test coverage
 ```
 
 ### Maintenance
+
 ```
 chore: update dependencies
 chore: configure CI/CD pipeline

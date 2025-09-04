@@ -20,7 +20,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {IClassSchedule} from '@/types/classSchedule';
 import {Status} from '@/types/common';
 
-
 export default function ClassScheduleListView() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });
@@ -148,34 +147,32 @@ export default function ClassScheduleListView() {
   };
 
   return (
-    
-      <>
-        <AsyncErrorBoundary
-          error={
-            listStatus.status === Status.FAILED
-              ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
-              : null
-          }
-          onRetry={() => loadClassSchedules({ page: 1, limit: 10 })}
-        >
-          <EntityList config={config as EntityConfig<IClassSchedule>} />
-        </AsyncErrorBoundary>
+    <>
+      <AsyncErrorBoundary
+        error={
+          listStatus.status === Status.FAILED
+            ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
+            : null
+        }
+        onRetry={() => loadClassSchedules({ page: 1, limit: 10 })}
+      >
+        <EntityList config={config as EntityConfig<IClassSchedule>} />
+      </AsyncErrorBoundary>
 
-        <ClassScheduleFormDrawer
-          mode={drawerMode}
-          classScheduleId={selectedId}
-          visible={drawerVisible}
-          onCancel={() => setDrawerVisible(false)}
-          onSuccess={handleDrawerSuccess}
-        />
+      <ClassScheduleFormDrawer
+        mode={drawerMode}
+        classScheduleId={selectedId}
+        visible={drawerVisible}
+        onCancel={() => setDrawerVisible(false)}
+        onSuccess={handleDrawerSuccess}
+      />
 
-        <ClassScheduleDetailsDrawer
-          classScheduleId={selectedDetailsId}
-          visible={detailsDrawerVisible}
-          onClose={() => setDetailsDrawerVisible(false)}
-          onEdit={handleDetailsEdit}
-        />
-      </>
-    
+      <ClassScheduleDetailsDrawer
+        classScheduleId={selectedDetailsId}
+        visible={detailsDrawerVisible}
+        onClose={() => setDetailsDrawerVisible(false)}
+        onEdit={handleDetailsEdit}
+      />
+    </>
   );
 }

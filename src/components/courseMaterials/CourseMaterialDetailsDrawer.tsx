@@ -10,7 +10,6 @@ import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 import {useCourseMaterials} from '@/hooks/useCourseMaterials';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import {Status} from '@/types/common';
 import {ICourseMaterial} from '@/types/courseMaterial';
 
@@ -46,7 +45,7 @@ const CourseMaterialDetailsDrawer: React.FC<CourseMaterialDetailsDrawerProps> = 
 
   const config = useCreateCourseMaterialDetailsConfig(
     selectedCourseMaterial,
-    detailsStatus.status === Status.LOADING ,
+    detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED ? detailsStatus.message || null : null,
     { embedded: true, onEdit: handleEdit },
   );

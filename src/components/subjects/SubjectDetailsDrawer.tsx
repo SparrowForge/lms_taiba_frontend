@@ -15,7 +15,6 @@ import {ISubject} from '@/types/subject';
 
 import {useCreateSubjectDetailsConfig} from './subjectConfig';
 
-
 interface SubjectDetailsDrawerProps {
   subjectId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const SubjectDetailsDrawer: React.FC<SubjectDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedSubject, loadSubject, detailsStatus } = useSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });

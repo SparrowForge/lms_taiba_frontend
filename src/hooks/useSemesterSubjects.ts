@@ -9,7 +9,7 @@ import {
     ISemesterSubject,
     ISemesterSubjectCreate,
     ISemesterSubjectMultipleCreate,
-    ISemesterSubjectUpdate
+    ISemesterSubjectUpdate,
 } from '@/types/semesterSubject';
 
 import {semesterSubjectService} from '@/services/semesterSubjectService';
@@ -76,7 +76,8 @@ export const useSemesterSubjects = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<ISemesterSubject> = await semesterSubjectService.getSemesterSubject(id);
+        const response: IBaseResponse<ISemesterSubject> =
+          await semesterSubjectService.getSemesterSubject(id);
         dispatch(setSelectedSemesterSubject(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
@@ -127,11 +128,18 @@ export const useSemesterSubjects = () => {
         // response.forEach(semesterSubject => {
         //   dispatch(addSemesterSubject(semesterSubject));
         // });
-        dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Semester subjects created successfully' }));
+        dispatch(
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Semester subjects created successfully',
+          }),
+        );
       } catch (error: unknown) {
         const errorMessage =
           error instanceof AxiosError
-            ? error?.response?.data?.message || error?.message || 'Failed to create semester subjects'
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to create semester subjects'
             : 'Failed to create semester subjects';
         dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;

@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import SemesterSubjectForm from './SemesterSubjectForm';
-
 
 interface SemesterSubjectFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,8 @@ const SemesterSubjectFormDrawer: React.FC<SemesterSubjectFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getSemesterSubjectById, selectedSemesterSubject, loadSemesterSubject, detailsStatus } = useSemesterSubjects();
+  const { getSemesterSubjectById, selectedSemesterSubject, loadSemesterSubject, detailsStatus } =
+    useSemesterSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
   useEffect(() => {
@@ -46,8 +46,8 @@ const SemesterSubjectFormDrawer: React.FC<SemesterSubjectFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

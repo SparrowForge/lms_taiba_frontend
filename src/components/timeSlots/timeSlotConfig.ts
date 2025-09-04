@@ -6,8 +6,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {ITimeSlot} from '@/types/timeSlot';
 
-export const getTimeSlotDisplayName = (item: ITimeSlot) =>
-  item.name || `Time Slot #${item.id}`;
+export const getTimeSlotDisplayName = (item: ITimeSlot) => item.name || `Time Slot #${item.id}`;
 export const getTimeSlotInitials = (item: ITimeSlot) =>
   item.name?.slice(0, 2).toUpperCase() || 'TS';
 
@@ -36,12 +35,12 @@ export const useCreateTimeSlotDetailsConfig = (
       {
         key: 'startTime',
         label: t(LOCALE_KEYS.START_TIME),
-        render: (v: string) => v ? v.substring(0, 5) : 'N/A', // Show only HH:mm
+        render: (v: string) => (v ? v.substring(0, 5) : 'N/A'), // Show only HH:mm
       },
       {
         key: 'endTime',
         label: t(LOCALE_KEYS.END_TIME),
-        render: (v: string) => v ? v.substring(0, 5) : 'N/A', // Show only HH:mm
+        render: (v: string) => (v ? v.substring(0, 5) : 'N/A'), // Show only HH:mm
       },
       { key: 'status', label: t(LOCALE_KEYS.STATUS) },
       {

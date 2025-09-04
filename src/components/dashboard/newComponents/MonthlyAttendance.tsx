@@ -1,23 +1,23 @@
-import { Card } from "antd";
+import {Card} from 'antd';
 
-import ColumnGraph from "../dashboardui/graphs/ColumnGraph";
-import { useLocalization } from "@/hooks/useLocalization";
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
+
+import ColumnGraph from '../dashboardui/graphs/ColumnGraph';
 
 const data = [
-  { week: "Week 1", attendance: 80 },
-  { week: "Week 2", attendance: 75 },
-  { week: "Week 3", attendance: 90 },
-  { week: "Week 4", attendance: 85 },
+  { week: 'Week 1', attendance: 80 },
+  { week: 'Week 2', attendance: 75 },
+  { week: 'Week 3', attendance: 90 },
+  { week: 'Week 4', attendance: 85 },
 ];
 
 const MonthlyAttendance = () => {
-  const {t} = useLocalization();
+  const { t } = useLocalization();
   return (
     <Card className="rounded-2xl shadow-sm">
-      <h2 className="text-base font-semibold mb-3">
-         {t(LOCALE_KEYS.MONTHLY_ATTENDANCE)}
-      </h2>
+      <h2 className="text-base font-semibold mb-3">{t(LOCALE_KEYS.MONTHLY_ATTENDANCE)}</h2>
       <div style={{ height: 160 }}>
         <ColumnGraph data={data} color="#1F4BCA" />
       </div>

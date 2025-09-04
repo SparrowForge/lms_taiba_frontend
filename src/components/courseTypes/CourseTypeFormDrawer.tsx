@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useCourseTypes} from '@/hooks/useCourseTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import CourseTypeForm from './CourseTypeForm';
-
 
 interface Props {
   mode: 'create' | 'edit';
@@ -46,8 +45,8 @@ const CourseTypeFormDrawer: React.FC<Props> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

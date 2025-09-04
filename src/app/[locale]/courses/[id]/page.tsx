@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 
-export default function CourseDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function CourseDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedCourse, detailsStatus, loadCourse } = useCourses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
@@ -45,7 +41,7 @@ export default function CourseDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<ICourse>} />
+        <EntityDetails config={config as EntityDetailsConfig<ICourse>} />
       </MainLayout>
     </ProtectedRoute>
   );

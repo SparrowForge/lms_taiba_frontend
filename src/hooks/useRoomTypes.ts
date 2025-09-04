@@ -23,17 +23,10 @@ import {
     updateRoomType,
 } from '@/store/slices/roomTypeSlice';
 
-
 export const useRoomTypes = () => {
   const dispatch = useDispatch();
-  const {
-    roomTypes,
-    selectedRoomType,
-    listStatus,
-    detailsStatus,
-    actionStatus,
-    pagination,
-  } = useSelector((state: RootState) => state.roomTypes);
+  const { roomTypes, selectedRoomType, listStatus, detailsStatus, actionStatus, pagination } =
+    useSelector((state: RootState) => state.roomTypes);
 
   const loadRoomTypes = useCallback(
     async (params = {}) => {

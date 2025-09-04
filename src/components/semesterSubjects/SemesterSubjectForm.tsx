@@ -1,7 +1,7 @@
 'use client';
 
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Card, Col, Form, InputNumber, message, Row, Select, Space, Typography} from 'antd';
+import {Button, Card, Col, Form, InputNumber, message, Row, Select, Space, Typography,} from 'antd';
 import {useRouter} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
@@ -21,10 +21,10 @@ import {
     IFacultyAssignment,
     ISemesterSubjectCreate,
     ISemesterSubjectMultipleCreate,
-    ISemesterSubjectUpdate
+    ISemesterSubjectUpdate,
 } from '@/types/semesterSubject';
 
-const {Text, Title} = Typography;
+const { Text, Title } = Typography;
 
 interface SemesterSubjectFormProps {
   mode: 'create' | 'edit';
@@ -43,36 +43,42 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
   onCancel,
   embedded = false,
 }) => {
-  const {t} = useLocalization();
-  const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, {defaultValue: 'Semester Subject'});
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
   const router = useRouter();
   const [form] = Form.useForm();
 
   // Hooks
-  const {createSemesterSubject, createMultipleSemesterSubjects, editSemesterSubject, actionStatus, loadSemesterSubject} = useSemesterSubjects();
-  const {faculties, loadFaculties} = useFaculties();
-  const {subjects, loadSubjects, listStatus: subjectsListStatus} = useSubjects();
-  const {semesters, loadSemesters} = useSemesters();
-  const {batches, loadBatches} = useBatches();
+  const {
+    createSemesterSubject,
+    createMultipleSemesterSubjects,
+    editSemesterSubject,
+    actionStatus,
+    loadSemesterSubject,
+  } = useSemesterSubjects();
+  const { faculties, loadFaculties } = useFaculties();
+  const { subjects, loadSubjects, listStatus: subjectsListStatus } = useSubjects();
+  const { semesters, loadSemesters } = useSemesters();
+  const { batches, loadBatches } = useBatches();
 
   // State for page mode (multiple faculty assignment)
   const [selectedSemesterId, setSelectedSemesterId] = useState<number | undefined>();
   const [selectedBatchId, setSelectedBatchId] = useState<number | undefined>();
   const [selectedCourseId, setSelectedCourseId] = useState<number | undefined>();
   const [filterBatchId, setFilterBatchId] = useState<number | undefined>();
-  const [subjectAssignments, setSubjectAssignments] = useState<Array<{
-    subjectId: number;
-    faculty: IFacultyAssignment[];
-  }>>([]);
+  const [subjectAssignments, setSubjectAssignments] = useState<
+    Array<{
+      subjectId: number;
+      faculty: IFacultyAssignment[];
+    }>
+  >([]);
 
   useEffect(() => {
-    loadFaculties({page: 1, limit: 100});
-    loadSemesters({page: 1, limit: 100});
-    loadBatches({page: 1, limit: 100});
+    loadFaculties({ page: 1, limit: 100 });
+    loadSemesters({ page: 1, limit: 100 });
+    loadBatches({ page: 1, limit: 100 });
     // Don't load subjects upfront - load them dynamically after semester selection
   }, [loadFaculties, loadSemesters, loadBatches]);
-
-
 
   useEffect(() => {
     if (mode === 'edit' && semesterSubjectId) {
@@ -91,8 +97,6 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
     }
   }, [mode, form]);
 
-
-
   // Handle batch filter change
   const handleBatchFilterChange = (batchId: number | undefined) => {
     setFilterBatchId(batchId);
@@ -110,11 +114,11 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
     // Reset subject assignments when semester changes
     setSubjectAssignments([]);
 
-    const selectedSemester = semesters.find(s => s.id === semesterId);
+    const selectedSemester = semesters.find((s) => s.id === semesterId);
 
     if (selectedSemester) {
       setSelectedBatchId(selectedSemester.batchId);
-      const selectedBatch = batches.find(b => b.id === selectedSemester.batchId);
+      const selectedBatch = batches.find((b) => b.id === selectedSemester.batchId);
 
       if (selectedBatch) {
         setSelectedCourseId(selectedBatch.courseId);
@@ -124,7 +128,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
           await loadSubjects({
             page: 1,
             limit: 100,
-            courseId: selectedBatch.courseId
+            courseId: selectedBatch.courseId,
           });
         } catch (error) {
           console.error('Failed to load subjects for course:', error);
@@ -139,7 +143,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
     if (!filterBatchId) {
       return []; // Show no semesters until batch is selected
     }
-    return semesters.filter(semester => semester.batchId === filterBatchId);
+    return semesters.filter((semester) => semester.batchId === filterBatchId);
   };
 
   // Get filtered subjects by course
@@ -154,7 +158,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
 
     // Since we're now loading subjects by course ID, all loaded subjects should match
     // But let's still filter to be safe
-    const filtered = subjects.filter(subject => {
+    const filtered = subjects.filter((subject) => {
       return subject.courseId === selectedCourseId;
     });
 
@@ -164,12 +168,14 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
   // Get available subjects (excluding already selected ones)
   const getAvailableSubjects = () => {
     const filteredSubjects = getFilteredSubjects();
-    const selectedSubjectIds = subjectAssignments.map(assignment => assignment.subjectId);
-    const available = filteredSubjects.filter(subject => !selectedSubjectIds.includes(subject.id));
+    const selectedSubjectIds = subjectAssignments.map((assignment) => assignment.subjectId);
+    const available = filteredSubjects.filter(
+      (subject) => !selectedSubjectIds.includes(subject.id),
+    );
 
     // Also include currently selected subjects so they show in their own dropdowns
-    const currentSubject = filteredSubjects.find(s => s.id === selectedSubjectIds[0]);
-    if (currentSubject && !available.find(s => s.id === currentSubject.id)) {
+    const currentSubject = filteredSubjects.find((s) => s.id === selectedSubjectIds[0]);
+    if (currentSubject && !available.find((s) => s.id === currentSubject.id)) {
       available.push(currentSubject);
     }
 
@@ -179,11 +185,11 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
   // Get subjects for a specific dropdown (including the currently selected one)
   const getSubjectsForDropdown = (currentSubjectId: number) => {
     const filteredSubjects = getFilteredSubjects();
-    const selectedSubjectIds = subjectAssignments.map(assignment => assignment.subjectId);
+    const selectedSubjectIds = subjectAssignments.map((assignment) => assignment.subjectId);
 
     // Include the current subject plus all unselected ones
-    const available = filteredSubjects.filter(subject =>
-      subject.id === currentSubjectId || !selectedSubjectIds.includes(subject.id)
+    const available = filteredSubjects.filter(
+      (subject) => subject.id === currentSubjectId || !selectedSubjectIds.includes(subject.id),
     );
 
     return available;
@@ -198,8 +204,10 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
 
     // Check if there are any subjects that haven't been assigned yet
     const filteredSubjects = getFilteredSubjects();
-    const selectedSubjectIds = subjectAssignments.map(assignment => assignment.subjectId);
-    const unassignedSubjects = filteredSubjects.filter(subject => !selectedSubjectIds.includes(subject.id));
+    const selectedSubjectIds = subjectAssignments.map((assignment) => assignment.subjectId);
+    const unassignedSubjects = filteredSubjects.filter(
+      (subject) => !selectedSubjectIds.includes(subject.id),
+    );
 
     return unassignedSubjects.length > 0;
   };
@@ -218,7 +226,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
     if (!filterBatchId) return false; // Batch must be selected first
     if (subjectAssignments.length === 0) return false;
 
-    return subjectAssignments.every(assignment => {
+    return subjectAssignments.every((assignment) => {
       // Faculty assignment is optional - just ensure the subject is selected
       return assignment.subjectId > 0;
     });
@@ -232,14 +240,19 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
       const subjectName = getSubjectName(assignment.subjectId);
 
       // Only validate faculty assignments if they are partially filled
-      const hasPartialFaculty = assignment.faculty.some(faculty => 
-        faculty.facultyId > 0 || faculty.hoursPerWeek > 0 || faculty.role.trim() !== ''
+      const hasPartialFaculty = assignment.faculty.some(
+        (faculty) =>
+          faculty.facultyId > 0 || faculty.hoursPerWeek > 0 || faculty.role.trim() !== '',
       );
-      
+
       if (hasPartialFaculty) {
-        const validFacultyCount = assignment.faculty.filter(faculty => validateFacultyAssignment(faculty)).length;
+        const validFacultyCount = assignment.faculty.filter((faculty) =>
+          validateFacultyAssignment(faculty),
+        ).length;
         if (validFacultyCount === 0) {
-          errors.push(`${subjectName}: Faculty assignment incomplete (need faculty, hours, and role)`);
+          errors.push(
+            `${subjectName}: Faculty assignment incomplete (need faculty, hours, and role)`,
+          );
         }
       }
     });
@@ -261,10 +274,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
       faculty: [], // Start with no faculty assignments
     };
 
-    setSubjectAssignments([
-      ...subjectAssignments,
-      newAssignment
-    ]);
+    setSubjectAssignments([...subjectAssignments, newAssignment]);
   };
 
   // Remove subject assignment
@@ -296,14 +306,22 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
   };
 
   // Update subject assignment
-  const updateSubjectAssignment = (index: number, field: 'subjectId' | 'faculty', value: any, facultyIndex?: number) => {
+  const updateSubjectAssignment = (
+    index: number,
+    field: 'subjectId' | 'faculty',
+    value: any,
+    facultyIndex?: number,
+  ) => {
     const newAssignments = [...subjectAssignments];
     if (field === 'subjectId') {
       newAssignments[index].subjectId = value;
       // Reset faculty assignments for new subject
       newAssignments[index].faculty = [];
     } else if (field === 'faculty' && facultyIndex !== undefined) {
-      newAssignments[index].faculty[facultyIndex] = {...newAssignments[index].faculty[facultyIndex], ...value};
+      newAssignments[index].faculty[facultyIndex] = {
+        ...newAssignments[index].faculty[facultyIndex],
+        ...value,
+      };
     }
 
     setSubjectAssignments(newAssignments);
@@ -311,13 +329,13 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
 
   // Get subject name by ID
   const getSubjectName = (subjectId: number) => {
-    const subject = subjects.find(s => s.id === subjectId);
+    const subject = subjects.find((s) => s.id === subjectId);
     return subject ? `${subject.name} (${subject.code})` : 'Unknown Subject';
   };
 
   // Get faculty name by ID
   const getFacultyName = (facultyId: number) => {
-    const faculty = faculties.find(f => f.id === facultyId);
+    const faculty = faculties.find((f) => f.id === facultyId);
     return faculty ? faculty.fullName : 'Unknown Faculty';
   };
 
@@ -336,9 +354,11 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
         if (mode === 'create' && subjectAssignments.length > 0) {
           const payload: ISemesterSubjectMultipleCreate = {
             semesterId: selectedSemesterId!,
-            subjects: subjectAssignments.map(assignment => ({
+            subjects: subjectAssignments.map((assignment) => ({
               subjectId: assignment.subjectId,
-              faculty: assignment.faculty.filter(f => f.facultyId > 0 && f.hoursPerWeek > 0 && f.role.trim() !== ''), // Only include complete faculty assignments
+              faculty: assignment.faculty.filter(
+                (f) => f.facultyId > 0 && f.hoursPerWeek > 0 && f.role.trim() !== '',
+              ), // Only include complete faculty assignments
             })),
           };
           await createMultipleSemesterSubjects(payload);
@@ -372,9 +392,9 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
   const drawerFormContent = (
     <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={initialValues}>
       <Form.Item
-        label={t(LOCALE_KEYS.SEMESTER, {defaultValue: 'Semester'})}
+        label={t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' })}
         name="semesterId"
-        rules={[{required: true, message: 'Please select a semester'}]}
+        rules={[{ required: true, message: 'Please select a semester' }]}
       >
         <Select placeholder="Select semester">
           {semesters.map((semester) => (
@@ -386,9 +406,9 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        label={t(LOCALE_KEYS.SUBJECT, {defaultValue: 'Subject'})}
+        label={t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' })}
         name="subjectId"
-        rules={[{required: true, message: 'Please select a subject'}]}
+        rules={[{ required: true, message: 'Please select a subject' }]}
       >
         <Select placeholder="Select subject">
           {subjects.map((subject) => (
@@ -404,9 +424,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {mode === 'create' ? 'Create' : 'Update'}
           </Button>
-          {onCancel && (
-            <Button onClick={onCancel}>Cancel</Button>
-          )}
+          {onCancel && <Button onClick={onCancel}>Cancel</Button>}
         </Space>
       </Form.Item>
     </Form>
@@ -414,25 +432,21 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
 
   // Form content for page mode (multiple assignments)
   const pageFormContent = (
-    <div style={{padding: '24px', height: 'calc(100vh - 128px)', overflow: 'auto'}}>
+    <div style={{ padding: '24px', height: 'calc(100vh - 128px)', overflow: 'auto' }}>
       <Row gutter={24}>
         <Col span={12}>
-          <Card 
-            title={`${mode === 'create' ? 'Create' : 'Edit'} ${entityName}`} 
-            style={{height: 'fit-content'}}
+          <Card
+            title={`${mode === 'create' ? 'Create' : 'Edit'} ${entityName}`}
+            style={{ height: 'fit-content' }}
             size="small"
           >
             {/* Batch Filter */}
-            <Form.Item
-              label="Select Batch (Required)"
-              required
-              style={{marginBottom: 16}}
-            >
+            <Form.Item label="Select Batch (Required)" required style={{ marginBottom: 16 }}>
               <Select
                 placeholder="Select a batch to continue"
                 value={filterBatchId}
                 onChange={handleBatchFilterChange}
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
                 loading={batches.length === 0}
                 showSearch
                 filterOption={(input, option) =>
@@ -453,15 +467,16 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
             </Form.Item>
 
             {/* Semester Selection */}
-            <Form.Item
-              label={t(LOCALE_KEYS.SEMESTER, {defaultValue: 'Semester'})}
-              required
-            >
+            <Form.Item label={t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' })} required>
               <Select
-                placeholder={filterBatchId ? `Select semester from ${batches.find(b => b.id === filterBatchId)?.name}` : "Please select a batch first"}
+                placeholder={
+                  filterBatchId
+                    ? `Select semester from ${batches.find((b) => b.id === filterBatchId)?.name}`
+                    : 'Please select a batch first'
+                }
                 value={selectedSemesterId}
                 onChange={handleSemesterChange}
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
                 loading={semesters.length === 0}
                 disabled={!filterBatchId}
               >
@@ -474,19 +489,27 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
             </Form.Item>
 
             {/* Semester Count Info */}
-            <div style={{marginBottom: 16, padding: 8, borderRadius: 4, border: '1px solid #d9d9d9'}}>
-              <Text type="secondary" style={{fontSize: '12px'}}>
-                {filterBatchId 
-                  ? `Showing ${getFilteredSemesters().length} semester${getFilteredSemesters().length !== 1 ? 's' : ''} for ${batches.find(b => b.id === filterBatchId)?.name}`
-                  : 'Please select a batch to see available semesters'
-                }
+            <div
+              style={{ marginBottom: 16, padding: 8, borderRadius: 4, border: '1px solid #d9d9d9' }}
+            >
+              <Text type="secondary" style={{ fontSize: '12px' }}>
+                {filterBatchId
+                  ? `Showing ${getFilteredSemesters().length} semester${getFilteredSemesters().length !== 1 ? 's' : ''} for ${batches.find((b) => b.id === filterBatchId)?.name}`
+                  : 'Please select a batch to see available semesters'}
               </Text>
             </div>
 
             {/* No Batch Selected Message */}
             {!filterBatchId && (
-              <div style={{marginBottom: 16, padding: 8, borderRadius: 4, border: '1px solid #d9d9d9'}}>
-                <Text type="secondary" style={{fontSize: '12px'}}>
+              <div
+                style={{
+                  marginBottom: 16,
+                  padding: 8,
+                  borderRadius: 4,
+                  border: '1px solid #d9d9d9',
+                }}
+              >
+                <Text type="secondary" style={{ fontSize: '12px' }}>
                   📋 Select a batch first to see available semesters and subjects
                 </Text>
               </div>
@@ -494,29 +517,42 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
 
             {/* No Semesters Message for Selected Batch */}
             {filterBatchId && getFilteredSemesters().length === 0 && semesters.length > 0 && (
-              <div style={{marginBottom: 16, padding: 8, borderRadius: 4, border: '1px solid #ffd591'}}>
-                <Text type="warning" style={{fontSize: '12px'}}>
-                  No semesters found for the selected batch. Try selecting a different batch or clear the filter.
+              <div
+                style={{
+                  marginBottom: 16,
+                  padding: 8,
+                  borderRadius: 4,
+                  border: '1px solid #ffd591',
+                }}
+              >
+                <Text type="warning" style={{ fontSize: '12px' }}>
+                  No semesters found for the selected batch. Try selecting a different batch or
+                  clear the filter.
                 </Text>
               </div>
             )}
 
             {/* Course and Batch Info */}
             {selectedSemesterId && selectedBatchId && selectedCourseId && (
-              <div style={{marginBottom: 16, padding: 12, borderRadius: 6, border: '1px solid #b7eb8f'}}>
-                <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+              <div
+                style={{
+                  marginBottom: 16,
+                  padding: 12,
+                  borderRadius: 6,
+                  border: '1px solid #b7eb8f',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div>
                     <Text strong>Course: </Text>
-                    <Text>{batches.find(b => b.id === selectedBatchId)?.course?.name}</Text>
+                    <Text>{batches.find((b) => b.id === selectedBatchId)?.course?.name}</Text>
                     <br />
                     <Text strong>Batch: </Text>
-                    <Text>{batches.find(b => b.id === selectedBatchId)?.name}</Text>
+                    <Text>{batches.find((b) => b.id === selectedBatchId)?.name}</Text>
                   </div>
                 </div>
               </div>
             )}
-
-
 
             {/* Add Subject Button */}
             <Button
@@ -525,40 +561,58 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
               onClick={addSubjectAssignment}
               disabled={!canAddSubject()}
               loading={subjectsListStatus.status === Status.LOADING}
-              style={{width: '100%', marginBottom: 16, height: '40px'}}
+              style={{ width: '100%', marginBottom: 16, height: '40px' }}
             >
               {subjectsListStatus.status === Status.LOADING
                 ? 'Loading Subjects...'
                 : `Add Subject (${(() => {
                     const filteredSubjects = getFilteredSubjects();
-                    const selectedSubjectIds = subjectAssignments.map(assignment => assignment.subjectId);
-                    const unassignedSubjects = filteredSubjects.filter(subject => !selectedSubjectIds.includes(subject.id));
+                    const selectedSubjectIds = subjectAssignments.map(
+                      (assignment) => assignment.subjectId,
+                    );
+                    const unassignedSubjects = filteredSubjects.filter(
+                      (subject) => !selectedSubjectIds.includes(subject.id),
+                    );
                     return unassignedSubjects.length;
-                  })()} available)`
-              }
+                  })()} available)`}
             </Button>
-            
-            <div style={{marginBottom: 16, padding: 8, borderRadius: 4}}>
-              <Text type="secondary" style={{fontSize: '12px'}}>
-                💡 Faculty assignments are optional. You can assign faculty later or leave them empty.
+
+            <div style={{ marginBottom: 16, padding: 8, borderRadius: 4 }}>
+              <Text type="secondary" style={{ fontSize: '12px' }}>
+                💡 Faculty assignments are optional. You can assign faculty later or leave them
+                empty.
               </Text>
             </div>
 
             {/* No Subjects Message */}
-            {selectedCourseId && subjects.length === 0 && subjectsListStatus.status === Status.SUCCESS && (
-              <div style={{marginBottom: 16, padding: 12, borderRadius: 6, border: '1px solid #ffd591'}}>
-                <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
-                  <Text type="warning" style={{fontSize: '16px'}}>⚠️</Text>
-                  <div>
-                    <Text type="warning" strong>No subjects available</Text>
-                    <br />
-                    <Text type="secondary" style={{fontSize: '12px'}}>
-                      No subjects found for this course. Please ensure subjects are assigned to the course first.
+            {selectedCourseId &&
+              subjects.length === 0 &&
+              subjectsListStatus.status === Status.SUCCESS && (
+                <div
+                  style={{
+                    marginBottom: 16,
+                    padding: 12,
+                    borderRadius: 6,
+                    border: '1px solid #ffd591',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Text type="warning" style={{ fontSize: '16px' }}>
+                      ⚠️
                     </Text>
+                    <div>
+                      <Text type="warning" strong>
+                        No subjects available
+                      </Text>
+                      <br />
+                      <Text type="secondary" style={{ fontSize: '12px' }}>
+                        No subjects found for this course. Please ensure subjects are assigned to
+                        the course first.
+                      </Text>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Submit Button */}
             <Button
@@ -566,7 +620,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
               htmlType="submit"
               loading={actionStatus.status === Status.LOADING}
               disabled={!validateAllAssignments()}
-              style={{width: '100%', height: '40px', fontSize: '16px'}}
+              style={{ width: '100%', height: '40px', fontSize: '16px' }}
               onClick={() => {
                 if (subjectAssignments.length === 0) {
                   message.warning('Please add at least one subject before submitting.');
@@ -575,18 +629,21 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
                 handleSubmit({});
               }}
             >
-              {actionStatus.status === Status.LOADING 
-                ? 'Creating...' 
-                : `Create ${subjectAssignments.length} Semester Subject${subjectAssignments.length !== 1 ? 's' : ''}`
-              }
+              {actionStatus.status === Status.LOADING
+                ? 'Creating...'
+                : `Create ${subjectAssignments.length} Semester Subject${subjectAssignments.length !== 1 ? 's' : ''}`}
             </Button>
 
             {/* Validation Errors */}
             {subjectAssignments.length > 0 && !validateAllAssignments() && (
-              <div style={{marginTop: 16, padding: 12, borderRadius: 4, border: '1px solid #ffccc7'}}>
-                <Text type="danger" strong>Please fix the following issues:</Text>
+              <div
+                style={{ marginTop: 16, padding: 12, borderRadius: 4, border: '1px solid #ffccc7' }}
+              >
+                <Text type="danger" strong>
+                  Please fix the following issues:
+                </Text>
                 {getValidationErrors().map((error, index) => (
-                  <div key={index} style={{marginTop: 4}}>
+                  <div key={index} style={{ marginTop: 4 }}>
                     <Text type="danger">• {error}</Text>
                   </div>
                 ))}
@@ -595,15 +652,11 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
 
             {/* Summary */}
             {subjectAssignments.length > 0 && (
-              <Card 
-                title="Summary" 
-                style={{marginTop: 16}}
-                size="small"
-              >
+              <Card title="Summary" style={{ marginTop: 16 }} size="small">
                 <Row gutter={16}>
                   <Col span={12}>
-                    <div style={{textAlign: 'center'}}>
-                      <Text strong style={{fontSize: '16px', color: '#1890ff'}}>
+                    <div style={{ textAlign: 'center' }}>
+                      <Text strong style={{ fontSize: '16px', color: '#1890ff' }}>
                         {subjectAssignments.length}
                       </Text>
                       <br />
@@ -611,9 +664,12 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
                     </div>
                   </Col>
                   <Col span={12}>
-                    <div style={{textAlign: 'center'}}>
-                      <Text strong style={{fontSize: '16px', color: '#52c41a'}}>
-                        {subjectAssignments.reduce((total, assignment) => total + assignment.faculty.length, 0)}
+                    <div style={{ textAlign: 'center' }}>
+                      <Text strong style={{ fontSize: '16px', color: '#52c41a' }}>
+                        {subjectAssignments.reduce(
+                          (total, assignment) => total + assignment.faculty.length,
+                          0,
+                        )}
                       </Text>
                       <br />
                       <Text type="secondary">Faculty Assignments</Text>
@@ -628,23 +684,27 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
         <Col span={12}>
           {/* Subject Assignments */}
           {subjectAssignments.length === 0 ? (
-            <Card 
-              title="No Subjects Added" 
-              style={{marginBottom: 16, textAlign: 'center'}}
+            <Card
+              title="No Subjects Added"
+              style={{ marginBottom: 16, textAlign: 'center' }}
               size="small"
             >
-              <div style={{padding: '24px 16px'}}>
-                <Text type="secondary" style={{fontSize: '14px'}}>
+              <div style={{ padding: '24px 16px' }}>
+                <Text type="secondary" style={{ fontSize: '14px' }}>
                   Select a semester first, then add subjects to get started.
                 </Text>
-                            </div>
+              </div>
             </Card>
           ) : (
             subjectAssignments.map((assignment, subjectIndex) => (
               <Card
                 key={subjectIndex}
-                title={assignment.subjectId ? getSubjectName(assignment.subjectId) : `Subject ${subjectIndex + 1}`}
-                style={{marginBottom: 16}}
+                title={
+                  assignment.subjectId
+                    ? getSubjectName(assignment.subjectId)
+                    : `Subject ${subjectIndex + 1}`
+                }
+                style={{ marginBottom: 16 }}
                 size="small"
                 extra={
                   <Button
@@ -655,172 +715,227 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
                   />
                 }
               >
-              {/* Subject Selection */}
-              <Form.Item
-                label={t(LOCALE_KEYS.SUBJECT, {defaultValue: 'Subject'})}
-                required
-              >
-                <Select
-                  key={`subject-${subjectIndex}-${assignment.subjectId}`}
-                  value={assignment.subjectId ? String(assignment.subjectId) : undefined}
-                  onChange={(value) => {
-                    // Convert string back to number for storage
-                    const numericValue = typeof value === 'string' ? parseInt(value, 10) : value;
-                    updateSubjectAssignment(subjectIndex, 'subjectId', numericValue);
-                  }}
-                  placeholder="Select subject"
-                  style={{width: '100%'}}
-                  showSearch
-                  filterOption={(input, option) =>
-                    (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
-                  }
-                  optionLabelProp="label"
-                >
-                  {getSubjectsForDropdown(assignment.subjectId || 0).map((subject) => (
-                    <Select.Option
-                      key={subject.id}
-                      value={String(subject.id)}
-                      label={`${subject.name} (${subject.code}) - ${subject.creditHours} credits`}
-                    >
-                      {subject.name} ({subject.code}) - {subject.creditHours} credits
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-
-              {/* Faculty Assignments */}
-              <div style={{marginBottom: 16}}>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8}}>
-                  <Text strong>Faculty Assignments</Text>
-                  <Button
-                    type="dashed"
-                    size="small"
-                    icon={<PlusOutlined />}
-                    onClick={() => addFacultyToSubject(subjectIndex)}
+                {/* Subject Selection */}
+                <Form.Item label={t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' })} required>
+                  <Select
+                    key={`subject-${subjectIndex}-${assignment.subjectId}`}
+                    value={assignment.subjectId ? String(assignment.subjectId) : undefined}
+                    onChange={(value) => {
+                      // Convert string back to number for storage
+                      const numericValue = typeof value === 'string' ? parseInt(value, 10) : value;
+                      updateSubjectAssignment(subjectIndex, 'subjectId', numericValue);
+                    }}
+                    placeholder="Select subject"
+                    style={{ width: '100%' }}
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
+                    }
+                    optionLabelProp="label"
                   >
-                    Add Faculty
-                  </Button>
-                </div>
+                    {getSubjectsForDropdown(assignment.subjectId || 0).map((subject) => (
+                      <Select.Option
+                        key={subject.id}
+                        value={String(subject.id)}
+                        label={`${subject.name} (${subject.code}) - ${subject.creditHours} credits`}
+                      >
+                        {subject.name} ({subject.code}) - {subject.creditHours} credits
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
 
-                {/* Faculty Assignment Status */}
-                {assignment.faculty.length > 0 && assignment.faculty.some(f => f.facultyId > 0 || f.hoursPerWeek > 0 || f.role.trim() !== '') && (
-                  <div style={{
-                    marginBottom: 8, 
-                    padding: 8, 
-                    borderRadius: 6, 
-                    border: `1px solid ${assignment.faculty.some(f => validateFacultyAssignment(f)) ? '#b7eb8f' : '#ffccc7'}`
-                  }}>
-                    <div style={{display: 'flex', alignItems: 'center', gap: 6}}>
-                      <Text type={assignment.faculty.some(f => validateFacultyAssignment(f)) ? 'success' : 'danger'} style={{fontSize: '14px'}}>
-                        {assignment.faculty.some(f => validateFacultyAssignment(f)) ? '✓' : '⚠'}
-                      </Text>
-                      <Text type={assignment.faculty.some(f => validateFacultyAssignment(f)) ? 'success' : 'danger'} style={{fontSize: '12px'}}>
-                        {assignment.faculty.some(f => validateFacultyAssignment(f))
-                          ? 'Faculty assignment complete'
-                          : 'Faculty assignment incomplete - need faculty, hours, and role'
-                        }
+                {/* Faculty Assignments */}
+                <div style={{ marginBottom: 16 }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: 8,
+                    }}
+                  >
+                    <Text strong>Faculty Assignments</Text>
+                    <Button
+                      type="dashed"
+                      size="small"
+                      icon={<PlusOutlined />}
+                      onClick={() => addFacultyToSubject(subjectIndex)}
+                    >
+                      Add Faculty
+                    </Button>
+                  </div>
+
+                  {/* Faculty Assignment Status */}
+                  {assignment.faculty.length > 0 &&
+                    assignment.faculty.some(
+                      (f) => f.facultyId > 0 || f.hoursPerWeek > 0 || f.role.trim() !== '',
+                    ) && (
+                      <div
+                        style={{
+                          marginBottom: 8,
+                          padding: 8,
+                          borderRadius: 6,
+                          border: `1px solid ${assignment.faculty.some((f) => validateFacultyAssignment(f)) ? '#b7eb8f' : '#ffccc7'}`,
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <Text
+                            type={
+                              assignment.faculty.some((f) => validateFacultyAssignment(f))
+                                ? 'success'
+                                : 'danger'
+                            }
+                            style={{ fontSize: '14px' }}
+                          >
+                            {assignment.faculty.some((f) => validateFacultyAssignment(f))
+                              ? '✓'
+                              : '⚠'}
+                          </Text>
+                          <Text
+                            type={
+                              assignment.faculty.some((f) => validateFacultyAssignment(f))
+                                ? 'success'
+                                : 'danger'
+                            }
+                            style={{ fontSize: '12px' }}
+                          >
+                            {assignment.faculty.some((f) => validateFacultyAssignment(f))
+                              ? 'Faculty assignment complete'
+                              : 'Faculty assignment incomplete - need faculty, hours, and role'}
+                          </Text>
+                        </div>
+                      </div>
+                    )}
+
+                  {/* No Faculty Message */}
+                  {assignment.faculty.length === 0 && (
+                    <div
+                      style={{
+                        marginBottom: 16,
+                        padding: 12,
+                        borderRadius: 6,
+                        border: '1px solid #d9d9d9',
+                      }}
+                    >
+                      <Text type="secondary" style={{ fontSize: '12px' }}>
+                        No faculty assigned yet. Click "Add Faculty" to assign faculty members.
                       </Text>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* No Faculty Message */}
-                {assignment.faculty.length === 0 && (
-                  <div style={{marginBottom: 16, padding: 12, borderRadius: 6, border: '1px solid #d9d9d9'}}>
-                    <Text type="secondary" style={{fontSize: '12px'}}>
-                      No faculty assigned yet. Click "Add Faculty" to assign faculty members.
-                    </Text>
-                  </div>
-                )}
-
-                {assignment.faculty.map((faculty, facultyIndex) => (
-                  <Row key={facultyIndex} gutter={16} style={{marginBottom: 16}}>
-                    <Col span={8}>
-                      <Form.Item
-                        label="Faculty"
-                        style={{marginBottom: 0}}
-                        labelCol={{span: 24}}
-                        wrapperCol={{span: 24}}
-                      >
-                        <Select
-                          value={faculty.facultyId ? String(faculty.facultyId) : undefined}
-                          onChange={(value) => {
-                            const numericValue = typeof value === 'string' ? parseInt(value, 10) : value;
-                            updateSubjectAssignment(subjectIndex, 'faculty', {facultyId: numericValue}, facultyIndex);
-                          }}
-                          placeholder="Select faculty"
-                          style={{width: '100%'}}
-                          showSearch
-                          loading={faculties.length === 0}
-                          filterOption={(input, option) =>
-                            (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
-                          }
-                          optionLabelProp="label"
+                  {assignment.faculty.map((faculty, facultyIndex) => (
+                    <Row key={facultyIndex} gutter={16} style={{ marginBottom: 16 }}>
+                      <Col span={8}>
+                        <Form.Item
+                          label="Faculty"
+                          style={{ marginBottom: 0 }}
+                          labelCol={{ span: 24 }}
+                          wrapperCol={{ span: 24 }}
                         >
-                          {faculties.map((facultyMember) => (
-                            <Select.Option
-                              key={facultyMember.id}
-                              value={String(facultyMember.id)}
-                              label={`${facultyMember.fullName} - ${facultyMember.department?.name}`}
-                            >
-                              {facultyMember.fullName} - {facultyMember.department?.name}
+                          <Select
+                            value={faculty.facultyId ? String(faculty.facultyId) : undefined}
+                            onChange={(value) => {
+                              const numericValue =
+                                typeof value === 'string' ? parseInt(value, 10) : value;
+                              updateSubjectAssignment(
+                                subjectIndex,
+                                'faculty',
+                                { facultyId: numericValue },
+                                facultyIndex,
+                              );
+                            }}
+                            placeholder="Select faculty"
+                            style={{ width: '100%' }}
+                            showSearch
+                            loading={faculties.length === 0}
+                            filterOption={(input, option) =>
+                              (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
+                            }
+                            optionLabelProp="label"
+                          >
+                            {faculties.map((facultyMember) => (
+                              <Select.Option
+                                key={facultyMember.id}
+                                value={String(facultyMember.id)}
+                                label={`${facultyMember.fullName} - ${facultyMember.department?.name}`}
+                              >
+                                {facultyMember.fullName} - {facultyMember.department?.name}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item
+                          label="Hours/Week"
+                          style={{ marginBottom: 0 }}
+                          labelCol={{ span: 24 }}
+                          wrapperCol={{ span: 24 }}
+                        >
+                          <InputNumber
+                            value={faculty.hoursPerWeek || undefined}
+                            onChange={(value) =>
+                              updateSubjectAssignment(
+                                subjectIndex,
+                                'faculty',
+                                { hoursPerWeek: value },
+                                facultyIndex,
+                              )
+                            }
+                            placeholder="Hours/week"
+                            min={1}
+                            max={40}
+                            style={{ width: '100%' }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item
+                          label="Role"
+                          style={{ marginBottom: 0 }}
+                          labelCol={{ span: 24 }}
+                          wrapperCol={{ span: 24 }}
+                        >
+                          <Select
+                            value={faculty.role || undefined}
+                            onChange={(value) =>
+                              updateSubjectAssignment(
+                                subjectIndex,
+                                'faculty',
+                                { role: value },
+                                facultyIndex,
+                              )
+                            }
+                            placeholder="Select role"
+                            style={{ width: '100%' }}
+                          >
+                            <Select.Option value="Primary Instructor">
+                              Primary Instructor
                             </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                      <Form.Item
-                        label="Hours/Week"
-                        style={{marginBottom: 0}}
-                        labelCol={{span: 24}}
-                        wrapperCol={{span: 24}}
-                      >
-                        <InputNumber
-                          value={faculty.hoursPerWeek || undefined}
-                          onChange={(value) => updateSubjectAssignment(subjectIndex, 'faculty', {hoursPerWeek: value}, facultyIndex)}
-                          placeholder="Hours/week"
-                          min={1}
-                          max={40}
-                          style={{width: '100%'}}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                      <Form.Item
-                        label="Role"
-                        style={{marginBottom: 0}}
-                        labelCol={{span: 24}}
-                        wrapperCol={{span: 24}}
-                      >
-                        <Select
-                          value={faculty.role || undefined}
-                          onChange={(value) => updateSubjectAssignment(subjectIndex, 'faculty', {role: value}, facultyIndex)}
-                          placeholder="Select role"
-                          style={{width: '100%'}}
-                        >
-                          <Select.Option value="Primary Instructor">Primary Instructor</Select.Option>
-                          <Select.Option value="Lab Instructor">Lab Instructor</Select.Option>
-                          <Select.Option value="Tutorial Assistant">Tutorial Assistant</Select.Option>
-                          <Select.Option value="Co-Instructor">Co-Instructor</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col span={4}>
-                      <div style={{paddingTop: 32}}>
-                        <Button
-                          type="text"
-                          danger
-                          icon={<DeleteOutlined />}
-                          onClick={() => removeFacultyFromSubject(subjectIndex, facultyIndex)}
-                        />
-                      </div>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
-            </Card>
-          ))
+                            <Select.Option value="Lab Instructor">Lab Instructor</Select.Option>
+                            <Select.Option value="Tutorial Assistant">
+                              Tutorial Assistant
+                            </Select.Option>
+                            <Select.Option value="Co-Instructor">Co-Instructor</Select.Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col span={4}>
+                        <div style={{ paddingTop: 32 }}>
+                          <Button
+                            type="text"
+                            danger
+                            icon={<DeleteOutlined />}
+                            onClick={() => removeFacultyFromSubject(subjectIndex, facultyIndex)}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  ))}
+                </div>
+              </Card>
+            ))
           )}
         </Col>
       </Row>

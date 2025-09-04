@@ -17,7 +17,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const DepartmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const DepartmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
     loadDepartment(departmentId);
   }, [resolvedParams.id, loadDepartment]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const DepartmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <DepartmentForm
-            mode="edit"
-            departmentId={parseInt(resolvedParams.id)}
-            initialValues={selectedDepartment}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <DepartmentForm
+          mode="edit"
+          departmentId={parseInt(resolvedParams.id)}
+          initialValues={selectedDepartment}
         />
       </MainLayout>
     </ProtectedRoute>

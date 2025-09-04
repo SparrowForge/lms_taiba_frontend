@@ -1,11 +1,13 @@
 # Swap Memory Setup Guide for LMS Taiba Admin Panel
 
 ## Overview
+
 This guide helps you set up swap memory on your server to handle the 2GB RAM limitation. Swap memory acts as virtual RAM using disk space.
 
 ## Quick Setup (Recommended)
 
 ### Option 1: Automated Script
+
 ```bash
 # Make script executable (if not already done)
 chmod +x setup-swap.sh
@@ -17,12 +19,14 @@ sudo ./setup-swap.sh
 ### Option 2: Manual Setup
 
 #### Step 1: Check Current Memory
+
 ```bash
 free -h
 swapon --show
 ```
 
 #### Step 2: Create Swap File (4GB for 2GB RAM)
+
 ```bash
 # Create 4GB swap file
 sudo fallocate -l 4G /swapfile
@@ -35,6 +39,7 @@ sudo chmod 600 /swapfile
 ```
 
 #### Step 3: Format and Enable Swap
+
 ```bash
 # Format as swap
 sudo mkswap /swapfile
@@ -44,12 +49,14 @@ sudo swapon /swapfile
 ```
 
 #### Step 4: Make Swap Permanent
+
 ```bash
 # Add to /etc/fstab
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
 #### Step 5: Optimize Swap Settings
+
 ```bash
 # Create optimization file
 sudo tee /etc/sysctl.d/99-swap.conf << EOF
@@ -64,6 +71,7 @@ sudo sysctl -p /etc/sysctl.d/99-swap.conf
 ## Verification
 
 ### Check Swap Status
+
 ```bash
 # Verify swap is active
 swapon --show
@@ -76,6 +84,7 @@ sysctl vm.swappiness vm.vfs_cache_pressure
 ```
 
 ### Expected Output
+
 ```
 NAME      TYPE      SIZE USED PRIO
 /swapfile file        4G   0B   -2
@@ -91,6 +100,7 @@ vm.vfs_cache_pressure = 50
 ## Docker Considerations
 
 Your `docker-compose.yml` already has memory limits:
+
 ```yaml
 deploy:
   resources:
@@ -101,6 +111,7 @@ deploy:
 ```
 
 With swap enabled:
+
 - Docker containers can use up to 2GB RAM
 - If RAM is exhausted, swap will be used
 - Prevents out-of-memory crashes
@@ -109,6 +120,7 @@ With swap enabled:
 ## Monitoring
 
 ### Check Swap Usage
+
 ```bash
 # Real-time memory monitoring
 watch -n 1 'free -h'
@@ -121,6 +133,7 @@ cat /proc/meminfo | grep -i swap
 ```
 
 ### Performance Monitoring
+
 ```bash
 # Check if swap is being used
 vmstat 1 5
@@ -132,6 +145,7 @@ iostat -x 1
 ## Troubleshooting
 
 ### Remove Swap (if needed)
+
 ```bash
 # Turn off swap
 sudo swapoff -a
@@ -166,6 +180,7 @@ sudo sed -i '/\/swapfile/d' /etc/fstab
 ## Support
 
 If you encounter issues:
+
 1. Check the automated script output for errors
 2. Verify disk space availability
 3. Ensure you're running as root/sudo

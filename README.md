@@ -5,10 +5,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 This project enforces structured git commits using [Husky](https://typicode.github.io/husky/) and [commitlint](https://commitlint.js.org/). All commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
 
 **Quick Start:**
+
 - Use `bun run commit` for interactive commits
 - Or follow the format: `type(scope): description`
 
 **Examples:**
+
 - `feat: add new dashboard component`
 - `fix(auth): resolve login validation issue`
 - `docs: update API documentation`

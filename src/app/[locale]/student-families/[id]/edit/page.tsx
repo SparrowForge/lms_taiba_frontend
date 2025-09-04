@@ -12,12 +12,10 @@ import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
 import {PageHeader} from '@/components/ui/PageHeader';
 
-
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentFamilies} from '@/hooks/useStudentFamilies';
 
 import {Status} from '@/types/common';
-
 
 export default function StudentFamilyEditPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);
@@ -44,7 +42,10 @@ export default function StudentFamilyEditPage({ params }: { params: Promise<{ id
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
         <StudentFamilyForm
           mode="edit"
           studentFamilyId={studentFamilyId}

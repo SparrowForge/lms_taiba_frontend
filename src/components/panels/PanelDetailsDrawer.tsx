@@ -15,7 +15,6 @@ import {IPanel} from '@/types/panel';
 
 import {useCreatePanelDetailsConfig} from './panelConfig';
 
-
 interface PanelDetailsDrawerProps {
   panelId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedPanel, loadPanel, detailsStatus } = usePanels();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });

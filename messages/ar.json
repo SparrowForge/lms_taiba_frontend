@@ -78,6 +78,7 @@
   "allow_late_submit": "السماح بالتسليم المتأخر",
   "late_penalty": "عقوبة التأخير",
   "attachment_path": "مسار المرفق",
+  "file": "ملف",
   "file_id": "معرف الملف",
   "is_downloadable": "قابل للتحميل",
   "access_level": "مستوى الوصول",
@@ -408,5 +409,6 @@
   "upcoming-assignment": "المهمة القادمة",
   "all-tasks": "كل المهام",
   "monthly-attendance": "الحضور الشهري",
-  "mark-all-read": "تعيين الكل كمقروء"
+  "mark-all-read": "تعيين الكل كمقروء",
+  "is_break": "هل هو فصل دراسي"
 }

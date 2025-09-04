@@ -6,10 +6,8 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {IWeekDay} from '@/types/weekDay';
 
-export const getWeekDayDisplayName = (item: IWeekDay) =>
-  item.name || `Week Day #${item.id}`;
-export const getWeekDayInitials = (item: IWeekDay) =>
-  item.name?.slice(0, 2).toUpperCase() || 'WD';
+export const getWeekDayDisplayName = (item: IWeekDay) => item.name || `Week Day #${item.id}`;
+export const getWeekDayInitials = (item: IWeekDay) => item.name?.slice(0, 2).toUpperCase() || 'WD';
 
 export const useCreateWeekDayDetailsConfig = (
   item: IWeekDay | null,
@@ -37,7 +35,7 @@ export const useCreateWeekDayDetailsConfig = (
       {
         key: 'isWorkingDay',
         label: t(LOCALE_KEYS.IS_WORKING_DAY),
-        render: (v: boolean) => v ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO),
+        render: (v: boolean) => (v ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)),
       },
       { key: 'remarks', label: t(LOCALE_KEYS.REMARKS) },
       { key: 'status', label: t(LOCALE_KEYS.STATUS) },

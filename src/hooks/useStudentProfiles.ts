@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
-import {IStudentProfile, IStudentProfileCreate, IStudentProfileUpdate} from '@/types/studentProfile';
+import {IStudentProfile, IStudentProfileCreate, IStudentProfileUpdate,} from '@/types/studentProfile';
 
 import {studentProfileService} from '@/services/studentProfileService';
 
@@ -25,8 +25,14 @@ import {
 
 export const useStudentProfiles = () => {
   const dispatch = useDispatch();
-  const { studentProfiles, selectedStudentProfile, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.studentProfiles);
+  const {
+    studentProfiles,
+    selectedStudentProfile,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+  } = useSelector((state: RootState) => state.studentProfiles);
 
   const loadStudentProfiles = useCallback(
     async (params = {}) => {
@@ -63,7 +69,8 @@ export const useStudentProfiles = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IStudentProfile> = await studentProfileService.getStudentProfile(id);
+        const response: IBaseResponse<IStudentProfile> =
+          await studentProfileService.getStudentProfile(id);
         dispatch(setSelectedStudentProfile(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
@@ -84,7 +91,10 @@ export const useStudentProfiles = () => {
         const response: IStudentProfile = await studentProfileService.createStudentProfile(data);
         dispatch(addStudentProfile(response));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Student profile created successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Student profile created successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =
@@ -102,10 +112,16 @@ export const useStudentProfiles = () => {
     async (id: number, data: IStudentProfileUpdate) => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
-        const response: IStudentProfile = await studentProfileService.updateStudentProfile(id, data);
+        const response: IStudentProfile = await studentProfileService.updateStudentProfile(
+          id,
+          data,
+        );
         dispatch(updateStudentProfile(response));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Student profile updated successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Student profile updated successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =
@@ -126,7 +142,10 @@ export const useStudentProfiles = () => {
         await studentProfileService.deleteStudentProfile(id);
         dispatch(deleteStudentProfile(id));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Student profile deleted successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Student profile deleted successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =

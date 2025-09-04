@@ -8,8 +8,7 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useCourseMaterials} from '@/hooks/useCourseMaterials';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 import {ICourseMaterial} from '@/types/courseMaterial';
 
 import CourseMaterialForm from './CourseMaterialForm';
@@ -30,7 +29,8 @@ const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
   onSuccess,
 }) => {
   const { t } = useLocalization();
-  const { selectedCourseMaterial, getCourseMaterialById, loadCourseMaterial, detailsStatus } = useCourseMaterials();
+  const { selectedCourseMaterial, getCourseMaterialById, loadCourseMaterial, detailsStatus } =
+    useCourseMaterials();
   const entityName = t(LOCALE_KEYS.COURSE_MATERIAL, { defaultValue: 'Course Material' });
 
   useEffect(() => {
@@ -57,8 +57,8 @@ const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
     };
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

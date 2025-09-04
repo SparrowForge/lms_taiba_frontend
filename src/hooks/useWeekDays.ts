@@ -25,21 +25,14 @@ import {
 
 export const useWeekDays = () => {
   const dispatch = useDispatch();
-  const {
-    weekDays,
-    selectedWeekDay,
-    listStatus,
-    detailsStatus,
-    actionStatus,
-    pagination,
-  } = useSelector((state: RootState) => state.weekDays);
+  const { weekDays, selectedWeekDay, listStatus, detailsStatus, actionStatus, pagination } =
+    useSelector((state: RootState) => state.weekDays);
 
   const loadWeekDays = useCallback(
     async (params = {}) => {
       try {
         dispatch(setListStatus({ status: Status.LOADING }));
-        const response: IBasePaginatedResponse<IWeekDay> =
-          await weekDayService.getWeekDays(params);
+        const response: IBasePaginatedResponse<IWeekDay> = await weekDayService.getWeekDays(params);
         dispatch(setWeekDays(response?.data?.items ?? []));
         dispatch(
           setPagination(

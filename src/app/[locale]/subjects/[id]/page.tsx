@@ -16,11 +16,7 @@ import {useSubjects} from '@/hooks/useSubjects';
 import {Status} from '@/types/common';
 import {ISubject} from '@/types/subject';
 
-export default function SubjectDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function SubjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedSubject, detailsStatus, loadSubject } = useSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
@@ -45,7 +41,7 @@ export default function SubjectDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<ISubject>} />
+        <EntityDetails config={config as EntityDetailsConfig<ISubject>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -20,7 +20,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {Status} from '@/types/common';
 import {IFacultySubject} from '@/types/facultySubject';
 
-
 export default function FacultySubjectsPage() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
@@ -62,8 +61,8 @@ export default function FacultySubjectsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadFacultySubjects({ page: 1, limit: 10 });
   };
 

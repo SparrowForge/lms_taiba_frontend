@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {IBranch} from '@/types/branch';
 import {Status} from '@/types/common';
 
-export default function BranchDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function BranchDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedBranch, detailsStatus, loadBranch } = useBranches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
@@ -45,7 +41,7 @@ export default function BranchDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IBranch>} />
+        <EntityDetails config={config as EntityDetailsConfig<IBranch>} />
       </MainLayout>
     </ProtectedRoute>
   );

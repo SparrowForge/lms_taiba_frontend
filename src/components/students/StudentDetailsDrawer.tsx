@@ -15,7 +15,6 @@ import {IStudent} from '@/types/student';
 
 import {useCreateStudentDetailsConfig} from './studentConfig';
 
-
 interface StudentDetailsDrawerProps {
   studentId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const StudentDetailsDrawer: React.FC<StudentDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedStudent, loadStudent, detailsStatus } = useStudents();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });

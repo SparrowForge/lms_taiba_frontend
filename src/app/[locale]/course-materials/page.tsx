@@ -28,9 +28,12 @@ export default function CourseMaterialsPage() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedCourseMaterialId, setSelectedCourseMaterialId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsCourseMaterialId, setSelectedDetailsCourseMaterialId] = useState<number | undefined>();
+  const [selectedDetailsCourseMaterialId, setSelectedDetailsCourseMaterialId] = useState<
+    number | undefined
+  >();
 
-  const { courseMaterials, listStatus, pagination, loadCourseMaterials, removeCourseMaterial } = useCourseMaterials();
+  const { courseMaterials, listStatus, pagination, loadCourseMaterials, removeCourseMaterial } =
+    useCourseMaterials();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -58,8 +61,8 @@ export default function CourseMaterialsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadCourseMaterials({ page: 1, limit: 10 });
   };
 

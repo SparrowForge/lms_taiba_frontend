@@ -8,7 +8,7 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useTimeSlots} from '@/hooks/useTimeSlots';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import TimeSlotForm from './TimeSlotForm';
 
@@ -45,8 +45,8 @@ const TimeSlotFormDrawer: React.FC<Props> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

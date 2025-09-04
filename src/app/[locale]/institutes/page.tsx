@@ -20,7 +20,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {Status} from '@/types/common';
 import {IInstitute} from '@/types/institute';
 
-
 export default function InstitutesPage() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
@@ -30,7 +29,8 @@ export default function InstitutesPage() {
   const [selectedInstituteId, setSelectedInstituteId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
 
-  const { institutes, listStatus, pagination, loadInstitutes, removeInstitute, setSelected } = useInstitutes();
+  const { institutes, listStatus, pagination, loadInstitutes, removeInstitute, setSelected } =
+    useInstitutes();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -59,10 +59,10 @@ export default function InstitutesPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false);
-     loadListWithPagination();
-   };
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+    loadListWithPagination();
+  };
   const handleViewDetails = (id: number) => {
     setSelectedInstituteId(id);
     setDetailsDrawerVisible(true);
@@ -110,7 +110,14 @@ export default function InstitutesPage() {
         title: t(LOCALE_KEYS.WEBSITE),
         dataIndex: 'website',
         key: 'website',
-        render: (text: string) => text ? <a href={text} target="_blank" rel="noopener noreferrer">{text}</a> : 'N/A',
+        render: (text: string) =>
+          text ? (
+            <a href={text} target="_blank" rel="noopener noreferrer">
+              {text}
+            </a>
+          ) : (
+            'N/A'
+          ),
       },
       {
         title: t(LOCALE_KEYS.STATUS),

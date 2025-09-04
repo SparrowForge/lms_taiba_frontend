@@ -19,7 +19,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {IAddress} from '@/types/address';
 import {Status} from '@/types/common';
 
-
 export default function AddressesPage() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
@@ -57,8 +56,8 @@ export default function AddressesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadAddresses({ page: 1, limit: 10 });
   };
 

@@ -21,7 +21,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {IAudit} from '@/types/audit';
 import {Status} from '@/types/common';
 
-
 export default function AuditPage() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.AUDIT, { defaultValue: 'Audit' });

@@ -104,6 +104,7 @@ export const LOCALE_KEYS = {
   COURSE_MATERIAL: 'course_material',
   COURSE_MATERIALS: 'course_materials',
   COURSE_TYPE: 'course_type',
+  IS_BREAK: 'is_break',
   TITLE: 'title',
   TYPE: 'type',
   TOTAL_MARKS: 'total_marks',
@@ -114,6 +115,7 @@ export const LOCALE_KEYS = {
   ALLOW_LATE_SUBMIT: 'allow_late_submit',
   LATE_PENALTY: 'late_penalty',
   ATTACHMENT_PATH: 'attachment_path',
+  FILE: 'file',
   FILE_ID: 'file_id',
   IS_DOWNLOADABLE: 'is_downloadable',
   ACCESS_LEVEL: 'access_level',
@@ -387,50 +389,48 @@ export const LOCALE_KEYS = {
   ENTER_ICON: 'enter_icon',
 
   // dashboard
-  WELCOME_BACK: "welcome-back",
-  TEACHER_DASHBOARD_SUBTITLE: "teacher-dashboard-subtitle",
-  STUDENT_DASHBOARD_SUBTITLE: "student-dashboard-subtitle",
-  VIEW_SCHEDULE: "view-schedule",
+  WELCOME_BACK: 'welcome-back',
+  TEACHER_DASHBOARD_SUBTITLE: 'teacher-dashboard-subtitle',
+  STUDENT_DASHBOARD_SUBTITLE: 'student-dashboard-subtitle',
+  VIEW_SCHEDULE: 'view-schedule',
 
   // dashboard cards
-  TEACHER_CLASSES_TITLE: "teacher-classes-title",
-  TEACHER_CLASSES_SUBTITLE: "teacher-classes-subtitle",
-  TEACHER_ASSIGNMENTS_TITLE: "teacher-assignments-title",
-  TEACHER_ASSIGNMENTS_SUBTITLE: "teacher-assignments-subtitle",
-  TEACHER_EVALUATIONS_TITLE: "teacher-evaluations-title",
-  TEACHER_EVALUATIONS_SUBTITLE: "teacher-evaluations-subtitle",
+  TEACHER_CLASSES_TITLE: 'teacher-classes-title',
+  TEACHER_CLASSES_SUBTITLE: 'teacher-classes-subtitle',
+  TEACHER_ASSIGNMENTS_TITLE: 'teacher-assignments-title',
+  TEACHER_ASSIGNMENTS_SUBTITLE: 'teacher-assignments-subtitle',
+  TEACHER_EVALUATIONS_TITLE: 'teacher-evaluations-title',
+  TEACHER_EVALUATIONS_SUBTITLE: 'teacher-evaluations-subtitle',
 
-  STUDENT_COURSES_TITLE: "student-courses-title",
-  STUDENT_COURSES_SUBTITLE: "student-courses-subtitle",
+  STUDENT_COURSES_TITLE: 'student-courses-title',
+  STUDENT_COURSES_SUBTITLE: 'student-courses-subtitle',
 
   // weekly schedule
-  WEEKLY_SCHEDULE_TITLE: "weekly-schedule-title",
-  VIEW_WEEK: "view-week",
-  VIEW_MONTH: "view-month",
-
+  WEEKLY_SCHEDULE_TITLE: 'weekly-schedule-title',
+  VIEW_WEEK: 'view-week',
+  VIEW_MONTH: 'view-month',
 
   // weekdays
-  SUN: "sun",
-  MON: "mon",
-  TUE: "tue",
-  WED: "wed",
-  THU: "thu",
-  TODAY_CLASSES_TITLE: "today-classes-title",
-  RECENT_ANNOUNCEMENT: "recent-announcement",
-  STUDENT_PERFORMANCE: "student-performance",
+  SUN: 'sun',
+  MON: 'mon',
+  TUE: 'tue',
+  WED: 'wed',
+  THU: 'thu',
+  TODAY_CLASSES_TITLE: 'today-classes-title',
+  RECENT_ANNOUNCEMENT: 'recent-announcement',
+  STUDENT_PERFORMANCE: 'student-performance',
 
-  ACADEMIC_PROGRESS: "academic-progress",
-  VIEW_ALL: "view-all",
+  ACADEMIC_PROGRESS: 'academic-progress',
+  VIEW_ALL: 'view-all',
 
-  UPCOMING_ASSIGNMENT: "upcoming-assignment",
-  ALL_TASKS: "all-tasks",
-  MONTHLY_ATTENDANCE: "monthly-attendance",
-   MARK_ALL_READ: "mark-all-read"
-
+  UPCOMING_ASSIGNMENT: 'upcoming-assignment',
+  ALL_TASKS: 'all-tasks',
+  MONTHLY_ATTENDANCE: 'monthly-attendance',
+  MARK_ALL_READ: 'mark-all-read',
 } as const;
 
 // Type for the keys
-export type LocaleKey = typeof LOCALE_KEYS[keyof typeof LOCALE_KEYS];
+export type LocaleKey = (typeof LOCALE_KEYS)[keyof typeof LOCALE_KEYS];
 
 // Helper function to ensure type safety
 export const t = (key: LocaleKey, values?: Record<string, any>) => {

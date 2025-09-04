@@ -45,7 +45,9 @@ const studentEducationSlice = createSlice({
       }
     },
     deleteStudentEducation: (state, action: PayloadAction<number>) => {
-      state.studentEducations = state.studentEducations.filter((item) => item.id !== action.payload);
+      state.studentEducations = state.studentEducations.filter(
+        (item) => item.id !== action.payload,
+      );
     },
     setSelectedStudentEducation: (state, action: PayloadAction<IStudentEducation | null>) => {
       state.selectedStudentEducation = action.payload;

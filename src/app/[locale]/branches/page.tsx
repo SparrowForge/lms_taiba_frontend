@@ -20,7 +20,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {IBranch} from '@/types/branch';
 import {Status} from '@/types/common';
 
-
 export default function BranchesPage() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
@@ -59,8 +58,8 @@ export default function BranchesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadBranches({ page: 1, limit: 10 });
   };
 

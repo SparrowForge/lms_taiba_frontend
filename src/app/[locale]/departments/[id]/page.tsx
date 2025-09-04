@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {Status} from '@/types/common';
 import {IDepartment} from '@/types/department';
 
-export default function DepartmentDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function DepartmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedDepartment, detailsStatus, loadDepartment } = useDepartments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
@@ -45,7 +41,7 @@ export default function DepartmentDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IDepartment>} />
+        <EntityDetails config={config as EntityDetailsConfig<IDepartment>} />
       </MainLayout>
     </ProtectedRoute>
   );

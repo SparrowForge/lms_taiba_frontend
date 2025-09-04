@@ -12,7 +12,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 export default function CreateCourseTypePage() {
   const { t } = useLocalization();
   const router = useRouter();
@@ -21,8 +20,11 @@ export default function CreateCourseTypePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <CourseTypeForm mode="create" />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <CourseTypeForm mode="create" />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -16,7 +16,6 @@ import {useStudentFamilies} from '@/hooks/useStudentFamilies';
 import {Status} from '@/types/common';
 import {IStudentFamily} from '@/types/studentFamily';
 
-
 export default function StudentFamilyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);
   const studentFamilyId = parseInt(resolvedParams.id);

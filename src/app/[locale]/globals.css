@@ -25,7 +25,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
 .ant-menu-light .ant-menu-item-selected {
   background-color: #e6f4ff !important; /* light blue background */
   color: #1677ff !important; /* Ant Design blue text */
@@ -52,16 +51,15 @@ body {
   color: #fff !important;
 }
 
-
 /* side bar  */
 /* Force submenu background in collapsed sidebar */
 .ant-menu-submenu-popup.ant-menu {
-  background-color: #1F4BCA !important;
+  background-color: #1f4bca !important;
 }
 
 /* Submenu items */
 .ant-menu-submenu-popup.ant-menu .ant-menu-item {
-  background-color: #1F4BCA !important;
+  background-color: #1f4bca !important;
   color: #fff !important;
 }
 
@@ -79,11 +77,9 @@ body {
 
 /* Submenu title inside popup */
 .ant-menu-submenu-popup.ant-menu .ant-menu-submenu-title {
-  background-color: #1F4BCA !important;
+  background-color: #1f4bca !important;
   color: #fff !important;
 }
-
-
 
 /* scrollbar fixing  */
 /* aside {
@@ -91,8 +87,6 @@ body {
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 } */
 
-
-.ant-picker-calendar-mode-switch{
+.ant-picker-calendar-mode-switch {
   display: none;
 }
-

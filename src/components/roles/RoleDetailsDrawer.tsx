@@ -15,7 +15,6 @@ import {IRole} from '@/types/role';
 
 import {useCreateRoleDetailsConfig} from './roleConfig';
 
-
 interface RoleDetailsDrawerProps {
   roleId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedRole, loadRole, detailsStatus } = useRoles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });

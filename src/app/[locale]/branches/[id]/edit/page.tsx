@@ -17,7 +17,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const BranchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,9 +30,8 @@ const BranchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params 
     loadBranch(branchId);
   }, [resolvedParams.id, loadBranch]);
 
-
   if (detailsStatus.status === Status.LOADING) {
-      return <EntityEditLoadingView entityName={entityName} />;
+    return <EntityEditLoadingView entityName={entityName} />;
   }
 
   if (!selectedBranch || selectedBranch.id !== parseInt(resolvedParams.id)) {
@@ -43,11 +41,14 @@ const BranchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params 
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <BranchForm
-            mode="edit"
-            branchId={parseInt(resolvedParams.id)}
-            initialValues={selectedBranch}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <BranchForm
+          mode="edit"
+          branchId={parseInt(resolvedParams.id)}
+          initialValues={selectedBranch}
         />
       </MainLayout>
     </ProtectedRoute>

@@ -1,5 +1,5 @@
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IStudentProfile, IStudentProfileCreate, IStudentProfileUpdate} from '@/types/studentProfile';
+import {IStudentProfile, IStudentProfileCreate, IStudentProfileUpdate,} from '@/types/studentProfile';
 
 import {api} from '@/lib/axios';
 
@@ -23,7 +23,10 @@ export const studentProfileService = {
   },
 
   // Update an existing student profile
-  updateStudentProfile: async (id: number, data: IStudentProfileUpdate): Promise<IStudentProfile> => {
+  updateStudentProfile: async (
+    id: number,
+    data: IStudentProfileUpdate,
+  ): Promise<IStudentProfile> => {
     const response = await api.put(`/student-profiles/${id}`, data);
     return response.data;
   },

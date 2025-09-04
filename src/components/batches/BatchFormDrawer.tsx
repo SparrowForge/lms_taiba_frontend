@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import BatchForm from './BatchForm';
-
 
 interface BatchFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getBatchById, selectedBatch, loadBatch, detailsStatus } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
@@ -47,8 +45,8 @@ const BatchFormDrawer: React.FC<BatchFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

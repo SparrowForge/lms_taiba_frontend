@@ -15,7 +15,6 @@ import {IEmploymentType} from '@/types/employmentType';
 
 import {useCreateEmploymentTypeDetailsConfig} from './employmentTypeConfig';
 
-
 interface EmploymentTypeDetailsDrawerProps {
   employmentTypeId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const EmploymentTypeDetailsDrawer: React.FC<EmploymentTypeDetailsDrawerProps> = 
   onClose,
   onEdit,
 }) => {
-
   const { selectedEmploymentType, loadEmploymentType, detailsStatus } = useEmploymentTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });

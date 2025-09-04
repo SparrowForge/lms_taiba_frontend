@@ -6,8 +6,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {IRoomType} from '@/types/roomType';
 
-export const getRoomTypeDisplayName = (item: IRoomType) =>
-  item.name || `Room Type #${item.id}`;
+export const getRoomTypeDisplayName = (item: IRoomType) => item.name || `Room Type #${item.id}`;
 export const getRoomTypeInitials = (item: IRoomType) =>
   item.name?.slice(0, 2).toUpperCase() || 'RT';
 

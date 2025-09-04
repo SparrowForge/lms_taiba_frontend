@@ -71,7 +71,8 @@ export const useFacultySubjects = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IFacultySubject> = await facultySubjectService.getFacultySubject(id);
+        const response: IBaseResponse<IFacultySubject> =
+          await facultySubjectService.getFacultySubject(id);
         dispatch(setSelectedFacultySubject(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {

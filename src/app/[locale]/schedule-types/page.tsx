@@ -20,7 +20,6 @@ import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 import {Status} from '@/types/common';
 import {IScheduleType} from '@/types/scheduleType';
 
-
 export default function ScheduleTypesPage() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
@@ -57,8 +56,8 @@ export default function ScheduleTypesPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadScheduleTypes({ page: 1, limit: 10 });
   };
   const handleViewDetails = (id: number) => {

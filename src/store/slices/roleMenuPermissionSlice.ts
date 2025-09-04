@@ -67,8 +67,7 @@ const roleMenuPermissionSlice = createSlice({
     },
     deleteRoleMenuPermission: (state, action: PayloadAction<number>) => {
       state.roleMenuPermissions = state.roleMenuPermissions.filter(
-        (permission) =>
-          permission.id !== action.payload,
+        (permission) => permission.id !== action.payload,
       );
       if (state.selectedRoleMenuPermission?.id === action.payload) {
         state.selectedRoleMenuPermission = null;

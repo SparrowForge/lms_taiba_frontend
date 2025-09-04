@@ -50,8 +50,7 @@ const weekDaySlice = createSlice({
     updateWeekDay: (state, action: PayloadAction<IWeekDay>) => {
       const index = state.weekDays.findIndex((item) => item.id === action.payload.id);
       if (index !== -1) state.weekDays[index] = action.payload;
-      if (state.selectedWeekDay?.id === action.payload.id)
-        state.selectedWeekDay = action.payload;
+      if (state.selectedWeekDay?.id === action.payload.id) state.selectedWeekDay = action.payload;
     },
     deleteWeekDay: (state, action: PayloadAction<number>) => {
       state.weekDays = state.weekDays.filter((item) => item.id !== action.payload);

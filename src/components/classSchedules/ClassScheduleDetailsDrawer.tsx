@@ -15,7 +15,6 @@ import {Status} from '@/types/common';
 
 import {useCreateClassScheduleDetailsConfig} from './classScheduleConfig';
 
-
 interface ClassScheduleDetailsDrawerProps {
   classScheduleId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const ClassScheduleDetailsDrawer: React.FC<ClassScheduleDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedClassSchedule, loadClassSchedule, detailsStatus } = useClassSchedules();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });

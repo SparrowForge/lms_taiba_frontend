@@ -40,7 +40,11 @@ export const useCreateRoleMenuPermissionDetailsConfig = (
         label: t(LOCALE_KEYS.MENU),
         render: (value: string, item: IRoleMenuPermission) => item?.menu?.name || 'N/A',
       },
-      { key: 'view', label: t(LOCALE_KEYS.VIEW), render: (value: boolean) => (value ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)) },
+      {
+        key: 'view',
+        label: t(LOCALE_KEYS.VIEW),
+        render: (value: boolean) => (value ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)),
+      },
       {
         key: 'insert',
         label: t(LOCALE_KEYS.INSERT),

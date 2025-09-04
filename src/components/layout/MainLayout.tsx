@@ -1,14 +1,14 @@
 'use client';
 
-import { Layout } from 'antd';
-import { usePathname } from 'next/navigation';
-import { useCallback, useMemo } from 'react';
-import {ToastContainer} from "react-toastify";
+import {Layout} from 'antd';
+import {usePathname} from 'next/navigation';
+import {useCallback, useMemo} from 'react';
+import {ToastContainer} from 'react-toastify';
 
-import { Sidebar2 } from './Sidebar2';
-import { useSidebar } from './SidebarContext';
+import {Sidebar2} from './Sidebar2';
+import {useSidebar} from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
-import { LanguageSwitcher } from '../ui/LanguageSwitcher';
+import {LanguageSwitcher} from '../ui/LanguageSwitcher';
 
 const { Header, Content } = Layout;
 
@@ -17,7 +17,17 @@ interface MainLayoutProps {
 }
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
-  const { collapsed, setCollapsed, openKeys, selectedKeys, setSelectedKeys, scrollTop, setScrollTop, isClient, handleOpenChange } = useSidebar();
+  const {
+    collapsed,
+    setCollapsed,
+    openKeys,
+    selectedKeys,
+    setSelectedKeys,
+    scrollTop,
+    setScrollTop,
+    isClient,
+    handleOpenChange,
+  } = useSidebar();
   const pathname = usePathname();
 
   // Memoize sidebar width calculation
@@ -77,10 +87,6 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   // Determine which section should be open based on current route
   const currentPath = useMemo(() => pathname.split('?')[0], [pathname]);
 
-
-
-
-
   // Memoize Sidebar2 component to prevent unnecessary re-renders
   const memoizedSidebar = useMemo(
     () => (
@@ -96,7 +102,16 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         currentPath={currentPath}
       />
     ),
-    [collapsed, openKeys, selectedKeys, setSelectedKeys, scrollTop, setScrollTop, handleOpenChange, currentPath]
+    [
+      collapsed,
+      openKeys,
+      selectedKeys,
+      setSelectedKeys,
+      scrollTop,
+      setScrollTop,
+      handleOpenChange,
+      currentPath,
+    ],
   );
 
   // Don't render anything until client-side hydration is complete
@@ -115,17 +130,15 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   }
 
   return (
+    <>
+      <ToastContainer />
+      <Layout className="h-screen overflow-hidden w-full">
+        {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
+        {memoizedSidebar}
 
-    <><ToastContainer/><Layout className="h-screen overflow-hidden w-full">
-      {/* <Sidebar collapsed={collapsed} onCollapse={setCollapsed} /> */}
-      {memoizedSidebar}
-
-      <Layout style={layoutStyle}>
-        <Header
-          className="px-4 flex items-center justify-between h-16"
-          style={headerStyle}
-        >
-          {/* <Button
+        <Layout style={layoutStyle}>
+          <Header className="px-4 flex items-center justify-between h-16" style={headerStyle}>
+            {/* <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={handleToggleCollapse}
@@ -139,13 +152,13 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             </div>
           </Header>
 
-        <Content style={contentStyle}>
-          <ErrorBoundary>
-            <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
-          </ErrorBoundary>
-        </Content>
+          <Content style={contentStyle}>
+            <ErrorBoundary>
+              <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
+            </ErrorBoundary>
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
- </>
+    </>
   );
 };

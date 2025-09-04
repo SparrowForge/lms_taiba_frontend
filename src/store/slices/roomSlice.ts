@@ -50,8 +50,7 @@ const roomSlice = createSlice({
     updateRoom: (state, action: PayloadAction<IRoom>) => {
       const index = state.rooms.findIndex((item) => item.id === action.payload.id);
       if (index !== -1) state.rooms[index] = action.payload;
-      if (state.selectedRoom?.id === action.payload.id)
-        state.selectedRoom = action.payload;
+      if (state.selectedRoom?.id === action.payload.id) state.selectedRoom = action.payload;
     },
     deleteRoom: (state, action: PayloadAction<number>) => {
       state.rooms = state.rooms.filter((item) => item.id !== action.payload);

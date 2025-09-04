@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import EmploymentTypeForm from './EmploymentTypeForm';
-
 
 interface Props {
   mode: 'create' | 'edit';
@@ -28,7 +27,8 @@ const EmploymentTypeFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getEmploymentTypeById, selectedEmploymentType, loadEmploymentType, detailsStatus } = useEmploymentTypes();
+  const { getEmploymentTypeById, selectedEmploymentType, loadEmploymentType, detailsStatus } =
+    useEmploymentTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
 
@@ -46,8 +46,8 @@ const EmploymentTypeFormDrawer: React.FC<Props> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

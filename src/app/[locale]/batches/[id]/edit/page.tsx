@@ -17,7 +17,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const BatchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const BatchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
     loadBatch(batchId);
   }, [resolvedParams.id, loadBatch]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,11 @@ const BatchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <BatchEditForm
-            batchId={parseInt(resolvedParams.id)}
-            initialValues={selectedBatch}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
         />
+        <BatchEditForm batchId={parseInt(resolvedParams.id)} initialValues={selectedBatch} />
       </MainLayout>
     </ProtectedRoute>
   );

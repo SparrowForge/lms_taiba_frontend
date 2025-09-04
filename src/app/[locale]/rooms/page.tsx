@@ -62,8 +62,8 @@ export default function RoomsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadRooms({ page: 1, limit: 10 });
   };
 

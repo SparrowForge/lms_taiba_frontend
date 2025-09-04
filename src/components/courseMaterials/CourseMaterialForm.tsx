@@ -7,6 +7,7 @@ import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
+import FileUpload from '@/components/ui/FileUpload';
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useBatches} from '@/hooks/useBatches';
@@ -18,8 +19,9 @@ import {useSemesters} from '@/hooks/useSemesters';
 import {useSubjects} from '@/hooks/useSubjects';
 
 import {Status} from '@/types/common';
-import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate} from '@/types/courseMaterial';
+import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate,} from '@/types/courseMaterial';
 import {getErrorMessage} from '@/types/errors';
+import {EntityType, FileCategory, FileType} from '@/types/file';
 
 import FormLayout from '../layout/FormLayout';
 
@@ -121,11 +123,21 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      initialValues={mode === 'edit' ? initialValues : undefined}
+    >
       <Form.Item
         name="courseId"
         label={t(LOCALE_KEYS.COURSE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })}
@@ -143,7 +155,12 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       <Form.Item
         name="subjectId"
         label={t(LOCALE_KEYS.SUBJECT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SUBJECT) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SUBJECT) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) })}
@@ -161,7 +178,12 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       <Form.Item
         name="semesterId"
         label={t(LOCALE_KEYS.SEMESTER)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
@@ -179,7 +201,12 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       <Form.Item
         name="batchId"
         label={t(LOCALE_KEYS.BATCH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
@@ -197,7 +224,12 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       <Form.Item
         name="facultyId"
         label={t(LOCALE_KEYS.FACULTY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FACULTY) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FACULTY) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) })}
@@ -215,7 +247,12 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       <Form.Item
         name="title"
         label={t(LOCALE_KEYS.TITLE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TITLE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TITLE) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.TITLE) })} />
       </Form.Item>
@@ -223,7 +260,12 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       <Form.Item
         name="description"
         label={t(LOCALE_KEYS.DESCRIPTION)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }),
+          },
+        ]}
       >
         <TextArea
           rows={4}
@@ -234,7 +276,12 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       <Form.Item
         name="type"
         label={t(LOCALE_KEYS.TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TYPE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TYPE) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}
@@ -250,11 +297,15 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="fileId"
-        label={t(LOCALE_KEYS.FILE_ID)}
-      >
-        <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.FILE_ID) })} />
+      <Form.Item name="fileId" label={t(LOCALE_KEYS.FILE)}>
+        <FileUpload
+          fileType={FileType.COURSE_MATERIAL}
+          fileCategory={FileCategory.ACADEMIC}
+          entityType={EntityType.COURSE_MATERIAL}
+          entityId={courseMaterialId}
+          accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mp3,.wav,.txt,.zip,.rar"
+          maxSize={50}
+        />
       </Form.Item>
 
       <Form.Item
@@ -268,7 +319,12 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       <Form.Item
         name="accessLevel"
         label={t(LOCALE_KEYS.ACCESS_LEVEL)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ACCESS_LEVEL) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ACCESS_LEVEL) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ACCESS_LEVEL) })}
@@ -283,7 +339,12 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
+          },
+        ]}
       >
         <StatusSelect />
       </Form.Item>

@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import {useRouter, useSearchParams} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
 
-
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -71,8 +70,8 @@ export default function UserRolesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false);
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadUserRoles({ page: 1, limit: 10 });
   };
 

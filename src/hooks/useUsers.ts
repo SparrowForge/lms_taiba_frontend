@@ -26,7 +26,6 @@ import {
     updateUser,
 } from '@/store/slices/userSlice';
 
-
 export const useUsers = () => {
   const dispatch = useAppDispatch();
   const { listStatus, detailsStatus, actionStatus, users, selectedUser, pagination, filters } =

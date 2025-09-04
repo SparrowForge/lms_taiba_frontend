@@ -17,7 +17,6 @@ import {useSubjects} from '@/hooks/useSubjects';
 
 import {Status} from '@/types/common';
 
-
 const SubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const SubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
     loadSubject(subjectId);
   }, [resolvedParams.id, loadSubject]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const SubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <SubjectForm
-            mode="edit"
-            subjectId={parseInt(resolvedParams.id)}
-            initialValues={selectedSubject}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <SubjectForm
+          mode="edit"
+          subjectId={parseInt(resolvedParams.id)}
+          initialValues={selectedSubject}
         />
       </MainLayout>
     </ProtectedRoute>

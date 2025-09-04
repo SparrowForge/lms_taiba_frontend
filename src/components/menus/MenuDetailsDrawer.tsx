@@ -15,7 +15,6 @@ import {IMenu} from '@/types/menu';
 
 import {useCreateMenuDetailsConfig} from './menuConfig';
 
-
 interface MenuDetailsDrawerProps {
   menuId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedMenu, loadMenu, detailsStatus } = useMenus();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });

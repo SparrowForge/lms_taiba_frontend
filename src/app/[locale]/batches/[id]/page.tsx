@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {IBatch} from '@/types/batch';
 import {Status} from '@/types/common';
 
-export default function BatchDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function BatchDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedBatch, detailsStatus, loadBatch } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
@@ -45,7 +41,7 @@ export default function BatchDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IBatch>} />
+        <EntityDetails config={config as EntityDetailsConfig<IBatch>} />
       </MainLayout>
     </ProtectedRoute>
   );

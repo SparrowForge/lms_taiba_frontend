@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import PanelForm from './PanelForm';
-
 
 interface PanelFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getPanelById, selectedPanel, loadPanel, detailsStatus } = usePanels();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
@@ -47,8 +45,8 @@ const PanelFormDrawer: React.FC<PanelFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

@@ -16,11 +16,7 @@ import {useUsers} from '@/hooks/useUsers';
 import {Status} from '@/types/common';
 import {IUser} from '@/types/user';
 
-export default function UserDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedUser, detailsStatus, loadUser } = useUsers();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
@@ -45,7 +41,7 @@ export default function UserDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IUser>} />
+        <EntityDetails config={config as EntityDetailsConfig<IUser>} />
       </MainLayout>
     </ProtectedRoute>
   );

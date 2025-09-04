@@ -16,11 +16,7 @@ import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 import {Status} from '@/types/common';
 import {ISemesterSubject} from '@/types/semesterSubject';
 
-export default function SemesterSubjectDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function SemesterSubjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedSemesterSubject, detailsStatus, loadSemesterSubject } = useSemesterSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
@@ -45,7 +41,7 @@ export default function SemesterSubjectDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<ISemesterSubject>} />
+        <EntityDetails config={config as EntityDetailsConfig<ISemesterSubject>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -16,7 +16,6 @@ import {useStudentProfiles} from '@/hooks/useStudentProfiles';
 import {Status} from '@/types/common';
 import {IStudentProfile} from '@/types/studentProfile';
 
-
 export default function StudentProfileDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);
   const studentProfileId = parseInt(resolvedParams.id);

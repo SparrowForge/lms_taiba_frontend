@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useFaculties} from '@/hooks/useFaculties';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import FacultyForm from './FacultyForm';
-
 
 interface FacultyFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const FacultyFormDrawer: React.FC<FacultyFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getFacultyById, selectedFaculty, loadFaculty, detailsStatus } = useFaculties();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
@@ -47,8 +45,8 @@ const FacultyFormDrawer: React.FC<FacultyFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

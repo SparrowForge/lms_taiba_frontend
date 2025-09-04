@@ -17,7 +17,6 @@ import {useWeekDays} from '@/hooks/useWeekDays';
 
 import {Status} from '@/types/common';
 
-
 const WeekDayEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const WeekDayEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
     loadWeekDay(weekDayId);
   }, [resolvedParams.id, loadWeekDay]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const WeekDayEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <WeekDayForm
-            mode="edit"
-            weekDayId={parseInt(resolvedParams.id)}
-            initialValues={selectedWeekDay}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <WeekDayForm
+          mode="edit"
+          weekDayId={parseInt(resolvedParams.id)}
+          initialValues={selectedWeekDay}
         />
       </MainLayout>
     </ProtectedRoute>

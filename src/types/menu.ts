@@ -1,10 +1,9 @@
 import {IPanel} from './panel';
 
 export interface IMenu {
-
   id: number;
   name: string;
-  localName:string;
+  localName: string;
   icon: string;
   route: string;
   panelId: number;
@@ -44,6 +43,6 @@ export interface IMenuUpdate {
 export interface IMyMenusResponse {
   success: boolean;
   message: string;
-  data: IMenu[];    
+  data: IMenu[];
   timestamp: string;
 }
