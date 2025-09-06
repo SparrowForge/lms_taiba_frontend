@@ -1,31 +1,33 @@
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
-import { useLocalization } from "@/hooks/useLocalization";
-import { Button, Card } from "antd";
+import {Button, Card} from 'antd';
+
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 const data = [
   {
-    color: "#eff6ff",
-    title: "Faculty Meeting",
-    date: "2025-08-24", // today
-    text: "All faculty members are required to attend the meeting at 4:00 PM in the conference room."
+    color: '#eff6ff',
+    title: 'Faculty Meeting',
+    date: '2025-08-24', // today
+    text: 'All faculty members are required to attend the meeting at 4:00 PM in the conference room.',
   },
   {
-    color: "#fffbeb",
-    title: "Exam Schedule",
-    date: "2025-08-23", // yesterday
-    text: "Mid-term examination schedule has been updated. Please check your dashboard."
+    color: '#fffbeb',
+    title: 'Exam Schedule',
+    date: '2025-08-23', // yesterday
+    text: 'Mid-term examination schedule has been updated. Please check your dashboard.',
   },
   {
-    color: "#ede9fe",
-    title: "Orientation",
-    date: "2025-08-24",
-    text: "New student orientation details updated in the portal."
+    color: '#ede9fe',
+    title: 'Orientation',
+    date: '2025-08-24',
+    text: 'New student orientation details updated in the portal.',
   },
   {
-    color: "#d1fae5",
-    title: "Workshop",
-    date: "2025-08-23", // today
-    text: "All faculty members are required to attend the workshop at 2:00 PM in the auditorium."
+    color: '#d1fae5',
+    title: 'Workshop',
+    date: '2025-08-23', // today
+    text: 'All faculty members are required to attend the workshop at 2:00 PM in the auditorium.',
   },
 ];
 
@@ -33,21 +35,21 @@ const formatDay = (dateString: string) => {
   const today = new Date();
   const given = new Date(dateString);
 
-  const todayStr = today.toISOString().split("T")[0];
+  const todayStr = today.toISOString().split('T')[0];
   const yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-  if (dateString === todayStr) return "Today";
-  if (dateString === yesterdayStr) return "Yesterday";
-  return given.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  if (dateString === todayStr) return 'Today';
+  if (dateString === yesterdayStr) return 'Yesterday';
+  return given.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 };
 
 const sortData = (items: typeof data) => {
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = new Date().toISOString().split('T')[0];
   const yesterday = new Date();
   yesterday.setDate(new Date().getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
 
   return [...items].sort((a, b) => {
     // Priority 1: Today first
@@ -65,20 +67,15 @@ const sortData = (items: typeof data) => {
 
 const RecentAnnouncenments = () => {
   const sortedData = sortData(data);
-  const {t} = useLocalization();
+  const { t } = useLocalization();
 
   return (
     <div className="mb-5">
       <Card>
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-lg font-semibold">
-              {t(LOCALE_KEYS.RECENT_ANNOUNCEMENT)}
-          </h1>
-          <Button
-            type="text"
-            style={{ color: "#1F4BCA", fontSize: "14px" , fontWeight: "400"}}
-          >
+          <h1 className="text-lg font-semibold">{t(LOCALE_KEYS.RECENT_ANNOUNCEMENT)}</h1>
+          <Button type="text" style={{ color: '#1F4BCA', fontSize: '14px', fontWeight: '400' }}>
             View All
           </Button>
         </div>
@@ -86,11 +83,7 @@ const RecentAnnouncenments = () => {
         {/* Announcements list */}
         <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto pr-2">
           {sortedData.map((item, index) => (
-            <div
-              key={index}
-              className="py-2 px-4 rounded-lg"
-              style={{ background: item.color }}
-            >
+            <div key={index} className="py-2 px-4 rounded-lg" style={{ background: item.color }}>
               <div className="flex justify-between items-center">
                 <h2 className="text-[14px] font-semibold">{item.title}</h2>
                 <p className="text-sm text-gray-600">{formatDay(item.date)}</p>

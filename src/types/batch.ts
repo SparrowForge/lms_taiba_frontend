@@ -5,7 +5,7 @@ export interface IBatch {
   id: number;
   courseId: number;
   name: string;
-  year: number;
+  academicYear: number;
   session: string;
   intakeCapacity: number;
   startDate: string;
@@ -21,7 +21,7 @@ export interface IBatch {
 export interface IBatchCreate {
   courseId: number;
   name: string;
-  year: number;
+  academicYear: number;
   session: string;
   intakeCapacity: number;
   startDate: string;
@@ -33,7 +33,7 @@ export interface IBatchCreate {
 export interface IBatchUpdate {
   courseId?: number;
   name?: string;
-  year?: number;
+  academicYear?: number;
   session?: string;
   intakeCapacity?: number;
   startDate?: string;

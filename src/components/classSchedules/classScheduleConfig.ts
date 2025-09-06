@@ -80,7 +80,7 @@ export const useCreateClassScheduleDetailsConfig = (
       {
         key: 'isRecurring',
         label: t(LOCALE_KEYS.IS_RECURRING),
-        render: (v: boolean) => v ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO),
+        render: (v: boolean) => (v ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)),
       },
       {
         key: 'classScheduleType',

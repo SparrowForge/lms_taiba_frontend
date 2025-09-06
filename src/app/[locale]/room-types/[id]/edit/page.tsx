@@ -17,7 +17,6 @@ import {useRoomTypes} from '@/hooks/useRoomTypes';
 
 import {Status} from '@/types/common';
 
-
 const RoomTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const RoomTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ param
     loadRoomType(roomTypeId);
   }, [resolvedParams.id, loadRoomType]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const RoomTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ param
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <RoomTypeForm
-            mode="edit"
-            roomTypeId={parseInt(resolvedParams.id)}
-            initialValues={selectedRoomType}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <RoomTypeForm
+          mode="edit"
+          roomTypeId={parseInt(resolvedParams.id)}
+          initialValues={selectedRoomType}
         />
       </MainLayout>
     </ProtectedRoute>

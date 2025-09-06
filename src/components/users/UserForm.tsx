@@ -65,7 +65,8 @@ const UserForm: React.FC<UserFormProps> = ({
         }
       }
     } catch (error: unknown) {
-      const errorMessage = getErrorMessage(error) || t(LOCALE_KEYS.FAILED_NAME, { name: entityName });
+      const errorMessage =
+        getErrorMessage(error) || t(LOCALE_KEYS.FAILED_NAME, { name: entityName });
       toast.error(errorMessage);
     }
   };
@@ -225,8 +226,7 @@ const UserForm: React.FC<UserFormProps> = ({
         formContent
       ) : (
         <FormLayout>
-
-            {/* <h1
+          {/* <h1
               id="form-title"
               style={{
                 marginBottom: '24px',
@@ -237,7 +237,7 @@ const UserForm: React.FC<UserFormProps> = ({
             >
               {mode === 'create' ? 'Create New User' : 'Edit User'}
             </h1> */}
-            {formContent}
+          {formContent}
         </FormLayout>
       )}
     </>

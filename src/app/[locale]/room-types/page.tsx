@@ -20,7 +20,6 @@ import {useRoomTypes} from '@/hooks/useRoomTypes';
 import {Status} from '@/types/common';
 import {IRoomType} from '@/types/roomType';
 
-
 export default function RoomTypesPage() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' });
@@ -31,8 +30,7 @@ export default function RoomTypesPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
-  const { roomTypes, listStatus, pagination, loadRoomTypes, removeRoomType } =
-    useRoomTypes();
+  const { roomTypes, listStatus, pagination, loadRoomTypes, removeRoomType } = useRoomTypes();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -57,8 +55,8 @@ export default function RoomTypesPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadRoomTypes({ page: 1, limit: 10 });
   };
   const handleViewDetails = (id: number) => {

@@ -5,7 +5,9 @@ import {api} from '@/lib/axios';
 
 export const classScheduleService = {
   getClassSchedules: async (params = {}): Promise<IBasePaginatedResponse<IClassSchedule>> => {
-    const response = await api.get<IBasePaginatedResponse<IClassSchedule>>('/class-schedules', { params });
+    const response = await api.get<IBasePaginatedResponse<IClassSchedule>>('/class-schedules', {
+      params,
+    });
     return response.data;
   },
 

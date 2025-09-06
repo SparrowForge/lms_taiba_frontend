@@ -16,10 +16,16 @@ import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IUserRole, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
 
-import { UserRoleFormProps } from './UserRoleFormTabView';
+import {UserRoleFormProps} from './UserRoleFormTabView';
 
-
-function UserRoleFormSingle({mode, userRoleId, initialValues, onSuccess, onCancel, embedded = false}: UserRoleFormProps) {
+function UserRoleFormSingle({
+  mode,
+  userRoleId,
+  initialValues,
+  onSuccess,
+  onCancel,
+  embedded = false,
+}: UserRoleFormProps) {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER_ROLE);
   const router = useRouter();
@@ -40,7 +46,7 @@ function UserRoleFormSingle({mode, userRoleId, initialValues, onSuccess, onCance
 
       const submitData = {
         userId: values.userId,
-        roleId: values.roleId
+        roleId: values.roleId,
       };
 
       console.log('Single role submission data:', submitData);
@@ -94,65 +100,65 @@ function UserRoleFormSingle({mode, userRoleId, initialValues, onSuccess, onCance
       ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
-  return(
+  return (
     <Form
-    form={singleForm}
-    layout="vertical"
-    initialValues={initialValues}
-    onFinish={handleSingleSubmit}
-    disabled={actionStatus.status === Status.LOADING}
-  >
-    <Form.Item
-      name="userId"
-      label={t(LOCALE_KEYS.USER)}
-      rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_USER) }]}
+      form={singleForm}
+      layout="vertical"
+      initialValues={initialValues}
+      onFinish={handleSingleSubmit}
+      disabled={actionStatus.status === Status.LOADING}
     >
-      <Select
-        showSearch
-        placeholder={t(LOCALE_KEYS.SELECT_USER)}
-        optionFilterProp="children"
-        filterOption={(input, option) =>
-          (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-        }
+      <Form.Item
+        name="userId"
+        label={t(LOCALE_KEYS.USER)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_USER) }]}
       >
-        {users.map((user) => (
-          <Select.Option key={user.id} value={user.id}>
-            {`${user.firstName} ${user.lastName} (${user.email})`}
-          </Select.Option>
-        ))}
-      </Select>
-    </Form.Item>
-    <Form.Item
-      name="roleId"
-      label={t(LOCALE_KEYS.ROLE)}
-      rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_ROLE) }]}
-    >
-      <Select
-        showSearch
-        placeholder={t(LOCALE_KEYS.SELECT_ROLE)}
-        optionFilterProp="children"
-        filterOption={(input, option) =>
-          (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-        }
+        <Select
+          showSearch
+          placeholder={t(LOCALE_KEYS.SELECT_USER)}
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {users.map((user) => (
+            <Select.Option key={user.id} value={user.id}>
+              {`${user.firstName} ${user.lastName} (${user.email})`}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name="roleId"
+        label={t(LOCALE_KEYS.ROLE)}
+        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_ROLE) }]}
       >
-        {roles.map((role) => (
-          <Select.Option key={role.id} value={role.id}>
-            {`${role.name} - ${role.description}`}
-          </Select.Option>
-        ))}
-      </Select>
-    </Form.Item>
-    <Form.Item>
-      <Space>
-        <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
-          {getSubmitText()}
-        </Button>
-        <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
-          {t(LOCALE_KEYS.CANCEL)}
-        </Button>
-      </Space>
-    </Form.Item>
-  </Form>
+        <Select
+          showSearch
+          placeholder={t(LOCALE_KEYS.SELECT_ROLE)}
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {roles.map((role) => (
+            <Select.Option key={role.id} value={role.id}>
+              {`${role.name} - ${role.description}`}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item>
+        <Space>
+          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
+            {getSubmitText()}
+          </Button>
+          <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
+            {t(LOCALE_KEYS.CANCEL)}
+          </Button>
+        </Space>
+      </Form.Item>
+    </Form>
   );
 }
 

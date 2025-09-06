@@ -17,7 +17,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const FeeStructureEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const FeeStructureEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
     loadFeeStructure(feeStructureId);
   }, [resolvedParams.id, loadFeeStructure]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const FeeStructureEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <FeeStructureForm
-            mode="edit"
-            feeStructureId={parseInt(resolvedParams.id)}
-            initialValues={selectedFeeStructure}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <FeeStructureForm
+          mode="edit"
+          feeStructureId={parseInt(resolvedParams.id)}
+          initialValues={selectedFeeStructure}
         />
       </MainLayout>
     </ProtectedRoute>

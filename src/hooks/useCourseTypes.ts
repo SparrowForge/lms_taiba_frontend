@@ -23,7 +23,6 @@ import {
     updateCourseType,
 } from '@/store/slices/courseTypeSlice';
 
-
 export const useCourseTypes = () => {
   const dispatch = useDispatch();
   const { courseTypes, selectedCourseType, listStatus, detailsStatus, actionStatus, pagination } =

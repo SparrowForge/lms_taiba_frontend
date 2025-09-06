@@ -8,7 +8,7 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentFamilies} from '@/hooks/useStudentFamilies';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import StudentFamilyForm from './StudentFamilyForm';
 
@@ -27,7 +27,8 @@ const StudentFamilyFormDrawer: React.FC<StudentFamilyFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getStudentFamilyById, selectedStudentFamily, loadStudentFamily, detailsStatus } = useStudentFamilies();
+  const { getStudentFamilyById, selectedStudentFamily, loadStudentFamily, detailsStatus } =
+    useStudentFamilies();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_FAMILY, { defaultValue: 'Student Family' });
 
@@ -46,8 +47,8 @@ const StudentFamilyFormDrawer: React.FC<StudentFamilyFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

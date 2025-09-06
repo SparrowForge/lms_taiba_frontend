@@ -15,7 +15,6 @@ import {IRoomType} from '@/types/roomType';
 
 import {useCreateRoomTypeDetailsConfig} from './roomTypeConfig';
 
-
 interface RoomTypeDetailsDrawerProps {
   roomTypeId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const RoomTypeDetailsDrawer: React.FC<RoomTypeDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedRoomType, loadRoomType, detailsStatus } = useRoomTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' });

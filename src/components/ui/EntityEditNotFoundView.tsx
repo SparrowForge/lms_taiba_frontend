@@ -1,20 +1,23 @@
-import { Button, Card } from 'antd';
-import { useRouter } from 'next/navigation';
+import {Button, Card} from 'antd';
+import {useRouter} from 'next/navigation';
 import React from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { MainLayout } from '@/components/layout/MainLayout';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
 
-import { useLocalization } from '@/hooks/useLocalization';
+import {useLocalization} from '@/hooks/useLocalization';
 
 interface EntityEditNotFoundViewProps {
   entityName: string;
   backRoute: string;
 }
 
-const EntityEditNotFoundView: React.FC<EntityEditNotFoundViewProps> = ({ entityName, backRoute }) => {
+const EntityEditNotFoundView: React.FC<EntityEditNotFoundViewProps> = ({
+  entityName,
+  backRoute,
+}) => {
   const { t } = useLocalization();
   const router = useRouter();
 

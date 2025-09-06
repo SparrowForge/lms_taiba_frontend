@@ -8,7 +8,7 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRooms} from '@/hooks/useRooms';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import RoomForm from './RoomForm';
 
@@ -20,13 +20,7 @@ interface Props {
   onSuccess: () => void;
 }
 
-const RoomFormDrawer: React.FC<Props> = ({
-  mode,
-  roomId,
-  visible,
-  onCancel,
-  onSuccess,
-}) => {
+const RoomFormDrawer: React.FC<Props> = ({ mode, roomId, visible, onCancel, onSuccess }) => {
   const { getRoomById, selectedRoom, loadRoom, detailsStatus } = useRooms();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM, { defaultValue: 'Room' });
@@ -38,14 +32,18 @@ const RoomFormDrawer: React.FC<Props> = ({
     }
   }, [visible, mode, roomId, loadRoom]);
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (
     <Drawer
       key={roomId}
-      title={mode === 'create' ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName }) : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+      title={
+        mode === 'create'
+          ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+          : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })
+      }
       width={600}
       open={visible}
       onClose={onCancel}

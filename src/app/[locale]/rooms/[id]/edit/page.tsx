@@ -41,12 +41,11 @@ const RoomEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params })
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-        <RoomForm
-          mode="edit"
-          roomId={parseInt(resolvedParams.id)}
-          initialValues={selectedRoom}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
         />
+        <RoomForm mode="edit" roomId={parseInt(resolvedParams.id)} initialValues={selectedRoom} />
       </MainLayout>
     </ProtectedRoute>
   );

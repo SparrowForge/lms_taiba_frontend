@@ -42,8 +42,9 @@ export const menuService = {
 
   // Get all panels with menu information
   getPanelsWithMenus: async (params = {}): Promise<IBaseResponse<IPanelWithMenus[]>> => {
-    const response = await api.get<IBaseResponse<IPanelWithMenus[]>>('/menus/panels-with-menus', { params });
+    const response = await api.get<IBaseResponse<IPanelWithMenus[]>>('/menus/panels-with-menus', {
+      params,
+    });
     return response.data;
   },
-
 };

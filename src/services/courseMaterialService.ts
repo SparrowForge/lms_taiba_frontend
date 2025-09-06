@@ -1,11 +1,13 @@
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate} from '@/types/courseMaterial';
+import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate,} from '@/types/courseMaterial';
 
 import {api} from '@/lib/axios';
 
 export const courseMaterialService = {
   getCourseMaterials: async (params = {}): Promise<IBasePaginatedResponse<ICourseMaterial>> => {
-    const response = await api.get<IBasePaginatedResponse<ICourseMaterial>>('/course-materials', { params });
+    const response = await api.get<IBasePaginatedResponse<ICourseMaterial>>('/course-materials', {
+      params,
+    });
     return response.data;
   },
 
@@ -19,7 +21,10 @@ export const courseMaterialService = {
     return response.data.data;
   },
 
-  updateCourseMaterial: async (id: number, data: ICourseMaterialUpdate): Promise<ICourseMaterial> => {
+  updateCourseMaterial: async (
+    id: number,
+    data: ICourseMaterialUpdate,
+  ): Promise<ICourseMaterial> => {
     const response = await api.put<IBaseResponse<ICourseMaterial>>(`/course-materials/${id}`, data);
     return response.data.data;
   },

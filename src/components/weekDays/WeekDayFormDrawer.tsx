@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useWeekDays} from '@/hooks/useWeekDays';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import WeekDayForm from './WeekDayForm';
-
 
 interface Props {
   mode: 'create' | 'edit';
@@ -21,13 +20,7 @@ interface Props {
   onSuccess: () => void;
 }
 
-const WeekDayFormDrawer: React.FC<Props> = ({
-  mode,
-  weekDayId,
-  visible,
-  onCancel,
-  onSuccess,
-}) => {
+const WeekDayFormDrawer: React.FC<Props> = ({ mode, weekDayId, visible, onCancel, onSuccess }) => {
   const { getWeekDayById, selectedWeekDay, loadWeekDay, detailsStatus } = useWeekDays();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
@@ -46,8 +39,8 @@ const WeekDayFormDrawer: React.FC<Props> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

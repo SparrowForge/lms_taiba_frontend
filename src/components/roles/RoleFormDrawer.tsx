@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import RoleForm from './RoleForm';
-
 
 interface RoleFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getRoleById, selectedRole, loadRole, detailsStatus } = useRoles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
@@ -47,8 +45,8 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import ScheduleTypeForm from './ScheduleTypeForm';
-
 
 interface Props {
   mode: 'create' | 'edit';
@@ -28,7 +27,8 @@ const ScheduleTypeFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getScheduleTypeById, selectedScheduleType, loadScheduleType, detailsStatus } = useScheduleTypes();
+  const { getScheduleTypeById, selectedScheduleType, loadScheduleType, detailsStatus } =
+    useScheduleTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
@@ -46,8 +46,8 @@ const ScheduleTypeFormDrawer: React.FC<Props> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

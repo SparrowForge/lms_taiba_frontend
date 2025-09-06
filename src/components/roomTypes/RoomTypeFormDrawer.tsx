@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import RoomTypeForm from './RoomTypeForm';
-
 
 interface Props {
   mode: 'create' | 'edit';
@@ -46,8 +45,8 @@ const RoomTypeFormDrawer: React.FC<Props> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

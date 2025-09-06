@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import UserForm from './UserForm';
-
 
 interface UserFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const UserFormDrawer: React.FC<UserFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getUserById, selectedUser, loadUser, detailsStatus } = useUsers();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
@@ -47,8 +45,8 @@ const UserFormDrawer: React.FC<UserFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

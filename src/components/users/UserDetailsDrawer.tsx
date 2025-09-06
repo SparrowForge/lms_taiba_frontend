@@ -15,7 +15,6 @@ import {IUser} from '@/types/user';
 
 import {useCreateUserDetailsConfig} from './userConfig';
 
-
 interface UserDetailsDrawerProps {
   userId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedUser, loadUser, detailsStatus } = useUsers();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });

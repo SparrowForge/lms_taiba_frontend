@@ -17,11 +17,12 @@ import {Status} from '@/types/common';
 import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
 
 export default function FeeInstallmentPlanDetailPage({
-  params
+  params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
-  const { selectedFeeInstallmentPlan, detailsStatus, loadFeeInstallmentPlan } = useFeeInstallmentPlans();
+  const { selectedFeeInstallmentPlan, detailsStatus, loadFeeInstallmentPlan } =
+    useFeeInstallmentPlans();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
 
@@ -45,7 +46,7 @@ export default function FeeInstallmentPlanDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IFeeInstallmentPlan>} />
+        <EntityDetails config={config as EntityDetailsConfig<IFeeInstallmentPlan>} />
       </MainLayout>
     </ProtectedRoute>
   );

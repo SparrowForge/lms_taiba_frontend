@@ -12,7 +12,6 @@ import {Status} from '@/types/common';
 
 import InstituteForm from './InstituteForm';
 
-
 interface Props {
   mode: 'create' | 'edit';
   instituteId?: number;
@@ -46,8 +45,8 @@ const InstituteFormDrawer: React.FC<Props> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

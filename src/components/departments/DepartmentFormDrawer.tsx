@@ -6,10 +6,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useDepartments} from '@/hooks/useDepartments';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import DepartmentForm from './DepartmentForm';
-
 
 interface DepartmentFormDrawerProps {
   mode: 'create' | 'edit';
@@ -45,9 +44,8 @@ const DepartmentFormDrawer: React.FC<DepartmentFormDrawerProps> = ({
     onCancel();
   };
 
-
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

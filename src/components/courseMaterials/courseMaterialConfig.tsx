@@ -30,14 +30,42 @@ export const useCreateCourseMaterialDetailsConfig = (
     fields: [
       { key: 'title', label: t(LOCALE_KEYS.TITLE) },
       { key: 'description', label: t(LOCALE_KEYS.DESCRIPTION) },
-      { key: 'course.name', label: t(LOCALE_KEYS.COURSE), render: (value: string, item: ICourseMaterial) => item?.course?.name || 'N/A' },
-      { key: 'subject.name', label: t(LOCALE_KEYS.SUBJECT), render: (value: string, item: ICourseMaterial) => item?.subject?.name || 'N/A' },
-      { key: 'semester.name', label: t(LOCALE_KEYS.SEMESTER), render: (value: string, item: ICourseMaterial) => item?.semester?.name || 'N/A' },
-      { key: 'batch.name', label: t(LOCALE_KEYS.BATCH), render: (value: string, item: ICourseMaterial) => item?.batch?.name || 'N/A' },
-      { key: 'faculty.fullName', label: t(LOCALE_KEYS.FACULTY), render: (value: string, item: ICourseMaterial) => item?.faculty?.fullName || 'N/A' },
+      {
+        key: 'course.name',
+        label: t(LOCALE_KEYS.COURSE),
+        render: (value: string, item: ICourseMaterial) => item?.course?.name || 'N/A',
+      },
+      {
+        key: 'subject.name',
+        label: t(LOCALE_KEYS.SUBJECT),
+        render: (value: string, item: ICourseMaterial) => item?.subject?.name || 'N/A',
+      },
+      {
+        key: 'semester.name',
+        label: t(LOCALE_KEYS.SEMESTER),
+        render: (value: string, item: ICourseMaterial) => item?.semester?.name || 'N/A',
+      },
+      {
+        key: 'batch.name',
+        label: t(LOCALE_KEYS.BATCH),
+        render: (value: string, item: ICourseMaterial) => item?.batch?.name || 'N/A',
+      },
+      {
+        key: 'faculty.fullName',
+        label: t(LOCALE_KEYS.FACULTY),
+        render: (value: string, item: ICourseMaterial) => item?.faculty?.fullName || 'N/A',
+      },
       { key: 'type', label: t(LOCALE_KEYS.TYPE) },
-      { key: 'fileId', label: t(LOCALE_KEYS.FILE_ID), render: (value: string, item: ICourseMaterial) => item?.fileId || 'N/A' },
-      { key: 'isDownloadable', label: t(LOCALE_KEYS.IS_DOWNLOADABLE), render: (value: string, item: ICourseMaterial) => item?.isDownloadable ? 'Yes' : 'No' },
+      {
+        key: 'fileId',
+        label: t(LOCALE_KEYS.FILE_ID),
+        render: (value: string, item: ICourseMaterial) => item?.fileId || 'N/A',
+      },
+      {
+        key: 'isDownloadable',
+        label: t(LOCALE_KEYS.IS_DOWNLOADABLE),
+        render: (value: string, item: ICourseMaterial) => (item?.isDownloadable ? 'Yes' : 'No'),
+      },
       { key: 'accessLevel', label: t(LOCALE_KEYS.ACCESS_LEVEL) },
       { key: 'status', label: t(LOCALE_KEYS.STATUS) },
       {

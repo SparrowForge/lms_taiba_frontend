@@ -28,9 +28,12 @@ export default function StudentFamiliesPage() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedStudentFamilyId, setSelectedStudentFamilyId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsStudentFamilyId, setSelectedDetailsStudentFamilyId] = useState<number | undefined>();
+  const [selectedDetailsStudentFamilyId, setSelectedDetailsStudentFamilyId] = useState<
+    number | undefined
+  >();
 
-  const { studentFamilies, listStatus, pagination, loadStudentFamilies, removeStudentFamily } = useStudentFamilies();
+  const { studentFamilies, listStatus, pagination, loadStudentFamilies, removeStudentFamily } =
+    useStudentFamilies();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -57,8 +60,8 @@ export default function StudentFamiliesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadStudentFamilies({ page: 1, limit: 10 });
   };
 
@@ -78,7 +81,13 @@ export default function StudentFamiliesPage() {
     name: entityName,
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/student-families',
-    searchFields: ['student.name', 'fatherName', 'motherName', 'fatherPhone', 'motherPhone'] as (keyof IStudentFamily)[],
+    searchFields: [
+      'student.name',
+      'fatherName',
+      'motherName',
+      'fatherPhone',
+      'motherPhone',
+    ] as (keyof IStudentFamily)[],
     onSearch: (searchText: string) => {
       loadStudentFamilies({ page: 1, limit: 10, search: searchText });
     },

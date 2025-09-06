@@ -15,7 +15,6 @@ import {ISemesterSubject} from '@/types/semesterSubject';
 
 import {useCreateSemesterSubjectDetailsConfig} from './semesterSubjectConfig';
 
-
 interface SemesterSubjectDetailsDrawerProps {
   semesterSubjectId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const SemesterSubjectDetailsDrawer: React.FC<SemesterSubjectDetailsDrawerProps> 
   onClose,
   onEdit,
 }) => {
-
   const { selectedSemesterSubject, loadSemesterSubject, detailsStatus } = useSemesterSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });

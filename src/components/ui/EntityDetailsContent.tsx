@@ -43,7 +43,8 @@ export const EntityDetailsContent = <T extends { id: number }>({
       <div style={{ padding: config.embedded ? '0' : '24px', textAlign: 'center' }}>
         <Spin size="large" />
         <div style={{ marginTop: '16px' }}>
-          {t(LOCALE_KEYS.LOADING)} {config.name} {t(LOCALE_KEYS.DETAILS_NAME, { name: config.name })}...
+          {t(LOCALE_KEYS.LOADING)} {config.name}{' '}
+          {t(LOCALE_KEYS.DETAILS_NAME, { name: config.name })}...
         </div>
       </div>
     );

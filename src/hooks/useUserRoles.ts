@@ -5,7 +5,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store';
 
 import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
-import {IUserRole, IUserRoleCreate, IUserRoleUpdate, IUserRoleBulkCreate, IUserRoleBulkCreateResponse} from '@/types/userRole';
+import {
+    IUserRole,
+    IUserRoleBulkCreate,
+    IUserRoleBulkCreateResponse,
+    IUserRoleCreate,
+    IUserRoleUpdate,
+} from '@/types/userRole';
 
 import {userRoleService} from '@/services/userRoleService';
 
@@ -22,7 +28,6 @@ import {
     setUserRoles,
     updateUserRole,
 } from '@/store/slices/userRoleSlice';
-
 
 export const useUserRoles = () => {
   const dispatch = useDispatch();
@@ -105,7 +110,8 @@ export const useUserRoles = () => {
     async (data: IUserRoleBulkCreate) => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IUserRoleBulkCreateResponse> = await userRoleService.createUserRolesBulk(data);
+        const response: IBaseResponse<IUserRoleBulkCreateResponse> =
+          await userRoleService.createUserRolesBulk(data);
         dispatch(setUserRoles(response.data.newAssignments));
         dispatch(setActionStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {

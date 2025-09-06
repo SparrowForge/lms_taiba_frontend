@@ -16,8 +16,11 @@ import {useStudentEducations} from '@/hooks/useStudentEducations';
 import {Status} from '@/types/common';
 import {IStudentEducation} from '@/types/studentEducation';
 
-
-export default function StudentEducationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function StudentEducationDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = React.use(params);
   const studentEducationId = parseInt(resolvedParams.id);
   const { t } = useLocalization();
@@ -41,7 +44,7 @@ export default function StudentEducationDetailPage({ params }: { params: Promise
   return (
     <ProtectedRoute>
       <MainLayout>
-      <EntityDetails config={config as EntityDetailsConfig<IStudentEducation>} />
+        <EntityDetails config={config as EntityDetailsConfig<IStudentEducation>} />
       </MainLayout>
     </ProtectedRoute>
   );

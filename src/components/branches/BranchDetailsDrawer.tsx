@@ -15,7 +15,6 @@ import {Status} from '@/types/common';
 
 import {useCreateBranchDetailsConfig} from './branchConfig';
 
-
 interface BranchDetailsDrawerProps {
   branchId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedBranch, loadBranch, detailsStatus } = useBranches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });

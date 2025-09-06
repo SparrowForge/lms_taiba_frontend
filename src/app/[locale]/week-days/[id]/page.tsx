@@ -16,11 +16,7 @@ import {useWeekDays} from '@/hooks/useWeekDays';
 import {Status} from '@/types/common';
 import {IWeekDay} from '@/types/weekDay';
 
-export default function WeekDayDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function WeekDayDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedWeekDay, detailsStatus, loadWeekDay } = useWeekDays();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
@@ -45,7 +41,7 @@ export default function WeekDayDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IWeekDay>} />
+        <EntityDetails config={config as EntityDetailsConfig<IWeekDay>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -15,7 +15,6 @@ import {IInstitute} from '@/types/institute';
 
 import {useCreateInstituteDetailsConfig} from './instituteConfig';
 
-
 interface InstituteDetailsDrawerProps {
   instituteId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const InstituteDetailsDrawer: React.FC<InstituteDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedInstitute, getInstituteById, detailsStatus, loadInstitute } = useInstitutes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });

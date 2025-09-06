@@ -14,11 +14,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-export default function CourseMaterialDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function CourseMaterialDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedCourseMaterial, detailsStatus, loadCourseMaterial } = useCourseMaterials();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_MATERIAL, { defaultValue: 'Course Material' });

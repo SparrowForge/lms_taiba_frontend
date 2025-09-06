@@ -1,7 +1,7 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import {LoginForm} from "./LoginForm";
-import {LanguageSwitcher} from "../ui/LanguageSwitcher";
+import {LoginForm} from './LoginForm';
+import {LanguageSwitcher} from '../ui/LanguageSwitcher';
 
 const RightComponent = () => {
   return (
@@ -23,9 +23,7 @@ const RightComponent = () => {
 
       {/* Footer */}
       <div className="py-4 text-center text-gray-500 text-[12px] ">
-        <p>
-          © 2023 EduTrain Institute. All rights reserved | جميع الحقوق محفوظة
-        </p>
+        <p>© 2023 EduTrain Institute. All rights reserved | جميع الحقوق محفوظة</p>
         <div className="flex justify-center gap-4 flex-wrap">
           <Link href="/privacy" className="hover:text-blue-600">
             Privacy Policy

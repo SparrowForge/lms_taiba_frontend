@@ -17,7 +17,6 @@ import {useTimeSlots} from '@/hooks/useTimeSlots';
 
 import {Status} from '@/types/common';
 
-
 const TimeSlotEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -42,7 +41,10 @@ const TimeSlotEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ param
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
         <TimeSlotForm
           mode="edit"
           timeSlotId={parseInt(resolvedParams.id)}

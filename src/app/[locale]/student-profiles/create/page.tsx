@@ -19,7 +19,10 @@ export default function StudentProfileCreatePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
         <StudentProfileForm mode="create" />
       </MainLayout>
     </ProtectedRoute>

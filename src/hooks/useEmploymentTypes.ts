@@ -23,7 +23,6 @@ import {
     updateEmploymentType,
 } from '@/store/slices/employmentTypeSlice';
 
-
 export const useEmploymentTypes = () => {
   const dispatch = useDispatch();
   const {
@@ -70,7 +69,8 @@ export const useEmploymentTypes = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IEmploymentType> = await employmentTypeService.getEmploymentType(id);
+        const response: IBaseResponse<IEmploymentType> =
+          await employmentTypeService.getEmploymentType(id);
         dispatch(setSelectedEmploymentType(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {

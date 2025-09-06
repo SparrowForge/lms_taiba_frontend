@@ -21,7 +21,6 @@ import {
     updatePanel,
 } from '@/store/slices/panelSlice';
 
-
 export const usePanels = () => {
   const dispatch = useAppDispatch();
   const { listStatus, detailsStatus, actionStatus, panels, selectedPanel, pagination } =

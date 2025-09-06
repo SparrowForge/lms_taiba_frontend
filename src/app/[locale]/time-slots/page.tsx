@@ -30,8 +30,7 @@ export default function TimeSlotsPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
-  const { timeSlots, listStatus, pagination, loadTimeSlots, removeTimeSlot } =
-    useTimeSlots();
+  const { timeSlots, listStatus, pagination, loadTimeSlots, removeTimeSlot } = useTimeSlots();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -58,8 +57,8 @@ export default function TimeSlotsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadTimeSlots({ page: 1, limit: 10 });
   };
 

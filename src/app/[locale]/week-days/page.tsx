@@ -20,7 +20,6 @@ import {useWeekDays} from '@/hooks/useWeekDays';
 import {Status} from '@/types/common';
 import {IWeekDay} from '@/types/weekDay';
 
-
 export default function WeekDaysPage() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
@@ -31,8 +30,7 @@ export default function WeekDaysPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
-  const { weekDays, listStatus, pagination, loadWeekDays, removeWeekDay } =
-    useWeekDays();
+  const { weekDays, listStatus, pagination, loadWeekDays, removeWeekDay } = useWeekDays();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -57,8 +55,8 @@ export default function WeekDaysPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadWeekDays({ page: 1, limit: 10 });
   };
   const handleViewDetails = (id: number) => {

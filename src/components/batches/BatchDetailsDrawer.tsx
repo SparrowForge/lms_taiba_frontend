@@ -15,7 +15,6 @@ import {Status} from '@/types/common';
 
 import {useCreateBatchDetailsConfig} from './batchConfig';
 
-
 interface BatchDetailsDrawerProps {
   batchId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedBatch, loadBatch, detailsStatus } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });

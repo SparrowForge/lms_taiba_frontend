@@ -15,7 +15,6 @@ import {Status} from '@/types/common';
 
 import {useCreateAuditDetailsConfig} from './auditConfig';
 
-
 interface AuditDetailsDrawerProps {
   auditId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedAudit, getAuditById, detailsStatus } = useAudit();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.AUDIT, { defaultValue: 'Audit' });

@@ -17,7 +17,6 @@ import {useUserRoles} from '@/hooks/useUserRoles';
 
 import {Status} from '@/types/common';
 
-
 const UserRoleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const UserRoleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ param
     loadUserRole(userRoleId);
   }, [resolvedParams.id, loadUserRole]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const UserRoleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ param
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <UserRoleForm
-            mode="edit"
-            userRoleId={parseInt(resolvedParams.id)}
-            initialValues={selectedUserRole}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <UserRoleForm
+          mode="edit"
+          userRoleId={parseInt(resolvedParams.id)}
+          initialValues={selectedUserRole}
         />
       </MainLayout>
     </ProtectedRoute>

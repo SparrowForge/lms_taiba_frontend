@@ -63,7 +63,11 @@ export const useCreateAuditDetailsConfig = (
         label: t(LOCALE_KEYS.SUCCESS),
         render: (value: boolean) => (value ? t(LOCALE_KEYS.YES) : t(LOCALE_KEYS.NO)),
       },
-      { key: 'error', label: t(LOCALE_KEYS.ERROR), render: (value: string | null) => value || 'N/A' },
+      {
+        key: 'error',
+        label: t(LOCALE_KEYS.ERROR),
+        render: (value: string | null) => value || 'N/A',
+      },
       {
         key: 'timestamp',
         label: t(LOCALE_KEYS.TIMESTAMP),

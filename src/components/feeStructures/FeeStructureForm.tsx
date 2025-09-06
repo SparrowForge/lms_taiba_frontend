@@ -42,7 +42,9 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
   const { createFeeStructure, editFeeStructure, actionStatus } = useFeeStructures();
   const { batches, loadBatches } = useBatches();
   const { semesters, loadSemesters } = useSemesters();
-  const [selectedBatchId, setSelectedBatchId] = useState<number | undefined>(initialValues?.batchId);
+  const [selectedBatchId, setSelectedBatchId] = useState<number | undefined>(
+    initialValues?.batchId,
+  );
 
   useEffect(() => {
     loadBatches({ page: 1, limit: 100 });
@@ -117,7 +119,12 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="templateName"
         label={t(LOCALE_KEYS.TEMPLATE_NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TEMPLATE_NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TEMPLATE_NAME) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
@@ -125,14 +132,21 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="batchId"
         label={t(LOCALE_KEYS.BATCH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
           onChange={(value) => setSelectedBatchId(value)}
           showSearch
           filterOption={(input, option) =>
-            String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            String(option?.label ?? '')
+              .toLowerCase()
+              .includes(input.toLowerCase())
           }
         >
           {batches.map((batch) => (
@@ -146,7 +160,12 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="semesterId"
         label={t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
@@ -160,7 +179,12 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="academicYear"
         label={t(LOCALE_KEYS.ACADEMIC_YEAR)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ACADEMIC_YEAR) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ACADEMIC_YEAR) }),
+          },
+        ]}
       >
         <Input placeholder="e.g., 2025-2026" />
       </Form.Item>
@@ -168,7 +192,12 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="paymentType"
         label={t(LOCALE_KEYS.PAYMENT_TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PAYMENT_TYPE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PAYMENT_TYPE) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_PAYMENT_TYPE)}>
           <Select.Option value="one_time">{t(LOCALE_KEYS.ONE_TIME)}</Select.Option>
@@ -180,7 +209,12 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="totalFees"
         label={t(LOCALE_KEYS.TOTAL_FEES)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TOTAL_FEES) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TOTAL_FEES) }),
+          },
+        ]}
       >
         <InputNumber
           style={{ width: '100%' }}
@@ -194,7 +228,12 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="admissionFee"
         label={t(LOCALE_KEYS.ADMISSION_FEE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADMISSION_FEE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADMISSION_FEE) }),
+          },
+        ]}
       >
         <InputNumber
           style={{ width: '100%' }}
@@ -208,7 +247,12 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="discountType"
         label={t(LOCALE_KEYS.DISCOUNT_TYPE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_TYPE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_TYPE) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_DISCOUNT_TYPE)}>
           <Select.Option value="percent">{t(LOCALE_KEYS.PERCENT)}</Select.Option>
@@ -220,19 +264,25 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="discountAmount"
         label={t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_AMOUNT) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_AMOUNT) }),
+          },
+        ]}
       >
-        <InputNumber
-          style={{ width: '100%' }}
-          min={0}
-          step={0.01}
-        />
+        <InputNumber style={{ width: '100%' }} min={0} step={0.01} />
       </Form.Item>
 
       <Form.Item
         name="currency"
         label={t(LOCALE_KEYS.CURRENCY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CURRENCY) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CURRENCY) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_CURRENCY)}>
           <Select.Option value="SAR">SAR</Select.Option>
@@ -242,17 +292,19 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
         </Select>
       </Form.Item>
 
-      <Form.Item
-        name="remarks"
-        label={t(LOCALE_KEYS.REMARKS)}
-      >
+      <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
         <Input.TextArea rows={3} />
       </Form.Item>
 
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_STATUS)}>
           <Select.Option value="active">{t('active')}</Select.Option>
@@ -274,13 +326,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default FeeStructureForm;

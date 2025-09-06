@@ -17,7 +17,6 @@ import {useUsers} from '@/hooks/useUsers';
 
 import {Status} from '@/types/common';
 
-
 const UserEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const UserEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params })
     loadUser(userId);
   }, [resolvedParams.id, loadUser]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,12 +41,11 @@ const UserEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params })
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <UserForm
-            mode="edit"
-            userId={parseInt(resolvedParams.id)}
-            initialValues={selectedUser}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
         />
+        <UserForm mode="edit" userId={parseInt(resolvedParams.id)} initialValues={selectedUser} />
       </MainLayout>
     </ProtectedRoute>
   );

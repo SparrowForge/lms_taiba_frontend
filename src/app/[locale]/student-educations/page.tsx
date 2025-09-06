@@ -26,11 +26,21 @@ export default function StudentEducationsPage() {
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedStudentEducationId, setSelectedStudentEducationId] = useState<number | undefined>();
+  const [selectedStudentEducationId, setSelectedStudentEducationId] = useState<
+    number | undefined
+  >();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsStudentEducationId, setSelectedDetailsStudentEducationId] = useState<number | undefined>();
+  const [selectedDetailsStudentEducationId, setSelectedDetailsStudentEducationId] = useState<
+    number | undefined
+  >();
 
-  const { studentEducations, listStatus, pagination, loadStudentEducations, removeStudentEducation } = useStudentEducations();
+  const {
+    studentEducations,
+    listStatus,
+    pagination,
+    loadStudentEducations,
+    removeStudentEducation,
+  } = useStudentEducations();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -57,8 +67,8 @@ export default function StudentEducationsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadStudentEducations({ page: 1, limit: 10 });
   };
 
@@ -78,7 +88,12 @@ export default function StudentEducationsPage() {
     name: entityName,
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/student-educations',
-    searchFields: ['student.name', 'degreeName', 'institute', 'groupMajor'] as (keyof IStudentEducation)[],
+    searchFields: [
+      'student.name',
+      'degreeName',
+      'institute',
+      'groupMajor',
+    ] as (keyof IStudentEducation)[],
     onSearch: (searchText: string) => {
       loadStudentEducations({ page: 1, limit: 10, search: searchText });
     },

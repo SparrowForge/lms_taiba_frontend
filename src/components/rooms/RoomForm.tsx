@@ -107,7 +107,12 @@ const RoomForm: React.FC<Props> = ({
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-          <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      initialValues={mode === 'edit' ? initialValues : undefined}
+    >
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
@@ -127,7 +132,9 @@ const RoomForm: React.FC<Props> = ({
         rules={[
           {
             required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' }) }),
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+              name: t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' }),
+            }),
           },
         ]}
       >
@@ -153,7 +160,9 @@ const RoomForm: React.FC<Props> = ({
         rules={[
           {
             required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.LEVEL_FLOOR, { defaultValue: 'Level/Floor' }) }),
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+              name: t(LOCALE_KEYS.LEVEL_FLOOR, { defaultValue: 'Level/Floor' }),
+            }),
           },
         ]}
       >
@@ -166,7 +175,9 @@ const RoomForm: React.FC<Props> = ({
         rules={[
           {
             required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SITTING_CAPACITY, { defaultValue: 'Sitting Capacity' }) }),
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+              name: t(LOCALE_KEYS.SITTING_CAPACITY, { defaultValue: 'Sitting Capacity' }),
+            }),
           },
           {
             type: 'number',
@@ -188,7 +199,9 @@ const RoomForm: React.FC<Props> = ({
         rules={[
           {
             required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EXAM_CAPACITY, { defaultValue: 'Exam Capacity' }) }),
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+              name: t(LOCALE_KEYS.EXAM_CAPACITY, { defaultValue: 'Exam Capacity' }),
+            }),
           },
           {
             type: 'number',
@@ -222,9 +235,7 @@ const RoomForm: React.FC<Props> = ({
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>
-            {t(LOCALE_KEYS.CANCEL)}
-          </Button>
+          <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>
       </Form.Item>
     </Form>

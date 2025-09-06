@@ -59,8 +59,8 @@ export default function SubjectsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadSubjects({ page: 1, limit: 10 });
   };
 

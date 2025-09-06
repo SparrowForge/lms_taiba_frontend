@@ -16,11 +16,7 @@ import {usePanels} from '@/hooks/usePanels';
 import {Status} from '@/types/common';
 import {IPanel} from '@/types/panel';
 
-export default function PanelDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function PanelDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedPanel, detailsStatus, loadPanel } = usePanels();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
@@ -45,7 +41,7 @@ export default function PanelDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IPanel>} />
+        <EntityDetails config={config as EntityDetailsConfig<IPanel>} />
       </MainLayout>
     </ProtectedRoute>
   );

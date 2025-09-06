@@ -26,11 +26,21 @@ export default function CourseAssignmentsPage() {
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<number | undefined>();
+  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<
+    number | undefined
+  >();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsCourseAssignmentId, setSelectedDetailsCourseAssignmentId] = useState<number | undefined>();
+  const [selectedDetailsCourseAssignmentId, setSelectedDetailsCourseAssignmentId] = useState<
+    number | undefined
+  >();
 
-  const { courseAssignments, listStatus, pagination, loadCourseAssignments, removeCourseAssignment } = useCourseAssignments();
+  const {
+    courseAssignments,
+    listStatus,
+    pagination,
+    loadCourseAssignments,
+    removeCourseAssignment,
+  } = useCourseAssignments();
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -99,14 +109,18 @@ export default function CourseAssignmentsPage() {
         title: t(LOCALE_KEYS.COURSE),
         key: 'course',
         render: (courseAssignment: ICourseAssignment) => (
-          <span>{courseAssignment.course.name} ({courseAssignment.course.code})</span>
+          <span>
+            {courseAssignment.course.name} ({courseAssignment.course.code})
+          </span>
         ),
       },
       {
         title: t(LOCALE_KEYS.SUBJECT),
         key: 'subject',
         render: (courseAssignment: ICourseAssignment) => (
-          <span>{courseAssignment.subject.name} ({courseAssignment.subject.code})</span>
+          <span>
+            {courseAssignment.subject.name} ({courseAssignment.subject.code})
+          </span>
         ),
       },
       {

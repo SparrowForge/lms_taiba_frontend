@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {IAddress} from '@/types/address';
 import {Status} from '@/types/common';
 
-export default function AddressDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function AddressDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedAddress, detailsStatus, loadAddress } = useAddresses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
@@ -45,7 +41,7 @@ export default function AddressDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IAddress>} />
+        <EntityDetails config={config as EntityDetailsConfig<IAddress>} />
       </MainLayout>
     </ProtectedRoute>
   );

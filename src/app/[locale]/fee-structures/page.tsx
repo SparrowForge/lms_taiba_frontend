@@ -29,9 +29,12 @@ export default function FeeStructuresPage() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedFeeStructureId, setSelectedFeeStructureId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsFeeStructureId, setSelectedDetailsFeeStructureId] = useState<number | undefined>();
+  const [selectedDetailsFeeStructureId, setSelectedDetailsFeeStructureId] = useState<
+    number | undefined
+  >();
 
-  const { feeStructures, listStatus, pagination, loadFeeStructures, removeFeeStructure } = useFeeStructures();
+  const { feeStructures, listStatus, pagination, loadFeeStructures, removeFeeStructure } =
+    useFeeStructures();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -58,8 +61,8 @@ export default function FeeStructuresPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadFeeStructures({ page: 1, limit: 10 });
   };
 
@@ -79,7 +82,12 @@ export default function FeeStructuresPage() {
     name: entityName,
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/fee-structures',
-    searchFields: ['templateName', 'academicYear', 'batch.name', 'semester.name'] as (keyof IFeeStructure)[],
+    searchFields: [
+      'templateName',
+      'academicYear',
+      'batch.name',
+      'semester.name',
+    ] as (keyof IFeeStructure)[],
     onSearch: (searchText: string) => {
       loadFeeStructures({ page: 1, limit: 10, search: searchText });
     },

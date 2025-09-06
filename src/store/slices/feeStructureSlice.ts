@@ -48,7 +48,9 @@ const feeStructureSlice = createSlice({
       state.feeStructures.unshift(action.payload);
     },
     updateFeeStructure: (state, action: PayloadAction<IFeeStructure>) => {
-      const index = state.feeStructures.findIndex((feeStructure) => feeStructure.id === action.payload.id);
+      const index = state.feeStructures.findIndex(
+        (feeStructure) => feeStructure.id === action.payload.id,
+      );
       if (index !== -1) {
         state.feeStructures[index] = action.payload;
       }
@@ -57,7 +59,9 @@ const feeStructureSlice = createSlice({
       }
     },
     deleteFeeStructure: (state, action: PayloadAction<number>) => {
-      state.feeStructures = state.feeStructures.filter((feeStructure) => feeStructure.id !== action.payload);
+      state.feeStructures = state.feeStructures.filter(
+        (feeStructure) => feeStructure.id !== action.payload,
+      );
       if (state.selectedFeeStructure?.id === action.payload) {
         state.selectedFeeStructure = null;
       }

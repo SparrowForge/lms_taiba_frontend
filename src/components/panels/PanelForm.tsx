@@ -7,7 +7,6 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
-
 import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
@@ -16,7 +15,6 @@ import {getErrorMessage} from '@/types/errors';
 import {IPanel} from '@/types/panel';
 
 import FormLayout from '../layout/FormLayout';
-
 
 interface PanelFormProps {
   mode: 'create' | 'edit';
@@ -108,14 +106,28 @@ const PanelForm: React.FC<PanelFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
-        <Input placeholder={t(LOCALE_KEYS.NAME)} aria-label={t(LOCALE_KEYS.NAME)} aria-required="true" />
+        <Input
+          placeholder={t(LOCALE_KEYS.NAME)}
+          aria-label={t(LOCALE_KEYS.NAME)}
+          aria-required="true"
+        />
       </Form.Item>
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
+          },
+        ]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -144,13 +156,7 @@ const PanelForm: React.FC<PanelFormProps> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default PanelForm;

@@ -18,12 +18,12 @@ export const INSTITUTE_TYPES = {
   ART_SCHOOL: 'Art School',
   MUSIC_SCHOOL: 'Music School',
   MILITARY_ACADEMY: 'Military Academy',
-  ONLINE_UNIVERSITY: 'Online University'
+  ONLINE_UNIVERSITY: 'Online University',
 } as const;
 
-export type InstituteType = typeof INSTITUTE_TYPES[keyof typeof INSTITUTE_TYPES];
+export type InstituteType = (typeof INSTITUTE_TYPES)[keyof typeof INSTITUTE_TYPES];
 
-export const INSTITUTE_TYPE_OPTIONS = Object.values(INSTITUTE_TYPES).map(type => ({
+export const INSTITUTE_TYPE_OPTIONS = Object.values(INSTITUTE_TYPES).map((type) => ({
   label: type,
-  value: type
+  value: type,
 }));

@@ -9,11 +9,10 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 import {IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
 
 import FeeInstallmentPlanForm from './FeeInstallmentPlanForm';
-
 
 interface FeeInstallmentPlanFormDrawerProps {
   mode: 'create' | 'edit';
@@ -30,8 +29,12 @@ const FeeInstallmentPlanFormDrawer: React.FC<FeeInstallmentPlanFormDrawerProps> 
   onCancel,
   onSuccess,
 }) => {
-
-  const { getFeeInstallmentPlanById, selectedFeeInstallmentPlan, loadFeeInstallmentPlan, detailsStatus } = useFeeInstallmentPlans();
+  const {
+    getFeeInstallmentPlanById,
+    selectedFeeInstallmentPlan,
+    loadFeeInstallmentPlan,
+    detailsStatus,
+  } = useFeeInstallmentPlans();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
   useEffect(() => {
@@ -49,8 +52,8 @@ const FeeInstallmentPlanFormDrawer: React.FC<FeeInstallmentPlanFormDrawerProps> 
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (
@@ -68,10 +71,16 @@ const FeeInstallmentPlanFormDrawer: React.FC<FeeInstallmentPlanFormDrawerProps> 
       <FeeInstallmentPlanForm
         mode={mode}
         feeInstallmentPlanId={feeInstallmentPlanId}
-        initialValues={mode === 'edit' ? {
-          ...selectedFeeInstallmentPlan,
-          dueDate: selectedFeeInstallmentPlan?.dueDate ? dayjs(selectedFeeInstallmentPlan.dueDate) : undefined,
-        } as Partial<IFeeInstallmentPlanUpdate> : undefined}
+        initialValues={
+          mode === 'edit'
+            ? ({
+                ...selectedFeeInstallmentPlan,
+                dueDate: selectedFeeInstallmentPlan?.dueDate
+                  ? dayjs(selectedFeeInstallmentPlan.dueDate)
+                  : undefined,
+              } as Partial<IFeeInstallmentPlanUpdate>)
+            : undefined
+        }
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded={true}

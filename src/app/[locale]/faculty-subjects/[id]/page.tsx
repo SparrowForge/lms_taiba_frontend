@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {Status} from '@/types/common';
 import {IFacultySubject} from '@/types/facultySubject';
 
-export default function FacultySubjectDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function FacultySubjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedFacultySubject, detailsStatus, loadFacultySubject } = useFacultySubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
@@ -45,7 +41,7 @@ export default function FacultySubjectDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IFacultySubject>} />
+        <EntityDetails config={config as EntityDetailsConfig<IFacultySubject>} />
       </MainLayout>
     </ProtectedRoute>
   );

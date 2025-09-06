@@ -19,7 +19,6 @@ import {useStudents} from '@/hooks/useStudents';
 import {Status} from '@/types/common';
 import {IStudent} from '@/types/student';
 
-
 export default function StudentsPage() {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
@@ -57,8 +56,8 @@ export default function StudentsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadStudents({ page: 1, limit: 10 });
   };
 
@@ -135,9 +134,11 @@ export default function StudentsPage() {
         dataIndex: 'status',
         key: 'status',
         render: (status: string) => (
-          <span className={`px-2 py-1 rounded text-xs font-medium ${
-            status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-          }`}>
+          <span
+            className={`px-2 py-1 rounded text-xs font-medium ${
+              status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            }`}
+          >
             {t(LOCALE_KEYS.STATUS, { defaultValue: status })}
           </span>
         ),

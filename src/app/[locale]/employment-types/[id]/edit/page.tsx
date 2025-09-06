@@ -17,7 +17,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const EmploymentTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const EmploymentTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({
     loadEmploymentType(employmentTypeId);
   }, [resolvedParams.id, loadEmploymentType]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const EmploymentTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <EmploymentTypeForm
-            mode="edit"
-            employmentTypeId={parseInt(resolvedParams.id)}
-            initialValues={selectedEmploymentType}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <EmploymentTypeForm
+          mode="edit"
+          employmentTypeId={parseInt(resolvedParams.id)}
+          initialValues={selectedEmploymentType}
         />
       </MainLayout>
     </ProtectedRoute>

@@ -15,7 +15,6 @@ import {Status} from '@/types/common';
 
 import {useCreateAddressDetailsConfig} from './addressConfig';
 
-
 interface AddressDetailsDrawerProps {
   addressId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const AddressDetailsDrawer: React.FC<AddressDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedAddress, loadAddress, detailsStatus } = useAddresses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });

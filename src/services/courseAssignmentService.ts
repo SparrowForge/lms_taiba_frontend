@@ -1,11 +1,14 @@
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ICourseAssignment, ICourseAssignmentCreate, ICourseAssignmentUpdate} from '@/types/courseAssignment';
+import {ICourseAssignment, ICourseAssignmentCreate, ICourseAssignmentUpdate,} from '@/types/courseAssignment';
 
 import {api} from '@/lib/axios';
 
 export const courseAssignmentService = {
   getCourseAssignments: async (params = {}): Promise<IBasePaginatedResponse<ICourseAssignment>> => {
-    const response = await api.get<IBasePaginatedResponse<ICourseAssignment>>('/course-assignments', { params });
+    const response = await api.get<IBasePaginatedResponse<ICourseAssignment>>(
+      '/course-assignments',
+      { params },
+    );
     return response.data;
   },
 
@@ -19,7 +22,10 @@ export const courseAssignmentService = {
     return response.data;
   },
 
-  updateCourseAssignment: async (id: number, data: ICourseAssignmentUpdate): Promise<ICourseAssignment> => {
+  updateCourseAssignment: async (
+    id: number,
+    data: ICourseAssignmentUpdate,
+  ): Promise<ICourseAssignment> => {
     const response = await api.put<ICourseAssignment>(`/course-assignments/${id}`, data);
     return response.data;
   },

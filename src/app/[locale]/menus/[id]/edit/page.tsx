@@ -17,7 +17,6 @@ import {useMenus} from '@/hooks/useMenus';
 
 import {Status} from '@/types/common';
 
-
 const MenuEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const MenuEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params })
     loadMenu(menuId);
   }, [resolvedParams.id, loadMenu]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,12 +41,11 @@ const MenuEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params })
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <MenuForm
-            mode="edit"
-            menuId={parseInt(resolvedParams.id)}
-            initialValues={selectedMenu}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
         />
+        <MenuForm mode="edit" menuId={parseInt(resolvedParams.id)} initialValues={selectedMenu} />
       </MainLayout>
     </ProtectedRoute>
   );

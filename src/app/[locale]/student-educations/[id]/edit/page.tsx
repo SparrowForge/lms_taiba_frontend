@@ -12,12 +12,10 @@ import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
 import {PageHeader} from '@/components/ui/PageHeader';
 
-
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentEducations} from '@/hooks/useStudentEducations';
 
 import {Status} from '@/types/common';
-
 
 export default function StudentEducationEditPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);
@@ -44,12 +42,15 @@ export default function StudentEducationEditPage({ params }: { params: Promise<{
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-      <StudentEducationForm
-            mode="edit"
-            studentEducationId={studentEducationId}
-            initialValues={selectedStudentEducation || undefined}
-          />
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <StudentEducationForm
+          mode="edit"
+          studentEducationId={studentEducationId}
+          initialValues={selectedStudentEducation || undefined}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -17,7 +17,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const CourseTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const CourseTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
     loadCourseType(courseTypeId);
   }, [resolvedParams.id, loadCourseType]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const CourseTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <CourseTypeForm
-            mode="edit"
-            courseTypeId={parseInt(resolvedParams.id)}
-            initialValues={selectedCourseType}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <CourseTypeForm
+          mode="edit"
+          courseTypeId={parseInt(resolvedParams.id)}
+          initialValues={selectedCourseType}
         />
       </MainLayout>
     </ProtectedRoute>

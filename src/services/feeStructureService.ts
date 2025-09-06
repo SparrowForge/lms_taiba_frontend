@@ -1,11 +1,13 @@
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate, IFeeStructureUpdate} from '@/types/feeStructure';
+import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate, IFeeStructureUpdate,} from '@/types/feeStructure';
 
 import {api} from '@/lib/axios';
 
 export const feeStructureService = {
   getFeeStructures: async (params = {}): Promise<IBasePaginatedResponse<IFeeStructure>> => {
-    const response = await api.get<IBasePaginatedResponse<IFeeStructure>>('/fee-structures', { params });
+    const response = await api.get<IBasePaginatedResponse<IFeeStructure>>('/fee-structures', {
+      params,
+    });
     return response.data;
   },
 

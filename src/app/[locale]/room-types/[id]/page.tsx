@@ -16,11 +16,7 @@ import {useRoomTypes} from '@/hooks/useRoomTypes';
 import {Status} from '@/types/common';
 import {IRoomType} from '@/types/roomType';
 
-export default function RoomTypeDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function RoomTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedRoomType, detailsStatus, loadRoomType } = useRoomTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' });
@@ -45,7 +41,7 @@ export default function RoomTypeDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IRoomType>} />
+        <EntityDetails config={config as EntityDetailsConfig<IRoomType>} />
       </MainLayout>
     </ProtectedRoute>
   );

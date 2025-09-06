@@ -20,8 +20,11 @@ export default function CreateDepartmentPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <DepartmentForm mode="create" embedded={false} />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <DepartmentForm mode="create" embedded={false} />
       </MainLayout>
     </ProtectedRoute>
   );

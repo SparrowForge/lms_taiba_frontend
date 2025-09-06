@@ -20,7 +20,6 @@ import {useUsers} from '@/hooks/useUsers';
 import {Status} from '@/types/common';
 import {IUser} from '@/types/user';
 
-
 export default function UsersPage() {
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -59,8 +58,8 @@ export default function UsersPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadUsers({ page: 1, limit: 10 }); // Refresh the list
   };
 

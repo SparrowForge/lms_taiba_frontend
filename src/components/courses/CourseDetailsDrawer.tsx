@@ -15,7 +15,6 @@ import {ICourse} from '@/types/course';
 
 import {useCreateCourseDetailsConfig} from './courseConfig';
 
-
 interface CourseDetailsDrawerProps {
   courseId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedCourse, loadCourse, detailsStatus } = useCourses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });

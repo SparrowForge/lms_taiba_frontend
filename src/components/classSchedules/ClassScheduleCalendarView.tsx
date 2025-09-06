@@ -1,16 +1,16 @@
 'use client';
 
-import { Calendar, Card, Tag, Tooltip, Button, Select, Space } from 'antd';
-import dayjs, { Dayjs } from 'dayjs';
-import React, { useState, useMemo, useEffect } from 'react';
+import {Button, Calendar, Card, Select, Space, Tag, Tooltip} from 'antd';
+import dayjs, {Dayjs} from 'dayjs';
+import React, {useEffect, useMemo, useState} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
-import { useClassSchedules } from '@/hooks/useClassSchedules';
-import { useLocalization } from '@/hooks/useLocalization';
+import {useClassSchedules} from '@/hooks/useClassSchedules';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import { IClassSchedule } from '@/types/classSchedule';
-import { Status } from '@/types/common';
+import {IClassSchedule} from '@/types/classSchedule';
+import {Status} from '@/types/common';
 
 import ClassScheduleDetailsDrawer from './ClassScheduleDetailsDrawer';
 import ClassScheduleFormDrawer from './ClassScheduleFormDrawer';
@@ -34,22 +34,22 @@ function ClassScheduleCalendarView() {
   useEffect(() => {
     // Load schedules for current month by default
     const currentDate = dayjs();
-    
-    loadClassSchedules({ 
-      page: 1, 
+
+    loadClassSchedules({
+      page: 1,
       limit: 100,
       year: currentDate.year(),
-      month: currentDate.month() + 1 // API expects 1-12, dayjs uses 0-11
+      month: currentDate.month() + 1, // API expects 1-12, dayjs uses 0-11
     });
   }, [loadClassSchedules]);
 
   const handlePeriodChange = (year: number, month: number) => {
     // Call API to fetch schedules for the specific year/month
-    loadClassSchedules({ 
-      page: 1, 
+    loadClassSchedules({
+      page: 1,
       limit: 100,
       year: year,
-      month: month + 1 // API expects 1-12, dayjs uses 0-11
+      month: month + 1, // API expects 1-12, dayjs uses 0-11
     });
   };
 
@@ -79,23 +79,24 @@ function ClassScheduleCalendarView() {
   // Get unique batches and faculties for filtering
   const batches = useMemo(() => {
     const uniqueBatches = Array.from(
-      new Set(classSchedules.map(schedule => schedule.batch?.name).filter(Boolean))
+      new Set(classSchedules.map((schedule) => schedule.batch?.name).filter(Boolean)),
     );
     return uniqueBatches;
   }, [classSchedules]);
 
   const faculties = useMemo(() => {
     const uniqueFaculties = Array.from(
-      new Set(classSchedules.map(schedule => schedule.faculty?.fullName).filter(Boolean))
+      new Set(classSchedules.map((schedule) => schedule.faculty?.fullName).filter(Boolean)),
     );
     return uniqueFaculties;
   }, [classSchedules]);
 
   // Filter schedules based on selected batch and faculty
   const filteredSchedules = useMemo(() => {
-    return classSchedules.filter(schedule => {
+    return classSchedules.filter((schedule) => {
       const batchMatch = selectedBatch === 'all' || schedule.batch?.name === selectedBatch;
-      const facultyMatch = selectedFaculty === 'all' || schedule.faculty?.fullName === selectedFaculty;
+      const facultyMatch =
+        selectedFaculty === 'all' || schedule.faculty?.fullName === selectedFaculty;
       return batchMatch && facultyMatch;
     });
   }, [classSchedules, selectedBatch, selectedFaculty]);
@@ -104,7 +105,7 @@ function ClassScheduleCalendarView() {
   const schedulesByDate = useMemo(() => {
     const grouped: Record<string, IClassSchedule[]> = {};
 
-    filteredSchedules.forEach(schedule => {
+    filteredSchedules.forEach((schedule) => {
       const startDate = dayjs(schedule.startDate);
       const endDate = dayjs(schedule.endDate);
 
@@ -113,18 +114,20 @@ function ClassScheduleCalendarView() {
         // Get the current month's start and end
         const monthStart = currentMonth.startOf('month');
         const monthEnd = currentMonth.endOf('month');
-        
+
         // Find the first occurrence of this weekday in the current month
         let currentDate = monthStart;
-        while (currentDate.day() !== (schedule.weekDay.dayNumber % 7)) {
+        while (currentDate.day() !== schedule.weekDay.dayNumber % 7) {
           currentDate = currentDate.add(1, 'day');
         }
-        
+
         // Add all occurrences of this weekday in the current month
         while (currentDate.isSame(monthStart, 'month')) {
           // Check if this date falls within the schedule's date range
-          if ((currentDate.isSame(startDate) || currentDate.isAfter(startDate)) && 
-              (currentDate.isSame(endDate) || currentDate.isBefore(endDate))) {
+          if (
+            (currentDate.isSame(startDate) || currentDate.isAfter(startDate)) &&
+            (currentDate.isSame(endDate) || currentDate.isBefore(endDate))
+          ) {
             const dateKey = currentDate.format('YYYY-MM-DD');
             if (!grouped[dateKey]) {
               grouped[dateKey] = [];
@@ -173,11 +176,7 @@ function ClassScheduleCalendarView() {
             </Tag>
           </Tooltip>
         ))}
-        {daySchedules.length > 3 && (
-          <Tag color="default">
-            +{daySchedules.length - 3} more
-          </Tag>
-        )}
+        {daySchedules.length > 3 && <Tag color="default">+{daySchedules.length - 3} more</Tag>}
       </div>
     );
   };
@@ -240,7 +239,10 @@ function ClassScheduleCalendarView() {
   };
 
   return (
-    <div className="flex flex-col gap-[12px] overflow-y-auto" style={{ height: 'calc(100vh - 142px)' }}>
+    <div
+      className="flex flex-col gap-[12px] overflow-y-auto"
+      style={{ height: 'calc(100vh - 142px)' }}
+    >
       {/* Filters and Actions */}
       <Card size="small">
         <div className="flex items-center justify-between">
@@ -253,7 +255,7 @@ function ClassScheduleCalendarView() {
                 style={{ width: 150 }}
                 options={[
                   { label: t(LOCALE_KEYS.ALL), value: 'all' },
-                  ...batches.map(batch => ({ label: batch, value: batch }))
+                  ...batches.map((batch) => ({ label: batch, value: batch })),
                 ]}
               />
             </div>
@@ -265,12 +267,12 @@ function ClassScheduleCalendarView() {
                 style={{ width: 150 }}
                 options={[
                   { label: t(LOCALE_KEYS.ALL), value: 'all' },
-                  ...faculties.map(faculty => ({ label: faculty, value: faculty }))
+                  ...faculties.map((faculty) => ({ label: faculty, value: faculty })),
                 ]}
               />
             </div>
           </Space>
-          
+
           <Button
             type="primary"
             onClick={() => {
@@ -309,9 +311,7 @@ function ClassScheduleCalendarView() {
               >
                 ← {currentMonth.subtract(1, 'month').format('MMMM')}
               </Button>
-              <div className="text-lg font-semibold">
-                {currentMonth.format('MMMM YYYY')}
-              </div>
+              <div className="text-lg font-semibold">{currentMonth.format('MMMM YYYY')}</div>
               <Button
                 type="text"
                 onClick={() => {
@@ -322,12 +322,10 @@ function ClassScheduleCalendarView() {
                 {currentMonth.add(1, 'month').format('MMMM')} →
               </Button>
             </div>
-            
+
             {filteredSchedules.length === 0 ? (
               <div className="text-center p-8">
-                <div className="text-gray-500 text-lg mb-2">
-                  No class schedules found
-                </div>
+                <div className="text-gray-500 text-lg mb-2">No class schedules found</div>
                 <div className="text-gray-400 text-sm">
                   Try changing your filters or create a new schedule
                 </div>
@@ -384,6 +382,6 @@ function ClassScheduleCalendarView() {
       />
     </div>
   );
-};
+}
 
 export default ClassScheduleCalendarView;

@@ -17,7 +17,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const ClassScheduleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const ClassScheduleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ 
     loadClassSchedule(classScheduleId);
   }, [resolvedParams.id, loadClassSchedule]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const ClassScheduleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ 
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <ClassScheduleForm
-            mode="edit"
-            classScheduleId={parseInt(resolvedParams.id)}
-            initialValues={selectedClassSchedule}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <ClassScheduleForm
+          mode="edit"
+          classScheduleId={parseInt(resolvedParams.id)}
+          initialValues={selectedClassSchedule}
         />
       </MainLayout>
     </ProtectedRoute>

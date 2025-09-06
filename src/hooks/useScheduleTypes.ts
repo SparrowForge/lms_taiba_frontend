@@ -23,7 +23,6 @@ import {
     updateScheduleType,
 } from '@/store/slices/scheduleTypeSlice';
 
-
 export const useScheduleTypes = () => {
   const dispatch = useDispatch();
   const {
@@ -70,7 +69,8 @@ export const useScheduleTypes = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IScheduleType> = await scheduleTypeService.getScheduleType(id);
+        const response: IBaseResponse<IScheduleType> =
+          await scheduleTypeService.getScheduleType(id);
         dispatch(setSelectedScheduleType(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {

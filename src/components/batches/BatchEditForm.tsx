@@ -1,6 +1,6 @@
 'use client';
 
-import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space, Typography} from 'antd';
+import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space, Switch, Typography,} from 'antd';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
@@ -19,7 +19,7 @@ import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {ISemester} from '@/types/semester';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 interface BatchEditFormProps {
   batchId: number;
@@ -75,7 +75,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
       };
 
       // Prepare semester data for update
-      const semesterPayload = localSemesters.map(semester => ({
+      const semesterPayload = localSemesters.map((semester) => ({
         id: semester.id,
         name: semester.name,
         termNo: semester.termNo,
@@ -83,6 +83,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
         endDate: semester.endDate,
         status: semester.status,
         remarks: semester.remarks,
+        isBreak: semester.isBreak,
       }));
 
       // Update batch with semesters in single API call
@@ -136,14 +137,8 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
-      <Form.Item
-        name="courseId"
-        label={t(LOCALE_KEYS.COURSE)}
-      >
-        <Select
-          disabled={true}
-          value={selectedBatch?.courseId}
-        >
+      <Form.Item name="courseId" label={t(LOCALE_KEYS.COURSE)}>
+        <Select disabled={true} value={selectedBatch?.courseId}>
           {selectedBatch?.course && (
             <Select.Option key={selectedBatch.course.id} value={selectedBatch.course.id}>
               {selectedBatch.course.name} ({selectedBatch.course.durationInSemesters} semesters)
@@ -154,69 +149,103 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        name="year"
-        label={t(LOCALE_KEYS.YEAR)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.YEAR) }) }]}
+        name="academicYear"
+        label={t(LOCALE_KEYS.ACADEMIC_YEAR)}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ACADEMIC_YEAR) }),
+          },
+        ]}
       >
         <InputNumber min={2000} max={2100} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="session"
         label={t(LOCALE_KEYS.SESSION)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SESSION) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SESSION) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="intakeCapacity"
         label={t(LOCALE_KEYS.INTAKE_CAPACITY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INTAKE_CAPACITY) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INTAKE_CAPACITY) }),
+          },
+        ]}
       >
         <InputNumber min={1} max={10000} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="startDate"
         label={t(LOCALE_KEYS.START_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.START_DATE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.START_DATE) }),
+          },
+        ]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
       <Form.Item
         name="endDate"
         label={t(LOCALE_KEYS.END_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.END_DATE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.END_DATE) }),
+          },
+        ]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
+          },
+        ]}
       >
         <StatusSelect />
       </Form.Item>
       <Form.Item
         name="remarks"
         label={t(LOCALE_KEYS.REMARKS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.REMARKS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.REMARKS) }),
+          },
+        ]}
       >
         <Input.TextArea rows={3} />
       </Form.Item>
 
-
-
       <Form.Item>
         <Space>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={actionStatus.status === Status.LOADING}
-          >
+          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {t(LOCALE_KEYS.UPDATE_NAME, { name: entityName })}
           </Button>
           <Button onClick={handleCancel} disabled={actionStatus.status === Status.LOADING}>
@@ -227,8 +256,6 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
     </Form>
   );
 
-
-
   return (
     <div style={{ padding: '24px', height: 'calc(100vh - 128px)', overflow: 'auto' }}>
       <Row gutter={24}>
@@ -238,7 +265,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
           </Card>
         </Col>
         <Col span={12}>
-                     <Card title={`Semesters (${localSemesters.length})`} style={{ height: 'fit-content' }}>
+          <Card title={`Semesters (${localSemesters.length})`} style={{ height: 'fit-content' }}>
             {listStatus.status === Status.LOADING ? (
               <div style={{ textAlign: 'center', padding: '20px' }}>
                 <Text>Loading semesters...</Text>
@@ -278,7 +305,9 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                       <Form.Item label={t(LOCALE_KEYS.START_DATE)} style={{ marginBottom: 8 }}>
                         <DatePicker
                           value={semester.startDate ? dayjs(semester.startDate) : undefined}
-                          onChange={(date) => updateSemester(index, 'startDate', date ? date.toISOString() : '')}
+                          onChange={(date) =>
+                            updateSemester(index, 'startDate', date ? date.toISOString() : '')
+                          }
                           style={{ width: '100%' }}
                           format="YYYY-MM-DD"
                         />
@@ -288,7 +317,9 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                       <Form.Item label={t(LOCALE_KEYS.END_DATE)} style={{ marginBottom: 8 }}>
                         <DatePicker
                           value={semester.endDate ? dayjs(semester.endDate) : undefined}
-                          onChange={(date) => updateSemester(index, 'endDate', date ? date.toISOString() : '')}
+                          onChange={(date) =>
+                            updateSemester(index, 'endDate', date ? date.toISOString() : '')
+                          }
                           style={{ width: '100%' }}
                           format="YYYY-MM-DD"
                         />
@@ -315,6 +346,16 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                           value={semester.remarks}
                           onChange={(e) => updateSemester(index, 'remarks', e.target.value)}
                           placeholder="Remarks"
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item label={t(LOCALE_KEYS.IS_BREAK)} style={{ marginBottom: 8 }}>
+                        <Switch
+                          value={semester.isBreak}
+                          onChange={(value: boolean) => updateSemester(index, 'isBreak', value)}
                         />
                       </Form.Item>
                     </Col>

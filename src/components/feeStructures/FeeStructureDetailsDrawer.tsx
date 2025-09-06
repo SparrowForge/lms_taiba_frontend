@@ -15,7 +15,6 @@ import {IFeeStructure} from '@/types/feeStructure';
 
 import {useCreateFeeStructureDetailsConfig} from './feeStructureConfig';
 
-
 interface FeeStructureDetailsDrawerProps {
   feeStructureId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const FeeStructureDetailsDrawer: React.FC<FeeStructureDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedFeeStructure, loadFeeStructure, detailsStatus } = useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });

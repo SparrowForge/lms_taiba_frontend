@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {Status} from '@/types/common';
 import {IEmploymentType} from '@/types/employmentType';
 
-export default function EmploymentTypeDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function EmploymentTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedEmploymentType, detailsStatus, loadEmploymentType } = useEmploymentTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
@@ -45,7 +41,7 @@ export default function EmploymentTypeDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IEmploymentType>} />
+        <EntityDetails config={config as EntityDetailsConfig<IEmploymentType>} />
       </MainLayout>
     </ProtectedRoute>
   );

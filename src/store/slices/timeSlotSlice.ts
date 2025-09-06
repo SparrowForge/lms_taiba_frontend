@@ -50,8 +50,7 @@ const timeSlotSlice = createSlice({
     updateTimeSlot: (state, action: PayloadAction<ITimeSlot>) => {
       const index = state.timeSlots.findIndex((item) => item.id === action.payload.id);
       if (index !== -1) state.timeSlots[index] = action.payload;
-      if (state.selectedTimeSlot?.id === action.payload.id)
-        state.selectedTimeSlot = action.payload;
+      if (state.selectedTimeSlot?.id === action.payload.id) state.selectedTimeSlot = action.payload;
     },
     deleteTimeSlot: (state, action: PayloadAction<number>) => {
       state.timeSlots = state.timeSlots.filter((item) => item.id !== action.payload);

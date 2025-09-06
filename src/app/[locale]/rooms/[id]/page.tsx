@@ -16,11 +16,7 @@ import {useRooms} from '@/hooks/useRooms';
 import {Status} from '@/types/common';
 import {IRoom} from '@/types/room';
 
-export default function RoomDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function RoomDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedRoom, detailsStatus, loadRoom } = useRooms();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM, { defaultValue: 'Room' });

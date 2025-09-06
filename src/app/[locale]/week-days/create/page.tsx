@@ -20,8 +20,11 @@ export default function CreateWeekDayPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <WeekDayForm mode="create" />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <WeekDayForm mode="create" />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {IClassSchedule} from '@/types/classSchedule';
 import {Status} from '@/types/common';
 
-export default function ClassScheduleDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function ClassScheduleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedClassSchedule, detailsStatus, loadClassSchedule } = useClassSchedules();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });
@@ -45,7 +41,7 @@ export default function ClassScheduleDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IClassSchedule>} />
+        <EntityDetails config={config as EntityDetailsConfig<IClassSchedule>} />
       </MainLayout>
     </ProtectedRoute>
   );

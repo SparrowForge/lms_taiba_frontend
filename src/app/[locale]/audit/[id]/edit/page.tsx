@@ -16,7 +16,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {Status} from '@/types/common';
 
-
 const AuditEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -29,7 +28,6 @@ const AuditEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
     getAuditById(auditId);
   }, [resolvedParams.id, getAuditById]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -41,7 +39,10 @@ const AuditEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

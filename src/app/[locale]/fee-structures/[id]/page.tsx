@@ -16,11 +16,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {Status} from '@/types/common';
 import {IFeeStructure} from '@/types/feeStructure';
 
-export default function FeeStructureDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function FeeStructureDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedFeeStructure, detailsStatus, loadFeeStructure } = useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
@@ -45,7 +41,7 @@ export default function FeeStructureDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IFeeStructure>} />
+        <EntityDetails config={config as EntityDetailsConfig<IFeeStructure>} />
       </MainLayout>
     </ProtectedRoute>
   );

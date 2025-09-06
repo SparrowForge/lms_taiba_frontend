@@ -1,5 +1,5 @@
-import { Tag } from "antd";
-import React from "react";
+import {Tag} from 'antd';
+import React from 'react';
 
 interface IconBgColoredCardProps {
   text: string;
@@ -11,7 +11,7 @@ interface IconBgColoredCardProps {
   tag?: string;
   due?: string;
   rounded?: string; // optional: 'sm', 'md', 'lg', 'xl', '2xl', 'full'
-  textSize?:string;
+  textSize?: string;
 }
 
 const IconBgColoredCard: React.FC<IconBgColoredCardProps> = ({
@@ -23,15 +23,15 @@ const IconBgColoredCard: React.FC<IconBgColoredCardProps> = ({
   icon,
   tag,
   due,
-  rounded ,
-  textSize
+  rounded,
+  textSize,
 }) => {
   const roundedClass = `rounded-${rounded}`;
 
   return (
     <div
       className={`py-2 px-3 flex gap-3 justify-center items-center rounded-md  `}
-      style={{ backgroundColor: bgColor, color: color,  border: `2px solid ${bgColorIcon}` }}
+      style={{ backgroundColor: bgColor, color: color, border: `2px solid ${bgColorIcon}` }}
     >
       {/* Icon Container */}
       <div
@@ -46,8 +46,14 @@ const IconBgColoredCard: React.FC<IconBgColoredCardProps> = ({
       {/* Content */}
       <div className="flex-1">
         <div className="flex justify-between items-center">
-          <h1 className="text-[14px] text-black " style={{fontSize: textSize}}>{text}</h1>
-          {tag && <Tag color={bgColorIcon} style={{ color: color }}>{tag}</Tag>}
+          <h1 className="text-[14px] text-black " style={{ fontSize: textSize }}>
+            {text}
+          </h1>
+          {tag && (
+            <Tag color={bgColorIcon} style={{ color: color }}>
+              {tag}
+            </Tag>
+          )}
         </div>
         {time && <p className="text-xs text-gray-500">{time}</p>}
         {due && <p className="text-xs text-gray-500">Due: {due}</p>}

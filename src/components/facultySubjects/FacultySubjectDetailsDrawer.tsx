@@ -15,7 +15,6 @@ import {IFacultySubject} from '@/types/facultySubject';
 
 import {useCreateFacultySubjectDetailsConfig} from './facultySubjectConfig';
 
-
 interface FacultySubjectDetailsDrawerProps {
   facultySubjectId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const FacultySubjectDetailsDrawer: React.FC<FacultySubjectDetailsDrawerProps> = 
   onClose,
   onEdit,
 }) => {
-
   const { selectedFacultySubject, loadFacultySubject, detailsStatus } = useFacultySubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });

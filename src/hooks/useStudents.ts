@@ -32,8 +32,7 @@ export const useStudents = () => {
     async (params = {}) => {
       try {
         dispatch(setListStatus({ status: Status.LOADING }));
-        const response: IBasePaginatedResponse<IStudent> =
-          await studentService.getStudents(params);
+        const response: IBasePaginatedResponse<IStudent> = await studentService.getStudents(params);
         dispatch(setStudents(response?.data?.items ?? []));
         dispatch(
           setPagination(

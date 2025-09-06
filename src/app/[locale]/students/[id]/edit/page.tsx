@@ -17,7 +17,6 @@ import {useStudents} from '@/hooks/useStudents';
 
 import {Status} from '@/types/common';
 
-
 const StudentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -32,7 +31,6 @@ const StudentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
     loadStudent(studentId);
   }, [studentId, loadStudent]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -44,12 +42,11 @@ const StudentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <StudentForm
-            mode="edit"
-            studentId={studentId}
-            initialValues={selectedStudent}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
         />
+        <StudentForm mode="edit" studentId={studentId} initialValues={selectedStudent} />
       </MainLayout>
     </ProtectedRoute>
   );

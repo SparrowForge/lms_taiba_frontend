@@ -25,14 +25,8 @@ import {
 
 export const useTimeSlots = () => {
   const dispatch = useDispatch();
-  const {
-    timeSlots,
-    selectedTimeSlot,
-    listStatus,
-    detailsStatus,
-    actionStatus,
-    pagination,
-  } = useSelector((state: RootState) => state.timeSlots);
+  const { timeSlots, selectedTimeSlot, listStatus, detailsStatus, actionStatus, pagination } =
+    useSelector((state: RootState) => state.timeSlots);
 
   const loadTimeSlots = useCallback(
     async (params = {}) => {

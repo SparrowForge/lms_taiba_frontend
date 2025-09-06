@@ -16,11 +16,7 @@ import {useUserRoles} from '@/hooks/useUserRoles';
 import {Status} from '@/types/common';
 import {IUserRole} from '@/types/userRole';
 
-export default function UserRoleDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function UserRoleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedUserRole, detailsStatus, loadUserRole } = useUserRoles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER_ROLE, { defaultValue: 'User Role' });
@@ -45,7 +41,7 @@ export default function UserRoleDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IUserRole>} />
+        <EntityDetails config={config as EntityDetailsConfig<IUserRole>} />
       </MainLayout>
     </ProtectedRoute>
   );

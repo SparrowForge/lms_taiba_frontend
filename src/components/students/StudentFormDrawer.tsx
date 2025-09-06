@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudents} from '@/hooks/useStudents';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import StudentForm from './StudentForm';
-
 
 interface StudentFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const StudentFormDrawer: React.FC<StudentFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getStudentById, selectedStudent, loadStudent, detailsStatus } = useStudents();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
@@ -47,8 +45,8 @@ const StudentFormDrawer: React.FC<StudentFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

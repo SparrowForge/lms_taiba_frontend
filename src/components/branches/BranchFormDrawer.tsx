@@ -8,10 +8,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useBranches} from '@/hooks/useBranches';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import { Status } from '@/types/common';
+import {Status} from '@/types/common';
 
 import BranchForm from './BranchForm';
-
 
 interface BranchFormDrawerProps {
   mode: 'create' | 'edit';
@@ -28,7 +27,6 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
   const { getBranchById, selectedBranch, loadBranch, detailsStatus } = useBranches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
@@ -47,8 +45,8 @@ const BranchFormDrawer: React.FC<BranchFormDrawerProps> = ({
     onCancel();
   };
 
-  if( mode === 'edit' && detailsStatus.status === Status.LOADING) {
-    return <Spin/>;
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
   }
 
   return (

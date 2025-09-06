@@ -1,4 +1,6 @@
-"use client"
+'use client';
+
+import {Col} from 'antd';
 
 import { Col } from "antd";
 
@@ -9,22 +11,21 @@ import UpcomingAssignments from '../dashboard/newComponents/UpcomingAssignments'
 
 
 const StudentLayout = () => {
-    return (
-        <>
-            <Col xs={24} lg={8}>
-                            {/* For students, maybe show performance more prominently */}
-                           <AcademicProgress/>
-                        </Col>
-                        <Col xs={24} lg={8}>
-                           <UpcomingAssignments/>
-                           
-                        </Col>
-                        <Col xs={24} lg={8}>
-                            <MonthlyAttendance/>
-                            <NotificationsStudent/>
-                        </Col>
-        </>
-    );
+  return (
+    <>
+      <Col xs={24} lg={8}>
+        {/* For students, maybe show performance more prominently */}
+        <AcademicProgress />
+      </Col>
+      <Col xs={24} lg={8}>
+        <UpcomingAssignments />
+      </Col>
+      <Col xs={24} lg={8}>
+        <MonthlyAttendance />
+        <NotificationsStudent />
+      </Col>
+    </>
+  );
 };
 
 export default StudentLayout;

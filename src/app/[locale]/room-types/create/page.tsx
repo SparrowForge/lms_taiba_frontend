@@ -20,8 +20,11 @@ export default function CreateRoomTypePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <RoomTypeForm mode="create" />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <RoomTypeForm mode="create" />
       </MainLayout>
     </ProtectedRoute>
   );

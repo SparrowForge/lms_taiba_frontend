@@ -15,7 +15,6 @@ import {IScheduleType} from '@/types/scheduleType';
 
 import {useCreateScheduleTypeDetailsConfig} from './scheduleTypeConfig';
 
-
 interface ScheduleTypeDetailsDrawerProps {
   scheduleTypeId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const ScheduleTypeDetailsDrawer: React.FC<ScheduleTypeDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedScheduleType, loadScheduleType, detailsStatus } = useScheduleTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });

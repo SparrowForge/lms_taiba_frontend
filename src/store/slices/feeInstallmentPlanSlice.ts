@@ -45,9 +45,7 @@ const feeInstallmentPlanSlice = createSlice({
       state.feeInstallmentPlans.unshift(action.payload);
     },
     updateFeeInstallmentPlan: (state, action: PayloadAction<IFeeInstallmentPlan>) => {
-      const index = state.feeInstallmentPlans.findIndex(
-        (item) => item.id === action.payload.id,
-      );
+      const index = state.feeInstallmentPlans.findIndex((item) => item.id === action.payload.id);
       if (index !== -1) {
         state.feeInstallmentPlans[index] = action.payload;
       }

@@ -18,7 +18,6 @@ import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
 
-
 interface Props {
   mode: 'create' | 'edit';
   employmentTypeId?: number;
@@ -94,14 +93,24 @@ const EmploymentTypeForm: React.FC<Props> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="status"
         label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
+          },
+        ]}
       >
         <StatusSelect preset="binary" />
       </Form.Item>
@@ -118,13 +127,7 @@ const EmploymentTypeForm: React.FC<Props> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default EmploymentTypeForm;

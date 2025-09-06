@@ -30,9 +30,18 @@ import {
 
 export const useMenus = () => {
   const dispatch = useDispatch();
-  const { menus, selectedMenu, listStatus, detailsStatus, actionStatus, pagination , myMenus,myMenusStatus, panelsWithMenus, panelsWithMenusStatus } = useSelector(
-    (state: RootState) => state.menus,
-  );
+  const {
+    menus,
+    selectedMenu,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+    myMenus,
+    myMenusStatus,
+    panelsWithMenus,
+    panelsWithMenusStatus,
+  } = useSelector((state: RootState) => state.menus);
   // my menu
   const loadMyMenus = useCallback(
     async (params = {}) => {
@@ -57,7 +66,8 @@ export const useMenus = () => {
     async (params = {}) => {
       try {
         dispatch(setPanelsWithMenusStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IPanelWithMenus[]> = await menuService.getPanelsWithMenus(params);
+        const response: IBaseResponse<IPanelWithMenus[]> =
+          await menuService.getPanelsWithMenus(params);
 
         // Sort panels by menu count (descending - most menus first)
         const sortedPanels = (response?.data ?? []).sort((a, b) => {
@@ -78,8 +88,6 @@ export const useMenus = () => {
     },
     [dispatch],
   );
-
-
 
   // Load menus with pagination and search
   const loadMenus = useCallback(

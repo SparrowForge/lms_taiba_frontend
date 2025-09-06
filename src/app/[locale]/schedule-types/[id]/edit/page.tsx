@@ -17,7 +17,6 @@ import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
 import {Status} from '@/types/common';
 
-
 const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -31,7 +30,6 @@ const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
     loadScheduleType(scheduleTypeId);
   }, [resolvedParams.id, loadScheduleType]);
 
-
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
@@ -43,11 +41,14 @@ const ScheduleTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <ScheduleTypeForm
-            mode="edit"
-            scheduleTypeId={parseInt(resolvedParams.id)}
-            initialValues={selectedScheduleType}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <ScheduleTypeForm
+          mode="edit"
+          scheduleTypeId={parseInt(resolvedParams.id)}
+          initialValues={selectedScheduleType}
         />
       </MainLayout>
     </ProtectedRoute>

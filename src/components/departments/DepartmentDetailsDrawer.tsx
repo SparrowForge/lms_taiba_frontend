@@ -15,7 +15,6 @@ import {IDepartment} from '@/types/department';
 
 import {useCreateDepartmentDetailsConfig} from './departmentConfig';
 
-
 interface DepartmentDetailsDrawerProps {
   departmentId?: number;
   visible: boolean;
@@ -29,7 +28,6 @@ const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedDepartment, loadDepartment, detailsStatus } = useDepartments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });

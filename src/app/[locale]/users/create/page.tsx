@@ -19,8 +19,11 @@ export default function CreateUserPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: t(LOCALE_KEYS.USER) })} onBack={() => router.back()} />
-          <UserForm mode="create" />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: t(LOCALE_KEYS.USER) })}
+          onBack={() => router.back()}
+        />
+        <UserForm mode="create" />
       </MainLayout>
     </ProtectedRoute>
   );

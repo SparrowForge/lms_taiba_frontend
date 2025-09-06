@@ -116,7 +116,12 @@ const StudentFamilyForm: React.FC<StudentFamilyFormProps> = ({
       <Form.Item
         name="studentId"
         label={t(LOCALE_KEYS.STUDENT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STUDENT) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STUDENT) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_STUDENT, { defaultValue: 'Select Student' })}
@@ -130,81 +135,143 @@ const StudentFamilyForm: React.FC<StudentFamilyFormProps> = ({
       <Form.Item
         name="fatherName"
         label={t(LOCALE_KEYS.FATHER_NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FATHER_NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FATHER_NAME) }),
+          },
+        ]}
       >
-        <Input placeholder={t(LOCALE_KEYS.ENTER_FATHER_NAME, { defaultValue: 'Enter father name' })} />
+        <Input
+          placeholder={t(LOCALE_KEYS.ENTER_FATHER_NAME, { defaultValue: 'Enter father name' })}
+        />
       </Form.Item>
 
       <Form.Item
         name="fatherAddress"
         label={t(LOCALE_KEYS.FATHER_ADDRESS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FATHER_ADDRESS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FATHER_ADDRESS) }),
+          },
+        ]}
       >
-        <Input.TextArea rows={3} placeholder={t(LOCALE_KEYS.ENTER_FATHER_ADDRESS, { defaultValue: 'Enter father address' })} />
+        <Input.TextArea
+          rows={3}
+          placeholder={t(LOCALE_KEYS.ENTER_FATHER_ADDRESS, {
+            defaultValue: 'Enter father address',
+          })}
+        />
       </Form.Item>
 
       <Form.Item
         name="fatherPhone"
         label={t(LOCALE_KEYS.FATHER_PHONE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FATHER_PHONE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FATHER_PHONE) }),
+          },
+        ]}
       >
-        <Input placeholder={t(LOCALE_KEYS.ENTER_FATHER_PHONE, { defaultValue: 'Enter father phone' })} />
+        <Input
+          placeholder={t(LOCALE_KEYS.ENTER_FATHER_PHONE, { defaultValue: 'Enter father phone' })}
+        />
       </Form.Item>
 
       <Form.Item
         name="fatherEmail"
         label={t(LOCALE_KEYS.FATHER_EMAIL)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FATHER_EMAIL) }) },
-          { type: 'email', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL, { defaultValue: 'Please enter a valid email' }) }
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FATHER_EMAIL) }),
+          },
+          {
+            type: 'email',
+            message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL, {
+              defaultValue: 'Please enter a valid email',
+            }),
+          },
         ]}
       >
-        <Input placeholder={t(LOCALE_KEYS.ENTER_FATHER_EMAIL, { defaultValue: 'Enter father email' })} />
+        <Input
+          placeholder={t(LOCALE_KEYS.ENTER_FATHER_EMAIL, { defaultValue: 'Enter father email' })}
+        />
       </Form.Item>
 
       <Form.Item
         name="motherName"
         label={t(LOCALE_KEYS.MOTHER_NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MOTHER_NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MOTHER_NAME) }),
+          },
+        ]}
       >
-        <Input placeholder={t(LOCALE_KEYS.ENTER_MOTHER_NAME, { defaultValue: 'Enter mother name' })} />
+        <Input
+          placeholder={t(LOCALE_KEYS.ENTER_MOTHER_NAME, { defaultValue: 'Enter mother name' })}
+        />
       </Form.Item>
 
       <Form.Item
         name="motherPhone"
         label={t(LOCALE_KEYS.MOTHER_PHONE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MOTHER_PHONE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MOTHER_PHONE) }),
+          },
+        ]}
       >
-        <Input placeholder={t(LOCALE_KEYS.ENTER_MOTHER_PHONE, { defaultValue: 'Enter mother phone' })} />
+        <Input
+          placeholder={t(LOCALE_KEYS.ENTER_MOTHER_PHONE, { defaultValue: 'Enter mother phone' })}
+        />
       </Form.Item>
 
       <Form.Item
         name="motherEmail"
         label={t(LOCALE_KEYS.MOTHER_EMAIL)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MOTHER_EMAIL) }) },
-          { type: 'email', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL, { defaultValue: 'Please enter a valid email' }) }
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MOTHER_EMAIL) }),
+          },
+          {
+            type: 'email',
+            message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL, {
+              defaultValue: 'Please enter a valid email',
+            }),
+          },
         ]}
       >
-        <Input placeholder={t(LOCALE_KEYS.ENTER_MOTHER_EMAIL, { defaultValue: 'Enter mother email' })} />
+        <Input
+          placeholder={t(LOCALE_KEYS.ENTER_MOTHER_EMAIL, { defaultValue: 'Enter mother email' })}
+        />
       </Form.Item>
 
       <Form.Item
         name="noOfSiblings"
         label={t(LOCALE_KEYS.NO_OF_SIBLINGS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NO_OF_SIBLINGS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NO_OF_SIBLINGS) }),
+          },
+        ]}
       >
         <InputNumber
-          placeholder={t(LOCALE_KEYS.ENTER_NO_OF_SIBLINGS, { defaultValue: 'Enter number of siblings' })}
+          placeholder={t(LOCALE_KEYS.ENTER_NO_OF_SIBLINGS, {
+            defaultValue: 'Enter number of siblings',
+          })}
           min={0}
           style={{ width: '100%' }}
         />
       </Form.Item>
 
-      <Form.Item
-        name="siblingsIds"
-        label={t(LOCALE_KEYS.SIBLINGS_IDS)}
-      >
+      <Form.Item name="siblingsIds" label={t(LOCALE_KEYS.SIBLINGS_IDS)}>
         <Select
           mode="multiple"
           placeholder={t(LOCALE_KEYS.SELECT_SIBLINGS, { defaultValue: 'Select siblings' })}
@@ -228,13 +295,7 @@ const StudentFamilyForm: React.FC<StudentFamilyFormProps> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default StudentFamilyForm;
