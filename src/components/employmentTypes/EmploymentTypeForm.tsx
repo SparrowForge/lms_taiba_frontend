@@ -9,8 +9,6 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
 import {Status} from '@/enums';
 
-import StatusSelect from '@/components/ui/StatusSelect';
-
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
@@ -18,6 +16,7 @@ import {IEmploymentType, IEmploymentTypeCreate, IEmploymentTypeUpdate,} from '@/
 import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 
 interface Props {
@@ -104,18 +103,7 @@ const EmploymentTypeForm: React.FC<Props> = ({
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-          },
-        ]}
-      >
-        <StatusSelect options={ENTITY_STATUS_OPTIONS} />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>

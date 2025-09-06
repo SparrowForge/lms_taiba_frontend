@@ -7,8 +7,6 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
 import {Status} from '@/enums';
 
-import StatusSelect from '@/components/ui/StatusSelect';
-
 import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
@@ -16,6 +14,7 @@ import {getErrorMessage} from '@/types/errors';
 import {IPanel} from '@/types/panel';
 
 import FormLayout from '../layout/FormLayout';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 
 interface PanelFormProps {
@@ -121,18 +120,7 @@ const PanelForm: React.FC<PanelFormProps> = ({
           aria-required="true"
         />
       </Form.Item>
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-          },
-        ]}
-      >
-        <StatusSelect options={ENTITY_STATUS_OPTIONS} />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
       <Form.Item style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}>
         <Space size={embedded ? 'small' : 'large'}>
           <Button

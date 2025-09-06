@@ -16,7 +16,7 @@ import {getErrorMessage} from '@/types/errors';
 import {IUserCreate, IUserUpdate} from '@/types/user';
 
 import FormLayout from '../layout/FormLayout';
-import StatusSelect from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface UserFormProps {
   mode: 'create' | 'edit';
@@ -171,13 +171,7 @@ const UserForm: React.FC<UserFormProps> = ({
           </Form.Item>
         )}
 
-        <Form.Item
-          name="status"
-          label={t(LOCALE_KEYS.STATUS)}
-          rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_STATUS) }]}
-        >
-          <StatusSelect options={ENTITY_STATUS_OPTIONS} />
-        </Form.Item>
+        <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
         <Form.Item style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}>
           <div role="group" aria-label="Form actions">
