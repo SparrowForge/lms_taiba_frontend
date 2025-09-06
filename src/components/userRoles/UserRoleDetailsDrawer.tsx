@@ -2,13 +2,13 @@ import {Drawer} from 'antd';
 import React, {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';
 
-import {Status} from '@/types/common';
 import {IUserRole} from '@/types/userRole';
 
 import {useCreateUserRoleDetailsConfig} from './userRoleConfig';

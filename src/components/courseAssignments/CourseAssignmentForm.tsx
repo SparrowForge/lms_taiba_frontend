@@ -7,8 +7,8 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS,} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useCourseAssignments} from '@/hooks/useCourseAssignments';
@@ -18,11 +18,11 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useSubjects} from '@/hooks/useSubjects';
 
-import {Status} from '@/types/common';
 import {ICourseAssignment, ICourseAssignmentCreate, ICourseAssignmentUpdate,} from '@/types/courseAssignment';
 import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 const { TextArea } = Input;
 
@@ -453,18 +453,7 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
         <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.ATTACHMENT_PATH) })} />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-          },
-        ]}
-      >
-        <StatusSelect preset="binary" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
       <Form.Item>
         <Space>

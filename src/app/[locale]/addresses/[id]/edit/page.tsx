@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import AddressForm from '@/components/addresses/AddressForm';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -15,7 +16,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useAddresses} from '@/hooks/useAddresses';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 
 const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);

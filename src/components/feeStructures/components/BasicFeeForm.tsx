@@ -2,11 +2,11 @@ import {Button, Card, Col, Form, Input, InputNumber, Row, Select} from 'antd';
 import React from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 
 interface BasicFeeFormProps {
   form: any;

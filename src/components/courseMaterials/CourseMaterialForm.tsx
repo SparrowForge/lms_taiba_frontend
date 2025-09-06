@@ -6,9 +6,9 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ACCESS_LEVEL_TYPE_OPTIONS, EntityType, FileCategory, FileType, MATERIAL_TYPE_OPTIONS, Status,} from '@/enums';
 
 import FileUpload from '@/components/ui/FileUpload';
-import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useCourseMaterials} from '@/hooks/useCourseMaterials';
@@ -18,12 +18,12 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useSubjects} from '@/hooks/useSubjects';
 
-import {Status} from '@/types/common';
+
 import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate,} from '@/types/courseMaterial';
 import {getErrorMessage} from '@/types/errors';
-import {EntityType, FileCategory, FileType} from '@/types/file';
 
 import FormLayout from '../layout/FormLayout';
+import {StatusSelect} from '../ui/StatusSelect';
 
 const { TextArea } = Input;
 
@@ -283,27 +283,16 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
           },
         ]}
       >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}
-          options={[
-            { value: 'PDF', label: 'PDF' },
-            { value: 'DOC', label: 'DOC' },
-            { value: 'PPT', label: 'PPT' },
-            { value: 'VIDEO', label: 'VIDEO' },
-            { value: 'AUDIO', label: 'AUDIO' },
-            { value: 'LINK', label: 'LINK' },
-            { value: 'OTHER', label: 'OTHER' },
-          ]}
-        />
+        <StatusSelect options={MATERIAL_TYPE_OPTIONS} />
       </Form.Item>
 
       <Form.Item name="fileId" label={t(LOCALE_KEYS.FILE)}>
         <FileUpload
-          fileType={FileType.COURSE_MATERIAL}
+          fileType={FileType.DOCUMENT}
           fileCategory={FileCategory.ACADEMIC}
           entityType={EntityType.COURSE_MATERIAL}
           entityId={courseMaterialId}
-          accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mp3,.wav,.txt,.zip,.rar"
+          accept="file/*"
           maxSize={50}
         />
       </Form.Item>
@@ -326,29 +315,8 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
           },
         ]}
       >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ACCESS_LEVEL) })}
-          options={[
-            { value: 'Public', label: 'Public' },
-            { value: 'Private', label: 'Private' },
-            { value: 'Restricted', label: 'Restricted' },
-          ]}
-        />
+        <StatusSelect options={ACCESS_LEVEL_TYPE_OPTIONS} />
       </Form.Item>
-
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-          },
-        ]}
-      >
-        <StatusSelect />
-      </Form.Item>
-
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>

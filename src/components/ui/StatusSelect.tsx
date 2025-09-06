@@ -1,26 +1,14 @@
 'use client';
 
-import {Select} from 'antd';
+import {Form, Select} from 'antd';
 import {useTranslations} from 'next-intl';
 import React from 'react';
 
-export type StatusOptionValue = 'active' | 'inactive' | 'complete' | 'archived' | 'ongoing';
+import {LOCALE_KEYS, t} from '@/constants/localizationKeys';
 
-type StatusPreset = 'binary' | 'lifecycle' | 'custom';
+import {IStatusSelectProps} from '@/types/statusSelect';
 
-interface StatusSelectProps {
-  value?: StatusOptionValue | null;
-  onChange?: (value: StatusOptionValue) => void;
-  allowClear?: boolean;
-  disabled?: boolean;
-  placeholder?: string;
-  size?: 'small' | 'middle' | 'large';
-  style?: React.CSSProperties;
-  preset?: StatusPreset;
-  options?: StatusOptionValue[]; // used when preset = 'custom'
-}
-
-const StatusSelect: React.FC<StatusSelectProps> = ({
+export const StatusSelect: React.FC<IStatusSelectProps> = ({
   value,
   onChange,
   allowClear,
@@ -28,22 +16,14 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
   placeholder,
   size = 'middle',
   style,
-  preset = 'binary',
   options,
 }) => {
   const t = useTranslations();
-  const presetValues: Record<Exclude<StatusPreset, 'custom'>, StatusOptionValue[]> = {
-    binary: ['active', 'inactive'],
-    lifecycle: ['active', 'inactive', 'ongoing', 'complete', 'archived'],
-  };
 
-  const values: StatusOptionValue[] = (
-    preset === 'custom' ? (options ?? []) : presetValues[preset]
-  ) as StatusOptionValue[];
-
-  const localizedOptions = values.map((val) => ({
-    label: t(val),
-    value: val,
+  // Convert to Ant Design Select options with localized labels
+  const selectOptions = options.map((option) => ({
+    label: t(option.labelKey, { defaultValue: option.value }),
+    value: option.value,
   }));
 
   return (
@@ -55,7 +35,7 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
       disabled={disabled}
       placeholder={placeholder ?? t('please_select_status')}
       optionFilterProp="label"
-      options={localizedOptions}
+      options={selectOptions}
       size={size}
       style={style}
       filterOption={(input, option) =>
@@ -65,4 +45,20 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
   );
 };
 
-export default StatusSelect;
+export function StatusSelectFormItem({ options, initialValue }: IStatusSelectProps) {
+  return (
+    <Form.Item
+      initialValue={initialValue ?? options[0]?.value}
+      name="status"
+      label={t(LOCALE_KEYS.STATUS)}
+      rules={[
+        {
+          required: true,
+          message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
+        },
+      ]}
+    >
+      <StatusSelect options={options} />
+    </Form.Item>
+  );
+}

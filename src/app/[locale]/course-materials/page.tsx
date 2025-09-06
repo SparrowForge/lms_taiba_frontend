@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseMaterialDetailsDrawer from '@/components/courseMaterials/CourseMaterialDetailsDrawer';
@@ -17,7 +18,6 @@ import StatusTag from '@/components/ui/StatusTag';
 import {useCourseMaterials} from '@/hooks/useCourseMaterials';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {ICourseMaterial} from '@/types/courseMaterial';
 
 export default function CourseMaterialsPage() {
@@ -101,12 +101,16 @@ export default function CourseMaterialsPage() {
       {
         title: t(LOCALE_KEYS.COURSE),
         key: 'course',
-        render: (courseMaterial: ICourseMaterial) => <span>{courseMaterial.course.name}</span>,
+        render: (courseMaterial: ICourseMaterial) => (
+          <span>{courseMaterial.course?.name || 'N/A'}</span>
+        ),
       },
       {
         title: t(LOCALE_KEYS.SUBJECT),
         key: 'subject',
-        render: (courseMaterial: ICourseMaterial) => <span>{courseMaterial.subject.name}</span>,
+        render: (courseMaterial: ICourseMaterial) => (
+          <span>{courseMaterial.subject?.name || 'N/A'}</span>
+        ),
       },
       {
         title: t(LOCALE_KEYS.TYPE),

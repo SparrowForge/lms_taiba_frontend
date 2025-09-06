@@ -6,13 +6,13 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IRoomType, IRoomTypeCreate, IRoomTypeUpdate} from '@/types/roomType';
 

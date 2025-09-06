@@ -5,12 +5,12 @@ import dayjs, {Dayjs} from 'dayjs';
 import React, {useEffect, useMemo, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useClassSchedules} from '@/hooks/useClassSchedules';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IClassSchedule} from '@/types/classSchedule';
-import {Status} from '@/types/common';
 
 import ClassScheduleDetailsDrawer from './ClassScheduleDetailsDrawer';
 import ClassScheduleFormDrawer from './ClassScheduleFormDrawer';

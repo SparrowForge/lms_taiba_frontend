@@ -10,8 +10,8 @@ const { Text } = Typography;
 const { Dragger } = AntUpload;
 
 interface FileUploadProps {
-  value?: string;
-  onChange?: (fileId: string | undefined) => void;
+  value?: number;
+  onChange?: (fileId: number | undefined) => void;
   fileType?: string;
   fileCategory?: string;
   entityType?: string;
@@ -39,14 +39,14 @@ const FileUpload: React.FC<FileUploadProps> = ({
     if (uploadedFile) {
       setFileList([
         {
-          uid: uploadedFile.fileId.toString(),
+          uid: uploadedFile.fileId,
           name: uploadedFile.originalName,
           status: 'done',
           url: uploadedFile.fileUrl,
           response: uploadedFile,
         },
       ]);
-      onChange?.(uploadedFile.fileId.toString());
+      onChange?.(uploadedFile.fileId);
     }
   }, [uploadedFile, onChange]);
 
@@ -68,7 +68,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
     if (result) {
       setFileList([
         {
-          uid: result.fileId.toString(),
+          uid: result.fileId,
           name: result.originalName,
           status: 'done',
           url: result.fileUrl,

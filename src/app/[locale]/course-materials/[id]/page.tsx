@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateCourseMaterialDetailsConfig} from '@/components/courseMaterials/courseMaterialConfig';
@@ -12,7 +13,6 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {useCourseMaterials} from '@/hooks/useCourseMaterials';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 
 export default function CourseMaterialDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedCourseMaterial, detailsStatus, loadCourseMaterial } = useCourseMaterials();

@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseMaterialForm from '@/components/courseMaterials/CourseMaterialForm';
@@ -15,7 +16,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useCourseMaterials} from '@/hooks/useCourseMaterials';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {ICourseMaterial, ICourseMaterialUpdate} from '@/types/courseMaterial';
 
 const CourseMaterialEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {

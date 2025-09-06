@@ -6,17 +6,19 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IEmploymentType, IEmploymentTypeCreate, IEmploymentTypeUpdate,} from '@/types/employmentType';
 import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
+
 
 interface Props {
   mode: 'create' | 'edit';
@@ -112,7 +114,7 @@ const EmploymentTypeForm: React.FC<Props> = ({
           },
         ]}
       >
-        <StatusSelect preset="binary" />
+        <StatusSelect options={ENTITY_STATUS_OPTIONS} />
       </Form.Item>
       <Form.Item>
         <Space>

@@ -11,11 +11,9 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRole} from '@/hooks/useRole';
 
-
 import WelcomeSection from './WelcomeSection';
 import LeftBorderCard from '../dashboardui/cards/LeftBorderCard';
 import UpBorderCard from '../dashboardui/cards/UpBorderCard';
-
 
 // ===== SORTABLE WRAPPER =====
 const SortableCard = ({ id, children }: { id: string; children: React.ReactNode }) => {

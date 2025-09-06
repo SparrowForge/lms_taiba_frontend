@@ -6,17 +6,19 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useWeekDays} from '@/hooks/useWeekDays';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IWeekDay, IWeekDayCreate, IWeekDayUpdate} from '@/types/weekDay';
 
 import FormLayout from '../layout/FormLayout';
+
 
 interface Props {
   mode: 'create' | 'edit';
@@ -135,7 +137,7 @@ const WeekDayForm: React.FC<Props> = ({
           },
         ]}
       >
-        <StatusSelect preset="binary" />
+        <StatusSelect options={ENTITY_STATUS_OPTIONS} />
       </Form.Item>
       <Form.Item>
         <Space>

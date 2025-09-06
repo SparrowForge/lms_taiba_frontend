@@ -6,17 +6,19 @@ import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {DISCOUNT_TYPE_OPTIONS, PAYMENT_TYPE_OPTIONS, Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IFeeStructure, IFeeStructureCreate, IFeeStructureUpdate} from '@/types/feeStructure';
 
 import FormLayout from '../layout/FormLayout';
+import {StatusSelect, StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface FeeStructureFormProps {
   mode: 'create' | 'edit';
@@ -192,6 +194,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="paymentType"
         label={t(LOCALE_KEYS.PAYMENT_TYPE)}
+        initialValue={PAYMENT_TYPE_OPTIONS[0]?.value}
         rules={[
           {
             required: true,
@@ -199,11 +202,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
           },
         ]}
       >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_PAYMENT_TYPE)}>
-          <Select.Option value="one_time">{t(LOCALE_KEYS.ONE_TIME)}</Select.Option>
-          <Select.Option value="installment">{t(LOCALE_KEYS.INSTALLMENT)}</Select.Option>
-          <Select.Option value="monthly">{t(LOCALE_KEYS.MONTHLY)}</Select.Option>
-        </Select>
+        <StatusSelect options={PAYMENT_TYPE_OPTIONS} />
       </Form.Item>
 
       <Form.Item
@@ -247,6 +246,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
       <Form.Item
         name="discountType"
         label={t(LOCALE_KEYS.DISCOUNT_TYPE)}
+        initialValue={DISCOUNT_TYPE_OPTIONS[0]?.value}
         rules={[
           {
             required: true,
@@ -254,11 +254,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
           },
         ]}
       >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_DISCOUNT_TYPE)}>
-          <Select.Option value="percent">{t(LOCALE_KEYS.PERCENT)}</Select.Option>
-          <Select.Option value="fixed">{t(LOCALE_KEYS.FIXED)}</Select.Option>
-          <Select.Option value="none">{t(LOCALE_KEYS.NONE)}</Select.Option>
-        </Select>
+        <StatusSelect options={DISCOUNT_TYPE_OPTIONS} />
       </Form.Item>
 
       <Form.Item
@@ -296,23 +292,7 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
         <Input.TextArea rows={3} />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-          },
-        ]}
-      >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_STATUS)}>
-          <Select.Option value="active">{t('active')}</Select.Option>
-          <Select.Option value="inactive">{t('inactive')}</Select.Option>
-          <Select.Option value="draft">{t('draft')}</Select.Option>
-        </Select>
-      </Form.Item>
-
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>

@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseDetailsDrawer from '@/components/courses/CourseDetailsDrawer';
@@ -17,7 +18,6 @@ import StatusTag from '@/components/ui/StatusTag';
 import {useCourses} from '@/hooks/useCourses';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 import {IDepartment} from '@/types/department';
 

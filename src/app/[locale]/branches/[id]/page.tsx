@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateBranchDetailsConfig} from '@/components/branches/branchConfig';
@@ -14,7 +15,6 @@ import {useBranches} from '@/hooks/useBranches';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBranch} from '@/types/branch';
-import {Status} from '@/types/common';
 
 export default function BranchDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedBranch, detailsStatus, loadBranch } = useBranches();

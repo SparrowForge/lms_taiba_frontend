@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,7 +14,6 @@ import {useCreateUserRoleDetailsConfig} from '@/components/userRoles/userRoleCon
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';
 
-import {Status} from '@/types/common';
 import {IUserRole} from '@/types/userRole';
 
 export default function UserRoleDetailPage({ params }: { params: Promise<{ id: string }> }) {

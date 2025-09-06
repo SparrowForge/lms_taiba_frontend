@@ -1,7 +1,8 @@
 import {useState} from 'react';
 import {toast} from 'react-toastify';
 
-import {Status} from '@/types/common';
+import {Status} from '@/enums';
+
 import {IFileUploadRequest, IFileUploadResponse} from '@/types/file';
 
 import {fileService} from '@/services/fileService';

@@ -1,8 +1,9 @@
 import {Button, Card, Col, Row} from 'antd';
 import React from 'react';
 
+import {Status} from '@/enums';
+
 import {IBatch} from '@/types/batch';
-import {Status} from '@/types/common';
 import {ISemester} from '@/types/semester';
 
 import {PaymentRow} from '../types';

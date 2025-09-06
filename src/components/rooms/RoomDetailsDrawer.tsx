@@ -4,13 +4,13 @@ import {Drawer} from 'antd';
 import React from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRooms} from '@/hooks/useRooms';
 
-import {Status} from '@/types/common';
 import {IRoom} from '@/types/room';
 
 import {useCreateRoomDetailsConfig} from './roomConfig';

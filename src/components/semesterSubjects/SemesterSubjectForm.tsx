@@ -7,6 +7,7 @@ import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useFaculties} from '@/hooks/useFaculties';
@@ -15,7 +16,6 @@ import {useSemesters} from '@/hooks/useSemesters';
 import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 import {useSubjects} from '@/hooks/useSubjects';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {
     IFacultyAssignment,

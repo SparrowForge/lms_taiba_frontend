@@ -1,20 +1,22 @@
 'use client';
 
-import {Button, Form, Input, Select, Space} from 'antd';
+import {Button, Form, Input, Space} from 'antd';
 import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IUserCreate, IUserUpdate} from '@/types/user';
 
 import FormLayout from '../layout/FormLayout';
+import StatusSelect from '../ui/StatusSelect';
 
 interface UserFormProps {
   mode: 'create' | 'edit';
@@ -174,22 +176,7 @@ const UserForm: React.FC<UserFormProps> = ({
           label={t(LOCALE_KEYS.STATUS)}
           rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_STATUS) }]}
         >
-          <Select
-            placeholder={t(LOCALE_KEYS.STATUS)}
-            aria-label={t(LOCALE_KEYS.STATUS)}
-            aria-required="true"
-            aria-describedby="status-help"
-          >
-            <Select.Option value="active" aria-label={t(LOCALE_KEYS.ACTIVE)}>
-              {t(LOCALE_KEYS.ACTIVE)}
-            </Select.Option>
-            <Select.Option value="inactive" aria-label={t(LOCALE_KEYS.INACTIVE)}>
-              {t(LOCALE_KEYS.INACTIVE)}
-            </Select.Option>
-            <Select.Option value="pending" aria-label={t(LOCALE_KEYS.PENDING)}>
-              {t(LOCALE_KEYS.PENDING)}
-            </Select.Option>
-          </Select>
+          <StatusSelect options={ENTITY_STATUS_OPTIONS} />
         </Form.Item>
 
         <Form.Item style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}>

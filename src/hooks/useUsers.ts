@@ -3,9 +3,10 @@
 import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBaseResponse, Status} from '@/types/common';
+import {IBaseResponse} from '@/types/common';
 import {IUser, IUserCreate, IUserFilters, IUserUpdate} from '@/types/user';
 
 import {userService} from '@/services/userService';

@@ -6,24 +6,25 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useClassSchedules} from '@/hooks/useClassSchedules';
 import {useFaculties} from '@/hooks/useFaculties';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRooms} from '@/hooks/useRooms';
+import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useSubjects} from '@/hooks/useSubjects';
 import {useTimeSlots} from '@/hooks/useTimeSlots';
 import {useWeekDays} from '@/hooks/useWeekDays';
 
 import {IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate} from '@/types/classSchedule';
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -54,6 +55,8 @@ const ClassScheduleForm: React.FC<Props> = ({
   const { rooms, loadRooms } = useRooms();
   const { faculties, loadFaculties } = useFaculties();
   const { timeSlots, loadTimeSlots } = useTimeSlots();
+  const { scheduleTypes, loadScheduleTypes } = useScheduleTypes();
+
   useEffect(() => {
     if (mode === 'create') form.resetFields();
   }, [mode, form]);
@@ -66,6 +69,7 @@ const ClassScheduleForm: React.FC<Props> = ({
     loadRooms({ page: 1, limit: 100 });
     loadFaculties({ page: 1, limit: 100 });
     loadTimeSlots({ page: 1, limit: 100 });
+    loadScheduleTypes({ page: 1, limit: 100 });
   }, [
     loadBatches,
     loadSemesters,
@@ -74,6 +78,7 @@ const ClassScheduleForm: React.FC<Props> = ({
     loadRooms,
     loadFaculties,
     loadTimeSlots,
+    loadScheduleTypes,
   ]);
 
   const handleSubmit = async (values: Partial<IClassSchedule>) => {
@@ -285,7 +290,7 @@ const ClassScheduleForm: React.FC<Props> = ({
       </Form.Item>
 
       <Form.Item
-        name="classScheduleType"
+        name="scheduleTypeId"
         label={t(LOCALE_KEYS.CLASS_SCHEDULE_TYPE)}
         rules={[
           {
@@ -298,10 +303,17 @@ const ClassScheduleForm: React.FC<Props> = ({
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.CLASS_SCHEDULE_TYPE) })}
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
         >
-          <Select.Option value="REGULAR">Regular</Select.Option>
-          <Select.Option value="MAKEUP">Makeup</Select.Option>
-          <Select.Option value="EXTRA">Extra</Select.Option>
+          {scheduleTypes.map((scheduleType) => (
+            <Select.Option key={scheduleType.id} value={scheduleType.id}>
+              {scheduleType.name}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 
@@ -319,18 +331,8 @@ const ClassScheduleForm: React.FC<Props> = ({
         <InputNumber min={1} style={{ width: '100%' }} />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-          },
-        ]}
-      >
-        <StatusSelect preset="binary" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
+
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>

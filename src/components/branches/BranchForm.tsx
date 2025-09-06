@@ -6,8 +6,8 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useAddresses} from '@/hooks/useAddresses';
 import {useBranches} from '@/hooks/useBranches';
@@ -16,10 +16,10 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
 import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface BranchFormProps {
   mode: 'create' | 'edit';
@@ -246,18 +246,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         </Select>
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-          },
-        ]}
-      >
-        <StatusSelect preset="binary" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
       <Form.Item style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}>
         <Space size={embedded ? 'small' : 'large'}>

@@ -7,13 +7,13 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useBranches} from '@/hooks/useBranches';
 import {useDepartments} from '@/hooks/useDepartments';
 import {useFaculties} from '@/hooks/useFaculties';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
 

@@ -6,6 +6,8 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
@@ -13,11 +15,11 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 import {usePanels} from '@/hooks/usePanels';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
 
 import FormLayout from '../layout/FormLayout';
+
 
 interface MenuFormProps {
   mode: 'create' | 'edit';
@@ -237,7 +239,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
           },
         ]}
       >
-        <StatusSelect preset="binary" />
+        <StatusSelect options={ENTITY_STATUS_OPTIONS} />
       </Form.Item>
 
       <Form.Item>

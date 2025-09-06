@@ -1,6 +1,7 @@
 import {IBatch} from './batch';
 import {ICourse} from './course';
 import {IFaculty} from './faculty';
+import {IFile} from './file';
 import {ISemester} from './semester';
 import {ISubject} from './subject';
 
@@ -14,7 +15,7 @@ export interface ICourseMaterial {
   title: string;
   description: string;
   type: string;
-  fileId: string | null;
+  fileId?: number;
   isDownloadable: boolean;
   accessLevel: string;
   status: string;
@@ -26,7 +27,7 @@ export interface ICourseMaterial {
   semester: ISemester;
   batch: IBatch;
   faculty: IFaculty;
-  file: any | null;
+  file: IFile | null;
 }
 
 export interface ICourseMaterialCreate {
@@ -38,7 +39,7 @@ export interface ICourseMaterialCreate {
   title: string;
   description: string;
   type: string;
-  fileId?: string;
+  fileId?: number;
   isDownloadable: boolean;
   accessLevel: string;
   status: string;
@@ -53,7 +54,7 @@ export interface ICourseMaterialUpdate {
   title?: string;
   description?: string;
   type?: string;
-  fileId?: string;
+  fileId?: number;
   isDownloadable?: boolean;
   accessLevel?: string;
   status?: string;

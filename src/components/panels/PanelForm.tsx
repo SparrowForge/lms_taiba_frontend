@@ -4,17 +4,19 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IPanel} from '@/types/panel';
 
 import FormLayout from '../layout/FormLayout';
+
 
 interface PanelFormProps {
   mode: 'create' | 'edit';
@@ -129,7 +131,7 @@ const PanelForm: React.FC<PanelFormProps> = ({
           },
         ]}
       >
-        <StatusSelect preset="binary" />
+        <StatusSelect options={ENTITY_STATUS_OPTIONS} />
       </Form.Item>
       <Form.Item style={{ marginTop: '32px', textAlign: embedded ? 'right' : 'center' }}>
         <Space size={embedded ? 'small' : 'large'}>

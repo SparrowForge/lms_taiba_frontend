@@ -6,6 +6,8 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import StatusSelect from '@/components/ui/StatusSelect';
 
@@ -13,11 +15,11 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {useRooms} from '@/hooks/useRooms';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IRoom, IRoomCreate, IRoomUpdate} from '@/types/room';
 
 import FormLayout from '../layout/FormLayout';
+
 
 interface Props {
   mode: 'create' | 'edit';
@@ -227,7 +229,7 @@ const RoomForm: React.FC<Props> = ({
           },
         ]}
       >
-        <StatusSelect preset="binary" />
+        <StatusSelect options={ENTITY_STATUS_OPTIONS} />
       </Form.Item>
 
       <Form.Item>
