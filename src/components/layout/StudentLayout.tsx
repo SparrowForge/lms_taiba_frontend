@@ -9,7 +9,6 @@ import MonthlyAttendance from '../dashboard/newComponents/MonthlyAttendance';
 import NotificationsStudent from '../dashboard/newComponents/NotificationsStudent';
 import UpcomingAssignments from '../dashboard/newComponents/UpcomingAssignments';
 
-
 const StudentLayout = () => {
   return (
     <>

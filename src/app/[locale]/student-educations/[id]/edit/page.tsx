@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -15,7 +16,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentEducations} from '@/hooks/useStudentEducations';
 
-import {Status} from '@/types/common';
 
 export default function StudentEducationEditPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);

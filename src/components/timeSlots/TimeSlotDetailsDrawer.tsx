@@ -4,13 +4,13 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useTimeSlots} from '@/hooks/useTimeSlots';
 
-import {Status} from '@/types/common';
 import {ITimeSlot} from '@/types/timeSlot';
 
 import {useCreateTimeSlotDetailsConfig} from './timeSlotConfig';

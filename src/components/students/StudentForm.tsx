@@ -7,6 +7,8 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useBranches} from '@/hooks/useBranches';
@@ -14,11 +16,11 @@ import {useCourses} from '@/hooks/useCourses';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudents} from '@/hooks/useStudents';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IStudent, IStudentCreate, IStudentUpdate} from '@/types/student';
 
 import FormLayout from '../layout/FormLayout';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface StudentFormProps {
   mode: 'create' | 'edit';
@@ -278,25 +280,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
         <Input />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS, { defaultValue: 'Status' })}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_STATUS, { defaultValue: 'Select Status' })}
-          options={[
-            { label: t(LOCALE_KEYS.ACTIVE, { defaultValue: 'Active' }), value: 'active' },
-            { label: t(LOCALE_KEYS.INACTIVE, { defaultValue: 'Inactive' }), value: 'inactive' },
-          ]}
-        />
-      </Form.Item>
-
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
       <Form.Item>
         <div className="flex justify-end space-x-2">
           <Button onClick={handleCancel}>

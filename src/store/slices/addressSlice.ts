@@ -1,7 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+import {Status} from '@/enums';
+
 import {IAddress} from '@/types/address';
-import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {IPaginationMeta, IStatusState,} from '@/types/common';
 
 interface IAddressesState {
   listStatus: IStatusState;

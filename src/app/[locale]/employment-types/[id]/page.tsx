@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateEmploymentTypeDetailsConfig} from '@/components/employmentTypes/employmentTypeConfig';
@@ -13,7 +14,6 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IEmploymentType} from '@/types/employmentType';
 
 export default function EmploymentTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {

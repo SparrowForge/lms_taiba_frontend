@@ -6,18 +6,19 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRooms} from '@/hooks/useRooms';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IRoom, IRoomCreate, IRoomUpdate} from '@/types/room';
 
 import FormLayout from '../layout/FormLayout';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
+
 
 interface Props {
   mode: 'create' | 'edit';
@@ -217,18 +218,7 @@ const RoomForm: React.FC<Props> = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_STATUS),
-          },
-        ]}
-      >
-        <StatusSelect preset="binary" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
       <Form.Item>
         <Space>

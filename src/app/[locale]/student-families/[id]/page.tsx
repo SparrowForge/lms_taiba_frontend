@@ -3,6 +3,7 @@
 import React from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,7 +14,6 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentFamilies} from '@/hooks/useStudentFamilies';
 
-import {Status} from '@/types/common';
 import {IStudentFamily} from '@/types/studentFamily';
 
 export default function StudentFamilyDetailPage({ params }: { params: Promise<{ id: string }> }) {

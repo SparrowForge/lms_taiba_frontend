@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,7 +14,6 @@ import {useCreateUserDetailsConfig} from '@/components/users/userConfig';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
-import {Status} from '@/types/common';
 import {IUser} from '@/types/user';
 
 export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {

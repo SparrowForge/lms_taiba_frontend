@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useCreateAuditDetailsConfig} from '@/components/audits/auditConfig';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -14,7 +15,6 @@ import {useAudit} from '@/hooks/useAudit';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAudit} from '@/types/audit';
-import {Status} from '@/types/common';
 
 export default function AuditDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedAudit, detailsStatus, getAuditById } = useAudit();

@@ -1,9 +1,10 @@
 import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IPanel} from '@/types/panel';
 
 import {panelService} from '@/services/panelService';

@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate, IFeeStructureUpdate,} from '@/types/feeStructure';
 
 import {feeStructureService} from '@/services/feeStructureService';

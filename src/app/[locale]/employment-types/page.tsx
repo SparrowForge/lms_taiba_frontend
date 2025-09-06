@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import EmploymentTypeDetailsDrawer from '@/components/employmentTypes/EmploymentTypeDetailsDrawer';
@@ -17,7 +18,6 @@ import StatusTag from '@/components/ui/StatusTag';
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IEmploymentType} from '@/types/employmentType';
 
 export default function EmploymentTypesPage() {

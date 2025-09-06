@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateInstituteDetailsConfig} from '@/components/institutes/instituteConfig';
@@ -13,7 +14,6 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useInstitutes} from '@/hooks/useInstitutes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IInstitute} from '@/types/institute';
 
 export default function InstituteDetailPage({ params }: { params: Promise<{ id: string }> }) {

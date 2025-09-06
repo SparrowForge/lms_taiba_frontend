@@ -6,13 +6,13 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 import {useUserRoles} from '@/hooks/useUserRoles';
 import {useUsers} from '@/hooks/useUsers';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IUserRole, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
 

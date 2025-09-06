@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateFacultyDetailsConfig} from '@/components/faculties/facultyConfig';
@@ -13,7 +14,6 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useFaculties} from '@/hooks/useFaculties';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFaculty} from '@/types/faculty';
 
 export default function FacultyDetailPage({ params }: { params: Promise<{ id: string }> }) {

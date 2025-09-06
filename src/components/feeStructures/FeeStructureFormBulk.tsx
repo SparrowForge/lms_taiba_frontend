@@ -1,23 +1,28 @@
 'use client';
 
 import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space} from 'antd';
-import type {Dayjs} from 'dayjs';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
 import React, {useCallback, useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {DISCOUNT_TYPE_OPTIONS, DiscountType, PAYMENT_TYPE_OPTIONS, PaymentType, Status,} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IFeeInstallmentPlanCreate} from '@/types/feeInstallmentPlan';
 import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate} from '@/types/feeStructure';
+
+import {StatusSelect, StatusSelectFormItem} from '../ui/StatusSelect';
+
+
+import type {Dayjs} from 'dayjs';
 
 interface FeeStructureFormBulkProps {
   onSuccess?: () => void;
@@ -514,18 +519,21 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
       }
 
       // Validate discount amounts
-      if (formDiscountType === 'percent' && (formDiscountAmount < 0 || formDiscountAmount > 100)) {
+      if (
+        formDiscountType === DiscountType.PERCENT &&
+        (formDiscountAmount < 0 || formDiscountAmount > 100)
+      ) {
         toast.error('Percentage discount must be between 0 and 100');
         return;
       }
-      if (formDiscountType === 'fixed' && formDiscountAmount < 0) {
+      if (formDiscountType === DiscountType.FIXED && formDiscountAmount < 0) {
         toast.error('Fixed discount amount cannot be negative');
         return;
       }
 
       // Validate that discount doesn't exceed remaining amount after admission fee
       const remainingAfterAdmission = formTotalFees - formAdmissionFee;
-      if (formDiscountType === 'fixed' && formDiscountAmount > remainingAfterAdmission) {
+      if (formDiscountType === DiscountType.FIXED && formDiscountAmount > remainingAfterAdmission) {
         toast.error(
           `Fixed discount amount (${formDiscountAmount}) cannot exceed the remaining amount after admission fee (${remainingAfterAdmission})`,
         );
@@ -565,18 +573,21 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
       }
 
       // Validate discount amounts
-      if (formDiscountType === 'percent' && (formDiscountAmount < 0 || formDiscountAmount > 100)) {
+      if (
+        formDiscountType === DiscountType.PERCENT &&
+        (formDiscountAmount < 0 || formDiscountAmount > 100)
+      ) {
         toast.error('Percentage discount must be between 0 and 100');
         return;
       }
-      if (formDiscountType === 'fixed' && formDiscountAmount < 0) {
+      if (formDiscountType === DiscountType.FIXED && formDiscountAmount < 0) {
         toast.error('Fixed discount amount cannot be negative');
         return;
       }
 
       // Validate that discount doesn't exceed remaining amount after admission fee
       const remainingAfterAdmission = formTotalFees - formAdmissionFee;
-      if (formDiscountType === 'fixed' && formDiscountAmount > remainingAfterAdmission) {
+      if (formDiscountType === DiscountType.FIXED && formDiscountAmount > remainingAfterAdmission) {
         toast.error(
           `Fixed discount amount (${formDiscountAmount}) cannot exceed the remaining amount after admission fee (${remainingAfterAdmission})`,
         );
@@ -610,9 +621,9 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
       // Calculate expected amount after admission fee and discount
       let expectedAmountAfterDiscount = remainingAfterAdmission;
 
-      if (formDiscountType === 'percent' && formDiscountAmount > 0) {
+      if (formDiscountType === DiscountType.PERCENT && formDiscountAmount > 0) {
         expectedAmountAfterDiscount = remainingAfterAdmission * (1 - formDiscountAmount / 100);
-      } else if (formDiscountType === 'fixed' && formDiscountAmount > 0) {
+      } else if (formDiscountType === DiscountType.FIXED && formDiscountAmount > 0) {
         expectedAmountAfterDiscount = remainingAfterAdmission - formDiscountAmount;
       }
 
@@ -677,18 +688,21 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
       }
 
       // Validate discount amounts
-      if (formDiscountType === 'percent' && (formDiscountAmount < 0 || formDiscountAmount > 100)) {
+      if (
+        formDiscountType === DiscountType.PERCENT &&
+        (formDiscountAmount < 0 || formDiscountAmount > 100)
+      ) {
         toast.error('Percentage discount must be between 0 and 100');
         return;
       }
-      if (formDiscountType === 'fixed' && formDiscountAmount < 0) {
+      if (formDiscountType === DiscountType.FIXED && formDiscountAmount < 0) {
         toast.error('Fixed discount amount cannot be negative');
         return;
       }
 
       // Validate that discount doesn't exceed remaining amount after admission fee
       const remainingAfterAdmission = formTotalFees - formAdmissionFee;
-      if (formDiscountType === 'fixed' && formDiscountAmount > remainingAfterAdmission) {
+      if (formDiscountType === DiscountType.FIXED && formDiscountAmount > remainingAfterAdmission) {
         toast.error(
           `Fixed discount amount (${formDiscountAmount}) cannot exceed the remaining amount after admission fee (${remainingAfterAdmission})`,
         );
@@ -723,9 +737,9 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
       // Calculate expected amount after admission fee and discount
       let expectedAmountAfterDiscount = remainingAfterAdmission;
 
-      if (formDiscountType === 'percent' && formDiscountAmount > 0) {
+      if (formDiscountType === DiscountType.PERCENT && formDiscountAmount > 0) {
         expectedAmountAfterDiscount = remainingAfterAdmission * (1 - formDiscountAmount / 100);
-      } else if (formDiscountType === 'fixed' && formDiscountAmount > 0) {
+      } else if (formDiscountType === DiscountType.FIXED && formDiscountAmount > 0) {
         expectedAmountAfterDiscount = remainingAfterAdmission - formDiscountAmount;
       }
 
@@ -778,11 +792,11 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
   const handleSubmit = async (values: Partial<IFeeStructure>) => {
     const paymentType = values.paymentType;
 
-    if (paymentType === 'one_time') {
+    if (paymentType === PaymentType.ONE_TIME) {
       await handleOneTimeSubmit(values);
-    } else if (paymentType === 'installment') {
+    } else if (paymentType === PaymentType.INSTALLMENT) {
       await handleInstallmentSubmit(values);
-    } else if (paymentType === 'monthly') {
+    } else if (paymentType === PaymentType.MONTHLY) {
       await handleMonthlySubmit(values);
     } else {
       toast.error('Please select a valid payment type');
@@ -919,6 +933,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                 <Form.Item
                   name="paymentType"
                   label={t(LOCALE_KEYS.PAYMENT_TYPE)}
+                  initialValue={PAYMENT_TYPE_OPTIONS[0]?.value}
                   rules={[
                     {
                       required: true,
@@ -928,11 +943,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                     },
                   ]}
                 >
-                  <Select placeholder={t(LOCALE_KEYS.SELECT_PAYMENT_TYPE)}>
-                    <Select.Option value="one_time">{t(LOCALE_KEYS.ONE_TIME)}</Select.Option>
-                    <Select.Option value="installment">{t(LOCALE_KEYS.INSTALLMENT)}</Select.Option>
-                    <Select.Option value="monthly">{t(LOCALE_KEYS.MONTHLY)}</Select.Option>
-                  </Select>
+                  <StatusSelect options={PAYMENT_TYPE_OPTIONS} />
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -985,6 +996,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
               <Col span={8}>
                 <Form.Item
                   name="discountType"
+                  initialValue={DISCOUNT_TYPE_OPTIONS[0]?.value}
                   label={t(LOCALE_KEYS.DISCOUNT_TYPE)}
                   rules={[
                     {
@@ -995,11 +1007,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                     },
                   ]}
                 >
-                  <Select placeholder={t(LOCALE_KEYS.SELECT_DISCOUNT_TYPE)}>
-                    <Select.Option value="percent">{t(LOCALE_KEYS.PERCENT)}</Select.Option>
-                    <Select.Option value="fixed">{t(LOCALE_KEYS.FIXED)}</Select.Option>
-                    <Select.Option value="none">{t(LOCALE_KEYS.NONE)}</Select.Option>
-                  </Select>
+                  <StatusSelect options={DISCOUNT_TYPE_OPTIONS} />
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -1104,23 +1112,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item
-                  name="status"
-                  label={t(LOCALE_KEYS.STATUS)}
-                  initialValue="active"
-                  rules={[
-                    {
-                      required: true,
-                      message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-                    },
-                  ]}
-                >
-                  <Select placeholder={t(LOCALE_KEYS.SELECT_STATUS)}>
-                    <Select.Option value="active">{t('active')}</Select.Option>
-                    <Select.Option value="inactive">{t('inactive')}</Select.Option>
-                    {/* <Select.Option value="draft">{t('draft')}</Select.Option> */}
-                  </Select>
-                </Form.Item>
+                <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
               </Col>
             </Row>
           </>

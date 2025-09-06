@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useCreateAddressDetailsConfig} from '@/components/addresses/addressConfig';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -14,7 +15,6 @@ import {useAddresses} from '@/hooks/useAddresses';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAddress} from '@/types/address';
-import {Status} from '@/types/common';
 
 export default function AddressDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedAddress, detailsStatus, loadAddress } = useAddresses();

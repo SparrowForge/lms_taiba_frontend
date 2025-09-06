@@ -7,17 +7,18 @@ import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
 import {IBatch, IBatchUpdate} from '@/types/batch';
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {ISemester} from '@/types/semester';
+
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 const { Text } = Typography;
 
@@ -218,18 +219,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-          },
-        ]}
-      >
-        <StatusSelect />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
       <Form.Item
         name="remarks"
         label={t(LOCALE_KEYS.REMARKS)}

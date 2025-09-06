@@ -5,11 +5,11 @@ import dayjs from 'dayjs';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
 
 import FeeInstallmentPlanForm from './FeeInstallmentPlanForm';

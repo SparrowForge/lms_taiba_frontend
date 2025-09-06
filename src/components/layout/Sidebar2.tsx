@@ -16,13 +16,13 @@ import {usePathname, useRouter} from 'next/navigation';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useAuth} from '@/hooks/useAuth';
 import {useBranches} from '@/hooks/useBranches'; // ✅ ADD
 import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
-import {Status} from '@/types/common';
 import {IMenu} from '@/types/menu';
 
 const { Sider } = Layout;

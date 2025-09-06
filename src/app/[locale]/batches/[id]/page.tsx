@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateBatchDetailsConfig} from '@/components/batches/batchConfig';
@@ -14,7 +15,6 @@ import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
-import {Status} from '@/types/common';
 
 export default function BatchDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedBatch, detailsStatus, loadBatch } = useBatches();

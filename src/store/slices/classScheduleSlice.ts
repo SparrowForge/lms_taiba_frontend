@@ -1,7 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+import {Status} from '@/enums';
+
 import {IClassSchedule} from '@/types/classSchedule';
-import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {IPaginationMeta, IStatusState} from '@/types/common';
 
 interface IClassSchedulesState {
   listStatus: IStatusState;

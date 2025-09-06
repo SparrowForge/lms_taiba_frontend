@@ -4,13 +4,13 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
-import {Status} from '@/types/common';
 import {IPanel} from '@/types/panel';
 
 import {useCreatePanelDetailsConfig} from './panelConfig';

@@ -21,18 +21,20 @@ import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useCourses} from '@/hooks/useCourses';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate} from '@/types/batch';
-import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 import {getErrorMessage} from '@/types/errors';
 import {ISemesterCreate} from '@/types/semester';
+
+
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 // Local interface for semester form with duration (not submitted to backend)
 interface ISemesterFormData extends ISemesterCreate {
@@ -541,19 +543,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            initialValue="active"
-            name="status"
-            label={t(LOCALE_KEYS.STATUS)}
-            rules={[
-              {
-                required: true,
-                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
-              },
-            ]}
-          >
-            <StatusSelect />
-          </Form.Item>
+          <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
         </Col>
       </Row>
 

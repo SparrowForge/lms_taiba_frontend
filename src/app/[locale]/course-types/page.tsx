@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseTypeDetailsDrawer from '@/components/courseTypes/CourseTypeDetailsDrawer';
@@ -17,7 +18,6 @@ import StatusTag from '@/components/ui/StatusTag';
 import {useCourseTypes} from '@/hooks/useCourseTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {ICourseType} from '@/types/courseType';
 
 export default function CourseTypesPage() {

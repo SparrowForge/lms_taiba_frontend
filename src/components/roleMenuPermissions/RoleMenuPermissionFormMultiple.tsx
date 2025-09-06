@@ -7,6 +7,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
@@ -14,7 +15,6 @@ import {usePanels} from '@/hooks/usePanels';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 import {useRoles} from '@/hooks/useRoles';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IMenu} from '@/types/menu';
 

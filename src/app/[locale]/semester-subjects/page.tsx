@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -16,7 +17,6 @@ import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 
-import {Status} from '@/types/common';
 import {ISemester} from '@/types/semester';
 import {ISemesterSubject} from '@/types/semesterSubject';
 import {ISubject} from '@/types/subject';

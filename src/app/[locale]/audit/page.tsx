@@ -7,6 +7,7 @@ import {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import AuditDetailsDrawer from '@/components/audits/AuditDetailsDrawer';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -19,7 +20,6 @@ import {useAudit} from '@/hooks/useAudit';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAudit} from '@/types/audit';
-import {Status} from '@/types/common';
 
 export default function AuditPage() {
   const { t } = useLocalization();

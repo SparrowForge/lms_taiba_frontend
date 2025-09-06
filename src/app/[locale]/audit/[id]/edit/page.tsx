@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -14,7 +15,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useAudit} from '@/hooks/useAudit';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 
 const AuditEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);

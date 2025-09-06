@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse} from '@/types/common';
 import {ICourseAssignment, ICourseAssignmentCreate, ICourseAssignmentUpdate,} from '@/types/courseAssignment';
 
 import {courseAssignmentService} from '@/services/courseAssignmentService';

@@ -5,6 +5,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -17,7 +18,6 @@ import UserRoleFormDrawer from '@/components/userRoles/UserRoleFormDrawer';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';
 
-import {Status} from '@/types/common';
 import {IUserRole} from '@/types/userRole';
 
 export default function UserRolesPage() {
