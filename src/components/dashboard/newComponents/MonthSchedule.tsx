@@ -96,21 +96,37 @@ const MonthSchedule: React.FC = () => {
     }
   };
 
+  // ✅ Custom render for calendar cells
   const dateCellRender = (date: Dayjs) => {
     const dateKey = date.format("YYYY-MM-DD");
     const daySchedules = schedulesByDate[dateKey] || [];
 
-    if (daySchedules.length === 0) return null;
+    // ✅ Mark Friday (5) & Saturday (6) as weekend
+    const isWeekend = date.day() === 5 || date.day() === 6;
+
+if (daySchedules.length === 0) {
+  return isWeekend ? (
+    <div
+      className="calendar-cell-content flex items-center justify-center"
+      style={{ backgroundColor: "#ff4d4f", color: "white", height: "100%", opacity:"0.5"}}
+    >
+     
+    </div>
+  ) : null;
+}
+
 
     return (
-      <div className="calendar-cell-content">
+      <div
+        className={`calendar-cell-content ${isWeekend ? "border border-red-500 rounded" : ""}`}
+      >
         {daySchedules.slice(0, 3).map((schedule) => (
           <Tooltip
             key={schedule.id}
             title={`${schedule.subject?.name} - ${schedule.timeSlot?.name} - ${schedule.room?.name}`}
           >
             <Tag
-              color={getScheduleColor(schedule)}
+              color={isWeekend ? "red" : getScheduleColor(schedule)} // ✅ override color for weekend
               className="cursor-pointer hover:opacity-80"
               onClick={() => handleScheduleClick(schedule)}
             >
@@ -119,7 +135,9 @@ const MonthSchedule: React.FC = () => {
           </Tooltip>
         ))}
         {daySchedules.length > 3 && (
-          <Tag color="default">+{daySchedules.length - 3} more</Tag>
+          <Tag color={isWeekend ? "red" : "default"}>
+            +{daySchedules.length - 3} more
+          </Tag>
         )}
       </div>
     );
@@ -160,7 +178,7 @@ const MonthSchedule: React.FC = () => {
         )}
       </Card>
 
-      {/* Only Details Drawer kept */}
+      {/* ✅ Details Drawer */}
       <ClassScheduleDetailsDrawer
         visible={detailsDrawerVisible}
         onClose={() => setDetailsDrawerVisible(false)}
