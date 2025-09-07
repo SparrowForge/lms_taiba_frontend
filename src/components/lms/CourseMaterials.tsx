@@ -14,10 +14,11 @@ import {
 } from "@ant-design/icons";
 import { useLocale } from "next-intl";
 
-import { Status } from "@/types/common";
+
 import { useCourseMaterials } from "@/hooks/useCourseMaterials";
 import { ICourseMaterial } from "@/types/courseMaterial";
 import { useRouter } from "next/navigation";
+import { Status } from "@/enums";
 
 const materialTypes = ["pdf", "lecture", "video", "slide", "assignment", "material"];
 
@@ -172,8 +173,8 @@ const CourseMaterials = () => {
                   {getIcon(m.type)}
                   <div>
                     <h3 className="font-medium text-lg">{m.title}</h3>
-                    <p className="text-sm text-gray-500">
-                      {m.course?.name ?? "-"} | {m.file?.size ?? "N/A"}
+                    <p className="text-xs text-gray-500">
+                      {m.description}
                     </p>
                   </div>
                 </div>

@@ -1,11 +1,11 @@
-import { Column } from "@ant-design/plots";
+import {Column} from '@ant-design/plots';
 
 interface ColumnGraphProps {
   data: { xdata: string; ydata: number }[];
   color?: string; // hex or rgba
 }
 
-const ColumnGraph: React.FC<ColumnGraphProps> = ({ data, color = "#1F4BCA" }) => {
+const ColumnGraph: React.FC<ColumnGraphProps> = ({ data, color = '#1F4BCA' }) => {
   const config = {
     data,
     xField: "xdata",
@@ -16,7 +16,7 @@ const ColumnGraph: React.FC<ColumnGraphProps> = ({ data, color = "#1F4BCA" }) =>
       radius: [8, 8, 0, 0], // rounded top corners
       fill: color, // dynamic color
     },
-   
+
     // label: {
     //   text: (originData: { ydata: any; }) => `${originData.attendance}%`,
     //   offset: 10,

@@ -1,31 +1,16 @@
 import {Card} from 'antd';
 
-<<<<<<< HEAD
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
-=======
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import {useLocalization} from '@/hooks/useLocalization';
-
-import ColumnGraph from '../dashboardui/graphs/ColumnGraph';
->>>>>>> dev
-
 import { useLocalization } from "@/hooks/useLocalization";
+import ColumnGraph from '../dashboardui/graphs/ColumnGraph';
 
-import ColumnGraph from "../dashboardui/graphs/ColumnGraph";
+
 
 const data = [
-<<<<<<< HEAD
   { xdata: "Week 1", ydata: 80 },
   { xdata: "Week 2", ydata: 75 },
   { xdata: "Week 3", ydata: 90 },
   { xdata: "Week 4", ydata: 85 },
-=======
-  { week: 'Week 1', attendance: 80 },
-  { week: 'Week 2', attendance: 75 },
-  { week: 'Week 3', attendance: 90 },
-  { week: 'Week 4', attendance: 85 },
->>>>>>> dev
 ];
 
 const MonthlyAttendance = () => {

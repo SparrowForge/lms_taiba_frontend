@@ -31,6 +31,7 @@ export interface IClassSchedule {
   room: IRoom;
   faculty: IFaculty;
   timeSlot: ITimeSlot;
+  color: string;
 }
 
 export interface IClassScheduleCreate {

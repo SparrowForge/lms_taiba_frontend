@@ -1,60 +1,174 @@
-'use client';
+"use client";
 
-import {Calendar, Tag} from 'antd';
+import { Card, Calendar, Tag, Tooltip } from "antd";
+import dayjs, { Dayjs } from "dayjs";
+import React, { useEffect, useMemo, useState } from "react";
 
-import type {Dayjs} from 'dayjs';
+import { Status } from "@/enums";
+import { useClassSchedules } from "@/hooks/useClassSchedules";
+import { useLocalization } from "@/hooks/useLocalization";
+import { IClassSchedule } from "@/types/classSchedule";
 
-const monthlyClasses: Record<string, { title: string; time: string; color: string }[]> = {
-  '2025-08-25': [
-    { title: 'Programming', time: '9:30 - 11:00', color: 'blue' },
-    { title: 'Database', time: '12:30 - 2:00', color: 'green' },
-  ],
-  '2025-08-26': [
-    { title: 'Web Dev', time: '11:30 - 1:00', color: 'geekblue' },
-    { title: 'UI Design', time: '2:30 - 4:00', color: 'cyan' },
-  ],
-  '2025-08-27': [{ title: 'Data Science', time: '10:00 - 11:30', color: 'purple' }],
-  '2025-08-28': [{ title: 'Python', time: '9:00 - 10:30', color: 'green' }],
-  '2025-09-01': [
-    { title: 'Web Dev', time: '11:30 - 1:00', color: 'geekblue' },
-    { title: 'UI Design', time: '2:30 - 4:00', color: 'cyan' },
-  ],
-};
+import ClassScheduleDetailsDrawer from "@/components/classSchedules/ClassScheduleDetailsDrawer";
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
 
-interface MonthScheduleProps {
-  onSelectClass: (date: string) => void;
-}
+const MonthSchedule: React.FC = () => {
+  const { t } = useLocalization();
+  const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
+  const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
+  const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
-const MonthSchedule: React.FC<MonthScheduleProps> = ({ onSelectClass }) => {
-  const cellRender = (
-    date: Dayjs,
-    info: {
-      originNode: any;
-      type: string;
-    },
-  ) => {
-    if (info.type === 'date') {
-      const key = date.format('YYYY-MM-DD');
-      const classes = monthlyClasses[key] || [];
-      return (
-        <ul className="m-0 p-0 list-none">
-          {classes.map((cls, idx) => (
-            <Tag
-              color={cls.color}
-              key={idx}
-              className="mb-1 text-xs cursor-pointer "
-              onClick={() => onSelectClass(key)}
-            >
-              {cls.title.length > 5 ? cls.title.slice(0, 6) + '' : cls.title}
-            </Tag>
-          ))}
-        </ul>
-      );
-    }
-    return info.originNode;
+  const { classSchedules, listStatus, loadClassSchedules } = useClassSchedules();
+
+  useEffect(() => {
+    const currentDate = dayjs();
+    loadClassSchedules({
+      page: 1,
+      limit: 100,
+      year: currentDate.year(),
+      month: currentDate.month() + 1, // API expects 1-12, dayjs uses 0-11
+    });
+  }, [loadClassSchedules]);
+
+  const handleScheduleClick = (schedule: IClassSchedule) => {
+    setSelectedDetailsId(schedule.id);
+    setDetailsDrawerVisible(true);
   };
 
-  return <Calendar fullscreen={true} cellRender={cellRender} />;
+  const schedulesByDate = useMemo(() => {
+    const grouped: Record<string, IClassSchedule[]> = {};
+
+    classSchedules.forEach((schedule) => {
+      const startDate = dayjs(schedule.startDate);
+      const endDate = dayjs(schedule.endDate);
+
+      // recurring schedules
+      if (schedule.isRecurring && schedule.weekDay?.dayNumber) {
+        const monthStart = currentMonth.startOf("month");
+        let currentDate = monthStart;
+
+        // find first weekday occurrence
+        while (currentDate.day() !== schedule.weekDay.dayNumber % 7) {
+          currentDate = currentDate.add(1, "day");
+        }
+
+        // add occurrences within range
+        while (currentDate.isSame(monthStart, "month")) {
+          if (
+            (currentDate.isSame(startDate) || currentDate.isAfter(startDate)) &&
+            (currentDate.isSame(endDate) || currentDate.isBefore(endDate))
+          ) {
+            const dateKey = currentDate.format("YYYY-MM-DD");
+            if (!grouped[dateKey]) grouped[dateKey] = [];
+            grouped[dateKey].push(schedule);
+          }
+          currentDate = currentDate.add(7, "day");
+        }
+      } else {
+        // one-time schedules
+        if (startDate.isSame(currentMonth, "month")) {
+          const dateKey = startDate.format("YYYY-MM-DD");
+          if (!grouped[dateKey]) grouped[dateKey] = [];
+          grouped[dateKey].push(schedule);
+        }
+      }
+    });
+
+    return grouped;
+  }, [classSchedules, currentMonth]);
+
+  const getScheduleColor = (schedule: IClassSchedule): string => {
+    if (schedule.status === "ACTIVE") return "green";
+    if (schedule.status === "INACTIVE") return "red";
+    if (schedule.status === "PENDING") return "orange";
+
+    switch (schedule.classScheduleType) {
+      case "REGULAR":
+        return "blue";
+      case "LAB":
+        return "purple";
+      case "TUTORIAL":
+        return "cyan";
+      case "EXAM":
+        return "red";
+      default:
+        return "default";
+    }
+  };
+
+  const dateCellRender = (date: Dayjs) => {
+    const dateKey = date.format("YYYY-MM-DD");
+    const daySchedules = schedulesByDate[dateKey] || [];
+
+    if (daySchedules.length === 0) return null;
+
+    return (
+      <div className="calendar-cell-content">
+        {daySchedules.slice(0, 3).map((schedule) => (
+          <Tooltip
+            key={schedule.id}
+            title={`${schedule.subject?.name} - ${schedule.timeSlot?.name} - ${schedule.room?.name}`}
+          >
+            <Tag
+              color={getScheduleColor(schedule)}
+              className="cursor-pointer hover:opacity-80"
+              onClick={() => handleScheduleClick(schedule)}
+            >
+              {schedule.subject?.name?.substring(0, 8)}...
+            </Tag>
+          </Tooltip>
+        ))}
+        {daySchedules.length > 3 && (
+          <Tag color="default">+{daySchedules.length - 3} more</Tag>
+        )}
+      </div>
+    );
+  };
+
+  const handleMonthChange = (date: Dayjs) => {
+    setCurrentMonth(date);
+    loadClassSchedules({
+      page: 1,
+      limit: 100,
+      year: date.year(),
+      month: date.month() + 1,
+    });
+  };
+
+  return (
+    <div
+      className="flex flex-col gap-[12px] overflow-y-auto"
+      style={{ height: "calc(100vh - 142px)" }}
+    >
+      <Card>
+        {listStatus.status === Status.LOADING ? (
+          <div className="flex items-center justify-center p-8 text-gray-500">
+            {t(LOCALE_KEYS.LOADING)}
+          </div>
+        ) : listStatus.status === Status.FAILED ? (
+          <div className="flex items-center justify-center p-8 text-red-500">
+            {t(LOCALE_KEYS.ERROR)}: {listStatus.message}
+          </div>
+        ) : (
+          <Calendar
+            value={currentMonth}
+            cellRender={dateCellRender}
+            onChange={handleMonthChange}
+            mode="month"
+            fullscreen
+          />
+        )}
+      </Card>
+
+      {/* Only Details Drawer kept */}
+      <ClassScheduleDetailsDrawer
+        visible={detailsDrawerVisible}
+        onClose={() => setDetailsDrawerVisible(false)}
+        onEdit={() => {}}
+        classScheduleId={selectedDetailsId}
+      />
+    </div>
+  );
 };
 
 export default MonthSchedule;
