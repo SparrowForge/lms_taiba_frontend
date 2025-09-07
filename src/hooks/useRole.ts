@@ -3,8 +3,8 @@ import {useState} from 'react';
 type Role = 'teacher' | 'student';
 
 export const useRole = (): Role => {
-  const [role] = useState<Role>("teacher");
-  // const [role] = useState<Role>('student');
+  // const [role] = useState<Role>("teacher");
+  const [role] = useState<Role>('student');
 
   //   useEffect(() => {
   //     // Example: get role from localStorage
