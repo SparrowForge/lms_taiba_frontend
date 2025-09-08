@@ -115,14 +115,18 @@ const CourseMaterials = () => {
             <SnippetsOutlined style={{ fontSize: 22, color: '#06b6d4' }} />
           </div>
         );
-      case 'other':
-        return (
-          <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100">
+      // case 'other':
+      //   return (
+      //     <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100">
+      //       <BookOutlined style={{ fontSize: 22, color: '#ff4d4f' }}  />
+      //     </div>
+      //   );
+      default:
+        return(
+           <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100">
             <BookOutlined style={{ fontSize: 22, color: '#ff4d4f' }}  />
           </div>
-        );
-      default:
-        return null;
+        )
     }
   };
 
@@ -142,10 +146,8 @@ const CourseMaterials = () => {
         return 'purple';
       case 'document':
         return 'cyan';
-      case 'other':
-        return 'red';
       default:
-        return 'default';
+        return 'red';
     }
   };
 
