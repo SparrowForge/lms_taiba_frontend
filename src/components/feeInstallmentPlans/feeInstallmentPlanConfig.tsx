@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
+import { IFeeInstallmentPlan } from '@/types/feeInstallmentPlan';
 
 export const getFeeInstallmentPlanDisplayName = (feeInstallmentPlan: IFeeInstallmentPlan) => {
   return feeInstallmentPlan.paymentLabel || `Fee Installment Plan #${feeInstallmentPlan.id}`;

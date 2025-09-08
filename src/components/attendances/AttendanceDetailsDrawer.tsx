@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useAttendances} from '@/hooks/useAttendances';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAttendances } from '@/hooks/useAttendances';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IAttendance} from '@/types/attendance';
+import { IAttendance } from '@/types/attendance';
 
-import {useCreateAttendanceDetailsConfig} from './attendanceConfig';
+import { useCreateAttendanceDetailsConfig } from './attendanceConfig';
 
 interface AttendanceDetailsDrawerProps {
   attendanceId?: number;

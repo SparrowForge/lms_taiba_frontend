@@ -1,22 +1,22 @@
 'use client';
 
-import {Button, Form, Input, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
 
-import {StatusSelectFormItem} from '@/components/ui/StatusSelect';
+import { StatusSelectFormItem } from '@/components/ui/StatusSelect';
 
-import {useBranches} from '@/hooks/useBranches';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRoles} from '@/hooks/useRoles';
+import { useBranches } from '@/hooks/useBranches';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRoles } from '@/hooks/useRoles';
 
-import {getErrorMessage} from '@/types/errors';
-import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
+import { getErrorMessage } from '@/types/errors';
+import { IRole, IRoleCreate, IRoleUpdate } from '@/types/role';
 
 import FormLayout from '../layout/FormLayout';
 

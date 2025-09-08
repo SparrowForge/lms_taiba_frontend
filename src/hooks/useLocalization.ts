@@ -1,6 +1,6 @@
-import {useTranslations} from 'next-intl';
+import { useTranslations } from 'next-intl';
 
-import {LOCALE_KEYS, LocaleKey} from '@/constants/localizationKeys';
+import { LOCALE_KEYS, LocaleKey } from '@/constants/localizationKeys';
 
 export const useLocalization = () => {
   const t = useTranslations();

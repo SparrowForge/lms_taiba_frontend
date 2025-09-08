@@ -1,13 +1,13 @@
 'use client';
 
-import {FileExcelOutlined, SearchOutlined, UserAddOutlined} from '@ant-design/icons';
-import {Alert, Button, Card, Input, Pagination, Table, Typography} from 'antd';
-import {TableProps} from 'antd/es/table';
-import {useRouter, useSearchParams} from 'next/navigation';
+import { FileExcelOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Input, Pagination, Table, Typography } from 'antd';
+import { TableProps } from 'antd/es/table';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const { Title } = Typography;
 const { Search } = Input;

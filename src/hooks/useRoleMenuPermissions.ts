@@ -1,33 +1,33 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
-    IRoleMenuPermission,
-    IRoleMenuPermissionCreate,
-    IRoleMenuPermissionUpdate,
-    IRoleWithMenuPermission,
+  IRoleMenuPermission,
+  IRoleMenuPermissionCreate,
+  IRoleMenuPermissionUpdate,
+  IRoleWithMenuPermission,
 } from '@/types/roleMenuPermission';
 
-import {roleMenuPermissionService} from '@/services/roleMenuPermissionService';
+import { roleMenuPermissionService } from '@/services/roleMenuPermissionService';
 
 import {
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteRoleMenuPermission,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setRoleMenuPermissions,
-    setRolesWithPermissions,
-    setRolesWithPermissionsStatus,
-    setSelectedRoleMenuPermission,
-    updateRoleMenuPermission,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteRoleMenuPermission,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setRoleMenuPermissions,
+  setRolesWithPermissions,
+  setRolesWithPermissionsStatus,
+  setSelectedRoleMenuPermission,
+  updateRoleMenuPermission,
 } from '@/store/slices/roleMenuPermissionSlice';
 
 export const useRoleMenuPermissions = () => {

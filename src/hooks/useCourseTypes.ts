@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ICourseType, ICourseTypeCreate, ICourseTypeUpdate} from '@/types/courseType';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { ICourseType, ICourseTypeCreate, ICourseTypeUpdate } from '@/types/courseType';
 
-import {courseTypeService} from '@/services/courseTypeService';
+import { courseTypeService } from '@/services/courseTypeService';
 
 import {
-    addCourseType,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteCourseType,
-    setActionStatus,
-    setCourseTypes,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedCourseType,
-    updateCourseType,
+  addCourseType,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteCourseType,
+  setActionStatus,
+  setCourseTypes,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedCourseType,
+  updateCourseType,
 } from '@/store/slices/courseTypeSlice';
 
 export const useCourseTypes = () => {

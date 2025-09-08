@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IAudit} from '@/types/audit';
+import { IAudit } from '@/types/audit';
 
 export const getAuditDisplayName = (audit: IAudit) => {
   return `${audit.action} - ${audit.resource} (${audit.username})`;

@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ISubject, ISubjectCreate, ISubjectUpdate} from '@/types/subject';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { ISubject, ISubjectCreate, ISubjectUpdate } from '@/types/subject';
 
-import {subjectService} from '@/services/subjectService';
+import { subjectService } from '@/services/subjectService';
 
 import {
-    addSubject,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteSubject,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedSubject,
-    setSubjects,
-    updateSubject,
+  addSubject,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteSubject,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedSubject,
+  setSubjects,
+  updateSubject,
 } from '@/store/slices/subjectSlice';
 
 export const useSubjects = () => {

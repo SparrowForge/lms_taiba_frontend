@@ -1,10 +1,10 @@
-import {Button} from 'antd';
+import { Button } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const SocialLogin = () => {
   const { t } = useLocalization();

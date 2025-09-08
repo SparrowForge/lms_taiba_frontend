@@ -1,32 +1,32 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
-    ISemesterSubject,
-    ISemesterSubjectCreate,
-    ISemesterSubjectMultipleCreate,
-    ISemesterSubjectUpdate,
+  ISemesterSubject,
+  ISemesterSubjectCreate,
+  ISemesterSubjectMultipleCreate,
+  ISemesterSubjectUpdate,
 } from '@/types/semesterSubject';
 
-import {semesterSubjectService} from '@/services/semesterSubjectService';
+import { semesterSubjectService } from '@/services/semesterSubjectService';
 
 import {
-    addSemesterSubject,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteSemesterSubject,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedSemesterSubject,
-    setSemesterSubjects,
-    updateSemesterSubject,
+  addSemesterSubject,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteSemesterSubject,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedSemesterSubject,
+  setSemesterSubjects,
+  updateSemesterSubject,
 } from '@/store/slices/semesterSubjectSlice';
 
 export const useSemesterSubjects = () => {

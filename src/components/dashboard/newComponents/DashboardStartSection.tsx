@@ -1,15 +1,20 @@
 'use client';
 
-import {FileDoneOutlined, FundProjectionScreenOutlined, ProfileOutlined} from '@ant-design/icons';
-import {closestCenter, DndContext, PointerSensor, useSensor, useSensors} from '@dnd-kit/core';
-import {arrayMove, SortableContext, useSortable, verticalListSortingStrategy,} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
-import {useState} from 'react';
+import { FileDoneOutlined, FundProjectionScreenOutlined, ProfileOutlined } from '@ant-design/icons';
+import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRole} from '@/hooks/useRole';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRole } from '@/hooks/useRole';
 
 import WelcomeSection from './WelcomeSection';
 import LeftBorderCard from '../dashboardui/cards/LeftBorderCard';

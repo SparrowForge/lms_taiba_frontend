@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {useCreateRoomDetailsConfig} from '@/components/rooms/roomConfig';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { useCreateRoomDetailsConfig } from '@/components/rooms/roomConfig';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRooms} from '@/hooks/useRooms';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRooms } from '@/hooks/useRooms';
 
-import {IRoom} from '@/types/room';
+import { IRoom } from '@/types/room';
 
 export default function RoomDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedRoom, detailsStatus, loadRoom } = useRooms();

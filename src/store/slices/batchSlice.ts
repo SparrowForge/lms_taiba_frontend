@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IBatch} from '@/types/batch';
-import {IPaginationMeta, IStatusState} from '@/types/common';
+import { IBatch } from '@/types/batch';
+import { IPaginationMeta, IStatusState } from '@/types/common';
 
 interface IBatchesState {
   listStatus: IStatusState;

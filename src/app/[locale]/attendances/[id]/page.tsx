@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useCreateAttendanceDetailsConfig} from '@/components/attendances/attendanceConfig';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { useCreateAttendanceDetailsConfig } from '@/components/attendances/attendanceConfig';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useAttendances} from '@/hooks/useAttendances';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAttendances } from '@/hooks/useAttendances';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IAttendance} from '@/types/attendance';
+import { IAttendance } from '@/types/attendance';
 
 export default function AttendanceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedAttendance, detailsStatus, loadAttendance } = useAttendances();

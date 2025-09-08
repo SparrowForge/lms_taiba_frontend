@@ -1,8 +1,8 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IPanel} from '@/types/panel';
+import { IPanel } from '@/types/panel';
 
 export const getPanelDisplayName = (panel: IPanel) => panel.name;
 

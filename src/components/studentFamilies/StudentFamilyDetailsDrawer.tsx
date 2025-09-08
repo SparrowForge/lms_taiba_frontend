@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudentFamilies} from '@/hooks/useStudentFamilies';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudentFamilies } from '@/hooks/useStudentFamilies';
 
-import {IStudentFamily} from '@/types/studentFamily';
+import { IStudentFamily } from '@/types/studentFamily';
 
-import {useCreateStudentFamilyDetailsConfig} from './studentFamilyConfig';
+import { useCreateStudentFamilyDetailsConfig } from './studentFamilyConfig';
 
 interface StudentFamilyDetailsDrawerProps {
   studentFamilyId?: number;

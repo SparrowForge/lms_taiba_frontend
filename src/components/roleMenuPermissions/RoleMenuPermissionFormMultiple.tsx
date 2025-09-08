@@ -1,24 +1,30 @@
 'use client';
 
-import {DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, ReloadOutlined,} from '@ant-design/icons';
-import {Button, Checkbox, Form, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useCallback, useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  PlusOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons';
+import { Button, Checkbox, Form, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useMenus} from '@/hooks/useMenus';
-import {usePanels} from '@/hooks/usePanels';
-import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
-import {useRoles} from '@/hooks/useRoles';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useMenus } from '@/hooks/useMenus';
+import { usePanels } from '@/hooks/usePanels';
+import { useRoleMenuPermissions } from '@/hooks/useRoleMenuPermissions';
+import { useRoles } from '@/hooks/useRoles';
 
-import {getErrorMessage} from '@/types/errors';
-import {IMenu} from '@/types/menu';
+import { getErrorMessage } from '@/types/errors';
+import { IMenu } from '@/types/menu';
 
-import {RoleMenuPermissionFormProps} from './RoleMenuPermissionFormTabView';
+import { RoleMenuPermissionFormProps } from './RoleMenuPermissionFormTabView';
 
 function RoleMenuPermissionFormMultiple({
   roleMenuPermissionId,

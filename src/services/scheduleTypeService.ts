@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IScheduleType, IScheduleTypeCreate, IScheduleTypeUpdate} from '@/types/scheduleType';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IScheduleType, IScheduleTypeCreate, IScheduleTypeUpdate } from '@/types/scheduleType';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const scheduleTypeService = {
   getScheduleTypes: async (params = {}): Promise<IBasePaginatedResponse<IScheduleType>> => {

@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IFaculty, IFacultyCreate, IFacultyUpdate } from '@/types/faculty';
 
-import {facultyService} from '@/services/facultyService';
+import { facultyService } from '@/services/facultyService';
 
 import {
-    addFaculty,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteFaculty,
-    setActionStatus,
-    setDetailsStatus,
-    setFaculties,
-    setListStatus,
-    setPagination,
-    setSelectedFaculty,
-    updateFaculty,
+  addFaculty,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteFaculty,
+  setActionStatus,
+  setDetailsStatus,
+  setFaculties,
+  setListStatus,
+  setPagination,
+  setSelectedFaculty,
+  updateFaculty,
 } from '@/store/slices/facultySlice';
 
 export const useFaculties = () => {

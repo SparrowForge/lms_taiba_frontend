@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateInstituteDetailsConfig} from '@/components/institutes/instituteConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateInstituteDetailsConfig } from '@/components/institutes/instituteConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useInstitutes} from '@/hooks/useInstitutes';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useInstitutes } from '@/hooks/useInstitutes';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IInstitute} from '@/types/institute';
+import { IInstitute } from '@/types/institute';
 
 export default function InstituteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedInstitute, detailsStatus, getInstituteById, loadInstitute } = useInstitutes();

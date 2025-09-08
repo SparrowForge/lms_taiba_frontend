@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IAttendance, IAttendanceCreate, IAttendanceUpdate} from '@/types/attendance';
-import {IBasePaginatedResponse} from '@/types/common';
+import { IAttendance, IAttendanceCreate, IAttendanceUpdate } from '@/types/attendance';
+import { IBasePaginatedResponse } from '@/types/common';
 
-import {attendanceService} from '@/services/attendanceService';
+import { attendanceService } from '@/services/attendanceService';
 
 import {
-    addAttendance,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteAttendance,
-    setActionStatus,
-    setAttendances,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedAttendance,
-    updateAttendance,
+  addAttendance,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteAttendance,
+  setActionStatus,
+  setAttendances,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedAttendance,
+  updateAttendance,
 } from '@/store/slices/attendanceSlice';
 
 export const useAttendances = () => {

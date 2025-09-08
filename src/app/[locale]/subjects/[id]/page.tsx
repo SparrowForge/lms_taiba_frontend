@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {useCreateSubjectDetailsConfig} from '@/components/subjects/subjectConfig';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { useCreateSubjectDetailsConfig } from '@/components/subjects/subjectConfig';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSubjects} from '@/hooks/useSubjects';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSubjects } from '@/hooks/useSubjects';
 
-import {ISubject} from '@/types/subject';
+import { ISubject } from '@/types/subject';
 
 export default function SubjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedSubject, detailsStatus, loadSubject } = useSubjects();

@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
-import {useCreateUserDetailsConfig} from '@/components/users/userConfig';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import { useCreateUserDetailsConfig } from '@/components/users/userConfig';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useUsers} from '@/hooks/useUsers';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useUsers } from '@/hooks/useUsers';
 
-import {IUser} from '@/types/user';
+import { IUser } from '@/types/user';
 
 export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedUser, detailsStatus, loadUser } = useUsers();

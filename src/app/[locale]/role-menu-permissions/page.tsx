@@ -1,25 +1,25 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import RoleMenuPermissionDetailsDrawer from '@/components/roleMenuPermissions/RoleMenuPermissionDetailsDrawer';
 import RoleMenuPermissionFormDrawer from '@/components/roleMenuPermissions/RoleMenuPermissionFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRoleMenuPermissions } from '@/hooks/useRoleMenuPermissions';
 
-import {IMenu} from '@/types/menu';
-import {IRole} from '@/types/role';
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
+import { IMenu } from '@/types/menu';
+import { IRole } from '@/types/role';
+import { IRoleMenuPermission } from '@/types/roleMenuPermission';
 
 export default function RoleMenuPermissionsPage() {
   const { t } = useLocalization();

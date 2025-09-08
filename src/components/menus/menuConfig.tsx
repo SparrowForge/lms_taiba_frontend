@@ -1,8 +1,8 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IMenu} from '@/types/menu';
+import { IMenu } from '@/types/menu';
 
 export const getMenuDisplayName = (menu: IMenu) => menu.name;
 

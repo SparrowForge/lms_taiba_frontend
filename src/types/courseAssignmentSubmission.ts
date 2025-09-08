@@ -1,7 +1,7 @@
-import {ICourseAssignment} from './courseAssignment';
-import {IFaculty} from './faculty';
-import {IFile} from './file';
-import {IStudent} from './student';
+import { ICourseAssignment } from './courseAssignment';
+import { IFaculty } from './faculty';
+import { IFile } from './file';
+import { IStudent } from './student';
 
 export interface ICourseAssignmentSubmission {
   id: number;

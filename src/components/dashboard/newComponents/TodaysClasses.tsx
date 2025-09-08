@@ -1,13 +1,13 @@
 'use client';
-import {Card, Col, Row, Tag} from 'antd';
+import { Card, Col, Row, Tag } from 'antd';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import {useEffect, useMemo} from 'react';
+import { useEffect, useMemo } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useClassSchedules} from '@/hooks/useClassSchedules';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useClassSchedules } from '@/hooks/useClassSchedules';
+import { useLocalization } from '@/hooks/useLocalization';
 
 dayjs.extend(isBetween);
 

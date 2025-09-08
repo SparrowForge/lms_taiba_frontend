@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
-import {useCreateWeekDayDetailsConfig} from '@/components/weekDays/weekDayConfig';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import { useCreateWeekDayDetailsConfig } from '@/components/weekDays/weekDayConfig';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useWeekDays} from '@/hooks/useWeekDays';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useWeekDays } from '@/hooks/useWeekDays';
 
-import {IWeekDay} from '@/types/weekDay';
+import { IWeekDay } from '@/types/weekDay';
 
 export default function WeekDayDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedWeekDay, detailsStatus, loadWeekDay } = useWeekDays();

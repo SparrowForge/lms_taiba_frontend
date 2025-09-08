@@ -1,18 +1,18 @@
 'use client';
 
-import {Card, Col, Row, Segmented, Tag} from 'antd';
+import { Card, Col, Row, Segmented, Tag } from 'antd';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 import ClassScheduleDetailsDrawer from '@/components/classSchedules/ClassScheduleDetailsDrawer';
 
-import {useClassSchedules} from '@/hooks/useClassSchedules';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useClassSchedules } from '@/hooks/useClassSchedules';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IClassSchedule} from '@/types/classSchedule';
+import { IClassSchedule } from '@/types/classSchedule';
 
 import MonthSchedule from './MonthSchedule';
 import TodaysClasses from './TodaysClasses';

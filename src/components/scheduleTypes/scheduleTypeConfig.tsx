@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IScheduleType} from '@/types/scheduleType';
+import { IScheduleType } from '@/types/scheduleType';
 
 export const getScheduleTypeDisplayName = (item: IScheduleType) =>
   item.name || `Schedule Type #${item.id}`;

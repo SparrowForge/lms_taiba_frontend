@@ -1,4 +1,4 @@
-import {Column} from '@ant-design/plots';
+import { Column } from '@ant-design/plots';
 
 interface ColumnGraphProps {
   data: { xdata: string; ydata: number }[];

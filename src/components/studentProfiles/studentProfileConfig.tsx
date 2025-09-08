@@ -1,8 +1,8 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {IStudentProfile} from '@/types/studentProfile';
+import { IStudentProfile } from '@/types/studentProfile';
 
 export const getStudentProfileDisplayName = (studentProfile: IStudentProfile) => {
   return studentProfile.student?.name || `Student Profile #${studentProfile.id}`;

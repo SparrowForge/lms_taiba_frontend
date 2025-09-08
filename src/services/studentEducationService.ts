@@ -1,7 +1,11 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IStudentEducation, IStudentEducationCreate, IStudentEducationUpdate,} from '@/types/studentEducation';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IStudentEducation,
+  IStudentEducationCreate,
+  IStudentEducationUpdate,
+} from '@/types/studentEducation';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const studentEducationService = {
   // Get all student educations with pagination

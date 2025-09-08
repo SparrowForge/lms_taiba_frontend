@@ -1,6 +1,6 @@
-import {IBatch} from './batch';
-import {IBranch} from './branch';
-import {ICourse} from './course';
+import { IBatch } from './batch';
+import { IBranch } from './branch';
+import { ICourse } from './course';
 
 export interface IStudent {
   id: number;

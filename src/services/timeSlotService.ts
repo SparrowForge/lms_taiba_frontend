@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ITimeSlot, ITimeSlotCreate, ITimeSlotUpdate} from '@/types/timeSlot';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { ITimeSlot, ITimeSlotCreate, ITimeSlotUpdate } from '@/types/timeSlot';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const timeSlotService = {
   getTimeSlots: async (params = {}): Promise<IBasePaginatedResponse<ITimeSlot>> => {

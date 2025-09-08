@@ -1,39 +1,39 @@
 'use client';
 
 import {
-    Button,
-    Card,
-    Col,
-    DatePicker,
-    Divider,
-    Form,
-    Input,
-    InputNumber,
-    Row,
-    Select,
-    Space,
-    Switch,
-    Typography,
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+  Switch,
+  Typography,
 } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useCourses} from '@/hooks/useCourses';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate} from '@/types/batch';
-import {ICourse} from '@/types/course';
-import {getErrorMessage} from '@/types/errors';
-import {ISemesterCreate} from '@/types/semester';
+import { IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate } from '@/types/batch';
+import { ICourse } from '@/types/course';
+import { getErrorMessage } from '@/types/errors';
+import { ISemesterCreate } from '@/types/semester';
 
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 // Local interface for semester form with duration (not submitted to backend)
 interface ISemesterFormData extends ISemesterCreate {

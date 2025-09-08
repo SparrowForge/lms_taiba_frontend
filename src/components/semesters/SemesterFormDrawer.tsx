@@ -1,13 +1,13 @@
 'use client';
 
-import {Drawer, Spin} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer, Spin } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSemesters} from '@/hooks/useSemesters';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
 
 import SemesterForm from './SemesterForm';
 

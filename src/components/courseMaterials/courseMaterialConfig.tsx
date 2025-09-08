@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourseMaterial} from '@/types/courseMaterial';
+import { ICourseMaterial } from '@/types/courseMaterial';
 
 export const useCreateCourseMaterialDetailsConfig = (
   courseMaterial: ICourseMaterial | null,

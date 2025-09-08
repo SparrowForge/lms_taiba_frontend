@@ -1,7 +1,13 @@
-import {IBatch, IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate, IBatchWithSemestersUpdate,} from '@/types/batch';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import {
+  IBatch,
+  IBatchCreate,
+  IBatchUpdate,
+  IBatchWithSemestersCreate,
+  IBatchWithSemestersUpdate,
+} from '@/types/batch';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const batchService = {
   // Get all batches with pagination and search

@@ -1,7 +1,7 @@
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import DashboardStartSection from '@/components/dashboard/newComponents/DashboardStartSection';
 import LayoutDashboard from '@/components/layout/LayoutDashboard';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 
 export default function HomePage() {
   return (

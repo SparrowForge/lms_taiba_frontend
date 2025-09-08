@@ -1,24 +1,24 @@
 'use client';
 
-import {Button, Form, Input, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
 
-import {useBranches} from '@/hooks/useBranches';
-import {useDepartments} from '@/hooks/useDepartments';
-import {useFaculties} from '@/hooks/useFaculties';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useBranches } from '@/hooks/useBranches';
+import { useDepartments } from '@/hooks/useDepartments';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IDepartment, IDepartmentCreate, IDepartmentUpdate} from '@/types/department';
-import {getErrorMessage} from '@/types/errors';
+import { IDepartment, IDepartmentCreate, IDepartmentUpdate } from '@/types/department';
+import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface DepartmentFormProps {
   mode: 'create' | 'edit';

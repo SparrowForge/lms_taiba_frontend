@@ -1,18 +1,18 @@
 'use client';
 
-import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, Card, Form, Input, Spin} from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, Spin } from 'antd';
 import Image from 'next/image';
-import {useEffect, useState} from 'react';
-import {toast, ToastContainer} from 'react-toastify';
+import { useEffect, useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useAuth} from '@/hooks/useAuth';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAuth } from '@/hooks/useAuth';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import type {LoginCredentials} from '@/types/auth';
-import {getErrorMessage} from '@/types/errors';
+import type { LoginCredentials } from '@/types/auth';
+import { getErrorMessage } from '@/types/errors';
 
 import SocialLogin from './SocialLogin';
 

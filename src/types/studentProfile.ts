@@ -1,5 +1,5 @@
-import {IAddress} from './address';
-import {IStudent} from './student';
+import { IAddress } from './address';
+import { IStudent } from './student';
 
 export interface IStudentProfile {
   id: number;

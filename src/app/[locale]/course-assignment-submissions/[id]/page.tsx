@@ -1,22 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {
-    useCreateCourseAssignmentSubmissionDetailsConfig
-} from '@/components/courseAssignmentSubmissions/courseAssignmentSubmissionConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateCourseAssignmentSubmissionDetailsConfig } from '@/components/courseAssignmentSubmissions/courseAssignmentSubmissionConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useCourseAssignmentSubmissions} from '@/hooks/useCourseAssignmentSubmissions';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useCourseAssignmentSubmissions } from '@/hooks/useCourseAssignmentSubmissions';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourseAssignmentSubmission} from '@/types/courseAssignmentSubmission';
+import { ICourseAssignmentSubmission } from '@/types/courseAssignmentSubmission';
 
 export default function CourseAssignmentSubmissionDetailPage({
   params,

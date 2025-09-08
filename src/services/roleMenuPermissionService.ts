@@ -1,12 +1,12 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
-    IRoleMenuPermission,
-    IRoleMenuPermissionCreate,
-    IRoleMenuPermissionUpdate,
-    IRoleWithMenuPermission,
+  IRoleMenuPermission,
+  IRoleMenuPermissionCreate,
+  IRoleMenuPermissionUpdate,
+  IRoleWithMenuPermission,
 } from '@/types/roleMenuPermission';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const roleMenuPermissionService = {
   // Get all role menu permissions with pagination and search

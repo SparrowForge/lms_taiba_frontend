@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ICourse, ICourseCreate, ICourseUpdate} from '@/types/course';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { ICourse, ICourseCreate, ICourseUpdate } from '@/types/course';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const courseService = {
   // Get all courses with pagination and search

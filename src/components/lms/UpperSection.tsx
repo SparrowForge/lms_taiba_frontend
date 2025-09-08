@@ -1,11 +1,21 @@
 'use client';
-import {ClockCircleOutlined, CommentOutlined, FileTextOutlined, ReadOutlined,} from '@ant-design/icons';
-import {closestCenter, DndContext, PointerSensor, useSensor, useSensors} from '@dnd-kit/core';
-import {arrayMove, SortableContext, useSortable, verticalListSortingStrategy,} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
-import React, {useState} from 'react';
+import {
+  ClockCircleOutlined,
+  CommentOutlined,
+  FileTextOutlined,
+  ReadOutlined,
+} from '@ant-design/icons';
+import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import React, { useState } from 'react';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import LeftBorderCard from '../dashboard/dashboardui/cards/LeftBorderCard';
 

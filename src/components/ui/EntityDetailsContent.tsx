@@ -1,11 +1,11 @@
-import {UserOutlined} from '@ant-design/icons';
-import {Alert, Avatar, Card, Col, Row, Spin, Typography} from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { Alert, Avatar, Card, Col, Row, Spin, Typography } from 'antd';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useAudit} from '@/hooks/useAudit';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAudit } from '@/hooks/useAudit';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import PageHeaderDetails from './PageHeaderDetails';
 

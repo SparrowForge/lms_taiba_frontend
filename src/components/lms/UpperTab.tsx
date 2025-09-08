@@ -1,7 +1,7 @@
 'use client';
 
-import {Tabs} from 'antd';
-import {useLocale} from 'next-intl';
+import { Tabs } from 'antd';
+import { useLocale } from 'next-intl';
 
 const UpperTab: React.FC<{ onTabChange: (key: string) => void }> = ({ onTabChange }) => {
   const locale = useLocale();

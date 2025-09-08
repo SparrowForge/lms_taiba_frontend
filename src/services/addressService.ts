@@ -1,7 +1,7 @@
-import {IAddress, IAddressCreate, IAddressUpdate} from '@/types/address';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IAddress, IAddressCreate, IAddressUpdate } from '@/types/address';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const addressService = {
   getAddresses: async (params = {}): Promise<IBasePaginatedResponse<IAddress>> => {

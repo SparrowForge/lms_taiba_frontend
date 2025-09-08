@@ -1,7 +1,11 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ICourseAssignment, ICourseAssignmentCreate, ICourseAssignmentUpdate,} from '@/types/courseAssignment';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  ICourseAssignment,
+  ICourseAssignmentCreate,
+  ICourseAssignmentUpdate,
+} from '@/types/courseAssignment';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const courseAssignmentService = {
   getCourseAssignments: async (params = {}): Promise<IBasePaginatedResponse<ICourseAssignment>> => {

@@ -1,5 +1,5 @@
-import {Card} from 'antd';
-import {useLocale} from 'next-intl';
+import { Card } from 'antd';
+import { useLocale } from 'next-intl';
 import React from 'react';
 
 interface LeftBorderCardProps {

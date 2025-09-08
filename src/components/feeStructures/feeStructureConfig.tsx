@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IFeeStructure} from '@/types/feeStructure';
+import { IFeeStructure } from '@/types/feeStructure';
 
 export const getFeeStructureDisplayName = (feeStructure: IFeeStructure) => {
   return feeStructure.templateName || `Fee Structure #${feeStructure.id}`;

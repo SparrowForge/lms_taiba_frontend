@@ -1,7 +1,7 @@
 'use client';
-import {Row} from 'antd';
+import { Row } from 'antd';
 
-import {useRole} from '@/hooks/useRole';
+import { useRole } from '@/hooks/useRole';
 
 import StudentLayout from './StudentLayout';
 import TeacherLayout from './TeacherLayout';

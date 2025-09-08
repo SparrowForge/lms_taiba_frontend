@@ -1,28 +1,39 @@
 'use client';
 
-import {Button, Form, Input, Select, Space, Switch} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, Select, Space, Switch } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ACCESS_LEVEL_TYPE_OPTIONS, EntityType, FileCategory, FileType, MATERIAL_TYPE_OPTIONS, Status,} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import {
+  ACCESS_LEVEL_TYPE_OPTIONS,
+  EntityType,
+  FileCategory,
+  FileType,
+  MATERIAL_TYPE_OPTIONS,
+  Status,
+} from '@/enums';
 
 import FileUpload from '@/components/ui/FileUpload';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useCourseMaterials} from '@/hooks/useCourseMaterials';
-import {useCourses} from '@/hooks/useCourses';
-import {useFaculties} from '@/hooks/useFaculties';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSemesters} from '@/hooks/useSemesters';
-import {useSubjects} from '@/hooks/useSubjects';
+import { useBatches } from '@/hooks/useBatches';
+import { useCourseMaterials } from '@/hooks/useCourseMaterials';
+import { useCourses } from '@/hooks/useCourses';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSubjects } from '@/hooks/useSubjects';
 
-import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate,} from '@/types/courseMaterial';
-import {getErrorMessage} from '@/types/errors';
+import {
+  ICourseMaterial,
+  ICourseMaterialCreate,
+  ICourseMaterialUpdate,
+} from '@/types/courseMaterial';
+import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelect} from '../ui/StatusSelect';
+import { StatusSelect } from '../ui/StatusSelect';
 
 const { TextArea } = Input;
 

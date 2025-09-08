@@ -1,5 +1,5 @@
-import {IBatch} from './batch';
-import {ISubjectWithFaculty} from './subject';
+import { IBatch } from './batch';
+import { ISubjectWithFaculty } from './subject';
 
 export interface ISemester {
   id: number;

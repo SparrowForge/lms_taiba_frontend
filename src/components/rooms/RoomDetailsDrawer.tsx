@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
+import { Drawer } from 'antd';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRooms} from '@/hooks/useRooms';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRooms } from '@/hooks/useRooms';
 
-import {IRoom} from '@/types/room';
+import { IRoom } from '@/types/room';
 
-import {useCreateRoomDetailsConfig} from './roomConfig';
+import { useCreateRoomDetailsConfig } from './roomConfig';
 
 interface RoomDetailsDrawerProps {
   roomId?: number;

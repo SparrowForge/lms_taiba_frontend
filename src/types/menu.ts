@@ -1,4 +1,4 @@
-import {IPanel} from './panel';
+import { IPanel } from './panel';
 
 export interface IMenu {
   id: number;

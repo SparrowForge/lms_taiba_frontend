@@ -1,5 +1,5 @@
 'use client';
-import {Col} from 'antd';
+import { Col } from 'antd';
 
 import RecentAnnouncenments from '@/components/dashboard/newComponents/RecentAnnouncenments';
 import StudentPerformance from '@/components/dashboard/newComponents/StudentPerformance';

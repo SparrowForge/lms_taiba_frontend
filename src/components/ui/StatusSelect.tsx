@@ -1,12 +1,12 @@
 'use client';
 
-import {Form, Select} from 'antd';
-import {useTranslations} from 'next-intl';
+import { Form, Select } from 'antd';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 
-import {LOCALE_KEYS, t} from '@/constants/localizationKeys';
+import { LOCALE_KEYS, t } from '@/constants/localizationKeys';
 
-import {IStatusSelectProps} from '@/types/statusSelect';
+import { IStatusSelectProps } from '@/types/statusSelect';
 
 export const StatusSelect: React.FC<IStatusSelectProps> = ({
   value,

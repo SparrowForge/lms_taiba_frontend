@@ -1,33 +1,33 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
-    IUserRole,
-    IUserRoleBulkCreate,
-    IUserRoleBulkCreateResponse,
-    IUserRoleCreate,
-    IUserRoleUpdate,
+  IUserRole,
+  IUserRoleBulkCreate,
+  IUserRoleBulkCreateResponse,
+  IUserRoleCreate,
+  IUserRoleUpdate,
 } from '@/types/userRole';
 
-import {userRoleService} from '@/services/userRoleService';
+import { userRoleService } from '@/services/userRoleService';
 
 import {
-    addUserRole,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteUserRole,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedUserRole,
-    setUserRoles,
-    updateUserRole,
+  addUserRole,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteUserRole,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedUserRole,
+  setUserRoles,
+  updateUserRole,
 } from '@/store/slices/userRoleSlice';
 
 export const useUserRoles = () => {

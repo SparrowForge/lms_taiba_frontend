@@ -1,19 +1,19 @@
 'use client';
 
-import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudentEducations} from '@/hooks/useStudentEducations';
-import {useStudents} from '@/hooks/useStudents';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudentEducations } from '@/hooks/useStudentEducations';
+import { useStudents } from '@/hooks/useStudents';
 
-import {getErrorMessage} from '@/types/errors';
-import {IStudentEducationCreate, IStudentEducationUpdate} from '@/types/studentEducation';
+import { getErrorMessage } from '@/types/errors';
+import { IStudentEducationCreate, IStudentEducationUpdate } from '@/types/studentEducation';
 
 import FormLayout from '../layout/FormLayout';
 

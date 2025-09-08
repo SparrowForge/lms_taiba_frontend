@@ -1,27 +1,31 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IStudentProfile, IStudentProfileCreate, IStudentProfileUpdate,} from '@/types/studentProfile';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IStudentProfile,
+  IStudentProfileCreate,
+  IStudentProfileUpdate,
+} from '@/types/studentProfile';
 
-import {studentProfileService} from '@/services/studentProfileService';
+import { studentProfileService } from '@/services/studentProfileService';
 
 import {
-    addStudentProfile,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteStudentProfile,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedStudentProfile,
-    setStudentProfiles,
-    updateStudentProfile,
+  addStudentProfile,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteStudentProfile,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedStudentProfile,
+  setStudentProfiles,
+  updateStudentProfile,
 } from '@/store/slices/studentProfileSlice';
 
 export const useStudentProfiles = () => {

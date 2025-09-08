@@ -1,4 +1,4 @@
-import {Tag} from 'antd';
+import { Tag } from 'antd';
 
 export default function StatusTag({ status }: { status: string }) {
   const getColor = (status: string) => {

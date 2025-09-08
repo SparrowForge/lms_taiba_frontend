@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IWeekDay, IWeekDayCreate, IWeekDayUpdate} from '@/types/weekDay';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IWeekDay, IWeekDayCreate, IWeekDayUpdate } from '@/types/weekDay';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const weekDayService = {
   getWeekDays: async (params = {}): Promise<IBasePaginatedResponse<IWeekDay>> => {

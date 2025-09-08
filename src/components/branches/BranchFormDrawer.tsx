@@ -1,13 +1,13 @@
 'use client';
 
-import {Drawer, Spin} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer, Spin } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useBranches} from '@/hooks/useBranches';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useBranches } from '@/hooks/useBranches';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import BranchForm from './BranchForm';
 

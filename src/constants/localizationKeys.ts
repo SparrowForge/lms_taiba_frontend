@@ -433,7 +433,6 @@ export const LOCALE_KEYS = {
   CONTACT_ADMIN: 'contact-admin',
 
   // dashboard
-  WELCOME_BACK: 'welcome-back',
   TEACHER_DASHBOARD_SUBTITLE: 'teacher-dashboard-subtitle',
   STUDENT_DASHBOARD_SUBTITLE: 'student-dashboard-subtitle',
   VIEW_SCHEDULE: 'view-schedule',

@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IPaginationMeta, IStatusState} from '@/types/common';
-import {IFeeStructure} from '@/types/feeStructure';
+import { IPaginationMeta, IStatusState } from '@/types/common';
+import { IFeeStructure } from '@/types/feeStructure';
 
 interface IFeeStructuresState {
   listStatus: IStatusState;

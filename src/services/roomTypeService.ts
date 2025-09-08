@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IRoomType, IRoomTypeCreate, IRoomTypeUpdate} from '@/types/roomType';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IRoomType, IRoomTypeCreate, IRoomTypeUpdate } from '@/types/roomType';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const roomTypeService = {
   getRoomTypes: async (params = {}): Promise<IBasePaginatedResponse<IRoomType>> => {

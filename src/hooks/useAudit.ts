@@ -1,26 +1,26 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IAudit} from '@/types/audit';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IAudit } from '@/types/audit';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {auditService} from '@/services/auditService';
+import { auditService } from '@/services/auditService';
 
 import {
-    clearActionStatus,
-    clearAudits,
-    clearDetailsStatus,
-    setActionStatus,
-    setAudits,
-    setAuditsByResource,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedAudit,
+  clearActionStatus,
+  clearAudits,
+  clearDetailsStatus,
+  setActionStatus,
+  setAudits,
+  setAuditsByResource,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedAudit,
 } from '@/store/slices/auditSlice';
 
 export const useAudit = () => {

@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useEmploymentTypes } from '@/hooks/useEmploymentTypes';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IEmploymentType} from '@/types/employmentType';
+import { IEmploymentType } from '@/types/employmentType';
 
-import {useCreateEmploymentTypeDetailsConfig} from './employmentTypeConfig';
+import { useCreateEmploymentTypeDetailsConfig } from './employmentTypeConfig';
 
 interface EmploymentTypeDetailsDrawerProps {
   employmentTypeId?: number;

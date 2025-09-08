@@ -1,8 +1,8 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IRoleMenuPermission} from '@/types/roleMenuPermission';
+import { IRoleMenuPermission } from '@/types/roleMenuPermission';
 
 export const getRoleMenuPermissionDisplayName = (permission: IRoleMenuPermission) =>
   `${permission.role.name} - ${permission.menu.name}`;

@@ -1,21 +1,34 @@
 'use client';
 
-import {Button, Card, Col, Input, Radio, Row, Select, Space, Table, Tag, Tooltip, Typography,} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import {
+  Button,
+  Card,
+  Col,
+  Input,
+  Radio,
+  Row,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+  Typography,
+} from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {AttendanceStatus, CaptureMethod, Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { AttendanceStatus, CaptureMethod, Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {PageHeader} from '@/components/ui/PageHeader';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
 
-import {useAttendances} from '@/hooks/useAttendances';
-import {useBatches} from '@/hooks/useBatches';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudents} from '@/hooks/useStudents';
+import { useAttendances } from '@/hooks/useAttendances';
+import { useBatches } from '@/hooks/useBatches';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudents } from '@/hooks/useStudents';
 
 const { Text } = Typography;
 const { Option } = Select;

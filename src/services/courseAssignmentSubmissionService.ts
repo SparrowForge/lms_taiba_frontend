@@ -1,11 +1,11 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
-    ICourseAssignmentSubmission,
-    ICourseAssignmentSubmissionCreate,
-    ICourseAssignmentSubmissionUpdate,
+  ICourseAssignmentSubmission,
+  ICourseAssignmentSubmissionCreate,
+  ICourseAssignmentSubmissionUpdate,
 } from '@/types/courseAssignmentSubmission';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const courseAssignmentSubmissionService = {
   getCourseAssignmentSubmissions: async (

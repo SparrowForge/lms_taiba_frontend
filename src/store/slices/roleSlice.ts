@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IPaginationMeta, IStatusState} from '@/types/common';
-import {IRole} from '@/types/role';
+import { IPaginationMeta, IStatusState } from '@/types/common';
+import { IRole } from '@/types/role';
 
 // State interface
 interface IRolesState {

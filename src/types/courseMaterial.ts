@@ -1,9 +1,9 @@
-import {IBatch} from './batch';
-import {ICourse} from './course';
-import {IFaculty} from './faculty';
-import {IFile} from './file';
-import {ISemester} from './semester';
-import {ISubject} from './subject';
+import { IBatch } from './batch';
+import { ICourse } from './course';
+import { IFaculty } from './faculty';
+import { IFile } from './file';
+import { ISemester } from './semester';
+import { ISubject } from './subject';
 
 export interface ICourseMaterial {
   id: number;

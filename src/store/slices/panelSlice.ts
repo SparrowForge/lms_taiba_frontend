@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IPaginationMeta, IStatusState} from '@/types/common';
-import {IPanel} from '@/types/panel';
+import { IPaginationMeta, IStatusState } from '@/types/common';
+import { IPanel } from '@/types/panel';
 
 interface PanelsState {
   listStatus: IStatusState;

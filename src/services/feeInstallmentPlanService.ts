@@ -1,7 +1,11 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IFeeInstallmentPlan, IFeeInstallmentPlanCreate, IFeeInstallmentPlanUpdate,} from '@/types/feeInstallmentPlan';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IFeeInstallmentPlan,
+  IFeeInstallmentPlanCreate,
+  IFeeInstallmentPlanUpdate,
+} from '@/types/feeInstallmentPlan';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const feeInstallmentPlanService = {
   // Get all fee installment plans with pagination and search

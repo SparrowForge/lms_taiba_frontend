@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IRole, IRoleCreate, IRoleUpdate } from '@/types/role';
 
-import {roleService} from '@/services/roleService';
+import { roleService } from '@/services/roleService';
 
 import {
-    addRole,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteRole,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setRoles,
-    setSelectedRole,
-    updateRole,
+  addRole,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteRole,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setRoles,
+  setSelectedRole,
+  updateRole,
 } from '@/store/slices/roleSlice';
 
 export const useRoles = () => {

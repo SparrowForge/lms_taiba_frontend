@@ -1,19 +1,18 @@
 'use client';
 
-import {Calendar, Card, Tag, Tooltip} from 'antd';
-import dayjs, {Dayjs} from 'dayjs';
-import React, {useEffect, useMemo, useState} from 'react';
+import { Card, Calendar, Tag, Tooltip } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
 import ClassScheduleDetailsDrawer from '@/components/classSchedules/ClassScheduleDetailsDrawer';
 
-import {useClassSchedules} from '@/hooks/useClassSchedules';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useClassSchedules } from '@/hooks/useClassSchedules';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IClassSchedule} from '@/types/classSchedule';
-
+import { IClassSchedule } from '@/types/classSchedule';
 
 const MonthSchedule: React.FC = () => {
   const { t } = useLocalization();
@@ -85,18 +84,19 @@ const MonthSchedule: React.FC = () => {
     if (schedule.status === 'INACTIVE') return 'red';
     if (schedule.status === 'PENDING') return 'orange';
 
-    switch (schedule.classScheduleType) {
-      case 'REGULAR':
-        return 'blue';
-      case 'LAB':
-        return 'purple';
-      case 'TUTORIAL':
-        return 'cyan';
-      case 'EXAM':
-        return 'red';
-      default:
-        return 'default';
-    }
+    // switch (schedule.scheduleType) {
+    //   case "REGULAR":
+    //     return "blue";
+    //   case "LAB":
+    //     return "purple";
+    //   case "TUTORIAL":
+    //     return "cyan";
+    //   case "EXAM":
+    //     return "red";
+    //   default:
+    //     return "default";
+    // }
+    return 'default';
   };
 
   // ✅ Custom render for calendar cells

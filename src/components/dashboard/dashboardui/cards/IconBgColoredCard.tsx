@@ -1,4 +1,4 @@
-import {Tag} from 'antd';
+import { Tag } from 'antd';
 import React from 'react';
 
 interface IconBgColoredCardProps {
@@ -12,6 +12,7 @@ interface IconBgColoredCardProps {
   due?: string;
   rounded?: string; // optional: 'sm', 'md', 'lg', 'xl', '2xl', 'full'
   textSize?: string;
+  onClick?: () => void;
 }
 
 const IconBgColoredCard: React.FC<IconBgColoredCardProps> = ({
@@ -25,6 +26,7 @@ const IconBgColoredCard: React.FC<IconBgColoredCardProps> = ({
   due,
   rounded,
   textSize,
+  onClick,
 }) => {
   const roundedClass = `rounded-${rounded}`;
 
@@ -32,6 +34,7 @@ const IconBgColoredCard: React.FC<IconBgColoredCardProps> = ({
     <div
       className={`py-2 px-3 flex gap-3 justify-center items-center rounded-md  `}
       style={{ backgroundColor: bgColor, color: color, border: `2px solid ${bgColorIcon}` }}
+      onClick={onClick}
     >
       {/* Icon Container */}
       <div

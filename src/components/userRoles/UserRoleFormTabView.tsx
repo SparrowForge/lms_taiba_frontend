@@ -1,9 +1,9 @@
 'use client';
 
-import {Card, Tabs} from 'antd';
-import React, {useState} from 'react';
+import { Card, Tabs } from 'antd';
+import React, { useState } from 'react';
 
-import {IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
+import { IUserRoleCreate, IUserRoleUpdate } from '@/types/userRole';
 
 import UserRoleFormMultiple from './UserRoleFormMultiple';
 import UserRoleFormSingle from './UserRoleFormSingle';

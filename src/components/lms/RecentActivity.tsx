@@ -1,12 +1,11 @@
-import {CodeOutlined, FileTextOutlined, MessageOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, Card} from 'antd';
+import { MessageOutlined, UserOutlined, FileTextOutlined, CodeOutlined } from '@ant-design/icons';
+import { Button, Card } from 'antd';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import IconBgColoredCard from '../dashboard/dashboardui/cards/IconBgColoredCard';
-
 
 const recentActive = [
   {

@@ -1,20 +1,20 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
 import TimeSlotForm from '@/components/timeSlots/TimeSlotForm';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
-import {PageHeader} from '@/components/ui/PageHeader';
+import { PageHeader } from '@/components/ui/PageHeader';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useTimeSlots} from '@/hooks/useTimeSlots';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useTimeSlots } from '@/hooks/useTimeSlots';
 
 const TimeSlotEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);

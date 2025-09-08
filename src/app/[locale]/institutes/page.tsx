@@ -1,24 +1,24 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import InstituteDetailsDrawer from '@/components/institutes/InstituteDetailsDrawer';
 import InstituteFormDrawer from '@/components/institutes/InstituteFormDrawer';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useInstitutes} from '@/hooks/useInstitutes';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useInstitutes } from '@/hooks/useInstitutes';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IInstitute} from '@/types/institute';
+import { IInstitute } from '@/types/institute';
 
 export default function InstitutesPage() {
   const { t } = useLocalization();

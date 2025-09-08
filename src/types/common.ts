@@ -1,7 +1,7 @@
 // Status enum moved to centralized enums
 // Import from: import { Status } from '@/enums';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
 export interface IStatusState {
   status: Status;
