@@ -1,63 +1,65 @@
 import {
-  CalculatorOutlined,
-  CodeOutlined,
-  DiffOutlined,
-  ExceptionOutlined,
-  ExperimentOutlined,
-  FileTextOutlined,
-} from "@ant-design/icons";
-import { Button, Card } from "antd";
-import dayjs from "dayjs";
+    CalculatorOutlined,
+    CodeOutlined,
+    DiffOutlined,
+    ExceptionOutlined,
+    ExperimentOutlined,
+    FileTextOutlined,
+} from '@ant-design/icons';
+import {Button, Card} from 'antd';
+import dayjs from 'dayjs';
+import {useEffect} from 'react';
 
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
-import { useLocalization } from "@/hooks/useLocalization";
-import { useCourseAssignments } from "@/hooks/useCourseAssignments";
-import IconBgColoredCard from "../dashboardui/cards/IconBgColoredCard";
-import { useEffect } from "react";
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useCourseAssignments} from '@/hooks/useCourseAssignments';
+import {useLocalization} from '@/hooks/useLocalization';
+
+import IconBgColoredCard from '../dashboardui/cards/IconBgColoredCard';
 
 const getAssignmentStyle = (assignment: any) => {
   switch (assignment.type?.toLowerCase()) {
-    case "lab":
+    case 'lab':
       return {
-        color: "#ef4444",
-        bgColor: "#fef2f2",
-        bgColorIcon: "#fee2e2",
-        icon: <ExperimentOutlined style={{ color: "#ef4444" }} />,
+        color: '#ef4444',
+        bgColor: '#fef2f2',
+        bgColorIcon: '#fee2e2',
+        icon: <ExperimentOutlined style={{ color: '#ef4444' }} />,
       };
-    case "math":
+    case 'math':
       return {
-        color: "#f59e0b",
-        bgColor: "#fffbeb",
-        bgColorIcon: "#fef3c7",
-        icon: <CalculatorOutlined style={{ color: "#f59e0b" }} />,
+        color: '#f59e0b',
+        bgColor: '#fffbeb',
+        bgColorIcon: '#fef3c7',
+        icon: <CalculatorOutlined style={{ color: '#f59e0b' }} />,
       };
-    case "project":
+    case 'project':
       return {
-        color: "#5190f7",
-        bgColor: "#eff6ff",
-        bgColorIcon: "#dbeafe",
-        icon: <CodeOutlined style={{ color: "#5190f7" }} />,
+        color: '#5190f7',
+        bgColor: '#eff6ff',
+        bgColorIcon: '#dbeafe',
+        icon: <CodeOutlined style={{ color: '#5190f7' }} />,
       };
-    case "essay":
+    case 'essay':
       return {
-        color: "#6b7280",
-        bgColor: "#f3f4f6",
-        bgColorIcon: "#e5e7eb",
-        icon: <FileTextOutlined style={{ color: "#6b7280" }} />,
+        color: '#6b7280',
+        bgColor: '#f3f4f6',
+        bgColorIcon: '#e5e7eb',
+        icon: <FileTextOutlined style={{ color: '#6b7280' }} />,
       };
-    case "homework":
+    case 'homework':
       return {
-        color: "#d97706",
-        bgColor: "#fffbeb",
-        bgColorIcon: "#fef3c7",
-        icon: <DiffOutlined style={{ color: "#d97706" }} />,
+        color: '#d97706',
+        bgColor: '#fffbeb',
+        bgColorIcon: '#fef3c7',
+        icon: <DiffOutlined style={{ color: '#d97706' }} />,
       };
     default:
       return {
-        color: "#10b981",
-        bgColor: "#ecfdf5",
-        bgColorIcon: "#d1fae5",
-        icon: <FileTextOutlined style={{ color: "#10b981" }} />,
+        color: '#10b981',
+        bgColor: '#ecfdf5',
+        bgColorIcon: '#d1fae5',
+        icon: <FileTextOutlined style={{ color: '#10b981' }} />,
       };
   }
 };
@@ -68,14 +70,15 @@ const getAssignmentTag = (assignment: any) => {
   const dueDate = dayjs(assignment.dueDate);
   const publishDate = dayjs(assignment.publishDate);
 
-  if (dueDate.diff(today, "day") <= 1) return "Urgent"; 
-  if (assignment.maxAttempt && assignment.maxAttempt <= 1) return "Important"; 
-  if (assignment.type?.toLowerCase() === "project" ||  assignment.maxAttempt > 1) return "Group Work";
+  if (dueDate.diff(today, 'day') <= 1) return 'Urgent';
+  if (assignment.maxAttempt && assignment.maxAttempt <= 1) return 'Important';
+  if (assignment.type?.toLowerCase() === 'project' || assignment.maxAttempt > 1)
+    return 'Group Work';
   // if (["homework", "lab"].includes(assignment.type?.toLowerCase())) return "Started";
-  if(assignment.type?.toLowerCase() === "quiz") return "Quiz";
-  if(assignment.type?.toLowerCase() === "lab") return "Lab";
+  if (assignment.type?.toLowerCase() === 'quiz') return 'Quiz';
+  if (assignment.type?.toLowerCase() === 'lab') return 'Lab';
 
-  return assignment.tag || "";
+  return assignment.tag || '';
 };
 
 const UpcomingAssignments = () => {
@@ -86,12 +89,12 @@ const UpcomingAssignments = () => {
     loadCourseAssignments({ page: 1, limit: 100 });
   }, [loadCourseAssignments]);
 
-  const upcomingAssignments = (courseAssignments || []).filter((a: any) =>
-    dayjs(a.dueDate).isAfter(dayjs(), "day") || dayjs(a.dueDate).isSame(dayjs(), "day")
+  const upcomingAssignments = (courseAssignments || []).filter(
+    (a: any) => dayjs(a.dueDate).isAfter(dayjs(), 'day') || dayjs(a.dueDate).isSame(dayjs(), 'day'),
   );
 
-  const sortedAssignments = [...upcomingAssignments].sort((a, b) =>
-    dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf()
+  const sortedAssignments = [...upcomingAssignments].sort(
+    (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf(),
   );
 
   return (
@@ -107,18 +110,18 @@ const UpcomingAssignments = () => {
         {sortedAssignments.map((a: any, i: number) => {
           const style = getAssignmentStyle(a);
           const tag = getAssignmentTag(a);
-          const isUrgent = tag === "Urgent";
+          const isUrgent = tag === 'Urgent';
 
           return (
             <IconBgColoredCard
               key={i}
               text={a.title}
-              due={dayjs(a.dueDate).format("MMM D, YYYY")}
+              due={dayjs(a.dueDate).format('MMM D, YYYY')}
               tag={tag}
-              color={isUrgent ? "#ef4444" : style.color}
-              bgColor={isUrgent ? "#fef2f2" : style.bgColor}
-              bgColorIcon={isUrgent ? "#fee2e2" : style.bgColorIcon}
-              icon={isUrgent ? <ExceptionOutlined style={{ color: "#ef4444" }} /> : style.icon}
+              color={isUrgent ? '#ef4444' : style.color}
+              bgColor={isUrgent ? '#fef2f2' : style.bgColor}
+              bgColorIcon={isUrgent ? '#fee2e2' : style.bgColorIcon}
+              icon={isUrgent ? <ExceptionOutlined style={{ color: '#ef4444' }} /> : style.icon}
               rounded="md"
             />
           );

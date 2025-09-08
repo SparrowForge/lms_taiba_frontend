@@ -25,6 +25,7 @@ interface EntityActionsProps {
     viewModal?: boolean;
     editModal?: boolean;
   };
+  extraActions?: MenuProps['items'];
 }
 
 const EntityActions: React.FC<EntityActionsProps> = ({
@@ -40,6 +41,7 @@ const EntityActions: React.FC<EntityActionsProps> = ({
   viewModalText,
   deleteText,
   loadingStates = {},
+  extraActions,
 }) => {
   const { t } = useLocalization();
   const [localLoading, setLocalLoading] = useState<{
@@ -161,6 +163,12 @@ const EntityActions: React.FC<EntityActionsProps> = ({
       },
     });
   }
+
+  // Add extra actions
+  extraActions?.forEach((action) => {
+    menuItems.push(action);
+  });
+  console.log(menuItems);
 
   // If no actions are available, return null
   if (menuItems.length === 0) {

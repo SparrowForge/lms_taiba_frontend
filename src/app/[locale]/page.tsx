@@ -7,11 +7,10 @@ export default function HomePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div className="h-[600px] overflow-y-auto">
-           <DashboardStartSection />
-        <LayoutDashboard/>
+        <div className="h-[95vh] overflow-y-auto">
+          <DashboardStartSection />
+          <LayoutDashboard />
         </div>
-       
       </MainLayout>
     </ProtectedRoute>
   );
