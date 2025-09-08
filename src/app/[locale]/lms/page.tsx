@@ -9,7 +9,7 @@ const LMSDashboard = () => {
         <ProtectedRoute>
             <MainLayout >
 
-                <div className="h-[600px] overflow-y-auto">
+                <div className="h-[95vh] overflow-y-auto">
                     <LMSMainComponent />
                 </div>
 

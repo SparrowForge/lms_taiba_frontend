@@ -16,13 +16,13 @@ const LayoutDashboard = () => {
                 style={{ width: "100%", minWidth: 0, height: "100%" }}
             >
                 {role === "teacher" ? (
-                 
+
                        <TeacherLayout/>
-              
+
                 ) : (
-                  
-                       <StudentLayout/> 
-         
+
+                       <StudentLayout/>
+
                 )}</Row>
         </div>
     );

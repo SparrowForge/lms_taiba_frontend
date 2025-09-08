@@ -68,8 +68,8 @@ const getAssignmentTag = (assignment: any) => {
   const dueDate = dayjs(assignment.dueDate);
   const publishDate = dayjs(assignment.publishDate);
 
-  if (dueDate.diff(today, "day") <= 1) return "Urgent"; 
-  if (assignment.maxAttempt && assignment.maxAttempt <= 1) return "Important"; 
+  if (dueDate.diff(today, "day") <= 1) return "Urgent";
+  if (assignment.maxAttempt && assignment.maxAttempt <= 1) return "Important";
   if (assignment.type?.toLowerCase() === "project" ||  assignment.maxAttempt > 1) return "Group Work";
   // if (["homework", "lab"].includes(assignment.type?.toLowerCase())) return "Started";
   if(assignment.type?.toLowerCase() === "quiz") return "Quiz";

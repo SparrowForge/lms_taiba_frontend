@@ -1,5 +1,6 @@
 'use client';
 
+import {EditOutlined} from '@ant-design/icons';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
@@ -165,6 +166,21 @@ export default function AttendancesPage() {
             editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeAttendance(attendance.id)}
             id={attendance.id}
+            extraActions={[
+              {
+                key: 'mark',
+                icon: <EditOutlined />,
+                label: t(LOCALE_KEYS.ATTENDANCE),
+                onClick: () => router.push(`/attendances/${attendance.id}/mark`),
+                disabled: false,
+                style: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  color: '#1890ff',
+                },
+              },
+            ]}
           />
         ),
       },

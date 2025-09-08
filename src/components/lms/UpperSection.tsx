@@ -39,7 +39,7 @@ const SortableCard = ({ id, children }: { id: string; children: React.ReactNode 
 
 const UpperSection = () => {
     const { t } = useLocalization();
-  
+
     const studentInitial = [
       {
         id: "1",
@@ -78,35 +78,35 @@ const UpperSection = () => {
         iconColor: "#7c3aed"
       },
     ];
-  
+
     // 🔹 State for cards
     const [dataTeacher, setDataTeacher] = useState(studentInitial);
-  
+
     // 🔹 DnD sensors
     const sensors = useSensors(
       useSensor(PointerSensor, {
         activationConstraint: { distance: 5 }, // drag starts after 5px
       })
     );
-  
+
     // 🔹 Handle drag & drop reorder
     const handleDragEnd = (event: any) => {
       const { active, over } = event;
       if (!over || active.id === over.id) return;
-  
+
       setDataTeacher((items) => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over.id);
         return arrayMove(items, oldIndex, newIndex);
       });
     };
-  
+
     return (
       <div className='md:mx-6'>
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={dataTeacher.map((item) => item.id)} strategy={verticalListSortingStrategy}>
             <div className="grid grid-cols-1 md:grid-cols-4 md:gap-4 md:my-6">
-              {dataTeacher.map((item) => (   
+              {dataTeacher.map((item) => (
                 <SortableCard key={item.id} id={item.id}>
                   <LeftBorderCard {...item} />
                 </SortableCard>

@@ -110,7 +110,7 @@ if (daySchedules.length === 0) {
       className="calendar-cell-content flex items-center justify-center"
       style={{ backgroundColor: "#ff4d4f", color: "white", height: "100%", opacity:"0.5"}}
     >
-     
+
     </div>
   ) : null;
 }

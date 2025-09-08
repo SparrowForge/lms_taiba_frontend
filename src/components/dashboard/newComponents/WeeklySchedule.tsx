@@ -76,19 +76,19 @@ const getScheduleColor = (subject: IClassSchedule) => {
   const capacity = subject.maxCapacity ?? 0;
 
   if (capacity < 10) {
-    return "yellow"; 
+    return "yellow";
   } else if (capacity >= 10 && capacity < 30) {
-    return "red"; 
+    return "red";
   } else if (capacity >= 30 && capacity < 50) {
-    return "purple"; 
+    return "purple";
   } else if (capacity >= 50 && capacity < 70) {
-    return "cyan"; 
+    return "cyan";
   } else if (capacity >= 70 && capacity < 100) {
-    return "blue"; 
+    return "blue";
   } else if (capacity >= 100 && capacity < 200) {
-    return "orange"; 
+    return "orange";
   } else if (capacity >= 200) {
-    return "green"; 
+    return "green";
   } else {
     return "default";
   }

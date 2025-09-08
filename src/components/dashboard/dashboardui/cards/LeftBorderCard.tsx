@@ -23,9 +23,9 @@ const LeftBorderCard: React.FC<LeftBorderCardProps> = ({
 }) => {
     const locale = useLocale();
     return (
-       <Card 
+       <Card
             style={{ borderLeft: `8px solid ${color}`, backgroundColor : '',   borderRadius: "12px" , padding: "0px"}}>
-      
+
             <div className="flex items-center justify-between gap-2 ">
                 <div className= "w-[80%]">
                     {/* Show localized title if Arabic, otherwise normal title */}

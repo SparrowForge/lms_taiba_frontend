@@ -10,7 +10,7 @@ const ColumnGraph: React.FC<ColumnGraphProps> = ({ data, color = '#1F4BCA' }) =>
     data,
     xField: "xdata",
     yField: "ydata",
-    columnWidthRatio: 0.5, 
+    columnWidthRatio: 0.5,
     intervalPadding: 20,
     columnStyle: {
       radius: [8, 8, 0, 0], // rounded top corners
