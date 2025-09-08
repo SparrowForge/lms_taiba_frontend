@@ -1,16 +1,16 @@
 import {
-  BookOutlined,
+  FilePdfOutlined,
+  VideoCameraOutlined,
+  FileTextOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  FilePdfOutlined,
-  FileTextOutlined,
-  FundProjectionScreenOutlined,
   PlusOutlined,
+  FundProjectionScreenOutlined,
   SnippetsOutlined,
-  VideoCameraOutlined,
+  BookOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Empty, Select, Spin, Tag } from 'antd';
+import { Button, Select, Tag, Card, Spin, Empty } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import React, { useEffect, useState } from 'react';
@@ -20,6 +20,8 @@ import { Status } from '@/enums';
 import { useCourseMaterials } from '@/hooks/useCourseMaterials';
 
 import { ICourseMaterial } from '@/types/courseMaterial';
+import CourseMaterialDetailsDrawer from '../courseMaterials/CourseMaterialDetailsDrawer';
+import CourseMaterialFormDrawer from '../courseMaterials/CourseMaterialFormDrawer';
 
 const materialTypes = ['pdf', 'lecture', 'video', 'slide', 'assignment', 'material'];
 
@@ -29,6 +31,12 @@ const CourseMaterials = () => {
   const { courseMaterials, listStatus, loadCourseMaterials } = useCourseMaterials();
   const [selectedCourse, setSelectedCourse] = useState<string>('allCourses');
   const [selectedType, setSelectedType] = useState<string>('allTypes');
+  const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
+  const [selectedDetailsCourseMaterialId, setSelectedDetailsCourseMaterialId] = useState<number | undefined>();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [drawerMode, setDrawerMode] = useState<'edit' | 'create'>('edit');
+  const [selectedCourseMaterialId, setSelectedCourseMaterialId] = useState<number | undefined>();
+
 
   // Fetch materials on mount
   useEffect(() => {
@@ -42,6 +50,25 @@ const CourseMaterials = () => {
       selectedCourse === 'allCourses' || m.course?.id.toString() === selectedCourse;
     return matchType && matchCourse;
   });
+
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+    loadCourseMaterials({ page: 1, limit: 10 });
+  };
+
+  const handleViewDetails = (courseMaterialId: number) => {
+    setSelectedDetailsCourseMaterialId(courseMaterialId);
+    setDetailsDrawerVisible(true);
+  };
+
+  const handleDetailsEdit = (courseMaterialId: number) => {
+    setSelectedDetailsCourseMaterialId(undefined); // close details first
+    setDetailsDrawerVisible(false);
+    setSelectedCourseMaterialId(courseMaterialId);
+    setDrawerMode('edit');
+    setDrawerVisible(true);
+  };
+
 
   // Icon and tag helpers
   const getIcon = (type: string) => {
@@ -82,8 +109,24 @@ const CourseMaterials = () => {
             <SnippetsOutlined style={{ fontSize: 22, color: '#9254de' }} />
           </div>
         );
+      case 'document':
+        return (
+          <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-cyan-100">
+            <SnippetsOutlined style={{ fontSize: 22, color: '#06b6d4' }} />
+          </div>
+        );
+      // case 'other':
+      //   return (
+      //     <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100">
+      //       <BookOutlined style={{ fontSize: 22, color: '#ff4d4f' }}  />
+      //     </div>
+      //   );
       default:
-        return null;
+        return(
+           <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100">
+            <BookOutlined style={{ fontSize: 22, color: '#ff4d4f' }}  />
+          </div>
+        )
     }
   };
 
@@ -101,8 +144,10 @@ const CourseMaterials = () => {
         return 'green';
       case 'material':
         return 'purple';
+      case 'document':
+        return 'cyan';
       default:
-        return 'default';
+        return 'red';
     }
   };
 
@@ -192,24 +237,43 @@ const CourseMaterials = () => {
                   <div className="flex gap-1">
                     <EditOutlined
                       style={{ fontSize: 18, cursor: 'pointer' }}
-                      onClick={() => router.push(`/course-materials/${m.id}/edit`)}
+                      onClick={() => handleDetailsEdit(m.id)}
                     />
                     <EyeOutlined
                       style={{ fontSize: 18, cursor: 'pointer' }}
-                      onClick={() => router.push(`/course-materials/${m.id}`)}
+                      onClick={() => handleViewDetails(m.id)}
                     />
                     <DeleteOutlined
                       style={{ fontSize: 18, cursor: 'pointer' }}
-                      onClick={() => router.push('/course-materials')}
+                      onClick={() => router.push('/course-materials')} // keep delete action for now
                     />
                   </div>
+
                 </div>
               </div>
             </Card>
           ))}
         </div>
       )}
+      <CourseMaterialDetailsDrawer
+        courseMaterialId={selectedDetailsCourseMaterialId}
+        visible={detailsDrawerVisible}
+        onClose={() => setDetailsDrawerVisible(false)}
+        onEdit={handleDetailsEdit}
+      />
+
+      {drawerVisible && (
+        <CourseMaterialFormDrawer
+          mode={drawerMode}
+          courseMaterialId={selectedCourseMaterialId}
+          visible={drawerVisible}
+          onCancel={() => setDrawerVisible(false)}
+          onSuccess={handleDrawerSuccess}
+        />
+      )}
+
     </Card>
+
   );
 };
 

@@ -28,6 +28,8 @@ import { IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate } from '@/t
 
 import { StatusSelect, StatusSelectFormItem } from '../ui/StatusSelect';
 
+import type { Dayjs } from 'dayjs';
+
 interface FeeStructureFormBulkProps {
   onSuccess?: () => void;
   onCancel?: () => void;
