@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFeeStructure} from '@/types/feeStructure';
 
 import {useCreateFeeStructureDetailsConfig} from './feeStructureConfig';
-
 
 interface FeeStructureDetailsDrawerProps {
   feeStructureId?: number;
@@ -29,15 +28,15 @@ const FeeStructureDetailsDrawer: React.FC<FeeStructureDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedFeeStructure, getFeeStructureById, detailsStatus } = useFeeStructures();
+  const { selectedFeeStructure, loadFeeStructure, detailsStatus } = useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
   useEffect(() => {
     if (visible && feeStructureId) {
-      getFeeStructureById(feeStructureId);
+      //getFeeStructureById(feeStructureId);
+      loadFeeStructure(feeStructureId);
     }
-  }, [visible, feeStructureId, getFeeStructureById]);
+  }, [visible, feeStructureId, loadFeeStructure]);
 
   const handleEdit = (feeStructure: IFeeStructure) => {
     onEdit(feeStructure.id);

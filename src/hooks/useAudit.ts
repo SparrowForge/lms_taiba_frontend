@@ -2,10 +2,11 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
 import {IAudit} from '@/types/audit';
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
 import {auditService} from '@/services/auditService';
 
@@ -24,8 +25,15 @@ import {
 
 export const useAudit = () => {
   const dispatch = useDispatch();
-  const { audits, auditsByResource, selectedAudit, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.audits);
+  const {
+    audits,
+    auditsByResource,
+    selectedAudit,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+  } = useSelector((state: RootState) => state.audits);
 
   // Load audit logs with pagination and search
   const loadAudits = useCallback(
@@ -63,25 +71,37 @@ export const useAudit = () => {
     async (resource: string, resourceId: number, params = {}) => {
       try {
         dispatch(setListStatus({ status: Status.LOADING }));
-        const response: IBasePaginatedResponse<IAudit> = await auditService.getAuditByResource(resource, resourceId, params);
+        const response: IBasePaginatedResponse<IAudit> = await auditService.getAuditByResource(
+          resource,
+          resourceId,
+          params,
+        );
         dispatch(setAuditsByResource(response?.data?.items ?? []));
-        dispatch(setPagination(response?.data?.meta ?? {
-          page: 1,
-          limit: 10,
-          total: 0,
-          totalPages: 0,
-          hasNextPage: false,
-          hasPreviousPage: false,
-        }));
+        dispatch(
+          setPagination(
+            response?.data?.meta ?? {
+              page: 1,
+              limit: 10,
+              total: 0,
+              totalPages: 0,
+              hasNextPage: false,
+              hasPreviousPage: false,
+            },
+          ),
+        );
         dispatch(setListStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
           error instanceof AxiosError
-            ? error?.response?.data?.message || error?.message || 'Failed to load audit logs by resource'
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load audit logs by resource'
             : 'Failed to load audit logs by resource';
         dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
       }
-  }, [dispatch]);
+    },
+    [dispatch],
+  );
 
   // Load a single audit log
   const loadAudit = useCallback(

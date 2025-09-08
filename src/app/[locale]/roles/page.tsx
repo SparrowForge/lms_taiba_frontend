@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -18,7 +19,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 
 import {IBranch} from '@/types/branch';
-import {Status} from '@/types/common';
 import {IRole} from '@/types/role';
 
 export default function RolesPage() {
@@ -59,8 +59,8 @@ export default function RolesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadRoles({ page: 1, limit: 10 });
   };
 

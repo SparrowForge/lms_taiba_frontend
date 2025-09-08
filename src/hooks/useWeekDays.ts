@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IWeekDay, IWeekDayCreate, IWeekDayUpdate} from '@/types/weekDay';
 
 import {weekDayService} from '@/services/weekDayService';
@@ -25,21 +26,14 @@ import {
 
 export const useWeekDays = () => {
   const dispatch = useDispatch();
-  const {
-    weekDays,
-    selectedWeekDay,
-    listStatus,
-    detailsStatus,
-    actionStatus,
-    pagination,
-  } = useSelector((state: RootState) => state.weekDays);
+  const { weekDays, selectedWeekDay, listStatus, detailsStatus, actionStatus, pagination } =
+    useSelector((state: RootState) => state.weekDays);
 
   const loadWeekDays = useCallback(
     async (params = {}) => {
       try {
         dispatch(setListStatus({ status: Status.LOADING }));
-        const response: IBasePaginatedResponse<IWeekDay> =
-          await weekDayService.getWeekDays(params);
+        const response: IBasePaginatedResponse<IWeekDay> = await weekDayService.getWeekDays(params);
         dispatch(setWeekDays(response?.data?.items ?? []));
         dispatch(
           setPagination(

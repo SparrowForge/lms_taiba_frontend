@@ -1,15 +1,15 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useCourseTypes} from '@/hooks/useCourseTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import CourseTypeForm from './CourseTypeForm';
-
 
 interface Props {
   mode: 'create' | 'edit';
@@ -26,15 +26,16 @@ const CourseTypeFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getCourseTypeById, selectedCourseType } = useCourseTypes();
+  const { getCourseTypeById, selectedCourseType, loadCourseType, detailsStatus } = useCourseTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && courseTypeId) {
-      getCourseTypeById(courseTypeId);
+      //getCourseTypeById(courseTypeId);
+      loadCourseType(courseTypeId);
     }
-  }, [visible, mode, courseTypeId, getCourseTypeById]);
+  }, [visible, mode, courseTypeId, loadCourseType]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +43,10 @@ const CourseTypeFormDrawer: React.FC<Props> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
+  }
 
   return (
     <Drawer

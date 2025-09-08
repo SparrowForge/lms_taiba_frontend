@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -17,9 +18,7 @@ import StatusTag from '@/components/ui/StatusTag';
 import {useInstitutes} from '@/hooks/useInstitutes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IInstitute} from '@/types/institute';
-
 
 export default function InstitutesPage() {
   const { t } = useLocalization();
@@ -27,46 +26,50 @@ export default function InstitutesPage() {
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedId, setSelectedId] = useState<number | undefined>();
+  const [selectedInstituteId, setSelectedInstituteId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
-  const { institutes, listStatus, pagination, loadInstitutes, removeInstitute } = useInstitutes();
+  const { institutes, listStatus, pagination, loadInstitutes, removeInstitute, setSelected } =
+    useInstitutes();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
-  useEffect(() => {
+  const loadListWithPagination = () => {
     if (skip && limit) {
       const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
       loadInstitutes({ page, limit: parseInt(limit ?? '10') });
     } else {
       loadInstitutes({ page: 1, limit: 10 });
     }
+  };
+
+  useEffect(() => {
+    loadListWithPagination();
   }, [skip, limit, loadInstitutes]);
 
   const handleEditDrawer = (id: number) => {
-    setSelectedId(id);
+    setSelectedInstituteId(id);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
   const handleCreateDrawer = () => {
-    setSelectedId(undefined);
+    setSelectedInstituteId(undefined);
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
-    loadInstitutes({ page: 1, limit: 10 });
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+    loadListWithPagination();
   };
   const handleViewDetails = (id: number) => {
-    setSelectedDetailsId(id);
+    setSelectedInstituteId(id);
     setDetailsDrawerVisible(true);
   };
   const handleDetailsEdit = (id: number) => {
     setDetailsDrawerVisible(false);
-    setSelectedId(id);
+    setSelectedInstituteId(id);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
@@ -107,7 +110,14 @@ export default function InstitutesPage() {
         title: t(LOCALE_KEYS.WEBSITE),
         dataIndex: 'website',
         key: 'website',
-        render: (text: string) => text ? <a href={text} target="_blank" rel="noopener noreferrer">{text}</a> : 'N/A',
+        render: (text: string) =>
+          text ? (
+            <a href={text} target="_blank" rel="noopener noreferrer">
+              {text}
+            </a>
+          ) : (
+            'N/A'
+          ),
       },
       {
         title: t(LOCALE_KEYS.STATUS),
@@ -157,14 +167,14 @@ export default function InstitutesPage() {
 
         <InstituteFormDrawer
           mode={drawerMode}
-          instituteId={selectedId}
+          instituteId={selectedInstituteId}
           visible={drawerVisible}
           onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}
         />
 
         <InstituteDetailsDrawer
-          instituteId={selectedDetailsId}
+          instituteId={selectedInstituteId}
           visible={detailsDrawerVisible}
           onClose={() => setDetailsDrawerVisible(false)}
           onEdit={handleDetailsEdit}

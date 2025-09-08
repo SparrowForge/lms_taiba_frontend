@@ -4,6 +4,7 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -11,10 +12,8 @@ import {useBranches} from '@/hooks/useBranches';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBranch} from '@/types/branch';
-import {Status} from '@/types/common';
 
 import {useCreateBranchDetailsConfig} from './branchConfig';
-
 
 interface BranchDetailsDrawerProps {
   branchId?: number;
@@ -29,15 +28,15 @@ const BranchDetailsDrawer: React.FC<BranchDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedBranch, getBranchById, detailsStatus } = useBranches();
+  const { selectedBranch, loadBranch, detailsStatus } = useBranches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
   useEffect(() => {
     if (visible && branchId) {
-      getBranchById(branchId);
+      //getBranchById(branchId);
+      loadBranch(branchId);
     }
-  }, [visible, branchId, getBranchById]);
+  }, [visible, branchId, loadBranch]);
 
   const handleEdit = (branch: IBranch) => {
     onEdit(branch.id);

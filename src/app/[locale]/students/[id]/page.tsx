@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudents} from '@/hooks/useStudents';
 
-import {Status} from '@/types/common';
 import {IStudent} from '@/types/student';
 
-export default function StudentDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedStudent, detailsStatus, getStudentById } = useStudents();
+export default function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedStudent, detailsStatus, loadStudent } = useStudents();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
 
@@ -30,8 +26,9 @@ export default function StudentDetailPage({
 
   // Load student if not already loaded
   useEffect(() => {
-    getStudentById(studentId);
-  }, [getStudentById, studentId]);
+    //getStudentById(studentId);
+    loadStudent(studentId);
+  }, [loadStudent, studentId]);
 
   const config = useCreateStudentDetailsConfig(
     selectedStudent,
@@ -44,7 +41,7 @@ export default function StudentDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IStudent>} />
+        <EntityDetails config={config as EntityDetailsConfig<IStudent>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -1,15 +1,15 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
 import RoomTypeForm from './RoomTypeForm';
-
 
 interface Props {
   mode: 'create' | 'edit';
@@ -26,15 +26,16 @@ const RoomTypeFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getRoomTypeById, selectedRoomType } = useRoomTypes();
+  const { getRoomTypeById, selectedRoomType, loadRoomType, detailsStatus } = useRoomTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && roomTypeId) {
-      getRoomTypeById(roomTypeId);
+      //getRoomTypeById(roomTypeId);
+      loadRoomType(roomTypeId);
     }
-  }, [visible, mode, roomTypeId, getRoomTypeById]);
+  }, [visible, mode, roomTypeId, loadRoomType]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +43,10 @@ const RoomTypeFormDrawer: React.FC<Props> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
+  }
 
   return (
     <Drawer

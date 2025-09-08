@@ -1,15 +1,15 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useCourses} from '@/hooks/useCourses';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import CourseForm from './CourseForm';
-
 
 interface CourseFormDrawerProps {
   mode: 'create' | 'edit';
@@ -26,15 +26,15 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
-  const { getCourseById, selectedCourse } = useCourses();
+  const { getCourseById, selectedCourse, loadCourse, detailsStatus } = useCourses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   useEffect(() => {
     if (visible && mode === 'edit' && courseId) {
-      getCourseById(courseId);
+      //getCourseById(courseId);
+      loadCourse(courseId);
     }
-  }, [visible, mode, courseId, getCourseById]);
+  }, [visible, mode, courseId, loadCourse]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +43,10 @@ const CourseFormDrawer: React.FC<CourseFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
+  }
 
   return (
     <Drawer

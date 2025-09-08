@@ -1,6 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {Status} from '@/enums';
+
+import {IPaginationMeta, IStatusState} from '@/types/common';
 import {IMenu} from '@/types/menu';
 import {IPanelWithMenus} from '@/types/panel';
 
@@ -86,7 +88,8 @@ const menuSlice = createSlice({
     clearDetailsStatus: (state) => {
       state.detailsStatus = { status: Status.INITIAL };
     },
-    setMyMenusStatus: (state, action: PayloadAction<IStatusState>) => {// ⬅ my menus
+    setMyMenusStatus: (state, action: PayloadAction<IStatusState>) => {
+      // ⬅ my menus
       state.myMenusStatus = action.payload;
     },
     setMyMenus: (state, action: PayloadAction<IMenu[]>) => {

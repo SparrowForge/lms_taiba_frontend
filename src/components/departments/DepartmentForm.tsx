@@ -6,20 +6,19 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useBranches} from '@/hooks/useBranches';
 import {useDepartments} from '@/hooks/useDepartments';
 import {useFaculties} from '@/hooks/useFaculties';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IDepartment, IDepartmentCreate, IDepartmentUpdate} from '@/types/department';
 import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
-
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface DepartmentFormProps {
   mode: 'create' | 'edit';
@@ -111,11 +110,21 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      initialValues={mode === 'edit' ? initialValues : undefined}
+    >
       <Form.Item
         name="branchId"
         label={t(LOCALE_KEYS.BRANCH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
@@ -136,7 +145,12 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.NAME)} />
       </Form.Item>
@@ -144,7 +158,12 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       <Form.Item
         name="code"
         label={t(LOCALE_KEYS.CODE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CODE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CODE) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.CODE)} />
       </Form.Item>
@@ -152,7 +171,12 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       <Form.Item
         name="headId"
         label={t(LOCALE_KEYS.HEAD)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.HEAD) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.HEAD) }),
+          },
+        ]}
       >
         <Select
           showSearch
@@ -173,7 +197,12 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       <Form.Item
         name="email"
         label={t(LOCALE_KEYS.EMAIL)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMAIL) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMAIL) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
@@ -181,18 +210,17 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       <Form.Item
         name="phone"
         label={t(LOCALE_KEYS.PHONE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PHONE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PHONE) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
-      >
-        <StatusSelect preset="binary" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
       <Form.Item>
         <Space>
@@ -205,13 +233,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default DepartmentForm;

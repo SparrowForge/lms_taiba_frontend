@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
 
 import {useCreateFeeInstallmentPlanDetailsConfig} from './feeInstallmentPlanConfig';
-
 
 interface FeeInstallmentPlanDetailsDrawerProps {
   feeInstallmentPlanId?: number;
@@ -29,15 +28,16 @@ const FeeInstallmentPlanDetailsDrawer: React.FC<FeeInstallmentPlanDetailsDrawerP
   onClose,
   onEdit,
 }) => {
-
-  const { selectedFeeInstallmentPlan, getFeeInstallmentPlanById, detailsStatus } = useFeeInstallmentPlans();
+  const { selectedFeeInstallmentPlan, loadFeeInstallmentPlan, detailsStatus } =
+    useFeeInstallmentPlans();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' });
   useEffect(() => {
     if (visible && feeInstallmentPlanId) {
-      getFeeInstallmentPlanById(feeInstallmentPlanId);
+      //getFeeInstallmentPlanById(feeInstallmentPlanId);
+      loadFeeInstallmentPlan(feeInstallmentPlanId);
     }
-  }, [visible, feeInstallmentPlanId, getFeeInstallmentPlanById]);
+  }, [visible, feeInstallmentPlanId, loadFeeInstallmentPlan]);
 
   const handleEdit = (feeInstallmentPlan: IFeeInstallmentPlan) => {
     onEdit(feeInstallmentPlan.id);

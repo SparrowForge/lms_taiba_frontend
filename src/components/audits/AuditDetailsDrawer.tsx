@@ -4,6 +4,7 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -11,10 +12,8 @@ import {useAudit} from '@/hooks/useAudit';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAudit} from '@/types/audit';
-import {Status} from '@/types/common';
 
 import {useCreateAuditDetailsConfig} from './auditConfig';
-
 
 interface AuditDetailsDrawerProps {
   auditId?: number;
@@ -29,7 +28,6 @@ const AuditDetailsDrawer: React.FC<AuditDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
   const { selectedAudit, getAuditById, detailsStatus } = useAudit();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.AUDIT, { defaultValue: 'Audit' });

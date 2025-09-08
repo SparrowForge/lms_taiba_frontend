@@ -6,7 +6,6 @@ import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 const { Title } = Typography;
 
 interface PageHeaderProps {
@@ -27,7 +26,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, onBack, children 
                 {t(LOCALE_KEYS.BACK, { defaultValue: 'Back' })}
               </Button>
             )}
-            <Title level={4} style={{ margin: 0}}>
+            <Title level={4} style={{ margin: 0 }}>
               {title}
             </Title>
           </div>

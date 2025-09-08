@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
-import {Status} from '@/types/common';
 import {IMenu} from '@/types/menu';
 
-export default function MenuDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedMenu, detailsStatus, getMenuById } = useMenus();
+export default function MenuDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedMenu, detailsStatus, loadMenu } = useMenus();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
 
@@ -30,8 +26,9 @@ export default function MenuDetailPage({
 
   // Load menu if not already loaded
   useEffect(() => {
-    getMenuById(menuId);
-  }, [getMenuById, menuId]);
+    //getMenuById(menuId);
+    loadMenu(menuId);
+  }, [loadMenu, menuId]);
 
   const config = useCreateMenuDetailsConfig(
     selectedMenu,
@@ -44,7 +41,7 @@ export default function MenuDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IMenu>} />
+        <EntityDetails config={config as EntityDetailsConfig<IMenu>} />
       </MainLayout>
     </ProtectedRoute>
   );

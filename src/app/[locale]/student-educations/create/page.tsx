@@ -13,13 +13,16 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useLocalization} from '@/hooks/useLocalization';
 
 export default function StudentEducationCreatePage() {
-    const { t } = useLocalization();
+  const { t } = useLocalization();
   const router = useRouter();
   const entityName = t(LOCALE_KEYS.STUDENT_EDUCATION, { defaultValue: 'Student Education' });
   return (
     <ProtectedRoute>
       <MainLayout>
-      <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
         <StudentEducationForm mode="create" />
       </MainLayout>
     </ProtectedRoute>

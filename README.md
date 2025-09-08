@@ -1,16 +1,27 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Git Commit Standards
+
+This project enforces structured git commits using [Husky](https://typicode.github.io/husky/) and [commitlint](https://commitlint.js.org/). All commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+
+**Quick Start:**
+
+- Use `bun run commit` for interactive commits
+- Or follow the format: `type(scope): description`
+
+**Examples:**
+
+- `feat: add new dashboard component`
+- `fix(auth): resolve login validation issue`
+- `docs: update API documentation`
+
+See [GIT-COMMIT-GUIDE.md](./GIT-COMMIT-GUIDE.md) for detailed information.
+
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
 bun dev
 ```
 

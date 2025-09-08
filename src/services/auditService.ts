@@ -17,8 +17,15 @@ export const auditService = {
   },
 
   //Get audit logs by resource/resourceId
-  getAuditByResource: async (resource: string, resourceId: number, params = {}): Promise<IBasePaginatedResponse<IAudit>> => {
-    const response = await api.get<IBasePaginatedResponse<IAudit>>(`/audit/resource/${resource}?resourceId=${resourceId}&action=UPDATE`, { params });
+  getAuditByResource: async (
+    resource: string,
+    resourceId: number,
+    params = {},
+  ): Promise<IBasePaginatedResponse<IAudit>> => {
+    const response = await api.get<IBasePaginatedResponse<IAudit>>(
+      `/audit/resource/${resource}?resourceId=${resourceId}&action=UPDATE`,
+      { params },
+    );
     return response.data;
   },
   // Clean/delete audit logs

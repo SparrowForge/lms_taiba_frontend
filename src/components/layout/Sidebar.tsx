@@ -179,7 +179,6 @@ export const Sidebar = ({ collapsed }: SidebarProps) => {
         icon: <UserOutlined />,
         label: 'User Roles',
       },
-
     ],
     [],
   );

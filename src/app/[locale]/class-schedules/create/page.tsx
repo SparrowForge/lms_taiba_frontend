@@ -20,8 +20,11 @@ export default function CreateClassSchedulePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <ClassScheduleForm mode="create" />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <ClassScheduleForm mode="create" />
       </MainLayout>
     </ProtectedRoute>
   );

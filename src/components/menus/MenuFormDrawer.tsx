@@ -1,15 +1,15 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
 import MenuForm from './MenuForm';
-
 
 interface MenuFormDrawerProps {
   mode: 'create' | 'edit';
@@ -26,15 +26,15 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
-  const { getMenuById, selectedMenu } = useMenus();
+  const { getMenuById, selectedMenu, loadMenu, detailsStatus } = useMenus();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   useEffect(() => {
     if (visible && mode === 'edit' && menuId) {
-      getMenuById(menuId);
+      //getMenuById(menuId);
+      loadMenu(menuId);
     }
-  }, [visible, mode, menuId, getMenuById]);
+  }, [visible, mode, menuId, loadMenu]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +43,10 @@ const MenuFormDrawer: React.FC<MenuFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
+  }
 
   return (
     <Drawer

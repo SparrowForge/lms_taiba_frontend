@@ -1,4 +1,5 @@
 import {ICourse} from './course';
+import {IFacultyWithSubjectRole} from './faculty';
 
 export interface ISubject {
   id: number;
@@ -42,4 +43,8 @@ export interface ISubjectUpdate {
   prerequisite?: string;
   status?: string;
   remarks?: string;
+}
+
+export interface ISubjectWithFaculty extends ISubject {
+  faculties: IFacultyWithSubjectRole[];
 }

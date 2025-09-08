@@ -7,17 +7,17 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useTimeSlots} from '@/hooks/useTimeSlots';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {ITimeSlot, ITimeSlotCreate, ITimeSlotUpdate} from '@/types/timeSlot';
 
 import FormLayout from '../layout/FormLayout';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -114,7 +114,12 @@ const TimeSlotForm: React.FC<Props> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.NAME) })} />
       </Form.Item>
@@ -122,7 +127,12 @@ const TimeSlotForm: React.FC<Props> = ({
       <Form.Item
         name="startTime"
         label={t(LOCALE_KEYS.START_TIME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.START_TIME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.START_TIME) }),
+          },
+        ]}
       >
         <TimePicker
           format="HH:mm"
@@ -134,7 +144,12 @@ const TimeSlotForm: React.FC<Props> = ({
       <Form.Item
         name="endTime"
         label={t(LOCALE_KEYS.END_TIME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.END_TIME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.END_TIME) }),
+          },
+        ]}
       >
         <TimePicker
           format="HH:mm"
@@ -143,13 +158,7 @@ const TimeSlotForm: React.FC<Props> = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
-      >
-        <StatusSelect preset="binary" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
       <Form.Item>
         <Space>
@@ -164,13 +173,7 @@ const TimeSlotForm: React.FC<Props> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default TimeSlotForm;

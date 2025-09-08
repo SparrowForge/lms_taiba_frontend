@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {ITimeSlot, ITimeSlotCreate, ITimeSlotUpdate} from '@/types/timeSlot';
 
 import {timeSlotService} from '@/services/timeSlotService';
@@ -25,14 +26,8 @@ import {
 
 export const useTimeSlots = () => {
   const dispatch = useDispatch();
-  const {
-    timeSlots,
-    selectedTimeSlot,
-    listStatus,
-    detailsStatus,
-    actionStatus,
-    pagination,
-  } = useSelector((state: RootState) => state.timeSlots);
+  const { timeSlots, selectedTimeSlot, listStatus, detailsStatus, actionStatus, pagination } =
+    useSelector((state: RootState) => state.timeSlots);
 
   const loadTimeSlots = useCallback(
     async (params = {}) => {

@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IFeeInstallmentPlan, IFeeInstallmentPlanCreate, IFeeInstallmentPlanUpdate,} from '@/types/feeInstallmentPlan';
 
 import {feeInstallmentPlanService} from '@/services/feeInstallmentPlanService';
@@ -13,13 +14,13 @@ import {
     addFeeInstallmentPlan,
     clearActionStatus,
     clearDetailsStatus,
+    deleteFeeInstallmentPlan,
     setActionStatus,
     setDetailsStatus,
+    setFeeInstallmentPlans,
     setListStatus,
     setPagination,
-    setFeeInstallmentPlans,
     setSelectedFeeInstallmentPlan,
-    deleteFeeInstallmentPlan,
     updateFeeInstallmentPlan,
 } from '@/store/slices/feeInstallmentPlanSlice';
 

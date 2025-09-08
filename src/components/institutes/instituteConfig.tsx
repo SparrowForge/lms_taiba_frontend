@@ -40,7 +40,7 @@ export const useCreateInstituteDetailsConfig = (
       {
         key: 'address',
         label: t(LOCALE_KEYS.ADDRESS),
-        render: (address: any) => address ? `${address.name} - ${address.address}` : 'N/A',
+        render: (address: any) => (address ? `${address.name} - ${address.address}` : 'N/A'),
       },
       {
         key: 'createdAt',

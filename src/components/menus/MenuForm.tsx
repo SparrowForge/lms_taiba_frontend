@@ -6,20 +6,18 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
-
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 import {usePanels} from '@/hooks/usePanels';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
 
 import FormLayout from '../layout/FormLayout';
-
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface MenuFormProps {
   mode: 'create' | 'edit';
@@ -111,11 +109,21 @@ const MenuForm: React.FC<MenuFormProps> = ({
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      initialValues={mode === 'edit' ? initialValues : undefined}
+    >
       <Form.Item
         name="panelId"
         label={t(LOCALE_KEYS.PANEL)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PANEL) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PANEL) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.PANEL) })}
@@ -153,7 +161,12 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.NAME) })} />
       </Form.Item>
@@ -161,7 +174,12 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="localName"
         label={t(LOCALE_KEYS.LOCAL_NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.LOCAL_NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.LOCAL_NAME) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.LOCAL_NAME) })} />
       </Form.Item>
@@ -169,7 +187,12 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="icon"
         label={t(LOCALE_KEYS.ICON)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ICON) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ICON) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_ICON)} />
       </Form.Item>
@@ -177,7 +200,12 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="route"
         label={t(LOCALE_KEYS.ROUTE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROUTE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROUTE) }),
+          },
+        ]}
       >
         <Input placeholder={t(LOCALE_KEYS.ENTER_ROUTE)} />
       </Form.Item>
@@ -185,18 +213,21 @@ const MenuForm: React.FC<MenuFormProps> = ({
       <Form.Item
         name="sortOrder"
         label={t(LOCALE_KEYS.SORT_ORDER)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SORT_ORDER) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SORT_ORDER) }),
+          },
+        ]}
       >
-        <InputNumber placeholder={t(LOCALE_KEYS.ENTER_SORT_ORDER)} min={1} style={{ width: '100%' }} />
+        <InputNumber
+          placeholder={t(LOCALE_KEYS.ENTER_SORT_ORDER)}
+          min={1}
+          style={{ width: '100%' }}
+        />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
-      >
-        <StatusSelect preset="binary" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
       <Form.Item>
         <Space>
@@ -209,13 +240,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default MenuForm;

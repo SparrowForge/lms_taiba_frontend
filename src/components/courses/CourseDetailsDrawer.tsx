@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useCourses} from '@/hooks/useCourses';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 
 import {useCreateCourseDetailsConfig} from './courseConfig';
-
 
 interface CourseDetailsDrawerProps {
   courseId?: number;
@@ -29,15 +28,15 @@ const CourseDetailsDrawer: React.FC<CourseDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedCourse, getCourseById, detailsStatus } = useCourses();
+  const { selectedCourse, loadCourse, detailsStatus } = useCourses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   useEffect(() => {
     if (visible && courseId) {
-      getCourseById(courseId);
+      //getCourseById(courseId);
+      loadCourse(courseId);
     }
-  }, [visible, courseId, getCourseById]);
+  }, [visible, courseId, loadCourse]);
 
   const handleEdit = (course: ICourse) => {
     onEdit(course.id);

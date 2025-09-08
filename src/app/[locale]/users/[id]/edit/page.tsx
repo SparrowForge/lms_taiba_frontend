@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -15,21 +16,18 @@ import UserForm from '@/components/users/UserForm';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
-import {Status} from '@/types/common';
-
-
 const UserEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedUser, detailsStatus, getUserById } = useUsers();
+  const { selectedUser, detailsStatus, loadUser } = useUsers();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
 
   useEffect(() => {
     const userId = parseInt(resolvedParams.id);
-    getUserById(userId);
-  }, [resolvedParams.id, getUserById]);
-
+    //getUserById(userId);
+    loadUser(userId);
+  }, [resolvedParams.id, loadUser]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -42,12 +40,11 @@ const UserEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params })
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <UserForm
-            mode="edit"
-            userId={parseInt(resolvedParams.id)}
-            initialValues={selectedUser}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
         />
+        <UserForm mode="edit" userId={parseInt(resolvedParams.id)} initialValues={selectedUser} />
       </MainLayout>
     </ProtectedRoute>
   );

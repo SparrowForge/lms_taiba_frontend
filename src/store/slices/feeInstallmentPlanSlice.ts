@@ -1,6 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {Status} from '@/enums';
+
+import {IPaginationMeta, IStatusState} from '@/types/common';
 import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
 
 interface FeeInstallmentPlanState {
@@ -45,9 +47,7 @@ const feeInstallmentPlanSlice = createSlice({
       state.feeInstallmentPlans.unshift(action.payload);
     },
     updateFeeInstallmentPlan: (state, action: PayloadAction<IFeeInstallmentPlan>) => {
-      const index = state.feeInstallmentPlans.findIndex(
-        (item) => item.id === action.payload.id,
-      );
+      const index = state.feeInstallmentPlans.findIndex((item) => item.id === action.payload.id);
       if (index !== -1) {
         state.feeInstallmentPlans[index] = action.payload;
       }

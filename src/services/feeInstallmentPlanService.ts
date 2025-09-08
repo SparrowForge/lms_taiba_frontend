@@ -36,10 +36,7 @@ export const feeInstallmentPlanService = {
     id: number,
     data: IFeeInstallmentPlanUpdate,
   ): Promise<IFeeInstallmentPlan> => {
-    const response = await api.patch<IFeeInstallmentPlan>(
-      `/fee-installment-plans/${id}`,
-      data,
-    );
+    const response = await api.patch<IFeeInstallmentPlan>(`/fee-installment-plans/${id}`, data);
     return response.data;
   },
 

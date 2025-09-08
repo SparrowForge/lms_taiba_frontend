@@ -6,18 +6,18 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRooms} from '@/hooks/useRooms';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IRoom, IRoomCreate, IRoomUpdate} from '@/types/room';
 
 import FormLayout from '../layout/FormLayout';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -107,7 +107,12 @@ const RoomForm: React.FC<Props> = ({
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-          <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? initialValues : undefined}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      initialValues={mode === 'edit' ? initialValues : undefined}
+    >
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
@@ -127,7 +132,9 @@ const RoomForm: React.FC<Props> = ({
         rules={[
           {
             required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' }) }),
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+              name: t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' }),
+            }),
           },
         ]}
       >
@@ -153,7 +160,9 @@ const RoomForm: React.FC<Props> = ({
         rules={[
           {
             required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.LEVEL_FLOOR, { defaultValue: 'Level/Floor' }) }),
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+              name: t(LOCALE_KEYS.LEVEL_FLOOR, { defaultValue: 'Level/Floor' }),
+            }),
           },
         ]}
       >
@@ -166,7 +175,9 @@ const RoomForm: React.FC<Props> = ({
         rules={[
           {
             required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SITTING_CAPACITY, { defaultValue: 'Sitting Capacity' }) }),
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+              name: t(LOCALE_KEYS.SITTING_CAPACITY, { defaultValue: 'Sitting Capacity' }),
+            }),
           },
           {
             type: 'number',
@@ -188,7 +199,9 @@ const RoomForm: React.FC<Props> = ({
         rules={[
           {
             required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EXAM_CAPACITY, { defaultValue: 'Exam Capacity' }) }),
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+              name: t(LOCALE_KEYS.EXAM_CAPACITY, { defaultValue: 'Exam Capacity' }),
+            }),
           },
           {
             type: 'number',
@@ -204,27 +217,14 @@ const RoomForm: React.FC<Props> = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_STATUS),
-          },
-        ]}
-      >
-        <StatusSelect preset="binary" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
             {getSubmitText()}
           </Button>
-          <Button onClick={handleCancel}>
-            {t(LOCALE_KEYS.CANCEL)}
-          </Button>
+          <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>
       </Form.Item>
     </Form>

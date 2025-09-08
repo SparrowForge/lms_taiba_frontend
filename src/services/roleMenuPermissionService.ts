@@ -3,7 +3,7 @@ import {
     IRoleMenuPermission,
     IRoleMenuPermissionCreate,
     IRoleMenuPermissionUpdate,
-    IRoleWithMenuPermission
+    IRoleWithMenuPermission,
 } from '@/types/roleMenuPermission';
 
 import {api} from '@/lib/axios';
@@ -41,10 +41,7 @@ export const roleMenuPermissionService = {
     id: number,
     data: IRoleMenuPermissionUpdate,
   ): Promise<IRoleMenuPermission> => {
-    const response = await api.patch<IRoleMenuPermission>(
-      `/role-menu-permissions/${id}`,
-      data,
-    );
+    const response = await api.patch<IRoleMenuPermission>(`/role-menu-permissions/${id}`, data);
     return response.data;
   },
 

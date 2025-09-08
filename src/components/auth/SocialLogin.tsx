@@ -1,8 +1,10 @@
-import { useLocalization } from "@/hooks/useLocalization";
 import { Button } from "antd";
 import Image from "next/image";
 import Link from "next/link";
+
 import { LOCALE_KEYS } from "@/constants/localizationKeys";
+
+import { useLocalization } from "@/hooks/useLocalization";
 
 const SocialLogin = () => {
   const { t } = useLocalization();
@@ -39,7 +41,7 @@ const SocialLogin = () => {
       {/* Register prompt */}
       <div className="py-2 text-center">
         <h1>
-          {t(LOCALE_KEYS.NO_ACCOUNT)} 
+          {t(LOCALE_KEYS.NO_ACCOUNT)}
           <Link
             href="/register"
             className="text-[#1e45bf] hover:text-blue-500 font-medium cursor-pointer"

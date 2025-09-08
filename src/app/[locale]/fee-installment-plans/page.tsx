@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -16,7 +17,6 @@ import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
 
 export default function FeeInstallmentPlansPage() {
@@ -63,8 +63,8 @@ export default function FeeInstallmentPlansPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadFeeInstallmentPlans({ page: 1, limit: 10 });
   };
 
@@ -97,7 +97,9 @@ export default function FeeInstallmentPlansPage() {
       {
         title: t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' }),
         key: 'feeStructure',
-        render: (feeInstallmentPlan: IFeeInstallmentPlan) => <span>{feeInstallmentPlan.feeStructure.templateName}</span>,
+        render: (feeInstallmentPlan: IFeeInstallmentPlan) => (
+          <span>{feeInstallmentPlan.feeStructure.templateName}</span>
+        ),
       },
       {
         title: t(LOCALE_KEYS.SEQUENCE_NO, { defaultValue: 'Sequence No' }),
@@ -153,17 +155,13 @@ export default function FeeInstallmentPlansPage() {
         width: 100,
         render: (feeInstallmentPlan: IFeeInstallmentPlan) => (
           <EntityActions
-            onView={() =>
-              router.push(`/fee-installment-plans/${feeInstallmentPlan.id}`)
-            }
+            onView={() => router.push(`/fee-installment-plans/${feeInstallmentPlan.id}`)}
             onViewModal={() => handleViewDetails(feeInstallmentPlan.id)}
             viewText={t(LOCALE_KEYS.VIEW)}
             editText={t(LOCALE_KEYS.EDIT)}
             deleteText={t(LOCALE_KEYS.DELETE)}
             viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
-            onEdit={() =>
-              router.push(`/fee-installment-plans/${feeInstallmentPlan.id}/edit`)
-            }
+            onEdit={() => router.push(`/fee-installment-plans/${feeInstallmentPlan.id}/edit`)}
             onEditModal={() => handleEditDrawer(feeInstallmentPlan.id)}
             editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeFeeInstallmentPlan(feeInstallmentPlan.id)}

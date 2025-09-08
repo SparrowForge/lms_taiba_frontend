@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IStudent, IStudentCreate, IStudentUpdate} from '@/types/student';
 
 import {studentService} from '@/services/studentService';
@@ -32,8 +33,7 @@ export const useStudents = () => {
     async (params = {}) => {
       try {
         dispatch(setListStatus({ status: Status.LOADING }));
-        const response: IBasePaginatedResponse<IStudent> =
-          await studentService.getStudents(params);
+        const response: IBasePaginatedResponse<IStudent> = await studentService.getStudents(params);
         dispatch(setStudents(response?.data?.items ?? []));
         dispatch(
           setPagination(

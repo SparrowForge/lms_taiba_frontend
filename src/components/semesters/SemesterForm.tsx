@@ -1,25 +1,24 @@
 'use client';
 
-import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd';
+import {Button, DatePicker, Form, Input, InputNumber, Select, Space, Switch} from 'antd';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
 
 import FormLayout from '../layout/FormLayout';
-
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface SemesterFormProps {
   mode: 'create' | 'edit';
@@ -113,18 +112,27 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
     <Form
       form={form}
       layout="vertical"
-      initialValues={mode === 'edit' ? {
-        ...initialValues,
-        startDate: initialValues?.startDate ? dayjs(initialValues.startDate) : undefined,
-        endDate: initialValues?.endDate ? dayjs(initialValues.endDate) : undefined,
-      } : undefined}
+      initialValues={
+        mode === 'edit'
+          ? {
+              ...initialValues,
+              startDate: initialValues?.startDate ? dayjs(initialValues.startDate) : undefined,
+              endDate: initialValues?.endDate ? dayjs(initialValues.endDate) : undefined,
+            }
+          : undefined
+      }
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
       <Form.Item
         name="batchId"
         label={t(LOCALE_KEYS.BATCH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+          },
+        ]}
       >
         <Select
           showSearch
@@ -144,40 +152,57 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="termNo"
         label={t(LOCALE_KEYS.TERM_NO)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TERM_NO) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TERM_NO) }),
+          },
+        ]}
       >
         <InputNumber min={1} max={20} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="startDate"
         label={t(LOCALE_KEYS.START_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.START_DATE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.START_DATE) }),
+          },
+        ]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
       <Form.Item
         name="endDate"
         label={t(LOCALE_KEYS.END_DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.END_DATE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.END_DATE) }),
+          },
+        ]}
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
-      >
-        <StatusSelect preset="lifecycle" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
       <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
         <Input.TextArea rows={3} />
+      </Form.Item>
+      <Form.Item name="isBreak" label={t(LOCALE_KEYS.IS_BREAK)}>
+        <Switch />
       </Form.Item>
       <Form.Item>
         <Space>
@@ -191,13 +216,7 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
       </Form.Item>
     </Form>
   );
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default SemesterForm;

@@ -6,12 +6,12 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useAddresses} from '@/hooks/useAddresses';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAddress, IAddressCreate, IAddressUpdate} from '@/types/address';
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
@@ -106,56 +106,96 @@ const AddressForm: React.FC<AddressFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="address"
         label={t(LOCALE_KEYS.ADDRESS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
+          },
+        ]}
       >
         <Input.TextArea rows={3} />
       </Form.Item>
       <Form.Item
         name="city"
         label={t(LOCALE_KEYS.CITY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CITY) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CITY) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="state"
         label={t(LOCALE_KEYS.STATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATE) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="zipCode"
         label={t(LOCALE_KEYS.ZIP_CODE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ZIP_CODE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ZIP_CODE) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="country"
         label={t(LOCALE_KEYS.COUNTRY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COUNTRY) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COUNTRY) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="phone"
         label={t(LOCALE_KEYS.PHONE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PHONE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PHONE) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="email"
         label={t(LOCALE_KEYS.EMAIL)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMAIL) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMAIL) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
@@ -171,13 +211,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
       </Form.Item>
     </Form>
   );
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default AddressForm;

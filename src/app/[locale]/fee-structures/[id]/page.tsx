@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateFeeStructureDetailsConfig} from '@/components/feeStructures/feeStructureConfig';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFeeStructure} from '@/types/feeStructure';
 
-export default function FeeStructureDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedFeeStructure, detailsStatus, getFeeStructureById } = useFeeStructures();
+export default function FeeStructureDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedFeeStructure, detailsStatus, loadFeeStructure } = useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
 
@@ -30,8 +26,9 @@ export default function FeeStructureDetailPage({
 
   // Load fee structure if not already loaded
   useEffect(() => {
-    getFeeStructureById(feeStructureId);
-  }, [getFeeStructureById, feeStructureId]);
+    //getFeeStructureById(feeStructureId);
+    loadFeeStructure(feeStructureId);
+  }, [loadFeeStructure, feeStructureId]);
 
   const config = useCreateFeeStructureDetailsConfig(
     selectedFeeStructure,
@@ -44,7 +41,7 @@ export default function FeeStructureDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IFeeStructure>} />
+        <EntityDetails config={config as EntityDetailsConfig<IFeeStructure>} />
       </MainLayout>
     </ProtectedRoute>
   );

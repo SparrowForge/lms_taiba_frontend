@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudents} from '@/hooks/useStudents';
 
-import {Status} from '@/types/common';
 import {IStudent} from '@/types/student';
 
 import {useCreateStudentDetailsConfig} from './studentConfig';
-
 
 interface StudentDetailsDrawerProps {
   studentId?: number;
@@ -29,16 +28,16 @@ const StudentDetailsDrawer: React.FC<StudentDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedStudent, getStudentById, detailsStatus } = useStudents();
+  const { selectedStudent, loadStudent, detailsStatus } = useStudents();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
 
   useEffect(() => {
     if (visible && studentId) {
-      getStudentById(studentId);
+      //getStudentById(studentId);
+      loadStudent(studentId);
     }
-  }, [visible, studentId, getStudentById]);
+  }, [visible, studentId, loadStudent]);
 
   const handleEdit = (student: IStudent) => {
     onEdit(student.id);

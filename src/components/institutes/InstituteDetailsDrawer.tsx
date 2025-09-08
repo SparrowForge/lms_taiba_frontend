@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useInstitutes} from '@/hooks/useInstitutes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IInstitute} from '@/types/institute';
 
 import {useCreateInstituteDetailsConfig} from './instituteConfig';
-
 
 interface InstituteDetailsDrawerProps {
   instituteId?: number;
@@ -29,15 +28,15 @@ const InstituteDetailsDrawer: React.FC<InstituteDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedInstitute, getInstituteById, detailsStatus } = useInstitutes();
+  const { selectedInstitute, getInstituteById, detailsStatus, loadInstitute } = useInstitutes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
   useEffect(() => {
     if (visible && instituteId) {
-      getInstituteById(instituteId);
+      //getInstituteById(instituteId);
+      loadInstitute(instituteId);
     }
-  }, [visible, instituteId, getInstituteById]);
+  }, [visible, instituteId, loadInstitute]);
 
   const handleEdit = (institute: IInstitute) => {
     onEdit(institute.id);

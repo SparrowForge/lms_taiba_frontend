@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {ISubject, ISubjectCreate, ISubjectUpdate} from '@/types/subject';
 
 import {subjectService} from '@/services/subjectService';
@@ -168,6 +169,10 @@ export const useSubjects = () => {
     [dispatch],
   );
 
+  const clearSubjects = useCallback(() => {
+    dispatch(setSubjects([]));
+  }, [dispatch]);
+
   return {
     // State
     subjects,
@@ -187,5 +192,6 @@ export const useSubjects = () => {
     clearAction,
     clearDetails,
     setSelected,
+    clearSubjects,
   };
 };

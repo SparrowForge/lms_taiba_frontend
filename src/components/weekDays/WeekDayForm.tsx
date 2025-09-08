@@ -5,19 +5,18 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
-
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-
-import StatusSelect from '@/components/ui/StatusSelect';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useWeekDays} from '@/hooks/useWeekDays';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IWeekDay, IWeekDayCreate, IWeekDayUpdate} from '@/types/weekDay';
 
 import FormLayout from '../layout/FormLayout';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -94,7 +93,12 @@ const WeekDayForm: React.FC<Props> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
@@ -103,35 +107,26 @@ const WeekDayForm: React.FC<Props> = ({
         name="dayNumber"
         label={t(LOCALE_KEYS.DAY_NUMBER)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DAY_NUMBER) }) },
-          { type: 'number', min: 1, max: 7, message: 'Day number must be between 1 and 7' }
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DAY_NUMBER) }),
+          },
+          { type: 'number', min: 1, max: 7, message: 'Day number must be between 1 and 7' },
         ]}
       >
         <InputNumber min={1} max={7} style={{ width: '100%' }} />
       </Form.Item>
 
-      <Form.Item
-        name="isWorkingDay"
-        label={t(LOCALE_KEYS.IS_WORKING_DAY)}
-        valuePropName="checked"
-      >
+      <Form.Item name="isWorkingDay" label={t(LOCALE_KEYS.IS_WORKING_DAY)} valuePropName="checked">
         <Checkbox />
       </Form.Item>
 
-      <Form.Item
-        name="remarks"
-        label={t(LOCALE_KEYS.REMARKS)}
-      >
+      <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
         <Input.TextArea rows={3} />
       </Form.Item>
 
-      <Form.Item
-        name="status"
-        label={t(LOCALE_KEYS.STATUS)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }) }]}
-      >
-        <StatusSelect preset="binary" />
-      </Form.Item>
+      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
+
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
@@ -145,13 +140,7 @@ const WeekDayForm: React.FC<Props> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default WeekDayForm;

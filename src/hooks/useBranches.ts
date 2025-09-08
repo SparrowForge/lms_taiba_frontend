@@ -2,10 +2,11 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
 import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
 import {branchService} from '@/services/branchService';
 

@@ -1,6 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {Status} from '@/enums';
+
+import {IPaginationMeta, IStatusState} from '@/types/common';
 import {IUser, IUserFilters, IUsersState} from '@/types/user';
 
 const initialState: IUsersState = {

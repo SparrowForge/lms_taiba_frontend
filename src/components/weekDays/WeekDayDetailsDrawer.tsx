@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useWeekDays} from '@/hooks/useWeekDays';
 
-import {Status} from '@/types/common';
 import {IWeekDay} from '@/types/weekDay';
 
 import {useCreateWeekDayDetailsConfig} from './weekDayConfig';
-
 
 interface WeekDayDetailsDrawerProps {
   weekDayId?: number;
@@ -29,15 +28,15 @@ const WeekDayDetailsDrawer: React.FC<WeekDayDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedWeekDay, getWeekDayById, detailsStatus } = useWeekDays();
+  const { selectedWeekDay, loadWeekDay, detailsStatus } = useWeekDays();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
   useEffect(() => {
     if (visible && weekDayId) {
-      getWeekDayById(weekDayId);
+      //getWeekDayById(weekDayId);
+      loadWeekDay(weekDayId);
     }
-  }, [visible, weekDayId, getWeekDayById]);
+  }, [visible, weekDayId, loadWeekDay]);
 
   const handleEdit = (weekDay: IWeekDay) => {
     onEdit(weekDay.id);

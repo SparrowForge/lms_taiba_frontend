@@ -1,11 +1,15 @@
 import {configureStore} from '@reduxjs/toolkit';
 
 import addressReducer from './slices/addressSlice';
+import attendanceReducer from './slices/attendanceSlice';
 import auditReducer from './slices/auditSlice';
 import authReducer from './slices/authSlice';
 import batchReducer from './slices/batchSlice';
 import branchReducer from './slices/branchSlice';
 import classScheduleReducer from './slices/classScheduleSlice';
+import courseAssignmentReducer from './slices/courseAssignmentSlice';
+import courseAssignmentSubmissionReducer from './slices/courseAssignmentSubmissionSlice';
+import courseMaterialReducer from './slices/courseMaterialSlice';
 import courseReducer from './slices/courseSlice';
 import courseTypeReducer from './slices/courseTypeSlice';
 import departmentReducer from './slices/departmentSlice';
@@ -36,6 +40,7 @@ import weekDayReducer from './slices/weekDaySlice';
 
 // Root state type
 export interface RootState {
+  attendances: ReturnType<typeof attendanceReducer>;
   auth: ReturnType<typeof authReducer>;
   users: ReturnType<typeof userReducer>;
   panels: ReturnType<typeof panelReducer>;
@@ -45,6 +50,9 @@ export interface RootState {
   menus: ReturnType<typeof menuReducer>;
   roleMenuPermissions: ReturnType<typeof roleMenuPermissionReducer>;
   courses: ReturnType<typeof courseReducer>;
+  courseAssignments: ReturnType<typeof courseAssignmentReducer>;
+  courseAssignmentSubmissions: ReturnType<typeof courseAssignmentSubmissionReducer>;
+  courseMaterials: ReturnType<typeof courseMaterialReducer>;
   subjects: ReturnType<typeof subjectReducer>;
   batches: ReturnType<typeof batchReducer>;
   semesters: ReturnType<typeof semesterReducer>;
@@ -74,6 +82,7 @@ export interface RootState {
 // Create store
 export const store = configureStore({
   reducer: {
+    attendances: attendanceReducer,
     auth: authReducer,
     users: userReducer,
     panels: panelReducer,
@@ -83,6 +92,9 @@ export const store = configureStore({
     menus: menuReducer,
     roleMenuPermissions: roleMenuPermissionReducer,
     courses: courseReducer,
+    courseAssignments: courseAssignmentReducer,
+    courseAssignmentSubmissions: courseAssignmentSubmissionReducer,
+    courseMaterials: courseMaterialReducer,
     subjects: subjectReducer,
     batches: batchReducer,
     semesters: semesterReducer,

@@ -7,15 +7,15 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
-import {IFeeInstallmentPlanCreate, IFeeInstallmentPlanUpdate,} from '@/types/feeInstallmentPlan';
+import {IFeeInstallmentPlanCreate, IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
 
 import FormLayout from '../layout/FormLayout';
 
@@ -56,7 +56,9 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
     loadSemesters({ page: 1, limit: 100 });
   }, [loadFeeStructures, loadSemesters]);
 
-  const handleSubmit = async (values: Partial<IFeeInstallmentPlanCreate | IFeeInstallmentPlanUpdate>) => {
+  const handleSubmit = async (
+    values: Partial<IFeeInstallmentPlanCreate | IFeeInstallmentPlanUpdate>,
+  ) => {
     try {
       if (mode === 'create') {
         await createFeeInstallmentPlan(values as IFeeInstallmentPlanCreate);
@@ -110,14 +112,28 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={mode === 'edit' ? {
-      ...initialValues,
-      dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined,
-    } : undefined}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      initialValues={
+        mode === 'edit'
+          ? {
+              ...initialValues,
+              dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined,
+            }
+          : undefined
+      }
+    >
       <Form.Item
         name="feeStructureId"
         label={t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FEE_STRUCTURE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FEE_STRUCTURE) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FEE_STRUCTURE) })}
@@ -131,7 +147,12 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
       <Form.Item
         name="semesterId"
         label={t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }),
+          },
+        ]}
       >
         <Select
           placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
@@ -145,7 +166,12 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
       <Form.Item
         name="sequenceNo"
         label={t(LOCALE_KEYS.SEQUENCE_NO, { defaultValue: 'Sequence No' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEQUENCE_NO) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEQUENCE_NO) }),
+          },
+        ]}
       >
         <InputNumber style={{ width: '100%' }} min={1} />
       </Form.Item>
@@ -153,7 +179,12 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
       <Form.Item
         name="paymentLabel"
         label={t(LOCALE_KEYS.PAYMENT_LABEL, { defaultValue: 'Payment Label' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PAYMENT_LABEL) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PAYMENT_LABEL) }),
+          },
+        ]}
       >
         <Input />
       </Form.Item>
@@ -161,7 +192,12 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
       <Form.Item
         name="durationMonths"
         label={t(LOCALE_KEYS.DURATION_MONTHS, { defaultValue: 'Duration (Months)' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DURATION_MONTHS) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DURATION_MONTHS) }),
+          },
+        ]}
       >
         <InputNumber style={{ width: '100%' }} min={1} />
       </Form.Item>
@@ -169,31 +205,38 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
       <Form.Item
         name="amount"
         label={t(LOCALE_KEYS.AMOUNT, { defaultValue: 'Amount' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.AMOUNT) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.AMOUNT) }),
+          },
+        ]}
       >
-        <InputNumber
-          style={{ width: '100%' }}
-          min={0}
-          step={0.01}
-        />
+        <InputNumber style={{ width: '100%' }} min={0} step={0.01} />
       </Form.Item>
 
       <Form.Item
         name="discountAmount"
         label={t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_AMOUNT) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_AMOUNT) }),
+          },
+        ]}
       >
-        <InputNumber
-          style={{ width: '100%' }}
-          min={0}
-          step={0.01}
-        />
+        <InputNumber style={{ width: '100%' }} min={0} step={0.01} />
       </Form.Item>
 
       <Form.Item
         name="dueDate"
         label={t(LOCALE_KEYS.DUE_DATE, { defaultValue: 'Due Date' })}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DUE_DATE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DUE_DATE) }),
+          },
+        ]}
       >
         <DatePicker style={{ width: '100%' }} />
       </Form.Item>
@@ -209,13 +252,7 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
     </Form>
   );
 
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default FeeInstallmentPlanForm;

@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRooms} from '@/hooks/useRooms';
 
-import {Status} from '@/types/common';
 import {IRoom} from '@/types/room';
 
-export default function RoomDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedRoom, detailsStatus, getRoomById } = useRooms();
+export default function RoomDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedRoom, detailsStatus, loadRoom } = useRooms();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM, { defaultValue: 'Room' });
 
@@ -29,8 +25,9 @@ export default function RoomDetailPage({
   const roomId = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    getRoomById(roomId);
-  }, [getRoomById, roomId]);
+    //getRoomById(roomId);
+    loadRoom(roomId);
+  }, [loadRoom, roomId]);
 
   const config = useCreateRoomDetailsConfig(
     selectedRoom,

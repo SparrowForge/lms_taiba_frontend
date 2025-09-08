@@ -2,10 +2,11 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
 import {IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate} from '@/types/classSchedule';
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
 import {classScheduleService} from '@/services/classScheduleService';
 
@@ -69,7 +70,8 @@ export const useClassSchedules = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IClassSchedule> = await classScheduleService.getClassSchedule(id);
+        const response: IBaseResponse<IClassSchedule> =
+          await classScheduleService.getClassSchedule(id);
         dispatch(setSelectedClassSchedule(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {

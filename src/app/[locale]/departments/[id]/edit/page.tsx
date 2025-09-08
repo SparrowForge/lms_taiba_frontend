@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import DepartmentForm from '@/components/departments/DepartmentForm';
@@ -15,21 +16,18 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useDepartments} from '@/hooks/useDepartments';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
-
-
 const DepartmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedDepartment, detailsStatus, getDepartmentById } = useDepartments();
+  const { selectedDepartment, detailsStatus, loadDepartment } = useDepartments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
 
   useEffect(() => {
     const departmentId = parseInt(resolvedParams.id);
-    getDepartmentById(departmentId);
-  }, [resolvedParams.id, getDepartmentById]);
-
+    //getDepartmentById(departmentId);
+    loadDepartment(departmentId);
+  }, [resolvedParams.id, loadDepartment]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -42,11 +40,14 @@ const DepartmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <DepartmentForm
-            mode="edit"
-            departmentId={parseInt(resolvedParams.id)}
-            initialValues={selectedDepartment}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <DepartmentForm
+          mode="edit"
+          departmentId={parseInt(resolvedParams.id)}
+          initialValues={selectedDepartment}
         />
       </MainLayout>
     </ProtectedRoute>

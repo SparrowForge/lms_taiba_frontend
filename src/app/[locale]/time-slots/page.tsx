@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -17,7 +18,6 @@ import StatusTag from '@/components/ui/StatusTag';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useTimeSlots} from '@/hooks/useTimeSlots';
 
-import {Status} from '@/types/common';
 import {ITimeSlot} from '@/types/timeSlot';
 
 export default function TimeSlotsPage() {
@@ -30,8 +30,7 @@ export default function TimeSlotsPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
-  const { timeSlots, listStatus, pagination, loadTimeSlots, removeTimeSlot } =
-    useTimeSlots();
+  const { timeSlots, listStatus, pagination, loadTimeSlots, removeTimeSlot } = useTimeSlots();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -58,8 +57,8 @@ export default function TimeSlotsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadTimeSlots({ page: 1, limit: 10 });
   };
 

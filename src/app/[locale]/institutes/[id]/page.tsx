@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateInstituteDetailsConfig} from '@/components/institutes/instituteConfig';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useInstitutes} from '@/hooks/useInstitutes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IInstitute} from '@/types/institute';
 
-export default function InstituteDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedInstitute, detailsStatus, getInstituteById } = useInstitutes();
+export default function InstituteDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedInstitute, detailsStatus, getInstituteById, loadInstitute } = useInstitutes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
 
@@ -30,8 +26,9 @@ export default function InstituteDetailPage({
 
   // Load institute if not already loaded
   useEffect(() => {
-    getInstituteById(instituteId);
-  }, [getInstituteById, instituteId]);
+    //getInstituteById(instituteId);
+    loadInstitute(instituteId);
+  }, [loadInstitute, instituteId]);
 
   const config = useCreateInstituteDetailsConfig(
     selectedInstitute,
@@ -44,7 +41,7 @@ export default function InstituteDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IInstitute>} />
+        <EntityDetails config={config as EntityDetailsConfig<IInstitute>} />
       </MainLayout>
     </ProtectedRoute>
   );

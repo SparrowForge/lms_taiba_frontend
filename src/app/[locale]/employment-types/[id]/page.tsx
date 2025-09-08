@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateEmploymentTypeDetailsConfig} from '@/components/employmentTypes/employmentTypeConfig';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IEmploymentType} from '@/types/employmentType';
 
-export default function EmploymentTypeDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedEmploymentType, detailsStatus, getEmploymentTypeById } = useEmploymentTypes();
+export default function EmploymentTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedEmploymentType, detailsStatus, loadEmploymentType } = useEmploymentTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
 
@@ -30,8 +26,9 @@ export default function EmploymentTypeDetailPage({
 
   // Load employment type if not already loaded
   useEffect(() => {
-    getEmploymentTypeById(employmentTypeId);
-  }, [getEmploymentTypeById, employmentTypeId]);
+    //getEmploymentTypeById(employmentTypeId);
+    loadEmploymentType(employmentTypeId);
+  }, [loadEmploymentType, employmentTypeId]);
 
   const config = useCreateEmploymentTypeDetailsConfig(
     selectedEmploymentType,
@@ -44,7 +41,7 @@ export default function EmploymentTypeDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IEmploymentType>} />
+        <EntityDetails config={config as EntityDetailsConfig<IEmploymentType>} />
       </MainLayout>
     </ProtectedRoute>
   );

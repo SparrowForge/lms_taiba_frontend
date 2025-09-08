@@ -1,15 +1,15 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 
 import RoleForm from './RoleForm';
-
 
 interface RoleFormDrawerProps {
   mode: 'create' | 'edit';
@@ -26,15 +26,15 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
-  const { getRoleById, selectedRole } = useRoles();
+  const { getRoleById, selectedRole, loadRole, detailsStatus } = useRoles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
   useEffect(() => {
     if (visible && mode === 'edit' && roleId) {
-      getRoleById(roleId);
+      //getRoleById(roleId);
+      loadRole(roleId);
     }
-  }, [visible, mode, roleId, getRoleById]);
+  }, [visible, mode, roleId, loadRole]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +43,10 @@ const RoleFormDrawer: React.FC<RoleFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
+  }
 
   return (
     <Drawer

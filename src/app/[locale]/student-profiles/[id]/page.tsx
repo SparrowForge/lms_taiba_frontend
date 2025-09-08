@@ -3,6 +3,7 @@
 import React from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,9 +14,7 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentProfiles} from '@/hooks/useStudentProfiles';
 
-import {Status} from '@/types/common';
 import {IStudentProfile} from '@/types/studentProfile';
-
 
 export default function StudentProfileDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);
@@ -23,11 +22,12 @@ export default function StudentProfileDetailPage({ params }: { params: Promise<{
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_PROFILE, { defaultValue: 'Student Profile' });
 
-  const { selectedStudentProfile, detailsStatus, getStudentProfileById } = useStudentProfiles();
+  const { selectedStudentProfile, detailsStatus, loadStudentProfile } = useStudentProfiles();
 
   React.useEffect(() => {
-    getStudentProfileById(studentProfileId);
-  }, [studentProfileId, getStudentProfileById]);
+    //getStudentProfileById(studentProfileId);
+    loadStudentProfile(studentProfileId);
+  }, [studentProfileId, loadStudentProfile]);
 
   const config = useCreateStudentProfileDetailsConfig(
     selectedStudentProfile,

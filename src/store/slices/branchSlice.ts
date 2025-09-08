@@ -1,7 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+import {Status} from '@/enums';
+
 import {IBranch} from '@/types/branch';
-import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {IPaginationMeta, IStatusState} from '@/types/common';
 
 // State interface
 interface IBranchesState {

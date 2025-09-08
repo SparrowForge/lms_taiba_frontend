@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
-import {Status} from '@/types/common';
 import {IRoomType} from '@/types/roomType';
 
-export default function RoomTypeDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedRoomType, detailsStatus, getRoomTypeById } = useRoomTypes();
+export default function RoomTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedRoomType, detailsStatus, loadRoomType } = useRoomTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' });
 
@@ -30,8 +26,9 @@ export default function RoomTypeDetailPage({
 
   // Load room type if not already loaded
   useEffect(() => {
-    getRoomTypeById(roomTypeId);
-  }, [getRoomTypeById, roomTypeId]);
+    //getRoomTypeById(roomTypeId);
+    loadRoomType(roomTypeId);
+  }, [loadRoomType, roomTypeId]);
 
   const config = useCreateRoomTypeDetailsConfig(
     selectedRoomType,
@@ -44,7 +41,7 @@ export default function RoomTypeDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IRoomType>} />
+        <EntityDetails config={config as EntityDetailsConfig<IRoomType>} />
       </MainLayout>
     </ProtectedRoute>
   );

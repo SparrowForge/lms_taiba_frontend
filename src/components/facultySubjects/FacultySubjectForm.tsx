@@ -6,6 +6,7 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useFaculties} from '@/hooks/useFaculties';
@@ -14,12 +15,10 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useSubjects} from '@/hooks/useSubjects';
 
-import {Status} from '@/types/common';
 import {getErrorMessage} from '@/types/errors';
 import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate,} from '@/types/facultySubject';
 
 import FormLayout from '../layout/FormLayout';
-
 
 interface FacultySubjectFormProps {
   mode: 'create' | 'edit';
@@ -121,7 +120,12 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       <Form.Item
         name="facultyId"
         label={t(LOCALE_KEYS.FACULTY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FACULTY) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FACULTY) }),
+          },
+        ]}
       >
         <Select
           showSearch
@@ -141,7 +145,12 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       <Form.Item
         name="subjectId"
         label={t(LOCALE_KEYS.SUBJECT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SUBJECT) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SUBJECT) }),
+          },
+        ]}
       >
         <Select
           showSearch
@@ -161,7 +170,12 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       <Form.Item
         name="semesterId"
         label={t(LOCALE_KEYS.SEMESTER)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }),
+          },
+        ]}
       >
         <Select
           showSearch
@@ -181,7 +195,12 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       <Form.Item
         name="batchId"
         label={t(LOCALE_KEYS.BATCH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+          },
+        ]}
       >
         <Select
           showSearch
@@ -201,14 +220,24 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       <Form.Item
         name="hoursPerWeek"
         label={t(LOCALE_KEYS.HOURS_PER_WEEK)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.HOURS_PER_WEEK) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.HOURS_PER_WEEK) }),
+          },
+        ]}
       >
         <InputNumber min={1} max={40} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
         name="role"
         label={t(LOCALE_KEYS.ROLE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROLE) }) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROLE) }),
+          },
+        ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}>
           <Select.Option value="instructor">{t(LOCALE_KEYS.INSTRUCTOR)}</Select.Option>
@@ -229,13 +258,7 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
       </Form.Item>
     </Form>
   );
-  return embedded ? (
-    formContent
-  ) : (
-    <FormLayout>
-      {formContent}
-    </FormLayout>
-  );
+  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
 export default FacultySubjectForm;

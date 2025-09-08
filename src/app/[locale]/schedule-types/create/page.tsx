@@ -20,8 +20,11 @@ export default function CreateScheduleTypePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <ScheduleTypeForm mode="create" />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <ScheduleTypeForm mode="create" />
       </MainLayout>
     </ProtectedRoute>
   );

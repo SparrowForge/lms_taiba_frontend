@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateBatchDetailsConfig} from '@/components/batches/batchConfig';
@@ -14,14 +15,9 @@ import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
-import {Status} from '@/types/common';
 
-export default function BatchDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedBatch, detailsStatus, getBatchById } = useBatches();
+export default function BatchDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedBatch, detailsStatus, loadBatch } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
 
@@ -30,8 +26,9 @@ export default function BatchDetailPage({
 
   // Load batch if not already loaded
   useEffect(() => {
-    getBatchById(batchId);
-  }, [getBatchById, batchId]);
+    //getBatchById(batchId);
+    loadBatch(batchId);
+  }, [loadBatch, batchId]);
 
   const config = useCreateBatchDetailsConfig(
     selectedBatch,
@@ -44,7 +41,7 @@ export default function BatchDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IBatch>} />
+        <EntityDetails config={config as EntityDetailsConfig<IBatch>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
-import {Status} from '@/types/common';
 import {ISemester} from '@/types/semester';
 
-export default function SemesterDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedSemester, detailsStatus, getSemesterById } = useSemesters();
+export default function SemesterDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedSemester, detailsStatus, loadSemester } = useSemesters();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
 
@@ -30,8 +26,9 @@ export default function SemesterDetailPage({
 
   // Load semester if not already loaded
   useEffect(() => {
-    getSemesterById(semesterId);
-  }, [getSemesterById, semesterId]);
+    //getSemesterById(semesterId);
+    loadSemester(semesterId);
+  }, [loadSemester, semesterId]);
 
   const config = useCreateSemesterDetailsConfig(
     selectedSemester,
@@ -44,7 +41,7 @@ export default function SemesterDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<ISemester>} />
+        <EntityDetails config={config as EntityDetailsConfig<ISemester>} />
       </MainLayout>
     </ProtectedRoute>
   );

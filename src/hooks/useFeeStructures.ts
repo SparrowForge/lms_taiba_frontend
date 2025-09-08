@@ -2,10 +2,11 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
-import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate, IFeeStructureUpdate} from '@/types/feeStructure';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate, IFeeStructureUpdate,} from '@/types/feeStructure';
 
 import {feeStructureService} from '@/services/feeStructureService';
 
@@ -25,8 +26,14 @@ import {
 
 export const useFeeStructures = () => {
   const dispatch = useDispatch();
-  const { feeStructures, selectedFeeStructure, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.feeStructures);
+  const {
+    feeStructures,
+    selectedFeeStructure,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+  } = useSelector((state: RootState) => state.feeStructures);
 
   const loadFeeStructures = useCallback(
     async (params = {}) => {
@@ -63,7 +70,8 @@ export const useFeeStructures = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IFeeStructure> = await feeStructureService.getFeeStructure(id);
+        const response: IBaseResponse<IFeeStructure> =
+          await feeStructureService.getFeeStructure(id);
         dispatch(setSelectedFeeStructure(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
@@ -84,7 +92,10 @@ export const useFeeStructures = () => {
         const response: IFeeStructure = await feeStructureService.createFeeStructure(data);
         dispatch(addFeeStructure(response));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Fee structure created successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Fee structure created successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =
@@ -105,12 +116,17 @@ export const useFeeStructures = () => {
         const response: IFeeStructure = await feeStructureService.createFeeStructureBulk(data);
         dispatch(addFeeStructure(response));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Fee structure with installment plans created successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Fee structure with installment plans created successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =
           error instanceof AxiosError
-            ? error?.response?.data?.message || error?.message || 'Failed to create fee structure with installment plans'
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to create fee structure with installment plans'
             : 'Failed to create fee structure with installment plans';
         dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;
@@ -126,7 +142,10 @@ export const useFeeStructures = () => {
         const response: IFeeStructure = await feeStructureService.updateFeeStructure(id, data);
         dispatch(updateFeeStructure(response));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Fee structure updated successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Fee structure updated successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =
@@ -147,7 +166,10 @@ export const useFeeStructures = () => {
         await feeStructureService.deleteFeeStructure(id);
         dispatch(deleteFeeStructure(id));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Fee structure deleted successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Fee structure deleted successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =

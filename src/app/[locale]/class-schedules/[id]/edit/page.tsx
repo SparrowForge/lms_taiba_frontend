@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import ClassScheduleForm from '@/components/classSchedules/ClassScheduleForm';
@@ -15,21 +16,18 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useClassSchedules} from '@/hooks/useClassSchedules';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
-
-
 const ClassScheduleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedClassSchedule, detailsStatus, getClassScheduleById } = useClassSchedules();
+  const { selectedClassSchedule, detailsStatus, loadClassSchedule } = useClassSchedules();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });
 
   useEffect(() => {
     const classScheduleId = parseInt(resolvedParams.id);
-    getClassScheduleById(classScheduleId);
-  }, [resolvedParams.id, getClassScheduleById]);
-
+    //getClassScheduleById(classScheduleId);
+    loadClassSchedule(classScheduleId);
+  }, [resolvedParams.id, loadClassSchedule]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -42,11 +40,14 @@ const ClassScheduleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ 
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <ClassScheduleForm
-            mode="edit"
-            classScheduleId={parseInt(resolvedParams.id)}
-            initialValues={selectedClassSchedule}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <ClassScheduleForm
+          mode="edit"
+          classScheduleId={parseInt(resolvedParams.id)}
+          initialValues={selectedClassSchedule}
         />
       </MainLayout>
     </ProtectedRoute>

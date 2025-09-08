@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import BranchDetailsDrawer from '@/components/branches/BranchDetailsDrawer';
@@ -18,8 +19,6 @@ import {useBranches} from '@/hooks/useBranches';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBranch} from '@/types/branch';
-import {Status} from '@/types/common';
-
 
 export default function BranchesPage() {
   const { t } = useLocalization();
@@ -59,8 +58,8 @@ export default function BranchesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadBranches({ page: 1, limit: 10 });
   };
 
@@ -105,12 +104,12 @@ export default function BranchesPage() {
       {
         title: t(LOCALE_KEYS.INSTITUTE),
         key: 'institute',
-        render: (branch: IBranch) => <span>{branch.institute.name}</span>,
+        render: (branch: IBranch) => <span>{branch.institute?.name}</span>,
       },
       {
         title: t(LOCALE_KEYS.ADDRESS),
         key: 'addressId',
-        render: (branch: IBranch) => <span>{branch.address.name}</span>,
+        render: (branch: IBranch) => <span>{branch.address?.name}</span>,
       },
       {
         title: t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO),
@@ -121,7 +120,7 @@ export default function BranchesPage() {
       {
         title: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID),
         key: 'campusDirectorUserId',
-        render: (branch: IBranch) => <span>{branch.campusDirector.firstName}</span>,
+        render: (branch: IBranch) => <span>{branch.campusDirector?.firstName}</span>,
       },
       {
         title: t(LOCALE_KEYS.STATUS),

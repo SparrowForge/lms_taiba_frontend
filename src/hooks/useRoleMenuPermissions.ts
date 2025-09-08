@@ -2,14 +2,15 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {
     IRoleMenuPermission,
     IRoleMenuPermissionCreate,
     IRoleMenuPermissionUpdate,
-    IRoleWithMenuPermission
+    IRoleWithMenuPermission,
 } from '@/types/roleMenuPermission';
 
 import {roleMenuPermissionService} from '@/services/roleMenuPermissionService';
@@ -88,26 +89,23 @@ export const useRoleMenuPermissions = () => {
   );
 
   // Load roles with their menu permissions
-  const loadRolesWithPermissions = useCallback(
-    async () => {
-      try {
-        dispatch(setRolesWithPermissionsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IRoleWithMenuPermission[]> =
-          await roleMenuPermissionService.getRolesWithPermissions();
-        dispatch(setRolesWithPermissions(response.data));
-        dispatch(setRolesWithPermissionsStatus({ status: Status.SUCCESS }));
-      } catch (error: unknown) {
-        const errorMessage =
-          error instanceof AxiosError
-            ? error?.response?.data?.message ||
-              error?.message ||
-              'Failed to load roles with permissions'
-            : 'Failed to load roles with permissions';
-        dispatch(setRolesWithPermissionsStatus({ status: Status.FAILED, message: errorMessage }));
-      }
-    },
-    [dispatch],
-  );
+  const loadRolesWithPermissions = useCallback(async () => {
+    try {
+      dispatch(setRolesWithPermissionsStatus({ status: Status.LOADING }));
+      const response: IBaseResponse<IRoleWithMenuPermission[]> =
+        await roleMenuPermissionService.getRolesWithPermissions();
+      dispatch(setRolesWithPermissions(response.data));
+      dispatch(setRolesWithPermissionsStatus({ status: Status.SUCCESS }));
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof AxiosError
+          ? error?.response?.data?.message ||
+            error?.message ||
+            'Failed to load roles with permissions'
+          : 'Failed to load roles with permissions';
+      dispatch(setRolesWithPermissionsStatus({ status: Status.FAILED, message: errorMessage }));
+    }
+  }, [dispatch]);
 
   // Create a new role menu permission
   const createRoleMenuPermission = useCallback(

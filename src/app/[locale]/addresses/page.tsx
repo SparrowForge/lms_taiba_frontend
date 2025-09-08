@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import AddressDetailsDrawer from '@/components/addresses/AddressDetailsDrawer';
 import AddressFormDrawer from '@/components/addresses/AddressFormDrawer';
@@ -17,8 +18,6 @@ import {useAddresses} from '@/hooks/useAddresses';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAddress} from '@/types/address';
-import {Status} from '@/types/common';
-
 
 export default function AddressesPage() {
   const { t } = useLocalization();
@@ -57,8 +56,8 @@ export default function AddressesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadAddresses({ page: 1, limit: 10 });
   };
 

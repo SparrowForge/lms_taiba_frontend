@@ -6,14 +6,15 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+
 import { useAuth } from '@/hooks/useAuth';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import type { LoginCredentials } from '@/types/auth';
 import { getErrorMessage } from '@/types/errors';
 
 import SocialLogin from './SocialLogin';
-import { useLocalization } from '@/hooks/useLocalization';
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 
 export const LoginForm = () => {
@@ -110,7 +111,7 @@ export const LoginForm = () => {
 
             rules={[
               {
-                // required: true, 
+                // required: true,
                 message: 'Please enter your password!'
               },
               { min: 6, message: 'Password must be at least 6 characters!' },

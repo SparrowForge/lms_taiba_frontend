@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useCreateAddressDetailsConfig} from '@/components/addresses/addressConfig';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -14,14 +15,9 @@ import {useAddresses} from '@/hooks/useAddresses';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IAddress} from '@/types/address';
-import {Status} from '@/types/common';
 
-export default function AddressDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedAddress, detailsStatus, getAddressById } = useAddresses();
+export default function AddressDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedAddress, detailsStatus, loadAddress } = useAddresses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
 
@@ -30,8 +26,9 @@ export default function AddressDetailPage({
 
   // Load address if not already loaded
   useEffect(() => {
-    getAddressById(addressId);
-  }, [getAddressById, addressId]);
+    //getAddressById(addressId);
+    loadAddress(addressId);
+  }, [loadAddress, addressId]);
 
   const config = useCreateAddressDetailsConfig(
     selectedAddress,
@@ -44,7 +41,7 @@ export default function AddressDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IAddress>} />
+        <EntityDetails config={config as EntityDetailsConfig<IAddress>} />
       </MainLayout>
     </ProtectedRoute>
   );

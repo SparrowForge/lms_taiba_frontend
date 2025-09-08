@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
-import {Status} from '@/types/common';
 import {IScheduleType} from '@/types/scheduleType';
 
-export default function ScheduleTypeDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedScheduleType, detailsStatus, getScheduleTypeById } = useScheduleTypes();
+export default function ScheduleTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedScheduleType, detailsStatus, loadScheduleType } = useScheduleTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
@@ -30,8 +26,9 @@ export default function ScheduleTypeDetailPage({
 
   // Load schedule type if not already loaded
   useEffect(() => {
-    getScheduleTypeById(scheduleTypeId);
-  }, [getScheduleTypeById, scheduleTypeId]);
+    //getScheduleTypeById(scheduleTypeId);
+    loadScheduleType(scheduleTypeId);
+  }, [loadScheduleType, scheduleTypeId]);
 
   const config = useCreateScheduleTypeDetailsConfig(
     selectedScheduleType,
@@ -44,7 +41,7 @@ export default function ScheduleTypeDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IScheduleType>} />
+        <EntityDetails config={config as EntityDetailsConfig<IScheduleType>} />
       </MainLayout>
     </ProtectedRoute>
   );

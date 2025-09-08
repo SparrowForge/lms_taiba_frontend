@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IRoom, IRoomCreate, IRoomUpdate} from '@/types/room';
 
 import {roomService} from '@/services/roomService';
@@ -25,21 +26,15 @@ import {
 
 export const useRooms = () => {
   const dispatch = useDispatch();
-  const {
-    rooms,
-    selectedRoom,
-    listStatus,
-    detailsStatus,
-    actionStatus,
-    pagination,
-  } = useSelector((state: RootState) => state.rooms);
+  const { rooms, selectedRoom, listStatus, detailsStatus, actionStatus, pagination } = useSelector(
+    (state: RootState) => state.rooms,
+  );
 
   const loadRooms = useCallback(
     async (params = {}) => {
       try {
         dispatch(setListStatus({ status: Status.LOADING }));
-        const response: IBasePaginatedResponse<IRoom> =
-          await roomService.getRooms(params);
+        const response: IBasePaginatedResponse<IRoom> = await roomService.getRooms(params);
         dispatch(setRooms(response?.data?.items ?? []));
         dispatch(
           setPagination(

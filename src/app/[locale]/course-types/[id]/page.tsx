@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateCourseTypeDetailsConfig} from '@/components/courseTypes/courseTypeConfig';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useCourseTypes} from '@/hooks/useCourseTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {ICourseType} from '@/types/courseType';
 
-export default function CourseTypeDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedCourseType, detailsStatus, getCourseTypeById } = useCourseTypes();
+export default function CourseTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedCourseType, detailsStatus, loadCourseType } = useCourseTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
 
@@ -30,8 +26,9 @@ export default function CourseTypeDetailPage({
 
   // Load course type if not already loaded
   useEffect(() => {
-    getCourseTypeById(courseTypeId);
-  }, [getCourseTypeById, courseTypeId]);
+    //getCourseTypeById(courseTypeId);
+    loadCourseType(courseTypeId);
+  }, [loadCourseType, courseTypeId]);
 
   const config = useCreateCourseTypeDetailsConfig(
     selectedCourseType,
@@ -44,7 +41,7 @@ export default function CourseTypeDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<ICourseType>} />
+        <EntityDetails config={config as EntityDetailsConfig<ICourseType>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -1,9 +1,11 @@
-import Link from "next/link";
+import Link from 'next/link';
+
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
+
+import { useLocalization } from "@/hooks/useLocalization";
 
 import { LoginForm } from "./LoginForm";
 import { LanguageSwitcher } from "../ui/LanguageSwitcher";
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
-import { useLocalization } from "@/hooks/useLocalization";
 
 
 const RightComponent = () => {

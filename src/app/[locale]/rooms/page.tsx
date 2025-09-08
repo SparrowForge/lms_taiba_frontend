@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -17,7 +18,6 @@ import StatusTag from '@/components/ui/StatusTag';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRooms} from '@/hooks/useRooms';
 
-import {Status} from '@/types/common';
 import {IRoom} from '@/types/room';
 
 export default function RoomsPage() {
@@ -62,8 +62,8 @@ export default function RoomsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadRooms({ page: 1, limit: 10 });
   };
 

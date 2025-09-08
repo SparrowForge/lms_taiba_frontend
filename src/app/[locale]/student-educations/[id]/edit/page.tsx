@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -12,12 +13,8 @@ import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
 import {PageHeader} from '@/components/ui/PageHeader';
 
-
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentEducations} from '@/hooks/useStudentEducations';
-
-import {Status} from '@/types/common';
-
 
 export default function StudentEducationEditPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);
@@ -26,11 +23,12 @@ export default function StudentEducationEditPage({ params }: { params: Promise<{
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_EDUCATION, { defaultValue: 'Student Education' });
 
-  const { selectedStudentEducation, detailsStatus, getStudentEducationById } = useStudentEducations();
+  const { selectedStudentEducation, detailsStatus, loadStudentEducation } = useStudentEducations();
 
   React.useEffect(() => {
-    getStudentEducationById(studentEducationId);
-  }, [studentEducationId, getStudentEducationById]);
+    //getStudentEducationById(studentEducationId);
+    loadStudentEducation(studentEducationId);
+  }, [studentEducationId, loadStudentEducation]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -43,12 +41,15 @@ export default function StudentEducationEditPage({ params }: { params: Promise<{
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-      <StudentEducationForm
-            mode="edit"
-            studentEducationId={studentEducationId}
-            initialValues={selectedStudentEducation || undefined}
-          />
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <StudentEducationForm
+          mode="edit"
+          studentEducationId={studentEducationId}
+          initialValues={selectedStudentEducation || undefined}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -15,21 +16,18 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
-import {Status} from '@/types/common';
-
-
 const RoomTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedRoomType, detailsStatus, getRoomTypeById } = useRoomTypes();
+  const { selectedRoomType, detailsStatus, loadRoomType } = useRoomTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' });
 
   useEffect(() => {
     const roomTypeId = parseInt(resolvedParams.id);
-    getRoomTypeById(roomTypeId);
-  }, [resolvedParams.id, getRoomTypeById]);
-
+    //getRoomTypeById(roomTypeId);
+    loadRoomType(roomTypeId);
+  }, [resolvedParams.id, loadRoomType]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -42,11 +40,14 @@ const RoomTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ param
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <RoomTypeForm
-            mode="edit"
-            roomTypeId={parseInt(resolvedParams.id)}
-            initialValues={selectedRoomType}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <RoomTypeForm
+          mode="edit"
+          roomTypeId={parseInt(resolvedParams.id)}
+          initialValues={selectedRoomType}
         />
       </MainLayout>
     </ProtectedRoute>

@@ -1,9 +1,7 @@
-export enum Status {
-  INITIAL = 'initial',
-  LOADING = 'loading',
-  SUCCESS = 'success',
-  FAILED = 'failed',
-}
+// Status enum moved to centralized enums
+// Import from: import { Status } from '@/enums';
+
+import {Status} from '@/enums';
 
 export interface IStatusState {
   status: Status;

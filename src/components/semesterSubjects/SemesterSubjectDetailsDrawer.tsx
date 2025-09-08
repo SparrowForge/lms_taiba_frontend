@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 
-import {Status} from '@/types/common';
 import {ISemesterSubject} from '@/types/semesterSubject';
 
 import {useCreateSemesterSubjectDetailsConfig} from './semesterSubjectConfig';
-
 
 interface SemesterSubjectDetailsDrawerProps {
   semesterSubjectId?: number;
@@ -29,15 +28,15 @@ const SemesterSubjectDetailsDrawer: React.FC<SemesterSubjectDetailsDrawerProps> 
   onClose,
   onEdit,
 }) => {
-
-  const { selectedSemesterSubject, getSemesterSubjectById, detailsStatus } = useSemesterSubjects();
+  const { selectedSemesterSubject, loadSemesterSubject, detailsStatus } = useSemesterSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
   useEffect(() => {
     if (visible && semesterSubjectId) {
-      getSemesterSubjectById(semesterSubjectId);
+      //getSemesterSubjectById(semesterSubjectId);
+      loadSemesterSubject(semesterSubjectId);
     }
-  }, [visible, semesterSubjectId, getSemesterSubjectById]);
+  }, [visible, semesterSubjectId, loadSemesterSubject]);
 
   const handleEdit = (semesterSubject: ISemesterSubject) => {
     onEdit(semesterSubject.id);

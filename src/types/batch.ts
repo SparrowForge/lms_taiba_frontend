@@ -1,11 +1,11 @@
 import {ICourse} from './course';
-import {ISemesterCreate} from './semester';
+import {ISemesterCreate, ISemesterUpdate} from './semester';
 
 export interface IBatch {
   id: number;
   courseId: number;
   name: string;
-  year: number;
+  academicYear: number;
   session: string;
   intakeCapacity: number;
   startDate: string;
@@ -21,7 +21,7 @@ export interface IBatch {
 export interface IBatchCreate {
   courseId: number;
   name: string;
-  year: number;
+  academicYear: number;
   session: string;
   intakeCapacity: number;
   startDate: string;
@@ -33,7 +33,7 @@ export interface IBatchCreate {
 export interface IBatchUpdate {
   courseId?: number;
   name?: string;
-  year?: number;
+  academicYear?: number;
   session?: string;
   intakeCapacity?: number;
   startDate?: string;
@@ -46,4 +46,10 @@ export interface IBatchUpdate {
 export interface IBatchWithSemestersCreate {
   batch: IBatchCreate;
   semesters: Omit<ISemesterCreate, 'batchId'>[];
+}
+
+// New interface for updating batch with semesters
+export interface IBatchWithSemestersUpdate {
+  batch: IBatchUpdate;
+  semesters: ISemesterUpdate[];
 }

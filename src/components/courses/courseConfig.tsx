@@ -32,8 +32,16 @@ export const useCreateCourseDetailsConfig = (
       { key: 'id', label: t(LOCALE_KEYS.ID) },
       { key: 'name', label: t(LOCALE_KEYS.NAME) },
       { key: 'code', label: t(LOCALE_KEYS.CODE) },
-      { key: 'courseType.name', label: t(LOCALE_KEYS.COURSE_TYPE), render: (value: string, item: ICourse) => item?.courseType?.name || 'N/A' },
-      { key: 'scheduleType.name', label: t(LOCALE_KEYS.SCHEDULE_TYPE), render: (value: string, item: ICourse) => item?.scheduleType?.name || 'N/A' },
+      {
+        key: 'courseType.name',
+        label: t(LOCALE_KEYS.COURSE_TYPE),
+        render: (value: string, item: ICourse) => item?.courseType?.name || 'N/A',
+      },
+      {
+        key: 'scheduleType.name',
+        label: t(LOCALE_KEYS.SCHEDULE_TYPE),
+        render: (value: string, item: ICourse) => item?.scheduleType?.name || 'N/A',
+      },
       { key: 'durationInSemesters', label: t(LOCALE_KEYS.DURATION_IN_SEMESTERS) },
       { key: 'description', label: t(LOCALE_KEYS.DESCRIPTION) },
       { key: 'status', label: t(LOCALE_KEYS.STATUS) },

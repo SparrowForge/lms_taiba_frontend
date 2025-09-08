@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -12,12 +13,8 @@ import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
 import {PageHeader} from '@/components/ui/PageHeader';
 
-
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentFamilies} from '@/hooks/useStudentFamilies';
-
-import {Status} from '@/types/common';
-
 
 export default function StudentFamilyEditPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);
@@ -26,11 +23,12 @@ export default function StudentFamilyEditPage({ params }: { params: Promise<{ id
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_FAMILY, { defaultValue: 'Student Family' });
 
-  const { selectedStudentFamily, detailsStatus, getStudentFamilyById } = useStudentFamilies();
+  const { selectedStudentFamily, detailsStatus, loadStudentFamily } = useStudentFamilies();
 
   React.useEffect(() => {
-    getStudentFamilyById(studentFamilyId);
-  }, [studentFamilyId, getStudentFamilyById]);
+    //getStudentFamilyById(studentFamilyId);
+    loadStudentFamily(studentFamilyId);
+  }, [studentFamilyId, loadStudentFamily]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -43,7 +41,10 @@ export default function StudentFamilyEditPage({ params }: { params: Promise<{ id
   return (
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
         <StudentFamilyForm
           mode="edit"
           studentFamilyId={studentFamilyId}

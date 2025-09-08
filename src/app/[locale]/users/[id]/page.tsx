@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,15 +14,10 @@ import {useCreateUserDetailsConfig} from '@/components/users/userConfig';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
-import {Status} from '@/types/common';
 import {IUser} from '@/types/user';
 
-export default function UserDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedUser, detailsStatus, getUserById } = useUsers();
+export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedUser, detailsStatus, loadUser } = useUsers();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
 
@@ -30,8 +26,9 @@ export default function UserDetailPage({
 
   // Load user if not already loaded
   useEffect(() => {
-    getUserById(userId);
-  }, [getUserById, userId]);
+    //getUserById(userId);
+    loadUser(userId);
+  }, [loadUser, userId]);
 
   const config = useCreateUserDetailsConfig(
     selectedUser,
@@ -44,7 +41,7 @@ export default function UserDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IUser>} />
+        <EntityDetails config={config as EntityDetailsConfig<IUser>} />
       </MainLayout>
     </ProtectedRoute>
   );

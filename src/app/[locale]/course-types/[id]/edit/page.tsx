@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import CourseTypeForm from '@/components/courseTypes/CourseTypeForm';
@@ -15,21 +16,18 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useCourseTypes} from '@/hooks/useCourseTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
-
-
 const CourseTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedCourseType, detailsStatus, getCourseTypeById } = useCourseTypes();
+  const { selectedCourseType, detailsStatus, loadCourseType } = useCourseTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
 
   useEffect(() => {
     const courseTypeId = parseInt(resolvedParams.id);
-    getCourseTypeById(courseTypeId);
-  }, [resolvedParams.id, getCourseTypeById]);
-
+    //getCourseTypeById(courseTypeId);
+    loadCourseType(courseTypeId);
+  }, [resolvedParams.id, loadCourseType]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -42,11 +40,14 @@ const CourseTypeEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <CourseTypeForm
-            mode="edit"
-            courseTypeId={parseInt(resolvedParams.id)}
-            initialValues={selectedCourseType}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <CourseTypeForm
+          mode="edit"
+          courseTypeId={parseInt(resolvedParams.id)}
+          initialValues={selectedCourseType}
         />
       </MainLayout>
     </ProtectedRoute>

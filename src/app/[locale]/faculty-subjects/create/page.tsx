@@ -22,7 +22,7 @@ const CreateFacultySubjectPage: React.FC = () => {
 
   return (
     <MainLayout>
-      <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={handleBack}/>
+      <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={handleBack} />
       <FacultySubjectForm mode="create" embedded={false} />
     </MainLayout>
   );

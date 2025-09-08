@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useFacultySubjects} from '@/hooks/useFacultySubjects';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFacultySubject} from '@/types/facultySubject';
 
 import {useCreateFacultySubjectDetailsConfig} from './facultySubjectConfig';
-
 
 interface FacultySubjectDetailsDrawerProps {
   facultySubjectId?: number;
@@ -29,15 +28,15 @@ const FacultySubjectDetailsDrawer: React.FC<FacultySubjectDetailsDrawerProps> = 
   onClose,
   onEdit,
 }) => {
-
-  const { selectedFacultySubject, getFacultySubjectById, detailsStatus } = useFacultySubjects();
+  const { selectedFacultySubject, loadFacultySubject, detailsStatus } = useFacultySubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
   useEffect(() => {
     if (visible && facultySubjectId) {
-      getFacultySubjectById(facultySubjectId);
+      //getFacultySubjectById(facultySubjectId);
+      loadFacultySubject(facultySubjectId);
     }
-  }, [visible, facultySubjectId, getFacultySubjectById]);
+  }, [visible, facultySubjectId, loadFacultySubject]);
 
   const handleEdit = (facultySubject: IFacultySubject) => {
     onEdit(facultySubject.id);

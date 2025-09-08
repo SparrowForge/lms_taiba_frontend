@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IEmploymentType, IEmploymentTypeCreate, IEmploymentTypeUpdate,} from '@/types/employmentType';
 
 import {employmentTypeService} from '@/services/employmentTypeService';
@@ -22,7 +23,6 @@ import {
     setSelectedEmploymentType,
     updateEmploymentType,
 } from '@/store/slices/employmentTypeSlice';
-
 
 export const useEmploymentTypes = () => {
   const dispatch = useDispatch();
@@ -70,7 +70,8 @@ export const useEmploymentTypes = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IEmploymentType> = await employmentTypeService.getEmploymentType(id);
+        const response: IBaseResponse<IEmploymentType> =
+          await employmentTypeService.getEmploymentType(id);
         dispatch(setSelectedEmploymentType(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {

@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -15,21 +16,18 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSubjects} from '@/hooks/useSubjects';
 
-import {Status} from '@/types/common';
-
-
 const SubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedSubject, detailsStatus, getSubjectById } = useSubjects();
+  const { selectedSubject, detailsStatus, loadSubject } = useSubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
 
   useEffect(() => {
     const subjectId = parseInt(resolvedParams.id);
-    getSubjectById(subjectId);
-  }, [resolvedParams.id, getSubjectById]);
-
+    //getSubjectById(subjectId);
+    loadSubject(subjectId);
+  }, [resolvedParams.id, loadSubject]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -42,11 +40,14 @@ const SubjectEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <SubjectForm
-            mode="edit"
-            subjectId={parseInt(resolvedParams.id)}
-            initialValues={selectedSubject}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <SubjectForm
+          mode="edit"
+          subjectId={parseInt(resolvedParams.id)}
+          initialValues={selectedSubject}
         />
       </MainLayout>
     </ProtectedRoute>

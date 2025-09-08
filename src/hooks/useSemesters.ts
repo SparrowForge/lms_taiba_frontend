@@ -2,10 +2,11 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
-import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import {ISemester, ISemesterCreate, ISemesterUpdate, ISemesterWithSubjectsAndFaculty,} from '@/types/semester';
 
 import {semesterService} from '@/services/semesterService';
 
@@ -20,14 +21,21 @@ import {
     setPagination,
     setSelectedSemester,
     setSemesters,
+    setSemesterWithSubjectsAndFaculty,
     updateSemester,
 } from '@/store/slices/semesterSlice';
 
-
 export const useSemesters = () => {
   const dispatch = useDispatch();
-  const { semesters, selectedSemester, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.semesters);
+  const {
+    semesters,
+    selectedSemester,
+    semesterWithSubjectsAndFaculty,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+  } = useSelector((state: RootState) => state.semesters);
 
   // Load semesters with pagination and search
   const loadSemesters = useCallback(
@@ -74,6 +82,28 @@ export const useSemesters = () => {
           error instanceof AxiosError
             ? error?.response?.data?.message || error?.message || 'Failed to load semester'
             : 'Failed to load semester';
+        dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
+  // Load semester with subjects and faculty
+  const loadSemesterWithSubjectsAndFaculty = useCallback(
+    async (id: number) => {
+      try {
+        dispatch(setDetailsStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<ISemesterWithSubjectsAndFaculty> =
+          await semesterService.getSemesterWithSubjectsAndFaculty(id);
+        dispatch(setSemesterWithSubjectsAndFaculty(response.data));
+        dispatch(setDetailsStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load semester with subjects and faculty'
+            : 'Failed to load semester with subjects and faculty';
         dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
       }
     },
@@ -181,10 +211,15 @@ export const useSemesters = () => {
     [dispatch],
   );
 
+  const clearSemesters = useCallback(() => {
+    dispatch(setSemesters([]));
+  }, [dispatch]);
+
   return {
     // State
     semesters,
     selectedSemester,
+    semesterWithSubjectsAndFaculty,
     listStatus,
     detailsStatus,
     actionStatus,
@@ -193,6 +228,7 @@ export const useSemesters = () => {
     // Actions
     loadSemesters,
     loadSemester,
+    loadSemesterWithSubjectsAndFaculty,
     createSemester,
     editSemester,
     removeSemester,
@@ -200,5 +236,6 @@ export const useSemesters = () => {
     clearAction,
     clearDetails,
     setSelected,
+    clearSemesters,
   };
 };

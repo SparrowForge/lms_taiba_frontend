@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useDepartments} from '@/hooks/useDepartments';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IDepartment} from '@/types/department';
 
 import {useCreateDepartmentDetailsConfig} from './departmentConfig';
-
 
 interface DepartmentDetailsDrawerProps {
   departmentId?: number;
@@ -29,15 +28,15 @@ const DepartmentDetailsDrawer: React.FC<DepartmentDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedDepartment, getDepartmentById, detailsStatus } = useDepartments();
+  const { selectedDepartment, loadDepartment, detailsStatus } = useDepartments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
   useEffect(() => {
     if (visible && departmentId) {
-      getDepartmentById(departmentId);
+      //getDepartmentById(departmentId);
+      loadDepartment(departmentId);
     }
-  }, [visible, departmentId, getDepartmentById]);
+  }, [visible, departmentId, loadDepartment]);
 
   const handleEdit = (department: IDepartment) => {
     onEdit(department.id);

@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
-import {Status} from '@/types/common';
 import {ISemester} from '@/types/semester';
 
 import {useCreateSemesterDetailsConfig} from './semesterConfig';
-
 
 interface SemesterDetailsDrawerProps {
   semesterId?: number;
@@ -29,15 +28,15 @@ const SemesterDetailsDrawer: React.FC<SemesterDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedSemester, getSemesterById, detailsStatus } = useSemesters();
+  const { selectedSemester, loadSemester, detailsStatus } = useSemesters();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   useEffect(() => {
     if (visible && semesterId) {
-      getSemesterById(semesterId);
+      //getSemesterById(semesterId);
+      loadSemester(semesterId);
     }
-  }, [visible, semesterId, getSemesterById]);
+  }, [visible, semesterId, loadSemester]);
 
   const handleEdit = (semester: ISemester) => {
     onEdit(semester.id);

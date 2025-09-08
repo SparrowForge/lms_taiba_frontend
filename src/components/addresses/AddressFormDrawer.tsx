@@ -1,15 +1,15 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useAddresses} from '@/hooks/useAddresses';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import AddressForm from './AddressForm';
-
 
 interface AddressFormDrawerProps {
   mode: 'create' | 'edit';
@@ -26,15 +26,15 @@ const AddressFormDrawer: React.FC<AddressFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
-  const { getAddressById, selectedAddress } = useAddresses();
+  const { getAddressById, selectedAddress, loadAddress, detailsStatus } = useAddresses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
   useEffect(() => {
     if (visible && mode === 'edit' && addressId) {
-      getAddressById(addressId);
+      //getAddressById(addressId);
+      loadAddress(addressId);
     }
-  }, [visible, mode, addressId, getAddressById]);
+  }, [visible, mode, addressId, loadAddress]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +43,10 @@ const AddressFormDrawer: React.FC<AddressFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
+  }
 
   return (
     <Drawer

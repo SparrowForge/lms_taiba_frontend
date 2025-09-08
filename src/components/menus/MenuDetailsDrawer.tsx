@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
-import {Status} from '@/types/common';
 import {IMenu} from '@/types/menu';
 
 import {useCreateMenuDetailsConfig} from './menuConfig';
-
 
 interface MenuDetailsDrawerProps {
   menuId?: number;
@@ -29,15 +28,15 @@ const MenuDetailsDrawer: React.FC<MenuDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedMenu, getMenuById, detailsStatus } = useMenus();
+  const { selectedMenu, loadMenu, detailsStatus } = useMenus();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   useEffect(() => {
     if (visible && menuId) {
-      getMenuById(menuId);
+      //getMenuById(menuId);
+      loadMenu(menuId);
     }
-  }, [visible, menuId, getMenuById]);
+  }, [visible, menuId, loadMenu]);
 
   const handleEdit = (menu: IMenu) => {
     onEdit(menu.id);

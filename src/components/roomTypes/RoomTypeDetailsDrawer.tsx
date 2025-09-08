@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
-import {Status} from '@/types/common';
 import {IRoomType} from '@/types/roomType';
 
 import {useCreateRoomTypeDetailsConfig} from './roomTypeConfig';
-
 
 interface RoomTypeDetailsDrawerProps {
   roomTypeId?: number;
@@ -29,15 +28,15 @@ const RoomTypeDetailsDrawer: React.FC<RoomTypeDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedRoomType, getRoomTypeById, detailsStatus } = useRoomTypes();
+  const { selectedRoomType, loadRoomType, detailsStatus } = useRoomTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' });
   useEffect(() => {
     if (visible && roomTypeId) {
-      getRoomTypeById(roomTypeId);
+      //getRoomTypeById(roomTypeId);
+      loadRoomType(roomTypeId);
     }
-  }, [visible, roomTypeId, getRoomTypeById]);
+  }, [visible, roomTypeId, loadRoomType]);
 
   const handleEdit = (roomType: IRoomType) => {
     onEdit(roomType.id);

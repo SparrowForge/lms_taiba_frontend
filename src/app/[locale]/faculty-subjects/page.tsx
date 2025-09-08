@@ -5,6 +5,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -17,9 +18,7 @@ import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import {useFacultySubjects} from '@/hooks/useFacultySubjects';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFacultySubject} from '@/types/facultySubject';
-
 
 export default function FacultySubjectsPage() {
   const { t } = useLocalization();
@@ -62,8 +61,8 @@ export default function FacultySubjectsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadFacultySubjects({ page: 1, limit: 10 });
   };
 

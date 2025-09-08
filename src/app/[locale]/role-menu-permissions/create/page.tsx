@@ -12,7 +12,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 export default function CreateRoleMenuPermissionPage() {
   const { t } = useLocalization();
   const router = useRouter();
@@ -21,8 +20,11 @@ export default function CreateRoleMenuPermissionPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={() => router.back()} />
-          <RoleMenuPermissionFormTabView mode="create" embedded={false} />
+        <PageHeader
+          title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <RoleMenuPermissionFormTabView mode="create" embedded={false} />
       </MainLayout>
     </ProtectedRoute>
   );

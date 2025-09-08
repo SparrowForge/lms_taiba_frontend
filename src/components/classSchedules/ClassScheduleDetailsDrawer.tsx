@@ -4,6 +4,7 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -11,10 +12,8 @@ import {useClassSchedules} from '@/hooks/useClassSchedules';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IClassSchedule} from '@/types/classSchedule';
-import {Status} from '@/types/common';
 
 import {useCreateClassScheduleDetailsConfig} from './classScheduleConfig';
-
 
 interface ClassScheduleDetailsDrawerProps {
   classScheduleId?: number;
@@ -29,15 +28,15 @@ const ClassScheduleDetailsDrawer: React.FC<ClassScheduleDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedClassSchedule, getClassScheduleById, detailsStatus } = useClassSchedules();
+  const { selectedClassSchedule, loadClassSchedule, detailsStatus } = useClassSchedules();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });
   useEffect(() => {
     if (visible && classScheduleId) {
-      getClassScheduleById(classScheduleId);
+      //getClassScheduleById(classScheduleId);
+      loadClassSchedule(classScheduleId);
     }
-  }, [visible, classScheduleId, getClassScheduleById]);
+  }, [visible, classScheduleId, loadClassSchedule]);
 
   const handleEdit = (classSchedule: IClassSchedule) => {
     onEdit(classSchedule.id);

@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
-import {Status} from '@/types/common';
 import {IPanel} from '@/types/panel';
 
 import {useCreatePanelDetailsConfig} from './panelConfig';
-
 
 interface PanelDetailsDrawerProps {
   panelId?: number;
@@ -29,15 +28,15 @@ const PanelDetailsDrawer: React.FC<PanelDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedPanel, getPanelById, detailsStatus } = usePanels();
+  const { selectedPanel, loadPanel, detailsStatus } = usePanels();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
   useEffect(() => {
     if (visible && panelId) {
-      getPanelById(panelId);
+      //getPanelById(panelId);
+      loadPanel(panelId);
     }
-  }, [visible, panelId, getPanelById]);
+  }, [visible, panelId, loadPanel]);
 
   const handleEdit = (panel: IPanel) => {
     onEdit(panel.id);

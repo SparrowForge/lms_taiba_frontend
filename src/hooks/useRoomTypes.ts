@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IRoomType, IRoomTypeCreate, IRoomTypeUpdate} from '@/types/roomType';
 
 import {roomTypeService} from '@/services/roomTypeService';
@@ -23,17 +24,10 @@ import {
     updateRoomType,
 } from '@/store/slices/roomTypeSlice';
 
-
 export const useRoomTypes = () => {
   const dispatch = useDispatch();
-  const {
-    roomTypes,
-    selectedRoomType,
-    listStatus,
-    detailsStatus,
-    actionStatus,
-    pagination,
-  } = useSelector((state: RootState) => state.roomTypes);
+  const { roomTypes, selectedRoomType, listStatus, detailsStatus, actionStatus, pagination } =
+    useSelector((state: RootState) => state.roomTypes);
 
   const loadRoomTypes = useCallback(
     async (params = {}) => {

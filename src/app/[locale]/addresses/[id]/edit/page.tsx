@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import AddressForm from '@/components/addresses/AddressForm';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
@@ -15,22 +16,19 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useAddresses} from '@/hooks/useAddresses';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
-
-
 const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedAddress, detailsStatus, getAddressById } = useAddresses();
+  const { selectedAddress, detailsStatus, loadAddress } = useAddresses();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ADDRESS, { defaultValue: 'Address' });
 
   const addressId = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    getAddressById(addressId);
-  }, [addressId, getAddressById]);
-
+    //getAddressById(addressId);
+    loadAddress(addressId);
+  }, [addressId, loadAddress]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -43,12 +41,11 @@ const AddressEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <AddressForm
-            mode="edit"
-            addressId={addressId}
-            initialValues={selectedAddress}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
         />
+        <AddressForm mode="edit" addressId={addressId} initialValues={selectedAddress} />
       </MainLayout>
     </ProtectedRoute>
   );

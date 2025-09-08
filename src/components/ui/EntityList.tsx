@@ -140,7 +140,9 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
         </div>
 
         {/* Scrollable Table Section */}
-        <div style={{ flex: 1, overflow: 'auto', marginBottom: '16px', height: 'calc(100vh - 200px)' }}>
+        <div
+          style={{ flex: 1, overflow: 'auto', marginBottom: '16px', height: 'calc(100vh - 200px)' }}
+        >
           <Table
             scroll={{ y: 'calc(100vh - 360px)' }}
             loading={config.loading}

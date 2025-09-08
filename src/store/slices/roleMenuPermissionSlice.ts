@@ -1,6 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {IPaginationMeta, IStatusState, Status} from '@/types/common';
+import {Status} from '@/enums';
+
+import {IPaginationMeta, IStatusState} from '@/types/common';
 import {IRoleMenuPermission, IRoleWithMenuPermission} from '@/types/roleMenuPermission';
 
 // State interface
@@ -67,8 +69,7 @@ const roleMenuPermissionSlice = createSlice({
     },
     deleteRoleMenuPermission: (state, action: PayloadAction<number>) => {
       state.roleMenuPermissions = state.roleMenuPermissions.filter(
-        (permission) =>
-          permission.id !== action.payload,
+        (permission) => permission.id !== action.payload,
       );
       if (state.selectedRoleMenuPermission?.id === action.payload) {
         state.selectedRoleMenuPermission = null;

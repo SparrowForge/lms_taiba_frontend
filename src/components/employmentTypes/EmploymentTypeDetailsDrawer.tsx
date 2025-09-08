@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IEmploymentType} from '@/types/employmentType';
 
 import {useCreateEmploymentTypeDetailsConfig} from './employmentTypeConfig';
-
 
 interface EmploymentTypeDetailsDrawerProps {
   employmentTypeId?: number;
@@ -29,15 +28,15 @@ const EmploymentTypeDetailsDrawer: React.FC<EmploymentTypeDetailsDrawerProps> = 
   onClose,
   onEdit,
 }) => {
-
-  const { selectedEmploymentType, getEmploymentTypeById, detailsStatus } = useEmploymentTypes();
+  const { selectedEmploymentType, loadEmploymentType, detailsStatus } = useEmploymentTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
   useEffect(() => {
     if (visible && employmentTypeId) {
-      getEmploymentTypeById(employmentTypeId);
+      //getEmploymentTypeById(employmentTypeId);
+      loadEmploymentType(employmentTypeId);
     }
-  }, [visible, employmentTypeId, getEmploymentTypeById]);
+  }, [visible, employmentTypeId, loadEmploymentType]);
 
   const handleEdit = (employmentType: IEmploymentType) => {
     onEdit(employmentType.id);

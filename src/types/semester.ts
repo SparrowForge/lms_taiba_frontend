@@ -1,4 +1,5 @@
 import {IBatch} from './batch';
+import {ISubjectWithFaculty} from './subject';
 
 export interface ISemester {
   id: number;
@@ -9,6 +10,7 @@ export interface ISemester {
   endDate: string;
   status: string;
   remarks: string;
+  isBreak: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -23,6 +25,7 @@ export interface ISemesterCreate {
   endDate: string;
   status: string;
   remarks: string;
+  isBreak: boolean;
 }
 
 export interface ISemesterUpdate {
@@ -33,4 +36,9 @@ export interface ISemesterUpdate {
   endDate?: string;
   status?: string;
   remarks?: string;
+  isBreak?: boolean;
+}
+
+export interface ISemesterWithSubjectsAndFaculty extends ISemester {
+  subjects: ISubjectWithFaculty[];
 }

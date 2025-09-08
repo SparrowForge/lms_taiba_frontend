@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -17,9 +18,7 @@ import StatusTag from '@/components/ui/StatusTag';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
-import {Status} from '@/types/common';
 import {IScheduleType} from '@/types/scheduleType';
-
 
 export default function ScheduleTypesPage() {
   const { t } = useLocalization();
@@ -57,8 +56,8 @@ export default function ScheduleTypesPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadScheduleTypes({ page: 1, limit: 10 });
   };
   const handleViewDetails = (id: number) => {

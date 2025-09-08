@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IStudentFamily, IStudentFamilyCreate, IStudentFamilyUpdate} from '@/types/studentFamily';
 
 import {studentFamilyService} from '@/services/studentFamilyService';
@@ -25,8 +26,14 @@ import {
 
 export const useStudentFamilies = () => {
   const dispatch = useDispatch();
-  const { studentFamilies, selectedStudentFamily, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.studentFamilies);
+  const {
+    studentFamilies,
+    selectedStudentFamily,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+  } = useSelector((state: RootState) => state.studentFamilies);
 
   const loadStudentFamilies = useCallback(
     async (params = {}) => {
@@ -63,7 +70,8 @@ export const useStudentFamilies = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IStudentFamily> = await studentFamilyService.getStudentFamily(id);
+        const response: IBaseResponse<IStudentFamily> =
+          await studentFamilyService.getStudentFamily(id);
         dispatch(setSelectedStudentFamily(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
@@ -84,7 +92,10 @@ export const useStudentFamilies = () => {
         const response: IStudentFamily = await studentFamilyService.createStudentFamily(data);
         dispatch(addStudentFamily(response));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Student family created successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Student family created successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =
@@ -105,7 +116,10 @@ export const useStudentFamilies = () => {
         const response: IStudentFamily = await studentFamilyService.updateStudentFamily(id, data);
         dispatch(updateStudentFamily(response));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Student family updated successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Student family updated successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =
@@ -126,7 +140,10 @@ export const useStudentFamilies = () => {
         await studentFamilyService.deleteStudentFamily(id);
         dispatch(deleteStudentFamily(id));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Student family deleted successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Student family deleted successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =

@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -15,21 +16,18 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
-import {Status} from '@/types/common';
-
-
 const PanelEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedPanel, detailsStatus, getPanelById } = usePanels();
+  const { selectedPanel, detailsStatus, loadPanel } = usePanels();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
 
   useEffect(() => {
     const panelId = parseInt(resolvedParams.id);
-    getPanelById(panelId);
-  }, [resolvedParams.id, getPanelById]);
-
+    //getPanelById(panelId);
+    loadPanel(panelId);
+  }, [resolvedParams.id, loadPanel]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -42,11 +40,14 @@ const PanelEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <PanelForm
-            mode="edit"
-            panelId={parseInt(resolvedParams.id)}
-            initialValues={selectedPanel}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <PanelForm
+          mode="edit"
+          panelId={parseInt(resolvedParams.id)}
+          initialValues={selectedPanel}
         />
       </MainLayout>
     </ProtectedRoute>

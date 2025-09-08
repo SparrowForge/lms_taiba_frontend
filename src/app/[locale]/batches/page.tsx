@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import BatchDetailsDrawer from '@/components/batches/BatchDetailsDrawer';
@@ -18,7 +19,6 @@ import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
-import {Status} from '@/types/common';
 import {ICourse} from '@/types/course';
 
 export default function BatchesPage() {
@@ -59,8 +59,8 @@ export default function BatchesPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-     setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadBatches({ page: 1, limit: 10 });
   };
 
@@ -84,7 +84,7 @@ export default function BatchesPage() {
     onSearch: (searchText: string) => {
       loadBatches({ page: 1, limit: 10, search: searchText });
     },
-    onQuickAdd: handleCreateDrawer,
+    // onQuickAdd: handleCreateDrawer,
     items: batches,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
@@ -157,13 +157,13 @@ export default function BatchesPage() {
         render: (batch: IBatch) => (
           <EntityActions
             onView={() => router.push(`/batches/${batch.id}`)}
-            onViewModal={handleViewDetails}
+            // onViewModal={handleViewDetails}
             viewText={t(LOCALE_KEYS.VIEW)}
             editText={t(LOCALE_KEYS.EDIT)}
             deleteText={t(LOCALE_KEYS.DELETE)}
             viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/batches/${batch.id}/edit`)}
-            onEditModal={handleEditDrawer}
+            // onEditModal={handleEditDrawer}
             editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeBatch(batch.id)}
             id={batch.id}

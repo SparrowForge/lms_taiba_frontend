@@ -39,3 +39,8 @@ export interface IFacultyUpdate {
   isActive?: boolean;
   joinedDate?: string;
 }
+
+export interface IFacultyWithSubjectRole extends IFaculty {
+  role: string;
+  hoursPerWeek: number;
+}

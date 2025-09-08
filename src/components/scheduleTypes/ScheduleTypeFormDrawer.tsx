@@ -1,15 +1,15 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
 import ScheduleTypeForm from './ScheduleTypeForm';
-
 
 interface Props {
   mode: 'create' | 'edit';
@@ -26,15 +26,17 @@ const ScheduleTypeFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { getScheduleTypeById, selectedScheduleType } = useScheduleTypes();
+  const { getScheduleTypeById, selectedScheduleType, loadScheduleType, detailsStatus } =
+    useScheduleTypes();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
 
   useEffect(() => {
     if (visible && mode === 'edit' && scheduleTypeId) {
-      getScheduleTypeById(scheduleTypeId);
+      //getScheduleTypeById(scheduleTypeId);
+      loadScheduleType(scheduleTypeId);
     }
-  }, [visible, mode, scheduleTypeId, getScheduleTypeById]);
+  }, [visible, mode, scheduleTypeId, loadScheduleType]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -42,6 +44,10 @@ const ScheduleTypeFormDrawer: React.FC<Props> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
+  }
 
   return (
     <Drawer

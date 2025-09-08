@@ -4,13 +4,13 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentProfiles} from '@/hooks/useStudentProfiles';
 
-import {Status} from '@/types/common';
 import {IStudentProfile} from '@/types/studentProfile';
 
 import {useCreateStudentProfileDetailsConfig} from './studentProfileConfig';
@@ -28,15 +28,16 @@ const StudentProfileDetailsDrawer: React.FC<StudentProfileDetailsDrawerProps> = 
   onClose,
   onEdit,
 }) => {
-  const { getStudentProfileById, selectedStudentProfile, detailsStatus } = useStudentProfiles();
+  const { loadStudentProfile, selectedStudentProfile, detailsStatus } = useStudentProfiles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_PROFILE, { defaultValue: 'Student Profile' });
 
   useEffect(() => {
     if (visible && studentProfileId) {
-      getStudentProfileById(studentProfileId);
+      //getStudentProfileById(studentProfileId);
+      loadStudentProfile(studentProfileId);
     }
-  }, [visible, studentProfileId, getStudentProfileById]);
+  }, [visible, studentProfileId, loadStudentProfile]);
 
   const handleEdit = (studentProfile: IStudentProfile) => {
     onEdit(studentProfile.id);

@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUsers} from '@/hooks/useUsers';
 
-import {Status} from '@/types/common';
 import {IUser} from '@/types/user';
 
 import {useCreateUserDetailsConfig} from './userConfig';
-
 
 interface UserDetailsDrawerProps {
   userId?: number;
@@ -29,15 +28,15 @@ const UserDetailsDrawer: React.FC<UserDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedUser, getUserById, detailsStatus } = useUsers();
+  const { selectedUser, loadUser, detailsStatus } = useUsers();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
   useEffect(() => {
     if (visible && userId) {
-      getUserById(userId);
+      //getUserById(userId);
+      loadUser(userId);
     }
-  }, [visible, userId, getUserById]);
+  }, [visible, userId, loadUser]);
 
   const handleEdit = (user: IUser) => {
     onEdit(user.id);

@@ -4,6 +4,7 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
@@ -11,10 +12,8 @@ import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
-import {Status} from '@/types/common';
 
 import {useCreateBatchDetailsConfig} from './batchConfig';
-
 
 interface BatchDetailsDrawerProps {
   batchId?: number;
@@ -29,15 +28,15 @@ const BatchDetailsDrawer: React.FC<BatchDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedBatch, getBatchById, detailsStatus } = useBatches();
+  const { selectedBatch, loadBatch, detailsStatus } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   useEffect(() => {
     if (visible && batchId) {
-      getBatchById(batchId);
+      //getBatchById(batchId);
+      loadBatch(batchId);
     }
-  }, [visible, batchId, getBatchById]);
+  }, [visible, batchId, loadBatch]);
 
   const handleEdit = (batch: IBatch) => {
     onEdit(batch.id);

@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,15 +14,10 @@ import {useCreateWeekDayDetailsConfig} from '@/components/weekDays/weekDayConfig
 import {useLocalization} from '@/hooks/useLocalization';
 import {useWeekDays} from '@/hooks/useWeekDays';
 
-import {Status} from '@/types/common';
 import {IWeekDay} from '@/types/weekDay';
 
-export default function WeekDayDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedWeekDay, detailsStatus, getWeekDayById } = useWeekDays();
+export default function WeekDayDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedWeekDay, detailsStatus, loadWeekDay } = useWeekDays();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
 
@@ -30,8 +26,9 @@ export default function WeekDayDetailPage({
 
   // Load week day if not already loaded
   useEffect(() => {
-    getWeekDayById(weekDayId);
-  }, [getWeekDayById, weekDayId]);
+    //getWeekDayById(weekDayId);
+    loadWeekDay(weekDayId);
+  }, [loadWeekDay, weekDayId]);
 
   const config = useCreateWeekDayDetailsConfig(
     selectedWeekDay,
@@ -44,7 +41,7 @@ export default function WeekDayDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IWeekDay>} />
+        <EntityDetails config={config as EntityDetailsConfig<IWeekDay>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useTimeSlots} from '@/hooks/useTimeSlots';
 
-import {Status} from '@/types/common';
 import {ITimeSlot} from '@/types/timeSlot';
 
-export default function TimeSlotDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedTimeSlot, detailsStatus, getTimeSlotById } = useTimeSlots();
+export default function TimeSlotDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedTimeSlot, detailsStatus, loadTimeSlot } = useTimeSlots();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.TIME_SLOT, { defaultValue: 'Time Slot' });
 
@@ -29,8 +25,9 @@ export default function TimeSlotDetailPage({
   const timeSlotId = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    getTimeSlotById(timeSlotId);
-  }, [getTimeSlotById, timeSlotId]);
+    //getTimeSlotById(timeSlotId);
+    loadTimeSlot(timeSlotId);
+  }, [loadTimeSlot, timeSlotId]);
 
   const config = useCreateTimeSlotDetailsConfig(
     selectedTimeSlot,

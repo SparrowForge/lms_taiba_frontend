@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import FeeStructureForm from '@/components/feeStructures/FeeStructureForm';
@@ -15,21 +16,18 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
-
-
 const FeeStructureEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
-  const { selectedFeeStructure, detailsStatus, getFeeStructureById } = useFeeStructures();
+  const { selectedFeeStructure, detailsStatus, loadFeeStructure } = useFeeStructures();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
 
   useEffect(() => {
     const feeStructureId = parseInt(resolvedParams.id);
-    getFeeStructureById(feeStructureId);
-  }, [resolvedParams.id, getFeeStructureById]);
-
+    //getFeeStructureById(feeStructureId);
+    loadFeeStructure(feeStructureId);
+  }, [resolvedParams.id, loadFeeStructure]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
@@ -42,11 +40,14 @@ const FeeStructureEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ p
   return (
     <ProtectedRoute>
       <MainLayout>
-          <PageHeader title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} onBack={() => router.back()} />
-          <FeeStructureForm
-            mode="edit"
-            feeStructureId={parseInt(resolvedParams.id)}
-            initialValues={selectedFeeStructure}
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <FeeStructureForm
+          mode="edit"
+          feeStructureId={parseInt(resolvedParams.id)}
+          initialValues={selectedFeeStructure}
         />
       </MainLayout>
     </ProtectedRoute>

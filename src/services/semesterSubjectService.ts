@@ -3,7 +3,7 @@ import {
     ISemesterSubject,
     ISemesterSubjectCreate,
     ISemesterSubjectMultipleCreate,
-    ISemesterSubjectUpdate
+    ISemesterSubjectUpdate,
 } from '@/types/semesterSubject';
 
 import {api} from '@/lib/axios';
@@ -30,8 +30,13 @@ export const semesterSubjectService = {
   },
 
   // Create multiple semester subjects with faculty assignments
-  createMultipleSemesterSubjects: async (data: ISemesterSubjectMultipleCreate): Promise<ISemesterSubject[]> => {
-    const response = await api.post<ISemesterSubject[]>('/semester-subjects/bulk-subject-faculty', data);
+  createMultipleSemesterSubjects: async (
+    data: ISemesterSubjectMultipleCreate,
+  ): Promise<ISemesterSubject[]> => {
+    const response = await api.post<ISemesterSubject[]>(
+      '/semester-subjects/bulk-subject-faculty',
+      data,
+    );
     return response.data;
   },
 

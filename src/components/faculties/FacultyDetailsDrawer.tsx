@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useFaculties} from '@/hooks/useFaculties';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFaculty} from '@/types/faculty';
 
 import {useCreateFacultyDetailsConfig} from './facultyConfig';
-
 
 interface FacultyDetailsDrawerProps {
   facultyId?: number;
@@ -29,15 +28,15 @@ const FacultyDetailsDrawer: React.FC<FacultyDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedFaculty, getFacultyById, detailsStatus } = useFaculties();
+  const { selectedFaculty, loadFaculty, detailsStatus } = useFaculties();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
   useEffect(() => {
     if (visible && facultyId) {
-      getFacultyById(facultyId);
+      //getFacultyById(facultyId);
+      loadFaculty(facultyId);
     }
-  }, [visible, facultyId, getFacultyById]);
+  }, [visible, facultyId, loadFaculty]);
 
   const handleEdit = (faculty: IFaculty) => {
     onEdit(faculty.id);

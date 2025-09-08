@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
-import {Status} from '@/types/common';
 import {IRoleMenuPermission} from '@/types/roleMenuPermission';
 
 import {useCreateRoleMenuPermissionDetailsConfig} from './roleMenuPermissionConfig';
-
 
 interface RoleMenuPermissionDetailsDrawerProps {
   roleMenuPermissionId?: number;
@@ -29,15 +28,16 @@ const RoleMenuPermissionDetailsDrawer: React.FC<RoleMenuPermissionDetailsDrawerP
   onClose,
   onEdit,
 }) => {
-
-  const { selectedRoleMenuPermission, getRoleMenuPermissionById, detailsStatus } = useRoleMenuPermissions();
+  const { selectedRoleMenuPermission, loadRoleMenuPermission, detailsStatus } =
+    useRoleMenuPermissions();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE_MENU_PERMISSION, { defaultValue: 'Role Menu Permission' });
   useEffect(() => {
     if (visible && roleMenuPermissionId) {
-      getRoleMenuPermissionById(roleMenuPermissionId);
+      //getRoleMenuPermissionById(roleMenuPermissionId);
+      loadRoleMenuPermission(roleMenuPermissionId);
     }
-  }, [visible, roleMenuPermissionId, getRoleMenuPermissionById]);
+  }, [visible, roleMenuPermissionId, loadRoleMenuPermission]);
 
   const handleEdit = (roleMenuPermission: IRoleMenuPermission) => {
     onEdit(roleMenuPermission.id);

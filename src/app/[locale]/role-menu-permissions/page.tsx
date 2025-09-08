@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -16,7 +17,6 @@ import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
-import {Status} from '@/types/common';
 import {IMenu} from '@/types/menu';
 import {IRole} from '@/types/role';
 import {IRoleMenuPermission} from '@/types/roleMenuPermission';
@@ -65,8 +65,8 @@ export default function RoleMenuPermissionsPage() {
     setDrawerVisible(true);
   };
 
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadRoleMenuPermissions({ page: 1, limit: 10 });
   };
 
@@ -144,17 +144,13 @@ export default function RoleMenuPermissionsPage() {
         width: 100,
         render: (permission: IRoleMenuPermission) => (
           <EntityActions
-            onView={() =>
-              router.push(`/role-menu-permissions/${permission.id}`)
-            }
+            onView={() => router.push(`/role-menu-permissions/${permission.id}`)}
             onViewModal={() => handleViewDetails(permission.id)}
             viewText={t(LOCALE_KEYS.VIEW)}
             editText={t(LOCALE_KEYS.EDIT)}
             deleteText={t(LOCALE_KEYS.DELETE)}
             viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
-            onEdit={() =>
-              router.push(`/role-menu-permissions/${permission.id}/edit`)
-            }
+            onEdit={() => router.push(`/role-menu-permissions/${permission.id}/edit`)}
             onEditModal={() => handleEditDrawer(permission.id)}
             editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeRoleMenuPermission(permission.id)}

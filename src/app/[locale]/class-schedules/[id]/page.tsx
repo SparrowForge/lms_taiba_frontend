@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateClassScheduleDetailsConfig} from '@/components/classSchedules/classScheduleConfig';
@@ -14,14 +15,9 @@ import {useClassSchedules} from '@/hooks/useClassSchedules';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IClassSchedule} from '@/types/classSchedule';
-import {Status} from '@/types/common';
 
-export default function ClassScheduleDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedClassSchedule, detailsStatus, getClassScheduleById } = useClassSchedules();
+export default function ClassScheduleDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedClassSchedule, detailsStatus, loadClassSchedule } = useClassSchedules();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.CLASS_SCHEDULE, { defaultValue: 'Class Schedule' });
 
@@ -30,8 +26,9 @@ export default function ClassScheduleDetailPage({
 
   // Load class schedule if not already loaded
   useEffect(() => {
-    getClassScheduleById(classScheduleId);
-  }, [getClassScheduleById, classScheduleId]);
+    //getClassScheduleById(classScheduleId);
+    loadClassSchedule(classScheduleId);
+  }, [loadClassSchedule, classScheduleId]);
 
   const config = useCreateClassScheduleDetailsConfig(
     selectedClassSchedule,
@@ -44,7 +41,7 @@ export default function ClassScheduleDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IClassSchedule>} />
+        <EntityDetails config={config as EntityDetailsConfig<IClassSchedule>} />
       </MainLayout>
     </ProtectedRoute>
   );

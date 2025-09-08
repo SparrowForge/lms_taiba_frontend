@@ -4,6 +4,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -17,9 +18,7 @@ import WeekDayFormDrawer from '@/components/weekDays/WeekDayFormDrawer';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useWeekDays} from '@/hooks/useWeekDays';
 
-import {Status} from '@/types/common';
 import {IWeekDay} from '@/types/weekDay';
-
 
 export default function WeekDaysPage() {
   const { t } = useLocalization();
@@ -31,8 +30,7 @@ export default function WeekDaysPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
-  const { weekDays, listStatus, pagination, loadWeekDays, removeWeekDay } =
-    useWeekDays();
+  const { weekDays, listStatus, pagination, loadWeekDays, removeWeekDay } = useWeekDays();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -57,8 +55,8 @@ export default function WeekDaysPage() {
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-   const handleDrawerSuccess = () => {
-    setDrawerVisible(false)
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
     loadWeekDays({ page: 1, limit: 10 });
   };
   const handleViewDetails = (id: number) => {

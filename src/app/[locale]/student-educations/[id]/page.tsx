@@ -3,6 +3,7 @@
 import React from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {MainLayout} from '@/components/layout/MainLayout';
@@ -13,21 +14,24 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentEducations} from '@/hooks/useStudentEducations';
 
-import {Status} from '@/types/common';
 import {IStudentEducation} from '@/types/studentEducation';
 
-
-export default function StudentEducationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function StudentEducationDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = React.use(params);
   const studentEducationId = parseInt(resolvedParams.id);
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_EDUCATION, { defaultValue: 'Student Education' });
 
-  const { selectedStudentEducation, detailsStatus, getStudentEducationById } = useStudentEducations();
+  const { selectedStudentEducation, detailsStatus, loadStudentEducation } = useStudentEducations();
 
   React.useEffect(() => {
-    getStudentEducationById(studentEducationId);
-  }, [studentEducationId, getStudentEducationById]);
+    //getStudentEducationById(studentEducationId);
+    loadStudentEducation(studentEducationId);
+  }, [studentEducationId, loadStudentEducation]);
 
   const config = useCreateStudentEducationDetailsConfig(
     selectedStudentEducation,
@@ -40,7 +44,7 @@ export default function StudentEducationDetailPage({ params }: { params: Promise
   return (
     <ProtectedRoute>
       <MainLayout>
-      <EntityDetails config={config as EntityDetailsConfig<IStudentEducation>} />
+        <EntityDetails config={config as EntityDetailsConfig<IStudentEducation>} />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import React, {createContext, ReactNode, useCallback, useContext, useEffect, useState} from 'react';
+import React, {createContext, ReactNode, useCallback, useContext, useEffect, useState,} from 'react';
 
 interface SidebarContextType {
   collapsed: boolean;
@@ -53,11 +53,7 @@ export const SidebarProvider = ({ children }: SidebarProviderProps) => {
     handleOpenChange,
   };
 
-  return (
-    <SidebarContext.Provider value={value}>
-      {children}
-    </SidebarContext.Provider>
-  );
+  return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>;
 };
 
 export const useSidebar = () => {

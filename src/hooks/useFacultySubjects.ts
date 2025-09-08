@@ -2,9 +2,10 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate,} from '@/types/facultySubject';
 
 import {facultySubjectService} from '@/services/facultySubjectService';
@@ -71,7 +72,8 @@ export const useFacultySubjects = () => {
     async (id: number) => {
       try {
         dispatch(setDetailsStatus({ status: Status.LOADING }));
-        const response: IBaseResponse<IFacultySubject> = await facultySubjectService.getFacultySubject(id);
+        const response: IBaseResponse<IFacultySubject> =
+          await facultySubjectService.getFacultySubject(id);
         dispatch(setSelectedFacultySubject(response.data));
         dispatch(setDetailsStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {

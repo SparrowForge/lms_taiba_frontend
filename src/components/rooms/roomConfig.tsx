@@ -6,11 +6,9 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {IRoom} from '@/types/room';
 
-export const getRoomDisplayName = (item: IRoom) =>
-  item.name || `Room #${item.id}`;
+export const getRoomDisplayName = (item: IRoom) => item.name || `Room #${item.id}`;
 
-export const getRoomInitials = (item: IRoom) =>
-  item.name?.slice(0, 2).toUpperCase() || 'RM';
+export const getRoomInitials = (item: IRoom) => item.name?.slice(0, 2).toUpperCase() || 'RM';
 
 export const useCreateRoomDetailsConfig = (
   item: IRoom | null,
@@ -20,7 +18,7 @@ export const useCreateRoomDetailsConfig = (
 ): EntityDetailsConfig<IRoom> => {
   const { embedded = false, onEdit, onBack } = options;
   const { t } = useLocalization();
-  
+
   return {
     name: t(LOCALE_KEYS.ROOM, { defaultValue: 'Room' }),
     route: '/rooms',
@@ -35,22 +33,22 @@ export const useCreateRoomDetailsConfig = (
     fields: [
       { key: 'id', label: 'ID' },
       { key: 'name', label: t(LOCALE_KEYS.NAME) },
-      { 
-        key: 'roomType', 
+      {
+        key: 'roomType',
         label: t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' }),
-        render: (v: any) => v?.name || 'N/A'
+        render: (v: any) => v?.name || 'N/A',
       },
-      { 
-        key: 'levelFloor', 
-        label: t(LOCALE_KEYS.LEVEL_FLOOR, { defaultValue: 'Level/Floor' })
+      {
+        key: 'levelFloor',
+        label: t(LOCALE_KEYS.LEVEL_FLOOR, { defaultValue: 'Level/Floor' }),
       },
-      { 
-        key: 'sittingCapacity', 
-        label: t(LOCALE_KEYS.SITTING_CAPACITY, { defaultValue: 'Sitting Capacity' })
+      {
+        key: 'sittingCapacity',
+        label: t(LOCALE_KEYS.SITTING_CAPACITY, { defaultValue: 'Sitting Capacity' }),
       },
-      { 
-        key: 'examCapacity', 
-        label: t(LOCALE_KEYS.EXAM_CAPACITY, { defaultValue: 'Exam Capacity' })
+      {
+        key: 'examCapacity',
+        label: t(LOCALE_KEYS.EXAM_CAPACITY, { defaultValue: 'Exam Capacity' }),
       },
       { key: 'status', label: t(LOCALE_KEYS.STATUS) },
       {

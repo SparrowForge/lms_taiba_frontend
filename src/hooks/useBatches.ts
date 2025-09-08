@@ -2,10 +2,11 @@ import {AxiosError} from 'axios';
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Status} from '@/enums';
 import {RootState} from '@/store';
 
-import {IBatch, IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate} from '@/types/batch';
-import {IBasePaginatedResponse, IBaseResponse, Status} from '@/types/common';
+import {IBatch, IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate, IBatchWithSemestersUpdate,} from '@/types/batch';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
 import {batchService} from '@/services/batchService';
 
@@ -108,12 +109,17 @@ export const useBatches = () => {
         const response: IBatch = await batchService.createBatchWithSemesters(data);
         dispatch(addBatch(response));
         dispatch(
-          setActionStatus({ status: Status.SUCCESS, message: 'Batch with semesters created successfully' }),
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Batch with semesters created successfully',
+          }),
         );
       } catch (error: unknown) {
         const errorMessage =
           error instanceof AxiosError
-            ? error?.response?.data?.message || error?.message || 'Failed to create batch with semesters'
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to create batch with semesters'
             : 'Failed to create batch with semesters';
         dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;
@@ -137,6 +143,33 @@ export const useBatches = () => {
           error instanceof AxiosError
             ? error?.response?.data?.message || error?.message || 'Failed to update batch'
             : 'Failed to update batch';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  // Edit an existing batch with semesters
+  const editBatchWithSemesters = useCallback(
+    async (id: number, data: IBatchWithSemestersUpdate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IBatch = await batchService.updateBatchWithSemesters(id, data);
+        dispatch(updateBatch(response));
+        dispatch(
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: 'Batch with semesters updated successfully',
+          }),
+        );
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to update batch with semesters'
+            : 'Failed to update batch with semesters';
         dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;
       }
@@ -201,6 +234,11 @@ export const useBatches = () => {
     [dispatch],
   );
 
+  // Clear batches
+  const clearBatches = useCallback(() => {
+    dispatch(setBatches([]));
+  }, [dispatch]);
+
   return {
     // State
     batches,
@@ -216,10 +254,12 @@ export const useBatches = () => {
     createBatch,
     createBatchWithSemesters,
     editBatch,
+    editBatchWithSemesters,
     removeBatch,
     getBatchById,
     clearAction,
     clearDetails,
     setSelected,
+    clearBatches,
   };
 };

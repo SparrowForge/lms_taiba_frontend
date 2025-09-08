@@ -4,17 +4,16 @@ import {Drawer} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoles} from '@/hooks/useRoles';
 
-import {Status} from '@/types/common';
 import {IRole} from '@/types/role';
 
 import {useCreateRoleDetailsConfig} from './roleConfig';
-
 
 interface RoleDetailsDrawerProps {
   roleId?: number;
@@ -29,15 +28,15 @@ const RoleDetailsDrawer: React.FC<RoleDetailsDrawerProps> = ({
   onClose,
   onEdit,
 }) => {
-
-  const { selectedRole, getRoleById, detailsStatus } = useRoles();
+  const { selectedRole, loadRole, detailsStatus } = useRoles();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
   useEffect(() => {
     if (visible && roleId) {
-      getRoleById(roleId);
+      //getRoleById(roleId);
+      loadRole(roleId);
     }
-  }, [visible, roleId, getRoleById]);
+  }, [visible, roleId, loadRole]);
 
   const handleEdit = (role: IRole) => {
     onEdit(role.id);

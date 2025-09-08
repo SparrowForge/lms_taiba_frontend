@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import {useCreateFacultySubjectDetailsConfig} from '@/components/facultySubjects/facultySubjectConfig';
@@ -13,15 +14,10 @@ import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import {useFacultySubjects} from '@/hooks/useFacultySubjects';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {Status} from '@/types/common';
 import {IFacultySubject} from '@/types/facultySubject';
 
-export default function FacultySubjectDetailPage({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { selectedFacultySubject, detailsStatus, getFacultySubjectById } = useFacultySubjects();
+export default function FacultySubjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { selectedFacultySubject, detailsStatus, loadFacultySubject } = useFacultySubjects();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FACULTY_SUBJECT, { defaultValue: 'Faculty Subject' });
 
@@ -30,8 +26,9 @@ export default function FacultySubjectDetailPage({
 
   // Load faculty subject if not already loaded
   useEffect(() => {
-    getFacultySubjectById(facultySubjectId);
-  }, [getFacultySubjectById, facultySubjectId]);
+    //getFacultySubjectById(facultySubjectId);
+    loadFacultySubject(facultySubjectId);
+  }, [loadFacultySubject, facultySubjectId]);
 
   const config = useCreateFacultySubjectDetailsConfig(
     selectedFacultySubject,
@@ -44,7 +41,7 @@ export default function FacultySubjectDetailPage({
   return (
     <ProtectedRoute>
       <MainLayout>
-          <EntityDetails config={config as EntityDetailsConfig<IFacultySubject>} />
+        <EntityDetails config={config as EntityDetailsConfig<IFacultySubject>} />
       </MainLayout>
     </ProtectedRoute>
   );

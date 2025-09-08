@@ -1,15 +1,15 @@
 'use client';
 
-import {Drawer} from 'antd';
+import {Drawer, Spin} from 'antd';
 import React, {useEffect} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
 import SemesterForm from './SemesterForm';
-
 
 interface SemesterFormDrawerProps {
   mode: 'create' | 'edit';
@@ -26,15 +26,15 @@ const SemesterFormDrawer: React.FC<SemesterFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-
-  const { getSemesterById, selectedSemester } = useSemesters();
+  const { getSemesterById, selectedSemester, loadSemester, detailsStatus } = useSemesters();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   useEffect(() => {
     if (visible && mode === 'edit' && semesterId) {
-      getSemesterById(semesterId);
+      //getSemesterById(semesterId);
+      loadSemester(semesterId);
     }
-  }, [visible, mode, semesterId, getSemesterById]);
+  }, [visible, mode, semesterId, loadSemester]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -43,6 +43,10 @@ const SemesterFormDrawer: React.FC<SemesterFormDrawerProps> = ({
   const handleCancel = () => {
     onCancel();
   };
+
+  if (mode === 'edit' && detailsStatus.status === Status.LOADING) {
+    return <Spin />;
+  }
 
   return (
     <Drawer
