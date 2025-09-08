@@ -186,7 +186,7 @@ const DashboardStartSection = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 m-6">
               {dataStudent.map((item) => (
                 <SortableCard key={item.id} id={item.id}>
-                  <LeftBorderCard {...item} />
+                  <LeftBorderCard {...item} localTitle={item.title} />
                 </SortableCard>
               ))}
             </div>

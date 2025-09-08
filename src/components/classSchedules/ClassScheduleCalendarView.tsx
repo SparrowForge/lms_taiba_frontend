@@ -190,20 +190,20 @@ function ClassScheduleCalendarView() {
     } else if (schedule.status === 'PENDING') {
       return 'orange';
     }
-
+    return 'default';
     // Default colors based on class type
-    switch (schedule.classScheduleType) {
-      case 'REGULAR':
-        return 'blue';
-      case 'LAB':
-        return 'purple';
-      case 'TUTORIAL':
-        return 'cyan';
-      case 'EXAM':
-        return 'red';
-      default:
-        return 'default';
-    }
+    // switch (schedule.scheduleType) {
+    //   case 'REGULAR':
+    //     return 'blue';
+    //   case 'LAB':
+    //     return 'purple';
+    //   case 'TUTORIAL':
+    //     return 'cyan';
+    //   case 'EXAM':
+    //     return 'red';
+    //   default:
+    //     return 'default';
+    // }
   };
 
   // Handle month change
