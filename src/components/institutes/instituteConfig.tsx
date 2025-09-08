@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IInstitute} from '@/types/institute';
+import { IInstitute } from '@/types/institute';
 
 export const getInstituteDisplayName = (item: IInstitute) => item.name || `Institute #${item.id}`;
 export const getInstituteInitials = (item: IInstitute) =>

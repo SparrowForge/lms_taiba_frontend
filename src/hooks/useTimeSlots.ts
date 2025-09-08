@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ITimeSlot, ITimeSlotCreate, ITimeSlotUpdate} from '@/types/timeSlot';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { ITimeSlot, ITimeSlotCreate, ITimeSlotUpdate } from '@/types/timeSlot';
 
-import {timeSlotService} from '@/services/timeSlotService';
+import { timeSlotService } from '@/services/timeSlotService';
 
 import {
-    addTimeSlot,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteTimeSlot,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedTimeSlot,
-    setTimeSlots,
-    updateTimeSlot,
+  addTimeSlot,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteTimeSlot,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedTimeSlot,
+  setTimeSlots,
+  updateTimeSlot,
 } from '@/store/slices/timeSlotSlice';
 
 export const useTimeSlots = () => {

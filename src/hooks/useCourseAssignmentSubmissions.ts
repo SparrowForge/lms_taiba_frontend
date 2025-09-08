@@ -1,31 +1,31 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse} from '@/types/common';
+import { IBasePaginatedResponse } from '@/types/common';
 import {
-    ICourseAssignmentSubmission,
-    ICourseAssignmentSubmissionCreate,
-    ICourseAssignmentSubmissionUpdate,
+  ICourseAssignmentSubmission,
+  ICourseAssignmentSubmissionCreate,
+  ICourseAssignmentSubmissionUpdate,
 } from '@/types/courseAssignmentSubmission';
 
-import {courseAssignmentSubmissionService} from '@/services/courseAssignmentSubmissionService';
+import { courseAssignmentSubmissionService } from '@/services/courseAssignmentSubmissionService';
 
 import {
-    addCourseAssignmentSubmission,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteCourseAssignmentSubmission,
-    setActionStatus,
-    setCourseAssignmentSubmissions,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedCourseAssignmentSubmission,
-    updateCourseAssignmentSubmission,
+  addCourseAssignmentSubmission,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteCourseAssignmentSubmission,
+  setActionStatus,
+  setCourseAssignmentSubmissions,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedCourseAssignmentSubmission,
+  updateCourseAssignmentSubmission,
 } from '@/store/slices/courseAssignmentSubmissionSlice';
 
 export const useCourseAssignmentSubmissions = () => {

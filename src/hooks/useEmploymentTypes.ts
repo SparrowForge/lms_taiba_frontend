@@ -1,27 +1,31 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IEmploymentType, IEmploymentTypeCreate, IEmploymentTypeUpdate,} from '@/types/employmentType';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IEmploymentType,
+  IEmploymentTypeCreate,
+  IEmploymentTypeUpdate,
+} from '@/types/employmentType';
 
-import {employmentTypeService} from '@/services/employmentTypeService';
+import { employmentTypeService } from '@/services/employmentTypeService';
 
 import {
-    addEmploymentType,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteEmploymentType,
-    setActionStatus,
-    setDetailsStatus,
-    setEmploymentTypes,
-    setListStatus,
-    setPagination,
-    setSelectedEmploymentType,
-    updateEmploymentType,
+  addEmploymentType,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteEmploymentType,
+  setActionStatus,
+  setDetailsStatus,
+  setEmploymentTypes,
+  setListStatus,
+  setPagination,
+  setSelectedEmploymentType,
+  updateEmploymentType,
 } from '@/store/slices/employmentTypeSlice';
 
 export const useEmploymentTypes = () => {

@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IPaginationMeta, IStatusState} from '@/types/common';
-import {IUser, IUserFilters, IUsersState} from '@/types/user';
+import { IPaginationMeta, IStatusState } from '@/types/common';
+import { IUser, IUserFilters, IUsersState } from '@/types/user';
 
 const initialState: IUsersState = {
   // Status fields as IStatusState objects

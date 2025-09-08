@@ -1,16 +1,16 @@
 'use client';
 
 import {
-    ArrowDownOutlined,
-    ArrowUpOutlined,
-    BookOutlined,
-    FileTextOutlined,
-    TeamOutlined,
-    UserOutlined,
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  BookOutlined,
+  FileTextOutlined,
+  TeamOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
-import {Card, Col, Row, Statistic, Typography} from 'antd';
+import { Card, Col, Row, Statistic, Typography } from 'antd';
 
-import {useAuth} from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 const { Title, Text } = Typography;
 

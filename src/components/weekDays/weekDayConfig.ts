@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IWeekDay} from '@/types/weekDay';
+import { IWeekDay } from '@/types/weekDay';
 
 export const getWeekDayDisplayName = (item: IWeekDay) => item.name || `Week Day #${item.id}`;
 export const getWeekDayInitials = (item: IWeekDay) => item.name?.slice(0, 2).toUpperCase() || 'WD';

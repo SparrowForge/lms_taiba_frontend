@@ -1,27 +1,31 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse} from '@/types/common';
-import {ICourseAssignment, ICourseAssignmentCreate, ICourseAssignmentUpdate,} from '@/types/courseAssignment';
+import { IBasePaginatedResponse } from '@/types/common';
+import {
+  ICourseAssignment,
+  ICourseAssignmentCreate,
+  ICourseAssignmentUpdate,
+} from '@/types/courseAssignment';
 
-import {courseAssignmentService} from '@/services/courseAssignmentService';
+import { courseAssignmentService } from '@/services/courseAssignmentService';
 
 import {
-    addCourseAssignment,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteCourseAssignment,
-    setActionStatus,
-    setCourseAssignments,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedCourseAssignment,
-    updateCourseAssignment,
+  addCourseAssignment,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteCourseAssignment,
+  setActionStatus,
+  setCourseAssignments,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedCourseAssignment,
+  updateCourseAssignment,
 } from '@/store/slices/courseAssignmentSlice';
 
 export const useCourseAssignments = () => {

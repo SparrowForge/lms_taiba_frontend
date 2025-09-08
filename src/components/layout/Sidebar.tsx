@@ -1,11 +1,17 @@
 'use client';
 
-import {BookOutlined, DashboardOutlined, LogoutOutlined, SettingOutlined, UserOutlined,} from '@ant-design/icons';
-import {Avatar, Layout, Menu, Typography} from 'antd';
-import {usePathname, useRouter} from 'next/navigation';
-import {useCallback, useMemo} from 'react';
+import {
+  BookOutlined,
+  DashboardOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Avatar, Layout, Menu, Typography } from 'antd';
+import { usePathname, useRouter } from 'next/navigation';
+import { useCallback, useMemo } from 'react';
 
-import {useAuth} from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 const { Sider } = Layout;
 const { Text } = Typography;

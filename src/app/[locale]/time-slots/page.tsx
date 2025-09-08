@@ -1,24 +1,24 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import TimeSlotDetailsDrawer from '@/components/timeSlots/TimeSlotDetailsDrawer';
 import TimeSlotFormDrawer from '@/components/timeSlots/TimeSlotFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useTimeSlots} from '@/hooks/useTimeSlots';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useTimeSlots } from '@/hooks/useTimeSlots';
 
-import {ITimeSlot} from '@/types/timeSlot';
+import { ITimeSlot } from '@/types/timeSlot';
 
 export default function TimeSlotsPage() {
   const { t } = useLocalization();

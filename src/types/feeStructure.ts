@@ -1,6 +1,6 @@
-import {IBatch} from './batch';
-import {IFeeInstallmentPlanCreate} from './feeInstallmentPlan';
-import {ISemester} from './semester';
+import { IBatch } from './batch';
+import { IFeeInstallmentPlanCreate } from './feeInstallmentPlan';
+import { ISemester } from './semester';
 
 export interface IFeeStructure {
   id: number;

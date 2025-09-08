@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ISubject, ISubjectCreate, ISubjectUpdate} from '@/types/subject';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { ISubject, ISubjectCreate, ISubjectUpdate } from '@/types/subject';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const subjectService = {
   // Get all subjects with pagination and search

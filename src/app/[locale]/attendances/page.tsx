@@ -1,24 +1,24 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
 import AttendanceDetailsDrawer from '@/components/attendances/AttendanceDetailsDrawer';
 import AttendanceFormDrawer from '@/components/attendances/AttendanceFormDrawer';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useAttendances} from '@/hooks/useAttendances';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAttendances } from '@/hooks/useAttendances';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IAttendance} from '@/types/attendance';
+import { IAttendance } from '@/types/attendance';
 
 export default function AttendancesPage() {
   const { t } = useLocalization();

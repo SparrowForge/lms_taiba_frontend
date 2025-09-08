@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useAddresses} from '@/hooks/useAddresses';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAddresses } from '@/hooks/useAddresses';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IAddress} from '@/types/address';
+import { IAddress } from '@/types/address';
 
-import {useCreateAddressDetailsConfig} from './addressConfig';
+import { useCreateAddressDetailsConfig } from './addressConfig';
 
 interface AddressDetailsDrawerProps {
   addressId?: number;

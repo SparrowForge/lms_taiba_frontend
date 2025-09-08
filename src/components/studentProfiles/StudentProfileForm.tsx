@@ -1,21 +1,21 @@
 'use client';
 
-import {Button, DatePicker, Form, Input, Select, Space, Switch} from 'antd';
+import { Button, DatePicker, Form, Input, Select, Space, Switch } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useAddresses} from '@/hooks/useAddresses';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudentProfiles} from '@/hooks/useStudentProfiles';
-import {useStudents} from '@/hooks/useStudents';
+import { useAddresses } from '@/hooks/useAddresses';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudentProfiles } from '@/hooks/useStudentProfiles';
+import { useStudents } from '@/hooks/useStudents';
 
-import {getErrorMessage} from '@/types/errors';
-import {IStudentProfileCreate, IStudentProfileUpdate} from '@/types/studentProfile';
+import { getErrorMessage } from '@/types/errors';
+import { IStudentProfileCreate, IStudentProfileUpdate } from '@/types/studentProfile';
 
 import FormLayout from '../layout/FormLayout';
 

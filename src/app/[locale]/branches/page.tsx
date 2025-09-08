@@ -1,24 +1,24 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import BranchDetailsDrawer from '@/components/branches/BranchDetailsDrawer';
 import BranchFormDrawer from '@/components/branches/BranchFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useBranches} from '@/hooks/useBranches';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useBranches } from '@/hooks/useBranches';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IBranch} from '@/types/branch';
+import { IBranch } from '@/types/branch';
 
 export default function BranchesPage() {
   const { t } = useLocalization();

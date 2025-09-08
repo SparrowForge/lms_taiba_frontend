@@ -1,6 +1,6 @@
 'use client';
 
-import {ConfigProvider} from 'antd';
+import { ConfigProvider } from 'antd';
 
 interface AntdProviderProps {
   children: React.ReactNode;

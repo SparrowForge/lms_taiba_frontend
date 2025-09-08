@@ -1,25 +1,25 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IPanel} from '@/types/panel';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IPanel } from '@/types/panel';
 
-import {panelService} from '@/services/panelService';
+import { panelService } from '@/services/panelService';
 
-import {useAppDispatch, useAppSelector} from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
-    addPanel,
-    deletePanel,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setPanels,
-    setSelectedPanel,
-    updatePanel,
+  addPanel,
+  deletePanel,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setPanels,
+  setSelectedPanel,
+  updatePanel,
 } from '@/store/slices/panelSlice';
 
 export const usePanels = () => {

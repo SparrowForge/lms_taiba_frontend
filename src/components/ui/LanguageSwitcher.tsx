@@ -1,12 +1,12 @@
 'use client';
 
-import {GlobalOutlined} from '@ant-design/icons';
-import {Button, Dropdown} from 'antd';
-import {usePathname, useRouter} from 'next/navigation';
-import {useLocale} from 'next-intl';
-import React, {useCallback, useMemo} from 'react';
+import { GlobalOutlined } from '@ant-design/icons';
+import { Button, Dropdown } from 'antd';
+import { usePathname, useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import React, { useCallback, useMemo } from 'react';
 
-import {routing} from '@/i18n/routing';
+import { routing } from '@/i18n/routing';
 
 export const LanguageSwitcher: React.FC = React.memo(() => {
   const locale = useLocale();

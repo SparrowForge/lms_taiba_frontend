@@ -1,24 +1,24 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import EmploymentTypeDetailsDrawer from '@/components/employmentTypes/EmploymentTypeDetailsDrawer';
 import EmploymentTypeFormDrawer from '@/components/employmentTypes/EmploymentTypeFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useEmploymentTypes } from '@/hooks/useEmploymentTypes';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IEmploymentType} from '@/types/employmentType';
+import { IEmploymentType } from '@/types/employmentType';
 
 export default function EmploymentTypesPage() {
   const { t } = useLocalization();

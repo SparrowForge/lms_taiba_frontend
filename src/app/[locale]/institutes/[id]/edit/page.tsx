@@ -1,20 +1,20 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import InstituteForm from '@/components/institutes/InstituteForm';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
-import {PageHeader} from '@/components/ui/PageHeader';
+import { PageHeader } from '@/components/ui/PageHeader';
 
-import {useInstitutes} from '@/hooks/useInstitutes';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useInstitutes } from '@/hooks/useInstitutes';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const InstituteEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);

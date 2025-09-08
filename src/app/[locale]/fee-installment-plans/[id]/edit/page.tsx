@@ -1,22 +1,22 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import FeeInstallmentPlanForm from '@/components/feeInstallmentPlans/FeeInstallmentPlanForm';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
-import {PageHeader} from '@/components/ui/PageHeader';
+import { PageHeader } from '@/components/ui/PageHeader';
 
-import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useFeeInstallmentPlans } from '@/hooks/useFeeInstallmentPlans';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
+import { IFeeInstallmentPlanUpdate } from '@/types/feeInstallmentPlan';
 
 const FeeInstallmentPlanEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);

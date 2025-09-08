@@ -1,23 +1,23 @@
-import {DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Checkbox, Form, Select, Space} from 'antd';
-import {useForm} from 'antd/es/form/Form';
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Select, Space } from 'antd';
+import { useForm } from 'antd/es/form/Form';
 import router from 'next/router';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useMenus} from '@/hooks/useMenus';
-import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
-import {useRoles} from '@/hooks/useRoles';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useMenus } from '@/hooks/useMenus';
+import { useRoleMenuPermissions } from '@/hooks/useRoleMenuPermissions';
+import { useRoles } from '@/hooks/useRoles';
 
-import {getErrorMessage} from '@/types/errors';
-import {IMenu} from '@/types/menu';
-import {IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
+import { getErrorMessage } from '@/types/errors';
+import { IMenu } from '@/types/menu';
+import { IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate } from '@/types/roleMenuPermission';
 
-import {RoleMenuPermissionFormProps} from './RoleMenuPermissionFormTabView';
+import { RoleMenuPermissionFormProps } from './RoleMenuPermissionFormTabView';
 
 function RoleMenuPermissionFormSingle({
   mode,

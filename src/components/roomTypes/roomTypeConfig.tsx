@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IRoomType} from '@/types/roomType';
+import { IRoomType } from '@/types/roomType';
 
 export const getRoomTypeDisplayName = (item: IRoomType) => item.name || `Room Type #${item.id}`;
 export const getRoomTypeInitials = (item: IRoomType) =>

@@ -1,6 +1,6 @@
-import {IFileUploadRequest, IFileUploadResponse} from '@/types/file';
+import { IFileUploadRequest, IFileUploadResponse } from '@/types/file';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const fileService = {
   uploadFile: async (data: IFileUploadRequest): Promise<IFileUploadResponse> => {

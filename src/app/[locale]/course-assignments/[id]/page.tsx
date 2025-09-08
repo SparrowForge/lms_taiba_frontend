@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateCourseAssignmentDetailsConfig} from '@/components/courseAssignments/courseAssignmentConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateCourseAssignmentDetailsConfig } from '@/components/courseAssignments/courseAssignmentConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useCourseAssignments} from '@/hooks/useCourseAssignments';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useCourseAssignments } from '@/hooks/useCourseAssignments';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourseAssignment} from '@/types/courseAssignment';
+import { ICourseAssignment } from '@/types/courseAssignment';
 
 export default function CourseAssignmentDetailPage({
   params,

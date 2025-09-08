@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateEmploymentTypeDetailsConfig} from '@/components/employmentTypes/employmentTypeConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateEmploymentTypeDetailsConfig } from '@/components/employmentTypes/employmentTypeConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useEmploymentTypes } from '@/hooks/useEmploymentTypes';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IEmploymentType} from '@/types/employmentType';
+import { IEmploymentType } from '@/types/employmentType';
 
 export default function EmploymentTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedEmploymentType, detailsStatus, loadEmploymentType } = useEmploymentTypes();

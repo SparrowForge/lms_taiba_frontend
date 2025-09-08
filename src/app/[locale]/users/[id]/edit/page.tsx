@@ -1,20 +1,20 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
-import {PageHeader} from '@/components/ui/PageHeader';
+import { PageHeader } from '@/components/ui/PageHeader';
 import UserForm from '@/components/users/UserForm';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useUsers} from '@/hooks/useUsers';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useUsers } from '@/hooks/useUsers';
 
 const UserEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);

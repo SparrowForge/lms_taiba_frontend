@@ -1,24 +1,24 @@
 'use client';
 
 import dayjs from 'dayjs';
-import {useRouter, useSearchParams} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import UserRoleDetailsDrawer from '@/components/userRoles/UserRoleDetailsDrawer';
 import UserRoleFormDrawer from '@/components/userRoles/UserRoleFormDrawer';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useUserRoles} from '@/hooks/useUserRoles';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useUserRoles } from '@/hooks/useUserRoles';
 
-import {IUserRole} from '@/types/userRole';
+import { IUserRole } from '@/types/userRole';
 
 export default function UserRolesPage() {
   const { t } = useLocalization();

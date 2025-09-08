@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useBranches} from '@/hooks/useBranches';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useBranches } from '@/hooks/useBranches';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IBranch} from '@/types/branch';
+import { IBranch } from '@/types/branch';
 
-import {useCreateBranchDetailsConfig} from './branchConfig';
+import { useCreateBranchDetailsConfig } from './branchConfig';
 
 interface BranchDetailsDrawerProps {
   branchId?: number;

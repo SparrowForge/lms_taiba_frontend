@@ -2,19 +2,19 @@
 
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {useCreateStudentFamilyDetailsConfig} from '@/components/studentFamilies/studentFamilyConfig';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { useCreateStudentFamilyDetailsConfig } from '@/components/studentFamilies/studentFamilyConfig';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudentFamilies} from '@/hooks/useStudentFamilies';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudentFamilies } from '@/hooks/useStudentFamilies';
 
-import {IStudentFamily} from '@/types/studentFamily';
+import { IStudentFamily } from '@/types/studentFamily';
 
 export default function StudentFamilyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);

@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IStudentFamily, IStudentFamilyCreate, IStudentFamilyUpdate} from '@/types/studentFamily';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IStudentFamily, IStudentFamilyCreate, IStudentFamilyUpdate } from '@/types/studentFamily';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const studentFamilyService = {
   // Get all student families with pagination

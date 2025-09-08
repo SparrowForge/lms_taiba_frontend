@@ -1,8 +1,8 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ISubject} from '@/types/subject';
+import { ISubject } from '@/types/subject';
 
 export const getSubjectDisplayName = (subject: ISubject) => subject.name;
 

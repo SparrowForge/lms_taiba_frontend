@@ -1,12 +1,12 @@
-import {Drawer} from 'antd';
-import React, {useEffect, useState} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useUserRoles} from '@/hooks/useUserRoles';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useUserRoles } from '@/hooks/useUserRoles';
 
-import {IUserRole} from '@/types/userRole';
+import { IUserRole } from '@/types/userRole';
 
 import UserRoleFormSingle from './UserRoleFormSingle';
 

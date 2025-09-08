@@ -1,15 +1,15 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 import FacultySubjectForm from '@/components/facultySubjects/FacultySubjectForm';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {PageHeader} from '@/components/ui/PageHeader';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const CreateFacultySubjectPage: React.FC = () => {
   const { t } = useLocalization();

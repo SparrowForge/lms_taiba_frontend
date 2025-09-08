@@ -1,16 +1,16 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
 import RoomForm from '@/components/rooms/RoomForm';
-import {PageHeader} from '@/components/ui/PageHeader';
+import { PageHeader } from '@/components/ui/PageHeader';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 export default function CreateRoomPage() {
   const { t } = useLocalization();

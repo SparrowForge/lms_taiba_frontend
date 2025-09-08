@@ -1,4 +1,4 @@
-import {IStudent} from './student';
+import { IStudent } from './student';
 
 export interface IStudentFamily {
   id: number;

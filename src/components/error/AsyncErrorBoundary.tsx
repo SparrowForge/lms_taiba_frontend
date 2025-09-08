@@ -1,6 +1,6 @@
-import {ExclamationCircleOutlined, ReloadOutlined} from '@ant-design/icons';
-import {Alert, Button, Card, Typography} from 'antd';
-import React, {ReactNode, useEffect, useState} from 'react';
+import { ExclamationCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Typography } from 'antd';
+import React, { ReactNode, useEffect, useState } from 'react';
 
 const { Title, Text } = Typography;
 

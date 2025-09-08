@@ -1,24 +1,24 @@
 'use client';
 
-import {Button, Form, Input, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {INSTITUTE_TYPE_OPTIONS} from '@/constants/instituteTypes';
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
+import { INSTITUTE_TYPE_OPTIONS } from '@/constants/instituteTypes';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
 
-import {useAddresses} from '@/hooks/useAddresses';
-import {useInstitutes} from '@/hooks/useInstitutes';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAddresses } from '@/hooks/useAddresses';
+import { useInstitutes } from '@/hooks/useInstitutes';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {getErrorMessage} from '@/types/errors';
-import {IInstitute, IInstituteCreate, IInstituteUpdate} from '@/types/institute';
+import { getErrorMessage } from '@/types/errors';
+import { IInstitute, IInstituteCreate, IInstituteUpdate } from '@/types/institute';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';

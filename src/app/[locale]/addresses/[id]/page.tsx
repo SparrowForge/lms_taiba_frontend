@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useCreateAddressDetailsConfig} from '@/components/addresses/addressConfig';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { useCreateAddressDetailsConfig } from '@/components/addresses/addressConfig';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useAddresses} from '@/hooks/useAddresses';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAddresses } from '@/hooks/useAddresses';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IAddress} from '@/types/address';
+import { IAddress } from '@/types/address';
 
 export default function AddressDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedAddress, detailsStatus, loadAddress } = useAddresses();

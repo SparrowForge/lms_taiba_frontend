@@ -413,24 +413,24 @@ export const LOCALE_KEYS = {
   LOCAL_NAME: 'local_name',
   ICON: 'icon',
   ENTER_ICON: 'enter_icon',
-  ERP_TAGLINE: "erp-tagline",
-  WELCOME_BACK: "welcome-back",
-  COPYRIGHT: "copyright",
-   // LoginForm
-  EMAIL_USERNAME: "email-username",
-  FORGET_PASSWORD: "forget-password",
-  SIGN_IN: "sign-in",
-  SIGNING_IN: "signing-in",
-  LOGIN_SUCCESS: "login-success",
-  LOGIN_FAILED: "login-failed",
-  EMAIL_REQUIRED: "email-required",
-  EMAIL_INVALID: "email-invalid",
-  PASSWORD_REQUIRED: "password-required",
-  PASSWORD_MIN: "password-min",
-   OR_CONTINUE_WITH: "or-continue-with",
-  SIGN_IN_MICROSOFT: "sign-in-microsoft",
-  NO_ACCOUNT: "no-account",
-  CONTACT_ADMIN: "contact-admin",
+  ERP_TAGLINE: 'erp-tagline',
+  WELCOME_BACK: 'welcome-back',
+  COPYRIGHT: 'copyright',
+  // LoginForm
+  EMAIL_USERNAME: 'email-username',
+  FORGET_PASSWORD: 'forget-password',
+  SIGN_IN: 'sign-in',
+  SIGNING_IN: 'signing-in',
+  LOGIN_SUCCESS: 'login-success',
+  LOGIN_FAILED: 'login-failed',
+  EMAIL_REQUIRED: 'email-required',
+  EMAIL_INVALID: 'email-invalid',
+  PASSWORD_REQUIRED: 'password-required',
+  PASSWORD_MIN: 'password-min',
+  OR_CONTINUE_WITH: 'or-continue-with',
+  SIGN_IN_MICROSOFT: 'sign-in-microsoft',
+  NO_ACCOUNT: 'no-account',
+  CONTACT_ADMIN: 'contact-admin',
 
   // dashboard
   WELCOME_BACK: 'welcome-back',
@@ -467,13 +467,12 @@ export const LOCALE_KEYS = {
   ACADEMIC_PROGRESS: 'academic-progress',
   VIEW_ALL: 'view-all',
 
-  UPCOMING_ASSIGNMENT: "upcoming-assignment",
-  ALL_TASKS: "all-tasks",
-  MONTHLY_ATTENDANCE: "monthly-attendance",
-  MARK_ALL_READ: "mark-all-read",
-  STUDENT_PROGRESS: "student-progress",
-  RECENT_ACTIVITY: "recent_activity"
-
+  UPCOMING_ASSIGNMENT: 'upcoming-assignment',
+  ALL_TASKS: 'all-tasks',
+  MONTHLY_ATTENDANCE: 'monthly-attendance',
+  MARK_ALL_READ: 'mark-all-read',
+  STUDENT_PROGRESS: 'student-progress',
+  RECENT_ACTIVITY: 'recent_activity',
 } as const;
 
 // Type for the keys

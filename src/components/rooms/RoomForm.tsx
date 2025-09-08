@@ -1,23 +1,23 @@
 'use client';
 
-import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRooms} from '@/hooks/useRooms';
-import {useRoomTypes} from '@/hooks/useRoomTypes';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRooms } from '@/hooks/useRooms';
+import { useRoomTypes } from '@/hooks/useRoomTypes';
 
-import {getErrorMessage} from '@/types/errors';
-import {IRoom, IRoomCreate, IRoomUpdate} from '@/types/room';
+import { getErrorMessage } from '@/types/errors';
+import { IRoom, IRoomCreate, IRoomUpdate } from '@/types/room';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';

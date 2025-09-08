@@ -1,7 +1,7 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type {AuthState} from '@/types/auth';
-import type {IUser} from '@/types/user';
+import type { AuthState } from '@/types/auth';
+import type { IUser } from '@/types/user';
 
 // Helper function to get cookie value
 const getCookie = (name: string): string | null => {

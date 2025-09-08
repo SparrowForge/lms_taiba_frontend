@@ -1,18 +1,18 @@
 'use client';
 
-import {Button, Form, Input, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useAddresses} from '@/hooks/useAddresses';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAddresses } from '@/hooks/useAddresses';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IAddress, IAddressCreate, IAddressUpdate} from '@/types/address';
-import {getErrorMessage} from '@/types/errors';
+import { IAddress, IAddressCreate, IAddressUpdate } from '@/types/address';
+import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
 

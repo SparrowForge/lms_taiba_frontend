@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IBranch, IBranchCreate, IBranchUpdate } from '@/types/branch';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {branchService} from '@/services/branchService';
+import { branchService } from '@/services/branchService';
 
 import {
-    addBranch,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteBranch,
-    setActionStatus,
-    setBranches,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedBranch,
-    updateBranch,
+  addBranch,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteBranch,
+  setActionStatus,
+  setBranches,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedBranch,
+  updateBranch,
 } from '@/store/slices/branchSlice';
 
 export const useBranches = () => {

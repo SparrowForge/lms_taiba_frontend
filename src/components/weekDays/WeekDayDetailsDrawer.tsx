@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useWeekDays} from '@/hooks/useWeekDays';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useWeekDays } from '@/hooks/useWeekDays';
 
-import {IWeekDay} from '@/types/weekDay';
+import { IWeekDay } from '@/types/weekDay';
 
-import {useCreateWeekDayDetailsConfig} from './weekDayConfig';
+import { useCreateWeekDayDetailsConfig } from './weekDayConfig';
 
 interface WeekDayDetailsDrawerProps {
   weekDayId?: number;

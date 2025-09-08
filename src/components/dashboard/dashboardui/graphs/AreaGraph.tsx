@@ -1,5 +1,5 @@
 // AreaGraph.tsx
-import {Area, AreaConfig} from '@ant-design/plots';
+import { Area, AreaConfig } from '@ant-design/plots';
 
 export interface AreaGraphProps {
   data: { week: string; score: number }[];

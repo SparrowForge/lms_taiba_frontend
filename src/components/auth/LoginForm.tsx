@@ -16,7 +16,6 @@ import { getErrorMessage } from '@/types/errors';
 
 import SocialLogin from './SocialLogin';
 
-
 export const LoginForm = () => {
   const { t } = useLocalization();
   const { login, isLoading, error, clearError } = useAuth();
@@ -63,10 +62,7 @@ export const LoginForm = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
-      <Card
-        style={{ width: 400, padding: "0px" }}
-        className="shadow-lg rounded-lg"
-      >
+      <Card style={{ width: 400, padding: '0px' }} className="shadow-lg rounded-lg">
         <div className="flex justify-center items-center pt-4 pb-2">
           <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
         </div>
@@ -98,21 +94,17 @@ export const LoginForm = () => {
             />
           </Form.Item>
 
-
-
-
           <Form.Item
             name="password"
             label={
-              <div className='text-gray-500 text-[15px]'>
+              <div className="text-gray-500 text-[15px]">
                 <h1>{t(LOCALE_KEYS.PASSWORD)}</h1>
               </div>
             }
-
             rules={[
               {
                 // required: true,
-                message: 'Please enter your password!'
+                message: 'Please enter your password!',
               },
               { min: 6, message: 'Password must be at least 6 characters!' },
             ]}
@@ -134,10 +126,7 @@ export const LoginForm = () => {
             </div>
           )}
           <div className="text-center flex justify-end">
-            <p className="text-sm text-[#1e45bf]">
-
-              {t(LOCALE_KEYS.FORGET_PASSWORD)}
-            </p>
+            <p className="text-sm text-[#1e45bf]">{t(LOCALE_KEYS.FORGET_PASSWORD)}</p>
           </div>
           <Form.Item>
             <Button
@@ -166,8 +155,6 @@ export const LoginForm = () => {
             </Link>
           </p>
         </div> */}
-
-
       </Card>
     </>
   );

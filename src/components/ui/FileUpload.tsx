@@ -1,10 +1,10 @@
 'use client';
 
-import {InboxOutlined} from '@ant-design/icons';
-import {message, Typography, Upload as AntUpload} from 'antd';
-import {useEffect, useState} from 'react';
+import { InboxOutlined } from '@ant-design/icons';
+import { message, Typography, Upload as AntUpload } from 'antd';
+import { useEffect, useState } from 'react';
 
-import {useFiles} from '@/hooks/useFiles';
+import { useFiles } from '@/hooks/useFiles';
 
 const { Text } = Typography;
 const { Dragger } = AntUpload;

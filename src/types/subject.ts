@@ -1,5 +1,5 @@
-import {ICourse} from './course';
-import {IFacultyWithSubjectRole} from './faculty';
+import { ICourse } from './course';
+import { IFacultyWithSubjectRole } from './faculty';
 
 export interface ISubject {
   id: number;

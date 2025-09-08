@@ -1,24 +1,24 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import ClassScheduleDetailsDrawer from '@/components/classSchedules/ClassScheduleDetailsDrawer';
 import ClassScheduleFormDrawer from '@/components/classSchedules/ClassScheduleFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useClassSchedules} from '@/hooks/useClassSchedules';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useClassSchedules } from '@/hooks/useClassSchedules';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IClassSchedule} from '@/types/classSchedule';
+import { IClassSchedule } from '@/types/classSchedule';
 
 export default function ClassScheduleListView() {
   const { t } = useLocalization();

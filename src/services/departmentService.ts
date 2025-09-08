@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IDepartment, IDepartmentCreate, IDepartmentUpdate} from '@/types/department';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IDepartment, IDepartmentCreate, IDepartmentUpdate } from '@/types/department';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const departmentService = {
   // Get all departments with pagination and search

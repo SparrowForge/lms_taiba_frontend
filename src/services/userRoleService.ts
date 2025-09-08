@@ -1,13 +1,13 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
-    IUserRole,
-    IUserRoleBulkCreate,
-    IUserRoleBulkCreateResponse,
-    IUserRoleCreate,
-    IUserRoleUpdate,
+  IUserRole,
+  IUserRoleBulkCreate,
+  IUserRoleBulkCreateResponse,
+  IUserRoleCreate,
+  IUserRoleUpdate,
 } from '@/types/userRole';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const userRoleService = {
   // Get all user roles with pagination and search

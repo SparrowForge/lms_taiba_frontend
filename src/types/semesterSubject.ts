@@ -1,5 +1,5 @@
-import {ISemester} from './semester';
-import {ISubject} from './subject';
+import { ISemester } from './semester';
+import { ISubject } from './subject';
 
 export interface ISemesterSubject {
   id: number;

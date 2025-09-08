@@ -1,26 +1,26 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import FacultyDetailsDrawer from '@/components/faculties/FacultyDetailsDrawer';
 import FacultyFormDrawer from '@/components/faculties/FacultyFormDrawer';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useFaculties} from '@/hooks/useFaculties';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IBranch} from '@/types/branch';
-import {IDepartment} from '@/types/department';
-import {IFaculty} from '@/types/faculty';
+import { IBranch } from '@/types/branch';
+import { IDepartment } from '@/types/department';
+import { IFaculty } from '@/types/faculty';
 
 export default function FacultyPage() {
   const { t } = useLocalization();

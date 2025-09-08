@@ -1,24 +1,24 @@
 'use client';
 
-import {Tag} from 'antd';
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { Tag } from 'antd';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import FacultySubjectDetailsDrawer from '@/components/facultySubjects/FacultySubjectDetailsDrawer';
 import FacultySubjectFormDrawer from '@/components/facultySubjects/FacultySubjectFormDrawer';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
-import {useFacultySubjects} from '@/hooks/useFacultySubjects';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useFacultySubjects } from '@/hooks/useFacultySubjects';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IFacultySubject} from '@/types/facultySubject';
+import { IFacultySubject } from '@/types/facultySubject';
 
 export default function FacultySubjectsPage() {
   const { t } = useLocalization();

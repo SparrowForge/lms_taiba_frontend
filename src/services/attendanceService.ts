@@ -1,7 +1,7 @@
-import {IAttendance, IAttendanceCreate, IAttendanceUpdate} from '@/types/attendance';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IAttendance, IAttendanceCreate, IAttendanceUpdate } from '@/types/attendance';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const attendanceService = {
   getAttendances: async (params = {}): Promise<IBasePaginatedResponse<IAttendance>> => {

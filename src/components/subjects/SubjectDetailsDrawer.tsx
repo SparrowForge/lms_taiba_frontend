@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSubjects} from '@/hooks/useSubjects';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSubjects } from '@/hooks/useSubjects';
 
-import {ISubject} from '@/types/subject';
+import { ISubject } from '@/types/subject';
 
-import {useCreateSubjectDetailsConfig} from './subjectConfig';
+import { useCreateSubjectDetailsConfig } from './subjectConfig';
 
 interface SubjectDetailsDrawerProps {
   subjectId?: number;

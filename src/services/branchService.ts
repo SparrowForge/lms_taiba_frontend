@@ -1,7 +1,7 @@
-import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IBranch, IBranchCreate, IBranchUpdate } from '@/types/branch';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const branchService = {
   // Get all branches with pagination and search

@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IPaginationMeta, IStatusState} from '@/types/common';
-import {IScheduleType} from '@/types/scheduleType';
+import { IPaginationMeta, IStatusState } from '@/types/common';
+import { IScheduleType } from '@/types/scheduleType';
 
 interface IScheduleTypesState {
   listStatus: IStatusState;

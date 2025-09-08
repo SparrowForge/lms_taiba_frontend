@@ -1,24 +1,24 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import StudentEducationDetailsDrawer from '@/components/studentEducations/StudentEducationDetailsDrawer';
 import StudentEducationFormDrawer from '@/components/studentEducations/StudentEducationFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudentEducations} from '@/hooks/useStudentEducations';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudentEducations } from '@/hooks/useStudentEducations';
 
-import {IStudent} from '@/types/student';
-import {IStudentEducation} from '@/types/studentEducation';
+import { IStudent } from '@/types/student';
+import { IStudentEducation } from '@/types/studentEducation';
 
 export default function StudentEducationsPage() {
   const { t } = useLocalization();

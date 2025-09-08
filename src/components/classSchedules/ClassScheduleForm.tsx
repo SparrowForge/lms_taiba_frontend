@@ -1,30 +1,30 @@
 'use client';
 
-import {Button, Checkbox, DatePicker, Form, InputNumber, Select, Space} from 'antd';
+import { Button, Checkbox, DatePicker, Form, InputNumber, Select, Space } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useClassSchedules} from '@/hooks/useClassSchedules';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRooms} from '@/hooks/useRooms';
-import {useScheduleTypes} from '@/hooks/useScheduleTypes';
-import {useSemesters} from '@/hooks/useSemesters';
-import {useTimeSlots} from '@/hooks/useTimeSlots';
-import {useWeekDays} from '@/hooks/useWeekDays';
+import { useBatches } from '@/hooks/useBatches';
+import { useClassSchedules } from '@/hooks/useClassSchedules';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRooms } from '@/hooks/useRooms';
+import { useScheduleTypes } from '@/hooks/useScheduleTypes';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useTimeSlots } from '@/hooks/useTimeSlots';
+import { useWeekDays } from '@/hooks/useWeekDays';
 
-import {IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate} from '@/types/classSchedule';
-import {getErrorMessage} from '@/types/errors';
-import {IFacultyWithSubjectRole} from '@/types/faculty';
+import { IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate } from '@/types/classSchedule';
+import { getErrorMessage } from '@/types/errors';
+import { IFacultyWithSubjectRole } from '@/types/faculty';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';

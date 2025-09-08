@@ -1,9 +1,9 @@
-import {Button, Card, Progress} from 'antd';
-import {useLocale} from 'next-intl';
+import { Button, Card, Progress } from 'antd';
+import { useLocale } from 'next-intl';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const subjects = [
   { name: 'Mathematics', local_name: 'الرياضيات', percent: 86 },

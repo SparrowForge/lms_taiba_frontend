@@ -1,4 +1,4 @@
-import {IRoomType} from './roomType';
+import { IRoomType } from './roomType';
 
 export interface IRoom {
   id: number;

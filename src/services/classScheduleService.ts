@@ -1,7 +1,7 @@
-import {IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate} from '@/types/classSchedule';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate } from '@/types/classSchedule';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const classScheduleService = {
   getClassSchedules: async (params = {}): Promise<IBasePaginatedResponse<IClassSchedule>> => {

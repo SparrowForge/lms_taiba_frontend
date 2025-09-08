@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IRoomType, IRoomTypeCreate, IRoomTypeUpdate} from '@/types/roomType';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IRoomType, IRoomTypeCreate, IRoomTypeUpdate } from '@/types/roomType';
 
-import {roomTypeService} from '@/services/roomTypeService';
+import { roomTypeService } from '@/services/roomTypeService';
 
 import {
-    addRoomType,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteRoomType,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setRoomTypes,
-    setSelectedRoomType,
-    updateRoomType,
+  addRoomType,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteRoomType,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setRoomTypes,
+  setSelectedRoomType,
+  updateRoomType,
 } from '@/store/slices/roomTypeSlice';
 
 export const useRoomTypes = () => {

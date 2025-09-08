@@ -1,13 +1,13 @@
 'use client';
 
-import {Drawer, Spin} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer, Spin } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRoles} from '@/hooks/useRoles';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRoles } from '@/hooks/useRoles';
 
 import RoleForm from './RoleForm';
 

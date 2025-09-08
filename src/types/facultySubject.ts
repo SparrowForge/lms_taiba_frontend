@@ -1,7 +1,7 @@
-import {IBatch} from './batch';
-import {IFaculty} from './faculty';
-import {ISemester} from './semester';
-import {ISubject} from './subject';
+import { IBatch } from './batch';
+import { IFaculty } from './faculty';
+import { ISemester } from './semester';
+import { ISubject } from './subject';
 
 export interface IFacultySubject {
   id: number;

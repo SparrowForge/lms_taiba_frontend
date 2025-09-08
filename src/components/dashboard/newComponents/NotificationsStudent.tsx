@@ -1,9 +1,9 @@
-import {BellOutlined, CommentOutlined, DollarOutlined} from '@ant-design/icons';
-import {Card} from 'antd';
+import { BellOutlined, CommentOutlined, DollarOutlined } from '@ant-design/icons';
+import { Card } from 'antd';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import IconBgColoredCard from '../dashboardui/cards/IconBgColoredCard';
 

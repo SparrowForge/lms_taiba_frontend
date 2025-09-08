@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {useCreateTimeSlotDetailsConfig} from '@/components/timeSlots/timeSlotConfig';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { useCreateTimeSlotDetailsConfig } from '@/components/timeSlots/timeSlotConfig';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useTimeSlots} from '@/hooks/useTimeSlots';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useTimeSlots } from '@/hooks/useTimeSlots';
 
-import {ITimeSlot} from '@/types/timeSlot';
+import { ITimeSlot } from '@/types/timeSlot';
 
 export default function TimeSlotDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedTimeSlot, detailsStatus, loadTimeSlot } = useTimeSlots();

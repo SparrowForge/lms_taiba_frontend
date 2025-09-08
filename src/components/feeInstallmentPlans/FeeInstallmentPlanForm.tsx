@@ -1,21 +1,21 @@
 'use client';
 
-import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd';
+import { Button, DatePicker, Form, Input, InputNumber, Select, Space } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
-import {useFeeStructures} from '@/hooks/useFeeStructures';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSemesters} from '@/hooks/useSemesters';
+import { useFeeInstallmentPlans } from '@/hooks/useFeeInstallmentPlans';
+import { useFeeStructures } from '@/hooks/useFeeStructures';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
 
-import {getErrorMessage} from '@/types/errors';
-import {IFeeInstallmentPlanCreate, IFeeInstallmentPlanUpdate} from '@/types/feeInstallmentPlan';
+import { getErrorMessage } from '@/types/errors';
+import { IFeeInstallmentPlanCreate, IFeeInstallmentPlanUpdate } from '@/types/feeInstallmentPlan';
 
 import FormLayout from '../layout/FormLayout';
 

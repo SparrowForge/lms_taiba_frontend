@@ -1,12 +1,12 @@
-import {Button, Card, Col, Row} from 'antd';
+import { Button, Card, Col, Row } from 'antd';
 import React from 'react';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IBatch} from '@/types/batch';
-import {ISemester} from '@/types/semester';
+import { IBatch } from '@/types/batch';
+import { ISemester } from '@/types/semester';
 
-import {PaymentRow} from '../types';
+import { PaymentRow } from '../types';
 
 interface InstallmentSectionProps {
   selectedBatch: IBatch;

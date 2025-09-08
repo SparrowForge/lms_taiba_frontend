@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IUser, IUserCreate, IUserUpdate} from '@/types/user';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IUser, IUserCreate, IUserUpdate } from '@/types/user';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const userService = {
   // Get paginated users

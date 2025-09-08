@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateFacultyDetailsConfig} from '@/components/faculties/facultyConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateFacultyDetailsConfig } from '@/components/faculties/facultyConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useFaculties} from '@/hooks/useFaculties';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IFaculty} from '@/types/faculty';
+import { IFaculty } from '@/types/faculty';
 
 export default function FacultyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedFaculty, detailsStatus, loadFaculty } = useFaculties();

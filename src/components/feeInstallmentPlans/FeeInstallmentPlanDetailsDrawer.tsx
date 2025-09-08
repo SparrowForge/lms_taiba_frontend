@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useFeeInstallmentPlans} from '@/hooks/useFeeInstallmentPlans';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useFeeInstallmentPlans } from '@/hooks/useFeeInstallmentPlans';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IFeeInstallmentPlan} from '@/types/feeInstallmentPlan';
+import { IFeeInstallmentPlan } from '@/types/feeInstallmentPlan';
 
-import {useCreateFeeInstallmentPlanDetailsConfig} from './feeInstallmentPlanConfig';
+import { useCreateFeeInstallmentPlanDetailsConfig } from './feeInstallmentPlanConfig';
 
 interface FeeInstallmentPlanDetailsDrawerProps {
   feeInstallmentPlanId?: number;

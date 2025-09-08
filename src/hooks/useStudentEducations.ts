@@ -1,27 +1,31 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IStudentEducation, IStudentEducationCreate, IStudentEducationUpdate,} from '@/types/studentEducation';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IStudentEducation,
+  IStudentEducationCreate,
+  IStudentEducationUpdate,
+} from '@/types/studentEducation';
 
-import {studentEducationService} from '@/services/studentEducationService';
+import { studentEducationService } from '@/services/studentEducationService';
 
 import {
-    addStudentEducation,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteStudentEducation,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedStudentEducation,
-    setStudentEducations,
-    updateStudentEducation,
+  addStudentEducation,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteStudentEducation,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedStudentEducation,
+  setStudentEducations,
+  updateStudentEducation,
 } from '@/store/slices/studentEducationSlice';
 
 export const useStudentEducations = () => {

@@ -1,27 +1,32 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate, IFeeStructureUpdate,} from '@/types/feeStructure';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IFeeStructure,
+  IFeeStructureBulkCreate,
+  IFeeStructureCreate,
+  IFeeStructureUpdate,
+} from '@/types/feeStructure';
 
-import {feeStructureService} from '@/services/feeStructureService';
+import { feeStructureService } from '@/services/feeStructureService';
 
 import {
-    addFeeStructure,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteFeeStructure,
-    setActionStatus,
-    setDetailsStatus,
-    setFeeStructures,
-    setListStatus,
-    setPagination,
-    setSelectedFeeStructure,
-    updateFeeStructure,
+  addFeeStructure,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteFeeStructure,
+  setActionStatus,
+  setDetailsStatus,
+  setFeeStructures,
+  setListStatus,
+  setPagination,
+  setSelectedFeeStructure,
+  updateFeeStructure,
 } from '@/store/slices/feeStructureSlice';
 
 export const useFeeStructures = () => {

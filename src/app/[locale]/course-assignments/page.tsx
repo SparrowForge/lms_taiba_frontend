@@ -1,24 +1,24 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
 import CourseAssignmentFormDrawer from '@/components/courseAssignments/CourseAssignmentFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useCourseAssignments} from '@/hooks/useCourseAssignments';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useCourseAssignments } from '@/hooks/useCourseAssignments';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourseAssignment} from '@/types/courseAssignment';
+import { ICourseAssignment } from '@/types/courseAssignment';
 
 export default function CourseAssignmentsPage() {
   const { t } = useLocalization();
@@ -26,13 +26,9 @@ export default function CourseAssignmentsPage() {
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<
-    number | undefined
-  >();
+  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsCourseAssignmentId, setSelectedDetailsCourseAssignmentId] = useState<
-    number | undefined
-  >();
+  const [selectedDetailsCourseAssignmentId, setSelectedDetailsCourseAssignmentId] = useState<number | undefined>();
 
   const {
     courseAssignments,

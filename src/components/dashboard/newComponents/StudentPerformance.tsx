@@ -1,9 +1,9 @@
 'use client';
-import {Card} from 'antd';
+import { Card } from 'antd';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import AreaGraph from '../dashboardui/graphs/AreaGraph';
 

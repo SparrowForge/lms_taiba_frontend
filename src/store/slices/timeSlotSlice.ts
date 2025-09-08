@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IPaginationMeta, IStatusState} from '@/types/common';
-import {ITimeSlot} from '@/types/timeSlot';
+import { IPaginationMeta, IStatusState } from '@/types/common';
+import { ITimeSlot } from '@/types/timeSlot';
 
 interface ITimeSlotsState {
   listStatus: IStatusState;

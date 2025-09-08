@@ -1,21 +1,21 @@
 'use client';
 
-import {DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined} from '@ant-design/icons';
-import {Alert, Button, Form, Modal, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { Alert, Button, Form, Modal, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
-import {useUserRoles} from '@/hooks/useUserRoles';
-import {useUsers} from '@/hooks/useUsers';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRoleMenuPermissions } from '@/hooks/useRoleMenuPermissions';
+import { useUserRoles } from '@/hooks/useUserRoles';
+import { useUsers } from '@/hooks/useUsers';
 
-import {getErrorMessage} from '@/types/errors';
-import {IUserRoleBulkCreate, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
+import { getErrorMessage } from '@/types/errors';
+import { IUserRoleBulkCreate, IUserRoleCreate, IUserRoleUpdate } from '@/types/userRole';
 
 interface UserRoleFormProps {
   mode: 'create' | 'edit';
