@@ -51,11 +51,11 @@ const CourseMaterials = () => {
     return matchType && matchCourse;
   });
 
-    const handleDrawerSuccess = () => {
+  const handleDrawerSuccess = () => {
     setDrawerVisible(false);
     loadCourseMaterials({ page: 1, limit: 10 });
   };
-  
+
   const handleViewDetails = (courseMaterialId: number) => {
     setSelectedDetailsCourseMaterialId(courseMaterialId);
     setDetailsDrawerVisible(true);
@@ -109,6 +109,18 @@ const CourseMaterials = () => {
             <SnippetsOutlined style={{ fontSize: 22, color: '#9254de' }} />
           </div>
         );
+      case 'document':
+        return (
+          <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-cyan-100">
+            <SnippetsOutlined style={{ fontSize: 22, color: '#06b6d4' }} />
+          </div>
+        );
+      case 'other':
+        return (
+          <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100">
+            <BookOutlined style={{ fontSize: 22, color: '#ff4d4f' }}  />
+          </div>
+        );
       default:
         return null;
     }
@@ -128,6 +140,10 @@ const CourseMaterials = () => {
         return 'green';
       case 'material':
         return 'purple';
+      case 'document':
+        return 'cyan';
+      case 'other':
+        return 'red';
       default:
         return 'default';
     }
