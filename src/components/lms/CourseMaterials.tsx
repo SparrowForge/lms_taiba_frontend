@@ -20,6 +20,8 @@ import { Status } from '@/enums';
 import { useCourseMaterials } from '@/hooks/useCourseMaterials';
 
 import { ICourseMaterial } from '@/types/courseMaterial';
+import CourseMaterialDetailsDrawer from '../courseMaterials/CourseMaterialDetailsDrawer';
+import CourseMaterialFormDrawer from '../courseMaterials/CourseMaterialFormDrawer';
 
 const materialTypes = ['pdf', 'lecture', 'video', 'slide', 'assignment', 'material'];
 
@@ -29,6 +31,12 @@ const CourseMaterials = () => {
   const { courseMaterials, listStatus, loadCourseMaterials } = useCourseMaterials();
   const [selectedCourse, setSelectedCourse] = useState<string>('allCourses');
   const [selectedType, setSelectedType] = useState<string>('allTypes');
+  const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
+  const [selectedDetailsCourseMaterialId, setSelectedDetailsCourseMaterialId] = useState<number | undefined>();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [drawerMode, setDrawerMode] = useState<'edit' | 'create'>('edit');
+  const [selectedCourseMaterialId, setSelectedCourseMaterialId] = useState<number | undefined>();
+
 
   // Fetch materials on mount
   useEffect(() => {
@@ -42,6 +50,25 @@ const CourseMaterials = () => {
       selectedCourse === 'allCourses' || m.course?.id.toString() === selectedCourse;
     return matchType && matchCourse;
   });
+
+    const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+    loadCourseMaterials({ page: 1, limit: 10 });
+  };
+  
+  const handleViewDetails = (courseMaterialId: number) => {
+    setSelectedDetailsCourseMaterialId(courseMaterialId);
+    setDetailsDrawerVisible(true);
+  };
+
+  const handleDetailsEdit = (courseMaterialId: number) => {
+    setSelectedDetailsCourseMaterialId(undefined); // close details first
+    setDetailsDrawerVisible(false);
+    setSelectedCourseMaterialId(courseMaterialId);
+    setDrawerMode('edit');
+    setDrawerVisible(true);
+  };
+
 
   // Icon and tag helpers
   const getIcon = (type: string) => {
@@ -192,24 +219,43 @@ const CourseMaterials = () => {
                   <div className="flex gap-1">
                     <EditOutlined
                       style={{ fontSize: 18, cursor: 'pointer' }}
-                      onClick={() => router.push(`/course-materials/${m.id}/edit`)}
+                      onClick={() => handleDetailsEdit(m.id)}
                     />
                     <EyeOutlined
                       style={{ fontSize: 18, cursor: 'pointer' }}
-                      onClick={() => router.push(`/course-materials/${m.id}`)}
+                      onClick={() => handleViewDetails(m.id)}
                     />
                     <DeleteOutlined
                       style={{ fontSize: 18, cursor: 'pointer' }}
-                      onClick={() => router.push('/course-materials')}
+                      onClick={() => router.push('/course-materials')} // keep delete action for now
                     />
                   </div>
+
                 </div>
               </div>
             </Card>
           ))}
         </div>
       )}
+      <CourseMaterialDetailsDrawer
+        courseMaterialId={selectedDetailsCourseMaterialId}
+        visible={detailsDrawerVisible}
+        onClose={() => setDetailsDrawerVisible(false)}
+        onEdit={handleDetailsEdit}
+      />
+
+      {drawerVisible && (
+        <CourseMaterialFormDrawer
+          mode={drawerMode}
+          courseMaterialId={selectedCourseMaterialId}
+          visible={drawerVisible}
+          onCancel={() => setDrawerVisible(false)}
+          onSuccess={handleDrawerSuccess}
+        />
+      )}
+
     </Card>
+
   );
 };
 
