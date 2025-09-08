@@ -32,11 +32,12 @@ const CourseMaterials = () => {
   const [selectedCourse, setSelectedCourse] = useState<string>('allCourses');
   const [selectedType, setSelectedType] = useState<string>('allTypes');
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsCourseMaterialId, setSelectedDetailsCourseMaterialId] = useState<number | undefined>();
+  const [selectedDetailsCourseMaterialId, setSelectedDetailsCourseMaterialId] = useState<
+    number | undefined
+  >();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'edit' | 'create'>('edit');
   const [selectedCourseMaterialId, setSelectedCourseMaterialId] = useState<number | undefined>();
-
 
   // Fetch materials on mount
   useEffect(() => {
@@ -68,7 +69,6 @@ const CourseMaterials = () => {
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
-
 
   // Icon and tag helpers
   const getIcon = (type: string) => {
@@ -122,11 +122,11 @@ const CourseMaterials = () => {
       //     </div>
       //   );
       default:
-        return(
-           <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100">
-            <BookOutlined style={{ fontSize: 22, color: '#ff4d4f' }}  />
+        return (
+          <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100">
+            <BookOutlined style={{ fontSize: 22, color: '#ff4d4f' }} />
           </div>
-        )
+        );
     }
   };
 
@@ -248,7 +248,6 @@ const CourseMaterials = () => {
                       onClick={() => router.push('/course-materials')} // keep delete action for now
                     />
                   </div>
-
                 </div>
               </div>
             </Card>
@@ -271,9 +270,7 @@ const CourseMaterials = () => {
           onSuccess={handleDrawerSuccess}
         />
       )}
-
     </Card>
-
   );
 };
 

@@ -26,9 +26,13 @@ export default function CourseAssignmentsPage() {
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<number | undefined>();
+  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<
+    number | undefined
+  >();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsCourseAssignmentId, setSelectedDetailsCourseAssignmentId] = useState<number | undefined>();
+  const [selectedDetailsCourseAssignmentId, setSelectedDetailsCourseAssignmentId] = useState<
+    number | undefined
+  >();
 
   const {
     courseAssignments,

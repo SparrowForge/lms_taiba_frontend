@@ -34,7 +34,7 @@ const IconBgColoredCard: React.FC<IconBgColoredCardProps> = ({
     <div
       className={`py-2 px-3 flex gap-3 justify-center items-center rounded-md  `}
       style={{ backgroundColor: bgColor, color: color, border: `2px solid ${bgColorIcon}` }}
-      onClick={onClick} 
+      onClick={onClick}
     >
       {/* Icon Container */}
       <div

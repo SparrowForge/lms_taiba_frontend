@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   CalculatorOutlined,
   CodeOutlined,
@@ -6,18 +6,18 @@ import {
   ExceptionOutlined,
   ExperimentOutlined,
   FileTextOutlined,
-} from "@ant-design/icons";
-import { Button, Card } from "antd";
-import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+} from '@ant-design/icons';
+import { Button, Card } from 'antd';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
-import { useCourseAssignments } from "@/hooks/useCourseAssignments";
-import { useLocalization } from "@/hooks/useLocalization";
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { useCourseAssignments } from '@/hooks/useCourseAssignments';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import IconBgColoredCard from "../dashboardui/cards/IconBgColoredCard";
-import CourseAssignmentDetailsDrawer from "@/components/courseAssignments/CourseAssignmentDetailsDrawer";
-import { useRouter } from "next/navigation";
+import IconBgColoredCard from '../dashboardui/cards/IconBgColoredCard';
+import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
+import { useRouter } from 'next/navigation';
 
 const getAssignmentStyle = (assignment: any) => {
   switch (assignment.type?.toLowerCase()) {
@@ -72,15 +72,15 @@ const getAssignmentTag = (assignment: any) => {
   const dueDate = dayjs(assignment.dueDate);
   const publishDate = dayjs(assignment.publishDate);
 
-  if (dueDate.diff(today, "day") <= 1) return "Urgent";
-  if (publishDate.diff(today, "day") <= 0 && publishDate.diff(today, "day") >= -1) return "Started";
-  if (assignment.maxAttempt && assignment.maxAttempt <= 1) return "Important";
-  if (assignment.type?.toLowerCase() === "project" || assignment.maxAttempt > 1)
-    return "Group Work";
-  if (assignment.type?.toLowerCase() === "quiz") return "Quiz";
-  if (assignment.type?.toLowerCase() === "lab") return "Lab";
+  if (dueDate.diff(today, 'day') <= 1) return 'Urgent';
+  if (publishDate.diff(today, 'day') <= 0 && publishDate.diff(today, 'day') >= -1) return 'Started';
+  if (assignment.maxAttempt && assignment.maxAttempt <= 1) return 'Important';
+  if (assignment.type?.toLowerCase() === 'project' || assignment.maxAttempt > 1)
+    return 'Group Work';
+  if (assignment.type?.toLowerCase() === 'quiz') return 'Quiz';
+  if (assignment.type?.toLowerCase() === 'lab') return 'Lab';
 
-  return assignment.tag || "";
+  return assignment.tag || '';
 };
 
 const UpcomingAssignments = () => {
@@ -98,13 +98,11 @@ const UpcomingAssignments = () => {
   }, [loadCourseAssignments]);
 
   const upcomingAssignments = (courseAssignments || []).filter(
-    (a: any) =>
-      dayjs(a.dueDate).isAfter(dayjs(), "day") ||
-      dayjs(a.dueDate).isSame(dayjs(), "day")
+    (a: any) => dayjs(a.dueDate).isAfter(dayjs(), 'day') || dayjs(a.dueDate).isSame(dayjs(), 'day'),
   );
 
   const sortedAssignments = [...upcomingAssignments].sort(
-    (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf()
+    (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf(),
   );
 
   const handleViewDetails = (courseAssignmentId: number) => {
@@ -115,13 +113,13 @@ const UpcomingAssignments = () => {
   return (
     <Card className="rounded-2xl shadow-sm min-h-full mb-6">
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-base font-semibold">
-          {t(LOCALE_KEYS.UPCOMING_ASSIGNMENT)}
-        </h2>
-        <Button type="text" style={{ padding: 0 }}  onClick={() => router.push('/course-assignments')}>
-          <span className="text-blue-600 cursor-pointer">
-            {t(LOCALE_KEYS.ALL_TASKS)}
-          </span>
+        <h2 className="text-base font-semibold">{t(LOCALE_KEYS.UPCOMING_ASSIGNMENT)}</h2>
+        <Button
+          type="text"
+          style={{ padding: 0 }}
+          onClick={() => router.push('/course-assignments')}
+        >
+          <span className="text-blue-600 cursor-pointer">{t(LOCALE_KEYS.ALL_TASKS)}</span>
         </Button>
       </div>
 
@@ -129,24 +127,18 @@ const UpcomingAssignments = () => {
         {sortedAssignments.map((a: any, i: number) => {
           const style = getAssignmentStyle(a);
           const tag = getAssignmentTag(a);
-          const isUrgent = tag === "Urgent";
+          const isUrgent = tag === 'Urgent';
 
           return (
             <IconBgColoredCard
               key={i}
               text={a.title}
-              due={dayjs(a.dueDate).format("MMM D, YYYY")}
+              due={dayjs(a.dueDate).format('MMM D, YYYY')}
               tag={tag}
-              color={isUrgent ? "#ef4444" : style.color}
-              bgColor={isUrgent ? "#fef2f2" : style.bgColor}
-              bgColorIcon={isUrgent ? "#fee2e2" : style.bgColorIcon}
-              icon={
-                isUrgent ? (
-                  <ExceptionOutlined style={{ color: "#ef4444" }} />
-                ) : (
-                  style.icon
-                )
-              }
+              color={isUrgent ? '#ef4444' : style.color}
+              bgColor={isUrgent ? '#fef2f2' : style.bgColor}
+              bgColorIcon={isUrgent ? '#fee2e2' : style.bgColorIcon}
+              icon={isUrgent ? <ExceptionOutlined style={{ color: '#ef4444' }} /> : style.icon}
               rounded="md"
               onClick={() => handleViewDetails(a.id)}
             />
@@ -158,7 +150,7 @@ const UpcomingAssignments = () => {
         courseAssignmentId={selectedDetailsCourseAssignmentId}
         visible={detailsDrawerVisible}
         onClose={() => setDetailsDrawerVisible(false)}
-       onEdit={() => {}}
+        onEdit={() => {}}
       />
     </Card>
   );
