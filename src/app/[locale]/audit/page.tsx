@@ -1,25 +1,25 @@
 'use client';
 
-import {DeleteOutlined} from '@ant-design/icons';
-import {Button, Modal, Tag} from 'antd';
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Modal, Tag } from 'antd';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
 import AuditDetailsDrawer from '@/components/audits/AuditDetailsDrawer';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
-import {useAudit} from '@/hooks/useAudit';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useAudit } from '@/hooks/useAudit';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IAudit} from '@/types/audit';
+import { IAudit } from '@/types/audit';
 
 export default function AuditPage() {
   const { t } = useLocalization();

@@ -1,31 +1,31 @@
 'use client';
 
-import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd';
+import { Button, DatePicker, Form, Input, InputNumber, Select, Space } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {EntityType, FileCategory, FileType, Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { EntityType, FileCategory, FileType, Status } from '@/enums';
 
-import {useCourseAssignments} from '@/hooks/useCourseAssignments';
-import {useCourseAssignmentSubmissions} from '@/hooks/useCourseAssignmentSubmissions';
-import {useFaculties} from '@/hooks/useFaculties';
-import {useFiles} from '@/hooks/useFiles';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudents} from '@/hooks/useStudents';
+import { useCourseAssignments } from '@/hooks/useCourseAssignments';
+import { useCourseAssignmentSubmissions } from '@/hooks/useCourseAssignmentSubmissions';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useFiles } from '@/hooks/useFiles';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudents } from '@/hooks/useStudents';
 
 import {
-    ICourseAssignmentSubmission,
-    ICourseAssignmentSubmissionCreate,
-    ICourseAssignmentSubmissionUpdate,
+  ICourseAssignmentSubmission,
+  ICourseAssignmentSubmissionCreate,
+  ICourseAssignmentSubmissionUpdate,
 } from '@/types/courseAssignmentSubmission';
 
 import FormLayout from '../layout/FormLayout';
 import FileUpload from '../ui/FileUpload';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 const { TextArea } = Input;
 

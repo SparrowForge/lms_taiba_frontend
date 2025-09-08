@@ -1,5 +1,5 @@
-import {IFeeStructure} from './feeStructure';
-import {ISemester} from './semester';
+import { IFeeStructure } from './feeStructure';
+import { ISemester } from './semester';
 
 export interface IFeeInstallmentPlan {
   id: number;

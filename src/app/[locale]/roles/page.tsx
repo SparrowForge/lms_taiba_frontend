@@ -1,25 +1,25 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import RoleDetailsDrawer from '@/components/roles/RoleDetailsDrawer';
 import RoleFormDrawer from '@/components/roles/RoleFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRoles} from '@/hooks/useRoles';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRoles } from '@/hooks/useRoles';
 
-import {IBranch} from '@/types/branch';
-import {IRole} from '@/types/role';
+import { IBranch } from '@/types/branch';
+import { IRole } from '@/types/role';
 
 export default function RolesPage() {
   const { t } = useLocalization();

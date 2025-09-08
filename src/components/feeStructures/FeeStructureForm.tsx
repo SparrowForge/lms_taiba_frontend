@@ -1,24 +1,24 @@
 'use client';
 
-import {Button, Form, Input, InputNumber, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {DISCOUNT_TYPE_OPTIONS, PAYMENT_TYPE_OPTIONS, Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { DISCOUNT_TYPE_OPTIONS, PAYMENT_TYPE_OPTIONS, Status } from '@/enums';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useFeeStructures} from '@/hooks/useFeeStructures';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSemesters} from '@/hooks/useSemesters';
+import { useBatches } from '@/hooks/useBatches';
+import { useFeeStructures } from '@/hooks/useFeeStructures';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
 
-import {getErrorMessage} from '@/types/errors';
-import {IFeeStructure, IFeeStructureCreate, IFeeStructureUpdate} from '@/types/feeStructure';
+import { getErrorMessage } from '@/types/errors';
+import { IFeeStructure, IFeeStructureCreate, IFeeStructureUpdate } from '@/types/feeStructure';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelect, StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelect, StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface FeeStructureFormProps {
   mode: 'create' | 'edit';

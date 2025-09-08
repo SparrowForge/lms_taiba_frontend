@@ -1,27 +1,38 @@
 'use client';
 
-import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Card, Col, Form, InputNumber, message, Row, Select, Space, Typography,} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
-
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
-
-import {useBatches} from '@/hooks/useBatches';
-import {useFaculties} from '@/hooks/useFaculties';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSemesters} from '@/hooks/useSemesters';
-import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
-import {useSubjects} from '@/hooks/useSubjects';
-
-import {getErrorMessage} from '@/types/errors';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import {
-    IFacultyAssignment,
-    ISemesterSubjectCreate,
-    ISemesterSubjectMultipleCreate,
-    ISemesterSubjectUpdate,
+  Button,
+  Card,
+  Col,
+  Form,
+  InputNumber,
+  message,
+  Row,
+  Select,
+  Space,
+  Typography,
+} from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
+
+import { useBatches } from '@/hooks/useBatches';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSemesterSubjects } from '@/hooks/useSemesterSubjects';
+import { useSubjects } from '@/hooks/useSubjects';
+
+import { getErrorMessage } from '@/types/errors';
+import {
+  IFacultyAssignment,
+  ISemesterSubjectCreate,
+  ISemesterSubjectMultipleCreate,
+  ISemesterSubjectUpdate,
 } from '@/types/semesterSubject';
 
 const { Text, Title } = Typography;

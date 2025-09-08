@@ -1,22 +1,26 @@
 'use client';
 
-import {Button, Form, Input, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
 
-import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useEmploymentTypes } from '@/hooks/useEmploymentTypes';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IEmploymentType, IEmploymentTypeCreate, IEmploymentTypeUpdate,} from '@/types/employmentType';
-import {getErrorMessage} from '@/types/errors';
+import {
+  IEmploymentType,
+  IEmploymentTypeCreate,
+  IEmploymentTypeUpdate,
+} from '@/types/employmentType';
+import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';

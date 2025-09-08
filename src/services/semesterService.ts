@@ -1,7 +1,12 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ISemester, ISemesterCreate, ISemesterUpdate, ISemesterWithSubjectsAndFaculty,} from '@/types/semester';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  ISemester,
+  ISemesterCreate,
+  ISemesterUpdate,
+  ISemesterWithSubjectsAndFaculty,
+} from '@/types/semester';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const semesterService = {
   // Get all semesters with pagination and search

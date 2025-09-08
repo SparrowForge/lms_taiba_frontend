@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useScheduleTypes} from '@/hooks/useScheduleTypes';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useScheduleTypes } from '@/hooks/useScheduleTypes';
 
-import {IScheduleType} from '@/types/scheduleType';
+import { IScheduleType } from '@/types/scheduleType';
 
-import {useCreateScheduleTypeDetailsConfig} from './scheduleTypeConfig';
+import { useCreateScheduleTypeDetailsConfig } from './scheduleTypeConfig';
 
 interface ScheduleTypeDetailsDrawerProps {
   scheduleTypeId?: number;

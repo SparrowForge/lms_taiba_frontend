@@ -1,11 +1,11 @@
-import {useState} from 'react';
-import {toast} from 'react-toastify';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IFileUploadRequest, IFileUploadResponse} from '@/types/file';
+import { IFileUploadRequest, IFileUploadResponse } from '@/types/file';
 
-import {fileService} from '@/services/fileService';
+import { fileService } from '@/services/fileService';
 
 export const useFiles = () => {
   const [uploadStatus, setUploadStatus] = useState<Status>(Status.INITIAL);

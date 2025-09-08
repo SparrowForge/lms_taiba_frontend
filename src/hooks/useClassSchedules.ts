@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate} from '@/types/classSchedule';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate } from '@/types/classSchedule';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {classScheduleService} from '@/services/classScheduleService';
+import { classScheduleService } from '@/services/classScheduleService';
 
 import {
-    addClassSchedule,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteClassSchedule,
-    setActionStatus,
-    setClassSchedules,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedClassSchedule,
-    updateClassSchedule,
+  addClassSchedule,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteClassSchedule,
+  setActionStatus,
+  setClassSchedules,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedClassSchedule,
+  updateClassSchedule,
 } from '@/store/slices/classScheduleSlice';
 
 export const useClassSchedules = () => {

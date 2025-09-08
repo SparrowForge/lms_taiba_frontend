@@ -1,32 +1,32 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
-import {IPanelWithMenus} from '@/types/panel';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IMenu, IMenuCreate, IMenuUpdate } from '@/types/menu';
+import { IPanelWithMenus } from '@/types/panel';
 
-import {menuService} from '@/services/menuService';
+import { menuService } from '@/services/menuService';
 
 import {
-    addMenu,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteMenu,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setMenus,
-    setMyMenus,
-    setMyMenusStatus,
-    setPagination,
-    setPanelsWithMenus,
-    setPanelsWithMenusStatus,
-    setSelectedMenu,
-    updateMenu,
+  addMenu,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteMenu,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setMenus,
+  setMyMenus,
+  setMyMenusStatus,
+  setPagination,
+  setPanelsWithMenus,
+  setPanelsWithMenusStatus,
+  setSelectedMenu,
+  updateMenu,
 } from '@/store/slices/menuSlice';
 
 export const useMenus = () => {

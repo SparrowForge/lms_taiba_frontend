@@ -1,25 +1,25 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import MenuDetailsDrawer from '@/components/menus/MenuDetailsDrawer';
 import MenuFormDrawer from '@/components/menus/MenuFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useMenus} from '@/hooks/useMenus';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useMenus } from '@/hooks/useMenus';
 
-import {IMenu} from '@/types/menu';
-import {IPanel} from '@/types/panel';
+import { IMenu } from '@/types/menu';
+import { IPanel } from '@/types/panel';
 
 export default function MenusPage() {
   const { t } = useLocalization();

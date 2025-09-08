@@ -1,10 +1,10 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IPaginationMeta, IStatusState} from '@/types/common';
-import {IMenu} from '@/types/menu';
-import {IPanelWithMenus} from '@/types/panel';
+import { IPaginationMeta, IStatusState } from '@/types/common';
+import { IMenu } from '@/types/menu';
+import { IPanelWithMenus } from '@/types/panel';
 
 // State interface
 interface IMenusState {

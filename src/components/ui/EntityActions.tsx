@@ -1,10 +1,10 @@
-import {DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined} from '@ant-design/icons';
-import {Button, Dropdown, MenuProps, Spin} from 'antd';
-import React, {useState} from 'react';
+import { DeleteOutlined, EditOutlined, EyeOutlined, MoreOutlined } from '@ant-design/icons';
+import { Button, Dropdown, MenuProps, Spin } from 'antd';
+import React, { useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 interface EntityActionsProps {
   id: number;

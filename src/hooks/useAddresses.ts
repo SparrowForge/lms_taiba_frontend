@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IAddress, IAddressCreate, IAddressUpdate} from '@/types/address';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IAddress, IAddressCreate, IAddressUpdate } from '@/types/address';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {addressService} from '@/services/addressService';
+import { addressService } from '@/services/addressService';
 
 import {
-    addAddress,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteAddress,
-    setActionStatus,
-    setAddresses,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedAddress,
-    updateAddress,
+  addAddress,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteAddress,
+  setActionStatus,
+  setAddresses,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedAddress,
+  updateAddress,
 } from '@/store/slices/addressSlice';
 
 export const useAddresses = () => {

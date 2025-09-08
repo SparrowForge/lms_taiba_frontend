@@ -1,17 +1,17 @@
 'use client';
 
-import {LineChartOutlined} from '@ant-design/icons';
-import {Card, Col, Row, Typography} from 'antd';
+import { LineChartOutlined } from '@ant-design/icons';
+import { Card, Col, Row, Typography } from 'antd';
 import Image from 'next/image';
-import {useLocale} from 'next-intl';
+import { useLocale } from 'next-intl';
 import React from 'react';
-import {FaChalkboardTeacher} from 'react-icons/fa';
-import {IoIosPeople} from 'react-icons/io';
-import {PiStudentFill} from 'react-icons/pi';
+import { FaChalkboardTeacher } from 'react-icons/fa';
+import { IoIosPeople } from 'react-icons/io';
+import { PiStudentFill } from 'react-icons/pi';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const { Title, Text } = Typography;
 

@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {useCreateRoomTypeDetailsConfig} from '@/components/roomTypes/roomTypeConfig';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { useCreateRoomTypeDetailsConfig } from '@/components/roomTypes/roomTypeConfig';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRoomTypes} from '@/hooks/useRoomTypes';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRoomTypes } from '@/hooks/useRoomTypes';
 
-import {IRoomType} from '@/types/roomType';
+import { IRoomType } from '@/types/roomType';
 
 export default function RoomTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedRoomType, detailsStatus, loadRoomType } = useRoomTypes();

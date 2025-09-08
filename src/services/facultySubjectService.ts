@@ -1,7 +1,11 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate,} from '@/types/facultySubject';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IFacultySubject,
+  IFacultySubjectCreate,
+  IFacultySubjectUpdate,
+} from '@/types/facultySubject';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const facultySubjectService = {
   // Get all faculty subjects with pagination and search

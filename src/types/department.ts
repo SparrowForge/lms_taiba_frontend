@@ -1,5 +1,5 @@
-import {IBranch} from './branch';
-import {IFaculty} from './faculty';
+import { IBranch } from './branch';
+import { IFaculty } from './faculty';
 
 export interface IDepartment {
   id: number;

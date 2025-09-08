@@ -1,7 +1,13 @@
 'use client';
 
-import {BookOutlined, FileTextOutlined, PlusOutlined, TeamOutlined, UserOutlined,} from '@ant-design/icons';
-import {Button, Card} from 'antd';
+import {
+  BookOutlined,
+  FileTextOutlined,
+  PlusOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Button, Card } from 'antd';
 
 interface QuickAction {
   title: string;

@@ -1,25 +1,25 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import CourseDetailsDrawer from '@/components/courses/CourseDetailsDrawer';
 import CourseFormDrawer from '@/components/courses/CourseFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import {useCourses} from '@/hooks/useCourses';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useCourses } from '@/hooks/useCourses';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourse} from '@/types/course';
-import {IDepartment} from '@/types/department';
+import { ICourse } from '@/types/course';
+import { IDepartment } from '@/types/department';
 
 export default function CoursesPage() {
   const { t } = useLocalization();

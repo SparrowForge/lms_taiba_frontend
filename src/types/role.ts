@@ -1,4 +1,4 @@
-import {IBranch} from './branch';
+import { IBranch } from './branch';
 
 export interface IRole {
   id: number;

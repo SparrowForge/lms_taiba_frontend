@@ -1,4 +1,4 @@
-import {Card} from 'antd';
+import { Card } from 'antd';
 
 function FormLayout({ children }: { children: React.ReactNode }) {
   return (

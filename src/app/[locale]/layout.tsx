@@ -1,23 +1,23 @@
 import '@ant-design/v5-patch-for-react-19';
 // eslint-disable-next-line import/order
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 
 // eslint-disable-next-line import/order
-import {Geist, Geist_Mono} from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 
 import './globals.css';
 import 'antd/dist/reset.css';
-import {dir} from 'i18next';
-import {notFound} from 'next/navigation';
-import {hasLocale, NextIntlClientProvider} from 'next-intl';
-import {getMessages} from 'next-intl/server';
+import { dir } from 'i18next';
+import { notFound } from 'next/navigation';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 
-import {routing} from '@/i18n/routing';
+import { routing } from '@/i18n/routing';
 
-import {AuthInitializer} from '@/components/auth/AuthInitializer';
-import {SidebarProvider} from '@/components/layout/SidebarContext';
-import {AntdProvider} from '@/components/providers/AntdProvider';
-import {ReduxProvider} from '@/components/providers/ReduxProvider';
+import { AuthInitializer } from '@/components/auth/AuthInitializer';
+import { SidebarProvider } from '@/components/layout/SidebarContext';
+import { AntdProvider } from '@/components/providers/AntdProvider';
+import { ReduxProvider } from '@/components/providers/ReduxProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

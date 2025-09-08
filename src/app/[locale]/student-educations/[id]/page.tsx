@@ -2,19 +2,19 @@
 
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {useCreateStudentEducationDetailsConfig} from '@/components/studentEducations/studentEducationConfig';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { useCreateStudentEducationDetailsConfig } from '@/components/studentEducations/studentEducationConfig';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudentEducations} from '@/hooks/useStudentEducations';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudentEducations } from '@/hooks/useStudentEducations';
 
-import {IStudentEducation} from '@/types/studentEducation';
+import { IStudentEducation } from '@/types/studentEducation';
 
 export default function StudentEducationDetailPage({
   params,

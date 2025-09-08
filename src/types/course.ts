@@ -1,6 +1,6 @@
-import {ICourseType} from './courseType';
-import {IDepartment} from './department';
-import {IScheduleType} from './scheduleType';
+import { ICourseType } from './courseType';
+import { IDepartment } from './department';
+import { IScheduleType } from './scheduleType';
 
 export interface ICourse {
   id: number;

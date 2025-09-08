@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IStudentFamily, IStudentFamilyCreate, IStudentFamilyUpdate} from '@/types/studentFamily';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IStudentFamily, IStudentFamilyCreate, IStudentFamilyUpdate } from '@/types/studentFamily';
 
-import {studentFamilyService} from '@/services/studentFamilyService';
+import { studentFamilyService } from '@/services/studentFamilyService';
 
 import {
-    addStudentFamily,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteStudentFamily,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedStudentFamily,
-    setStudentFamilies,
-    updateStudentFamily,
+  addStudentFamily,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteStudentFamily,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedStudentFamily,
+  setStudentFamilies,
+  updateStudentFamily,
 } from '@/store/slices/studentFamilySlice';
 
 export const useStudentFamilies = () => {

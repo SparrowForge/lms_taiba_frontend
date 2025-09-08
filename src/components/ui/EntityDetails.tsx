@@ -1,6 +1,6 @@
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-import {EntityDetailsConfig, EntityDetailsContent} from './EntityDetailsContent';
+import { EntityDetailsConfig, EntityDetailsContent } from './EntityDetailsContent';
 
 // Generic EntityDetails component (Page version with navigation)
 export const EntityDetails = <T extends { id: number }>({

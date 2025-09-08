@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateBranchDetailsConfig} from '@/components/branches/branchConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateBranchDetailsConfig } from '@/components/branches/branchConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useBranches} from '@/hooks/useBranches';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useBranches } from '@/hooks/useBranches';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IBranch} from '@/types/branch';
+import { IBranch } from '@/types/branch';
 
 export default function BranchDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedBranch, detailsStatus, loadBranch } = useBranches();

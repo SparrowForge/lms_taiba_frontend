@@ -1,8 +1,8 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IDepartment} from '@/types/department';
+import { IDepartment } from '@/types/department';
 
 export const getDepartmentDisplayName = (department: IDepartment) => department.name;
 

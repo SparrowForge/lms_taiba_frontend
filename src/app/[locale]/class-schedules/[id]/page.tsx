@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateClassScheduleDetailsConfig} from '@/components/classSchedules/classScheduleConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateClassScheduleDetailsConfig } from '@/components/classSchedules/classScheduleConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useClassSchedules} from '@/hooks/useClassSchedules';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useClassSchedules } from '@/hooks/useClassSchedules';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IClassSchedule} from '@/types/classSchedule';
+import { IClassSchedule } from '@/types/classSchedule';
 
 export default function ClassScheduleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedClassSchedule, detailsStatus, loadClassSchedule } = useClassSchedules();

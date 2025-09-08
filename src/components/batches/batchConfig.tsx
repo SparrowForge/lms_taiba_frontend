@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IBatch} from '@/types/batch';
+import { IBatch } from '@/types/batch';
 
 export const getBatchDisplayName = (batch: IBatch) => {
   return batch.name || `Batch #${batch.id}`;

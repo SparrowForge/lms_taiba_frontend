@@ -1,8 +1,8 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourseAssignment} from '@/types/courseAssignment';
+import { ICourseAssignment } from '@/types/courseAssignment';
 
 export const getCourseAssignmentDisplayName = (courseAssignment: ICourseAssignment) =>
   courseAssignment.title;

@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useDepartments} from '@/hooks/useDepartments';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useDepartments } from '@/hooks/useDepartments';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IDepartment} from '@/types/department';
+import { IDepartment } from '@/types/department';
 
-import {useCreateDepartmentDetailsConfig} from './departmentConfig';
+import { useCreateDepartmentDetailsConfig } from './departmentConfig';
 
 interface DepartmentDetailsDrawerProps {
   departmentId?: number;

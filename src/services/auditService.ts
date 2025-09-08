@@ -1,7 +1,7 @@
-import {IAudit} from '@/types/audit';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import { IAudit } from '@/types/audit';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const auditService = {
   // Get all audit logs with pagination and search

@@ -1,26 +1,30 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
-
-import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate,} from '@/types/courseMaterial';
-
-import {courseMaterialService} from '@/services/courseMaterialService';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
 import {
-    addCourseMaterial,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteCourseMaterial,
-    setActionStatus,
-    setCourseMaterials,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedCourseMaterial,
-    updateCourseMaterial,
+  ICourseMaterial,
+  ICourseMaterialCreate,
+  ICourseMaterialUpdate,
+} from '@/types/courseMaterial';
+
+import { courseMaterialService } from '@/services/courseMaterialService';
+
+import {
+  addCourseMaterial,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteCourseMaterial,
+  setActionStatus,
+  setCourseMaterials,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedCourseMaterial,
+  updateCourseMaterial,
 } from '@/store/slices/courseMaterialSlice';
 
 export const useCourseMaterials = () => {

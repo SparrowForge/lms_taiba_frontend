@@ -1,16 +1,16 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import CourseAssignmentSubmissionForm from '@/components/courseAssignmentSubmissions/CourseAssignmentSubmissionForm';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {PageHeader} from '@/components/ui/PageHeader';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 export default function CreateCourseAssignmentSubmissionPage() {
   const { t } = useLocalization();

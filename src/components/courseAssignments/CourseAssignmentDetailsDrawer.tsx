@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useCourseAssignments} from '@/hooks/useCourseAssignments';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useCourseAssignments } from '@/hooks/useCourseAssignments';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourseAssignment} from '@/types/courseAssignment';
+import { ICourseAssignment } from '@/types/courseAssignment';
 
-import {useCreateCourseAssignmentDetailsConfig} from './courseAssignmentConfig';
+import { useCreateCourseAssignmentDetailsConfig } from './courseAssignmentConfig';
 
 interface CourseAssignmentDetailsDrawerProps {
   courseAssignmentId?: number;

@@ -1,22 +1,26 @@
 'use client';
 
-import {Button, Form, InputNumber, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, InputNumber, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useFaculties} from '@/hooks/useFaculties';
-import {useFacultySubjects} from '@/hooks/useFacultySubjects';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSemesters} from '@/hooks/useSemesters';
-import {useSubjects} from '@/hooks/useSubjects';
+import { useBatches } from '@/hooks/useBatches';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useFacultySubjects } from '@/hooks/useFacultySubjects';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSubjects } from '@/hooks/useSubjects';
 
-import {getErrorMessage} from '@/types/errors';
-import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate,} from '@/types/facultySubject';
+import { getErrorMessage } from '@/types/errors';
+import {
+  IFacultySubject,
+  IFacultySubjectCreate,
+  IFacultySubjectUpdate,
+} from '@/types/facultySubject';
 
 import FormLayout from '../layout/FormLayout';
 

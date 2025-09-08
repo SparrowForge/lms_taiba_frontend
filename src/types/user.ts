@@ -1,4 +1,4 @@
-import {IPaginationMeta, IStatusState} from './common';
+import { IPaginationMeta, IStatusState } from './common';
 
 // User interface matching the API response
 export interface IUser {

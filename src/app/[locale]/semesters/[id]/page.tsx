@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {useCreateSemesterDetailsConfig} from '@/components/semesters/semesterConfig';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { useCreateSemesterDetailsConfig } from '@/components/semesters/semesterConfig';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSemesters} from '@/hooks/useSemesters';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
 
-import {ISemester} from '@/types/semester';
+import { ISemester } from '@/types/semester';
 
 export default function SemesterDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedSemester, detailsStatus, loadSemester } = useSemesters();

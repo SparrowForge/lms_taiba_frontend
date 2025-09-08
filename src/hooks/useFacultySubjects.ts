@@ -1,27 +1,31 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IFacultySubject, IFacultySubjectCreate, IFacultySubjectUpdate,} from '@/types/facultySubject';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IFacultySubject,
+  IFacultySubjectCreate,
+  IFacultySubjectUpdate,
+} from '@/types/facultySubject';
 
-import {facultySubjectService} from '@/services/facultySubjectService';
+import { facultySubjectService } from '@/services/facultySubjectService';
 
 import {
-    addFacultySubject,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteFacultySubject,
-    setActionStatus,
-    setDetailsStatus,
-    setFacultySubjects,
-    setListStatus,
-    setPagination,
-    setSelectedFacultySubject,
-    updateFacultySubject,
+  addFacultySubject,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteFacultySubject,
+  setActionStatus,
+  setDetailsStatus,
+  setFacultySubjects,
+  setListStatus,
+  setPagination,
+  setSelectedFacultySubject,
+  updateFacultySubject,
 } from '@/store/slices/facultySubjectSlice';
 
 export const useFacultySubjects = () => {

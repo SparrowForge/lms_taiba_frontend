@@ -1,21 +1,21 @@
 'use client';
 
-import {Button, Form, Input, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
 
-import {StatusSelectFormItem} from '@/components/ui/StatusSelect';
+import { StatusSelectFormItem } from '@/components/ui/StatusSelect';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useScheduleTypes} from '@/hooks/useScheduleTypes';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useScheduleTypes } from '@/hooks/useScheduleTypes';
 
-import {getErrorMessage} from '@/types/errors';
-import {IScheduleType, IScheduleTypeCreate, IScheduleTypeUpdate} from '@/types/scheduleType';
+import { getErrorMessage } from '@/types/errors';
+import { IScheduleType, IScheduleTypeCreate, IScheduleTypeUpdate } from '@/types/scheduleType';
 
 import FormLayout from '../layout/FormLayout';
 

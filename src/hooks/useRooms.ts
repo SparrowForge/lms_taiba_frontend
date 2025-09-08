@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IRoom, IRoomCreate, IRoomUpdate} from '@/types/room';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IRoom, IRoomCreate, IRoomUpdate } from '@/types/room';
 
-import {roomService} from '@/services/roomService';
+import { roomService } from '@/services/roomService';
 
 import {
-    addRoom,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteRoom,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setRooms,
-    setSelectedRoom,
-    updateRoom,
+  addRoom,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteRoom,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setRooms,
+  setSelectedRoom,
+  updateRoom,
 } from '@/store/slices/roomSlice';
 
 export const useRooms = () => {

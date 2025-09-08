@@ -1,7 +1,7 @@
 'use client';
 
-import {EyeOutlined} from '@ant-design/icons';
-import {Avatar, Button, Card, List, Typography} from 'antd';
+import { EyeOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, List, Typography } from 'antd';
 
 const { Text } = Typography;
 

@@ -1,8 +1,8 @@
-import {Button, Card} from 'antd';
+import { Button, Card } from 'antd';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const data = [
   {

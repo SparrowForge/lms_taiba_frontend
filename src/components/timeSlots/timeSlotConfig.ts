@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ITimeSlot} from '@/types/timeSlot';
+import { ITimeSlot } from '@/types/timeSlot';
 
 export const getTimeSlotDisplayName = (item: ITimeSlot) => item.name || `Time Slot #${item.id}`;
 export const getTimeSlotInitials = (item: ITimeSlot) =>

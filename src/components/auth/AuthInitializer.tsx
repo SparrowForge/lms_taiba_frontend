@@ -1,8 +1,8 @@
 'use client';
 
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
-import {useAuth} from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AuthInitializerProps {
   children: React.ReactNode;

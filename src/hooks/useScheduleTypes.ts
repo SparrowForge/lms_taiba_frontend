@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IScheduleType, IScheduleTypeCreate, IScheduleTypeUpdate} from '@/types/scheduleType';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IScheduleType, IScheduleTypeCreate, IScheduleTypeUpdate } from '@/types/scheduleType';
 
-import {scheduleTypeService} from '@/services/scheduleTypeService';
+import { scheduleTypeService } from '@/services/scheduleTypeService';
 
 import {
-    addScheduleType,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteScheduleType,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setScheduleTypes,
-    setSelectedScheduleType,
-    updateScheduleType,
+  addScheduleType,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteScheduleType,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setScheduleTypes,
+  setSelectedScheduleType,
+  updateScheduleType,
 } from '@/store/slices/scheduleTypeSlice';
 
 export const useScheduleTypes = () => {

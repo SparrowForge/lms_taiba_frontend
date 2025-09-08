@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IEmploymentType} from '@/types/employmentType';
+import { IEmploymentType } from '@/types/employmentType';
 
 export const getEmploymentTypeDisplayName = (item: IEmploymentType) =>
   item.name || `Employment Type #${item.id}`;

@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {Status} from '@/enums';
+import { Status } from '@/enums';
 
-import {IPaginationMeta, IStatusState} from '@/types/common';
-import {IRoomType} from '@/types/roomType';
+import { IPaginationMeta, IStatusState } from '@/types/common';
+import { IRoomType } from '@/types/roomType';
 
 interface IRoomTypesState {
   listStatus: IStatusState;

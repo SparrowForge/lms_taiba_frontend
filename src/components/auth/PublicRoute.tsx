@@ -1,9 +1,9 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
-import {useEffect} from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-import {useAuth} from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 interface PublicRouteProps {
   children: React.ReactNode;

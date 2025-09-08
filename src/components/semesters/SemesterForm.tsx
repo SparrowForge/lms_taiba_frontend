@@ -1,24 +1,24 @@
 'use client';
 
-import {Button, DatePicker, Form, Input, InputNumber, Select, Space, Switch} from 'antd';
+import { Button, DatePicker, Form, Input, InputNumber, Select, Space, Switch } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useSemesters} from '@/hooks/useSemesters';
+import { useBatches } from '@/hooks/useBatches';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
 
-import {getErrorMessage} from '@/types/errors';
-import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
+import { getErrorMessage } from '@/types/errors';
+import { ISemester, ISemesterCreate, ISemesterUpdate } from '@/types/semester';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface SemesterFormProps {
   mode: 'create' | 'edit';

@@ -1,10 +1,10 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IFacultySubject} from '@/types/facultySubject';
+import { IFacultySubject } from '@/types/facultySubject';
 
 export const getFacultySubjectDisplayName = (facultySubject: IFacultySubject) => {
   return `${facultySubject.faculty?.fullName || 'Faculty'} - ${facultySubject.subject?.name || 'Subject'}`;

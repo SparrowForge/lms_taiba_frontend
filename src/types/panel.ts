@@ -1,4 +1,4 @@
-import {IMenu} from './menu';
+import { IMenu } from './menu';
 
 export interface IPanel {
   id: number;

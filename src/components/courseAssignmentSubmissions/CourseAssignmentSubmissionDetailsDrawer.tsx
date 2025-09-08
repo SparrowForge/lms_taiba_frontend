@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useCourseAssignmentSubmissions} from '@/hooks/useCourseAssignmentSubmissions';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useCourseAssignmentSubmissions } from '@/hooks/useCourseAssignmentSubmissions';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourseAssignmentSubmission} from '@/types/courseAssignmentSubmission';
+import { ICourseAssignmentSubmission } from '@/types/courseAssignmentSubmission';
 
-import {useCreateCourseAssignmentSubmissionDetailsConfig} from './courseAssignmentSubmissionConfig';
+import { useCreateCourseAssignmentSubmissionDetailsConfig } from './courseAssignmentSubmissionConfig';
 
 interface CourseAssignmentSubmissionDetailsDrawerProps {
   courseAssignmentSubmissionId?: number;

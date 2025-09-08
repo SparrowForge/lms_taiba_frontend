@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IDepartment, IDepartmentCreate, IDepartmentUpdate} from '@/types/department';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IDepartment, IDepartmentCreate, IDepartmentUpdate } from '@/types/department';
 
-import {departmentService} from '@/services/departmentService';
+import { departmentService } from '@/services/departmentService';
 
 import {
-    addDepartment,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteDepartment,
-    setActionStatus,
-    setDepartments,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedDepartment,
-    updateDepartment,
+  addDepartment,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteDepartment,
+  setActionStatus,
+  setDepartments,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedDepartment,
+  updateDepartment,
 } from '@/store/slices/departmentSlice';
 
 export const useDepartments = () => {

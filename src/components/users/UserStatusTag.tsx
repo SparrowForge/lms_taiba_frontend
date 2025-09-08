@@ -1,4 +1,4 @@
-import {Tag} from 'antd';
+import { Tag } from 'antd';
 import React from 'react';
 
 interface UserStatusTagProps {

@@ -1,8 +1,8 @@
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IAttendance} from '@/types/attendance';
+import { IAttendance } from '@/types/attendance';
 
 export const getAttendanceDisplayName = (attendance: IAttendance) =>
   `${attendance.course?.name} - ${attendance.subject?.name} - Class ${attendance.classNo}`;

@@ -1,24 +1,24 @@
 'use client';
 
-import {useRouter, useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import StudentFamilyDetailsDrawer from '@/components/studentFamilies/StudentFamilyDetailsDrawer';
 import StudentFamilyFormDrawer from '@/components/studentFamilies/StudentFamilyFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
-import {EntityConfig, EntityList} from '@/components/ui/EntityList';
+import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudentFamilies} from '@/hooks/useStudentFamilies';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudentFamilies } from '@/hooks/useStudentFamilies';
 
-import {IStudent} from '@/types/student';
-import {IStudentFamily} from '@/types/studentFamily';
+import { IStudent } from '@/types/student';
+import { IStudentFamily } from '@/types/studentFamily';
 
 export default function StudentFamiliesPage() {
   const { t } = useLocalization();

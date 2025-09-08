@@ -1,20 +1,20 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
 import StudentProfileForm from '@/components/studentProfiles/StudentProfileForm';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
-import {PageHeader} from '@/components/ui/PageHeader';
+import { PageHeader } from '@/components/ui/PageHeader';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudentProfiles} from '@/hooks/useStudentProfiles';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudentProfiles } from '@/hooks/useStudentProfiles';
 
 export default function StudentProfileEditPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params);

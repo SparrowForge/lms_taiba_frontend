@@ -1,19 +1,19 @@
 'use client';
 
-import {Drawer} from 'antd';
-import React, {useEffect} from 'react';
+import { Drawer } from 'antd';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {EntityDetailsContent} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsContent } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useMenus} from '@/hooks/useMenus';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useMenus } from '@/hooks/useMenus';
 
-import {IMenu} from '@/types/menu';
+import { IMenu } from '@/types/menu';
 
-import {useCreateMenuDetailsConfig} from './menuConfig';
+import { useCreateMenuDetailsConfig } from './menuConfig';
 
 interface MenuDetailsDrawerProps {
   menuId?: number;

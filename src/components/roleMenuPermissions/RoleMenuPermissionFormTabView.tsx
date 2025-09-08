@@ -1,7 +1,7 @@
-import {Card, Tabs} from 'antd';
-import React, {useState} from 'react';
+import { Card, Tabs } from 'antd';
+import React, { useState } from 'react';
 
-import {IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate} from '@/types/roleMenuPermission';
+import { IRoleMenuPermissionCreate, IRoleMenuPermissionUpdate } from '@/types/roleMenuPermission';
 
 import RoleMenuPermissionFormMultiple from './RoleMenuPermissionFormMultiple';
 import RoleMenuPermissionFormSingle from './RoleMenuPermissionFormSingle';

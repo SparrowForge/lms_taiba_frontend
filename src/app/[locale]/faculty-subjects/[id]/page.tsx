@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateFacultySubjectDetailsConfig} from '@/components/facultySubjects/facultySubjectConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateFacultySubjectDetailsConfig } from '@/components/facultySubjects/facultySubjectConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useFacultySubjects} from '@/hooks/useFacultySubjects';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useFacultySubjects } from '@/hooks/useFacultySubjects';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IFacultySubject} from '@/types/facultySubject';
+import { IFacultySubject } from '@/types/facultySubject';
 
 export default function FacultySubjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedFacultySubject, detailsStatus, loadFacultySubject } = useFacultySubjects();

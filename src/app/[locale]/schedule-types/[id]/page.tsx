@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {useCreateScheduleTypeDetailsConfig} from '@/components/scheduleTypes/scheduleTypeConfig';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { useCreateScheduleTypeDetailsConfig } from '@/components/scheduleTypes/scheduleTypeConfig';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useScheduleTypes} from '@/hooks/useScheduleTypes';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useScheduleTypes } from '@/hooks/useScheduleTypes';
 
-import {IScheduleType} from '@/types/scheduleType';
+import { IScheduleType } from '@/types/scheduleType';
 
 export default function ScheduleTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedScheduleType, detailsStatus, loadScheduleType } = useScheduleTypes();

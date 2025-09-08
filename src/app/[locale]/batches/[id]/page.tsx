@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateBatchDetailsConfig} from '@/components/batches/batchConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateBatchDetailsConfig } from '@/components/batches/batchConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useBatches } from '@/hooks/useBatches';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IBatch} from '@/types/batch';
+import { IBatch } from '@/types/batch';
 
 export default function BatchDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedBatch, detailsStatus, loadBatch } = useBatches();

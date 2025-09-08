@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateDepartmentDetailsConfig} from '@/components/departments/departmentConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateDepartmentDetailsConfig } from '@/components/departments/departmentConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useDepartments} from '@/hooks/useDepartments';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useDepartments } from '@/hooks/useDepartments';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IDepartment} from '@/types/department';
+import { IDepartment } from '@/types/department';
 
 export default function DepartmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedDepartment, detailsStatus, loadDepartment } = useDepartments();

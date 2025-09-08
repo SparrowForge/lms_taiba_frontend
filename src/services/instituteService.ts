@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IInstitute, IInstituteCreate, IInstituteUpdate} from '@/types/institute';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IInstitute, IInstituteCreate, IInstituteUpdate } from '@/types/institute';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const instituteService = {
   getInstitutes: async (params = {}): Promise<IBasePaginatedResponse<IInstitute>> => {

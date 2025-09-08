@@ -1,4 +1,4 @@
-import {Column} from '@ant-design/plots';
+import { Column } from '@ant-design/plots';
 
 interface ColumnGraphProps {
   data: { xdata: string; ydata: number }[];
@@ -8,8 +8,8 @@ interface ColumnGraphProps {
 const ColumnGraph: React.FC<ColumnGraphProps> = ({ data, color = '#1F4BCA' }) => {
   const config = {
     data,
-    xField: "xdata",
-    yField: "ydata",
+    xField: 'xdata',
+    yField: 'ydata',
     columnWidthRatio: 0.5,
     intervalPadding: 20,
     columnStyle: {

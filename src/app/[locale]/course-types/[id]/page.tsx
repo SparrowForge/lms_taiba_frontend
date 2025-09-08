@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {useCreateCourseTypeDetailsConfig} from '@/components/courseTypes/courseTypeConfig';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useCreateCourseTypeDetailsConfig } from '@/components/courseTypes/courseTypeConfig';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useCourseTypes} from '@/hooks/useCourseTypes';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useCourseTypes } from '@/hooks/useCourseTypes';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourseType} from '@/types/courseType';
+import { ICourseType } from '@/types/courseType';
 
 export default function CourseTypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedCourseType, detailsStatus, loadCourseType } = useCourseTypes();

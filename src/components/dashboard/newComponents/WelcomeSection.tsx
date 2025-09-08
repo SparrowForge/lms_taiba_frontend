@@ -1,11 +1,11 @@
 'use client';
-import {Button, Card, Typography} from 'antd';
+import { Button, Card, Typography } from 'antd';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useAuth} from '@/hooks/useAuth';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRole} from '@/hooks/useRole';
+import { useAuth } from '@/hooks/useAuth';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRole } from '@/hooks/useRole';
 
 const { Title, Text } = Typography;
 

@@ -1,7 +1,7 @@
-import type {IAuthResponse, LoginCredentials, RegisterCredentials} from '@/types/auth';
-import {IUser} from '@/types/user';
+import type { IAuthResponse, LoginCredentials, RegisterCredentials } from '@/types/auth';
+import { IUser } from '@/types/user';
 
-import {apiService} from '@/lib/axios';
+import { apiService } from '@/lib/axios';
 
 class AuthService {
   // Helper function to set cookie

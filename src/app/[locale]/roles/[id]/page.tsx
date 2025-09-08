@@ -1,20 +1,20 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
-import {useCreateRoleDetailsConfig} from '@/components/roles/roleConfig';
-import {EntityDetails} from '@/components/ui/EntityDetails';
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { useCreateRoleDetailsConfig } from '@/components/roles/roleConfig';
+import { EntityDetails } from '@/components/ui/EntityDetails';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRoles} from '@/hooks/useRoles';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRoles } from '@/hooks/useRoles';
 
-import {IRole} from '@/types/role';
+import { IRole } from '@/types/role';
 
 export default function RoleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedRole, detailsStatus, loadRole } = useRoles();

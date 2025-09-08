@@ -1,27 +1,27 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IWeekDay, IWeekDayCreate, IWeekDayUpdate} from '@/types/weekDay';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IWeekDay, IWeekDayCreate, IWeekDayUpdate } from '@/types/weekDay';
 
-import {weekDayService} from '@/services/weekDayService';
+import { weekDayService } from '@/services/weekDayService';
 
 import {
-    addWeekDay,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteWeekDay,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedWeekDay,
-    setWeekDays,
-    updateWeekDay,
+  addWeekDay,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteWeekDay,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedWeekDay,
+  setWeekDays,
+  updateWeekDay,
 } from '@/store/slices/weekDaySlice';
 
 export const useWeekDays = () => {
