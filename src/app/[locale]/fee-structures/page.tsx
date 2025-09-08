@@ -91,7 +91,7 @@ export default function FeeStructuresPage() {
     onSearch: (searchText: string) => {
       loadFeeStructures({ page: 1, limit: 10, search: searchText });
     },
-    onQuickAdd: handleCreateDrawer,
+    // onQuickAdd: handleCreateDrawer,
     items: feeStructures,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,

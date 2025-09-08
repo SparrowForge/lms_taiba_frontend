@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useFacultySubjects} from '@/hooks/useFacultySubjects';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import FacultySubjectForm from './FacultySubjectForm';
 
 interface FacultySubjectFormDrawerProps {

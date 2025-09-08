@@ -19,7 +19,6 @@ import {IScheduleType, IScheduleTypeCreate, IScheduleTypeUpdate} from '@/types/s
 
 import FormLayout from '../layout/FormLayout';
 
-
 interface Props {
   mode: 'create' | 'edit';
   scheduleTypeId?: number;

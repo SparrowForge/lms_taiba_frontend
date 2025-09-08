@@ -7,7 +7,6 @@ import {Status} from '@/enums';
 import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 interface BasicFeeFormProps {
   form: any;
   onFinish: (values: any) => void;

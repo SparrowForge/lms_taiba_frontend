@@ -16,7 +16,6 @@ import WeekDayForm from '@/components/weekDays/WeekDayForm';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useWeekDays} from '@/hooks/useWeekDays';
 
-
 const WeekDayEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();

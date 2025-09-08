@@ -16,7 +16,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useBranches} from '@/hooks/useBranches';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 const BranchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();

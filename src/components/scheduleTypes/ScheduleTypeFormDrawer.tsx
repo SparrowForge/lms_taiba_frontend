@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useScheduleTypes} from '@/hooks/useScheduleTypes';
 
-
 import ScheduleTypeForm from './ScheduleTypeForm';
 
 interface Props {

@@ -1,6 +1,7 @@
 import {IBatch} from './batch';
 import {IFaculty} from './faculty';
 import {IRoom} from './room';
+import {IScheduleType} from './scheduleType';
 import {ISemester} from './semester';
 import {ISubject} from './subject';
 import {ITimeSlot} from './timeSlot';
@@ -18,7 +19,8 @@ export interface IClassSchedule {
   startDate: string;
   endDate: string;
   isRecurring: boolean;
-  classScheduleType: string;
+  scheduleTypeId: number;
+  scheduleType: IScheduleType;
   maxCapacity: number;
   status: string;
   createdAt: string;
@@ -45,7 +47,7 @@ export interface IClassScheduleCreate {
   startDate: string;
   endDate: string;
   isRecurring: boolean;
-  classScheduleType: string;
+  scheduleTypeId: number;
   maxCapacity: number;
   status: string;
 }
@@ -61,7 +63,7 @@ export interface IClassScheduleUpdate {
   startDate?: string;
   endDate?: string;
   isRecurring?: boolean;
-  classScheduleType?: string;
+  scheduleTypeId?: number;
   maxCapacity?: number;
   status?: string;
 }

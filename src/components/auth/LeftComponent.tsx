@@ -1,47 +1,56 @@
-'use client';
-import {LineChartOutlined} from '@ant-design/icons';
-import {Card, Col, Row, Typography} from 'antd';
-import Image from 'next/image';
-import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {FaChalkboardTeacher} from 'react-icons/fa';
-import {IoIosPeople} from 'react-icons/io';
-import {PiStudentFill} from 'react-icons/pi';
+"use client"
+
+
+import {
+  LineChartOutlined,
+} from "@ant-design/icons";
+import { Card, Row, Col, Typography} from "antd";
+import Image from "next/image";
+import { useLocale } from "next-intl";
+import React from "react";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { IoIosPeople } from "react-icons/io";
+import { PiStudentFill } from "react-icons/pi";
+
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
+
+import { useLocalization } from "@/hooks/useLocalization";
 
 const { Title, Text } = Typography;
 
 const LeftComponent = () => {
-  const { t } = useTranslation();
+  const { t } = useLocalization();
+  const locale = useLocale();
 
   const portals = [
     {
-      key: 'teacher',
-      icon: <FaChalkboardTeacher style={{ fontSize: 28, color: '#92c4fc' }} />,
-      title: t('Teacher Portal'),
-      subtitle: t('بوابة المعلم'),
+      key: "teacher",
+      icon: <FaChalkboardTeacher style={{ fontSize: 28, color: "#92c4fc" }} />,
+      title: "Teacher Portal",
+      subtitle: "بوابة المعلم",
     },
     {
-      key: 'student',
-      icon: <PiStudentFill style={{ fontSize: 28, color: '#92c4fc' }} />,
-      title: t('Student Portal'),
-      subtitle: t('بوابة الطالب'),
+      key: "student",
+      icon: <PiStudentFill style={{ fontSize: 28, color: "#92c4fc" }} />,
+      title: "Student Portal",
+      subtitle: "بوابة الطالب",
     },
     {
-      key: 'parent',
-      icon: <IoIosPeople style={{ fontSize: 28, color: '#92c4fc' }} />,
-      title: t('Parent Portal'),
-      subtitle: t('بوابة ولي الأمر'),
+      key: "parent",
+      icon: <IoIosPeople style={{ fontSize: 28, color: "#92c4fc" }} />,
+      title: "Parent Portal",
+      subtitle: "بوابة ولي الأمر",
     },
     {
-      key: 'admin',
-      icon: <LineChartOutlined style={{ fontSize: 28, color: '#92c4fc' }} />,
-      title: t('Admin Dashboard'),
-      subtitle: t('لوحة الإدارة'),
+      key: "admin",
+      icon: <LineChartOutlined  style={{ fontSize: 28, color: "#92c4fc" }} />,
+      title: "Admin Dashboard",
+      subtitle: "لوحة الإدارة",
     },
   ];
 
   return (
-    <div className="bg-[#1F4BCA] w-full  flex flex-col justify-center items-center">
+    <div className="bg-[#1F4BCA] w-full  flex flex-col justify-center items-center py-10 md:py-0">
       {/* Logo */}
       <div style={{ marginBottom: 10 }}>
         <Image src="/logo.PNG" alt="logo" width={80} height={80} />
@@ -50,8 +59,8 @@ const LeftComponent = () => {
       <Title level={3} style={{ color: '#fff', marginBottom: 0, fontSize: '30px' }}>
         EduTrain Institute
       </Title>
-      <Text style={{ color: '#fff', fontSize: '18px' }}>
-        {t('Education ERP System | نظام تخطيط موارد التعليم')}
+      <Text style={{ color: "#fff", fontSize:"18px" }}>
+        {t(LOCALE_KEYS.ERP_TAGLINE)}
       </Text>
 
       <Card
@@ -68,8 +77,8 @@ const LeftComponent = () => {
           padding: '20px',
         }}
       >
-        <Title level={5} style={{ color: '#fff', fontSize: '20px' }}>
-          {t('Complete Education Management Solution')}
+        <Title level={5} style={{ color: "#fff",fontSize:"20px"  }}>
+          Complete Education Management Solution
         </Title>
 
         <Row gutter={[16, 16]} style={{ marginTop: 20 }}>
@@ -78,9 +87,11 @@ const LeftComponent = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 {item.icon}
                 <div>
-                  <Text style={{ color: '#fff', fontWeight: 500 }}>{item.title}</Text>
+                  <Text style={{ color: "#fff", fontWeight: 500 }}>
+                   {locale === 'en' ?  item.title : item.subtitle }
+                  </Text>
                   <br />
-                  <Text style={{ color: '#fff', fontSize: 12 }}>{item.subtitle}</Text>
+
                 </div>
               </div>
             </Col>

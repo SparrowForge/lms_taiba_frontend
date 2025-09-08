@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import BatchForm from './BatchForm';
 
 interface BatchFormDrawerProps {

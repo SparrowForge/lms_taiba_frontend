@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useMenus} from '@/hooks/useMenus';
 
-
 import MenuForm from './MenuForm';
 
 interface MenuFormDrawerProps {

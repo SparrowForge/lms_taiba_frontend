@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoomTypes} from '@/hooks/useRoomTypes';
 
-
 import RoomTypeForm from './RoomTypeForm';
 
 interface Props {

@@ -1,19 +1,24 @@
 'use client';
 
-import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, Card, Form, Input, Spin} from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, Spin } from 'antd';
 import Image from 'next/image';
-import {useEffect, useState} from 'react';
-import {toast, ToastContainer} from 'react-toastify';
+import { useEffect, useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
-import {useAuth} from '@/hooks/useAuth';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import type {LoginCredentials} from '@/types/auth';
-import {getErrorMessage} from '@/types/errors';
+import { useAuth } from '@/hooks/useAuth';
+import { useLocalization } from '@/hooks/useLocalization';
+
+import type { LoginCredentials } from '@/types/auth';
+import { getErrorMessage } from '@/types/errors';
 
 import SocialLogin from './SocialLogin';
 
+
 export const LoginForm = () => {
+  const { t } = useLocalization();
   const { login, isLoading, error, clearError } = useAuth();
   const [form] = Form.useForm();
   const [showForm, setShowForm] = useState(false);
@@ -58,57 +63,56 @@ export const LoginForm = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
-      <Card style={{ width: 380 }} className="shadow-lg rounded-lg">
-        <div className="flex justify-center items-center py-6">
+      <Card
+        style={{ width: 400, padding: "0px" }}
+        className="shadow-lg rounded-lg"
+      >
+        <div className="flex justify-center items-center pt-4 pb-2">
           <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
         </div>
+
         <Form
           form={form}
           name="login"
           onFinish={handleSubmit}
           onValuesChange={handleFormChange}
           layout="vertical"
-          size="large"
+          size="small" // changed from "large" → smaller inputs
+          className="[&_.ant-form-item]:mb-2 [&_.ant-form-item-label]:mb-0" // reduce spacing between items
         >
           <Form.Item
             name="email"
             label={
-              <div className="flex flex-col text-gray-500 text-[15px]">
-                <h1>
-                  Email / Username |{' '}
-                  <span className=" ">
-                    البريد الإلكتروني / اسم
-                    <br /> المستخدم
-                  </span>
-                </h1>
-              </div>
+              <span className="text-gray-500 text-[15px] font-semibold">
+                {t(LOCALE_KEYS.EMAIL_USERNAME)}
+              </span>
             }
-            rules={[
-              {
-                // required: true,
-                message: 'Please enter your email!',
-              },
-              { type: 'email', message: 'Please enter a valid email!' },
-            ]}
+            style={{ marginBottom: 8 }} // controls spacing to next item
+            className="[&_.ant-form-item-label]:mb-0" // removes label→input gap
           >
             <Input
               prefix={<UserOutlined className="text-gray-400" />}
               placeholder="Enter your email"
               disabled={isLoading}
+              className="h-8 text-sm"
             />
           </Form.Item>
+
+
+
 
           <Form.Item
             name="password"
             label={
-              <div className="text-gray-500 text-[15px]">
-                <h1>Password | كلمة المرور</h1>
+              <div className='text-gray-500 text-[15px]'>
+                <h1>{t(LOCALE_KEYS.PASSWORD)}</h1>
               </div>
             }
+
             rules={[
               {
                 // required: true,
-                message: 'Please enter your password!',
+                message: 'Please enter your password!'
               },
               { min: 6, message: 'Password must be at least 6 characters!' },
             ]}
@@ -117,6 +121,7 @@ export const LoginForm = () => {
               prefix={<LockOutlined className="text-gray-400" />}
               placeholder="Enter your password"
               disabled={isLoading}
+              className="h-9 text-sm" // reduced height
             />
           </Form.Item>
 
@@ -128,8 +133,11 @@ export const LoginForm = () => {
               </div>
             </div>
           )}
-          <div className="text-center flex justify-end mt-4">
-            <p className="text-sm text-[#1e45bf]">Forget password? | نسيت كلمة المرور؟</p>
+          <div className="text-center flex justify-end">
+            <p className="text-sm text-[#1e45bf]">
+
+              {t(LOCALE_KEYS.FORGET_PASSWORD)}
+            </p>
           </div>
           <Form.Item>
             <Button
@@ -137,15 +145,16 @@ export const LoginForm = () => {
               htmlType="submit"
               loading={isLoading}
               block
-              size="large"
-              className="h-12 text-base font-medium"
+              size="middle"
+              className="h-9 text-base font-medium mb-0"
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
           </Form.Item>
         </Form>
-
+        <SocialLogin />
         {/* Footer */}
+        {/* <div className="text-center mt-4">
         {/* <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
             {`Don't have an account?{' '}`}
@@ -157,7 +166,8 @@ export const LoginForm = () => {
             </Link>
           </p>
         </div> */}
-        <SocialLogin />
+
+
       </Card>
     </>
   );

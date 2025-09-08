@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useWeekDays} from '@/hooks/useWeekDays';
 
-
 import WeekDayForm from './WeekDayForm';
 
 interface Props {

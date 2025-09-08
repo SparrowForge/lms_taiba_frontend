@@ -7,7 +7,6 @@ import {Status} from '@/enums';
 import {useDepartments} from '@/hooks/useDepartments';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import DepartmentForm from './DepartmentForm';
 
 interface DepartmentFormDrawerProps {

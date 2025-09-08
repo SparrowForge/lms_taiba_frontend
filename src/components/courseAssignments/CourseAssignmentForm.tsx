@@ -7,7 +7,7 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS,} from '@/constants/statusOptions';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
 import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
@@ -29,7 +29,7 @@ const { TextArea } = Input;
 interface CourseAssignmentFormProps {
   mode: 'create' | 'edit';
   courseAssignmentId?: number;
-  initialValues?: Partial<ICourseAssignmentCreate | ICourseAssignmentUpdate>;
+  initialValues?: Partial<ICourseAssignmentCreate | ICourseAssignmentUpdate | ICourseAssignment>;
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;

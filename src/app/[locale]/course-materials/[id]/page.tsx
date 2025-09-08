@@ -13,7 +13,6 @@ import {EntityDetails} from '@/components/ui/EntityDetails';
 import {useCourseMaterials} from '@/hooks/useCourseMaterials';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 export default function CourseMaterialDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedCourseMaterial, detailsStatus, loadCourseMaterial } = useCourseMaterials();
   const { t } = useLocalization();

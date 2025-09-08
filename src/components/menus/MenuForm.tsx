@@ -17,8 +17,7 @@ import {getErrorMessage} from '@/types/errors';
 import {IMenu, IMenuCreate, IMenuUpdate} from '@/types/menu';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
-
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface MenuFormProps {
   mode: 'create' | 'edit';

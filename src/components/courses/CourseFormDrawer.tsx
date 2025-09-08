@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useCourses} from '@/hooks/useCourses';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import CourseForm from './CourseForm';
 
 interface CourseFormDrawerProps {

@@ -7,7 +7,7 @@ import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
 import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
@@ -18,7 +18,7 @@ import {IBatch, IBatchUpdate} from '@/types/batch';
 import {getErrorMessage} from '@/types/errors';
 import {ISemester} from '@/types/semester';
 
-import { StatusSelectFormItem } from '../ui/StatusSelect';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 const { Text } = Typography;
 

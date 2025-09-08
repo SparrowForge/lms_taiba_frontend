@@ -16,7 +16,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useBatches} from '@/hooks/useBatches';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 const BatchEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();

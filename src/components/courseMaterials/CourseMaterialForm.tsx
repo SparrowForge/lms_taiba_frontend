@@ -18,7 +18,6 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 import {useSubjects} from '@/hooks/useSubjects';
 
-
 import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate,} from '@/types/courseMaterial';
 import {getErrorMessage} from '@/types/errors';
 

@@ -1,6 +1,7 @@
 'use client';
 
 import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space} from 'antd';
+import type {Dayjs} from 'dayjs';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -20,9 +21,6 @@ import {IFeeInstallmentPlanCreate} from '@/types/feeInstallmentPlan';
 import {IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate} from '@/types/feeStructure';
 
 import {StatusSelect, StatusSelectFormItem} from '../ui/StatusSelect';
-
-
-import type {Dayjs} from 'dayjs';
 
 interface FeeStructureFormBulkProps {
   onSuccess?: () => void;

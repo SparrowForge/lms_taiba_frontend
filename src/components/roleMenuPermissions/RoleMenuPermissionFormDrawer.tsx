@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useRoleMenuPermissions} from '@/hooks/useRoleMenuPermissions';
 
-
 import RoleMenuPermissionFormSingle from './RoleMenuPermissionFormSingle';
 
 interface RoleMenuPermissionFormDrawerProps {

@@ -169,6 +169,10 @@ export const useSubjects = () => {
     [dispatch],
   );
 
+  const clearSubjects = useCallback(() => {
+    dispatch(setSubjects([]));
+  }, [dispatch]);
+
   return {
     // State
     subjects,
@@ -188,5 +192,6 @@ export const useSubjects = () => {
     clearAction,
     clearDetails,
     setSelected,
+    clearSubjects,
   };
 };

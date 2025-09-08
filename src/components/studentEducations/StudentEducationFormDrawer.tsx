@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudentEducations} from '@/hooks/useStudentEducations';
 
-
 import StudentEducationForm from './StudentEducationForm';
 
 interface StudentEducationFormDrawerProps {

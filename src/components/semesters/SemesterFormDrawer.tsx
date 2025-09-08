@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useSemesters} from '@/hooks/useSemesters';
 
-
 import SemesterForm from './SemesterForm';
 
 interface SemesterFormDrawerProps {
