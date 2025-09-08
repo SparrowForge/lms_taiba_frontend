@@ -14,8 +14,7 @@ import {getErrorMessage} from '@/types/errors';
 import {IPanel} from '@/types/panel';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
-
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface PanelFormProps {
   mode: 'create' | 'edit';

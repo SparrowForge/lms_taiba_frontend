@@ -234,6 +234,11 @@ export const useBatches = () => {
     [dispatch],
   );
 
+  // Clear batches
+  const clearBatches = useCallback(() => {
+    dispatch(setBatches([]));
+  }, [dispatch]);
+
   return {
     // State
     batches,
@@ -255,5 +260,6 @@ export const useBatches = () => {
     clearAction,
     clearDetails,
     setSelected,
+    clearBatches,
   };
 };

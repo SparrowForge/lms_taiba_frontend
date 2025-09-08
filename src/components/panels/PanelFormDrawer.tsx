@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useLocalization} from '@/hooks/useLocalization';
 import {usePanels} from '@/hooks/usePanels';
 
-
 import PanelForm from './PanelForm';
 
 interface PanelFormDrawerProps {

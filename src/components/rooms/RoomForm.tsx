@@ -17,8 +17,7 @@ import {getErrorMessage} from '@/types/errors';
 import {IRoom, IRoomCreate, IRoomUpdate} from '@/types/room';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
-
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';

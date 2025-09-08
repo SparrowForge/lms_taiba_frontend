@@ -16,7 +16,6 @@ import UserRoleForm from '@/components/userRoles/UserRoleFormSingle';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useUserRoles} from '@/hooks/useUserRoles';
 
-
 const UserRoleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();

@@ -16,8 +16,7 @@ import {IEmploymentType, IEmploymentTypeCreate, IEmploymentTypeUpdate,} from '@/
 import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
-
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';

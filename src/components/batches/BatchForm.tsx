@@ -33,7 +33,6 @@ import {ICourse} from '@/types/course';
 import {getErrorMessage} from '@/types/errors';
 import {ISemesterCreate} from '@/types/semester';
 
-
 import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 // Local interface for semester form with duration (not submitted to backend)

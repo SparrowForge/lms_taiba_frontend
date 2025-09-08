@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useClassSchedules} from '@/hooks/useClassSchedules';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import ClassScheduleForm from './ClassScheduleForm';
 
 interface Props {

@@ -3,7 +3,7 @@
 import {Button, DatePicker, Form, Input, Select} from 'antd';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
@@ -44,9 +44,11 @@ const StudentForm: React.FC<StudentFormProps> = ({
   const router = useRouter();
   const [form] = Form.useForm();
   const { createStudent, editStudent, actionStatus } = useStudents();
-  const { batches, loadBatches } = useBatches();
+  const { batches, loadBatches, clearBatches } = useBatches();
   const { branches, loadBranches } = useBranches();
   const { courses, loadCourses } = useCourses();
+
+  const [selectedCourseId, setSelectedCourseId] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -55,10 +57,19 @@ const StudentForm: React.FC<StudentFormProps> = ({
   }, [mode, form]);
 
   useEffect(() => {
-    loadBatches({ page: 1, limit: 100 });
     loadBranches({ page: 1, limit: 100 });
     loadCourses({ page: 1, limit: 100 });
+    clearBatches();
   }, [loadBatches, loadBranches, loadCourses]);
+
+  useEffect(() => {
+    if (selectedCourseId) {
+      loadBatches({ page: 1, limit: 100, courseId: selectedCourseId });
+      form.setFieldsValue({
+        batchId: undefined,
+      });
+    }
+  }, [courses, selectedCourseId, loadBatches]);
 
   const handleSubmit = async (values: any) => {
     try {
@@ -208,6 +219,10 @@ const StudentForm: React.FC<StudentFormProps> = ({
         ]}
       >
         <Select
+          onChange={(value) => {
+            setSelectedCourseId(value);
+            form.setFieldsValue({ batchId: undefined });
+          }}
           placeholder={t('select_course', { defaultValue: 'Select Course' })}
           options={courses.map((course) => ({
             label: course.name,

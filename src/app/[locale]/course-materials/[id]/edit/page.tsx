@@ -16,8 +16,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useCourseMaterials} from '@/hooks/useCourseMaterials';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {ICourseMaterial, ICourseMaterialUpdate} from '@/types/courseMaterial';
-
 const CourseMaterialEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -39,27 +37,6 @@ const CourseMaterialEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({
     return <EntityEditNotFoundView entityName={entityName} backRoute="/course-materials" />;
   }
 
-  // Convert ICourseMaterial to ICourseMaterialUpdate for form compatibility
-  const convertToFormValues = (courseMaterial: ICourseMaterial): Partial<ICourseMaterialUpdate> => {
-    const {
-      id,
-      createdAt,
-      updatedAt,
-      deletedAt,
-      course,
-      subject,
-      semester,
-      batch,
-      faculty,
-      file,
-      ...formValues
-    } = courseMaterial;
-    return {
-      ...formValues,
-      fileId: formValues.fileId ?? undefined,
-    };
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
@@ -70,7 +47,7 @@ const CourseMaterialEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({
         <CourseMaterialForm
           mode="edit"
           courseMaterialId={parseInt(resolvedParams.id)}
-          initialValues={convertToFormValues(selectedCourseMaterial)}
+          initialValues={selectedCourseMaterial}
         />
       </MainLayout>
     </ProtectedRoute>

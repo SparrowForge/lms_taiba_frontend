@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useInstitutes} from '@/hooks/useInstitutes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import InstituteForm from './InstituteForm';
 
 interface Props {

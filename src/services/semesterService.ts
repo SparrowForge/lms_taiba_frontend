@@ -1,5 +1,5 @@
 import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {ISemester, ISemesterCreate, ISemesterUpdate} from '@/types/semester';
+import {ISemester, ISemesterCreate, ISemesterUpdate, ISemesterWithSubjectsAndFaculty,} from '@/types/semester';
 
 import {api} from '@/lib/axios';
 
@@ -31,6 +31,16 @@ export const semesterService = {
   // Delete a semester
   deleteSemester: async (id: number): Promise<void> => {
     const response = await api.delete(`/semesters/${id}`);
+    return response.data;
+  },
+
+  // Get semester with subjects and faculty
+  getSemesterWithSubjectsAndFaculty: async (
+    id: number,
+  ): Promise<IBaseResponse<ISemesterWithSubjectsAndFaculty>> => {
+    const response = await api.get<IBaseResponse<ISemesterWithSubjectsAndFaculty>>(
+      `/semesters/${id}/with-subjects-and-faculty`,
+    );
     return response.data;
   },
 };

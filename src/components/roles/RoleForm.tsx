@@ -20,7 +20,6 @@ import {IRole, IRoleCreate, IRoleUpdate} from '@/types/role';
 
 import FormLayout from '../layout/FormLayout';
 
-
 interface RoleFormProps {
   mode: 'create' | 'edit';
   roleId?: number;

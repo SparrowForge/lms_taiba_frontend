@@ -16,8 +16,6 @@ import {PageHeader} from '@/components/ui/PageHeader';
 import {useCourseAssignments} from '@/hooks/useCourseAssignments';
 import {useLocalization} from '@/hooks/useLocalization';
 
-import {ICourseAssignment, ICourseAssignmentUpdate} from '@/types/courseAssignment';
-
 const CourseAssignmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const router = useRouter();
@@ -39,29 +37,6 @@ const CourseAssignmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = 
     return <EntityEditNotFoundView entityName={entityName} backRoute="/course-assignments" />;
   }
 
-  // Convert ICourseAssignment to ICourseAssignmentUpdate for form compatibility
-  const convertToFormValues = (
-    courseAssignment: ICourseAssignment,
-  ): Partial<ICourseAssignmentUpdate> => {
-    const {
-      id,
-      createdAt,
-      updatedAt,
-      deletedAt,
-      course,
-      subject,
-      semester,
-      batch,
-      faculty,
-      ...formValues
-    } = courseAssignment;
-    return {
-      ...formValues,
-      latePenalty: formValues.latePenalty ?? undefined,
-      attachmentPath: formValues.attachmentPath ?? undefined,
-    };
-  };
-
   return (
     <ProtectedRoute>
       <MainLayout>
@@ -72,7 +47,7 @@ const CourseAssignmentEditPage: React.FC<{ params: Promise<{ id: string }> }> = 
         <CourseAssignmentForm
           mode="edit"
           courseAssignmentId={parseInt(resolvedParams.id)}
-          initialValues={convertToFormValues(selectedCourseAssignment)}
+          initialValues={selectedCourseAssignment}
         />
       </MainLayout>
     </ProtectedRoute>

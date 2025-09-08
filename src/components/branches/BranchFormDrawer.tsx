@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useBranches} from '@/hooks/useBranches';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import BranchForm from './BranchForm';
 
 interface BranchFormDrawerProps {

@@ -16,7 +16,7 @@ import {getErrorMessage} from '@/types/errors';
 import {IUserCreate, IUserUpdate} from '@/types/user';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface UserFormProps {
   mode: 'create' | 'edit';

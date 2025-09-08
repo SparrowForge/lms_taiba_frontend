@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import FeeStructureForm from './FeeStructureForm';
 
 interface FeeStructureFormDrawerProps {

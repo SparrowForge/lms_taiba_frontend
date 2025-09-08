@@ -9,7 +9,6 @@ import {Status} from '@/enums';
 import {useEmploymentTypes} from '@/hooks/useEmploymentTypes';
 import {useLocalization} from '@/hooks/useLocalization';
 
-
 import EmploymentTypeForm from './EmploymentTypeForm';
 
 interface Props {

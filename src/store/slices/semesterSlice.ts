@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Status} from '@/enums';
 
 import {IPaginationMeta, IStatusState} from '@/types/common';
-import {ISemester} from '@/types/semester';
+import {ISemester, ISemesterWithSubjectsAndFaculty} from '@/types/semester';
 
 interface ISemestersState {
   listStatus: IStatusState;
@@ -11,6 +11,7 @@ interface ISemestersState {
   actionStatus: IStatusState;
   semesters: ISemester[];
   selectedSemester: ISemester | null;
+  semesterWithSubjectsAndFaculty: ISemesterWithSubjectsAndFaculty | null;
   pagination: IPaginationMeta;
 }
 
@@ -20,6 +21,7 @@ const initialState: ISemestersState = {
   actionStatus: { status: Status.INITIAL },
   semesters: [],
   selectedSemester: null,
+  semesterWithSubjectsAndFaculty: null,
   pagination: {
     page: 1,
     limit: 10,
@@ -67,6 +69,12 @@ const semesterSlice = createSlice({
     setSelectedSemester: (state, action: PayloadAction<ISemester | null>) => {
       state.selectedSemester = action.payload;
     },
+    setSemesterWithSubjectsAndFaculty: (
+      state,
+      action: PayloadAction<ISemesterWithSubjectsAndFaculty>,
+    ) => {
+      state.semesterWithSubjectsAndFaculty = action.payload;
+    },
     setPagination: (state, action: PayloadAction<IPaginationMeta>) => {
       state.pagination = action.payload;
     },
@@ -88,6 +96,7 @@ export const {
   updateSemester,
   deleteSemester,
   setSelectedSemester,
+  setSemesterWithSubjectsAndFaculty,
   setPagination,
   clearActionStatus,
   clearDetailsStatus,

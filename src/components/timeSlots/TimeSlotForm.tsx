@@ -7,7 +7,7 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
 import {Status} from '@/enums';
 
 import {useLocalization} from '@/hooks/useLocalization';
@@ -17,7 +17,7 @@ import {getErrorMessage} from '@/types/errors';
 import {ITimeSlot, ITimeSlotCreate, ITimeSlotUpdate} from '@/types/timeSlot';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface Props {
   mode: 'create' | 'edit';
