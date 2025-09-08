@@ -496,5 +496,7 @@
 
   "discount_type_fixed": "مبلغ ثابت",
   "discount_type_percent": "نسبة مئوية",
-  "discount_type_none": "لا يوجد"
+  "discount_type_none": "لا يوجد",
+  "student-progress": "تقدم الطالب",
+  "recent_activity": "النشاطات الأخيرة"
 }

@@ -1,55 +1,101 @@
-import {CalculatorOutlined, CodeOutlined, ExperimentOutlined, FileTextOutlined,} from '@ant-design/icons';
-import {Button, Card} from 'antd';
+import {
+  CalculatorOutlined,
+  CodeOutlined,
+  DiffOutlined,
+  ExceptionOutlined,
+  ExperimentOutlined,
+  FileTextOutlined,
+} from "@ant-design/icons";
+import { Button, Card } from "antd";
+import dayjs from "dayjs";
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
+import { useLocalization } from "@/hooks/useLocalization";
+import { useCourseAssignments } from "@/hooks/useCourseAssignments";
+import IconBgColoredCard from "../dashboardui/cards/IconBgColoredCard";
+import { useEffect } from "react";
 
-import {useLocalization} from '@/hooks/useLocalization';
+const getAssignmentStyle = (assignment: any) => {
+  switch (assignment.type?.toLowerCase()) {
+    case "lab":
+      return {
+        color: "#ef4444",
+        bgColor: "#fef2f2",
+        bgColorIcon: "#fee2e2",
+        icon: <ExperimentOutlined style={{ color: "#ef4444" }} />,
+      };
+    case "math":
+      return {
+        color: "#f59e0b",
+        bgColor: "#fffbeb",
+        bgColorIcon: "#fef3c7",
+        icon: <CalculatorOutlined style={{ color: "#f59e0b" }} />,
+      };
+    case "project":
+      return {
+        color: "#5190f7",
+        bgColor: "#eff6ff",
+        bgColorIcon: "#dbeafe",
+        icon: <CodeOutlined style={{ color: "#5190f7" }} />,
+      };
+    case "essay":
+      return {
+        color: "#6b7280",
+        bgColor: "#f3f4f6",
+        bgColorIcon: "#e5e7eb",
+        icon: <FileTextOutlined style={{ color: "#6b7280" }} />,
+      };
+    case "homework":
+      return {
+        color: "#d97706",
+        bgColor: "#fffbeb",
+        bgColorIcon: "#fef3c7",
+        icon: <DiffOutlined style={{ color: "#d97706" }} />,
+      };
+    default:
+      return {
+        color: "#10b981",
+        bgColor: "#ecfdf5",
+        bgColorIcon: "#d1fae5",
+        icon: <FileTextOutlined style={{ color: "#10b981" }} />,
+      };
+  }
+};
 
-import IconBgColoredCard from '../dashboardui/cards/IconBgColoredCard';
+// 🔹 Compute static tag based on dueDate, type, maxAttempt
+const getAssignmentTag = (assignment: any) => {
+  const today = dayjs();
+  const dueDate = dayjs(assignment.dueDate);
+  const publishDate = dayjs(assignment.publishDate);
 
-const assignments = [
-  {
-    title: 'Physics Lab Report',
-    due: 'Tomorrow, 11:59 PM',
-    tag: 'Urgent',
-    color: '#ef4444',
-    bgColor: '#fef2f2',
-    bgColorIcon: '#fee2e2',
-    icon: <ExperimentOutlined style={{ color: '#ef4444' }} />,
-  },
-  {
-    title: 'Mathematics Problem Set',
-    due: 'Aug 27, 2023',
-    tag: 'Important',
-    color: '#f59e0b',
-    bgColor: '#fffbeb',
-    bgColorIcon: '#fef3c7',
-    icon: <CalculatorOutlined style={{ color: '#f59e0b' }} />,
-  },
-  {
-    title: 'Computer Science Project',
-    due: 'Aug 30, 2023',
-    tag: 'Group Work',
-    color: '#5190f7',
-    bgColor: '#eff6ff',
-    bgColorIcon: '#dbeafe',
-    icon: <CodeOutlined style={{ color: '#5190f7' }} />,
-  },
-  {
-    title: 'English Essay',
-    due: 'Sep 2, 2023',
-    tag: 'Started',
-    color: '#10b981',
-    bgColor: '#ecfdf5',
-    bgColorIcon: '#d1fae5',
-    icon: <FileTextOutlined style={{ color: '#10b981' }} />,
-  },
-];
+  if (dueDate.diff(today, "day") <= 1) return "Urgent"; 
+  if (assignment.maxAttempt && assignment.maxAttempt <= 1) return "Important"; 
+  if (assignment.type?.toLowerCase() === "project" ||  assignment.maxAttempt > 1) return "Group Work";
+  // if (["homework", "lab"].includes(assignment.type?.toLowerCase())) return "Started";
+  if(assignment.type?.toLowerCase() === "quiz") return "Quiz";
+  if(assignment.type?.toLowerCase() === "lab") return "Lab";
+
+  return assignment.tag || "";
+};
 
 const UpcomingAssignments = () => {
   const { t } = useLocalization();
+  const { courseAssignments, loadCourseAssignments } = useCourseAssignments();
+
+  useEffect(() => {
+    loadCourseAssignments({ page: 1, limit: 100 });
+  }, [loadCourseAssignments]);
+
+  const upcomingAssignments = (courseAssignments || []).filter((a: any) =>
+    dayjs(a.dueDate).isAfter(dayjs(), "day") || dayjs(a.dueDate).isSame(dayjs(), "day")
+  );
+
+  const sortedAssignments = [...upcomingAssignments].sort((a, b) =>
+    dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf()
+  );
+
   return (
-    <Card className="rounded-2xl shadow-sm min-h-full">
+    <Card className="rounded-2xl shadow-sm min-h-full mb-6">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-base font-semibold">{t(LOCALE_KEYS.UPCOMING_ASSIGNMENT)}</h2>
         <Button type="text" style={{ padding: 0 }}>
@@ -57,20 +103,26 @@ const UpcomingAssignments = () => {
         </Button>
       </div>
 
-      <div className="flex flex-col gap-3">
-        {assignments.map((a, i) => (
-          <IconBgColoredCard
-            key={i}
-            text={a.title}
-            due={a.due}
-            tag={a.tag}
-            color={a.color}
-            bgColor={a.bgColor}
-            bgColorIcon={a.bgColorIcon}
-            icon={a.icon}
-            rounded="md"
-          />
-        ))}
+      <div className="flex flex-col gap-3 overflow-y-auto h-[500px]">
+        {sortedAssignments.map((a: any, i: number) => {
+          const style = getAssignmentStyle(a);
+          const tag = getAssignmentTag(a);
+          const isUrgent = tag === "Urgent";
+
+          return (
+            <IconBgColoredCard
+              key={i}
+              text={a.title}
+              due={dayjs(a.dueDate).format("MMM D, YYYY")}
+              tag={tag}
+              color={isUrgent ? "#ef4444" : style.color}
+              bgColor={isUrgent ? "#fef2f2" : style.bgColor}
+              bgColorIcon={isUrgent ? "#fee2e2" : style.bgColorIcon}
+              icon={isUrgent ? <ExceptionOutlined style={{ color: "#ef4444" }} /> : style.icon}
+              rounded="md"
+            />
+          );
+        })}
       </div>
     </Card>
   );

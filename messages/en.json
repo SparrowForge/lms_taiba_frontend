@@ -460,7 +460,6 @@
   "monthly-attendance": "Monthly Attendance",
   "mark-all-read": "Mark All Read",
   "is_break": "Is Break",
-
   "status_active": "Active",
   "status_inactive": "Inactive",
   "status_pending": "Pending",
@@ -503,5 +502,9 @@
 
   "discount_type_fixed": "Fixed",
   "discount_type_percent": "Percent",
-  "discount_type_none": "None"
+  "discount_type_none": "None",
+  "student-progress": "Student Progress",
+  "recent_activity": "Recent Activity"
+
+
 }
