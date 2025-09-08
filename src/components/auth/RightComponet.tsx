@@ -1,15 +1,21 @@
 import Link from 'next/link';
 
-import {LoginForm} from './LoginForm';
-import {LanguageSwitcher} from '../ui/LanguageSwitcher';
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
+
+import { useLocalization } from "@/hooks/useLocalization";
+
+import { LoginForm } from "./LoginForm";
+import { LanguageSwitcher } from "../ui/LanguageSwitcher";
+
 
 const RightComponent = () => {
+  const {t} = useLocalization();
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <div className="flex justify-around items-center px-20 pt-4 pb-2">
-        <h1 className="text-black text-center">
-          Welcome back | <span>مرحًبا بعودتك </span>
+      <div className="flex justify-between md:justify-around items-center px-2 md:px-6  pt-4 ">
+        <h1 className="text-black text-center" >
+         {t(LOCALE_KEYS.WELCOME_BACK)}
         </h1>
         <div className="border rounded-md">
           <LanguageSwitcher />
@@ -22,8 +28,10 @@ const RightComponent = () => {
       </div>
 
       {/* Footer */}
-      <div className="py-4 text-center text-gray-500 text-[12px] ">
-        <p>© 2023 EduTrain Institute. All rights reserved | جميع الحقوق محفوظة</p>
+      <div className="py-4 text-center text-gray-500 text-[12px] " >
+        <p>
+           {t(LOCALE_KEYS.COPYRIGHT)}
+        </p>
         <div className="flex justify-center gap-4 flex-wrap">
           <Link href="/privacy" className="hover:text-blue-600">
             Privacy Policy
