@@ -453,7 +453,6 @@
   "monthly-attendance": "الحضور الشهري",
   "mark-all-read": "تعيين الكل كمقروء",
   "is_break": "هل هو فصل دراسي",
-
   "status_active": "نشط",
   "status_inactive": "غير نشط",
   "status_pending": "معلق",
@@ -477,26 +476,27 @@
   "marital_married": "متزوج",
   "marital_divorced": "مطلق",
   "marital_widowed": "أرمل",
-
   "material_type_document": "وثيقة",
   "material_type_video": "فيديو",
   "material_type_link": "رابط",
   "material_type_audio": "صوت",
   "material_type_image": "صورة",
   "material_type_other": "أخرى",
-
   "access_level_type_student": "طالب",
   "access_level_type_faculty": "أعضاء هيئة التدريس",
   "access_level_type_admin": "مدير",
   "access_level_type_public": "عام",
-
   "payment_type_installment": "أقساط",
   "payment_type_monthly": "شهري",
   "payment_type_one_time": "دفعة واحدة",
-
   "discount_type_fixed": "مبلغ ثابت",
   "discount_type_percent": "نسبة مئوية",
   "discount_type_none": "لا يوجد",
   "student-progress": "تقدم الطالب",
-  "recent_activity": "النشاطات الأخيرة"
+  "recent_activity": "النشاطات الأخيرة",
+  "upload_new": "رفع جديد",
+  "all_courses": "جميع الدورات",
+  "all_types": "جميع الأنواع",
+  "NO_MATERIALS": "لا توجد مواد",
+  "UPLOADED": "تم الرفع:"
 }

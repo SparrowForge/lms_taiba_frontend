@@ -428,23 +428,17 @@
   "teacher-dashboard-subtitle": "{date} | You have 3 classes today",
   "student-dashboard-subtitle": "First Semester, Academic Year 2023-2024 | {date}",
   "view-schedule": "View Schedule",
-
   "teacher-classes-title": "Today's Classes",
   "teacher-classes-subtitle": "Next: Web Development at 11:30 AM",
-
   "teacher-assignments-title": "Pending Assignments",
   "teacher-assignments-subtitle": "4 need grading, 4 due this week",
-
   "teacher-evaluations-title": "Student Evaluations",
   "teacher-evaluations-subtitle": "Mid-term evaluations due Friday",
-
   "student-courses-title": "Active Courses",
   "student-courses-subtitle": "2 courses have upcoming deadlines",
-
   "weekly-schedule-title": "Weekly Schedule",
   "view-week": "Week",
   "view-month": "Month",
-
   "sun": "Sun",
   "mon": "Mon",
   "tue": "Tue",
@@ -483,26 +477,27 @@
   "marital_married": "Married",
   "marital_divorced": "Divorced",
   "marital_widowed": "Widowed",
-
   "material_type_document": "Document",
   "material_type_video": "Video",
   "material_type_link": "Link",
   "material_type_audio": "Audio",
   "material_type_image": "Image",
   "material_type_other": "Other",
-
   "access_level_type_student": "Student",
   "access_level_type_faculty": "Faculty",
   "access_level_type_admin": "Admin",
   "access_level_type_public": "Public",
-
   "payment_type_installment": "Installment",
   "payment_type_monthly": "Monthly",
   "payment_type_one_time": "One Time",
-
   "discount_type_fixed": "Fixed",
   "discount_type_percent": "Percent",
   "discount_type_none": "None",
   "student-progress": "Student Progress",
-  "recent_activity": "Recent Activity"
+  "recent_activity": "Recent Activity",
+  "upload_new": "Upload New",
+  "all_courses": "All Courses",
+  "all_types": "All Types",
+  "no_materials": "No Material",
+  "upload": "Upload"
 }

@@ -472,6 +472,11 @@ export const LOCALE_KEYS = {
   MARK_ALL_READ: 'mark-all-read',
   STUDENT_PROGRESS: 'student-progress',
   RECENT_ACTIVITY: 'recent_activity',
+  UPLOAD_NEW: 'upload_new',
+  ALL_COURSES: 'all_courses',
+  ALL_TYPES: 'all_types',
+  NO_MATERIALS: 'no_materials',
+  UPLOADED: 'upload'
 } as const;
 
 // Type for the keys
