@@ -497,6 +497,13 @@
   "upload_new": "رفع جديد",
   "all_courses": "جميع الدورات",
   "all_types": "جميع الأنواع",
-  "NO_MATERIALS": "لا توجد مواد",
-  "UPLOADED": "تم الرفع:"
+  "no_materials": "لا توجد مواد",
+  "upload": "تم الرفع",
+  "my_courses": "مقرراتي",
+  "grid_View": "عرض الشبكة",
+  "open_course": "فتح المقرر",
+  "progress": "التقدم ",
+  "my_subjects": "موادي",
+  "open_subject": "فتح المواد"
+
 }

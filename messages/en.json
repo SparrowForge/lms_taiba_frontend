@@ -499,5 +499,11 @@
   "all_courses": "All Courses",
   "all_types": "All Types",
   "no_materials": "No Material",
-  "upload": "Upload"
+  "upload": "Upload",
+  "my_courses": "My Course",
+  "grid_View": "Grid View",
+  "open_course": "Open Course",
+  "progress": "Progress",
+  "my_subjects": "My Subjects",
+  "open_subject":"Open Subjects"
 }

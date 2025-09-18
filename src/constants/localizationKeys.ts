@@ -476,7 +476,13 @@ export const LOCALE_KEYS = {
   ALL_COURSES: 'all_courses',
   ALL_TYPES: 'all_types',
   NO_MATERIALS: 'no_materials',
-  UPLOADED: 'upload'
+  UPLOADED: 'upload',
+  My_COURSES: 'my_courses',
+  My_SUBJECT: 'my_subjects',
+  GRID_VIEW: 'grid_View',
+  OPEN_COURSE: 'open_course',
+  OPEN_SUBJECT: 'open_subject',
+  PROGRESS : 'progress'
 } as const;
 
 // Type for the keys
