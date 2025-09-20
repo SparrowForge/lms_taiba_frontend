@@ -521,7 +521,7 @@ export const LOCALE_KEYS = {
   GRID_VIEW: 'grid_View',
   OPEN_COURSE: 'open_course',
   OPEN_SUBJECT: 'open_subject',
-  PROGRESS : 'progress'
+  PROGRESS: 'progress',
 } as const;
 
 // Type for the keys

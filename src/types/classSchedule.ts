@@ -1,13 +1,13 @@
-import {ClassScheduleStatus} from '@/enums';
+import { ClassScheduleStatus } from '@/enums';
 
-import {IBatch} from './batch';
-import {IFaculty} from './faculty';
-import {IRoom} from './room';
-import {IScheduleType} from './scheduleType';
-import {ISemester} from './semester';
-import {ISubject} from './subject';
-import {ITimeSlot} from './timeSlot';
-import {IWeekDay} from './weekDay';
+import { IBatch } from './batch';
+import { IFaculty } from './faculty';
+import { IRoom } from './room';
+import { IScheduleType } from './scheduleType';
+import { ISemester } from './semester';
+import { ISubject } from './subject';
+import { ITimeSlot } from './timeSlot';
+import { IWeekDay } from './weekDay';
 
 export interface IClassSchedule {
   id: number;

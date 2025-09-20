@@ -1,18 +1,18 @@
 'use client';
 
-import {Calendar, Card, Tag, Tooltip} from 'antd';
-import dayjs, {Dayjs} from 'dayjs';
-import React, {useEffect, useMemo, useState} from 'react';
+import { Calendar, Card, Tag, Tooltip } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ClassScheduleStatus, Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ClassScheduleStatus, Status } from '@/enums';
 
 import ClassScheduleDetailsDrawer from '@/components/classSchedules/ClassScheduleDetailsDrawer';
 
-import {useClassSchedules} from '@/hooks/useClassSchedules';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useClassSchedules } from '@/hooks/useClassSchedules';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IClassSchedule} from '@/types/classSchedule';
+import { IClassSchedule } from '@/types/classSchedule';
 
 const MonthSchedule: React.FC = () => {
   const { t } = useLocalization();

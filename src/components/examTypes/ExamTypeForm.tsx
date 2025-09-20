@@ -18,7 +18,6 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { getErrorMessage } from '@/types/errors';
 import { IExamType, IExamTypeCreate, IExamTypeUpdate } from '@/types/examType';
 
-
 interface ExamTypeFormProps {
   mode: 'create' | 'edit';
   examTypeId?: number;

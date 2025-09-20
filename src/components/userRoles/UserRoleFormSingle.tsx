@@ -1,22 +1,22 @@
 'use client';
 
-import {Button, Form, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRoles} from '@/hooks/useRoles';
-import {useUserRoles} from '@/hooks/useUserRoles';
-import {useUsers} from '@/hooks/useUsers';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRoles } from '@/hooks/useRoles';
+import { useUserRoles } from '@/hooks/useUserRoles';
+import { useUsers } from '@/hooks/useUsers';
 
-import {getErrorMessage} from '@/types/errors';
-import {IUserRole, IUserRoleCreate, IUserRoleUpdate} from '@/types/userRole';
+import { getErrorMessage } from '@/types/errors';
+import { IUserRole, IUserRoleCreate, IUserRoleUpdate } from '@/types/userRole';
 
-import {UserRoleFormProps} from './UserRoleFormTabView';
+import { UserRoleFormProps } from './UserRoleFormTabView';
 
 function UserRoleFormSingle({
   mode,

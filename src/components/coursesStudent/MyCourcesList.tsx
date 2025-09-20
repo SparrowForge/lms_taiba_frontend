@@ -1,11 +1,13 @@
-"use client";
+'use client';
 
-import { ClockCircleOutlined } from "@ant-design/icons";
-import React, { useEffect } from "react";
-import { Pagination, Table, Tag, Progress, Button } from "antd";
-import { useSubjects } from "@/hooks/useSubjects";
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
-import { useLocalization } from "@/hooks/useLocalization";
+import { Button, Pagination, Progress, Table, Tag } from 'antd';
+import React, { useEffect } from 'react';
+
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
+
+import { useLocalization } from '@/hooks/useLocalization';
+import { useSubjects } from '@/hooks/useSubjects';
 
 const MyCourcesList = () => {
   const { t } = useLocalization();
@@ -16,7 +18,7 @@ const MyCourcesList = () => {
     loadSubjects({ page: 1, limit: 5 });
   }, [loadSubjects]);
 
-  if (listStatus.status === "LOADING") {
+  if (listStatus.status === Status.LOADING) {
     return <p className="text-center">Loading subjects...</p>;
   }
 
@@ -27,28 +29,24 @@ const MyCourcesList = () => {
   // Define table columns
   const columns = [
     {
-      title: t(LOCALE_KEYS.SUBJECT_NAME),
-      dataIndex: "name",
-      key: "name",
+      title: t(LOCALE_KEYS.SUBJECT),
+      dataIndex: 'name',
+      key: 'name',
       render: (text: string) => <span className="font-semibold">{text}</span>,
     },
     {
       title: t(LOCALE_KEYS.STATUS),
-      dataIndex: "status",
-      key: "status",
+      dataIndex: 'status',
+      key: 'status',
       render: (status: string) => (
-        <Tag color={status === "active" ? "green" : "red"}>
-          {status?.toUpperCase()}
-        </Tag>
+        <Tag color={status === 'active' ? 'green' : 'red'}>{status?.toUpperCase()}</Tag>
       ),
     },
     {
       title: t(LOCALE_KEYS.PROGRESS),
-      dataIndex: "progress",
-      key: "progress",
-      render: (progress: number) => (
-        <Progress percent={progress ?? 0} size="small" />
-      ),
+      dataIndex: 'progress',
+      key: 'progress',
+      render: (progress: number) => <Progress percent={progress ?? 0} size="small" />,
     },
     // {
     //   title: t(LOCALE_KEYS.UNITS),
@@ -67,8 +65,8 @@ const MyCourcesList = () => {
     //   ),
     // },
     {
-      title: "",
-      key: "action",
+      title: '',
+      key: 'action',
       render: (_: any, record: any) => (
         <Button type="primary" ghost size="small">
           {t(LOCALE_KEYS.OPEN_SUBJECT)}
@@ -89,8 +87,8 @@ const MyCourcesList = () => {
       {/* Pagination */}
       <div className="flex justify-center mt-6">
         <Pagination
-          current={pagination?.currentPage || 1}
-          pageSize={pagination?.perPage || 5}
+          current={pagination?.page || 1}
+          pageSize={pagination?.totalPages || 5}
           total={pagination?.total || 0}
           onChange={(page, pageSize) => {
             loadSubjects({ page, limit: pageSize });

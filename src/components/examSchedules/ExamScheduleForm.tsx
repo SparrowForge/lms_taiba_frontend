@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Space, Select, Row, Col } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';

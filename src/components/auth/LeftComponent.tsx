@@ -1,7 +1,7 @@
 'use client';
 
 import { LineChartOutlined } from '@ant-design/icons';
-import { Card, Row, Col, Typography } from 'antd';
+import { Card, Col, Row, Typography } from 'antd';
 import Image from 'next/image';
 import { useLocale } from 'next-intl';
 import React from 'react';

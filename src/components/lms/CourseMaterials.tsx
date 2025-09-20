@@ -1,30 +1,30 @@
 import {
-    BookOutlined,
-    DeleteOutlined,
-    EditOutlined,
-    EyeOutlined,
-    FilePdfOutlined,
-    FileTextOutlined,
-    FundProjectionScreenOutlined,
-    PlusOutlined,
-    SnippetsOutlined,
-    VideoCameraOutlined,
+  BookOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  FilePdfOutlined,
+  FileTextOutlined,
+  FundProjectionScreenOutlined,
+  PlusOutlined,
+  SnippetsOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Empty, Select, Spin, Tag} from 'antd';
-import {useRouter} from 'next/navigation';
-import {useLocale} from 'next-intl';
-import React, {useEffect, useState} from 'react';
+import { Button, Card, Empty, Select, Spin, Tag } from 'antd';
+import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import React, { useEffect, useState } from 'react';
 
-import {Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
 
-import {useCourseMaterials} from '@/hooks/useCourseMaterials';
+import { useCourseMaterials } from '@/hooks/useCourseMaterials';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {ICourseMaterial} from '@/types/courseMaterial';
+import { ICourseMaterial } from '@/types/courseMaterial';
 
 import CourseMaterialDetailsDrawer from '../courseMaterials/CourseMaterialDetailsDrawer';
 import CourseMaterialFormDrawer from '../courseMaterials/CourseMaterialFormDrawer';
-import { useLocalization } from '@/hooks/useLocalization';
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 const materialTypes = ['pdf', 'lecture', 'video', 'slide', 'assignment', 'material'];
 
@@ -159,14 +159,11 @@ const CourseMaterials = () => {
     <Card style={{ marginBottom: '10px' }} className="rounded-xl shadow-sm">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">
-          {t(LOCALE_KEYS.COURSE_MATERIALS)}
-        </h2>
+        <h2 className="text-2xl font-semibold">{t(LOCALE_KEYS.COURSE_MATERIALS)}</h2>
         <Button type="primary" onClick={() => router.push('/course-materials/create')}>
           <PlusOutlined />
           {t(LOCALE_KEYS.UPLOAD_NEW)}
         </Button>
-
       </div>
 
       {/* Filters */}
@@ -201,7 +198,6 @@ const CourseMaterials = () => {
             })),
           ]}
         />
-
       </div>
 
       {/* Loading / Empty states */}
@@ -212,7 +208,6 @@ const CourseMaterials = () => {
       )}
       {listStatus.status === Status.SUCCESS && filteredMaterials.length === 0 && (
         <Empty description={t(LOCALE_KEYS.NO_MATERIALS)} />
-
       )}
 
       {/* Materials List */}
@@ -253,7 +248,7 @@ const CourseMaterials = () => {
                     />
                     <DeleteOutlined
                       style={{ fontSize: 18, cursor: 'pointer' }}
-                      onClick={() => router.push('/course-materials')} 
+                      onClick={() => router.push('/course-materials')}
                     />
                   </div>
                 </div>

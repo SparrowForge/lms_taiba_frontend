@@ -1,9 +1,9 @@
-import {StudentStatus} from '@/enums';
+import { StudentStatus } from '@/enums';
 
-import {IBatch} from './batch';
-import {IBranch} from './branch';
-import {ICourse} from './course';
-import {IStudentProfile} from './studentProfile';
+import { IBatch } from './batch';
+import { IBranch } from './branch';
+import { ICourse } from './course';
+import { IStudentProfile } from './studentProfile';
 
 export interface IStudent {
   id: number;

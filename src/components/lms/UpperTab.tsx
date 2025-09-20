@@ -9,7 +9,10 @@ type TabItem = {
   localeTitle: string;
 };
 
-const UpperTab: React.FC<{ onTabChange: (key: string) => void; items: TabItem[] }> = ({ onTabChange, items }) => {
+const UpperTab: React.FC<{ onTabChange: (key: string) => void; items: TabItem[] }> = ({
+  onTabChange,
+  items,
+}) => {
   const locale = useLocale();
 
   return (

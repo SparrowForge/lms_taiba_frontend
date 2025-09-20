@@ -2,7 +2,7 @@ import { EntityStatus } from '@/enums/status';
 
 import { IBatch } from './batch';
 import { ICourse } from './course';
-import { IExamType, IDuration } from './examType';
+import { IDuration, IExamType } from './examType';
 import { IRoom } from './room';
 import { ISemester } from './semester';
 import { ISubject } from './subject';

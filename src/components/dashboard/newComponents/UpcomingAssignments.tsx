@@ -1,23 +1,23 @@
 'use client';
 import {
-    CalculatorOutlined,
-    CodeOutlined,
-    DiffOutlined,
-    ExceptionOutlined,
-    ExperimentOutlined,
-    FileTextOutlined,
+  CalculatorOutlined,
+  CodeOutlined,
+  DiffOutlined,
+  ExceptionOutlined,
+  ExperimentOutlined,
+  FileTextOutlined,
 } from '@ant-design/icons';
-import {Button, Card} from 'antd';
+import { Button, Card } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
 
-import {useCourseAssignments} from '@/hooks/useCourseAssignments';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useCourseAssignments } from '@/hooks/useCourseAssignments';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import IconBgColoredCard from '../dashboardui/cards/IconBgColoredCard';
 

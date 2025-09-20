@@ -1,8 +1,8 @@
-import {EntityStatus} from '@/enums';
+import { EntityStatus } from '@/enums';
 
-import {IAddress} from './address';
-import {IInstitute} from './institute';
-import {IUser} from './user';
+import { IAddress } from './address';
+import { IInstitute } from './institute';
+import { IUser } from './user';
 
 export interface IBranch {
   localName: string;

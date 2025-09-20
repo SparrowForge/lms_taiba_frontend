@@ -1,13 +1,15 @@
 'use client';
 import { Row } from 'antd';
 
-import { useRole } from '@/hooks/useRole';
+import { UserType } from '@/enums/user-type.enum';
+
+import { useAuth } from '@/hooks/useAuth';
 
 import StudentLayout from './StudentLayout';
 import TeacherLayout from './TeacherLayout';
 
 const LayoutDashboard = () => {
-  const role = useRole();
+  const { user } = useAuth();
   return (
     <div className="h-[600px] overflow-auto">
       <Row
@@ -15,7 +17,13 @@ const LayoutDashboard = () => {
         className="pl-6"
         style={{ width: '100%', minWidth: 0, height: '100%' }}
       >
-        {role === 'teacher' ? <TeacherLayout /> : <StudentLayout />}
+        {user?.type === UserType.FACULTY ? (
+          <TeacherLayout />
+        ) : user?.type === UserType.STUDENT ? (
+          <StudentLayout />
+        ) : (
+          <div />
+        )}
       </Row>
     </div>
   );

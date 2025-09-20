@@ -4,7 +4,7 @@ import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 import { useLocalization } from '@/hooks/useLocalization';
 
-import { IExamType, IDuration } from '@/types/examType';
+import { IDuration, IExamType } from '@/types/examType';
 
 export const getExamTypeDisplayName = (examType: IExamType) => {
   return examType.name || `Exam Type #${examType.id}`;
@@ -45,7 +45,8 @@ export const useCreateExamTypeDetailsConfig = (
       {
         key: 'duration',
         label: t(LOCALE_KEYS.DURATION),
-        render: (duration: IDuration) => (duration ? `${duration.hours}h ${duration.minutes}m` : 'N/A'),
+        render: (duration: IDuration) =>
+          duration ? `${duration.hours}h ${duration.minutes}m` : 'N/A',
       },
       { key: 'contribution', label: t(LOCALE_KEYS.CONTRIBUTION) },
       { key: 'status', label: t(LOCALE_KEYS.STATUS) },

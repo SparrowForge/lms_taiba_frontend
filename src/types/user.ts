@@ -1,9 +1,8 @@
-import {EntityStatus} from '@/enums';
-import {UserType} from "@/enums/user-type.enum";
+import { EntityStatus } from '@/enums';
+import { UserType } from '@/enums/user-type.enum';
 
-import {IPaginationMeta, IStatusState} from './common';
-import {IRole} from './role';
-
+import { IPaginationMeta, IStatusState } from './common';
+import { IRole } from './role';
 
 // User interface matching the API response
 export interface IUser {

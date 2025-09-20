@@ -1,11 +1,11 @@
-import {AttendanceStatus} from '@/enums';
+import { AttendanceStatus } from '@/enums';
 
-import {IBatch} from './batch';
-import {IClassSchedule} from './classSchedule';
-import {ICourse} from './course';
-import {IFaculty} from './faculty';
-import {ISemester} from './semester';
-import {ISubject} from './subject';
+import { IBatch } from './batch';
+import { IClassSchedule } from './classSchedule';
+import { ICourse } from './course';
+import { IFaculty } from './faculty';
+import { ISemester } from './semester';
+import { ISubject } from './subject';
 
 export interface IAttendance {
   id: number;

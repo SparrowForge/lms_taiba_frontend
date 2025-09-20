@@ -16,7 +16,6 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { useExamTypes } from '@/hooks/useExamTypes';
 import { useLocalization } from '@/hooks/useLocalization';
 
-
 export default function EditExamTypePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { selectedExamType, loadExamType, detailsStatus } = useExamTypes();

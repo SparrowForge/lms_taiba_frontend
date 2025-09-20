@@ -11,24 +11,24 @@ import { IExam, IExamCreate, IExamUpdate } from '@/types/exam';
 import { examService } from '@/services/examService';
 
 import {
-  setListStatus,
-  setDetailsStatus,
-  setActionStatus,
-  setExams,
   addExam,
-  updateExam,
-  deleteExam,
-  setSelectedExam,
-  setPagination,
   clearActionStatus,
   clearDetailsStatus,
+  deleteExam,
+  setActionStatus,
+  setDetailsStatus,
+  setExams,
+  setListStatus,
+  setPagination,
+  setSelectedExam,
+  updateExam,
 } from '@/store/slices/examSlice';
-
 
 export const useExams = () => {
   const dispatch = useDispatch();
-  const { exams, selectedExam, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.exams);
+  const { exams, selectedExam, listStatus, detailsStatus, actionStatus, pagination } = useSelector(
+    (state: RootState) => state.exams,
+  );
 
   const loadExams = useCallback(
     async (params = {}) => {

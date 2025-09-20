@@ -1,8 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
@@ -15,7 +14,6 @@ import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 import { useExamTypes } from '@/hooks/useExamTypes';
 import { useLocalization } from '@/hooks/useLocalization';
-
 
 import { IExamType } from '@/types/examType';
 

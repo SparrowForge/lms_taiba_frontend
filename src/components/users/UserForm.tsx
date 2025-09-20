@@ -1,25 +1,25 @@
 'use client';
 
-import {Button, Form, Input, Select, Space} from 'antd';
-import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
-import {toast} from 'react-toastify';
+import { Button, Form, Input, Select, Space } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
-import {UserType} from '@/enums/user-type.enum';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
+import { UserType } from '@/enums/user-type.enum';
 
-import {useFaculties} from '@/hooks/useFaculties';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudents} from '@/hooks/useStudents';
-import {useUsers} from '@/hooks/useUsers';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudents } from '@/hooks/useStudents';
+import { useUsers } from '@/hooks/useUsers';
 
-import {getErrorMessage} from '@/types/errors';
-import {IUserCreate, IUserUpdate} from '@/types/user';
+import { getErrorMessage } from '@/types/errors';
+import { IUserCreate, IUserUpdate } from '@/types/user';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface UserFormProps {
   mode: 'create' | 'edit';

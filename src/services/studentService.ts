@@ -1,7 +1,7 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IStudent, IStudentCreate, IStudentUpdate} from '@/types/student';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import { IStudent, IStudentCreate, IStudentUpdate } from '@/types/student';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const studentService = {
   getStudents: async (params = {}): Promise<IBasePaginatedResponse<IStudent>> => {

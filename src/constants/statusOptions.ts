@@ -4,13 +4,13 @@
  */
 
 import {
-  EntityStatus,
-  SemesterStatus,
-  ClassScheduleStatus,
-  StudentStatus,
   AttendanceStatus,
+  ClassScheduleStatus,
   CourseAssignmentSubmissionStatus,
+  EntityStatus,
   MaritalStatus,
+  SemesterStatus,
+  StudentStatus,
 } from '@/enums/status';
 
 import { IStatusOption } from '@/types/statusSelect';

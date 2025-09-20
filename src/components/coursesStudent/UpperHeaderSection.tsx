@@ -1,15 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
-import { LOCALE_KEYS } from "@/constants/localizationKeys";
-import { useLocalization } from "@/hooks/useLocalization";
-import MyCourcesCard from "./MyCourcesCard";
-import MyCourcesList from "./MyCourcesList";
+import { AppstoreOutlined, BarsOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+
+import { useLocalization } from '@/hooks/useLocalization';
+
+import MyCourcesCard from './MyCourcesCard';
+import MyCourcesList from './MyCourcesList';
 
 const UpperHeaderSection = () => {
   const { t } = useLocalization();
-  const [view, setView] = useState<"grid" | "list">("grid");
+  const [view, setView] = useState<'grid' | 'list'>('grid');
 
   return (
     <div>
@@ -21,11 +24,11 @@ const UpperHeaderSection = () => {
         {/* View Toggle */}
         <div className="flex gap-2">
           <button
-            onClick={() => setView("grid")}
+            onClick={() => setView('grid')}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-md ${
-              view === "grid"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-100"
+              view === 'grid'
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
             }`}
           >
             <AppstoreOutlined />
@@ -33,11 +36,11 @@ const UpperHeaderSection = () => {
           </button>
 
           <button
-            onClick={() => setView("list")}
+            onClick={() => setView('list')}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm tex rounded-md ${
-              view === "list"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-100"
+              view === 'list'
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
             }`}
           >
             <BarsOutlined />
@@ -47,7 +50,7 @@ const UpperHeaderSection = () => {
       </div>
 
       {/* Render view */}
-      {view === "grid" ? <MyCourcesCard /> : <MyCourcesList />}
+      {view === 'grid' ? <MyCourcesCard /> : <MyCourcesList />}
     </div>
   );
 };

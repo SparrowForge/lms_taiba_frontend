@@ -1,13 +1,13 @@
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 import UserStatusTag from '@/components/users/UserStatusTag';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IUser} from '@/types/user';
+import { IUser } from '@/types/user';
 
 export const getUserDisplayName = (user: IUser) => {
   return user.name || user.email || 'Unknown User';

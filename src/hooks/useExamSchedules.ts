@@ -11,19 +11,18 @@ import { IExamSchedule, IExamScheduleCreate, IExamScheduleUpdate } from '@/types
 import { examScheduleService } from '@/services/examScheduleService';
 
 import {
-  setListStatus,
-  setDetailsStatus,
-  setActionStatus,
-  setExamSchedules,
   addExamSchedule,
-  updateExamSchedule,
-  deleteExamSchedule,
-  setSelectedExamSchedule,
-  setPagination,
   clearActionStatus,
   clearDetailsStatus,
+  deleteExamSchedule,
+  setActionStatus,
+  setDetailsStatus,
+  setExamSchedules,
+  setListStatus,
+  setPagination,
+  setSelectedExamSchedule,
+  updateExamSchedule,
 } from '@/store/slices/examScheduleSlice';
-
 
 export const useExamSchedules = () => {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
-import {EntityStatus} from '@/enums';
+import { EntityStatus } from '@/enums';
 
-import {ICourse} from './course';
-import {ISemesterCreate, ISemesterUpdate} from './semester';
+import { ICourse } from './course';
+import { ISemesterCreate, ISemesterUpdate } from './semester';
 
 export interface IBatch {
   id: number;

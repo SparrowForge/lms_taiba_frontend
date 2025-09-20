@@ -1,26 +1,24 @@
 'use client';
 
 import {
-  FilePdfOutlined,
-  VideoCameraOutlined,
-  FileTextOutlined,
-  FundProjectionScreenOutlined,
-  SnippetsOutlined,
   BookOutlined,
-  ExceptionOutlined,
-  ExperimentOutlined,
   CalculatorOutlined,
+  ExperimentOutlined,
+  FileTextOutlined,
+  SnippetsOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Tag, Spin, Empty } from 'antd';
+import { Button, Card, Empty, Spin, Tag } from 'antd';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
+
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
+
+import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
 
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useLocalization } from '@/hooks/useLocalization';
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
-import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
 
 // 🔹 Icon map for assignment types
 const getIcon = (type: string) => {
@@ -85,7 +83,7 @@ const Assignments: React.FC = () => {
   }, [loadCourseAssignments]);
 
   const sortedAssignments = [...(courseAssignments || [])].sort(
-    (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf()
+    (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf(),
   );
 
   const handleViewDetails = (assignmentId: number) => {
