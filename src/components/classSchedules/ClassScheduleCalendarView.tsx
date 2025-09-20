@@ -1,16 +1,16 @@
 'use client';
 
-import { Button, Calendar, Card, Select, Space, Tag, Tooltip } from 'antd';
-import dayjs, { Dayjs } from 'dayjs';
-import React, { useEffect, useMemo, useState } from 'react';
+import {Button, Calendar, Card, Select, Space, Tag, Tooltip} from 'antd';
+import dayjs, {Dayjs} from 'dayjs';
+import React, {useEffect, useMemo, useState} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ClassScheduleStatus, Status} from '@/enums';
 
-import { useClassSchedules } from '@/hooks/useClassSchedules';
-import { useLocalization } from '@/hooks/useLocalization';
+import {useClassSchedules} from '@/hooks/useClassSchedules';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import { IClassSchedule } from '@/types/classSchedule';
+import {IClassSchedule} from '@/types/classSchedule';
 
 import ClassScheduleDetailsDrawer from './ClassScheduleDetailsDrawer';
 import ClassScheduleFormDrawer from './ClassScheduleFormDrawer';
@@ -183,11 +183,11 @@ function ClassScheduleCalendarView() {
 
   // Get color for schedule based on status or type
   const getScheduleColor = (schedule: IClassSchedule): string => {
-    if (schedule.status === 'ACTIVE') {
+    if (schedule.status === ClassScheduleStatus.ACTIVE) {
       return 'green';
-    } else if (schedule.status === 'INACTIVE') {
+    } else if (schedule.status === ClassScheduleStatus.INACTIVE) {
       return 'red';
-    } else if (schedule.status === 'PENDING') {
+    } else if (schedule.status === ClassScheduleStatus.CANCELLED) {
       return 'orange';
     }
     return 'default';

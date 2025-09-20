@@ -1,22 +1,25 @@
 import React from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 import UserStatusTag from '@/components/users/UserStatusTag';
 
-import { useLocalization } from '@/hooks/useLocalization';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import { IUser } from '@/types/user';
+import {IUser} from '@/types/user';
 
 export const getUserDisplayName = (user: IUser) => {
-  return `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || 'Unknown User';
+  return user.name || user.email || 'Unknown User';
 };
 
 export const getUserInitials = (user: IUser) => {
-  const firstName = user.firstName || '';
-  const lastName = user.lastName || '';
-  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || 'U';
+  const name = user.name || '';
+  const nameParts = name.split(' ');
+  if (nameParts.length >= 2) {
+    return `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
+  }
+  return name.charAt(0).toUpperCase() || 'U';
 };
 
 export const useCreateUserDetailsConfig = (
@@ -48,16 +51,22 @@ export const useCreateUserDetailsConfig = (
         label: 'ID',
       },
       {
-        key: 'firstName',
-        label: t(LOCALE_KEYS.FIRST_NAME),
-      },
-      {
-        key: 'lastName',
-        label: t(LOCALE_KEYS.LAST_NAME),
+        key: 'name',
+        label: t(LOCALE_KEYS.NAME),
       },
       {
         key: 'email',
         label: t(LOCALE_KEYS.EMAIL),
+      },
+      {
+        key: 'type',
+        label: t(LOCALE_KEYS.TYPE),
+      },
+      {
+        key: 'roles',
+        label: t(LOCALE_KEYS.ROLES),
+        render: (roles: any[]) =>
+          roles?.length > 0 ? roles.map((role) => role.role?.name).join(', ') : 'No roles',
       },
       {
         key: 'phone',

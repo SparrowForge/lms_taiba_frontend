@@ -1,10 +1,10 @@
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
 
-import { useLocalization } from '@/hooks/useLocalization';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import { IBranch } from '@/types/branch';
+import {IBranch} from '@/types/branch';
 
 export const getBranchDisplayName = (branch: IBranch) => branch.name;
 
@@ -62,9 +62,9 @@ export const useCreateBranchDetailsConfig = (
         label: t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO),
       },
       {
-        key: 'campusDirector.firstName',
+        key: 'campusDirector.name',
         label: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID),
-        render: (value: string, item: IBranch) => item?.campusDirector?.firstName || 'N/A',
+        render: (value: string, item: IBranch) => item?.campusDirector?.name || 'N/A',
       },
       {
         key: 'status',

@@ -1,25 +1,26 @@
 import {
-  FilePdfOutlined,
-  VideoCameraOutlined,
-  FileTextOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  PlusOutlined,
-  FundProjectionScreenOutlined,
-  SnippetsOutlined,
-  BookOutlined,
+    BookOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    EyeOutlined,
+    FilePdfOutlined,
+    FileTextOutlined,
+    FundProjectionScreenOutlined,
+    PlusOutlined,
+    SnippetsOutlined,
+    VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Button, Select, Tag, Card, Spin, Empty } from 'antd';
-import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
-import React, { useEffect, useState } from 'react';
+import {Button, Card, Empty, Select, Spin, Tag} from 'antd';
+import {useRouter} from 'next/navigation';
+import {useLocale} from 'next-intl';
+import React, {useEffect, useState} from 'react';
 
-import { Status } from '@/enums';
+import {Status} from '@/enums';
 
-import { useCourseMaterials } from '@/hooks/useCourseMaterials';
+import {useCourseMaterials} from '@/hooks/useCourseMaterials';
 
-import { ICourseMaterial } from '@/types/courseMaterial';
+import {ICourseMaterial} from '@/types/courseMaterial';
+
 import CourseMaterialDetailsDrawer from '../courseMaterials/CourseMaterialDetailsDrawer';
 import CourseMaterialFormDrawer from '../courseMaterials/CourseMaterialFormDrawer';
 

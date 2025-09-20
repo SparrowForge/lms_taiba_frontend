@@ -1,7 +1,9 @@
-import { ICourseAssignment } from './courseAssignment';
-import { IFaculty } from './faculty';
-import { IFile } from './file';
-import { IStudent } from './student';
+import {CourseAssignmentSubmissionStatus} from '@/enums';
+
+import {ICourseAssignment} from './courseAssignment';
+import {IFaculty} from './faculty';
+import {IFile} from './file';
+import {IStudent} from './student';
 
 export interface ICourseAssignmentSubmission {
   id: number;
@@ -14,7 +16,7 @@ export interface ICourseAssignmentSubmission {
   feedback: string;
   gradedBy: number;
   gradedAt: string;
-  status: string;
+  status: CourseAssignmentSubmissionStatus;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -34,7 +36,7 @@ export interface ICourseAssignmentSubmissionCreate {
   feedback: string;
   gradedBy: number;
   gradedAt: string;
-  status: string;
+  status: CourseAssignmentSubmissionStatus;
 }
 
 export interface ICourseAssignmentSubmissionUpdate {
@@ -47,5 +49,5 @@ export interface ICourseAssignmentSubmissionUpdate {
   feedback?: string;
   gradedBy?: number;
   gradedAt?: string;
-  status?: string;
+  status?: CourseAssignmentSubmissionStatus;
 }

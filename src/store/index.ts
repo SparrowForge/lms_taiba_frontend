@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 
 import addressReducer from './slices/addressSlice';
 import attendanceReducer from './slices/attendanceSlice';
@@ -14,6 +14,9 @@ import courseReducer from './slices/courseSlice';
 import courseTypeReducer from './slices/courseTypeSlice';
 import departmentReducer from './slices/departmentSlice';
 import employmentTypeReducer from './slices/employmentTypeSlice';
+import examScheduleReducer from './slices/examScheduleSlice';
+import examReducer from './slices/examSlice';
+import examTypeReducer from './slices/examTypeSlice';
 import facultyReducer from './slices/facultySlice';
 import facultySubjectReducer from './slices/facultySubjectSlice';
 import feeInstallmentPlanReducer from './slices/feeInstallmentPlanSlice';
@@ -65,6 +68,9 @@ export interface RootState {
   userRoles: ReturnType<typeof userRoleReducer>;
   addresses: ReturnType<typeof addressReducer>;
   courseTypes: ReturnType<typeof courseTypeReducer>;
+  exams: ReturnType<typeof examReducer>;
+  examSchedules: ReturnType<typeof examScheduleReducer>;
+  examTypes: ReturnType<typeof examTypeReducer>;
   rooms: ReturnType<typeof roomReducer>;
   roomTypes: ReturnType<typeof roomTypeReducer>;
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
@@ -107,6 +113,9 @@ export const store = configureStore({
     userRoles: userRoleReducer,
     addresses: addressReducer,
     courseTypes: courseTypeReducer,
+    exams: examReducer,
+    examSchedules: examScheduleReducer,
+    examTypes: examTypeReducer,
     rooms: roomReducer,
     roomTypes: roomTypeReducer,
     scheduleTypes: scheduleTypeReducer,

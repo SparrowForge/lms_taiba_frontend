@@ -1,26 +1,26 @@
-import { AxiosError } from 'axios';
-import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {AxiosError} from 'axios';
+import {useRouter} from 'next/navigation';
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
-import type { LoginCredentials, RegisterCredentials } from '@/types/auth';
-import type { IUser } from '@/types/user';
+import type {LoginCredentials, RegisterCredentials} from '@/types/auth';
+import type {IUser} from '@/types/user';
 
-import { authService } from '@/services/authService';
+import {authService} from '@/services/authService';
 
 import {
-  clearAuth,
-  clearError,
-  initializeAuth,
-  setIsAuthenticated,
-  setLoading,
-  setRefreshToken,
-  setToken,
-  setUser,
-  updateUser,
+    clearAuth,
+    clearError,
+    initializeAuth,
+    setIsAuthenticated,
+    setLoading,
+    setRefreshToken,
+    setToken,
+    setUser,
+    updateUser,
 } from '@/store/slices/authSlice';
 
-import type { AppDispatch, RootState } from '@/store';
+import type {AppDispatch, RootState} from '@/store';
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -173,7 +173,7 @@ export const useAuth = () => {
   // Get user's full name
   const getUserFullName = useCallback(() => {
     if (!user) return '';
-    return `${user.firstName} ${user.lastName}`.trim();
+    return user.name || user.email || 'Unknown User';
   }, [user]);
 
   return {

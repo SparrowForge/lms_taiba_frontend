@@ -1,5 +1,7 @@
-import { IBatch } from './batch';
-import { ISubjectWithFaculty } from './subject';
+import {SemesterStatus} from '@/enums';
+
+import {IBatch} from './batch';
+import {ISubjectWithFaculty} from './subject';
 
 export interface ISemester {
   id: number;
@@ -8,7 +10,7 @@ export interface ISemester {
   termNo: number;
   startDate: string;
   endDate: string;
-  status: string;
+  status: SemesterStatus;
   remarks: string;
   isBreak: boolean;
   createdAt: string;
@@ -23,7 +25,7 @@ export interface ISemesterCreate {
   termNo: number;
   startDate: string;
   endDate: string;
-  status: string;
+  status: SemesterStatus;
   remarks: string;
   isBreak: boolean;
 }
@@ -34,7 +36,7 @@ export interface ISemesterUpdate {
   termNo?: number;
   startDate?: string;
   endDate?: string;
-  status?: string;
+  status?: SemesterStatus;
   remarks?: string;
   isBreak?: boolean;
 }

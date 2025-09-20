@@ -1,20 +1,20 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { EntityDetails } from '@/components/ui/EntityDetails';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
-import { useCreateUserRoleDetailsConfig } from '@/components/userRoles/userRoleConfig';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import {MainLayout} from '@/components/layout/MainLayout';
+import {EntityDetails} from '@/components/ui/EntityDetails';
+import {EntityDetailsConfig} from '@/components/ui/EntityDetailsContent';
+import {useCreateUserRoleDetailsConfig} from '@/components/userRoles/userRoleConfig';
 
-import { useLocalization } from '@/hooks/useLocalization';
-import { useUserRoles } from '@/hooks/useUserRoles';
+import {useLocalization} from '@/hooks/useLocalization';
+import {useUserRoles} from '@/hooks/useUserRoles';
 
-import { IUserRole } from '@/types/userRole';
+import {IUserRole} from '@/types/userRole';
 
 export default function UserRoleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { selectedUserRole, detailsStatus, loadUserRole } = useUserRoles();
@@ -28,7 +28,7 @@ export default function UserRoleDetailPage({ params }: { params: Promise<{ id: s
   useEffect(() => {
     //getUserRoleById(userRoleId);
     loadUserRole(userRoleId);
-  }, [loadUserRole, userRoleId]);
+  }, [userRoleId, loadUserRole]);
 
   const config = useCreateUserRoleDetailsConfig(
     selectedUserRole,

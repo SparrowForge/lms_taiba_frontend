@@ -1,11 +1,13 @@
-import { IBatch } from './batch';
-import { IFaculty } from './faculty';
-import { IRoom } from './room';
-import { IScheduleType } from './scheduleType';
-import { ISemester } from './semester';
-import { ISubject } from './subject';
-import { ITimeSlot } from './timeSlot';
-import { IWeekDay } from './weekDay';
+import {ClassScheduleStatus} from '@/enums';
+
+import {IBatch} from './batch';
+import {IFaculty} from './faculty';
+import {IRoom} from './room';
+import {IScheduleType} from './scheduleType';
+import {ISemester} from './semester';
+import {ISubject} from './subject';
+import {ITimeSlot} from './timeSlot';
+import {IWeekDay} from './weekDay';
 
 export interface IClassSchedule {
   id: number;
@@ -22,7 +24,7 @@ export interface IClassSchedule {
   scheduleTypeId: number;
   scheduleType: IScheduleType;
   maxCapacity: number;
-  status: string;
+  status: ClassScheduleStatus;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -49,7 +51,7 @@ export interface IClassScheduleCreate {
   isRecurring: boolean;
   scheduleTypeId: number;
   maxCapacity: number;
-  status: string;
+  status: ClassScheduleStatus;
 }
 
 export interface IClassScheduleUpdate {
@@ -65,5 +67,5 @@ export interface IClassScheduleUpdate {
   isRecurring?: boolean;
   scheduleTypeId?: number;
   maxCapacity?: number;
-  status?: string;
+  status?: ClassScheduleStatus;
 }

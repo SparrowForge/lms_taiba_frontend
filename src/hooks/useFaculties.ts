@@ -1,27 +1,27 @@
-import { AxiosError } from 'axios';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {AxiosError} from 'axios';
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
-import { Status } from '@/enums';
-import { RootState } from '@/store';
+import {Status} from '@/enums';
+import {RootState} from '@/store';
 
-import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IFaculty, IFacultyCreate, IFacultyUpdate } from '@/types/faculty';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
 
-import { facultyService } from '@/services/facultyService';
+import {facultyService} from '@/services/facultyService';
 
 import {
-  addFaculty,
-  clearActionStatus,
-  clearDetailsStatus,
-  deleteFaculty,
-  setActionStatus,
-  setDetailsStatus,
-  setFaculties,
-  setListStatus,
-  setPagination,
-  setSelectedFaculty,
-  updateFaculty,
+    addFaculty,
+    clearActionStatus,
+    clearDetailsStatus,
+    deleteFaculty,
+    setActionStatus,
+    setDetailsStatus,
+    setFaculties,
+    setListStatus,
+    setPagination,
+    setSelectedFaculty,
+    updateFaculty,
 } from '@/store/slices/facultySlice';
 
 export const useFaculties = () => {
@@ -181,6 +181,39 @@ export const useFaculties = () => {
     [dispatch],
   );
 
+  // Load faculties without user accounts
+  const loadFacultiesWithoutUser = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IFaculty[]> =
+          await facultyService.getFacultiesWithoutUser(params);
+        dispatch(setFaculties(response?.data ?? []));
+        // Reset pagination since this is not a paginated response
+        dispatch(
+          setPagination({
+            page: 1,
+            limit: response?.data?.length ?? 0,
+            total: response?.data?.length ?? 0,
+            totalPages: 1,
+            hasNextPage: false,
+            hasPreviousPage: false,
+          }),
+        );
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load faculties without user accounts'
+            : 'Failed to load faculties without user accounts';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
   return {
     // State
     faculties,
@@ -192,6 +225,7 @@ export const useFaculties = () => {
 
     // Actions
     loadFaculties,
+    loadFacultiesWithoutUser,
     loadFaculty,
     createFaculty,
     editFaculty,

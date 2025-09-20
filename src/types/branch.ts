@@ -1,6 +1,8 @@
-import { IAddress } from './address';
-import { IInstitute } from './institute';
-import { IUser } from './user';
+import {EntityStatus} from '@/enums';
+
+import {IAddress} from './address';
+import {IInstitute} from './institute';
+import {IUser} from './user';
 
 export interface IBranch {
   localName: string;
@@ -11,7 +13,7 @@ export interface IBranch {
   addressId: number;
   externalInstituteIdNo: string;
   campusDirectorUserId: number;
-  status: string;
+  status: EntityStatus;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;

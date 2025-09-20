@@ -1,6 +1,9 @@
-import { IBatch } from './batch';
-import { IBranch } from './branch';
-import { ICourse } from './course';
+import {StudentStatus} from '@/enums';
+
+import {IBatch} from './batch';
+import {IBranch} from './branch';
+import {ICourse} from './course';
+import {IStudentProfile} from './studentProfile';
 
 export interface IStudent {
   id: number;
@@ -15,13 +18,14 @@ export interface IStudent {
   referenceNo: string;
   fileIds: number[];
   admissionSource: string;
-  status: string;
+  status: StudentStatus;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
   course: ICourse;
   batch: IBatch;
   branch: IBranch;
+  profile: IStudentProfile;
 }
 
 export interface IStudentCreate {
@@ -36,7 +40,7 @@ export interface IStudentCreate {
   referenceNo: string;
   fileIds: number[];
   admissionSource: string;
-  status: string;
+  status: StudentStatus;
 }
 
 export interface IStudentUpdate {
@@ -51,5 +55,5 @@ export interface IStudentUpdate {
   referenceNo?: string;
   fileIds?: number[];
   admissionSource?: string;
-  status?: string;
+  status?: StudentStatus;
 }

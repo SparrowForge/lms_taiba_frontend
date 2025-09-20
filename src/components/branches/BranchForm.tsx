@@ -1,25 +1,25 @@
 'use client';
 
-import { Button, Form, Input, Select, Space } from 'antd';
-import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import {Button, Form, Input, Select, Space} from 'antd';
+import {useRouter} from 'next/navigation';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
-import { useAddresses } from '@/hooks/useAddresses';
-import { useBranches } from '@/hooks/useBranches';
-import { useInstitutes } from '@/hooks/useInstitutes';
-import { useLocalization } from '@/hooks/useLocalization';
-import { useUsers } from '@/hooks/useUsers';
+import {useAddresses} from '@/hooks/useAddresses';
+import {useBranches} from '@/hooks/useBranches';
+import {useInstitutes} from '@/hooks/useInstitutes';
+import {useLocalization} from '@/hooks/useLocalization';
+import {useUsers} from '@/hooks/useUsers';
 
-import { IBranch, IBranchCreate, IBranchUpdate } from '@/types/branch';
-import { getErrorMessage } from '@/types/errors';
+import {IBranch, IBranchCreate, IBranchUpdate} from '@/types/branch';
+import {getErrorMessage} from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface BranchFormProps {
   mode: 'create' | 'edit';
@@ -240,7 +240,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         >
           {users.map((user) => (
             <Select.Option key={user.id} value={user.id}>
-              {user.firstName} {user.lastName}
+              {user.name || user.email}
             </Select.Option>
           ))}
         </Select>

@@ -1,30 +1,30 @@
 'use client';
 
-import { AxiosError } from 'axios';
-import { useCallback } from 'react';
+import {AxiosError} from 'axios';
+import {useCallback} from 'react';
 
-import { Status } from '@/enums';
-import { RootState } from '@/store';
+import {Status} from '@/enums';
+import {RootState} from '@/store';
 
-import { IBaseResponse } from '@/types/common';
-import { IUser, IUserCreate, IUserFilters, IUserUpdate } from '@/types/user';
+import {IBaseResponse} from '@/types/common';
+import {IUser, IUserCreate, IUserFilters, IUserUpdate} from '@/types/user';
 
-import { userService } from '@/services/userService';
+import {userService} from '@/services/userService';
 
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import {useAppDispatch, useAppSelector} from '@/store/hooks';
 import {
-  addUser,
-  clearFilters,
-  clearUsers,
-  deleteUser,
-  setActionStatus,
-  setDetailsStatus,
-  setFilters,
-  setListStatus,
-  setPagination,
-  setSelectedUser,
-  setUsers,
-  updateUser,
+    addUser,
+    clearFilters,
+    clearUsers,
+    deleteUser,
+    setActionStatus,
+    setDetailsStatus,
+    setFilters,
+    setListStatus,
+    setPagination,
+    setSelectedUser,
+    setUsers,
+    updateUser,
 } from '@/store/slices/userSlice';
 
 export const useUsers = () => {
@@ -79,7 +79,7 @@ export const useUsers = () => {
         dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
       }
     },
-    [dispatch, users],
+    [dispatch],
   );
 
   // Create user (Action)
@@ -222,8 +222,7 @@ export const useUsers = () => {
       const lowercaseQuery = query.toLowerCase();
       return users.filter(
         (user: IUser) =>
-          user.firstName.toLowerCase().includes(lowercaseQuery) ||
-          user.lastName.toLowerCase().includes(lowercaseQuery) ||
+          user.name.toLowerCase().includes(lowercaseQuery) ||
           user.phone?.toLowerCase().includes(lowercaseQuery),
       );
     },

@@ -1,7 +1,7 @@
-import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IFaculty, IFacultyCreate, IFacultyUpdate } from '@/types/faculty';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import {IFaculty, IFacultyCreate, IFacultyUpdate} from '@/types/faculty';
 
-import { api } from '@/lib/axios';
+import {api} from '@/lib/axios';
 
 export const facultyService = {
   // Get all faculty with pagination and search
@@ -31,6 +31,12 @@ export const facultyService = {
   // Delete a faculty
   deleteFaculty: async (id: number): Promise<void> => {
     const response = await api.delete(`/faculty/${id}`);
+    return response.data;
+  },
+
+  // Get faculties without user accounts
+  getFacultiesWithoutUser: async (params = {}): Promise<IBaseResponse<IFaculty[]>> => {
+    const response = await api.get<IBaseResponse<IFaculty[]>>('/faculty/without-user', { params });
     return response.data;
   },
 };

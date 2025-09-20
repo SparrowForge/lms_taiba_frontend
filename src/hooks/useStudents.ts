@@ -1,27 +1,27 @@
-import { AxiosError } from 'axios';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {AxiosError} from 'axios';
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
-import { Status } from '@/enums';
-import { RootState } from '@/store';
+import {Status} from '@/enums';
+import {RootState} from '@/store';
 
-import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IStudent, IStudentCreate, IStudentUpdate } from '@/types/student';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import {IStudent, IStudentCreate, IStudentUpdate} from '@/types/student';
 
-import { studentService } from '@/services/studentService';
+import {studentService} from '@/services/studentService';
 
 import {
-  addStudent,
-  clearActionStatus,
-  clearDetailsStatus,
-  deleteStudent,
-  setActionStatus,
-  setDetailsStatus,
-  setListStatus,
-  setPagination,
-  setSelectedStudent,
-  setStudents,
-  updateStudent,
+    addStudent,
+    clearActionStatus,
+    clearDetailsStatus,
+    deleteStudent,
+    setActionStatus,
+    setDetailsStatus,
+    setListStatus,
+    setPagination,
+    setSelectedStudent,
+    setStudents,
+    updateStudent,
 } from '@/store/slices/studentSlice';
 
 export const useStudents = () => {
@@ -171,6 +171,39 @@ export const useStudents = () => {
     [dispatch],
   );
 
+  // Load students without user accounts
+  const loadStudentsWithoutUser = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IStudent[]> =
+          await studentService.getStudentsWithoutUser(params);
+        dispatch(setStudents(response?.data ?? []));
+        // Reset pagination since this is not a paginated response
+        dispatch(
+          setPagination({
+            page: 1,
+            limit: response?.data?.length ?? 0,
+            total: response?.data?.length ?? 0,
+            totalPages: 1,
+            hasNextPage: false,
+            hasPreviousPage: false,
+          }),
+        );
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load students without user accounts'
+            : 'Failed to load students without user accounts';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
   return {
     students,
     selectedStudent,
@@ -180,6 +213,7 @@ export const useStudents = () => {
     pagination,
 
     loadStudents,
+    loadStudentsWithoutUser,
     loadStudent,
     createStudent,
     editStudent,
