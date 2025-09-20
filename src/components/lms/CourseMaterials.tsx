@@ -23,10 +23,13 @@ import {ICourseMaterial} from '@/types/courseMaterial';
 
 import CourseMaterialDetailsDrawer from '../courseMaterials/CourseMaterialDetailsDrawer';
 import CourseMaterialFormDrawer from '../courseMaterials/CourseMaterialFormDrawer';
+import { useLocalization } from '@/hooks/useLocalization';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 const materialTypes = ['pdf', 'lecture', 'video', 'slide', 'assignment', 'material'];
 
 const CourseMaterials = () => {
+  const { t } = useLocalization();
   const locale = useLocale();
   const router = useRouter();
   const { courseMaterials, listStatus, loadCourseMaterials } = useCourseMaterials();
@@ -157,12 +160,13 @@ const CourseMaterials = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">
-          {locale === 'ar' ? 'المواد الدراسية' : 'Course Materials'}
+          {t(LOCALE_KEYS.COURSE_MATERIALS)}
         </h2>
         <Button type="primary" onClick={() => router.push('/course-materials/create')}>
           <PlusOutlined />
-          {locale === 'ar' ? 'رفع جديد' : 'Upload New'}
+          {t(LOCALE_KEYS.UPLOAD_NEW)}
         </Button>
+
       </div>
 
       {/* Filters */}
@@ -173,10 +177,10 @@ const CourseMaterials = () => {
           value={selectedCourse}
           onChange={(val) => setSelectedCourse(val)}
           options={[
-            { value: 'allCourses', label: locale === 'ar' ? 'جميع الدورات' : 'All Courses' },
+            { value: 'allCourses', label: t(LOCALE_KEYS.ALL_COURSES) },
             ...courseMaterials
               .map((m) => m.course)
-              .filter((c, i, arr) => c && arr.findIndex((x) => x?.id === c.id) === i) // unique courses
+              .filter((c, i, arr) => c && arr.findIndex((x) => x?.id === c.id) === i)
               .map((c) => ({
                 value: c!.id.toString(),
                 label: c!.name,
@@ -190,13 +194,14 @@ const CourseMaterials = () => {
           value={selectedType}
           onChange={(val) => setSelectedType(val)}
           options={[
-            { value: 'allTypes', label: locale === 'ar' ? 'جميع الأنواع' : 'All Types' },
+            { value: 'allTypes', label: t(LOCALE_KEYS.ALL_TYPES) },
             ...materialTypes.map((t) => ({
               value: t,
               label: t.charAt(0).toUpperCase() + t.slice(1),
             })),
           ]}
         />
+
       </div>
 
       {/* Loading / Empty states */}
@@ -206,7 +211,8 @@ const CourseMaterials = () => {
         </div>
       )}
       {listStatus.status === Status.SUCCESS && filteredMaterials.length === 0 && (
-        <Empty description={locale === 'ar' ? 'لا توجد مواد' : 'No Materials'} />
+        <Empty description={t(LOCALE_KEYS.NO_MATERIALS)} />
+
       )}
 
       {/* Materials List */}
@@ -231,8 +237,9 @@ const CourseMaterials = () => {
                       </Tag>
                     </h1>
                     <p>
-                      {locale === 'ar' ? 'تم الرفع:' : 'Uploaded:'}{' '}
-                      {new Date(m.createdAt).toLocaleDateString(locale)}
+                      <p className="text-sm">
+                        {t(LOCALE_KEYS.UPLOADED)} {new Date(m.createdAt).toLocaleDateString(locale)}
+                      </p>
                     </p>
                   </div>
                   <div className="flex gap-1">
@@ -246,7 +253,7 @@ const CourseMaterials = () => {
                     />
                     <DeleteOutlined
                       style={{ fontSize: 18, cursor: 'pointer' }}
-                      onClick={() => router.push('/course-materials')} // keep delete action for now
+                      onClick={() => router.push('/course-materials')} 
                     />
                   </div>
                 </div>
