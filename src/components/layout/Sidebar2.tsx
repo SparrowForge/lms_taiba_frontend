@@ -367,6 +367,12 @@ export const Sidebar2 = React.memo(
         onClick: () => router.push('/upgrade'),
       },
       {
+        key: 'settings',
+        icon: <SettingOutlined />,
+        label: t(LOCALE_KEYS.SETTINGS),
+        onClick: () => router.push('/settings'),
+      },
+      {
         key: 'signout',
         icon: <LogoutOutlined />,
         label: t(LOCALE_KEYS.LOGOUT),

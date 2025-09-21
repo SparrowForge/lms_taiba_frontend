@@ -30,6 +30,15 @@ const authSlice = createSlice({
     // Data actions
     setUser: (state, action: PayloadAction<IUser | null>) => {
       state.user = action.payload;
+
+      // Store user in localStorage when setting user
+      if (typeof window !== 'undefined') {
+        if (action.payload) {
+          localStorage.setItem('user', JSON.stringify(action.payload));
+        } else {
+          localStorage.removeItem('user');
+        }
+      }
     },
     setToken: (state, action: PayloadAction<string | null>) => {
       state.token = action.payload;
@@ -58,6 +67,7 @@ const authSlice = createSlice({
         // Check localStorage first
         const localStorageToken = localStorage.getItem('token');
         const localStorageRefreshToken = localStorage.getItem('refreshToken');
+        const localStorageUser = localStorage.getItem('user');
 
         // Check cookies as fallback
         const cookieToken = getCookie('token');
@@ -71,6 +81,17 @@ const authSlice = createSlice({
           state.token = token;
           state.refreshToken = refreshToken;
           state.isAuthenticated = true;
+
+          // Restore user object from localStorage
+          if (localStorageUser) {
+            try {
+              state.user = JSON.parse(localStorageUser);
+            } catch (error) {
+              console.error('Failed to parse user from localStorage:', error);
+              // If parsing fails, clear the invalid user data
+              localStorage.removeItem('user');
+            }
+          }
 
           // If we have a token from cookies but not localStorage, sync them
           if (cookieToken && !localStorageToken) {
@@ -89,6 +110,11 @@ const authSlice = createSlice({
     updateUser: (state, action: PayloadAction<Partial<IUser>>) => {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
+
+        // Update user in localStorage
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('user', JSON.stringify(state.user));
+        }
       }
     },
 
@@ -100,6 +126,11 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.error = null;
       state.isLoading = false;
+
+      // Clear user from localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('user');
+      }
     },
   },
 });

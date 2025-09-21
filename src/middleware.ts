@@ -27,6 +27,18 @@ const protectedRoutes = [
   '/schedule-types',
   '/employment-types',
   '/institutes',
+  '/grade-rules',
+  '/mark-distributions',
+  '/exams',
+  '/exam-candidates',
+  '/exam-mcq-questions',
+  '/exam-results',
+  '/exam-schedules',
+  '/exam-types',
+  '/rooms',
+  '/room-types',
+  '/class-schedules',
+  '/week-days',
 ];
 
 // Public routes that don't require authentication

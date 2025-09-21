@@ -13,6 +13,8 @@ import {
   StudentStatus,
 } from '@/enums/status';
 
+import { ExamCandidateStatus } from '@/enums/exam-candidate.enum';
+
 import { IStatusOption } from '@/types/statusSelect';
 
 // Entity Status Options (Active/Inactive)
@@ -75,3 +77,12 @@ export const MARITAL_STATUS_OPTIONS: IStatusOption[] = Object.values(MaritalStat
     labelKey: `marital_${status}`,
   }),
 );
+
+// Exam Candidate Status Options
+export const EXAM_CANDIDATE_STATUS_OPTIONS: IStatusOption[] = Object.values(
+  ExamCandidateStatus,
+).map((status) => ({
+  key: `exam_candidate_${status}`,
+  value: status,
+  labelKey: `exam_candidate_${status}`,
+}));

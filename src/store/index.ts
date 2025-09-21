@@ -14,6 +14,9 @@ import courseReducer from './slices/courseSlice';
 import courseTypeReducer from './slices/courseTypeSlice';
 import departmentReducer from './slices/departmentSlice';
 import employmentTypeReducer from './slices/employmentTypeSlice';
+import examCandidateReducer from './slices/examCandidateSlice';
+import examMCQQuestionReducer from './slices/examMCQQuestionSlice';
+import examResultReducer from './slices/examResultSlice';
 import examScheduleReducer from './slices/examScheduleSlice';
 import examReducer from './slices/examSlice';
 import examTypeReducer from './slices/examTypeSlice';
@@ -21,7 +24,9 @@ import facultyReducer from './slices/facultySlice';
 import facultySubjectReducer from './slices/facultySubjectSlice';
 import feeInstallmentPlanReducer from './slices/feeInstallmentPlanSlice';
 import feeStructureReducer from './slices/feeStructureSlice';
+import gradeRuleReducer from './slices/gradeRuleSlice';
 import instituteReducer from './slices/instituteSlice';
+import markDistributionReducer from './slices/markDistributionSlice';
 import menuReducer from './slices/menuSlice';
 import panelReducer from './slices/panelSlice';
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice';
@@ -31,6 +36,7 @@ import roomTypeReducer from './slices/roomTypeSlice';
 import scheduleTypeReducer from './slices/scheduleTypeSlice';
 import semesterReducer from './slices/semesterSlice';
 import semesterSubjectReducer from './slices/semesterSubjectSlice';
+import settingsReducer from './slices/settingsSlice';
 import studentEducationReducer from './slices/studentEducationSlice';
 import studentFamilyReducer from './slices/studentFamilySlice';
 import studentProfileReducer from './slices/studentProfileSlice';
@@ -64,11 +70,16 @@ export interface RootState {
   facultySubjects: ReturnType<typeof facultySubjectReducer>;
   feeInstallmentPlans: ReturnType<typeof feeInstallmentPlanReducer>;
   feeStructures: ReturnType<typeof feeStructureReducer>;
+  gradeRules: ReturnType<typeof gradeRuleReducer>;
+  markDistributions: ReturnType<typeof markDistributionReducer>;
   audits: ReturnType<typeof auditReducer>;
   userRoles: ReturnType<typeof userRoleReducer>;
   addresses: ReturnType<typeof addressReducer>;
   courseTypes: ReturnType<typeof courseTypeReducer>;
   exams: ReturnType<typeof examReducer>;
+  examCandidates: ReturnType<typeof examCandidateReducer>;
+  examMCQQuestions: ReturnType<typeof examMCQQuestionReducer>;
+  examResults: ReturnType<typeof examResultReducer>;
   examSchedules: ReturnType<typeof examScheduleReducer>;
   examTypes: ReturnType<typeof examTypeReducer>;
   rooms: ReturnType<typeof roomReducer>;
@@ -83,6 +94,7 @@ export interface RootState {
   timeSlots: ReturnType<typeof timeSlotReducer>;
   weekDays: ReturnType<typeof weekDayReducer>;
   classSchedules: ReturnType<typeof classScheduleReducer>;
+  settings: ReturnType<typeof settingsReducer>;
 }
 
 // Create store
@@ -109,11 +121,16 @@ export const store = configureStore({
     facultySubjects: facultySubjectReducer,
     feeInstallmentPlans: feeInstallmentPlanReducer,
     feeStructures: feeStructureReducer,
+    gradeRules: gradeRuleReducer,
+    markDistributions: markDistributionReducer,
     audits: auditReducer,
     userRoles: userRoleReducer,
     addresses: addressReducer,
     courseTypes: courseTypeReducer,
     exams: examReducer,
+    examCandidates: examCandidateReducer,
+    examMCQQuestions: examMCQQuestionReducer,
+    examResults: examResultReducer,
     examSchedules: examScheduleReducer,
     examTypes: examTypeReducer,
     rooms: roomReducer,
@@ -128,6 +145,7 @@ export const store = configureStore({
     timeSlots: timeSlotReducer,
     weekDays: weekDayReducer,
     classSchedules: classScheduleReducer,
+    settings: settingsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -176,6 +176,11 @@ export const useAuth = () => {
     return user.name || user.email || 'Unknown User';
   }, [user]);
 
+  // Get stored user from localStorage (useful for initial checks)
+  const getStoredUser = useCallback(() => {
+    return authService.getUser();
+  }, []);
+
   return {
     // State
     user,
@@ -198,5 +203,6 @@ export const useAuth = () => {
     // Utilities
     isUserActive,
     getUserFullName,
+    getStoredUser,
   };
 };
