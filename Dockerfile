@@ -18,10 +18,17 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Set environment variables for memory optimization (1.9GB server)
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-ENV NODE_OPTIONS="--max-old-space-size=1536"
-ENV BUN_OPTIONS="--max-old-space-size=1536"
+ENV NODE_OPTIONS="--max-old-space-size=1024 --max-semi-space-size=64"
+ENV BUN_OPTIONS="--max-old-space-size=1024"
+
+# Set build-specific optimizations for low memory
+ENV NEXT_BUILD_WORKERS=1
+ENV NEXT_BUILD_MEMORY_LIMIT=1024
+
 # Use optimized build script
 COPY build-optimized.sh ./
 RUN chmod +x build-optimized.sh

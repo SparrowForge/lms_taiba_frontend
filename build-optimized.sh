@@ -26,9 +26,9 @@ print_error() {
 
 print_status "Starting optimized build process..."
 
-# Set memory options for Node.js and Bun (reduced for 2GB RAM server)
-export NODE_OPTIONS="--max-old-space-size=1536"
-export BUN_OPTIONS="--max-old-space-size=1536"
+# Set memory options for Node.js and Bun (optimized for 1.9GB server)
+export NODE_OPTIONS="--max-old-space-size=1024 --max-semi-space-size=64"
+export BUN_OPTIONS="--max-old-space-size=1024"
 
 print_status "Memory options set:"
 print_status "  NODE_OPTIONS: $NODE_OPTIONS"
@@ -56,7 +56,7 @@ fi
 print_status "Starting build process..."
 if command -v timeout >/dev/null 2>&1; then
     print_status "Using timeout command (Linux detected)"
-    timeout 1800 bun run build
+    timeout 2400 bun run build
 else
     print_status "No timeout command available (macOS detected), running build directly"
     bun run build
