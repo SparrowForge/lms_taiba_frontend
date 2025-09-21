@@ -74,8 +74,8 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['antd', 'dayjs', 'react-toastify', '@ant-design/icons', 'react-icons'],
     // Enable memory-efficient build
     memoryBasedWorkersCount: true,
-    // Optimize CSS
-    optimizeCss: true,
+    // Optimize CSS (disabled to avoid critters dependency issues)
+    // optimizeCss: true,
   },
 
   // Compiler optimizations
