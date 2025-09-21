@@ -50,7 +50,7 @@ export interface IExamCreate {
   roomId: number;
   marks: number;
   examDatetime: string;
-  duration: IDuration;
+  duration: string; // Duration in HH:MM:SS format (e.g., '01:30:00')
   questionType: string;
   attachmentPath?: string | null;
   examQuestion?: string | null;
@@ -73,10 +73,7 @@ export interface IExamUpdate {
   roomId?: number;
   marks?: number;
   examDatetime?: string;
-  duration?: {
-    hours: number;
-    minutes: number;
-  };
+  duration?: string; // Duration in HH:MM:SS format (e.g., '01:30:00')
   questionType?: string;
   attachmentPath?: string | null;
   examQuestion?: string | null;

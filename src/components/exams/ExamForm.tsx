@@ -11,6 +11,7 @@ import {
   Select,
   Space,
   Switch,
+  TimePicker,
 } from 'antd';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
@@ -33,7 +34,7 @@ import { useSemesters } from '@/hooks/useSemesters';
 import { useSubjects } from '@/hooks/useSubjects';
 
 import { getErrorMessage } from '@/types/errors';
-import { IExam, IExamCreate, IExamUpdate } from '@/types/exam';
+import { IExamCreate, IExamUpdate } from '@/types/exam';
 
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
@@ -64,6 +65,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
   const [form] = Form.useForm();
   const [isApproved, setIsApproved] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
+  const [selectedBatchId, setSelectedBatchId] = useState<number | null>(null);
   const { createExam, editExam, actionStatus } = useExams();
   const { courses, loadCourses } = useCourses();
   const { subjects, loadSubjects } = useSubjects();
@@ -80,16 +82,14 @@ const ExamForm: React.FC<ExamFormProps> = ({
 
   useEffect(() => {
     loadCourses();
-    loadSubjects();
-    loadSemesters();
-    loadBatches();
     loadExamTypes();
     loadRooms();
-  }, [loadCourses, loadSubjects, loadSemesters, loadBatches, loadExamTypes, loadRooms]);
+  }, [loadCourses, loadExamTypes, loadRooms]);
 
   // Handle course selection and load dependent data
   const handleCourseChange = async (courseId: number) => {
     setSelectedCourseId(courseId);
+    setSelectedBatchId(null); // Reset batch selection
 
     // Reset dependent fields
     form.setFieldsValue({
@@ -109,16 +109,6 @@ const ExamForm: React.FC<ExamFormProps> = ({
       console.error('Failed to load subjects for course:', error);
     }
 
-    // Load all semesters (will be filtered client-side)
-    try {
-      await loadSemesters({
-        page: 1,
-        limit: 1000,
-      });
-    } catch (error) {
-      console.error('Failed to load semesters:', error);
-    }
-
     // Load batches for the selected course
     try {
       await loadBatches({
@@ -131,6 +121,27 @@ const ExamForm: React.FC<ExamFormProps> = ({
     }
   };
 
+  // Handle batch selection and load semesters
+  const handleBatchChange = async (batchId: number) => {
+    setSelectedBatchId(batchId);
+
+    // Reset semester field
+    form.setFieldsValue({
+      semesterId: undefined,
+    });
+
+    // Load semesters for the selected batch
+    try {
+      await loadSemesters({
+        page: 1,
+        limit: 100,
+        batchId: batchId,
+      });
+    } catch (error) {
+      console.error('Failed to load semesters for batch:', error);
+    }
+  };
+
   // Get filtered subjects by course
   const getFilteredSubjects = () => {
     if (!selectedCourseId) {
@@ -139,12 +150,12 @@ const ExamForm: React.FC<ExamFormProps> = ({
     return subjects.filter((subject) => subject.courseId === selectedCourseId);
   };
 
-  // Get filtered semesters by course (through batch)
+  // Get filtered semesters by batch
   const getFilteredSemesters = () => {
-    if (!selectedCourseId) {
+    if (!selectedBatchId) {
       return [];
     }
-    return semesters.filter((semester) => semester.batch?.courseId === selectedCourseId);
+    return semesters.filter((semester) => semester.batchId === selectedBatchId);
   };
 
   // Get filtered batches by course
@@ -163,16 +174,30 @@ const ExamForm: React.FC<ExamFormProps> = ({
     // Set selected course ID for edit mode
     if (initialValues?.courseId) {
       setSelectedCourseId(initialValues.courseId);
+      // Load subjects and batches for the course
+      handleCourseChange(initialValues.courseId);
+    }
+
+    // Set selected batch ID for edit mode
+    if (initialValues?.batchId) {
+      setSelectedBatchId(initialValues.batchId);
+      // Load semesters for the batch
+      handleBatchChange(initialValues.batchId);
     }
   }, [initialValues]);
 
-  const handleSubmit = async (values: Partial<IExam>) => {
+  const handleSubmit = async (values: Partial<IExamCreate | IExamUpdate>) => {
     try {
-      const payload = { ...values };
+      const payload: any = { ...values };
 
       // Convert dayjs object back to ISO string for API
       if (payload.examDatetime && dayjs.isDayjs(payload.examDatetime)) {
         payload.examDatetime = payload.examDatetime.toISOString();
+      }
+
+      // Convert duration dayjs object to HH:mm:ss string
+      if (payload.duration && dayjs.isDayjs(payload.duration)) {
+        payload.duration = payload.duration.format('HH:mm:ss');
       }
 
       if (mode === 'create') {
@@ -232,6 +257,9 @@ const ExamForm: React.FC<ExamFormProps> = ({
               ...initialValues,
               examDatetime: initialValues?.examDatetime
                 ? dayjs(initialValues.examDatetime)
+                : undefined,
+              duration: initialValues?.duration && typeof initialValues.duration === 'string'
+                ? dayjs(initialValues.duration, 'HH:mm:ss')
                 : undefined,
             }
           : undefined
@@ -314,6 +342,36 @@ const ExamForm: React.FC<ExamFormProps> = ({
       </Row>
 
       <Row gutter={16}>
+      <Col span={12}>
+          <Form.Item
+            name="batchId"
+            label={t(LOCALE_KEYS.BATCH)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.children || '')
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              disabled={!selectedCourseId}
+              onChange={handleBatchChange}
+            >
+              {getFilteredBatches().map((batch) => (
+                <Option key={batch.id} value={batch.id}>
+                  {batch.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
         <Col span={12}>
           <Form.Item
             name="semesterId"
@@ -343,35 +401,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
-          <Form.Item
-            name="batchId"
-            label={t(LOCALE_KEYS.BATCH)}
-            rules={[
-              {
-                required: true,
-                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) }),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
-              showSearch
-              filterOption={(input, option) =>
-                String(option?.children || '')
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-              disabled={!selectedCourseId}
-            >
-              {getFilteredBatches().map((batch) => (
-                <Option key={batch.id} value={batch.id}>
-                  {batch.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Col>
+
       </Row>
 
       <Row gutter={16}>
@@ -475,45 +505,38 @@ const ExamForm: React.FC<ExamFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={8}>
+        <Col span={12}>
           <Form.Item
-            name={['duration', 'hours']}
-            label={t(LOCALE_KEYS.HOURS)}
+            name="duration"
+            label={t(LOCALE_KEYS.DURATION)}
             rules={[
               {
                 required: true,
-                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.HOURS) }),
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DURATION) }),
               },
             ]}
+            getValueFromEvent={(time) => {
+              if (time && dayjs.isDayjs(time)) {
+                return time.format('HH:mm:ss');
+              }
+              return time;
+            }}
+            getValueProps={(value) => {
+              if (typeof value === 'string' && value.match(/^\d{2}:\d{2}:\d{2}$/)) {
+                return { value: dayjs(value, 'HH:mm:ss') };
+              }
+              return { value: undefined };
+            }}
           >
-            <InputNumber
-              placeholder={t(LOCALE_KEYS.HOURS)}
-              min={0}
-              max={24}
+            <TimePicker
+              placeholder="Select duration"
+              format="HH:mm:ss"
+              showNow={false}
               style={{ width: '100%' }}
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
-          <Form.Item
-            name={['duration', 'minutes']}
-            label={t(LOCALE_KEYS.MINUTES)}
-            rules={[
-              {
-                required: true,
-                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MINUTES) }),
-              },
-            ]}
-          >
-            <InputNumber
-              placeholder={t(LOCALE_KEYS.MINUTES)}
-              min={0}
-              max={59}
-              style={{ width: '100%' }}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
+        <Col span={12}>
           <Form.Item
             name="questionType"
             label={t(LOCALE_KEYS.QUESTION_TYPE)}
