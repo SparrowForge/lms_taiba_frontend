@@ -584,5 +584,7 @@
   "my_subjects": "My Subjects",
   "open_subject": "Open Subjects",
   "attendance_summary":"Attendance Summary",
-  "upcoming_exams": "Upcoming Exams"
+  "upcoming_exams": "Upcoming Exams",
+  "payment_due": "Payment Due",
+  "pay_now":"Pay Now"
 }
