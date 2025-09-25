@@ -581,5 +581,7 @@
   "open_course": "فتح المقرر",
   "progress": "التقدم ",
   "my_subjects": "موادي",
-  "open_subject": "فتح المواد"
+  "open_subject": "فتح المواد",
+  "attendance_summary": "ملخص الحضور",
+  "upcoming_exams": "اإلختبارات القادمة"
 }

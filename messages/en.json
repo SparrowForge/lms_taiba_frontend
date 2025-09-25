@@ -582,5 +582,7 @@
   "open_course": "Open Course",
   "progress": "Progress",
   "my_subjects": "My Subjects",
-  "open_subject": "Open Subjects"
+  "open_subject": "Open Subjects",
+  "attendance_summary":"Attendance Summary",
+  "upcoming_exams": "Upcoming Exams"
 }
