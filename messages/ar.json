@@ -585,5 +585,11 @@
   "attendance_summary": "ملخص الحضور",
   "upcoming_exams": "اإلختبارات القادمة",
   "payment_due": "استحقاق الدفع",
-  "pay_now":"ادفع اآلن"
+  "pay_now": "ادفع اآلن",
+  "recent_invoice": "الفواتير الحديثة",
+  "filter": "تصفية",
+  "downloadAll": "تنزيل الكل",
+  "invoice": "الفاتورة",
+  "paid": "مدفوع",
+  "unpaid": "غير مدفوع"
 }

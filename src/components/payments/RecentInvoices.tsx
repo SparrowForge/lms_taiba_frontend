@@ -4,6 +4,8 @@ import { FaDownload } from "react-icons/fa";
 import { MdOutlinePayment } from "react-icons/md";
 import { AiFillCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { Card } from 'antd';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { useLocalization } from '@/hooks/useLocalization';
 
 type Invoice = {
   id: string;
@@ -62,15 +64,16 @@ const invoices: Invoice[] = [
 const currentLang: "en" | "ar" = "en";
 
 const RecentInvoices = () => {
+  const { t } = useLocalization();
   return (
     <Card className="bg-white shadow rounded-lg md:col-span-2">
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <h3 className="font-bold text-gray-700">Recent Invoices | الفواتير الحديثة</h3>
+        <h3 className="font-bold text-gray-700">{t(LOCALE_KEYS.RECENT_INVOICES)}</h3>
         <div className="flex gap-2">
-          <button className="bg-gray-100 px-3 py-1 rounded-md text-sm">Filter | تصفية</button>
-          <button className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm flex items-center gap-1">
-            <FaDownload /> Download All | تنزيل الكل
+          <button className="bg-gray-100 px-3 py-1 rounded-md text-sm">{t(LOCALE_KEYS.FILTER)}</button>
+          <button className="bg-blue-600 px-3 py-1 rounded-md text-sm flex items-center gap-1" style={{ color: "#ffffff" }}>
+            <FaDownload /> {t(LOCALE_KEYS.DOWNLOAD_ALL)}
           </button>
         </div>
       </div>
@@ -80,11 +83,11 @@ const RecentInvoices = () => {
         <thead>
           <tr className="bg-gray-100 text-left text-sm">
             <th className="p-2">#</th>
-            <th className="p-2">Invoice | الفاتورة</th>
-            <th className="p-2">Date | التاريخ</th>
-            <th className="p-2">Amount | المبلغ</th>
-            <th className="p-2">Status | الحالة</th>
-            <th className="p-2">Actions | الإجراءات</th>
+            <th className="p-2">{t(LOCALE_KEYS.INVOICE)}</th>
+            <th className="p-2">{t(LOCALE_KEYS.DATE)}</th>
+            <th className="p-2">{t(LOCALE_KEYS.AMOUNT)}</th>
+            <th className="p-2">{t(LOCALE_KEYS.STATUS)}</th>
+            <th className="p-2">{t(LOCALE_KEYS.ACTION)}</th>
           </tr>
         </thead>
         <tbody className="text-sm">
@@ -95,23 +98,31 @@ const RecentInvoices = () => {
               <td className="p-2">{invoice.date}</td>
               <td className="p-2">{invoice.amount}</td>
               <td
-                className={`p-2 flex items-center gap-1 ${
-                  invoice.status.value === "paid" ? "text-green-600" : "text-red-500"
-                }`}
+                className={`p-2  ${invoice.status.value === "paid" ? "text-green-600" : "text-red-500"
+                  }`}
               >
                 {invoice.status.value === "paid" ? (
-                  <>
+
+                  <div className='flex items-center gap-1'>
                     <AiFillCheckCircle /> {invoice.status.label[currentLang]}
-                  </>
+                  </div>
+
                 ) : (
-                  <>
+                  <div className='flex items-center gap-1'>
                     <AiOutlineCloseCircle /> {invoice.status.label[currentLang]}
-                  </>
+                  </div>
                 )}
               </td>
-              <td className="p-2 flex gap-2 text-blue-600">
-                <FaDownload /> <MdOutlinePayment />
+              <td className="p-2 flex items-center gap-2" style={{ color: "#1f4bca" }}>
+                <button >
+                  <FaDownload size={16} />
+                </button>
+                <button >
+                  <MdOutlinePayment size={16} />
+                </button>
               </td>
+
+
             </tr>
           ))}
         </tbody>

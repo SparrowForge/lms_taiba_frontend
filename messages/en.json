@@ -583,8 +583,14 @@
   "progress": "Progress",
   "my_subjects": "My Subjects",
   "open_subject": "Open Subjects",
-  "attendance_summary":"Attendance Summary",
+  "attendance_summary": "Attendance Summary",
   "upcoming_exams": "Upcoming Exams",
   "payment_due": "Payment Due",
-  "pay_now":"Pay Now"
+  "pay_now": "Pay Now",
+  "recent_invoice": "Recent Invoices",
+  "filter": "Filter",
+  "downloadAll": "Download All",
+  "invoice": "Invoice",
+  "paid": "Paid",
+  "unpaid": "Unpaid"
 }

@@ -569,8 +569,15 @@ export const LOCALE_KEYS = {
   PROGRESS: 'progress',
   ATTENDANCE_SUMMARTY: 'attendance_summary',
   UPCOMING_EXAMS: 'upcoming_exams',
-  PAYMENT_DUE:'payment_due',
-  PAY_NOW: 'pay_now'
+  PAYMENT_DUE: 'payment_due',
+  PAY_NOW: 'pay_now',
+  RECENT_INVOICES: "recent_invoice",
+  FILTER: "filter",
+  DOWNLOAD_ALL: "downloadAll",
+  INVOICE: "invoice",
+  PAID: "paid",
+  UNPAID: "unpaid",
+
 } as const;
 
 // Type for the keys
