@@ -593,6 +593,7 @@
   "paid": "مدفوع",
   "unpaid": "غير مدفوع",
   "recent_receipts": "الإيصالات الحديثة",
-  "payment_methods":"طرق الدفع",
-  "default": "الافتراضي"
+  "payment_methods": "طرق الدفع",
+  "default": "الافتراضي",
+  "add_payment_method": "إضافة طريقة الدفع"
 }

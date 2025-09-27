@@ -595,5 +595,6 @@
   "unpaid": "Unpaid",
   "recent_receipts":"Recent Receipts",
   "payment_methods": "Payment Methods",
-  "default": "Default"
+  "default": "Default",
+  "add_payment_method": "Add Payment Method"
 }
