@@ -1,11 +1,11 @@
 'use client';
 import React from 'react';
-import { FaDownload } from "react-icons/fa";
 import { MdOutlinePayment } from "react-icons/md";
 import { AiFillCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { Card } from 'antd';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useLocalization } from '@/hooks/useLocalization';
+import { DownloadOutlined } from '@ant-design/icons';
 
 type Invoice = {
   id: string;
@@ -66,14 +66,14 @@ const currentLang: "en" | "ar" = "en";
 const RecentInvoices = () => {
   const { t } = useLocalization();
   return (
-    <Card className="bg-white shadow rounded-lg md:col-span-2">
+    <Card className="h-screen overflow-hidden rounded-lg md:col-span-2">
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
         <h3 className="font-bold text-gray-700 text-xl">{t(LOCALE_KEYS.RECENT_INVOICES)}</h3>
         <div className="flex gap-2">
           <button className="bg-gray-100 px-3 py-1 rounded-md text-sm">{t(LOCALE_KEYS.FILTER)}</button>
           <button className="bg-blue-600 px-3 py-1 rounded-md text-sm flex items-center gap-1" style={{ color: "#ffffff" }}>
-            <FaDownload /> {t(LOCALE_KEYS.DOWNLOAD_ALL)}
+           <DownloadOutlined /> {t(LOCALE_KEYS.DOWNLOAD_ALL)}
           </button>
         </div>
       </div>
@@ -115,7 +115,7 @@ const RecentInvoices = () => {
               </td>
               <td className="p-2 flex items-center gap-2" style={{ color: "#1f4bca" }}>
                 <button >
-                  <FaDownload size={16} />
+                  <DownloadOutlined size={16} />
                 </button>
                 <button >
                   <MdOutlinePayment size={16} />

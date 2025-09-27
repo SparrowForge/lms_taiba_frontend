@@ -1,9 +1,7 @@
 
-import HeaderSection from './HeaderSection';
-import { FaCreditCard, FaDownload, FaFileInvoice, FaHistory } from "react-icons/fa";
-import { MdOutlinePayment } from "react-icons/md";
-import { AiFillCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { Col, Row } from 'antd';
+import HeaderSection from './HeaderSection';
+
 import RecentInvoices from './RecentInvoices';
 import StatisticsCard from './StatisticsCard';
 import PaymentMethods from './PaymentMethods';

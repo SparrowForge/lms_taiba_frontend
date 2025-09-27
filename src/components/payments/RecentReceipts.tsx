@@ -1,10 +1,8 @@
 'use client';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useLocalization } from '@/hooks/useLocalization';
-import { ExperimentOutlined, FilePptOutlined } from '@ant-design/icons';
+import { DownloadOutlined, ExperimentOutlined, FilePptOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
-import React from 'react';
-import { FaDownload } from 'react-icons/fa';
 
 type ReceiptType = "pdf" | "lab" | "other";
 
@@ -16,27 +14,14 @@ type Receipt = {
 };
 
 const receiptsData: Receipt[] = [
-  {
-    id: 'r1',
-    title: 'August Tuition Receipt',
-    type: "pdf",
-    icon: <FilePptOutlined />,
-  },
-  {
-    id: 'r2',
-    title: 'Lab Equipment Fee Receipt',
-    type:"lab",
-    icon: <ExperimentOutlined />,
-  },
-  {
-    id: 'r3',
-    title: 'September Tuition Receipt',
-    type: "pdf",
-    icon: <FilePptOutlined />,
-  },
+  { id: 'r1', title: 'August Tuition Receipt', type: "pdf", icon: <FilePptOutlined /> },
+  { id: 'r2', title: 'Lab Equipment Fee Receipt', type:"lab", icon: <ExperimentOutlined /> },
+  { id: 'r3', title: 'September Tuition Receipt', type: "pdf", icon: <FilePptOutlined /> },
+  { id: 'r4', title: 'September Tuition Receipt', type: "pdf", icon: <FilePptOutlined /> },
+  { id: 'r5', title: 'September Tuition Receipt', type: "pdf", icon: <FilePptOutlined /> },
 ];
 
-// Define icon colors based on type
+// Icon colors
 const typeColors: Record<ReceiptType, { bg: string; text: string }> = {
   pdf: { bg: 'bg-red-100', text: 'text-red-600' },
   lab: { bg: 'bg-green-100', text: 'text-green-600' },
@@ -46,27 +31,34 @@ const typeColors: Record<ReceiptType, { bg: string; text: string }> = {
 const RecentReceipts = () => {
   const { t } = useLocalization();
 
-  return (
-    <Card className="bg-white shadow rounded-lg p-4 md:col-span-1">
-      <h3 className="font-bold text-xl mb-3">{t(LOCALE_KEYS.RECENT_RECEIPTS)}</h3>
-      <ul className="text-sm space-y-2">
-        {receiptsData.map((receipt) => {
-          const colors = receipt.type ? typeColors[receipt.type] : typeColors.other;
+  // Calculate height for 4 items: assuming each li ~48px + spacing (~8px)
+  const maxVisible = 4;
+  const itemHeight = 40; // adjust if needed
+  const containerHeight = maxVisible * (itemHeight + 8);
 
-          return (
-            <li
-              key={receipt.id}
-              className="p-2 shadow rounded-md flex justify-between items-center"
-            >
-              <div className={`flex items-center justify-center w-7 h-7 rounded p-2 ${colors.bg} ${colors.text}`}>
-                {receipt.icon || <span className="w-5" />}
-              </div>
-              <span>{receipt.title}</span>
-              <FaDownload className="text-blue-600" />
-            </li>
-          );
-        })}
-      </ul>
+  return (
+    <Card className="bg-white shadow rounded-lg p-4 md:col-span-1" style={{ marginTop: "20px" }}>
+      <h3 className="font-bold text-xl mb-3">{t(LOCALE_KEYS.RECENT_RECEIPTS)}</h3>
+      <div style={{ maxHeight: `${containerHeight}px`, overflowY: 'auto' }}>
+        <ul className="text-sm space-y-2">
+          {receiptsData.map((receipt) => {
+            const colors = receipt.type ? typeColors[receipt.type] : typeColors.other;
+
+            return (
+              <li
+                key={receipt.id}
+                className="p-2 shadow rounded-md flex justify-between items-center"
+              >
+                <div className={`flex items-center justify-center w-7 h-7 rounded p-2 ${colors.bg} ${colors.text}`}>
+                  {receipt.icon || <span className="w-5" />}
+                </div>
+                <span>{receipt.title}</span>
+                <DownloadOutlined className="text-blue-600" />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </Card>
   );
 };
