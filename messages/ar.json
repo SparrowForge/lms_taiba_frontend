@@ -591,5 +591,8 @@
   "downloadAll": "تنزيل الكل",
   "invoice": "الفاتورة",
   "paid": "مدفوع",
-  "unpaid": "غير مدفوع"
+  "unpaid": "غير مدفوع",
+  "recent_receipts": "الإيصالات الحديثة",
+  "payment_methods":"طرق الدفع",
+  "default": "الافتراضي"
 }

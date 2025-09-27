@@ -577,7 +577,9 @@ export const LOCALE_KEYS = {
   INVOICE: "invoice",
   PAID: "paid",
   UNPAID: "unpaid",
-
+  RECENT_RECEIPTS: "recent_receipts",
+  PAYMENT_METHODS: "payment_methods",
+  DEFAULT: "default"
 } as const;
 
 // Type for the keys

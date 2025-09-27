@@ -592,5 +592,8 @@
   "downloadAll": "Download All",
   "invoice": "Invoice",
   "paid": "Paid",
-  "unpaid": "Unpaid"
+  "unpaid": "Unpaid",
+  "recent_receipts":"Recent Receipts",
+  "payment_methods": "Payment Methods",
+  "default": "Default"
 }

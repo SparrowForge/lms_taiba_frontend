@@ -60,7 +60,7 @@ const invoices: Invoice[] = [
   }
 ];
 
-// choose language dynamically (could come from context, locale, props, etc.)
+
 const currentLang: "en" | "ar" = "en";
 
 const RecentInvoices = () => {
@@ -69,7 +69,7 @@ const RecentInvoices = () => {
     <Card className="bg-white shadow rounded-lg md:col-span-2">
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <h3 className="font-bold text-gray-700">{t(LOCALE_KEYS.RECENT_INVOICES)}</h3>
+        <h3 className="font-bold text-gray-700 text-xl">{t(LOCALE_KEYS.RECENT_INVOICES)}</h3>
         <div className="flex gap-2">
           <button className="bg-gray-100 px-3 py-1 rounded-md text-sm">{t(LOCALE_KEYS.FILTER)}</button>
           <button className="bg-blue-600 px-3 py-1 rounded-md text-sm flex items-center gap-1" style={{ color: "#ffffff" }}>
