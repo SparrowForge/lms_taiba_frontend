@@ -92,10 +92,11 @@ export const Sidebar2 = React.memo(
     }, []);
 
     useEffect(() => {
-      if (!myMenus || myMenus.length === 0) {
-        loadMyMenus();
-      }
-    }, [myMenus, loadMyMenus]);
+      loadMyMenus();
+      // if (!myMenus || myMenus.length === 0) {
+      //   loadMyMenus();
+      // }
+    }, []);
 
     // ✅ Load branches once (or when empty)
     useEffect(() => {
@@ -339,6 +340,7 @@ export const Sidebar2 = React.memo(
         collapsed,
         getUserFullName,
         user?.email,
+        //  user?.type,
         t,
         selectedBranch?.id,
         branchListStatus.status,
@@ -452,8 +454,8 @@ export const Sidebar2 = React.memo(
                     <span className="text-white font-bold text-lg">L</span>
                   </div>
                   <h1 className="text-xl font-bold mb-1">LMS Taiba</h1>
-                  <Text className="text-xs " style={{ color: '#ffffff' }}>
-                    Admin Panel
+                  <Text className="text-xs uppercase" style={{ color: '#52d1f8ff' }}>
+                     {user?.type} Panel
                   </Text>
                 </div>
               ) : (
@@ -524,9 +526,8 @@ export const Sidebar2 = React.memo(
           {/* Settings & Logout */}
           <div className="py-4 border-t border-gray-100 shrink-0">
             <h1
-              className={`${
-                collapsed ? (locale === 'ar' ? 'px-4' : 'px-2') : 'pl-4'
-              } text-gray-400 uppercase text-xs tracking-wider mb-2`}
+              className={`${collapsed ? (locale === 'ar' ? 'px-4' : 'px-2') : 'pl-4'
+                } text-gray-400 uppercase text-xs tracking-wider mb-2`}
             >
               {t(LOCALE_KEYS.SETTINGS)}
             </h1>
