@@ -1,7 +1,7 @@
-import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IStudent, IStudentCreate, IStudentUpdate } from '@/types/student';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import {IStudent, IStudentCreate, IStudentRegistrationCreate, IStudentUpdate,} from '@/types/student';
 
-import { api } from '@/lib/axios';
+import {api} from '@/lib/axios';
 
 export const studentService = {
   getStudents: async (params = {}): Promise<IBasePaginatedResponse<IStudent>> => {
@@ -31,6 +31,12 @@ export const studentService = {
   // Get students without user accounts
   getStudentsWithoutUser: async (params = {}): Promise<IBaseResponse<IStudent[]>> => {
     const response = await api.get('/students/without-user', { params });
+    return response.data;
+  },
+
+  // Public student registration
+  registerStudent: async (data: IStudentRegistrationCreate): Promise<IBaseResponse<IStudent>> => {
+    const response = await api.post('/public/students/register', data);
     return response.data;
   },
 };

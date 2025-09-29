@@ -1,13 +1,13 @@
 'use client';
 
-import { Drawer, Spin } from 'antd';
-import React, { useEffect } from 'react';
+import {Drawer, Spin} from 'antd';
+import React, {useEffect} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
-import { useExamMCQQuestions } from '@/hooks/useExamMCQQuestions';
-import { useLocalization } from '@/hooks/useLocalization';
+import {useExamMCQQuestions} from '@/hooks/useExamMCQQuestions';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import ExamMCQQuestionForm from './ExamMCQQuestionForm';
 
@@ -26,8 +26,7 @@ const ExamMCQQuestionFormDrawer: React.FC<ExamMCQQuestionFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { selectedExamMCQQuestion, loadExamMCQQuestion, detailsStatus } =
-    useExamMCQQuestions();
+  const { selectedExamMCQQuestion, loadExamMCQQuestion, detailsStatus } = useExamMCQQuestions();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EXAM_MCQ_QUESTION, { defaultValue: 'Exam MCQ Question' });
   useEffect(() => {

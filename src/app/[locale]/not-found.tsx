@@ -64,7 +64,7 @@ export default function NotFound() {
             marginRight: 'auto',
           }}
         >
-            {`We're building something amazing for you!`}
+          {`We're building something amazing for you!`}
         </p>
 
         <p

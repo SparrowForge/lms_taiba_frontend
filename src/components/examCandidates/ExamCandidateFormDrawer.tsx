@@ -1,13 +1,13 @@
 'use client';
 
-import { Drawer, Spin } from 'antd';
-import React, { useEffect } from 'react';
+import {Drawer, Spin} from 'antd';
+import React, {useEffect} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
-import { useExamCandidates } from '@/hooks/useExamCandidates';
-import { useLocalization } from '@/hooks/useLocalization';
+import {useExamCandidates} from '@/hooks/useExamCandidates';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import ExamCandidateForm from './ExamCandidateForm';
 
@@ -26,8 +26,7 @@ const ExamCandidateFormDrawer: React.FC<ExamCandidateFormDrawerProps> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { selectedExamCandidate, loadExamCandidate, detailsStatus } =
-    useExamCandidates();
+  const { selectedExamCandidate, loadExamCandidate, detailsStatus } = useExamCandidates();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EXAM_CANDIDATE, { defaultValue: 'Exam Candidate' });
   useEffect(() => {

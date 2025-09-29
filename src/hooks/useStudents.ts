@@ -1,27 +1,27 @@
-import { AxiosError } from 'axios';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {AxiosError} from 'axios';
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
-import { Status } from '@/enums';
-import { RootState } from '@/store';
+import {Status} from '@/enums';
+import {RootState} from '@/store';
 
-import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IStudent, IStudentCreate, IStudentUpdate } from '@/types/student';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+import {IStudent, IStudentCreate, IStudentRegistrationCreate, IStudentUpdate,} from '@/types/student';
 
-import { studentService } from '@/services/studentService';
+import {studentService} from '@/services/studentService';
 
 import {
-  addStudent,
-  clearActionStatus,
-  clearDetailsStatus,
-  deleteStudent,
-  setActionStatus,
-  setDetailsStatus,
-  setListStatus,
-  setPagination,
-  setSelectedStudent,
-  setStudents,
-  updateStudent,
+    addStudent,
+    clearActionStatus,
+    clearDetailsStatus,
+    deleteStudent,
+    setActionStatus,
+    setDetailsStatus,
+    setListStatus,
+    setPagination,
+    setSelectedStudent,
+    setStudents,
+    updateStudent,
 } from '@/store/slices/studentSlice';
 
 export const useStudents = () => {
@@ -204,6 +204,40 @@ export const useStudents = () => {
     [dispatch],
   );
 
+  // Public student registration
+  const registerStudent = useCallback(
+    async (data: IStudentRegistrationCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IStudent> = await studentService.registerStudent(data);
+
+        if (response.success) {
+          // Add the newly created student to the list
+          dispatch(addStudent(response.data));
+          dispatch(
+            setActionStatus({
+              status: Status.SUCCESS,
+              message: 'Student registration completed successfully',
+            }),
+          );
+          return response.data;
+        } else {
+          throw new Error(response.message || 'Registration failed');
+        }
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to register student'
+            : error instanceof Error
+              ? error.message
+              : 'Failed to register student';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   return {
     students,
     selectedStudent,
@@ -218,6 +252,7 @@ export const useStudents = () => {
     createStudent,
     editStudent,
     removeStudent,
+    registerStudent,
     getStudentById,
     clearAction,
     clearDetails,

@@ -1,33 +1,27 @@
-import { AxiosError } from 'axios';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {AxiosError} from 'axios';
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
-import { Status } from '@/enums';
-import { RootState } from '@/store';
+import {Status} from '@/enums';
+import {RootState} from '@/store';
 
-import {
-  IBatch,
-  IBatchCreate,
-  IBatchUpdate,
-  IBatchWithSemestersCreate,
-  IBatchWithSemestersUpdate,
-} from '@/types/batch';
-import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {IBatch, IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate, IBatchWithSemestersUpdate,} from '@/types/batch';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
-import { batchService } from '@/services/batchService';
+import {batchService} from '@/services/batchService';
 
 import {
-  addBatch,
-  clearActionStatus,
-  clearDetailsStatus,
-  deleteBatch,
-  setActionStatus,
-  setBatches,
-  setDetailsStatus,
-  setListStatus,
-  setPagination,
-  setSelectedBatch,
-  updateBatch,
+    addBatch,
+    clearActionStatus,
+    clearDetailsStatus,
+    deleteBatch,
+    setActionStatus,
+    setBatches,
+    setDetailsStatus,
+    setListStatus,
+    setPagination,
+    setSelectedBatch,
+    updateBatch,
 } from '@/store/slices/batchSlice';
 
 export const useBatches = () => {
@@ -80,6 +74,26 @@ export const useBatches = () => {
             ? error?.response?.data?.message || error?.message || 'Failed to load batch'
             : 'Failed to load batch';
         dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
+  // Load a single batch by code from public endpoint
+  const loadBatchByCodePublic = useCallback(
+    async (code: string) => {
+      try {
+        dispatch(setDetailsStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IBatch> = await batchService.getBatchByCodePublic(code);
+        dispatch(setSelectedBatch(response.data));
+        dispatch(setDetailsStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load batch'
+            : 'Failed to load batch';
+        dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
       }
     },
     [dispatch],
@@ -257,6 +271,7 @@ export const useBatches = () => {
     // Actions
     loadBatches,
     loadBatch,
+    loadBatchByCodePublic,
     createBatch,
     createBatchWithSemesters,
     editBatch,

@@ -1,18 +1,18 @@
-import {
-  IBatch,
-  IBatchCreate,
-  IBatchUpdate,
-  IBatchWithSemestersCreate,
-  IBatchWithSemestersUpdate,
-} from '@/types/batch';
-import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {IBatch, IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate, IBatchWithSemestersUpdate,} from '@/types/batch';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
-import { api } from '@/lib/axios';
+import {api} from '@/lib/axios';
 
 export const batchService = {
   // Get all batches with pagination and search
   getBatches: async (params = {}): Promise<IBasePaginatedResponse<IBatch>> => {
     const response = await api.get<IBasePaginatedResponse<IBatch>>('/batches', { params });
+    return response.data;
+  },
+
+  // Get a single batch by code (public endpoint)
+  getBatchByCodePublic: async (code: string): Promise<IBaseResponse<IBatch>> => {
+    const response = await api.get<IBaseResponse<IBatch>>(`/public/batches/${code}`);
     return response.data;
   },
 

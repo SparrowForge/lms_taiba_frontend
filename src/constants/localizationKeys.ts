@@ -39,8 +39,7 @@ export const LOCALE_KEYS = {
   INFORMATION: 'information',
   NOT_FOUND_DESCRIPTION: 'not_found_description',
   BACK: 'back',
-  FIRST_NAME: 'first_name',
-  LAST_NAME: 'last_name',
+
   EMAIL: 'email',
   PHONE: 'phone',
   PASSWORD: 'password',
@@ -567,6 +566,44 @@ export const LOCALE_KEYS = {
   OPEN_COURSE: 'open_course',
   OPEN_SUBJECT: 'open_subject',
   PROGRESS: 'progress',
+
+  // Student Registration
+  STUDENT_REGISTRATION: 'student_registration',
+  REGISTRATION_SUBTITLE: 'registration_subtitle',
+  STUDENT_INFORMATION: 'student_information',
+  BASIC_STUDENT_DETAILS: 'basic_student_details',
+  PERSONAL_INFORMATION: 'personal_information',
+  ACADEMIC_BACKGROUND: 'academic_background',
+  STEP1_DESCRIPTION: 'step1_description',
+  STEP2_DESCRIPTION: 'step2_description',
+  STEP3_DESCRIPTION: 'step3_description',
+
+  // Education Entry
+  EDUCATION_ENTRY: 'education_entry',
+  ADD_EDUCATION_ENTRY: 'add_education_entry',
+
+  // Form Validation
+  PLEASE_FILL_REQUIRED_FIELDS: 'please_fill_required_fields',
+  REGISTRATION_SUBMITTED_SUCCESSFULLY: 'registration_submitted_successfully',
+
+  // Success Page
+  REGISTRATION_SUCCESS_TITLE: 'registration_success_title',
+  REGISTRATION_SUCCESS_MESSAGE: 'registration_success_message',
+  GO_TO_HOME: 'go_to_home',
+  NEW_REGISTRATION: 'new_registration',
+
+  PREVIOUS: 'previous',
+  NEXT: 'next',
+  SUBMIT_REGISTRATION: 'submit_registration',
+  FIRST_NAME: 'first_name',
+  MIDDLE_NAME: 'middle_name',
+  LAST_NAME: 'last_name',
+  ENTER_FIRST_NAME: 'enter_first_name',
+  ENTER_MIDDLE_NAME: 'enter_middle_name',
+  ENTER_LAST_NAME: 'enter_last_name',
+  WHATSAPP_NUMBER: 'whatsapp_number',
+  ENTER_WHATSAPP_NUMBER: 'enter_whatsapp_number',
+  PLEASE_ENTER_WHATSAPP_NUMBER: 'please_enter_whatsapp_number',
 } as const;
 
 // Type for the keys

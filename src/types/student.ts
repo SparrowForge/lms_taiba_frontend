@@ -1,9 +1,11 @@
-import { StudentStatus } from '@/enums';
+import {StudentStatus} from '@/enums';
 
-import { IBatch } from './batch';
-import { IBranch } from './branch';
-import { ICourse } from './course';
-import { IStudentProfile } from './studentProfile';
+import {IAddressCreate} from './address';
+import {IBatch} from './batch';
+import {IBranch} from './branch';
+import {ICourse} from './course';
+import {IStudentEducationCreate} from './studentEducation';
+import {IStudentProfile, IStudentProfileCreate} from './studentProfile';
 
 export interface IStudent {
   id: number;
@@ -56,4 +58,12 @@ export interface IStudentUpdate {
   fileIds?: number[];
   admissionSource?: string;
   status?: StudentStatus;
+}
+
+export interface IStudentRegistrationCreate {
+  student: IStudentCreate;
+  profile: IStudentProfileCreate;
+  presentAddress: IAddressCreate;
+  permanentAddress: IAddressCreate;
+  educations: IStudentEducationCreate[];
 }
