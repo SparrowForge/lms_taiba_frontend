@@ -22,7 +22,6 @@ import {IStudentCreate, IStudentRegistrationCreate} from '@/types/student';
 import {IStudentEducationCreate} from '@/types/studentEducation';
 import {IStudentProfileCreate} from '@/types/studentProfile';
 
-
 const RegisterStudentPage: React.FC = () => {
   const { t } = useLocalization();
   const router = useRouter();

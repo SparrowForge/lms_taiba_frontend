@@ -2,8 +2,10 @@
 
 import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
-import {useLocalization} from '@/hooks/useLocalization';
+
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+
+import {useLocalization} from '@/hooks/useLocalization';
 
 interface StudentInformationStepProps {
   form: any; // FormInstance from antd

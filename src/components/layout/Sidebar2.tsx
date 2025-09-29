@@ -2,28 +2,28 @@
 
 import * as Icons from '@ant-design/icons';
 import {
-  BellOutlined,
-  DashOutlined,
-  LeftOutlined,
-  LogoutOutlined,
-  RightOutlined,
-  SettingOutlined,
-  SignatureOutlined,
-  UserOutlined,
+    BellOutlined,
+    DashOutlined,
+    LeftOutlined,
+    LogoutOutlined,
+    RightOutlined,
+    SettingOutlined,
+    SignatureOutlined,
+    UserOutlined
 } from '@ant-design/icons';
-import { Avatar, Button, Layout, Menu, MenuProps, Select, Spin, Typography } from 'antd';
-import { usePathname, useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {Avatar, Button, Layout, Menu, MenuProps, Select, Spin, Typography} from 'antd';
+import {usePathname, useRouter} from 'next/navigation';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useBranches } from '@/hooks/useBranches'; // ✅ ADD
-import { useLocalization } from '@/hooks/useLocalization';
-import { useMenus } from '@/hooks/useMenus';
+import {useAuth} from '@/hooks/useAuth';
+import {useBranches} from '@/hooks/useBranches'; // ✅ ADD
+import {useLocalization} from '@/hooks/useLocalization';
+import {useMenus} from '@/hooks/useMenus';
 
-import { IMenu } from '@/types/menu';
+import {IMenu} from '@/types/menu';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -92,10 +92,11 @@ export const Sidebar2 = React.memo(
     }, []);
 
     useEffect(() => {
-      if (!myMenus || myMenus.length === 0) {
-        loadMyMenus();
-      }
-    }, [myMenus, loadMyMenus]);
+      loadMyMenus();
+      // if (!myMenus || myMenus.length === 0) {
+      //   loadMyMenus();
+      // }
+    }, []);
 
     // ✅ Load branches once (or when empty)
     useEffect(() => {
@@ -339,6 +340,7 @@ export const Sidebar2 = React.memo(
         collapsed,
         getUserFullName,
         user?.email,
+        //  user?.type,
         t,
         selectedBranch?.id,
         branchListStatus.status,
@@ -452,8 +454,8 @@ export const Sidebar2 = React.memo(
                     <span className="text-white font-bold text-lg">L</span>
                   </div>
                   <h1 className="text-xl font-bold mb-1">LMS Taiba</h1>
-                  <Text className="text-xs " style={{ color: '#ffffff' }}>
-                    Admin Panel
+                  <Text className="text-xs uppercase" style={{ color: '#52d1f8ff' }}>
+                    {user?.type} Panel
                   </Text>
                 </div>
               ) : (
