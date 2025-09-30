@@ -1,7 +1,3 @@
-'use client';
-
-import Link from 'next/link';
-
 export default function NotFound() {
   return (
     <div
@@ -91,7 +87,7 @@ export default function NotFound() {
             marginBottom: '3rem',
           }}
         >
-          <Link
+          {/* <Link
             href="/"
             style={{
               display: 'inline-flex',
@@ -120,9 +116,9 @@ export default function NotFound() {
             }}
           >
             🏠 Go to Dashboard
-          </Link>
+          </Link> */}
 
-          <button
+          {/* <button
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -155,7 +151,7 @@ export default function NotFound() {
             }}
           >
             ← Go Back
-          </button>
+          </button> */}
         </div>
 
         {/* Additional Info */}

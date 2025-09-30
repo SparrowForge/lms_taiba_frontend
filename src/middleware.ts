@@ -112,5 +112,9 @@ export const config = {
   // Match all pathnames except for
   // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
   // - … the ones containing a dot (e.g. `favicon.ico`)
-  matcher: '/((?!api|trpc|_next|_vercel|.*\\..*).*)',
+  // - … internal not-found routes `/_not-found` and localized `/{locale}/_not-found`
+  // We explicitly skip `/_not-found` and `/(en|ar)/_not-found` so Next can handle 404 rendering
+  matcher: [
+    '/((?!api|trpc|_next|_vercel|_not-found|en/_not-found|ar/_not-found|.*\\..*).*)',
+  ],
 };
