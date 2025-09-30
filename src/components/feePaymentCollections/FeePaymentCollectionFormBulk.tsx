@@ -142,7 +142,7 @@ const FeePaymentCollectionFormBulk: React.FC<FeePaymentCollectionFormBulkProps> 
     }
   }, [studentWithFeeInfo]);
 
-  // Check if all plans are paid from API response (existing payments only)
+  // Check if all plans are paid from API response (existing payment only)
   const allPlansPaidFromAPI =
     feePaymentDetailsRows.length > 0 &&
     feePaymentDetailsRows.every((row) => {
@@ -191,7 +191,7 @@ const FeePaymentCollectionFormBulk: React.FC<FeePaymentCollectionFormBulkProps> 
       };
 
       // Prepare fee payment details data for bulk API
-      // Only include rows that have new payments (regardless of final status)
+      // Only include rows that have new payment (regardless of final status)
       const paymentDetailsData = feePaymentDetailsRows
         .filter((row) => (row.newAmountPaid || 0) > 0)
         .map((row) => ({
