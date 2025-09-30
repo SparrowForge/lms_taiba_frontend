@@ -1,7 +1,13 @@
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IStudent, IStudentCreate, IStudentRegistrationCreate, IStudentUpdate,} from '@/types/student';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IStudent,
+  IStudentCreate,
+  IStudentRegistrationCreate,
+  IStudentUpdate,
+  IStudentWithFeeInfo,
+} from '@/types/student';
 
-import {api} from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export const studentService = {
   getStudents: async (params = {}): Promise<IBasePaginatedResponse<IStudent>> => {
@@ -14,12 +20,17 @@ export const studentService = {
     return response.data;
   },
 
+  getStudentWithFeeInfo: async (id: number): Promise<IBaseResponse<IStudentWithFeeInfo>> => {
+    const response = await api.get(`/students/${id}?include=fee-info`);
+    return response.data;
+  },
+
   createStudent: async (data: IStudentCreate): Promise<IStudent> => {
     const response = await api.post('/students', data);
     return response.data;
   },
 
-  updateStudent: async (id: number, data: IStudentUpdate): Promise<IStudent> => {
+  updateStudent: async (id: number, data: Partial<IStudentUpdate>): Promise<IStudent> => {
     const response = await api.patch(`/students/${id}`, data);
     return response.data;
   },

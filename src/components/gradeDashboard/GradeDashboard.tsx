@@ -1,6 +1,6 @@
 'use client';
 
-import {Col, Row} from 'antd';
+import { Col, Row } from 'antd';
 
 import Attendence from './Attendence';
 import HeaderSection from './HeaderSection';

@@ -23,6 +23,8 @@ import examTypeReducer from './slices/examTypeSlice';
 import facultyReducer from './slices/facultySlice';
 import facultySubjectReducer from './slices/facultySubjectSlice';
 import feeInstallmentPlanReducer from './slices/feeInstallmentPlanSlice';
+import feePaymentCollectionReducer from './slices/feePaymentCollectionSlice';
+import feePaymentDetailsReducer from './slices/feePaymentDetailsSlice';
 import feeStructureReducer from './slices/feeStructureSlice';
 import gradeRuleReducer from './slices/gradeRuleSlice';
 import instituteReducer from './slices/instituteSlice';
@@ -69,6 +71,8 @@ export interface RootState {
   faculties: ReturnType<typeof facultyReducer>;
   facultySubjects: ReturnType<typeof facultySubjectReducer>;
   feeInstallmentPlans: ReturnType<typeof feeInstallmentPlanReducer>;
+  feePaymentCollections: ReturnType<typeof feePaymentCollectionReducer>;
+  feePaymentDetails: ReturnType<typeof feePaymentDetailsReducer>;
   feeStructures: ReturnType<typeof feeStructureReducer>;
   gradeRules: ReturnType<typeof gradeRuleReducer>;
   markDistributions: ReturnType<typeof markDistributionReducer>;
@@ -120,6 +124,8 @@ export const store = configureStore({
     faculties: facultyReducer,
     facultySubjects: facultySubjectReducer,
     feeInstallmentPlans: feeInstallmentPlanReducer,
+    feePaymentCollections: feePaymentCollectionReducer,
+    feePaymentDetails: feePaymentDetailsReducer,
     feeStructures: feeStructureReducer,
     gradeRules: gradeRuleReducer,
     markDistributions: markDistributionReducer,

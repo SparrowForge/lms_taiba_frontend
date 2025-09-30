@@ -1,10 +1,10 @@
-import {ExclamationOutlined} from '@ant-design/icons';
-import {Button, Card} from 'antd';
+import { ExclamationOutlined } from '@ant-design/icons';
+import { Button, Card } from 'antd';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const HeaderSection = () => {
   const { t } = useLocalization();

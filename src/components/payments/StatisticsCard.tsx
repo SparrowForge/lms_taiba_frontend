@@ -1,8 +1,8 @@
 'use client';
-import {CreditCardOutlined, InfoCircleOutlined} from '@ant-design/icons';
-import {useLocale} from 'next-intl';
+import { CreditCardOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { useLocale } from 'next-intl';
 import React from 'react';
-import {FaHistory} from 'react-icons/fa';
+import { FaHistory } from 'react-icons/fa';
 
 type StatCard = {
   title: string;

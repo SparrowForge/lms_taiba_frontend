@@ -1,11 +1,11 @@
 'use client';
 
-import {Steps} from 'antd';
+import { Steps } from 'antd';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const { Step } = Steps;
 

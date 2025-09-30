@@ -3,19 +3,18 @@
  * These are derived from the status enums for use in forms and dropdowns
  */
 
-import {ExamCandidateStatus} from '@/enums/exam-candidate.enum';
+import { ExamCandidateStatus } from '@/enums/exam-candidate.enum';
 import {
-    AttendanceStatus,
-    ClassScheduleStatus,
-    CourseAssignmentSubmissionStatus,
-    EntityStatus,
-    MaritalStatus,
-    SemesterStatus,
-    StudentStatus,
+  AttendanceStatus,
+  ClassScheduleStatus,
+  CourseAssignmentSubmissionStatus,
+  EntityStatus,
+  MaritalStatus,
+  SemesterStatus,
+  StudentStatus,
 } from '@/enums/status';
 
-
-import {IStatusOption} from '@/types/statusSelect';
+import { IStatusOption } from '@/types/statusSelect';
 
 // Entity Status Options (Active/Inactive)
 export const ENTITY_STATUS_OPTIONS: IStatusOption[] = Object.values(EntityStatus).map((status) => ({

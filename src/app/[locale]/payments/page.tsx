@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
 import PaymentsDashboard from '@/components/payments/PaymentsDashboard';
 
 const PaymentDashboard: React.FC = () => {

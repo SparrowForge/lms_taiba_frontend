@@ -1,10 +1,10 @@
-import {Table} from 'antd';
-import {useLocale} from 'next-intl';
+import { Table } from 'antd';
+import { useLocale } from 'next-intl';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const dataSource = [
   {

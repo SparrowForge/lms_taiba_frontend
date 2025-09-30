@@ -1,6 +1,6 @@
 import AcademicDashboard from '@/components/academic/AcademicDashboard';
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
 
 const AcademicMainDashboard = () => {
   return (

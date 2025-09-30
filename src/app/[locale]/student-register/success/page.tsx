@@ -1,12 +1,12 @@
 'use client';
 
-import {Button, Card, Result} from 'antd';
-import {useRouter} from 'next/navigation';
+import { Button, Card, Result } from 'antd';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const StudentRegistrationSuccessPage: React.FC = () => {
   const { t } = useLocalization();

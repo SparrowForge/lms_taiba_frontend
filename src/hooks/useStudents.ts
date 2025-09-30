@@ -1,33 +1,47 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-import {IStudent, IStudentCreate, IStudentRegistrationCreate, IStudentUpdate,} from '@/types/student';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+  IStudent,
+  IStudentCreate,
+  IStudentRegistrationCreate,
+  IStudentUpdate,
+  IStudentWithFeeInfo,
+} from '@/types/student';
 
-import {studentService} from '@/services/studentService';
+import { studentService } from '@/services/studentService';
 
 import {
-    addStudent,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteStudent,
-    setActionStatus,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedStudent,
-    setStudents,
-    updateStudent,
+  addStudent,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteStudent,
+  setActionStatus,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedStudent,
+  setStudents,
+  setStudentWithFeeInfo,
+  updateStudent,
 } from '@/store/slices/studentSlice';
 
 export const useStudents = () => {
   const dispatch = useDispatch();
-  const { students, selectedStudent, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.students);
+  const {
+    students,
+    selectedStudent,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+    studentWithFeeInfo,
+  } = useSelector((state: RootState) => state.students);
 
   const loadStudents = useCallback(
     async (params = {}) => {
@@ -77,6 +91,29 @@ export const useStudents = () => {
     [dispatch],
   );
 
+  const loadStudentWithFeeInfo = useCallback(
+    async (id: number) => {
+      try {
+        dispatch(setDetailsStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IStudentWithFeeInfo> =
+          await studentService.getStudentWithFeeInfo(id);
+        dispatch(setStudentWithFeeInfo(response.data));
+        dispatch(setDetailsStatus({ status: Status.SUCCESS }));
+        return response.data;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load student with fee info'
+            : 'Failed to load student with fee info';
+        dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   const createStudent = useCallback(
     async (data: IStudentCreate) => {
       try {
@@ -99,7 +136,7 @@ export const useStudents = () => {
   );
 
   const editStudent = useCallback(
-    async (id: number, data: IStudentUpdate) => {
+    async (id: number, data: Partial<IStudentUpdate>) => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
         const response: IStudent = await studentService.updateStudent(id, data);
@@ -241,6 +278,7 @@ export const useStudents = () => {
   return {
     students,
     selectedStudent,
+    studentWithFeeInfo,
     listStatus,
     detailsStatus,
     actionStatus,
@@ -249,6 +287,7 @@ export const useStudents = () => {
     loadStudents,
     loadStudentsWithoutUser,
     loadStudent,
+    loadStudentWithFeeInfo,
     createStudent,
     editStudent,
     removeStudent,

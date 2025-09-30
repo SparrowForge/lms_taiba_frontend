@@ -1,31 +1,43 @@
 'use client';
 
-import {Button, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space, Switch, TimePicker,} from 'antd';
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+  Switch,
+  TimePicker,
+} from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS, LocaleKey} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {Status} from '@/enums';
-import {QUESTION_TYPE_OPTIONS} from '@/enums/question-type.enum';
-import {SECURITY_TYPE_OPTIONS} from '@/enums/security-type.enum';
+import { LOCALE_KEYS, LocaleKey } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { Status } from '@/enums';
+import { QUESTION_TYPE_OPTIONS } from '@/enums/question-type.enum';
+import { SECURITY_TYPE_OPTIONS } from '@/enums/security-type.enum';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useCourses} from '@/hooks/useCourses';
-import {useExams} from '@/hooks/useExams';
-import {useExamTypes} from '@/hooks/useExamTypes';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRooms} from '@/hooks/useRooms';
-import {useSemesters} from '@/hooks/useSemesters';
-import {useSubjects} from '@/hooks/useSubjects';
+import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
+import { useExams } from '@/hooks/useExams';
+import { useExamTypes } from '@/hooks/useExamTypes';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRooms } from '@/hooks/useRooms';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSubjects } from '@/hooks/useSubjects';
 
-import {getErrorMessage} from '@/types/errors';
-import {IExamCreate, IExamUpdate} from '@/types/exam';
+import { getErrorMessage } from '@/types/errors';
+import { IExamCreate, IExamUpdate } from '@/types/exam';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 const { Option } = Select;
 const { TextArea } = Input;

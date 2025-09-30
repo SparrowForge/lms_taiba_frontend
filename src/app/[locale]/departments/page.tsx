@@ -1,9 +1,11 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -18,11 +20,11 @@ import StatusTag from '@/components/ui/StatusTag';
 import { useDepartments } from '@/hooks/useDepartments';
 import { useLocalization } from '@/hooks/useLocalization';
 
-import { IBranch } from '@/types/branch';
 import { IDepartment } from '@/types/department';
 
 export default function DepartmentsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -108,7 +110,7 @@ export default function DepartmentsPage() {
       {
         title: t(LOCALE_KEYS.BRANCH),
         key: 'branch',
-        render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
+        render: (department: IDepartment) => <span>{department.branch?.name || 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.HEAD),
@@ -158,6 +160,16 @@ export default function DepartmentsPage() {
             id={department.id}
           />
         ),
+      },
+    ],
+    filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+        ],
       },
     ],
   };

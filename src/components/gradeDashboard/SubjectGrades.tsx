@@ -1,9 +1,9 @@
-import {Card} from 'antd';
+import { Card } from 'antd';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 import SubjectSection from './SubjectSection';
 import ColumnGraph from '../dashboard/dashboardui/graphs/ColumnGraph';

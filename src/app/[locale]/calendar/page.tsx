@@ -1,6 +1,6 @@
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import ClassScheduleCalendarView from '@/components/classSchedules/ClassScheduleCalendarView';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 
 const CalenderDashboard = () => {
   return (

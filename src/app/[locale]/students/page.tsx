@@ -1,26 +1,36 @@
 'use client';
 
+import { DollarOutlined } from '@ant-design/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { STUDENT_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
+import { StudentStatus } from '@/enums/status';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import { MainLayout } from '@/components/layout/MainLayout';
+import AssignFeeStructureDrawer from '@/components/students/AssignFeeStructureDrawer';
 import StudentDetailsDrawer from '@/components/students/StudentDetailsDrawer';
 import StudentFormDrawer from '@/components/students/StudentFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
 import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
+import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
+import { useFeeStructures } from '@/hooks/useFeeStructures';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useStudents } from '@/hooks/useStudents';
 
 import { IStudent } from '@/types/student';
 
+
 export default function StudentsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -28,21 +38,38 @@ export default function StudentsPage() {
   const [selectedStudentId, setSelectedStudentId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsStudentId, setSelectedDetailsStudentId] = useState<number | undefined>();
+  const [assignFeeDrawerVisible, setAssignFeeDrawerVisible] = useState(false);
+  const [selectedAssignStudentId, setSelectedAssignStudentId] = useState<number | undefined>();
 
   const { students, listStatus, pagination, loadStudents, removeStudent } = useStudents();
-
+  const { batches, loadBatches, clearBatches } = useBatches();
+  const { courses, loadCourses } = useCourses();
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const courseId = searchParams.get('courseId');
 
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadStudents({ page, limit: parseInt(limit ?? '10') });
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadStudents({ page, limit: limitNum, ...params });
+  }, [searchParams, skip, limit, loadStudents]);
+
+  // Load batch options for filter
+  useEffect(() => {
+    if (courseId) {
+      loadBatches({ page: 1, limit: 99, courseId: parseInt(courseId) });
     } else {
-      loadStudents({ page: 1, limit: 10 });
+      clearBatches();
     }
-  }, [skip, limit, loadStudents]);
+  }, [loadBatches, courseId]);
+
+  useEffect(() => {
+    loadCourses({ page: 1, limit: 99 });
+  }, [loadCourses]);
 
   const handleEditDrawer = (studentId: number) => {
     setSelectedStudentId(studentId);
@@ -73,19 +100,64 @@ export default function StudentsPage() {
     setDrawerVisible(true);
   };
 
+  const handleAssignFeeStructure = (studentId: number) => {
+    setSelectedAssignStudentId(studentId);
+    setAssignFeeDrawerVisible(true);
+  };
+
+  const handleAssignFeeSuccess = () => {
+    setAssignFeeDrawerVisible(false);
+    // Reload with current page, limit, and all filter parameters
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadStudents({ page, limit: limitNum, ...params });
+  };
+
   const config: EntityConfig<IStudent> = {
     name: entityName,
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/students',
     searchFields: ['name', 'applicationNo', 'cardNo', 'registrationNo'] as (keyof IStudent)[],
     onSearch: (searchText: string) => {
-      loadStudents({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadStudents({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: students,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...STUDENT_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+        ],
+      },
+      {
+        key: 'courseId',
+        label: t(LOCALE_KEYS.COURSE),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+        ],
+      },
+      {
+        key: 'batchId',
+        label: t(LOCALE_KEYS.BATCH),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...batches.map((b) => ({ label: b.name, value: String(b.id) })),
+        ],
+      },
+    ],
     columns: [
       {
         title: t(LOCALE_KEYS.APPLICATION_NO, { defaultValue: 'Application No' }),
@@ -95,9 +167,12 @@ export default function StudentsPage() {
       },
       {
         title: t(LOCALE_KEYS.NAME, { defaultValue: 'Name' }),
-        dataIndex: 'name',
         key: 'name',
-        render: (text: string) => <span>{text}</span>,
+        render: (data: IStudent) => (
+          <span>
+            {data.firstName} {data.middleName} {data.lastName}
+          </span>
+        ),
       },
       {
         title: t(LOCALE_KEYS.CARD_NO, { defaultValue: 'Card No' }),
@@ -139,7 +214,7 @@ export default function StudentsPage() {
               status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
             }`}
           >
-            {t(LOCALE_KEYS.STATUS, { defaultValue: status })}
+            {translate('status_' + status)}
           </span>
         ),
       },
@@ -157,6 +232,25 @@ export default function StudentsPage() {
             editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeStudent(student.id)}
             id={student.id}
+            extraActions={[
+              student.status === StudentStatus.PENDING
+                ? {
+                    key: 'assignFeeStructure',
+                    icon: <DollarOutlined />,
+                    label: t(LOCALE_KEYS.ASSIGN_FEE_STRUCTURE),
+                    onClick: () => handleAssignFeeStructure(student.id),
+                  }
+                : null,
+              student.feeStructureId !== null
+                ? {
+                    key: 'feePaymentCollections',
+                    icon: <DollarOutlined />,
+                    label: t(LOCALE_KEYS.FEE_PAYMENT_COLLECTIONS),
+                    onClick: () =>
+                      router.push(`/fee-payment-collections/create?studentId=${student.id}`),
+                  }
+                : null,
+            ]}
           />
         ),
       },
@@ -190,6 +284,13 @@ export default function StudentsPage() {
           visible={detailsDrawerVisible}
           onClose={() => setDetailsDrawerVisible(false)}
           onEdit={handleDetailsEdit}
+        />
+
+        <AssignFeeStructureDrawer
+          studentId={selectedAssignStudentId}
+          visible={assignFeeDrawerVisible}
+          onClose={() => setAssignFeeDrawerVisible(false)}
+          onSuccess={handleAssignFeeSuccess}
         />
       </MainLayout>
     </ProtectedRoute>

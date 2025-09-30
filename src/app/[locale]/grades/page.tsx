@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import GradeDashboard from '@/components/gradeDashboard/GradeDashboard';
-import {MainLayout} from '@/components/layout/MainLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 
 const GradePage: React.FC = () => {
   return (

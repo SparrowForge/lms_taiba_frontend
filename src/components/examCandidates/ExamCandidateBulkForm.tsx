@@ -1,19 +1,31 @@
 'use client';
 
-import {Avatar, Button, Card, Col, Empty, Radio, Row, Select, Space, Spin, Typography,} from 'antd';
-import React, {useEffect, useState} from 'react';
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Empty,
+  Radio,
+  Row,
+  Select,
+  Space,
+  Spin,
+  Typography,
+} from 'antd';
+import React, { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {EXAM_CANDIDATE_STATUS_OPTIONS} from '@/constants/statusOptions';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { EXAM_CANDIDATE_STATUS_OPTIONS } from '@/constants/statusOptions';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useCourses} from '@/hooks/useCourses';
-import {useExamCandidates} from '@/hooks/useExamCandidates';
-import {useExams} from '@/hooks/useExams';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudents} from '@/hooks/useStudents';
+import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
+import { useExamCandidates } from '@/hooks/useExamCandidates';
+import { useExams } from '@/hooks/useExams';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudents } from '@/hooks/useStudents';
 
-import {ICreateExamCandidateBulk} from '@/types/examCandidate';
+import { ICreateExamCandidateBulk } from '@/types/examCandidate';
 
 function ExamCandidateBulkForm() {
   const { t } = useLocalization();

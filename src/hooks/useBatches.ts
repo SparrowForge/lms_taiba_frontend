@@ -1,27 +1,33 @@
-import {AxiosError} from 'axios';
-import {useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { AxiosError } from 'axios';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {Status} from '@/enums';
-import {RootState} from '@/store';
-
-import {IBatch, IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate, IBatchWithSemestersUpdate,} from '@/types/batch';
-import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
-
-import {batchService} from '@/services/batchService';
+import { Status } from '@/enums';
+import { RootState } from '@/store';
 
 import {
-    addBatch,
-    clearActionStatus,
-    clearDetailsStatus,
-    deleteBatch,
-    setActionStatus,
-    setBatches,
-    setDetailsStatus,
-    setListStatus,
-    setPagination,
-    setSelectedBatch,
-    updateBatch,
+  IBatch,
+  IBatchCreate,
+  IBatchUpdate,
+  IBatchWithSemestersCreate,
+  IBatchWithSemestersUpdate,
+} from '@/types/batch';
+import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+
+import { batchService } from '@/services/batchService';
+
+import {
+  addBatch,
+  clearActionStatus,
+  clearDetailsStatus,
+  deleteBatch,
+  setActionStatus,
+  setBatches,
+  setDetailsStatus,
+  setListStatus,
+  setPagination,
+  setSelectedBatch,
+  updateBatch,
 } from '@/store/slices/batchSlice';
 
 export const useBatches = () => {

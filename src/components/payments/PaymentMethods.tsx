@@ -1,10 +1,10 @@
 'use client';
-import {Card} from 'antd';
-import {FaCcMastercard, FaCcVisa} from 'react-icons/fa';
+import { Card } from 'antd';
+import { FaCcMastercard, FaCcVisa } from 'react-icons/fa';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 type PaymentMethod = {
   id: string;

@@ -1,10 +1,10 @@
 'use client';
-import {DownloadOutlined, ExperimentOutlined, FilePptOutlined} from '@ant-design/icons';
-import {Card} from 'antd';
+import { DownloadOutlined, ExperimentOutlined, FilePptOutlined } from '@ant-design/icons';
+import { Card } from 'antd';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 type ReceiptType = 'pdf' | 'lab' | 'other';
 

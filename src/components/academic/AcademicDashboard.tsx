@@ -1,8 +1,7 @@
 'use client';
 
-
-import {Col, Row} from 'antd';
-import {useState} from 'react';
+import { Col, Row } from 'antd';
+import { useState } from 'react';
 
 import AttendenceSummary from './AttendenceSummary';
 import TabData from './TabData';

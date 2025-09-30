@@ -1,26 +1,26 @@
 'use client';
 
-import {Button, Card, Form, message} from 'antd';
-import {useRouter, useSearchParams} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
+import { Button, Card, Form, message } from 'antd';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {Status, StudentStatus} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status, StudentStatus } from '@/enums';
 
 import RegistrationSteps from '@/components/registration/RegistrationSteps';
 import StudentEducationStep from '@/components/registration/StudentEducationStep';
 import StudentInformationStep from '@/components/registration/StudentInformationStep';
 import StudentProfileStep from '@/components/registration/StudentProfileStep';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useStudents} from '@/hooks/useStudents';
+import { useBatches } from '@/hooks/useBatches';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useStudents } from '@/hooks/useStudents';
 
-import {IAddressCreate} from '@/types/address';
-import {IBatch} from '@/types/batch';
-import {IStudentCreate, IStudentRegistrationCreate} from '@/types/student';
-import {IStudentEducationCreate} from '@/types/studentEducation';
-import {IStudentProfileCreate} from '@/types/studentProfile';
+import { IAddressCreate } from '@/types/address';
+import { IBatch } from '@/types/batch';
+import { IStudentCreate, IStudentRegistrationCreate } from '@/types/student';
+import { IStudentEducationCreate } from '@/types/studentEducation';
+import { IStudentProfileCreate } from '@/types/studentProfile';
 
 const RegisterStudentPage: React.FC = () => {
   const { t } = useLocalization();
@@ -49,6 +49,7 @@ const RegisterStudentPage: React.FC = () => {
     try {
       // Validate current step fields
       const stepFields = getStepFields(currentStep);
+      console.log(form.getFieldsValue(), 'form.getFieldsValue()');
       await form.validateFields(stepFields);
 
       if (currentStep < 2) {
@@ -66,12 +67,25 @@ const RegisterStudentPage: React.FC = () => {
   const getStepFields = (step: number): string[] => {
     switch (step) {
       case 0: // Student Information
-        return ['firstName', 'lastName', 'email', 'phone', 'courseId', 'batchId', 'branchId'];
+        return ['firstName', 'lastName', 'email', 'phone'];
       case 1: // Student Profile
         return [
           'dob',
+          'placeOfBirth',
           'gender',
           'maritalStatus',
+          'presentAddressName',
+          'presentAddress',
+          'presentZipCode',
+          'presentCountry',
+          'presentAddressPhone',
+          'permanentAddressName',
+          'permanentAddress',
+          'permanentZipCode',
+          'permanentCountry',
+          'permanentAddressPhone',
+          'permanentAddressEmail',
+          'countryCode',
           'identityType',
           'identityNo',
           'isTransferred',
@@ -133,25 +147,29 @@ const RegisterStudentPage: React.FC = () => {
   const buildStudentData = (formValues: any, selectedBatch: IBatch): IStudentCreate => {
     const { firstName, middleName, lastName } = formValues;
 
+    console.log(firstName, middleName, lastName, 'firstName, middleName, lastName');
     return {
-      applicationNo: `APP-${Date.now()}`, // Generate application number
-      name: `${firstName} ${middleName ? middleName + ' ' : ''}${lastName}`.trim(),
-      cardNo: `CARD-${Date.now()}`, // Generate card number
-      registrationNo: `REG-${Date.now()}`, // Generate registration number
+      applicationNo: undefined, // Generate application number
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
+      cardNo: undefined, // Generate card number
+      registrationNo: undefined, // Generate registration number
       admissionDate: new Date().toISOString().split('T')[0], // Current date
       courseId: selectedBatch.courseId,
       batchId: selectedBatch.id,
       branchId: selectedBatch.course.department.branchId,
-      referenceNo: `REF-${Date.now()}`, // Generate reference number
+      referenceNo: undefined, // Generate reference number
       fileIds: [], // Empty array for now
       admissionSource: 'online_registration', // Default value
       status: StudentStatus.PENDING, // Default status
-    };
+    } as IStudentCreate;
   };
 
   const buildStudentProfileData = (formValues: any): IStudentProfileCreate => {
     const {
       dob,
+      placeOfBirth,
       gender,
       maritalStatus,
       identityType,
@@ -159,27 +177,29 @@ const RegisterStudentPage: React.FC = () => {
       isTransferred,
       isInternational,
       transferInfo,
-      presentAddressName,
-      presentAddressEmail,
-      presentAddressPhone,
-      permanentAddressName,
-      permanentAddressEmail,
-      permanentAddressPhone,
+      phone,
+      mobile,
+      email,
+      countryCode,
+      whatsappNumber,
     } = formValues;
 
     return {
       studentId: 0, // Will be set after student is created
       dob: dob,
+      placeOfBirth: placeOfBirth,
       gender: gender,
       maritalStatus: maritalStatus,
       presentAddressId: 0, // Will be set after address is created
       permanentAddressId: 0, // Will be set after address is created
-      phone: presentAddressPhone || '',
-      mobile: presentAddressPhone || '',
-      email: presentAddressEmail || '',
+      phone: phone || '',
+      mobile: mobile || '',
+      whatsappNumber: whatsappNumber || '',
+      email: email || '',
       isTransferred: isTransferred || false,
       transferInfo: transferInfo || null,
       isInternational: isInternational || false,
+      countryCode: countryCode || '',
       identityType: identityType,
       identityNo: identityNo,
     };
@@ -305,42 +325,52 @@ const RegisterStudentPage: React.FC = () => {
         <Card className="">
           <RegistrationSteps currentStep={currentStep} onStepClick={handleStepClick} />
 
-          {/* Step Content */}
+          {/* Step Content + Single Form Wrapper */}
           <Card className="" style={{ marginTop: '16px' }}>
-            {renderStepContent()}
+            <Form form={form} layout="vertical" className="w-full">
+              <div style={{ display: currentStep === 0 ? 'block' : 'none' }}>
+                <StudentInformationStep form={form} />
+              </div>
+              <div style={{ display: currentStep === 1 ? 'block' : 'none' }}>
+                <StudentProfileStep form={form} />
+              </div>
+              <div style={{ display: currentStep === 2 ? 'block' : 'none' }}>
+                <StudentEducationStep form={form} />
+              </div>
+
+              {/* Navigation Buttons */}
+              <div className="flex justify-between mt-6">
+                <div>
+                  {currentStep > 0 && (
+                    <Button size="large" onClick={handlePrevious}>
+                      {t(LOCALE_KEYS.PREVIOUS)}
+                    </Button>
+                  )}
+                </div>
+
+                <div className="flex space-x-3 gap-3">
+                  <Button size="large" onClick={() => router.push('/')}>
+                    {t(LOCALE_KEYS.CANCEL)}
+                  </Button>
+
+                  {currentStep < 2 ? (
+                    <Button type="primary" size="large" onClick={handleNext}>
+                      {t(LOCALE_KEYS.NEXT)}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="primary"
+                      size="large"
+                      onClick={handleSubmit}
+                      loading={actionStatus.status === Status.LOADING}
+                    >
+                      {t(LOCALE_KEYS.SUBMIT_REGISTRATION)}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </Form>
           </Card>
-
-          {/* Navigation Buttons */}
-          <div className="flex justify-between mt-6">
-            <div>
-              {currentStep > 0 && (
-                <Button size="large" onClick={handlePrevious}>
-                  {t(LOCALE_KEYS.PREVIOUS)}
-                </Button>
-              )}
-            </div>
-
-            <div className="flex space-x-3 gap-3">
-              <Button size="large" onClick={() => router.push('/')}>
-                {t(LOCALE_KEYS.CANCEL)}
-              </Button>
-
-              {currentStep < 2 ? (
-                <Button type="primary" size="large" onClick={handleNext}>
-                  {t(LOCALE_KEYS.NEXT)}
-                </Button>
-              ) : (
-                <Button
-                  type="primary"
-                  size="large"
-                  onClick={handleSubmit}
-                  loading={actionStatus.status === Status.LOADING}
-                >
-                  {t(LOCALE_KEYS.SUBMIT_REGISTRATION)}
-                </Button>
-              )}
-            </div>
-          </div>
         </Card>
       </div>
     </div>

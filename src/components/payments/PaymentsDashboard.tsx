@@ -1,4 +1,4 @@
-import {Col, Row} from 'antd';
+import { Col, Row } from 'antd';
 
 import HeaderSection from './HeaderSection';
 import PaymentMethods from './PaymentMethods';

@@ -1,14 +1,13 @@
 'use client';
-import {DownloadOutlined} from '@ant-design/icons';
-import {Card} from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+import { Card } from 'antd';
 import React from 'react';
-import {AiFillCheckCircle, AiOutlineCloseCircle} from 'react-icons/ai';
-import {MdOutlinePayment} from 'react-icons/md';
+import { AiFillCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
+import { MdOutlinePayment } from 'react-icons/md';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
-
+import { useLocalization } from '@/hooks/useLocalization';
 
 type Invoice = {
   id: string;

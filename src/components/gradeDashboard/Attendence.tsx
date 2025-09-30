@@ -1,9 +1,9 @@
-import {Card} from 'antd';
+import { Card } from 'antd';
 import React from 'react';
 
-import {LOCALE_KEYS, t} from '@/constants/localizationKeys';
+import { LOCALE_KEYS, t } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 const Attendence = () => {
   const { t } = useLocalization();

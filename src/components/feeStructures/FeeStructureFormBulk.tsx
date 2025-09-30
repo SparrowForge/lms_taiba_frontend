@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { CURRENCIES } from '@/constants/currencies';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import {
@@ -1043,10 +1044,11 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   ]}
                 >
                   <Select placeholder={t(LOCALE_KEYS.SELECT_CURRENCY)}>
-                    <Select.Option value="SAR">SAR</Select.Option>
-                    <Select.Option value="USD">USD</Select.Option>
-                    <Select.Option value="EUR">EUR</Select.Option>
-                    <Select.Option value="GBP">GBP</Select.Option>
+                    {CURRENCIES.map((currency) => (
+                      <Select.Option key={currency.code} value={currency.code}>
+                        {currency.code} - {currency.name} ({currency.symbol})
+                      </Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>

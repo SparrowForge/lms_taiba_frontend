@@ -1,12 +1,17 @@
 'use client';
 
-import {DownloadOutlined, EyeOutlined, FilePdfOutlined, FileTextOutlined,} from '@ant-design/icons';
-import {Card} from 'antd';
+import {
+  DownloadOutlined,
+  EyeOutlined,
+  FilePdfOutlined,
+  FileTextOutlined,
+} from '@ant-design/icons';
+import { Card } from 'antd';
 import React from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
 type DocumentType = 'pdf' | 'summary' | 'other';
 
