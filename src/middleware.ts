@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
-import { routing } from './i18n/routing';
+import {routing} from './i18n/routing';
 
 // Protected routes that require authentication
 const protectedRoutes = [
@@ -114,7 +114,5 @@ export const config = {
   // - … the ones containing a dot (e.g. `favicon.ico`)
   // - … internal not-found routes `/_not-found` and localized `/{locale}/_not-found`
   // We explicitly skip `/_not-found` and `/(en|ar)/_not-found` so Next can handle 404 rendering
-  matcher: [
-    '/((?!api|trpc|_next|_vercel|_not-found|en/_not-found|ar/_not-found|.*\\..*).*)',
-  ],
+  matcher: ['/((?!api|trpc|_next|_vercel|_not-found|en/_not-found|ar/_not-found|.*\\..*).*)'],
 };

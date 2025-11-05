@@ -1,9 +1,9 @@
 'use client';
-import { Row } from 'antd';
+import {Row} from 'antd';
 
-import { UserType } from '@/enums/user-type.enum';
+import {UserType} from '@/enums/user-type.enum';
 
-import { useAuth } from '@/hooks/useAuth';
+import {useAuth} from '@/hooks/useAuth';
 
 import StudentLayout from './StudentLayout';
 import TeacherLayout from './TeacherLayout';
@@ -11,7 +11,7 @@ import TeacherLayout from './TeacherLayout';
 const LayoutDashboard = () => {
   const { user } = useAuth();
   return (
-    <div className="h-[600px] overflow-auto">
+    <div className="overflow-auto">
       <Row
         gutter={[24, 24]}
         className="pl-6"

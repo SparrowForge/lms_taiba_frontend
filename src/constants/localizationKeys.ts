@@ -676,6 +676,7 @@ export const LOCALE_KEYS = {
   ASSIGN: 'assign',
   CLOSE: 'close',
   STUDENT_ALREADY_HAS_FEE_STRUCTURE: 'student_already_has_fee_structure',
+  APPROVE: 'approve',
 } as const;
 
 // Type for the keys

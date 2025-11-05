@@ -685,5 +685,6 @@
   "assign": "Assign",
   "months": "months",
   "close": "Close",
-  "student_already_has_fee_structure": "This student already has a fee structure assigned."
+  "student_already_has_fee_structure": "This student already has a fee structure assigned.",
+  "approve": "Approve"
 }

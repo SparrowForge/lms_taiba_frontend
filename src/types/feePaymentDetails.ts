@@ -1,4 +1,4 @@
-import { IFeeInstallmentPlan } from './feeInstallmentPlan';
+import {IFeeInstallmentPlan} from './feeInstallmentPlan';
 
 export interface IFeePaymentDetails {
   id: number;
@@ -23,4 +23,7 @@ export interface IFeePaymentDetailsCreate {
   balanceAmount: number;
 }
 
-export type IFeePaymentDetailsUpdate = Omit<IFeePaymentDetailsCreate, 'paymentId' | 'feeInstallmentPlanId'>
+export type IFeePaymentDetailsUpdate = Omit<
+  IFeePaymentDetailsCreate,
+  'paymentId' | 'feeInstallmentPlanId'
+>;

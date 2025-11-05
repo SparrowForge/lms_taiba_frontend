@@ -1,25 +1,25 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useEffect, useState} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import BatchDetailsDrawer from '@/components/batches/BatchDetailsDrawer';
 import BatchFormDrawer from '@/components/batches/BatchFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import { MainLayout } from '@/components/layout/MainLayout';
+import {MainLayout} from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import { EntityConfig, EntityList } from '@/components/ui/EntityList';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import { useBatches } from '@/hooks/useBatches';
-import { useLocalization } from '@/hooks/useLocalization';
+import {useBatches} from '@/hooks/useBatches';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import { IBatch } from '@/types/batch';
-import { ICourse } from '@/types/course';
+import {IBatch} from '@/types/batch';
+import {ICourse} from '@/types/course';
 
 export default function BatchesPage() {
   const { t } = useLocalization();
@@ -115,10 +115,10 @@ export default function BatchesPage() {
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t(LOCALE_KEYS.YEAR),
-        dataIndex: 'year',
-        key: 'year',
-        render: (text: number) => <span>{text}</span>,
+        title: t(LOCALE_KEYS.ACADEMIC_YEAR),
+        dataIndex: 'academicYear',
+        key: 'academicYear',
+        render: (text: number) => <span>{text || 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.SESSION),
@@ -168,8 +168,8 @@ export default function BatchesPage() {
             editText={t(LOCALE_KEYS.EDIT)}
             deleteText={t(LOCALE_KEYS.DELETE)}
             viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
-            onEdit={() => router.push(`/batches/${batch.id}/edit`)}
-            // onEditModal={handleEditDrawer}
+            // onEdit={() => router.push(`/batches/${batch.id}/edit`)}
+            onEditModal={handleEditDrawer}
             editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeBatch(batch.id)}
             id={batch.id}

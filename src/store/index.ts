@@ -1,5 +1,7 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 
+import {classScheduleApi} from './api/classScheduleApi';
+import {studentApi} from './api/studentApi';
 import addressReducer from './slices/addressSlice';
 import attendanceReducer from './slices/attendanceSlice';
 import auditReducer from './slices/auditSlice';
@@ -51,6 +53,8 @@ import weekDayReducer from './slices/weekDaySlice';
 
 // Root state type
 export interface RootState {
+  [classScheduleApi.reducerPath]: ReturnType<typeof classScheduleApi.reducer>;
+  [studentApi.reducerPath]: ReturnType<typeof studentApi.reducer>;
   attendances: ReturnType<typeof attendanceReducer>;
   auth: ReturnType<typeof authReducer>;
   users: ReturnType<typeof userReducer>;
@@ -104,6 +108,8 @@ export interface RootState {
 // Create store
 export const store = configureStore({
   reducer: {
+    [classScheduleApi.reducerPath]: classScheduleApi.reducer,
+    [studentApi.reducerPath]: studentApi.reducer,
     attendances: attendanceReducer,
     auth: authReducer,
     users: userReducer,
@@ -163,7 +169,7 @@ export const store = configureStore({
         // Ignore these paths in the state
         ignoredPaths: ['items.dates'],
       },
-    }),
+    }).concat(classScheduleApi.middleware, studentApi.middleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

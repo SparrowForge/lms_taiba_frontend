@@ -1,29 +1,29 @@
 'use client';
 
-import { Button, DatePicker, Form, Input, InputNumber, Select, Space } from 'antd';
+import {Button, DatePicker, Form, Input, InputNumber, Select, Space} from 'antd';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import {useRouter} from 'next/navigation';
+import React, {useEffect, useState} from 'react';
+import {toast} from 'react-toastify';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
-import { useAttendances } from '@/hooks/useAttendances';
-import { useBatches } from '@/hooks/useBatches';
-import { useClassSchedules } from '@/hooks/useClassSchedules';
-import { useCourses } from '@/hooks/useCourses';
-import { useFaculties } from '@/hooks/useFaculties';
-import { useLocalization } from '@/hooks/useLocalization';
-import { useSemesters } from '@/hooks/useSemesters';
-import { useSubjects } from '@/hooks/useSubjects';
+import {useAttendances} from '@/hooks/useAttendances';
+import {useBatches} from '@/hooks/useBatches';
+import {useClassSchedules} from '@/hooks/useClassSchedules';
+import {useCourses} from '@/hooks/useCourses';
+import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
+import {useSemesters} from '@/hooks/useSemesters';
+import {useSubjects} from '@/hooks/useSubjects';
 
-import { IAttendance, IAttendanceCreate, IAttendanceUpdate } from '@/types/attendance';
-import { IFacultyWithSubjectRole } from '@/types/faculty';
+import {IAttendance, IAttendanceCreate, IAttendanceUpdate} from '@/types/attendance';
+import {IFacultyWithSubjectRole} from '@/types/faculty';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 const { TextArea } = Input;
 
@@ -191,10 +191,15 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
       <Form.Item
         name="courseId"
         label={t(LOCALE_KEYS.COURSE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.REQUIRED_FIELD, { field: t(LOCALE_KEYS.COURSE) }),
+          },
+        ]}
       >
         <Select
-          placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })}
           showSearch
           optionFilterProp="children"
           filterOption={(input, option) =>
@@ -212,10 +217,15 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
       <Form.Item
         name="batchId"
         label={t(LOCALE_KEYS.BATCH)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.REQUIRED_FIELD, { field: t(LOCALE_KEYS.BATCH) }),
+          },
+        ]}
       >
         <Select
-          placeholder={t(LOCALE_KEYS.SELECT_BATCH)}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
           showSearch
           optionFilterProp="children"
           filterOption={(input, option) =>
@@ -233,10 +243,15 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
       <Form.Item
         name="semesterId"
         label={t(LOCALE_KEYS.SEMESTER)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.REQUIRED_FIELD, { field: t(LOCALE_KEYS.SEMESTER) }),
+          },
+        ]}
       >
         <Select
-          placeholder={t(LOCALE_KEYS.SELECT_SEMESTER)}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
           showSearch
           optionFilterProp="children"
           filterOption={(input, option) =>
@@ -254,10 +269,15 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
       <Form.Item
         name="subjectId"
         label={t(LOCALE_KEYS.SUBJECT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.REQUIRED_FIELD, { field: t(LOCALE_KEYS.SUBJECT) }),
+          },
+        ]}
       >
         <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME)}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) })}
           showSearch
           optionFilterProp="children"
           filterOption={(input, option) =>
@@ -275,10 +295,15 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
       <Form.Item
         name="facultyId"
         label={t(LOCALE_KEYS.FACULTY)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.REQUIRED_FIELD, { field: t(LOCALE_KEYS.FACULTY) }),
+          },
+        ]}
       >
         <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME)}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) })}
           showSearch
           optionFilterProp="children"
           filterOption={(input, option) =>
@@ -296,10 +321,15 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
       <Form.Item
         name="scheduleId"
         label={t(LOCALE_KEYS.SCHEDULE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.REQUIRED_FIELD, { field: t(LOCALE_KEYS.SCHEDULE) }),
+          },
+        ]}
       >
         <Select
-          placeholder={t(LOCALE_KEYS.SELECT_SCHEDULE)}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SCHEDULE) })}
           showSearch
           optionFilterProp="children"
           filterOption={(input, option) =>
@@ -319,7 +349,10 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
         name="classNo"
         label={t(LOCALE_KEYS.CLASS_NO)}
         rules={[
-          { required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) },
+          {
+            required: true,
+            message: t(LOCALE_KEYS.REQUIRED_FIELD, { field: t(LOCALE_KEYS.CLASS_NO) }),
+          },
           { type: 'number', min: 1, message: t(LOCALE_KEYS.CLASS_NO_MUST_BE_POSITIVE) },
         ]}
       >
@@ -333,12 +366,17 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
       <Form.Item
         name="date"
         label={t(LOCALE_KEYS.DATE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.REQUIRED_FIELD, { field: t(LOCALE_KEYS.DATE) }),
+          },
+        ]}
       >
         <DatePicker
           format="YYYY-MM-DD"
           style={{ width: '100%' }}
-          placeholder={t(LOCALE_KEYS.SELECT_NAME)}
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DATE) })}
         />
       </Form.Item>
 

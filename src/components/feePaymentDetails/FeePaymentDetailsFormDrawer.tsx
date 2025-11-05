@@ -1,13 +1,13 @@
 'use client';
 
-import { Drawer, Spin } from 'antd';
-import React, { useEffect } from 'react';
+import {Drawer, Spin} from 'antd';
+import React, {useEffect} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {Status} from '@/enums';
 
-import { useFeePaymentDetails } from '@/hooks/useFeePaymentDetails';
-import { useLocalization } from '@/hooks/useLocalization';
+import {useFeePaymentDetails} from '@/hooks/useFeePaymentDetails';
+import {useLocalization} from '@/hooks/useLocalization';
 
 import FeePaymentDetailsForm from './FeePaymentDetailsForm';
 
@@ -26,8 +26,7 @@ const FeePaymentDetailsFormDrawer: React.FC<Props> = ({
   onCancel,
   onSuccess,
 }) => {
-  const { selectedFeePaymentDetail, loadFeePaymentDetail, detailsStatus } =
-    useFeePaymentDetails();
+  const { selectedFeePaymentDetail, loadFeePaymentDetail, detailsStatus } = useFeePaymentDetails();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.FEE_PAYMENT_DETAILS, { defaultValue: 'Fee Payment Details' });
 

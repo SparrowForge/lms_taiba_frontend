@@ -684,5 +684,6 @@
   "assign": "تعيين",
   "months": "شهور",
   "close": "إغلاق",
-  "student_already_has_fee_structure": "هذا الطالب لديه بالفعل هيكل رسوم معين."
+  "student_already_has_fee_structure": "هذا الطالب لديه بالفعل هيكل رسوم معين.",
+  "approve": "موافقة"
 }

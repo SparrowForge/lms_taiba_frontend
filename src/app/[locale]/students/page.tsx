@@ -1,32 +1,31 @@
 'use client';
 
-import { DollarOutlined } from '@ant-design/icons';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import {CheckOutlined, DollarOutlined} from '@ant-design/icons';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { STUDENT_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { Status } from '@/enums';
-import { StudentStatus } from '@/enums/status';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {STUDENT_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
+import {StudentStatus} from '@/enums/status';
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import { MainLayout } from '@/components/layout/MainLayout';
+import {MainLayout} from '@/components/layout/MainLayout';
 import AssignFeeStructureDrawer from '@/components/students/AssignFeeStructureDrawer';
 import StudentDetailsDrawer from '@/components/students/StudentDetailsDrawer';
 import StudentFormDrawer from '@/components/students/StudentFormDrawer';
 import EntityActions from '@/components/ui/EntityActions';
-import { EntityConfig, EntityList } from '@/components/ui/EntityList';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 
-import { useBatches } from '@/hooks/useBatches';
-import { useCourses } from '@/hooks/useCourses';
-import { useFeeStructures } from '@/hooks/useFeeStructures';
-import { useLocalization } from '@/hooks/useLocalization';
-import { useStudents } from '@/hooks/useStudents';
+import {useBatches} from '@/hooks/useBatches';
+import {useCourses} from '@/hooks/useCourses';
+import {useFeeStructures} from '@/hooks/useFeeStructures';
+import {useLocalization} from '@/hooks/useLocalization';
+import {useStudents} from '@/hooks/useStudents';
 
-import { IStudent } from '@/types/student';
-
+import {IStudent} from '@/types/student';
 
 export default function StudentsPage() {
   const { t } = useLocalization();
@@ -41,7 +40,8 @@ export default function StudentsPage() {
   const [assignFeeDrawerVisible, setAssignFeeDrawerVisible] = useState(false);
   const [selectedAssignStudentId, setSelectedAssignStudentId] = useState<number | undefined>();
 
-  const { students, listStatus, pagination, loadStudents, removeStudent } = useStudents();
+  const { students, listStatus, pagination, loadStudents, removeStudent, editStudent } =
+    useStudents();
   const { batches, loadBatches, clearBatches } = useBatches();
   const { courses, loadCourses } = useCourses();
   const searchParams = useSearchParams();
@@ -49,13 +49,21 @@ export default function StudentsPage() {
   const limit = searchParams.get('limit');
   const courseId = searchParams.get('courseId');
 
-  useEffect(() => {
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
     const params = Object.fromEntries(searchParams.entries());
     delete params.skip;
     delete params.limit;
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
     loadStudents({ page, limit: limitNum, ...params });
+  };
+
+  useEffect(() => {
+    loadWithParams(searchParams, skip, limit);
   }, [searchParams, skip, limit, loadStudents]);
 
   // Load batch options for filter
@@ -107,13 +115,14 @@ export default function StudentsPage() {
 
   const handleAssignFeeSuccess = () => {
     setAssignFeeDrawerVisible(false);
-    // Reload with current page, limit, and all filter parameters
-    const params = Object.fromEntries(searchParams.entries());
-    delete params.skip;
-    delete params.limit;
-    const limitNum = parseInt(limit ?? '10');
-    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
-    loadStudents({ page, limit: limitNum, ...params });
+    loadWithParams(searchParams, skip, limit);
+  };
+
+  const handleApproveStudent = (studentId: number) => {
+    console.log('Approve student', studentId);
+    editStudent(studentId, { status: StudentStatus.ACTIVE }).then(() => {
+      loadWithParams(searchParams, skip, limit);
+    });
   };
 
   const config: EntityConfig<IStudent> = {
@@ -248,6 +257,14 @@ export default function StudentsPage() {
                     label: t(LOCALE_KEYS.FEE_PAYMENT_COLLECTIONS),
                     onClick: () =>
                       router.push(`/fee-payment-collections/create?studentId=${student.id}`),
+                  }
+                : null,
+              student.status === StudentStatus.PENDING
+                ? {
+                    key: 'approve',
+                    icon: <CheckOutlined />,
+                    label: t(LOCALE_KEYS.APPROVE),
+                    onClick: () => handleApproveStudent(student.id),
                   }
                 : null,
             ]}

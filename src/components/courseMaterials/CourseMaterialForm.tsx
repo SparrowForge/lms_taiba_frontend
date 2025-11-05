@@ -1,39 +1,27 @@
 'use client';
 
-import { Button, Form, Input, Select, Space, Switch } from 'antd';
-import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import {Button, Col, Form, Input, Row, Select, Space, Switch} from 'antd';
+import {useRouter} from 'next/navigation';
+import React, {useEffect, useMemo, useState} from 'react';
+import {toast} from 'react-toastify';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import {
-  ACCESS_LEVEL_TYPE_OPTIONS,
-  EntityType,
-  FileCategory,
-  FileType,
-  MATERIAL_TYPE_OPTIONS,
-  Status,
-} from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ACCESS_LEVEL_TYPE_OPTIONS, EntityType, FileCategory, FileType, MATERIAL_TYPE_OPTIONS, Status,} from '@/enums';
 
 import FileUpload from '@/components/ui/FileUpload';
 
-import { useBatches } from '@/hooks/useBatches';
-import { useCourseMaterials } from '@/hooks/useCourseMaterials';
-import { useCourses } from '@/hooks/useCourses';
-import { useFaculties } from '@/hooks/useFaculties';
-import { useLocalization } from '@/hooks/useLocalization';
-import { useSemesters } from '@/hooks/useSemesters';
-import { useSubjects } from '@/hooks/useSubjects';
+import {useBatches} from '@/hooks/useBatches';
+import {useCourseMaterials} from '@/hooks/useCourseMaterials';
+import {useCourses} from '@/hooks/useCourses';
+import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
+import {useSemesters} from '@/hooks/useSemesters';
+import {useSemesterSubjects} from '@/hooks/useSemesterSubjects';
 
-import {
-  ICourseMaterial,
-  ICourseMaterialCreate,
-  ICourseMaterialUpdate,
-} from '@/types/courseMaterial';
-import { getErrorMessage } from '@/types/errors';
-
-import FormLayout from '../layout/FormLayout';
-import { StatusSelect } from '../ui/StatusSelect';
+import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate,} from '@/types/courseMaterial';
+import {getErrorMessage} from '@/types/errors';
+import FormLayoutFull from '../layout/FormLayoutFull';
+import {StatusSelect} from '../ui/StatusSelect';
 
 const { TextArea } = Input;
 
@@ -60,10 +48,35 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
   const [form] = Form.useForm();
   const { createCourseMaterial, editCourseMaterial, actionStatus } = useCourseMaterials();
   const { courses, loadCourses } = useCourses();
-  const { subjects, loadSubjects } = useSubjects();
-  const { semesters, loadSemesters } = useSemesters();
-  const { batches, loadBatches } = useBatches();
+  const { semesters, loadSemesters, clearSemesters } = useSemesters();
+  const { batches, loadBatches, clearBatches } = useBatches();
+  const { semesterSubjects, loadSemesterSubjects } = useSemesterSubjects();
   const { faculties, loadFaculties } = useFaculties();
+
+  // State for cascading dropdowns
+  const [selectedCourseId, setSelectedCourseId] = useState<number | undefined>(
+    initialValues?.courseId,
+  );
+  const [selectedBatchId, setSelectedBatchId] = useState<number | undefined>(
+    initialValues?.batchId,
+  );
+  const [selectedSemesterId, setSelectedSemesterId] = useState<number | undefined>(
+    initialValues?.semesterId,
+  );
+
+  // Track which fields were pre-filled from URL (should be disabled)
+  const [prefilledFields, setPrefilledFields] = useState<{
+    courseId?: boolean;
+    batchId?: boolean;
+    semesterId?: boolean;
+    subjectId?: boolean;
+    facultyId?: boolean;
+  }>({});
+
+  // Extract subjects from semesterSubjects
+  const subjects = useMemo(() => {
+    return semesterSubjects.map((ss) => ss.subject);
+  }, [semesterSubjects]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -71,13 +84,85 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
     }
   }, [mode, form]);
 
+  // Load courses and faculties on mount
   useEffect(() => {
     loadCourses({ page: 1, limit: 100 });
-    loadSubjects({ page: 1, limit: 100 });
-    loadSemesters({ page: 1, limit: 100 });
-    loadBatches({ page: 1, limit: 100 });
     loadFaculties({ page: 1, limit: 100 });
-  }, [loadCourses, loadSubjects, loadSemesters, loadBatches, loadFaculties]);
+  }, [loadCourses, loadFaculties]);
+
+  // Load batches when course is selected
+  useEffect(() => {
+    if (selectedCourseId) {
+      loadBatches({ page: 1, limit: 100, courseId: selectedCourseId });
+    } else {
+      clearBatches();
+    }
+  }, [selectedCourseId, loadBatches, clearBatches]);
+
+  // Load semesters when batch is selected
+  useEffect(() => {
+    if (selectedBatchId) {
+      loadSemesters({ page: 1, limit: 100, batchId: selectedBatchId });
+    } else {
+      clearSemesters();
+    }
+  }, [selectedBatchId, loadSemesters, clearSemesters]);
+
+  // Load semester subjects when semester is selected
+  useEffect(() => {
+    if (selectedSemesterId) {
+      loadSemesterSubjects({ page: 1, limit: 100, semesterId: selectedSemesterId });
+    }
+  }, [selectedSemesterId, loadSemesterSubjects]);
+
+  // Handle URL query parameters for pre-filled values
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const courseId = params.get('courseId');
+      const batchId = params.get('batchId');
+      const semesterId = params.get('semesterId');
+      const subjectId = params.get('subjectId');
+      const facultyId = params.get('facultyId');
+
+      const prefilled: {
+        courseId?: boolean;
+        batchId?: boolean;
+        semesterId?: boolean;
+        subjectId?: boolean;
+        facultyId?: boolean;
+      } = {};
+
+      if (courseId) {
+        const courseIdNum = parseInt(courseId);
+        setSelectedCourseId(courseIdNum);
+        form.setFieldValue('courseId', courseIdNum);
+        prefilled.courseId = true;
+      }
+      if (batchId) {
+        const batchIdNum = parseInt(batchId);
+        setSelectedBatchId(batchIdNum);
+        form.setFieldValue('batchId', batchIdNum);
+        prefilled.batchId = true;
+      }
+      if (semesterId) {
+        const semesterIdNum = parseInt(semesterId);
+        setSelectedSemesterId(semesterIdNum);
+        form.setFieldValue('semesterId', semesterIdNum);
+        prefilled.semesterId = true;
+      }
+      if (subjectId) {
+        form.setFieldValue('subjectId', parseInt(subjectId));
+        prefilled.subjectId = true;
+      }
+      if (facultyId) {
+        form.setFieldValue('facultyId', parseInt(facultyId));
+        prefilled.facultyId = true;
+      }
+
+      setPrefilledFields(prefilled);
+    }
+  }, [form]);
 
   const handleSubmit = async (values: Partial<ICourseMaterial>) => {
     try {
@@ -127,6 +212,33 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
     }
   };
 
+  const handleCourseChange = (value: number) => {
+    setSelectedCourseId(value);
+    setSelectedBatchId(undefined);
+    setSelectedSemesterId(undefined);
+    form.setFieldsValue({
+      batchId: undefined,
+      semesterId: undefined,
+      subjectId: undefined,
+    });
+  };
+
+  const handleBatchChange = (value: number) => {
+    setSelectedBatchId(value);
+    setSelectedSemesterId(undefined);
+    form.setFieldsValue({
+      semesterId: undefined,
+      subjectId: undefined,
+    });
+  };
+
+  const handleSemesterChange = (value: number) => {
+    setSelectedSemesterId(value);
+    form.setFieldsValue({
+      subjectId: undefined,
+    });
+  };
+
   const getSubmitText = () =>
     mode === 'create'
       ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
@@ -139,194 +251,229 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
-      <Form.Item
-        name="courseId"
-        label={t(LOCALE_KEYS.COURSE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={courses.map((course) => ({
-            value: course.id,
-            label: `${course.code} - ${course.name}`,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={[32, 16]}>
+        {/* Left Column - Cascading Dropdowns */}
+        <Col xs={24} lg={12}>
+          {/* 1. Course Selection */}
+          <Form.Item
+            name="courseId"
+            label={t(LOCALE_KEYS.COURSE)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })}
+              showSearch
+              disabled={prefilledFields.courseId}
+              onChange={handleCourseChange}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={courses.map((course) => ({
+                value: course.id,
+                label: `${course.code} - ${course.name}`,
+              }))}
+            />
+          </Form.Item>
 
-      <Form.Item
-        name="subjectId"
-        label={t(LOCALE_KEYS.SUBJECT)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SUBJECT) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) })}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={subjects.map((subject) => ({
-            value: subject.id,
-            label: `${subject.code} - ${subject.name}`,
-          }))}
-        />
-      </Form.Item>
+          {/* 2. Batch Selection (enabled after course) */}
+          <Form.Item
+            name="batchId"
+            label={t(LOCALE_KEYS.BATCH)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={
+                selectedCourseId
+                  ? t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })
+                  : t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) }) + ' first'
+              }
+              showSearch
+              disabled={!selectedCourseId || prefilledFields.batchId}
+              onChange={handleBatchChange}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={batches.map((batch) => ({
+                value: batch.id,
+                label: `${batch.name}`,
+              }))}
+            />
+          </Form.Item>
 
-      <Form.Item
-        name="semesterId"
-        label={t(LOCALE_KEYS.SEMESTER)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={semesters.map((semester) => ({
-            value: semester.id,
-            label: `${semester.name}`,
-          }))}
-        />
-      </Form.Item>
+          {/* 3. Semester Selection (enabled after batch) */}
+          <Form.Item
+            name="semesterId"
+            label={t(LOCALE_KEYS.SEMESTER)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SEMESTER) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={
+                selectedBatchId
+                  ? t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })
+                  : t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) }) + ' first'
+              }
+              showSearch
+              disabled={!selectedBatchId || prefilledFields.semesterId}
+              onChange={handleSemesterChange}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={semesters.map((semester) => ({
+                value: semester.id,
+                label: `${semester.name}`,
+              }))}
+            />
+          </Form.Item>
 
-      <Form.Item
-        name="batchId"
-        label={t(LOCALE_KEYS.BATCH)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={batches.map((batch) => ({
-            value: batch.id,
-            label: `${batch.name}`,
-          }))}
-        />
-      </Form.Item>
+          {/* 4. Subject Selection (enabled after semester) */}
+          <Form.Item
+            name="subjectId"
+            label={t(LOCALE_KEYS.SUBJECT)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SUBJECT) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={
+                selectedSemesterId
+                  ? t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) })
+                  : t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) }) + ' first'
+              }
+              showSearch
+              disabled={!selectedSemesterId || prefilledFields.subjectId}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={subjects.map((subject) => ({
+                value: subject.id,
+                label: `${subject.code} - ${subject.name}`,
+              }))}
+            />
+          </Form.Item>
 
-      <Form.Item
-        name="facultyId"
-        label={t(LOCALE_KEYS.FACULTY)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FACULTY) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) })}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={faculties.map((faculty) => ({
-            value: faculty.id,
-            label: `${faculty.employeeCode} - ${faculty.fullName}`,
-          }))}
-        />
-      </Form.Item>
+          {/* 5. Faculty Selection */}
+          <Form.Item
+            name="facultyId"
+            label={t(LOCALE_KEYS.FACULTY)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FACULTY) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) })}
+              showSearch
+              disabled={prefilledFields.facultyId}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={faculties.map((faculty) => ({
+                value: faculty.id,
+                label: `${faculty.employeeCode} - ${faculty.fullName}`,
+              }))}
+            />
+          </Form.Item>
+        </Col>
 
-      <Form.Item
-        name="title"
-        label={t(LOCALE_KEYS.TITLE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TITLE) }),
-          },
-        ]}
-      >
-        <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.TITLE) })} />
-      </Form.Item>
+        {/* Right Column - Material Details */}
+        <Col xs={24} lg={12}>
+          <Form.Item
+            name="title"
+            label={t(LOCALE_KEYS.TITLE)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TITLE) }),
+              },
+            ]}
+          >
+            <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.TITLE) })} />
+          </Form.Item>
 
-      <Form.Item
-        name="description"
-        label={t(LOCALE_KEYS.DESCRIPTION)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }),
-          },
-        ]}
-      >
-        <TextArea
-          rows={4}
-          placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) })}
-        />
-      </Form.Item>
+          <Form.Item
+            name="description"
+            label={t(LOCALE_KEYS.DESCRIPTION)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }),
+              },
+            ]}
+          >
+            <TextArea
+              rows={4}
+              placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) })}
+            />
+          </Form.Item>
 
-      <Form.Item
-        name="type"
-        label={t(LOCALE_KEYS.TYPE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TYPE) }),
-          },
-        ]}
-      >
-        <StatusSelect options={MATERIAL_TYPE_OPTIONS} />
-      </Form.Item>
+          <Form.Item
+            name="type"
+            label={t(LOCALE_KEYS.TYPE)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TYPE) }),
+              },
+            ]}
+          >
+            <StatusSelect options={MATERIAL_TYPE_OPTIONS} />
+          </Form.Item>
 
-      <Form.Item name="fileId" label={t(LOCALE_KEYS.FILE)}>
-        <FileUpload
-          fileType={FileType.DOCUMENT}
-          fileCategory={FileCategory.ACADEMIC}
-          entityType={EntityType.COURSE_MATERIAL}
-          entityId={courseMaterialId}
-          accept="file/*"
-          maxSize={50}
-        />
-      </Form.Item>
+          <Form.Item name="fileId" label={t(LOCALE_KEYS.FILE)}>
+            <FileUpload
+              fileType={FileType.DOCUMENT}
+              fileCategory={FileCategory.ACADEMIC}
+              entityType={EntityType.COURSE_MATERIAL}
+              entityId={courseMaterialId}
+              accept="file/*"
+              maxSize={50}
+            />
+          </Form.Item>
 
-      <Form.Item
-        name="isDownloadable"
-        label={t(LOCALE_KEYS.IS_DOWNLOADABLE)}
-        valuePropName="checked"
-      >
-        <Switch />
-      </Form.Item>
+          <Form.Item
+            name="isDownloadable"
+            label={t(LOCALE_KEYS.IS_DOWNLOADABLE)}
+            valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
 
-      <Form.Item
-        name="accessLevel"
-        label={t(LOCALE_KEYS.ACCESS_LEVEL)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ACCESS_LEVEL) }),
-          },
-        ]}
-      >
-        <StatusSelect options={ACCESS_LEVEL_TYPE_OPTIONS} />
-      </Form.Item>
+          <Form.Item
+            name="accessLevel"
+            label={t(LOCALE_KEYS.ACCESS_LEVEL)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ACCESS_LEVEL) }),
+              },
+            ]}
+          >
+            <StatusSelect options={ACCESS_LEVEL_TYPE_OPTIONS} />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      {/* Action Buttons */}
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
@@ -342,7 +489,7 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
     return formContent;
   }
 
-  return <FormLayout>{formContent}</FormLayout>;
+  return <FormLayoutFull>{formContent}</FormLayoutFull>;
 };
 
 export default CourseMaterialForm;

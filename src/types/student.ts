@@ -1,13 +1,15 @@
-import { StudentStatus } from '@/enums';
+import {StudentStatus} from '@/enums';
 
-import { IAddressCreate } from './address';
-import { IBatch } from './batch';
-import { IBranch } from './branch';
-import { ICourse } from './course';
-import { IFeePaymentCollection } from './feePaymentCollection';
-import { IFeeStructure } from './feeStructure';
-import { IStudentEducationCreate } from './studentEducation';
-import { IStudentProfile, IStudentProfileCreate } from './studentProfile';
+import {IAddressCreate} from './address';
+import {IBatch} from './batch';
+import {IBranch} from './branch';
+import {ICourse} from './course';
+import {IFeePaymentCollection} from './feePaymentCollection';
+import {IFeeStructure} from './feeStructure';
+import {ISemester} from './semester';
+import {IStudentEducationCreate} from './studentEducation';
+import {IStudentProfile, IStudentProfileCreate} from './studentProfile';
+import {ISubjectWithFaculty} from './subject';
 
 export interface IStudent {
   id: number;
@@ -29,11 +31,11 @@ export interface IStudent {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  course: ICourse;
-  batch: IBatch;
-  branch: IBranch;
-  profile: IStudentProfile;
-  feeStructure: IFeeStructure;
+  course: ICourse | null;
+  batch: IBatch | null;
+  branch: IBranch | null;
+  profile: IStudentProfile | null;
+  feeStructure: IFeeStructure | null;
 }
 
 export interface IStudentCreate {
@@ -54,7 +56,7 @@ export interface IStudentCreate {
   feeStructureId?: number;
 }
 
-export type IStudentUpdate = Omit<IStudentCreate, 'courseId' | 'batchId' | 'branchId'>
+export type IStudentUpdate = Omit<IStudentCreate, 'courseId' | 'batchId' | 'branchId'>;
 
 export interface IStudentRegistrationCreate {
   student: IStudentCreate;
@@ -77,4 +79,21 @@ export interface IStudentWithFeeInfo {
   feeStructure: IFeeStructure;
   paymentCollections: IFeePaymentCollection[];
   feeSummary: IFeePaymentSummary;
+}
+
+export interface IStudentDashboard {
+  student: IStudent;
+  batch: IBatch;
+  course: ICourse;
+  currentSemester?: any;
+  upcomingClasses?: any[];
+  recentAttendance?: any[];
+  grades?: any[];
+  announcements?: any[];
+  feeSummary?: IFeePaymentSummary;
+}
+
+export interface IStudentSubjects {
+  semester: ISemester;
+  subjects: ISubjectWithFaculty[];
 }
