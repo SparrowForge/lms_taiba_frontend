@@ -143,7 +143,7 @@ export const LoginForm = () => {
             </div>
           )}
           <div className="text-center flex justify-end">
-            <Link href=""> <p className="text-sm text-[#1e45bf]">{t(LOCALE_KEYS.FORGET_PASSWORD)}</p></Link>
+            <Link href="/forgot-password"> <p className="text-sm text-[#1e45bf]">{t(LOCALE_KEYS.FORGET_PASSWORD)}</p></Link>
           </div>
           <Form.Item shouldUpdate>
             {() => (
