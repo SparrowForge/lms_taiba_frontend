@@ -15,12 +15,14 @@ import type { LoginCredentials } from '@/types/auth';
 import { getErrorMessage } from '@/types/errors';
 
 import SocialLogin from './SocialLogin';
+import Link from 'next/link';
 
 export const LoginForm = () => {
   const { t } = useLocalization();
   const { login, isLoading, error, clearError } = useAuth();
   const [form] = Form.useForm();
   const [showForm, setShowForm] = useState(false);
+  const [showError, setShowError] = useState("")
 
   // Simple solution: Show loading for 500ms, then show form
   useEffect(() => {
@@ -40,6 +42,7 @@ export const LoginForm = () => {
       // Error is already handled by Redux store and displayed via error state
       console.error('Login failed:', error);
       toast.error(getErrorMessage(error) || 'Login failed!');
+      setShowError(getErrorMessage(error))
     }
   };
 
@@ -85,6 +88,16 @@ export const LoginForm = () => {
             }
             style={{ marginBottom: 8 }} // controls spacing to next item
             className="[&_.ant-form-item-label]:mb-0" // removes label→input gap
+            rules={[
+              {
+                required: true,
+                message: "Please enter your email!",
+              },
+              {
+                type: "email",
+                message: "Please enter a valid email address!",
+              },
+            ]}
           >
             <Input
               prefix={<UserOutlined className="text-gray-400" />}
@@ -103,10 +116,14 @@ export const LoginForm = () => {
             }
             rules={[
               {
-                // required: true,
+                required: true,
                 message: 'Please enter your password!',
               },
               { min: 6, message: 'Password must be at least 6 characters!' },
+              // {
+              //   pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/,
+              //   message: "Password must contain letters and numbers!",
+              // },
             ]}
           >
             <Input.Password
@@ -118,28 +135,36 @@ export const LoginForm = () => {
           </Form.Item>
 
           {/* API Error Display */}
-          {error && (
+          {error || showError && (
             <div className="mb-4">
               <div className="ant-form-item-explain ant-form-item-explain-error">
-                <div className="ant-form-item-explain-error">{error}</div>
+                <div className="ant-form-item-explain-error">{error || showError}</div>
               </div>
             </div>
           )}
           <div className="text-center flex justify-end">
-            <p className="text-sm text-[#1e45bf]">{t(LOCALE_KEYS.FORGET_PASSWORD)}</p>
+            <Link href=""> <p className="text-sm text-[#1e45bf]">{t(LOCALE_KEYS.FORGET_PASSWORD)}</p></Link>
           </div>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={isLoading}
-              block
-              size="middle"
-              className="h-9 text-base font-medium mb-0"
-            >
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
+          <Form.Item shouldUpdate>
+            {() => (
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isLoading}
+                block
+                size="middle"
+                className="h-9 text-base font-medium mb-0"
+                disabled={
+                  isLoading ||
+                  !form.isFieldsTouched(true) ||
+                  form.getFieldsError().some(({ errors }) => errors.length > 0)
+                }
+              >
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </Button>
+            )}
           </Form.Item>
+
         </Form>
         <SocialLogin />
         {/* Footer */}
