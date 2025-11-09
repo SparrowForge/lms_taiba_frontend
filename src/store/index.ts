@@ -47,9 +47,11 @@ import studentProfileReducer from './slices/studentProfileSlice';
 import studentReducer from './slices/studentSlice';
 import subjectReducer from './slices/subjectSlice';
 import timeSlotReducer from './slices/timeSlotSlice';
+import twofaReducer from './slices/twofaSlice';
 import userRoleReducer from './slices/userRoleSlice';
 import userReducer from './slices/userSlice';
 import weekDayReducer from './slices/weekDaySlice';
+
 
 // Root state type
 export interface RootState {
@@ -95,6 +97,7 @@ export interface RootState {
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
   employmentTypes: ReturnType<typeof employmentTypeReducer>;
   institutes: ReturnType<typeof instituteReducer>;
+  twofa: ReturnType<typeof twofaReducer>
   students: ReturnType<typeof studentReducer>;
   studentEducations: ReturnType<typeof studentEducationReducer>;
   studentFamilies: ReturnType<typeof studentFamilyReducer>;
@@ -150,6 +153,7 @@ export const store = configureStore({
     scheduleTypes: scheduleTypeReducer,
     employmentTypes: employmentTypeReducer,
     institutes: instituteReducer,
+    twofa:twofaReducer,
     students: studentReducer,
     studentEducations: studentEducationReducer,
     studentFamilies: studentFamilyReducer,

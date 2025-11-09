@@ -2,6 +2,7 @@
 
 import { DesktopOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons';
 import { Card, Divider, Radio, Space, Typography } from 'antd';
+import Link from "next/link"
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
@@ -68,6 +69,11 @@ function SettingsPage() {
           </Space>
         </Card>
       </div>
+        <div className="m-8">
+            <Link href="twofa-settings">
+                Twofa
+            </Link>
+        </div>
     </MainLayout>
   );
 }
