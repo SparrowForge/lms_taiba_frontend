@@ -16,6 +16,7 @@ export interface IUser {
   updatedAt: string;
   deletedAt: string | null;
   roles: IRole[];
+  twoFaStatus:'active' | 'inactive'
 }
 
 export interface IUserCreate {

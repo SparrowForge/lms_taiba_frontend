@@ -34,7 +34,7 @@ const AuthSettings = () => {
     return (
         <div>
             {/* Google Authenticator 2FA */}
-            <Card title="Google Authenticator" style={{ width: 450, height: 600 }}>
+            <Card title="Google Authenticator" style={{ width: 450, height: 300 }}>
                 <Text>
                     Status:{" "}
                     <b>{status.app ? "Activated" : "Deactivated"}</b>

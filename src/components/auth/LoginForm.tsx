@@ -15,12 +15,15 @@ import type { LoginCredentials } from '@/types/auth';
 import { getErrorMessage } from '@/types/errors';
 
 import SocialLogin from './SocialLogin';
+import VerifyModalTwofa from './VerifyMailTwofa';
 
 export const LoginForm = () => {
   const { t } = useLocalization();
   const { login, isLoading, error, clearError } = useAuth();
   const [form] = Form.useForm();
   const [showForm, setShowForm] = useState(false);
+
+    const [verifyTwofa, setVerifyTwofa] = useState(false);
 
   // Simple solution: Show loading for 500ms, then show form
   useEffect(() => {
@@ -33,9 +36,9 @@ export const LoginForm = () => {
 
   const handleSubmit = async (values: LoginCredentials) => {
     try {
-      await login(values);
+      await login(values,setVerifyTwofa);
       //show toast message using nextjs toast
-      toast.success('Login successful!');
+      
     } catch (error: unknown) {
       // Error is already handled by Redux store and displayed via error state
       console.error('Login failed:', error);
@@ -61,6 +64,10 @@ export const LoginForm = () => {
 
   return (
     <>
+    <VerifyModalTwofa 
+      twoFaState={verifyTwofa}
+      setVerifyTwofa={setVerifyTwofa}
+    />
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
       <Card style={{ width: 400, padding: '0px' }} className="shadow-lg rounded-lg">
         <div className="flex justify-center items-center pt-4 pb-2">

@@ -21,6 +21,10 @@ import {
 } from '@/store/slices/authSlice';
 
 import type { AppDispatch, RootState } from '@/store';
+import { TwofaStatus } from '@/types/twofa';
+import { useTwofa } from './useTwofa';
+import { twofaService } from '@/services/twofaService';
+import { toast } from 'react-toastify';
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,19 +40,38 @@ export const useAuth = () => {
     error,
   } = useSelector((state: RootState) => state.auth);
 
+  const {sendCodeTwofa} = useTwofa()
+
   // Login function
   const handleLogin = useCallback(
-    async (credentials: LoginCredentials) => {
+    async (credentials: LoginCredentials, setVerifyTwofa:React.Dispatch<React.SetStateAction<boolean>>) => {
       try {
         dispatch(setLoading(true));
         const response = await authService.login(credentials);
-        dispatch(setUser(response.user));
-        dispatch(setToken(response.access_token));
-        dispatch(setRefreshToken(response.refresh_token));
-        dispatch(setIsAuthenticated(true));
-        dispatch(setLoading(false));
-
-        router.push('/'); // Redirect to main page (dashboard) after login
+        const {email} = response.user
+        const {twoFaStatus} = response.user
+        if(twoFaStatus == TwofaStatus.ACTIVE){
+         if(response.user){
+           const res = await twofaService.sendCodeTwofa({email})
+           if(res.message){
+              toast.success(res.message)
+              setVerifyTwofa(true)
+           }
+         }
+          dispatch(setUser(response.user));
+          dispatch(setToken(response.access_token));
+          dispatch(setRefreshToken(response.refresh_token));
+          dispatch(setIsAuthenticated(true));
+          dispatch(setLoading(false));
+        }else if(twoFaStatus == TwofaStatus.INACTIVE){
+          dispatch(setUser(response.user));
+          dispatch(setToken(response.access_token));
+          dispatch(setRefreshToken(response.refresh_token));
+          dispatch(setIsAuthenticated(true));
+          dispatch(setLoading(false));
+          toast.success('Login successful!');
+          router.push('/')
+        }
       } catch (error: unknown) {
         const errorMessage =
           error instanceof AxiosError

@@ -13,13 +13,15 @@ import {
 } from "@/store/slices/twofaSlice";
 import { useAuth } from "./useAuth";
 import { ITwofa } from "@/types/twofa";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export const useTwofa = () => {
   const dispatch = useDispatch();
   const { status, qrCodeUrl, secretKey, loading, error } = useSelector(
     (state: RootState) => state.twofa
   );
-
+  const router = useRouter()
 
 
   // Load current TwoFA status
@@ -130,6 +132,27 @@ export const useTwofa = () => {
     }
   }, [dispatch, status]);
 
+    // Deactivate Email TwoFA
+  const verifyMailTwofa = useCallback(async (data:ITwofa) => {
+    try {
+      dispatch(setLoading(true));
+      const response = await twofaService.verifyTwofa(data);
+      if(response.message){
+        toast.success(response.message)
+        router.push("/")
+      }
+      dispatch(setLoading(false))
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof AxiosError
+          ? err?.response?.data?.message || err?.message || "Failed to deactivate Email TwoFA"
+          : "Failed to deactivate Email TwoFA";
+      dispatch(setError(errorMessage));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  }, [dispatch, status]);
+
   return {
     // State
     status,
@@ -145,5 +168,6 @@ export const useTwofa = () => {
     deactivateAppTwofa,
     activateMailTwofa,
     deactivateMailTwofa,
+    verifyMailTwofa
   };
 };

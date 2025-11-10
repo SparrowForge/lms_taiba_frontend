@@ -38,8 +38,8 @@ export const twofaService = {
   },
 
   // Generic Verify (if needed for both)
-  verifyTwofa: async (params: { method: "mail" | "app" }): Promise<any> => {
-    const response = await api.post("/twofa/verify", params);
+  verifyTwofa: async (params: ITwofa): Promise<any> => {
+    const response = await api.post<ITwofa>("/twofa/mail/verify", params);
     return response.data;
   },
   initiateMailTwofa: async (): Promise<any> => {

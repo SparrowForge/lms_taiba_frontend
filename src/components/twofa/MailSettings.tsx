@@ -92,7 +92,7 @@ const MailSettings = () => {
     return (
         <div>
             {/* Mail 2FA */}
-            <Card title="Mail 2FA" style={{ width: 450, height: 600 }}>
+            <Card title="Mail 2FA" style={{ width: 450, height: 300 }}>
                 <Text>
                     Status:{" "}
                     <b>{status.mail ? "Activated" : "Deactivated"}</b>
@@ -145,7 +145,7 @@ const MailSettings = () => {
                                 Activate
                         </Button>
                     </Form.Item>
-    </Form>
+                 </Form>
             </Card>
         </div>
     )
