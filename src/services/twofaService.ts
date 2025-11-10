@@ -1,5 +1,6 @@
 // src/services/twofaService.ts
 import { api } from "@/lib/axios";
+import { ITwofa } from "@/types/twofa";
 
 export const twofaService = {
   // Get current 2FA status
@@ -7,21 +8,22 @@ export const twofaService = {
     const response = await api.get("/twofa/status");
     return response.data;
   },
+  // Resend OTP code
+  sendCodeTwofa: async (params: { email:string }): Promise<any> => {
+    const response = await api.post("/twofa/send-code", params);
+    return response.data;
+  },
   // Email 2FA
-  initiateMailTwofa: async (): Promise<any> => {
-    const response = await api.post("/twofa/mail/initiate");
+  activateMailTwofa: async (params: ITwofa): Promise<any> => {
+    const response = await api.post<ITwofa>("/twofa/mail/activate", params);
     return response.data;
   },
-  activateMailTwofa: async (params: {}): Promise<any> => {
-    const response = await api.post("/twofa/mail/activate", params);
-    return response.data;
-  },
-  deactivateMailTwofa: async (params: {}): Promise<any> => {
-    const response = await api.post("/twofa/mail/deactivate", params);
+  deactivateMailTwofa: async (params: ITwofa): Promise<any> => {
+    const response = await api.post<ITwofa>("/twofa/mail/deactivate", params);
     return response.data;
   },
 
-  // Google Authenticator 2FA
+  // Microsoft Authenticator 2FA
   initiateAppTwofa: async (): Promise<any> => {
     const response = await api.post("/twofa/app/initiate");
     return response.data;
@@ -40,10 +42,9 @@ export const twofaService = {
     const response = await api.post("/twofa/verify", params);
     return response.data;
   },
-
-  // Resend OTP code
-  sendCodeTwofa: async (params: { method: "mail" | "app" }): Promise<any> => {
-    const response = await api.post("/twofa/send-code", params);
+  initiateMailTwofa: async (): Promise<any> => {
+    const response = await api.post("/twofa/mail/initiate");
     return response.data;
   },
+
 };

@@ -1,3 +1,4 @@
-export interface IActivateTwofa {
-    code:string
+export interface ITwofa {
+    email:string ,
+    code:string 
 }

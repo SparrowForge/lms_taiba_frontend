@@ -41,7 +41,6 @@ export const useAuth = () => {
     async (credentials: LoginCredentials) => {
       try {
         dispatch(setLoading(true));
-
         const response = await authService.login(credentials);
         dispatch(setUser(response.user));
         dispatch(setToken(response.access_token));

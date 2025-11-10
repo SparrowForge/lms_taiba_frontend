@@ -71,7 +71,7 @@ function SettingsPage() {
       </div>
         <div className="m-8">
             <Link href="twofa-settings">
-                Twofa
+                Two Factor Authentication Setup
             </Link>
         </div>
     </MainLayout>
