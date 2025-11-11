@@ -10,6 +10,12 @@ export const userService = {
     return response.data;
   },
 
+  // Get current logged-in user's profile
+  async getMe(): Promise<IBaseResponse<IUser>> {
+    const response = await api.get<IBaseResponse<IUser>>(`/users/me`);
+    return response.data;
+  },
+
   // Get single user by ID
   async getUser(id: number): Promise<IBaseResponse<IUser>> {
     const response = await api.get<IBaseResponse<IUser>>(`/users/${id}`);

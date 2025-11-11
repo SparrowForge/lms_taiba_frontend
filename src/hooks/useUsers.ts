@@ -82,6 +82,24 @@ export const useUsers = () => {
     [dispatch],
   );
 
+  // Load current logged-in user's profile (Details action)
+  const loadMe = useCallback(async () => {
+    try {
+      dispatch(setDetailsStatus({ status: Status.LOADING }));
+      const response: IBaseResponse<IUser> = await userService.getMe();
+      dispatch(setSelectedUser(response.data));
+      dispatch(setDetailsStatus({ status: Status.SUCCESS }));
+      return response.data;
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof AxiosError
+          ? error.response?.data?.message || error.message || 'Failed to fetch profile'
+          : 'Failed to fetch profile';
+      dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+      throw error;
+    }
+  }, [dispatch]);
+
   // Create user (Action)
   const addUserAction = useCallback(
     async (userData: IUserCreate) => {
@@ -259,6 +277,7 @@ export const useUsers = () => {
     // Actions
     loadUsers,
     loadUser,
+    loadMe,
     addUser: addUserAction,
     editUser,
     removeUser,
