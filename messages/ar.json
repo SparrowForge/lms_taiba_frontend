@@ -685,5 +685,10 @@
   "months": "شهور",
   "close": "إغلاق",
   "student_already_has_fee_structure": "هذا الطالب لديه بالفعل هيكل رسوم معين.",
-  "approve": "موافقة"
+  "approve": "موافقة",
+  "edutrain_institute":"معهد إديو ترين",
+  "complete_education_management_solution":"الحل الكامل لإدارة التعليم",
+  "privacy_policy":"سياسة الخصوصية",
+  "terms_of_services":"شروط الخدمة",
+  "help":"يساعد"
 }

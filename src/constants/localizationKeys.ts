@@ -495,6 +495,12 @@ export const LOCALE_KEYS = {
   LAB: 'lab',
   TUTORIAL: 'tutorial',
 
+  EDUTRAIN_INSTITUTE:'edutrain_institute',
+  COMPLETE_EDUCATION_MANAGEMENT_SOLUTION:"complete_education_management_solution",
+  PRIVACY_POLICY:"privacy_policy",
+  TERMS_OF_SERVICES:"terms_of_services",
+  HELP:"help",
+
   CALENDAR_VIEW: 'calendar_view',
   LIST_VIEW: 'list_view',
   ALL: 'all',

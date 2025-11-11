@@ -29,15 +29,15 @@ const RightComponent = () => {
         <p>{t(LOCALE_KEYS.COPYRIGHT)}</p>
         <div className="flex justify-center gap-4 flex-wrap">
           <Link href="/privacy" className="hover:text-blue-600">
-            Privacy Policy
+           {t(LOCALE_KEYS.PRIVACY_POLICY)}
           </Link>
           <span>|</span>
           <Link href="/terms" className="hover:text-blue-600">
-            Terms of Service
+            {t(LOCALE_KEYS.TERMS_OF_SERVICES)}
           </Link>
           <span>|</span>
           <Link href="/help" className="hover:text-blue-600">
-            Help
+            {t(LOCALE_KEYS.HELP)}
           </Link>
         </div>
       </div>

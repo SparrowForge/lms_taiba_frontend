@@ -95,7 +95,7 @@ export const LoginForm = () => {
           >
             <Input
               prefix={<UserOutlined className="text-gray-400" />}
-              placeholder="Enter your email"
+              placeholder={t(LOCALE_KEYS.PLEASE_ENTER_EMAIL)}
               disabled={isLoading}
               className="h-8 text-sm"
             />
@@ -118,7 +118,7 @@ export const LoginForm = () => {
           >
             <Input.Password
               prefix={<LockOutlined className="text-gray-400" />}
-              placeholder="Enter your password"
+              placeholder={t(LOCALE_KEYS.PLEASE_ENTER_PASSWORD)}
               disabled={isLoading}
               className="h-9 text-sm" // reduced height
             />
@@ -144,7 +144,7 @@ export const LoginForm = () => {
               size="middle"
               className="h-9 text-base font-medium mb-0"
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? t(LOCALE_KEYS.SIGNING_IN) : t(LOCALE_KEYS.SIGN_IN)}
             </Button>
           </Form.Item>
         </Form>

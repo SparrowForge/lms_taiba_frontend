@@ -54,7 +54,7 @@ const LeftComponent = () => {
       </div>
 
       <Title level={3} style={{ color: '#fff', marginBottom: 0, fontSize: '30px' }}>
-        EduTrain Institute
+        {t(LOCALE_KEYS.EDUTRAIN_INSTITUTE)}
       </Title>
       <Text style={{ color: '#fff', fontSize: '18px' }}>{t(LOCALE_KEYS.ERP_TAGLINE)}</Text>
 
@@ -73,7 +73,7 @@ const LeftComponent = () => {
         }}
       >
         <Title level={5} style={{ color: '#fff', fontSize: '20px' }}>
-          Complete Education Management Solution
+          {t(LOCALE_KEYS.COMPLETE_EDUCATION_MANAGEMENT_SOLUTION)}
         </Title>
 
         <Row gutter={[16, 16]} style={{ marginTop: 20 }}>
