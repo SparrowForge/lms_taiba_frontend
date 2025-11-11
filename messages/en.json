@@ -691,5 +691,7 @@
   "complete_education_management_solution":"Complete Education Management Solution",
   "privacy_policy":"Privacy Policy",
   "terms_of_services":"Terms of Service",
-  "help":"Help"
+  "help":"Help",
+  "two_factor_authentication":"Two Factor Authentication",
+  "two_fa":"twofa"
 }

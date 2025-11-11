@@ -12,14 +12,12 @@ const AuthSettings = () => {
     const [qrCodeView, setQrCodeView] = useState<boolean>(false)
     const [data, setData] = useState<string>("")
     
-    const { loadTwofaStatus,
+    const { 
         activateAppTwofa,
         deactivateAppTwofa,
     } = useTwofa()
 
-    useEffect(() => {
-        dispatch(loadTwofaStatus);
-    }, [dispatch]);
+
     const handleActivate = (type: "mail" | "app") => {
         dispatch(activateAppTwofa)
             .then(() => message.success(`${type} 2FA activated successfully!`))
@@ -34,7 +32,7 @@ const AuthSettings = () => {
     return (
         <div>
             {/* Google Authenticator 2FA */}
-            <Card title="Google Authenticator" style={{ width: 450, height: 300 }}>
+            <Card title="Google Authenticator" style={{ width: 450, height: 350 }}>
                 <Text>
                     Status:{" "}
                     <b>{status.app ? "Activated" : "Deactivated"}</b>

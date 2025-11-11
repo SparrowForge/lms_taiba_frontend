@@ -10,11 +10,14 @@ import {
   setStatus,
   setQrCodeData,
   resetQrCodeData,
+  setCodeStatus,
+  setActionStatus,
 } from "@/store/slices/twofaSlice";
 import { useAuth } from "./useAuth";
-import { ITwofa } from "@/types/twofa";
+import { IActionResponse, ITwofa } from "@/types/twofa";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { Status } from "@/enums";
 
 export const useTwofa = () => {
   const dispatch = useDispatch();
@@ -23,31 +26,11 @@ export const useTwofa = () => {
   );
   const router = useRouter()
 
-
-  // Load current TwoFA status
-  const loadTwofaStatus = useCallback(async () => {
-    try {
-      dispatch(setLoading(true));
-      const res = await twofaService.getTwofaStatus();
-      dispatch(setStatus(res?.two_factor_type || { mail: false, app: false }));
-    } catch (err: unknown) {
-      const errorMessage =
-        err instanceof AxiosError
-          ? err?.response?.data?.message ||
-          err?.message ||
-          "Failed to load TwoFA status"
-          : "Failed to load TwoFA status";
-      dispatch(setError(errorMessage));
-    } finally {
-      dispatch(setLoading(false));
-    }
-  }, [dispatch]);
-
   const sendCodeTwofa = useCallback(async (params = '') => {
     try {
-      dispatch(setLoading(true));
+      dispatch(setCodeStatus({ status: Status.LOADING }));
       const res = await twofaService.sendCodeTwofa({ email: params });
-      dispatch(setLoading(true));
+      dispatch(setCodeStatus({ status: Status.SUCCESS }));
     } catch (err: unknown) {
       const errorMessage =
         err instanceof AxiosError
@@ -55,10 +38,10 @@ export const useTwofa = () => {
           : "Failed to send TwoFA Code";
       dispatch(setError(errorMessage));
     } finally {
-      dispatch(setLoading(false));
+      dispatch(setCodeStatus({ status: Status.FAILED }));
     }
-    
-  }, [dispatch, status]);
+
+  }, [dispatch]);
 
   // Activate Google App TwoFA
   const activateAppTwofa = useCallback(async () => {
@@ -97,47 +80,55 @@ export const useTwofa = () => {
   }, [dispatch, status]);
 
   // Activate Email TwoFA
-  const activateMailTwofa = useCallback(async (data:ITwofa) => {
-      try {
-      dispatch(setLoading(true));
-      await twofaService.activateMailTwofa(data);
-      dispatch(setLoading(false))
-      dispatch(setStatus({ ...status, mail: true }));
+  const activateMailTwofa = useCallback(async (data: ITwofa) => {
+    try {
+      dispatch(setActionStatus({ status: Status.LOADING }));
+      const response:IActionResponse = await twofaService.activateMailTwofa(data);
+      console.log("activateMailTwofa", response)
+      dispatch(setActionStatus({ 
+        status: Status.SUCCESS,
+        message:"Mail Activated Successfully"
+       }))
+     
     } catch (err: unknown) {
       const errorMessage =
         err instanceof AxiosError
-          ? err?.response?.data?.message || err?.message || "Failed to activate Email TwoFA"
+          ? err?.data?.message || err?.message || "Failed to activate Email TwoFA"
           : "Failed to activate Email TwoFA";
       dispatch(setError(errorMessage));
     } finally {
-      dispatch(setLoading(false));
+      dispatch(setActionStatus({ status: Status.FAILED }));
     }
-    
-  }, [dispatch, status]);
+
+  }, [dispatch]);
 
   // Deactivate Email TwoFA
-  const deactivateMailTwofa = useCallback(async (data:ITwofa) => {
+  const deactivateMailTwofa = useCallback(async (data: ITwofa) => {
     try {
-      dispatch(setLoading(true));
-      await twofaService.deactivateMailTwofa(data);
-      dispatch(setStatus({ ...status, mail: false }));
+      dispatch(setActionStatus({ status: Status.LOADING }));
+      const response = await twofaService.deactivateMailTwofa(data);
+      console.log("deactivateMailTwofa", response)
+      dispatch(setActionStatus({
+        status: Status.SUCCESS,
+        message: "Mail Deactivated Successfully"
+      }))
     } catch (err: unknown) {
       const errorMessage =
         err instanceof AxiosError
-          ? err?.response?.data?.message || err?.message || "Failed to deactivate Email TwoFA"
+          ? err?.data?.message || err?.message || "Failed to deactivate Email TwoFA"
           : "Failed to deactivate Email TwoFA";
       dispatch(setError(errorMessage));
     } finally {
-      dispatch(setLoading(false));
+      dispatch(setActionStatus({ status: Status.FAILED }));
     }
-  }, [dispatch, status]);
+  }, [dispatch]);
 
-    // Deactivate Email TwoFA
-  const verifyMailTwofa = useCallback(async (data:ITwofa) => {
+  // Verify Email TwoFA
+  const verifyMailTwofa = useCallback(async (data: ITwofa) => {
     try {
       dispatch(setLoading(true));
       const response = await twofaService.verifyTwofa(data);
-      if(response.message){
+      if (response.message) {
         toast.success(response.message)
         router.push("/")
       }
@@ -151,7 +142,7 @@ export const useTwofa = () => {
     } finally {
       dispatch(setLoading(false));
     }
-  }, [dispatch, status]);
+  }, [dispatch,router]);
 
   return {
     // State
@@ -162,7 +153,7 @@ export const useTwofa = () => {
     error,
 
     // Actions
-    loadTwofaStatus,
+
     sendCodeTwofa,
     activateAppTwofa,
     deactivateAppTwofa,

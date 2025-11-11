@@ -1,4 +1,6 @@
 // src/store/twofaSlice.ts
+import { Status } from "@/enums";
+import { IStatusState } from "@/types/common";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface TwoFAState {
@@ -9,6 +11,8 @@ interface TwoFAState {
   qrCodeUrl?: string;
   secretKey?: string;
   loading: boolean;
+  codeStatus:IStatusState,
+  actionStatus:IStatusState
   error?: string;
 }
 
@@ -17,6 +21,8 @@ const initialState: TwoFAState = {
   qrCodeUrl: undefined,
   secretKey: undefined,
   loading: false,
+  codeStatus:{ status: Status.INITIAL, },
+  actionStatus:{ status: Status.INITIAL },
   error: undefined,
 };
 
@@ -26,6 +32,12 @@ export const twofaSlice = createSlice({
   reducers: {
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
+    },
+    setCodeStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.codeStatus = action.payload;
+    },
+    setActionStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.actionStatus = action.payload;
     },
     setError(state, action: PayloadAction<string | undefined>) {
       state.error = action.payload;
@@ -44,7 +56,7 @@ export const twofaSlice = createSlice({
   },
 });
 
-export const { setLoading, setError, setStatus, setQrCodeData, resetQrCodeData } =
+export const { setLoading, setError, setStatus, setQrCodeData, resetQrCodeData,setCodeStatus,setActionStatus } =
   twofaSlice.actions;
 
 export default twofaSlice.reducer;

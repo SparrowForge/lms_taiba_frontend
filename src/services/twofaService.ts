@@ -4,10 +4,10 @@ import { ITwofa } from "@/types/twofa";
 
 export const twofaService = {
   // Get current 2FA status
-  getTwofaStatus: async (): Promise<any> => {
-    const response = await api.get("/twofa/status");
-    return response.data;
-  },
+  // getTwofaStatus: async (): Promise<any> => {
+  //   const response = await api.get("/twofa/status");
+  //   return response.data;
+  // },
   // Resend OTP code
   sendCodeTwofa: async (params: { email:string }): Promise<any> => {
     const response = await api.post("/twofa/send-code", params);

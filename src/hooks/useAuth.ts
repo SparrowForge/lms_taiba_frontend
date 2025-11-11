@@ -40,7 +40,7 @@ export const useAuth = () => {
     error,
   } = useSelector((state: RootState) => state.auth);
 
-  const {sendCodeTwofa} = useTwofa()
+
 
   // Login function
   const handleLogin = useCallback(

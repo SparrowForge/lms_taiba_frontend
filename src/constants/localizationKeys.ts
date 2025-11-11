@@ -156,6 +156,9 @@ export const LOCALE_KEYS = {
   ALLOW_UPDATE: 'allow_update',
   ALLOW_DELETE: 'allow_delete',
 
+  TWO_FACTOR_AUTHENTICATION:"two_factor_authentication",
+  TWO_FA:"two_fa",
+
   COURSE: 'course',
   COURSES: 'courses',
   ASSIGNMENT: 'assignment',

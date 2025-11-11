@@ -13,26 +13,25 @@ import MailSettings from "@/components/twofa/MailSettings";
 import AuthSettings from "@/components/twofa/AuthSettings";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { LOCALE_KEYS } from "@/constants/localizationKeys";
 
 const { Title, Text } = Typography;
 
 export default function TwofaPage() {
   const t = useTranslations()
   const router = useRouter()
-  const entityName = t('twofa', { defaultValue: 'TwoFa' });
-  const { loading, } = useSelector(
-    (state: RootState) => state.twofa
-  );
+  const entityName = t(LOCALE_KEYS.TWO_FA, { defaultValue: 'TwoFa' });
 
 
 
-  // if (loading) return <div className="flex items-center justify-center min-h-screen"><Spin size="large" /></div>;
+
+
 
   return (
 
     <ProtectedRoute>
       <MainLayout>
-        <PageHeader title={t('Two Factor Authentication', { name: entityName })} onBack={() => router.back()} />
+        <PageHeader title={t(LOCALE_KEYS.TWO_FACTOR_AUTHENTICATION, { name: entityName })} onBack={() => router.back()} />
         <div className="flex justify-center items-center min-h-[80vh] gap-4">
           <MailSettings />
           <AuthSettings />

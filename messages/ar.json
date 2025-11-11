@@ -690,5 +690,7 @@
   "complete_education_management_solution":"الحل الكامل لإدارة التعليم",
   "privacy_policy":"سياسة الخصوصية",
   "terms_of_services":"شروط الخدمة",
-  "help":"يساعد"
+  "help":"يساعد",
+  "two_factor_authentication":"المصادقة الثنائية",
+  "two_fa":"اثنين"
 }

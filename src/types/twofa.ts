@@ -11,3 +11,7 @@ export enum TwofaStatus {
 export interface TwoFaState {
     twoFaStatus: 'active' | 'inactive'
 }
+
+export interface IActionResponse{
+    message:string
+}
