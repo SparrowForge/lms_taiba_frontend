@@ -1,5 +1,6 @@
 import type { IAuthResponse, LoginCredentials, RegisterCredentials } from '@/types/auth';
 import { IUser } from '@/types/user';
+import { IBaseResponse } from '@/types/common';
 
 import { apiService } from '@/lib/axios';
 
@@ -85,10 +86,10 @@ class AuthService {
   }
 
   // Get current user profile
-  async getCurrentUser(): Promise<IUser> {
+  async getMe(): Promise<IBaseResponse<IUser>> {
     try {
       const response = await apiService.get<IUser>('/auth/me');
-      return response.data;
+      return response;
     } catch (error) {
       throw this.handleError(error);
     }

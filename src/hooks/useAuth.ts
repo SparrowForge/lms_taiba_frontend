@@ -131,8 +131,8 @@ export const useAuth = () => {
     try {
       dispatch(setLoading(true));
 
-      const user = await authService.getCurrentUser();
-      dispatch(setUser(user));
+      const response = await authService.getMe();
+      dispatch(setUser(response.data));
       dispatch(setIsAuthenticated(true));
       dispatch(setLoading(false));
     } catch (error: unknown) {
