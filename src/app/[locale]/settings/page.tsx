@@ -1,7 +1,7 @@
 'use client';
 
 import { DesktopOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons';
-import { Card, Divider, Radio, Space, Typography } from 'antd';
+import { Button, Card, Divider, Radio, Space, Typography } from 'antd';
 import Link from "next/link"
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -70,9 +70,11 @@ function SettingsPage() {
         </Card>
       </div>
         <div className="m-8">
-            <Link href="twofa-settings">
-                Two Factor Authentication Setup
-            </Link>
+            <Button type='primary'>
+              <Link href="twofa-settings">
+                Setup Two Factor Authentication 
+              </Link>
+            </Button>
         </div>
     </MainLayout>
   );
