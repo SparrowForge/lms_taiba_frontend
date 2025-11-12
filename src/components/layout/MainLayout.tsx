@@ -29,6 +29,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     handleOpenChange,
   } = useSidebar();
   const pathname = usePathname();
+  const locale = pathname.split('/')[1];
 
   // Memoize sidebar width calculation
   const sidebarWidth = useMemo(() => (collapsed ? 80 : 280), [collapsed]);
@@ -43,14 +44,18 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   // Memoize layout styles to prevent recalculation
   const layoutStyle = useMemo(
     () => ({
-      marginLeft: sidebarWidth,
+      [locale === 'ar' ? 'marginRight' : 'marginLeft']: sidebarWidth, // ✅ swap side dynamically
       width: `calc(100vw - ${sidebarWidth}px)`,
       minWidth: 0,
       overflow: 'hidden',
-      transition: `margin-left ${COLLAPSE_MS}ms ease, width ${COLLAPSE_MS}ms ease`,
+      transition: `
+        ${locale === 'ar' ? 'margin-right' : 'margin-left'} ${COLLAPSE_MS}ms ease,
+        width ${COLLAPSE_MS}ms ease
+      `,
     }),
-    [sidebarWidth],
+    [sidebarWidth, locale],
   );
+
 
   // Memoize header styles
   const headerStyle = useMemo(

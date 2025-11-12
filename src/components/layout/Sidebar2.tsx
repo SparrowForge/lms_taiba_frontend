@@ -437,7 +437,7 @@ export const Sidebar2 = React.memo(
             overflow: 'auto',
             height: '100vh',
             position: 'fixed',
-            left: 0,
+            [locale === 'ar' ? 'right' : 'left']: 0,
             top: 0,
             bottom: 0,
             zIndex: 1000,
