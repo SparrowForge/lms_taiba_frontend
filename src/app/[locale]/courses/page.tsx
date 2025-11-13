@@ -20,9 +20,15 @@ import { useLocalization } from '@/hooks/useLocalization';
 
 import { ICourse } from '@/types/course';
 import { IDepartment } from '@/types/department';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useCourseTypes } from '@/hooks/useCourseTypes';
+import { useDepartments } from '@/hooks/useDepartments';
+import { useSemesters } from '@/hooks/useSemesters';
 
 export default function CoursesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -32,21 +38,44 @@ export default function CoursesPage() {
   const [selectedDetailsCourseId, setSelectedDetailsCourseId] = useState<number | undefined>();
 
   const { courses, listStatus, pagination, loadCourses, removeCourse } = useCourses();
+  const {courseTypes,loadCourseTypes} = useCourseTypes()
+  const {departments,loadDepartments} = useDepartments()
+  const {semesters,loadSemesters} = useSemesters()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
-  useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadCourses({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadCourses({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadCourses]);
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadCourses({ page, limit: limitNum, ...params });
+  };
 
+  useEffect(() => {
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadCourses]);
+
+  useEffect(() => {
+    loadCourseTypes({ page: 1, limit: 99 });
+  }, [loadCourseTypes]);
+
+  useEffect(() => {
+    loadDepartments({ page: 1, limit: 99 });
+  }, [loadDepartments]);
+
+  useEffect(() => {
+    loadSemesters({ page: 1, limit: 99 });
+  }, [loadSemesters]);
+  
   const handleEditDrawer = (courseId: number) => {
     setSelectedCourseId(courseId);
     setDrawerMode('edit');
@@ -82,7 +111,10 @@ export default function CoursesPage() {
     route: '/courses',
     searchFields: ['name', 'code', 'status'] as (keyof ICourse)[],
     onSearch: (searchText: string) => {
-      loadCourses({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadCourses({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: courses,
@@ -157,6 +189,40 @@ export default function CoursesPage() {
         ),
       },
     ],
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'courseType',
+            label: t(LOCALE_KEYS.COURSE_TYPE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courseTypes.map((c) => ({ label: c.name, value: String(c.name) })),
+            ],
+          },
+          {
+            key: 'department',
+            label: t(LOCALE_KEYS.DEPARTMENT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...departments.map((d) => ({ label: d.name, value: String(d.name) })),
+            ],
+          },
+          {
+            key: 'semester',
+            label: t(LOCALE_KEYS.SEMESTER),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...semesters.map((s) => ({ label: s.name, value: String(s.name) })),
+            ],
+          },
+        ],
   };
 
   return (
