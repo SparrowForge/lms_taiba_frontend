@@ -102,7 +102,10 @@ export default function SemestersPage() {
     route: '/semesters',
     searchFields: ['name', 'termNo', 'status'] as (keyof ISemester)[],
     onSearch: (searchText: string) => {
-      loadSemesters({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadSemesters({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: semesters,
