@@ -123,14 +123,7 @@ export default function BatchesPage() {
               ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
             ],
           },
-         {
-            key: 'academicYear',
-            label: t(LOCALE_KEYS.ACADEMIC_YEAR),
-            options: [
-              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...batches.map((a) => ({ label: a.academicYear, value: String(a.academicYear) })),
-            ],
-          },
+        
         ],
     columns: [
       {
