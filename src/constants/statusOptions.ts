@@ -68,6 +68,8 @@ export const COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS: IStatusOption[] = Obje
   labelKey: `assignment_${status}`,
 }));
 
+
+
 // Marital Status Options
 export const MARITAL_STATUS_OPTIONS: IStatusOption[] = Object.values(MaritalStatus).map(
   (status) => ({
