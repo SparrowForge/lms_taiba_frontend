@@ -171,6 +171,28 @@ export default function InstitutesPage() {
           })),
         ],
       },
+      {
+        key: 'code',
+        label: t(LOCALE_KEYS.CODE),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...institutes.map((s: IInstitute) => ({
+            label:s.code,
+            value: s.code,
+          })),
+        ],
+      },
+       {
+        key: 'type',
+        label: t(LOCALE_KEYS.TYPE),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...institutes.map((s: IInstitute) => ({
+            label:s.type,
+            value: s.type,
+          })),
+        ],
+      },
     ],
   };
 
