@@ -45,6 +45,8 @@ export default function StudentsPage() {
   const { batches, loadBatches, clearBatches } = useBatches();
   const { courses, loadCourses } = useCourses();
   const searchParams = useSearchParams();
+
+  //get skip & limit from url
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
   const courseId = searchParams.get('courseId');
