@@ -178,6 +178,46 @@ export default function BranchesPage() {
           })),
         ],
       },
+      {
+          key: 'name',
+          label: t(LOCALE_KEYS.BRANCH),
+          options: [              
+            { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                ...branches.map((c) => ({ label: c.name, value: String(c.name) })),
+              ],
+      },
+      {
+          key: 'code',
+          label: t(LOCALE_KEYS.CODE),
+          options: [              
+            { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                ...branches.map((c) => ({ label: c.code, value: String(c.code) })),
+              ],
+      },
+      {
+          key: 'instituteId',
+          label: t(LOCALE_KEYS.INSTITUTE),
+          options: [              
+            { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                ...branches.map((c) => ({ label: c.institute.name, value: String(c.instituteId) })),
+              ],
+      },
+      {
+          key: 'externalInstituteIdNo',
+          label: t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO),
+          options: [              
+            { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                ...branches.map((c) => ({ label: c.externalInstituteIdNo, value: String(c.externalInstituteIdNo) })),
+              ],
+      },
+      {
+          key: 'campusDirectorUserId',
+          label: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID),
+          options: [              
+            { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                ...branches.map((c) => ({ label: c.campusDirector.name, value: String(c.campusDirectorUserId) })),
+              ],
+      },
     ],
   };
 
