@@ -20,9 +20,14 @@ import { useSemesterSubjects } from '@/hooks/useSemesterSubjects';
 import { ISemester } from '@/types/semester';
 import { ISemesterSubject } from '@/types/semesterSubject';
 import { ISubject } from '@/types/subject';
+import { useTranslations } from 'next-intl';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSubjects } from '@/hooks/useSubjects';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function SemesterSubjectsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.SEMESTER_SUBJECT, { defaultValue: 'Semester Subject' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -35,20 +40,33 @@ export default function SemesterSubjectsPage() {
 
   const { semesterSubjects, listStatus, pagination, loadSemesterSubjects, removeSemesterSubject } =
     useSemesterSubjects();
+  const {semesters, loadSemesters} = useSemesters()
+  const {subjects, loadSubjects} = useSubjects()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadSemesterSubjects({ page, limit: limitNum, ...params });
+    loadSemesters({ page, limit: limitNum, ...params })
+    loadSubjects({ page, limit: limitNum, ...params })
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadSemesterSubjects({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadSemesterSubjects({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadSemesterSubjects]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadSemesterSubjects]);
 
   const handleEditDrawer = (semesterSubjectId: number) => {
     setSelectedSemesterSubjectId(semesterSubjectId);
@@ -85,7 +103,10 @@ export default function SemesterSubjectsPage() {
     route: '/semester-subjects',
     searchFields: ['semesterId', 'subjectId'] as (keyof ISemesterSubject)[],
     onSearch: (searchText: string) => {
-      loadSemesterSubjects({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadSemesterSubjects({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: semesterSubjects,
@@ -144,6 +165,32 @@ export default function SemesterSubjectsPage() {
         ),
       },
     ],
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'semesterId',
+            label: t(LOCALE_KEYS.SEMESTER),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...semesters.map((s) => ({ label: s.name, value: String(s.id) })),
+            ],
+          },
+          {
+            key: 'subjectId',
+            label: t(LOCALE_KEYS.SUBJECT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...subjects.map((s) => ({ label: s.name, value: String(s.id) })),
+            ],
+          },
+        ],
   };
 
   return (
