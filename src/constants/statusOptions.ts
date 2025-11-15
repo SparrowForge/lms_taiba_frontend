@@ -3,7 +3,7 @@
  * These are derived from the status enums for use in forms and dropdowns
  */
 
-import { ExamCandidateStatus } from '@/enums/exam-candidate.enum';
+import { ExamCandidateStatus, ExamResultStatus } from '@/enums/exam-candidate.enum';
 import {
   AttendanceStatus,
   ClassScheduleStatus,
@@ -88,4 +88,14 @@ export const EXAM_CANDIDATE_STATUS_OPTIONS: IStatusOption[] = Object.values(
   key: `exam_candidate_${status}`,
   value: status,
   labelKey: `exam_candidate_${status}`,
+}));
+
+
+// Exam Candidate Status Options
+export const EXAM_RESULT_STATUS_OPTIONS: IStatusOption[] = Object.values(
+  ExamResultStatus,
+).map((status) => ({
+  key: `${status}`,
+  value: status,
+  labelKey: `${status}`,
 }));

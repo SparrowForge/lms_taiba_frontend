@@ -4,3 +4,9 @@ export enum ExamCandidateStatus {
   APPEARED = 'appeared',
   BARRED = 'barred',
 }
+
+export enum ExamResultStatus {
+  DRAFT = "draft",
+  PUBLISHED = "published",
+  WITHHELD = "withheld"
+}
