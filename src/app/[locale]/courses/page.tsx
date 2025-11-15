@@ -40,7 +40,7 @@ export default function CoursesPage() {
   const { courses, listStatus, pagination, loadCourses, removeCourse } = useCourses();
   const {courseTypes,loadCourseTypes} = useCourseTypes()
   const {departments,loadDepartments} = useDepartments()
-  const {semesters,loadSemesters} = useSemesters()
+
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -72,10 +72,6 @@ export default function CoursesPage() {
     loadDepartments({ page: 1, limit: 99 });
   }, [loadDepartments]);
 
-  useEffect(() => {
-    loadSemesters({ page: 1, limit: 99 });
-  }, [loadSemesters]);
-  
   const handleEditDrawer = (courseId: number) => {
     setSelectedCourseId(courseId);
     setDrawerMode('edit');
@@ -214,14 +210,7 @@ export default function CoursesPage() {
               ...departments.map((d) => ({ label: d.name, value: String(d.name) })),
             ],
           },
-          {
-            key: 'semester',
-            label: t(LOCALE_KEYS.SEMESTER),
-            options: [
-              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...semesters.map((s) => ({ label: s.name, value: String(s.name) })),
-            ],
-          },
+         
         ],
   };
 
