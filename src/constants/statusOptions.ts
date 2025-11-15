@@ -79,6 +79,8 @@ export const MARITAL_STATUS_OPTIONS: IStatusOption[] = Object.values(MaritalStat
   }),
 );
 
+
+
 // Exam Candidate Status Options
 export const EXAM_CANDIDATE_STATUS_OPTIONS: IStatusOption[] = Object.values(
   ExamCandidateStatus,
