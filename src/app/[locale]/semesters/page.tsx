@@ -22,6 +22,7 @@ import { IBatch } from '@/types/batch';
 import { ISemester } from '@/types/semester';
 import { SEMESTER_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { useTranslations } from 'next-intl';
+import { useBatches } from '@/hooks/useBatches';
 
 export default function SemestersPage() {
   const { t } = useLocalization();
@@ -35,6 +36,7 @@ export default function SemestersPage() {
   const [selectedDetailsSemesterId, setSelectedDetailsSemesterId] = useState<number | undefined>();
 
   const { semesters, listStatus, pagination, loadSemesters, removeSemester } = useSemesters();
+  const {loadBatches, batches} = useBatches()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -58,14 +60,10 @@ export default function SemestersPage() {
       loadWithParams(searchParams, skip, limit);
     }, [searchParams, skip, limit, loadSemesters]);
 
-  // useEffect(() => {
-  //   if (skip && limit) {
-  //     const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-  //     loadSemesters({ page, limit: parseInt(limit ?? '10') });
-  //   } else {
-  //     loadSemesters({ page: 1, limit: 10 });
-  //   }
-  // }, [skip, limit, loadSemesters]);
+    useEffect(()=>{
+      loadBatches({ page: 1, limit: 99 })
+    },[loadBatches])
+
 
   const handleEditDrawer = (semesterId: number) => {
     setSelectedSemesterId(semesterId);
@@ -126,17 +124,9 @@ export default function SemestersPage() {
             label: t(LOCALE_KEYS.BATCH),
             options: [
               { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...semesters.map((c) => ({ label: c.batch.name, value: String(c.batch.id) })),
+              ...batches.map((c) => ({ label: c.name, value: String(c.id) })),
             ],
           },
-          // {
-          //   key: 'batchId',
-          //   label: t(LOCALE_KEYS.SEMESTER),
-          //   options: [
-          //     { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-          //     ...semesters.map((b) => ({ label: b.batch.name, value: String(b.id) })),
-          //   ],
-          // },
         ],
     columns: [
       {
