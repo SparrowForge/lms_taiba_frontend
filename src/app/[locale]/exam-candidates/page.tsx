@@ -133,14 +133,14 @@ export default function ExamCandidatesPage() {
                     ...exams.map((c) => ({ label: c.name, value: String(c.id) })),
                   ],
           },
-           {
-                  key: 'studentId',
-                  label: t(LOCALE_KEYS.STUDENT),
-                  options: [
-                    { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-                    ...students.map((c) => ({ label: c.firstName, value: String(c.id) })),
-                  ],
-                },
+          {
+            key: 'studentId',
+            label: t(LOCALE_KEYS.STUDENT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                ...students.map((c) => ({ label: c.firstName, value: String(c.id) })),
+                ],
+               },
                 
         ],
     columns: [
