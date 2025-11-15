@@ -205,14 +205,14 @@ export default function DepartmentsPage() {
             ...branches.map((b) => ({ label: b.name, value: String(b.id) })),
           ],
       },
-      {
-        key: 'name',
-        label: t(LOCALE_KEYS.DEPARTMENT),
-        options: [
-          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-            ...departments.map((d) => ({ label: d.name, value: String(d.name) })),
-          ],
-      },
+      // {
+      //   key: 'name',
+      //   label: t(LOCALE_KEYS.DEPARTMENT),
+      //   options: [
+      //     { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+      //       ...departments.map((d) => ({ label: d.name, value: String(d.name) })),
+      //     ],
+      // },
     ],
   };
 
