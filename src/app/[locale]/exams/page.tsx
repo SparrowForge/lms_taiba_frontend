@@ -18,9 +18,18 @@ import { useExams } from '@/hooks/useExams';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { IExam } from '@/types/exam';
+import { useTranslations } from 'next-intl';
+import { useCourses } from '@/hooks/useCourses';
+import { useSubjects } from '@/hooks/useSubjects';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useBatches } from '@/hooks/useBatches';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { QUESTION_TYPE_OPTIONS } from '@/enums/question-type.enum';
+import { SECURITY_TYPE_OPTIONS } from '@/enums/security-type.enum';
 
 export default function ExamsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.EXAM, { defaultValue: 'Exam' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -30,19 +39,47 @@ export default function ExamsPage() {
   const [selectedDetailsExamId, setSelectedDetailsExamId] = useState<number | undefined>();
 
   const { exams, listStatus, pagination, loadExams, removeExam } = useExams();
+  const {courses, loadCourses} = useCourses()
+  const {subjects,loadSubjects} = useSubjects()
+  const {semesters, loadSemesters} = useSemesters()
+  const {batches, loadBatches} = useBatches()
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadExams({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadExams({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadExams({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadExams]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadExams]);
+
+  useEffect(()=>{
+    loadSemesters({page:1, limit:99})
+  },[loadSemesters])
+
+  useEffect(()=>{
+    loadBatches({page:1, limit:99})
+  },[loadBatches])
+
+  useEffect(()=>{
+    loadCourses({page:1, limit:99})
+  },[loadCourses])
+
+  useEffect(()=>{
+    loadSubjects({page:1, limit:99})
+  },[loadSubjects])
 
   const handleEditDrawer = (examId: number) => {
     setSelectedExamId(examId);
@@ -78,8 +115,11 @@ export default function ExamsPage() {
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/exams',
     searchFields: ['name', 'questionType'] as (keyof IExam)[],
-    onSearch: (searchText: string) => {
-      loadExams({ page: 1, limit: 10, search: searchText });
+     onSearch: (searchText: string) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadExams({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: exams,
@@ -141,6 +181,64 @@ export default function ExamsPage() {
         ),
       },
     ],
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'questionType',
+            label: t(LOCALE_KEYS.QUESTION_TYPE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...QUESTION_TYPE_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'securityType',
+            label: t(LOCALE_KEYS.SECURITY_TYPE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...SECURITY_TYPE_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'courseId',
+            label: t(LOCALE_KEYS.COURSE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+          {
+            key: 'batchId',
+            label: t(LOCALE_KEYS.BATCH),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...batches.map((b) => ({ label: b.name, value: String(b.id) })),
+            ],
+          },
+          {
+            key: 'semesterId',
+            label: t(LOCALE_KEYS.SEMESTER),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...semesters.map((b) => ({ label: b.name, value: String(b.id) })),
+            ],
+          },
+          {
+            key: 'subjectId',
+            label: t(LOCALE_KEYS.SUBJECT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...subjects.map((b) => ({ label: b.name, value: String(b.id) })),
+            ],
+          },
+        ],
   };
 
   return (
