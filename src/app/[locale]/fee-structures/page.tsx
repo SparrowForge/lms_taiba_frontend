@@ -20,9 +20,12 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { IBatch } from '@/types/batch';
 import { IFeeStructure } from '@/types/feeStructure';
 import { ISemester } from '@/types/semester';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function FeeStructuresPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -40,14 +43,22 @@ export default function FeeStructuresPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadFeeStructures({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadFeeStructures({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadFeeStructures({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadFeeStructures]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadFeeStructures]);
 
   const handleEditDrawer = (feeStructureId: number) => {
     setSelectedFeeStructureId(feeStructureId);
@@ -89,13 +100,27 @@ export default function FeeStructuresPage() {
       'semester.name',
     ] as (keyof IFeeStructure)[],
     onSearch: (searchText: string) => {
-      loadFeeStructures({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadFeeStructures({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     // onQuickAdd: handleCreateDrawer,
     items: feeStructures,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+         
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.TEMPLATE_NAME, { defaultValue: 'Template Name' }),
