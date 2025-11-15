@@ -18,9 +18,14 @@ import { useExamCandidates } from '@/hooks/useExamCandidates';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { IExamCandidate } from '@/types/examCandidate';
+import { useTranslations } from 'next-intl';
+import { EXAM_CANDIDATE_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useStudents } from '@/hooks/useStudents';
+import { useExams } from '@/hooks/useExams';
 
 export default function ExamCandidatesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.EXAM_CANDIDATE, { defaultValue: 'Exam Candidate' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -30,6 +35,8 @@ export default function ExamCandidatesPage() {
   const [selectedDetailsExamCandidateId, setSelectedDetailsExamCandidateId] = useState<
     number | undefined
   >();
+  const {students, loadStudents} = useStudents()
+  const {exams, loadExams} = useExams()
 
   const { examCandidates, listStatus, pagination, loadExamCandidates, removeExamCandidate } =
     useExamCandidates();
@@ -38,14 +45,31 @@ export default function ExamCandidatesPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadExamCandidates({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadExamCandidates({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadExamCandidates({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadExamCandidates]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadExamCandidates]);
+
+  useEffect(() =>{
+    loadStudents({page:1, limit:99})
+  },[loadStudents])
+
+  useEffect(() =>{
+    loadExams({page:1, limit:99})
+  },[loadExams])
+
 
   const handleEditDrawer = (examCandidateId: number) => {
     setSelectedExamCandidateId(examCandidateId);
@@ -82,13 +106,43 @@ export default function ExamCandidatesPage() {
     route: '/exam-candidates',
     searchFields: ['rollNo'] as (keyof IExamCandidate)[],
     onSearch: (searchText: string) => {
-      loadExamCandidates({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadExamCandidates({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: examCandidates,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...EXAM_CANDIDATE_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+                  key: 'exmaId',
+                  label: t(LOCALE_KEYS.EXAM),
+                  options: [
+                    { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                    ...exams.map((c) => ({ label: c.name, value: String(c.id) })),
+                  ],
+          },
+           {
+                  key: 'studentId',
+                  label: t(LOCALE_KEYS.STUDENT),
+                  options: [
+                    { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                    ...students.map((c) => ({ label: c.firstName, value: String(c.id) })),
+                  ],
+                },
+                
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.EXAM_ID),
