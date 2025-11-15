@@ -102,7 +102,7 @@ export const Sidebar2 = React.memo(
     useEffect(() => {
       if (!branches || branches.length === 0) {
         // fetch a sensible page size for dropdown
-        loadBranches({ page: 1, limit: 100 });
+        // loadBranches({ page: 1, limit: 100 });
       }
     }, [branches, loadBranches]);
 
