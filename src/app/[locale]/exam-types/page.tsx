@@ -18,9 +18,12 @@ import { useExamTypes } from '@/hooks/useExamTypes';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { IExamType } from '@/types/examType';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function ExamTypesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.EXAM_TYPE, { defaultValue: 'Exam Type' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -35,14 +38,22 @@ export default function ExamTypesPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadExamTypes({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadExamTypes({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadExamTypes({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadExamTypes]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadExamTypes]);
 
   const handleEditDrawer = (examTypeId: number) => {
     setSelectedExamTypeId(examTypeId);
@@ -79,13 +90,27 @@ export default function ExamTypesPage() {
     route: '/exam-types',
     searchFields: ['name', 'code'] as (keyof IExamType)[],
     onSearch: (searchText: string) => {
-      loadExamTypes({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadExamTypes({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: examTypes,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+     filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+         
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.CODE),
