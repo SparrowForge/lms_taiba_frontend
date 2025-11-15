@@ -21,9 +21,13 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { IBranch } from '@/types/branch';
 import { IDepartment } from '@/types/department';
 import { IFaculty } from '@/types/faculty';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useDepartments } from '@/hooks/useDepartments';
 
 export default function FacultyPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.FACULTY, { defaultValue: 'Faculty' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -33,20 +37,33 @@ export default function FacultyPage() {
   const [selectedDetailsFacultyId, setSelectedDetailsFacultyId] = useState<number | undefined>();
 
   const { faculties, listStatus, pagination, loadFaculties, removeFaculty } = useFaculties();
+  const {loadDepartments, departments} = useDepartments()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadFaculties({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadFaculties({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadFaculties({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadFaculties]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadFaculties]);
+
+  useEffect(()=>{
+    loadDepartments({page:1, limit:99})
+  },[loadDepartments])
 
   const handleEditDrawer = (facultyId: number) => {
     setSelectedFacultyId(facultyId);
@@ -83,13 +100,35 @@ export default function FacultyPage() {
     route: '/faculties',
     searchFields: ['fullName', 'email', 'employeeCode'] as (keyof IFaculty)[],
     onSearch: (searchText: string) => {
-      loadFaculties({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadFaculties({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: faculties,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+     filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'department',
+            label: t(LOCALE_KEYS.DEPARTMENT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...departments.map((d) => ({ label: d.name, value: String(d.name) })),
+            ],
+          },
+         
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.FULL_NAME),
