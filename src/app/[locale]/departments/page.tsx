@@ -65,10 +65,14 @@ export default function DepartmentsPage() {
 
       // Load batch options for filter
     useEffect(() => {
-        if (branchId) {
-          loadBranches({ page: 1, limit: 99, branchId: parseInt(branchId) });
-        } 
-      }, [loadBranches, branchId]);
+        loadBranches({ page: 1, limit: 99 });
+      }, [loadBranches]);
+
+  useEffect(() => {
+    if (branchId) {
+      loadDepartments({ page: 1, limit: 99, branchId: parseInt(branchId) });
+    } 
+  }, [loadDepartments, branchId]);
 
 
   const handleEditDrawer = (departmentId: number) => {
@@ -207,14 +211,6 @@ export default function DepartmentsPage() {
         options: [
           { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
             ...departments.map((d) => ({ label: d.name, value: String(d.name) })),
-          ],
-      },
-      {
-        key: 'code',
-        label: t(LOCALE_KEYS.CODE),
-        options: [
-          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-            ...departments.map((d) => ({ label: d.code, value: String(d.code) })),
           ],
       },
     ],
