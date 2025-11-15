@@ -52,7 +52,8 @@ export default function CourseMaterialsPage() {
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
-
+  const courseId = searchParams.get("courseId")
+ 
   const loadWithParams = (
     searchParams: URLSearchParams,
     skip: string | null,
@@ -75,20 +76,22 @@ export default function CourseMaterialsPage() {
   },[loadCourses])
 
   useEffect(()=>{
-    loadSubjects({ page: 1, limit: 99 })
-  },[loadSubjects])
+    if(courseId){
+      loadSubjects({ page: 1, limit: 99, courseId:parseInt(courseId) })
+    }
+  },[loadSubjects, courseId])
 
   useEffect(()=>{
     loadFaculties({ page: 1, limit: 99 })
   },[loadFaculties])
 
   useEffect(()=>{
-    loadBatches({ page: 1, limit: 99 })
-  },[loadBatches])
+    if(courseId){
+      loadBatches({ page: 1, limit: 99, courseId:parseInt(courseId)})
+    }
+  },[loadBatches, courseId])
 
-  useEffect(()=>{
-    loadSemesters({ page: 1, limit: 99 })
-  },[loadSemesters])
+
 
   const handleEditDrawer = (courseMaterialId: number) => {
     setSelectedCourseMaterialId(courseMaterialId);
@@ -176,14 +179,7 @@ export default function CourseMaterialsPage() {
               ...batches.map((c) => ({ label: c.name, value: String(c.id) })),
             ],
           },
-          {
-            key: 'semesterId',
-            label: t(LOCALE_KEYS.SEMESTER),
-            options: [
-              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...semesters.map((c) => ({ label: c.name, value: String(c.id) })),
-            ],
-          },
+         
         ],
     columns: [
       {
