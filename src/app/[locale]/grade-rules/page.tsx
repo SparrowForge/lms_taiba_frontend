@@ -18,9 +18,13 @@ import { useGradeRules } from '@/hooks/useGradeRules';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { IGradeRule } from '@/types/gradeRule';
+import { useTranslations } from 'next-intl';
+import { useCourses } from '@/hooks/useCourses';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function GradeRulesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.GRADE_RULE, { defaultValue: 'Grade Rule' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -32,19 +36,32 @@ export default function GradeRulesPage() {
   >();
 
   const { gradeRules, listStatus, pagination, loadGradeRules, removeGradeRule } = useGradeRules();
+  const {courses, loadCourses} = useCourses()
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadGradeRules({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadGradeRules({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadGradeRules({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadGradeRules]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadGradeRules]);
+
+  useEffect(()=>{
+    loadCourses({page:1, limit:99})
+  },[loadCourses])
 
   const handleEditDrawer = (gradeRuleId: number) => {
     setSelectedGradeRuleId(gradeRuleId);
@@ -81,13 +98,35 @@ export default function GradeRulesPage() {
     route: '/grade-rules',
     searchFields: ['grade', 'remarks'] as (keyof IGradeRule)[],
     onSearch: (searchText: string) => {
-      loadGradeRules({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadGradeRules({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: gradeRules,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+        filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+        ],
+      },
+      {
+        key: 'courseId',
+        label: t(LOCALE_KEYS.COURSE),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+        ],
+      },
+      
+    ],
     columns: [
       {
         title: t(LOCALE_KEYS.GRADE),

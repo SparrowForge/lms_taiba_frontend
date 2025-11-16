@@ -19,9 +19,12 @@ import { useCourseTypes } from '@/hooks/useCourseTypes';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { ICourseType } from '@/types/courseType';
+import { useTranslations } from 'next-intl';
+import {  ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function CourseTypesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.COURSE_TYPE, { defaultValue: 'Course Type' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -37,14 +40,23 @@ export default function CourseTypesPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
-  useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadCourseTypes({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadCourseTypes({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadCourseTypes]);
+    const loadWithParams = (
+      searchParams: URLSearchParams,
+      skip: string | null,
+      limit: string | null,
+    ) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      const limitNum = parseInt(limit ?? '10');
+      const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+      loadCourseTypes({ page, limit: limitNum, ...params });
+    };
+  
+    useEffect(() => {
+      loadWithParams(searchParams, skip, limit);
+    }, [searchParams, skip, limit, loadCourseTypes]);
+
 
   const handleEditDrawer = (id: number) => {
     setSelectedId(id);
@@ -77,13 +89,26 @@ export default function CourseTypesPage() {
     route: '/course-types',
     searchFields: ['name', 'status'] as (keyof ICourseType)[],
     onSearch: (searchText: string) => {
-      loadCourseTypes({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadCourseTypes({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: courseTypes,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          }
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),

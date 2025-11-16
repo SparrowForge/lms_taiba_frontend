@@ -22,6 +22,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBranch} from '@/types/branch';
 import {IStatusOption} from '@/types/statusSelect';
+import { useInstitutes } from '@/hooks/useInstitutes';
 
 export default function BranchesPage() {
   const { t } = useLocalization();
@@ -35,6 +36,7 @@ export default function BranchesPage() {
   const [selectedDetailsBranchId, setSelectedDetailsBranchId] = useState<number | undefined>();
 
   const { branches, listStatus, pagination, loadBranches, removeBranch } = useBranches();
+  const {institutes,loadInstitutes} = useInstitutes()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
@@ -52,11 +54,17 @@ export default function BranchesPage() {
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
     loadBranches({ page, limit: limitNum, ...params });
+    
   };
 
   useEffect(() => {
     loadWithParams(searchParams, skip, limit);
-  }, [searchParams, skip, limit, loadBranches]);
+  }, [searchParams, skip, limit]);
+
+  useEffect(()=>{
+    loadInstitutes({ page:1, limit:99 })
+  },[loadInstitutes])
+
 
   const handleEditDrawer = (branchId: number) => {
     setSelectedBranchId(branchId);
@@ -178,6 +186,15 @@ export default function BranchesPage() {
           })),
         ],
       },
+      {
+          key: 'instituteId',
+          label: t(LOCALE_KEYS.INSTITUTE),
+          options: [              
+            { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                ...institutes.map((i) => ({ label: i.name, value: String(i.id) })),
+              ],
+      },
+    
     ],
   };
 

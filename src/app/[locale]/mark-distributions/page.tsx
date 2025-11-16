@@ -18,9 +18,15 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { useMarkDistributions } from '@/hooks/useMarkDistributions';
 
 import { IMarkDistribution } from '@/types/markDistribution';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useCourses } from '@/hooks/useCourses';
+import { useSubjects } from '@/hooks/useSubjects';
+import { useExamTypes } from '@/hooks/useExamTypes';
 
 export default function MarkDistributionsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.MARK_DISTRIBUTION, { defaultValue: 'Mark Distribution' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -41,18 +47,42 @@ export default function MarkDistributionsPage() {
     removeMarkDistribution,
   } = useMarkDistributions();
 
+  const {courses, loadCourses} = useCourses()
+  const {subjects, loadSubjects} = useSubjects() 
+  const {examTypes, loadExamTypes} = useExamTypes()
+
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadMarkDistributions({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadMarkDistributions({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadMarkDistributions({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadMarkDistributions]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadMarkDistributions]);
+
+  useEffect(()=>{
+    loadCourses({page:1, limit:99})
+  },[loadCourses])
+
+  useEffect(()=>{
+    loadExamTypes({page:1, limit:99})
+  },[loadExamTypes])
+
+  useEffect(()=>{
+    loadSubjects({page:1, limit:99})
+  },[loadSubjects])
 
   const handleEditDrawer = (markDistributionId: number) => {
     setSelectedMarkDistributionId(markDistributionId);
@@ -89,13 +119,51 @@ export default function MarkDistributionsPage() {
     route: '/mark-distributions',
     searchFields: ['courseId', 'subjectId', 'examTypeId'] as (keyof IMarkDistribution)[],
     onSearch: (searchText: string) => {
-      loadMarkDistributions({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadMarkDistributions({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: markDistributions,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+        filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+           {
+                  key: 'courseId',
+                  label: t(LOCALE_KEYS.COURSE),
+                  options: [
+                    { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                    ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+                  ],
+                },
+                 {
+                        key: 'subjectId',
+                        label: t(LOCALE_KEYS.SUBJECT),
+                        options: [
+                          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                          ...subjects.map((c) => ({ label: c.name, value: String(c.id) })),
+                        ],
+                      },
+                       {
+                              key: 'examTypeId',
+                              label: t(LOCALE_KEYS.EXAM_TYPE),
+                              options: [
+                                { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                                ...examTypes.map((c) => ({ label: c.name, value: String(c.id) })),
+                              ],
+                            },
+        
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.COURSE_ID),

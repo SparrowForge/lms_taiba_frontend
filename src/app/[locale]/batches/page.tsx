@@ -20,9 +20,13 @@ import {useLocalization} from '@/hooks/useLocalization';
 
 import {IBatch} from '@/types/batch';
 import {ICourse} from '@/types/course';
+import { useCourses } from '@/hooks/useCourses';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function BatchesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -32,20 +36,30 @@ export default function BatchesPage() {
   const [selectedDetailsBatchId, setSelectedDetailsBatchId] = useState<number | undefined>();
 
   const { batches, listStatus, pagination, loadBatches, removeBatch } = useBatches();
+  const { courses, loadCourses } = useCourses(); 
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadBatches({ page, limit: limitNum, ...params });
+    loadCourses({ page, limit: limitNum, ...params })
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadBatches({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadBatches({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadBatches]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadBatches, loadCourses]);
 
   const handleEditDrawer = (batchId: number) => {
     setSelectedBatchId(batchId);
@@ -82,13 +96,35 @@ export default function BatchesPage() {
     route: '/batches',
     searchFields: ['name', 'year', 'session'] as (keyof IBatch)[],
     onSearch: (searchText: string) => {
-      loadBatches({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadBatches({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     // onQuickAdd: handleCreateDrawer,
     items: batches,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'courseId',
+            label: t(LOCALE_KEYS.COURSE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+        
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),

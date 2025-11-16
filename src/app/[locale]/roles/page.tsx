@@ -20,9 +20,13 @@ import { useRoles } from '@/hooks/useRoles';
 
 import { IBranch } from '@/types/branch';
 import { IRole } from '@/types/role';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useBranches } from '@/hooks/useBranches';
 
 export default function RolesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.ROLE, { defaultValue: 'Role' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -32,20 +36,33 @@ export default function RolesPage() {
   const [selectedDetailsRoleId, setSelectedDetailsRoleId] = useState<number | undefined>();
 
   const { roles, listStatus, pagination, loadRoles, removeRole } = useRoles();
+  const {branches, loadBranches} = useBranches()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadRoles({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadRoles({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadRoles({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadRoles]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadRoles]);
+
+  useEffect(() => {
+    loadBranches({page:1, limit:99});
+  }, [loadBranches]);
 
   const handleEditDrawer = (roleId: number) => {
     setSelectedRoleId(roleId);
@@ -82,13 +99,34 @@ export default function RolesPage() {
     route: '/roles',
     searchFields: ['name', 'description', 'status'] as (keyof IRole)[],
     onSearch: (searchText: string) => {
-      loadRoles({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadRoles({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: roles,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+        filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+        ],
+      },
+       {
+        key: 'branchId',
+        label: t(LOCALE_KEYS.BRANCH),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...branches.map((c) => ({ label: c.name, value: String(c.id) })),
+        ],
+      },
+    ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),

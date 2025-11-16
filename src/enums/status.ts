@@ -48,3 +48,4 @@ export enum MaritalStatus {
   DIVORCED = 'divorced',
   WIDOWED = 'widowed',
 }
+

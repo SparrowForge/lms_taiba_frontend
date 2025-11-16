@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import { DEGREE_TYPE_OPTIONS, Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -19,9 +19,13 @@ import { useStudentEducations } from '@/hooks/useStudentEducations';
 
 import { IStudent } from '@/types/student';
 import { IStudentEducation } from '@/types/studentEducation';
+import { STUDENT_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useTranslations } from 'next-intl';
+import { useInstitutes } from '@/hooks/useInstitutes';
 
 export default function StudentEducationsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.STUDENT_EDUCATION, { defaultValue: 'Student Education' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -33,6 +37,7 @@ export default function StudentEducationsPage() {
   const [selectedDetailsStudentEducationId, setSelectedDetailsStudentEducationId] = useState<
     number | undefined
   >();
+  const {loadInstitutes,institutes} = useInstitutes()
 
   const {
     studentEducations,
@@ -46,14 +51,28 @@ export default function StudentEducationsPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
-  useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadStudentEducations({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadStudentEducations({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadStudentEducations]);
+    const loadWithParams = (
+      searchParams: URLSearchParams,
+      skip: string | null,
+      limit: string | null,
+    ) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      const limitNum = parseInt(limit ?? '10');
+      const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+      loadStudentEducations({ page, limit: limitNum, ...params });
+    };
+  
+    useEffect(() => {
+      loadWithParams(searchParams, skip, limit);
+    }, [searchParams, skip, limit, loadStudentEducations]);
+
+    useEffect(()=>{
+      loadInstitutes({page:1, limit:99})
+    },[loadInstitutes])
+
+
 
   const handleEditDrawer = (studentEducationId: number) => {
     setSelectedStudentEducationId(studentEducationId);
@@ -95,19 +114,48 @@ export default function StudentEducationsPage() {
       'groupMajor',
     ] as (keyof IStudentEducation)[],
     onSearch: (searchText: string) => {
-      loadStudentEducations({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadStudentEducations({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: studentEducations,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...STUDENT_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'degreeType',
+            label: t(LOCALE_KEYS.DEGREE_TYPE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...DEGREE_TYPE_OPTIONS.map((s) => ({ label: translate(s.value), value: s.value })),
+            ],
+          },
+          {
+            key: 'institute',
+            label: t(LOCALE_KEYS.INSTITUTE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...institutes.map((i) => ({ label: i.name, value: String(i.id) })),
+            ],
+      },
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.STUDENT),
         dataIndex: 'student',
         key: 'student',
-        render: (student: IStudent) => <span>{student?.name || 'N/A'}</span>,
+        render: (student: IStudent) => <span>{student?.firstName || 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.DEGREE_TYPE),

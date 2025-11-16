@@ -19,9 +19,17 @@ import { useCourseMaterials } from '@/hooks/useCourseMaterials';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { ICourseMaterial } from '@/types/courseMaterial';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useTranslations } from 'next-intl';
+import { useCourses } from '@/hooks/useCourses';
+import { useSubjects } from '@/hooks/useSubjects';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useBatches } from '@/hooks/useBatches';
+import { useSemesters } from '@/hooks/useSemesters';
 
 export default function CourseMaterialsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.COURSE_MATERIAL, { defaultValue: 'Course Material' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -34,20 +42,56 @@ export default function CourseMaterialsPage() {
 
   const { courseMaterials, listStatus, pagination, loadCourseMaterials, removeCourseMaterial } =
     useCourseMaterials();
+  const {courses,loadCourses} = useCourses()
+  const {subjects,loadSubjects} = useSubjects()
+  const {faculties,loadFaculties} = useFaculties()
+  const {batches,loadBatches} = useBatches()
+  const {semesters,loadSemesters} = useSemesters()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const courseId = searchParams.get("courseId")
+ 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadCourseMaterials({ page, limit: limitNum, ...params });
+  };
 
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadCourseMaterials({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadCourseMaterials({ page: 1, limit: 10 });
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadCourseMaterials]);
+
+  useEffect(()=>{
+    loadCourses({ page: 1, limit: 99 })
+  },[loadCourses])
+
+  useEffect(()=>{
+    if(courseId){
+      loadSubjects({ page: 1, limit: 99, courseId:parseInt(courseId) })
     }
-  }, [skip, limit, loadCourseMaterials]);
+  },[loadSubjects, courseId])
+
+  useEffect(()=>{
+    loadFaculties({ page: 1, limit: 99 })
+  },[loadFaculties])
+
+  useEffect(()=>{
+    if(courseId){
+      loadBatches({ page: 1, limit: 99, courseId:parseInt(courseId)})
+    }
+  },[loadBatches, courseId])
+
+
 
   const handleEditDrawer = (courseMaterialId: number) => {
     setSelectedCourseMaterialId(courseMaterialId);
@@ -84,13 +128,59 @@ export default function CourseMaterialsPage() {
     route: '/course-materials',
     searchFields: ['title', 'type', 'status'] as (keyof ICourseMaterial)[],
     onSearch: (searchText: string) => {
-      loadCourseMaterials({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadCourseMaterials({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: courseMaterials,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'courseId',
+            label: t(LOCALE_KEYS.COURSE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+          {
+            key: 'subjectId',
+            label: t(LOCALE_KEYS.SUBJECT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...subjects.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+          {
+            key: 'facultyId',
+            label: t(LOCALE_KEYS.FACULTY),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...faculties.map((c) => ({ label: c.fullName, value: String(c.id) })),
+            ],
+          },
+          {
+            key: 'batchId',
+            label: t(LOCALE_KEYS.BATCH),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...batches.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+         
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.TITLE),

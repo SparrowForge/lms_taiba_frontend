@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import { GENDER_OPTIONS, Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
@@ -19,9 +19,12 @@ import { useStudentProfiles } from '@/hooks/useStudentProfiles';
 
 import { IStudent } from '@/types/student';
 import { IStudentProfile } from '@/types/studentProfile';
+import { ENTITY_STATUS_OPTIONS, MARITAL_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useTranslations } from 'next-intl';
 
 export default function StudentProfilesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.STUDENT_PROFILE, { defaultValue: 'Student Profile' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -39,14 +42,24 @@ export default function StudentProfilesPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
-  useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadStudentProfiles({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadStudentProfiles({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadStudentProfiles]);
+    const loadWithParams = (
+      searchParams: URLSearchParams,
+      skip: string | null,
+      limit: string | null,
+    ) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      const limitNum = parseInt(limit ?? '10');
+      const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+      loadStudentProfiles({ page, limit: limitNum, ...params });
+    };
+  
+    useEffect(() => {
+      loadWithParams(searchParams, skip, limit);
+    }, [searchParams, skip, limit, loadStudentProfiles]);
+
+
 
   const handleEditDrawer = (studentProfileId: number) => {
     setSelectedStudentProfileId(studentProfileId);
@@ -89,19 +102,49 @@ export default function StudentProfilesPage() {
       'identityNo',
     ] as (keyof IStudentProfile)[],
     onSearch: (searchText: string) => {
-      loadStudentProfiles({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadStudentProfiles( {age: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: studentProfiles,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'gender',
+            label: t(LOCALE_KEYS.GENDER),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...GENDER_OPTIONS.map((g) => ({ label: translate(g.labelKey), value: g.value })),
+            ],
+          },
+          {
+            key: 'maritalStatus',
+            label: t(LOCALE_KEYS.MARITAL_STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...MARITAL_STATUS_OPTIONS.map((g) => ({ label: translate(g.labelKey), value: g.value })),
+            ],
+          },
+          
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.STUDENT),
         dataIndex: 'student',
         key: 'student',
-        render: (student: IStudent) => <span>{student?.name || 'N/A'}</span>,
+        render: (student: IStudent) => <span>{student?.firstName || 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.DATE_OF_BIRTH),

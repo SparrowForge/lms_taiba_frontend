@@ -171,6 +171,8 @@ export default function InstitutesPage() {
           })),
         ],
       },
+      
+       
     ],
   };
 

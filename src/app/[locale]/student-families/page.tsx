@@ -19,9 +19,12 @@ import { useStudentFamilies } from '@/hooks/useStudentFamilies';
 
 import { IStudent } from '@/types/student';
 import { IStudentFamily } from '@/types/studentFamily';
+import { STUDENT_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useTranslations } from 'next-intl';
 
 export default function StudentFamiliesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.STUDENT_FAMILY, { defaultValue: 'Student Family' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -39,14 +42,22 @@ export default function StudentFamiliesPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadStudentFamilies({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadStudentFamilies({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadStudentFamilies({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadStudentFamilies]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadStudentFamilies]);
 
   const handleEditDrawer = (studentFamilyId: number) => {
     setSelectedStudentFamilyId(studentFamilyId);
@@ -89,19 +100,23 @@ export default function StudentFamiliesPage() {
       'motherPhone',
     ] as (keyof IStudentFamily)[],
     onSearch: (searchText: string) => {
-      loadStudentFamilies({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadStudentFamilies({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: studentFamilies,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+      
     columns: [
       {
         title: t(LOCALE_KEYS.STUDENT),
         dataIndex: 'student',
         key: 'student',
-        render: (student: IStudent) => <span>{student?.name || 'N/A'}</span>,
+        render: (student: IStudent) => <span>{student?.firstName || 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.FATHER_NAME),
