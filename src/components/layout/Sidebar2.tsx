@@ -289,7 +289,7 @@ export const Sidebar2 = React.memo(
               className="bg-gradient-to-r from-blue-500 to-purple-600 "
             />
             {!collapsed && (
-              <div className="flex-1 min-w-0 text-white">
+              <div className="flex-1 min-w-0 text-white pl-6">
                 <Text strong className="block text-sm truncate text-white">
                   {getUserFullName()}
                 </Text>
