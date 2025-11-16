@@ -19,9 +19,14 @@ import { useCourseAssignmentSubmissions } from '@/hooks/useCourseAssignmentSubmi
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { ICourseAssignmentSubmission } from '@/types/courseAssignmentSubmission';
+import { useTranslations } from 'next-intl';
+import { useStudents } from '@/hooks/useStudents';
+import { useCourseAssignments } from '@/hooks/useCourseAssignments';
+import { COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function CourseAssignmentSubmissionsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT_SUBMISSION, {
     defaultValue: 'Course Assignment Submission',
   });
@@ -45,19 +50,37 @@ export default function CourseAssignmentSubmissionsPage() {
     removeCourseAssignmentSubmission,
   } = useCourseAssignmentSubmissions();
 
+  const {students, loadStudents} = useStudents()
+  const {courseAssignments, loadCourseAssignments} = useCourseAssignments()
+
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadCourseAssignmentSubmissions({ page, limit: limitNum, ...params });
+  };
 
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadCourseAssignmentSubmissions({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadCourseAssignmentSubmissions({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadCourseAssignmentSubmissions]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadCourseAssignmentSubmissions]);
+
+  useEffect(()=>{
+    loadCourseAssignments({page:1, limit:99})
+  },[loadCourseAssignments])
+
+  useEffect(()=>{
+    loadStudents({page:1, limit:99})
+  },[loadStudents])
 
   const handleEditDrawer = (courseAssignmentSubmissionId: number) => {
     setSelectedCourseAssignmentSubmissionId(courseAssignmentSubmissionId);
@@ -98,13 +121,42 @@ export default function CourseAssignmentSubmissionsPage() {
       'status',
     ] as (keyof ICourseAssignmentSubmission)[],
     onSearch: (searchText: string) => {
-      loadCourseAssignmentSubmissions({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadCourseAssignmentSubmissions({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: courseAssignmentSubmissions,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'studentId',
+            label: t(LOCALE_KEYS.STUDENT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...students.map((c) => ({ label: c.firstName , value: String(c.id) })),
+            ],
+          },
+          {
+            key: 'assignmentId',
+            label: t(LOCALE_KEYS.COURSE_ASSIGNMENT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courseAssignments.map((b) => ({ label: b.subject.name, value: String(b.id) })),
+            ],
+          },
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.ID),
@@ -127,8 +179,8 @@ export default function CourseAssignmentSubmissionsPage() {
         key: 'student',
         width: 200,
         render: (text: string, record: ICourseAssignmentSubmission) =>
-          record?.student?.name
-            ? `${record.student.name} (${record.student.applicationNo})`
+          record?.student?.firstName
+            ? `${record.student.firstName} (${record.student.applicationNo})`
             : 'N/A',
       },
       {
