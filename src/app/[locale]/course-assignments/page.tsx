@@ -14,14 +14,22 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
 import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
+import {useTranslations} from 'next-intl';
 
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { ICourseAssignment } from '@/types/courseAssignment';
+import { COURSE_ASSIGNMENT_STATUS_OPTIONS, COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS, ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useCourses } from '@/hooks/useCourses';
+import { useBatches } from '@/hooks/useBatches';
+import { useSubjects } from '@/hooks/useSubjects';
+import { useFaculties } from '@/hooks/useFaculties';
+import { useSemesters } from '@/hooks/useSemesters';
 
 export default function CourseAssignmentsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -41,20 +49,57 @@ export default function CourseAssignmentsPage() {
     loadCourseAssignments,
     removeCourseAssignment,
   } = useCourseAssignments();
+  const {courses, loadCourses} = useCourses()
+  const {batches, loadBatches} = useBatches()
+  const {subjects, loadSubjects} = useSubjects()
+  const {faculties, loadFaculties} = useFaculties()
+  const {semesters, loadSemesters} = useSemesters()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const courseId = searchParams.get("courseId")
+
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadCourseAssignments({ page, limit: limitNum, ...params });
+  };
 
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadCourseAssignments({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadCourseAssignments({ page: 1, limit: 10 });
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadCourseAssignments]);
+
+  useEffect(()=>{
+    loadCourses({page:1, limit:99})
+  },[loadCourses])
+
+  useEffect(()=>{
+    if(courseId){
+      loadBatches({page:1, limit:99, courseId:parseInt(courseId)})
     }
-  }, [skip, limit, loadCourseAssignments]);
+  },[loadBatches, courseId])
+
+  useEffect(()=>{
+    loadSemesters({page:1, limit:99})
+  },[loadSemesters])
+
+  useEffect(()=>{
+    loadSubjects({page:1, limit:99})
+  },[loadSubjects])
+
+  useEffect(()=>{
+    loadFaculties({page:1, limit:99})
+  },[loadFaculties])
+
 
   const handleEditDrawer = (courseAssignmentId: number) => {
     setSelectedCourseAssignmentId(courseAssignmentId);
@@ -91,13 +136,74 @@ export default function CourseAssignmentsPage() {
     route: '/course-assignments',
     searchFields: ['title', 'type', 'status'] as (keyof ICourseAssignment)[],
     onSearch: (searchText: string) => {
-      loadCourseAssignments({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadCourseAssignments({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: courseAssignments,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+           {
+            key: 'type',
+            label: t(LOCALE_KEYS.COURSE_ASSIGNMENT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...COURSE_ASSIGNMENT_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'courseId',
+            label: t(LOCALE_KEYS.COURSE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+          {
+            key: 'batchId',
+            label: t(LOCALE_KEYS.BATCH),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...batches.map((b) => ({ label: b.name, value: String(b.id) })),
+            ],
+          },
+          {
+            key: 'semesterId',
+            label: t(LOCALE_KEYS.SEMESTER),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...semesters.map((s) => ({ label: s.name, value: String(s.id) })),
+            ],
+          },
+          {
+            key: 'subjectId',
+            label: t(LOCALE_KEYS.SUBJECT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...subjects.map((s) => ({ label: s.name, value: String(s.id) })),
+            ],
+          },
+          {
+            key: 'facultyId',
+            label: t(LOCALE_KEYS.FACULTY),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...faculties.map((f) => ({ label: f.fullName, value: String(f.id) })),
+            ],
+          },
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.TITLE),

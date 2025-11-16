@@ -10,3 +10,10 @@ export enum ExamResultStatus {
   PUBLISHED = "published",
   WITHHELD = "withheld"
 }
+
+export enum CourseAssignment {
+  HOMEWORK = 'homework',
+  QUIZ = 'quiz',
+  PROJECT = 'project',
+  LAB = 'lab'
+}
