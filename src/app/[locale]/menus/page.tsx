@@ -20,9 +20,12 @@ import { useMenus } from '@/hooks/useMenus';
 
 import { IMenu } from '@/types/menu';
 import { IPanel } from '@/types/panel';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function MenusPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -38,14 +41,23 @@ export default function MenusPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadMenus({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadMenus({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadMenus({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadMenus]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadMenus]);
+
 
   const handleEditDrawer = (menuId: number) => {
     setSelectedMenuId(menuId);
@@ -82,13 +94,27 @@ export default function MenusPage() {
     route: '/menus',
     searchFields: ['name', 'route', 'status'] as (keyof IMenu)[],
     onSearch: (searchText: string) => {
-      loadMenus({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadMenus({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: menus,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+        filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+        ],
+      },
+     
+    ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),

@@ -19,9 +19,12 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { useScheduleTypes } from '@/hooks/useScheduleTypes';
 
 import { IScheduleType } from '@/types/scheduleType';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function ScheduleTypesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.SCHEDULE_TYPE, { defaultValue: 'Schedule Type' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -37,14 +40,23 @@ export default function ScheduleTypesPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadScheduleTypes({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadScheduleTypes({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadScheduleTypes({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadScheduleTypes]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadScheduleTypes]);
+
 
   const handleEditDrawer = (id: number) => {
     setSelectedId(id);
@@ -76,14 +88,28 @@ export default function ScheduleTypesPage() {
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/schedule-types',
     searchFields: ['name', 'status'] as (keyof IScheduleType)[],
-    onSearch: (searchText: string) => {
-      loadScheduleTypes({ page: 1, limit: 10, search: searchText });
+   onSearch: (searchText: string) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadScheduleTypes({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: scheduleTypes,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+        filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+        ],
+      },
+     
+    ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),
