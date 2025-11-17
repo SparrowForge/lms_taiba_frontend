@@ -141,14 +141,7 @@ export default function StudentEducationsPage() {
               ...DEGREE_TYPE_OPTIONS.map((s) => ({ label: translate(s.value), value: s.value })),
             ],
           },
-          {
-            key: 'institute',
-            label: t(LOCALE_KEYS.INSTITUTE),
-            options: [
-              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...institutes.map((i) => ({ label: i.name, value: String(i.id) })),
-            ],
-      },
+         
         ],
     columns: [
       {
