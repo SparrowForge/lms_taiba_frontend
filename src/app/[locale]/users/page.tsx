@@ -19,6 +19,9 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { useUsers } from '@/hooks/useUsers';
 
 import { IUser } from '@/types/user';
+import { useTranslations } from 'next-intl';
+import { useUserRoles } from '@/hooks/useUserRoles';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function UsersPage() {
   const router = useRouter();
@@ -29,7 +32,9 @@ export default function UsersPage() {
   const [selectedDetailsUserId, setSelectedDetailsUserId] = useState<number | undefined>();
 
   const { users, listStatus, pagination, loadUsers, removeUser } = useUsers();
+ 
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
 
   //get skip & limit from url
@@ -37,14 +42,24 @@ export default function UsersPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
-  useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadUsers({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadUsers({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadUsers]);
+
+    const loadWithParams = (
+      searchParams: URLSearchParams,
+      skip: string | null,
+      limit: string | null,
+    ) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      const limitNum = parseInt(limit ?? '10');
+      const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+      delete params.courseId
+      loadUsers({ page, limit: limitNum, ...params });
+    };
+  
+    useEffect(() => {
+      loadWithParams(searchParams, skip, limit);
+    }, [searchParams, skip, limit, loadUsers]);
 
   const handleEditDrawer = (userId: number) => {
     setSelectedUserId(userId);
@@ -82,13 +97,27 @@ export default function UsersPage() {
     exportUrl: '/users/export',
     searchFields: ['name', 'email'] as (keyof IUser)[],
     onSearch: (searchText: string) => {
-      loadUsers({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadUsers({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: users,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+        filters: [
+              {
+                key: 'status',
+                label: t(LOCALE_KEYS.STATUS),
+                options: [
+                  { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                  ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+                ],
+              },
+             
+            ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),
