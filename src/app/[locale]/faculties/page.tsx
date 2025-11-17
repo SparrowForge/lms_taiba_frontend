@@ -120,11 +120,11 @@ export default function FacultyPage() {
             ],
           },
           {
-            key: 'department',
+            key: 'departmentId',
             label: t(LOCALE_KEYS.DEPARTMENT),
             options: [
               { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...departments.map((d) => ({ label: d.name, value: String(d.name) })),
+              ...departments.map((d) => ({ label: d.name, value: String(d.id) })),
             ],
           },
          

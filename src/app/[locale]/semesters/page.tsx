@@ -23,6 +23,7 @@ import { ISemester } from '@/types/semester';
 import { SEMESTER_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { useTranslations } from 'next-intl';
 import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
 
 export default function SemestersPage() {
   const { t } = useLocalization();
@@ -36,12 +37,14 @@ export default function SemestersPage() {
   const [selectedDetailsSemesterId, setSelectedDetailsSemesterId] = useState<number | undefined>();
 
   const { semesters, listStatus, pagination, loadSemesters, removeSemester } = useSemesters();
-  const {loadBatches, batches} = useBatches()
+  const {courses, loadCourses} = useCourses()
+  const {loadBatches, batches, clearBatches} = useBatches()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const courseId = searchParams.get('courseId')
 
     const loadWithParams = (
       searchParams: URLSearchParams,
@@ -53,6 +56,7 @@ export default function SemestersPage() {
       delete params.limit;
       const limitNum = parseInt(limit ?? '10');
       const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+      delete params.courseId
       loadSemesters({ page, limit: limitNum, ...params });
     };
   
@@ -61,8 +65,16 @@ export default function SemestersPage() {
     }, [searchParams, skip, limit, loadSemesters]);
 
     useEffect(()=>{
-      loadBatches({ page: 1, limit: 99 })
-    },[loadBatches])
+      loadCourses({ page: 1, limit: 99 })
+    },[loadCourses])
+
+    useEffect(()=>{
+      if(courseId){
+        loadBatches({ page: 1, limit: 99, courseId:parseInt(courseId) })
+      }else{
+        clearBatches()
+      }
+    },[loadBatches, courseId,clearBatches])
 
 
   const handleEditDrawer = (semesterId: number) => {
@@ -117,6 +129,14 @@ export default function SemestersPage() {
             options: [
               { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
               ...SEMESTER_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'courseId',
+            label: t(LOCALE_KEYS.COURSE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
             ],
           },
           {
