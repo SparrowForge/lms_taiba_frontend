@@ -50,7 +50,7 @@ const LeftComponent = () => {
     <div className="bg-[#1F4BCA] w-full  flex flex-col justify-center items-center py-10 md:py-0">
       {/* Logo */}
       <div style={{ marginBottom: 10 }}>
-        <Image src="/logo.PNG" alt="logo" width={80} height={80} />
+        <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
       </div>
 
       <Title level={3} style={{ color: '#fff', marginBottom: 0, fontSize: '30px' }}>

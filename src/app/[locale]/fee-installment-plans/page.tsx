@@ -36,7 +36,6 @@ export default function FeeInstallmentPlansPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
 
-
   const {
     feeInstallmentPlans,
     listStatus,
@@ -57,6 +56,7 @@ export default function FeeInstallmentPlansPage() {
   const batchId = searchParams.get('batchId')
 
 
+
   const loadWithParams = (
     searchParams: URLSearchParams,
     skip: string | null,
@@ -67,8 +67,6 @@ export default function FeeInstallmentPlansPage() {
     delete params.limit;
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
-    delete params.courseId
-    delete params.batchId
     loadFeeInstallmentPlans({ page, limit: limitNum, ...params });
   };
 
