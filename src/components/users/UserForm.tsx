@@ -282,28 +282,7 @@ const UserForm: React.FC<UserFormProps> = ({
           />
         </Form.Item>
 
-        <Form.Item
-          name="personal_email"
-          label={t(LOCALE_KEYS.PERSONAL_EMAIL)}
-          rules={[
-            { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_EMAIL) },
-            { type: 'email', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL) },
-          ]}
-        >
-          <Input
-            placeholder={t(LOCALE_KEYS.EMAIL)}
-            type="email"
-            aria-label={t(LOCALE_KEYS.EMAIL)}
-            aria-required="true"
-            aria-describedby="email-help"
-            disabled={selectedType === UserType.FACULTY || selectedType === UserType.STUDENT}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck="false"
-          />
-        </Form.Item>
-
+        
         <Form.Item
           name="role"
           label={t(LOCALE_KEYS.ROLE)}
@@ -322,7 +301,7 @@ const UserForm: React.FC<UserFormProps> = ({
             // onChange={handleTypeChange}
           >
              {
-              roles.map(role=><Select.Option key={role.id} value={role.name}>{role.name}</Select.Option>)
+              roles.map(role=><Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>)
             }
           </Select>
         </Form.Item>
