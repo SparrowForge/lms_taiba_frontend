@@ -46,6 +46,8 @@
   "ongoing": "Ongoing",
   "pending": "Pending",
 
+  "domain":"Domain",
+  "personal_email":"Personal Email",
   "please_enter_email": "Please enter email",
   "please_enter_valid_email": "Please enter a valid email",
   "please_enter_valid_phone": "Please enter a valid phone number",

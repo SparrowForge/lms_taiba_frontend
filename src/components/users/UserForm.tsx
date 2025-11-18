@@ -2,13 +2,13 @@
 
 import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
 import {Status} from '@/enums';
-import {UserType} from '@/enums/user-type.enum';
+import {DomainOptions, UserType} from '@/enums/user-type.enum';
 
 import {useFaculties} from '@/hooks/useFaculties';
 import {useLocalization} from '@/hooks/useLocalization';
@@ -20,6 +20,7 @@ import {IUserCreate, IUserUpdate} from '@/types/user';
 
 import FormLayout from '../layout/FormLayout';
 import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { useRoles } from '@/hooks/useRoles';
 
 interface UserFormProps {
   mode: 'create' | 'edit';
@@ -45,11 +46,13 @@ const UserForm: React.FC<UserFormProps> = ({
   const { addUser, editUser, actionStatus } = useUsers();
   const { faculties, loadFacultiesWithoutUser } = useFaculties();
   const { students, loadStudentsWithoutUser } = useStudents();
+  const {roles, loadRoles} = useRoles()
 
   // State for profile selection
   const [selectedType, setSelectedType] = React.useState<UserType | undefined>();
   const [selectedFacultyId, setSelectedFacultyId] = React.useState<number | undefined>();
   const [selectedStudentId, setSelectedStudentId] = React.useState<number | undefined>();
+  const [selectedStudentName, setSelectedStudentName] = useState('')
 
   useEffect(() => {
     if (mode === 'create') {
@@ -63,6 +66,12 @@ const UserForm: React.FC<UserFormProps> = ({
     loadStudentsWithoutUser();
   }, [loadFacultiesWithoutUser, loadStudentsWithoutUser]);
 
+  useEffect(()=>{
+    loadRoles({page:1, limit:99})
+  },[loadRoles])
+
+
+
   // Handle type change
   const handleTypeChange = (type: UserType) => {
     setSelectedType(type);
@@ -70,6 +79,15 @@ const UserForm: React.FC<UserFormProps> = ({
     setSelectedStudentId(undefined);
     form.setFieldsValue({ facultyId: undefined, studentId: undefined, name: '', email: '' });
   };
+
+  const handleDomainChange = (domain:any) => {
+    if (selectedStudentName) {
+      form.setFieldsValue({
+        email: `${selectedStudentName.toLowerCase()}@${domain}`
+      });
+    }
+};
+
 
   // Handle faculty selection
   const handleFacultyChange = (facultyId: number) => {
@@ -87,10 +105,12 @@ const UserForm: React.FC<UserFormProps> = ({
   const handleStudentChange = (studentId: number) => {
     setSelectedStudentId(studentId);
     const student = students.find((s) => s.id === studentId);
+    console.log("student name", student)
+    setSelectedStudentName(student?.firstName)
     if (student) {
       form.setFieldsValue({
         name: student.firstName + ' ' + (student.middleName ?? '') + ' ' + student.lastName,
-        email: student.profile.email,
+        personal_email: student.profile.email,
       });
     }
   };
@@ -263,6 +283,74 @@ const UserForm: React.FC<UserFormProps> = ({
         </Form.Item>
 
         <Form.Item
+          name="personal_email"
+          label={t(LOCALE_KEYS.PERSONAL_EMAIL)}
+          rules={[
+            { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_EMAIL) },
+            { type: 'email', message: t(LOCALE_KEYS.PLEASE_ENTER_VALID_EMAIL) },
+          ]}
+        >
+          <Input
+            placeholder={t(LOCALE_KEYS.EMAIL)}
+            type="email"
+            aria-label={t(LOCALE_KEYS.EMAIL)}
+            aria-required="true"
+            aria-describedby="email-help"
+            disabled={selectedType === UserType.FACULTY || selectedType === UserType.STUDENT}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="role"
+          label={t(LOCALE_KEYS.ROLE)}
+          rules={[
+            {
+              required: true,
+              message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROLE) }),
+            },
+          ]}
+        >
+          <Select
+            placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}
+            aria-label={t(LOCALE_KEYS.ROLE)}
+            aria-required="true"
+            aria-describedby="role-help"
+            // onChange={handleTypeChange}
+          >
+             {
+              roles.map(role=><Select.Option key={role.id} value={role.name}>{role.name}</Select.Option>)
+            }
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="domain"
+          label={t(LOCALE_KEYS.DOMAIN)}
+          rules={[
+            {
+              required: true,
+              message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DOMAIN) }),
+            },
+          ]}
+        >
+          <Select
+            placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DOMAIN) })}
+            aria-label={t(LOCALE_KEYS.DOMAIN)}
+            aria-required="true"
+            aria-describedby="domain-help"
+            onChange={handleDomainChange}
+          >
+            {
+              DomainOptions.map(item=><Select.Option key={item} value={item}>{item}</Select.Option>)
+            }
+          </Select>
+        </Form.Item>
+
+        <Form.Item
           name="email"
           label={t(LOCALE_KEYS.EMAIL)}
           rules={[
@@ -276,7 +364,6 @@ const UserForm: React.FC<UserFormProps> = ({
             aria-label={t(LOCALE_KEYS.EMAIL)}
             aria-required="true"
             aria-describedby="email-help"
-            disabled={selectedType === UserType.FACULTY || selectedType === UserType.STUDENT}
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"

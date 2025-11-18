@@ -40,6 +40,8 @@ export const LOCALE_KEYS = {
   NOT_FOUND_DESCRIPTION: 'not_found_description',
   BACK: 'back',
 
+  DOMAIN:"domain",
+  PERSONAL_EMAIL:'personal_email',
   EMAIL: 'email',
   PHONE: 'phone',
   PASSWORD: 'password',

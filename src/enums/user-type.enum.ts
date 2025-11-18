@@ -11,3 +11,18 @@ export const USER_TYPE_OPTIONS = [
   { key: 'user_type_student', value: UserType.STUDENT, labelKey: 'user_type_student' },
   { key: 'user_type_employee', value: UserType.EMPLOYEE, labelKey: 'user_type_employee' },
 ];
+
+export const DomainOptions = [
+  "gmail.com",
+  "yahoo.com",
+  "hotmail.com",
+  "outlook.com",
+  "live.com",
+  "icloud.com",
+  "proton.me",
+  "aol.com",
+  "mail.com",
+  "zoho.com",
+  "yandex.com"
+]
+
