@@ -26,6 +26,7 @@ import {useLocalization} from '@/hooks/useLocalization';
 import {useStudents} from '@/hooks/useStudents';
 
 import {IStudent} from '@/types/student';
+import ApproveStudentDrawer from '@/components/students/ApproveStudentDrawer';
 
 export default function StudentsPage() {
   const { t } = useLocalization();
@@ -39,8 +40,10 @@ export default function StudentsPage() {
   const [selectedDetailsStudentId, setSelectedDetailsStudentId] = useState<number | undefined>();
   const [assignFeeDrawerVisible, setAssignFeeDrawerVisible] = useState(false);
   const [selectedAssignStudentId, setSelectedAssignStudentId] = useState<number | undefined>();
+  const [approveDrawerVisible, setApproveDrawerVisible] = useState(false);
+  const [selectedApproveStudent, setSelectedApproveStudent] = useState<number>();
 
-  const { students, listStatus, pagination, loadStudents, removeStudent, editStudent } =
+  const { students, listStatus, pagination, loadStudents, removeStudent } =
     useStudents();
   const { batches, loadBatches, clearBatches } = useBatches();
   const { courses, loadCourses } = useCourses();
@@ -121,11 +124,16 @@ export default function StudentsPage() {
   };
 
   const handleApproveStudent = (studentId: number) => {
-    console.log('Approve student', studentId);
-    editStudent(studentId, { status: StudentStatus.ACTIVE }).then(() => {
-      loadWithParams(searchParams, skip, limit);
-    });
+    setSelectedApproveStudent(studentId);
+    setApproveDrawerVisible(true);
   };
+
+  const handleApproveStudentSuccess = () => {
+    setApproveDrawerVisible(false);
+    loadWithParams(searchParams, skip, limit);
+  };
+
+
 
   const config: EntityConfig<IStudent> = {
     name: entityName,
@@ -248,7 +256,7 @@ export default function StudentsPage() {
                 ? {
                     key: 'assignFeeStructure',
                     icon: <DollarOutlined />,
-                    label: t(LOCALE_KEYS.ASSIGN_FEE_STRUCTURE),
+                    label: student.feeStructureId !== null ? t(LOCALE_KEYS.FEE_STRUCTURE) : t(LOCALE_KEYS.ASSIGN_FEE_STRUCTURE),
                     onClick: () => handleAssignFeeStructure(student.id),
                   }
                 : null,
@@ -310,6 +318,13 @@ export default function StudentsPage() {
           visible={assignFeeDrawerVisible}
           onClose={() => setAssignFeeDrawerVisible(false)}
           onSuccess={handleAssignFeeSuccess}
+        />
+
+        <ApproveStudentDrawer
+          studentId={selectedApproveStudent}
+          visible={approveDrawerVisible}
+          onClose={() => setApproveDrawerVisible(false)}
+          onSuccess={handleApproveStudentSuccess}
         />
       </MainLayout>
     </ProtectedRoute>
