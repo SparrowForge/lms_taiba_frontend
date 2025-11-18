@@ -19,9 +19,12 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { usePanels } from '@/hooks/usePanels';
 
 import { IPanel } from '@/types/panel';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function PanelsPage() {
   const router = useRouter();
+  const translate = useTranslations()
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedPanelId, setSelectedPanelId] = useState<number | undefined>();
@@ -37,14 +40,23 @@ export default function PanelsPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadPanels({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadPanels({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadPanels({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadPanels]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadPanels]);
+
 
   const handleEditDrawer = (panelId: number) => {
     setSelectedPanelId(panelId);
@@ -81,13 +93,27 @@ export default function PanelsPage() {
     route: '/panels',
     searchFields: ['name', 'status'] as (keyof IPanel)[],
     onSearch: (searchText: string) => {
-      loadPanels({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadPanels({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: panels,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+        filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+        ],
+      },
+     
+    ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),

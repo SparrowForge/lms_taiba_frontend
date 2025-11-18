@@ -1,27 +1,32 @@
-import { AxiosError } from 'axios';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {AxiosError} from 'axios';
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
-import { Status } from '@/enums';
-import { RootState } from '@/store';
-
-import { IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate } from '@/types/classSchedule';
-import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-
-import { classScheduleService } from '@/services/classScheduleService';
+import {Status} from '@/enums';
+import {RootState} from '@/store';
 
 import {
-  addClassSchedule,
-  clearActionStatus,
-  clearDetailsStatus,
-  deleteClassSchedule,
-  setActionStatus,
-  setClassSchedules,
-  setDetailsStatus,
-  setListStatus,
-  setPagination,
-  setSelectedClassSchedule,
-  updateClassSchedule,
+    IClassSchedule,
+    IClassScheduleBulkCreate,
+    IClassScheduleCreate,
+    IClassScheduleUpdate,
+} from '@/types/classSchedule';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
+
+import {classScheduleService} from '@/services/classScheduleService';
+
+import {
+    addClassSchedule,
+    clearActionStatus,
+    clearDetailsStatus,
+    deleteClassSchedule,
+    setActionStatus,
+    setClassSchedules,
+    setDetailsStatus,
+    setListStatus,
+    setPagination,
+    setSelectedClassSchedule,
+    updateClassSchedule,
 } from '@/store/slices/classScheduleSlice';
 
 export const useClassSchedules = () => {
@@ -102,6 +107,33 @@ export const useClassSchedules = () => {
           error instanceof AxiosError
             ? error?.response?.data?.message || error?.message || 'Failed to create class schedule'
             : 'Failed to create class schedule';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const createBulkClassSchedule = useCallback(
+    async (data: IClassScheduleBulkCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IClassSchedule[]> =
+          await classScheduleService.createBulkClassSchedule(data);
+        // Optionally, you can add all the created schedules to the store
+        // response.data.forEach(schedule => dispatch(addClassSchedule(schedule)));
+        dispatch(
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: `${response.data.length} Class Schedules created successfully`,
+          }),
+        );
+        return response.data;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to create class schedules'
+            : 'Failed to create class schedules';
         dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;
       }
@@ -197,6 +229,7 @@ export const useClassSchedules = () => {
     loadClassSchedules,
     loadClassSchedule,
     createClassSchedule,
+    createBulkClassSchedule,
     editClassSchedule,
     removeClassSchedule,
     getClassScheduleById,

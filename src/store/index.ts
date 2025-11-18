@@ -1,5 +1,7 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 
+import {classScheduleApi} from './api/classScheduleApi';
+import {studentApi} from './api/studentApi';
 import addressReducer from './slices/addressSlice';
 import attendanceReducer from './slices/attendanceSlice';
 import auditReducer from './slices/auditSlice';
@@ -14,11 +16,21 @@ import courseReducer from './slices/courseSlice';
 import courseTypeReducer from './slices/courseTypeSlice';
 import departmentReducer from './slices/departmentSlice';
 import employmentTypeReducer from './slices/employmentTypeSlice';
+import examCandidateReducer from './slices/examCandidateSlice';
+import examMCQQuestionReducer from './slices/examMCQQuestionSlice';
+import examResultReducer from './slices/examResultSlice';
+import examScheduleReducer from './slices/examScheduleSlice';
+import examReducer from './slices/examSlice';
+import examTypeReducer from './slices/examTypeSlice';
 import facultyReducer from './slices/facultySlice';
 import facultySubjectReducer from './slices/facultySubjectSlice';
 import feeInstallmentPlanReducer from './slices/feeInstallmentPlanSlice';
+import feePaymentCollectionReducer from './slices/feePaymentCollectionSlice';
+import feePaymentDetailsReducer from './slices/feePaymentDetailsSlice';
 import feeStructureReducer from './slices/feeStructureSlice';
+import gradeRuleReducer from './slices/gradeRuleSlice';
 import instituteReducer from './slices/instituteSlice';
+import markDistributionReducer from './slices/markDistributionSlice';
 import menuReducer from './slices/menuSlice';
 import panelReducer from './slices/panelSlice';
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice';
@@ -28,18 +40,23 @@ import roomTypeReducer from './slices/roomTypeSlice';
 import scheduleTypeReducer from './slices/scheduleTypeSlice';
 import semesterReducer from './slices/semesterSlice';
 import semesterSubjectReducer from './slices/semesterSubjectSlice';
+import settingsReducer from './slices/settingsSlice';
 import studentEducationReducer from './slices/studentEducationSlice';
 import studentFamilyReducer from './slices/studentFamilySlice';
 import studentProfileReducer from './slices/studentProfileSlice';
 import studentReducer from './slices/studentSlice';
 import subjectReducer from './slices/subjectSlice';
 import timeSlotReducer from './slices/timeSlotSlice';
+import twofaReducer from './slices/twofaSlice';
 import userRoleReducer from './slices/userRoleSlice';
 import userReducer from './slices/userSlice';
 import weekDayReducer from './slices/weekDaySlice';
 
+
 // Root state type
 export interface RootState {
+  [classScheduleApi.reducerPath]: ReturnType<typeof classScheduleApi.reducer>;
+  [studentApi.reducerPath]: ReturnType<typeof studentApi.reducer>;
   attendances: ReturnType<typeof attendanceReducer>;
   auth: ReturnType<typeof authReducer>;
   users: ReturnType<typeof userReducer>;
@@ -60,16 +77,27 @@ export interface RootState {
   faculties: ReturnType<typeof facultyReducer>;
   facultySubjects: ReturnType<typeof facultySubjectReducer>;
   feeInstallmentPlans: ReturnType<typeof feeInstallmentPlanReducer>;
+  feePaymentCollections: ReturnType<typeof feePaymentCollectionReducer>;
+  feePaymentDetails: ReturnType<typeof feePaymentDetailsReducer>;
   feeStructures: ReturnType<typeof feeStructureReducer>;
+  gradeRules: ReturnType<typeof gradeRuleReducer>;
+  markDistributions: ReturnType<typeof markDistributionReducer>;
   audits: ReturnType<typeof auditReducer>;
   userRoles: ReturnType<typeof userRoleReducer>;
   addresses: ReturnType<typeof addressReducer>;
   courseTypes: ReturnType<typeof courseTypeReducer>;
+  exams: ReturnType<typeof examReducer>;
+  examCandidates: ReturnType<typeof examCandidateReducer>;
+  examMCQQuestions: ReturnType<typeof examMCQQuestionReducer>;
+  examResults: ReturnType<typeof examResultReducer>;
+  examSchedules: ReturnType<typeof examScheduleReducer>;
+  examTypes: ReturnType<typeof examTypeReducer>;
   rooms: ReturnType<typeof roomReducer>;
   roomTypes: ReturnType<typeof roomTypeReducer>;
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
   employmentTypes: ReturnType<typeof employmentTypeReducer>;
   institutes: ReturnType<typeof instituteReducer>;
+  twofa: ReturnType<typeof twofaReducer>
   students: ReturnType<typeof studentReducer>;
   studentEducations: ReturnType<typeof studentEducationReducer>;
   studentFamilies: ReturnType<typeof studentFamilyReducer>;
@@ -77,11 +105,14 @@ export interface RootState {
   timeSlots: ReturnType<typeof timeSlotReducer>;
   weekDays: ReturnType<typeof weekDayReducer>;
   classSchedules: ReturnType<typeof classScheduleReducer>;
+  settings: ReturnType<typeof settingsReducer>;
 }
 
 // Create store
 export const store = configureStore({
   reducer: {
+    [classScheduleApi.reducerPath]: classScheduleApi.reducer,
+    [studentApi.reducerPath]: studentApi.reducer,
     attendances: attendanceReducer,
     auth: authReducer,
     users: userReducer,
@@ -102,16 +133,27 @@ export const store = configureStore({
     faculties: facultyReducer,
     facultySubjects: facultySubjectReducer,
     feeInstallmentPlans: feeInstallmentPlanReducer,
+    feePaymentCollections: feePaymentCollectionReducer,
+    feePaymentDetails: feePaymentDetailsReducer,
     feeStructures: feeStructureReducer,
+    gradeRules: gradeRuleReducer,
+    markDistributions: markDistributionReducer,
     audits: auditReducer,
     userRoles: userRoleReducer,
     addresses: addressReducer,
     courseTypes: courseTypeReducer,
+    exams: examReducer,
+    examCandidates: examCandidateReducer,
+    examMCQQuestions: examMCQQuestionReducer,
+    examResults: examResultReducer,
+    examSchedules: examScheduleReducer,
+    examTypes: examTypeReducer,
     rooms: roomReducer,
     roomTypes: roomTypeReducer,
     scheduleTypes: scheduleTypeReducer,
     employmentTypes: employmentTypeReducer,
     institutes: instituteReducer,
+    twofa:twofaReducer,
     students: studentReducer,
     studentEducations: studentEducationReducer,
     studentFamilies: studentFamilyReducer,
@@ -119,6 +161,7 @@ export const store = configureStore({
     timeSlots: timeSlotReducer,
     weekDays: weekDayReducer,
     classSchedules: classScheduleReducer,
+    settings: settingsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -130,7 +173,7 @@ export const store = configureStore({
         // Ignore these paths in the state
         ignoredPaths: ['items.dates'],
       },
-    }),
+    }).concat(classScheduleApi.middleware, studentApi.middleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

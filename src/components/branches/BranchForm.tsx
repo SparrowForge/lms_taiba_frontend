@@ -240,7 +240,7 @@ const BranchForm: React.FC<BranchFormProps> = ({
         >
           {users.map((user) => (
             <Select.Option key={user.id} value={user.id}>
-              {user.firstName} {user.lastName}
+              {user.name || user.email}
             </Select.Option>
           ))}
         </Select>

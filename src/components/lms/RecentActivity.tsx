@@ -1,4 +1,4 @@
-import { MessageOutlined, UserOutlined, FileTextOutlined, CodeOutlined } from '@ant-design/icons';
+import { CodeOutlined, FileTextOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Card } from 'antd';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';

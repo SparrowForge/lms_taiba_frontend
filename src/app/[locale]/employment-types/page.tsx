@@ -19,9 +19,12 @@ import { useEmploymentTypes } from '@/hooks/useEmploymentTypes';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { IEmploymentType } from '@/types/employmentType';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function EmploymentTypesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.EMPLOYMENT_TYPE, { defaultValue: 'Employment Type' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -37,14 +40,22 @@ export default function EmploymentTypesPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadEmploymentTypes({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadEmploymentTypes({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadEmploymentTypes({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadEmploymentTypes]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadEmploymentTypes]);
 
   const handleEditDrawer = (id: number) => {
     setSelectedId(id);
@@ -77,13 +88,28 @@ export default function EmploymentTypesPage() {
     route: '/employment-types',
     searchFields: ['name', 'status'] as (keyof IEmploymentType)[],
     onSearch: (searchText: string) => {
-      loadEmploymentTypes({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadEmploymentTypes({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: employmentTypes,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+        filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          
+         
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),

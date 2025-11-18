@@ -1,12 +1,12 @@
 'use client';
 
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space } from 'antd';
-import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { CURRENCIES } from '@/constants/currencies';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import {
@@ -27,6 +27,8 @@ import { IFeeInstallmentPlanCreate } from '@/types/feeInstallmentPlan';
 import { IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate } from '@/types/feeStructure';
 
 import { StatusSelect, StatusSelectFormItem } from '../ui/StatusSelect';
+
+import type { Dayjs } from 'dayjs';
 
 interface FeeStructureFormBulkProps {
   onSuccess?: () => void;
@@ -381,7 +383,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
     calculateDiscountPerPeriod,
   ]);
 
-  // Auto-distribute total fees across monthly payments when totalFees changes
+  // Auto-distribute total fees across monthly payment when totalFees changes
   useEffect(() => {
     if (currentPaymentType === 'monthly' && monthlyPaymentRows.length > 0 && totalFees) {
       const totalFeesNumber = Number(totalFees);
@@ -561,7 +563,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
     }
   };
 
-  // Submit function for installment payments
+  // Submit function for installment payment
   const handleInstallmentSubmit = async (values: Partial<IFeeStructure>) => {
     try {
       // Validate basic form values
@@ -676,7 +678,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
     }
   };
 
-  // Submit function for monthly payments
+  // Submit function for monthly payment
   const handleMonthlySubmit = async (values: Partial<IFeeStructure>) => {
     try {
       // Validate basic form values
@@ -770,7 +772,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
               sequenceNo: row.sequenceNo,
               paymentLabel: row.paymentLabel,
               semesterId: row.semesterId,
-              durationMonths: 1, // Monthly payments are always 1 month
+              durationMonths: 1, // Monthly payment are always 1 month
               amount: row.isBreak ? 0 : row.amount, // Ensure break months have amount = 0
               discountAmount: row.isBreak ? 0 : row.discountAmount, // Ensure break months have discount = 0
               dueDate: row.dueDate ? row.dueDate.format('YYYY-MM-DD') : '',
@@ -1042,10 +1044,11 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   ]}
                 >
                   <Select placeholder={t(LOCALE_KEYS.SELECT_CURRENCY)}>
-                    <Select.Option value="SAR">SAR</Select.Option>
-                    <Select.Option value="USD">USD</Select.Option>
-                    <Select.Option value="EUR">EUR</Select.Option>
-                    <Select.Option value="GBP">GBP</Select.Option>
+                    {CURRENCIES.map((currency) => (
+                      <Select.Option key={currency.code} value={currency.code}>
+                        {currency.code} - {currency.name} ({currency.symbol})
+                      </Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>
@@ -1269,7 +1272,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
               return null;
             })()}
 
-            {/* Show totals summary for installment payments */}
+            {/* Show totals summary for installment payment */}
             {paymentRows.length > 0 && (
               <div
                 style={{
@@ -1668,7 +1671,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                 </div>
               )}
 
-            {/* Show monthly totals summary for monthly payments */}
+            {/* Show monthly totals summary for monthly payment */}
             {currentPaymentType === 'monthly' && monthlyPaymentRows.length > 0 && (
               <div
                 style={{

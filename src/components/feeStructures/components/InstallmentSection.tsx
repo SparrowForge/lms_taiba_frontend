@@ -22,7 +22,6 @@ const InstallmentSection: React.FC<InstallmentSectionProps> = ({
   selectedBatch,
   semesters,
   paymentRows,
-  listStatus,
   totalFees,
   onUpdatePaymentRows,
   getMissingSemesterNumbers,
@@ -79,7 +78,7 @@ const InstallmentSection: React.FC<InstallmentSectionProps> = ({
         </div>
       )}
 
-      {/* Show totals summary for installment payments */}
+      {/* Show totals summary for installment payment */}
       {paymentRows.length > 0 && (
         <div
           style={{

@@ -3,14 +3,15 @@
  * These are derived from the status enums for use in forms and dropdowns
  */
 
+import { CourseAssignment, ExamCandidateStatus, ExamResultStatus } from '@/enums/exam-candidate.enum';
 import {
-  EntityStatus,
-  SemesterStatus,
-  ClassScheduleStatus,
-  StudentStatus,
   AttendanceStatus,
+  ClassScheduleStatus,
   CourseAssignmentSubmissionStatus,
+  EntityStatus,
   MaritalStatus,
+  SemesterStatus,
+  StudentStatus,
 } from '@/enums/status';
 
 import { IStatusOption } from '@/types/statusSelect';
@@ -67,6 +68,8 @@ export const COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS: IStatusOption[] = Obje
   labelKey: `assignment_${status}`,
 }));
 
+
+
 // Marital Status Options
 export const MARITAL_STATUS_OPTIONS: IStatusOption[] = Object.values(MaritalStatus).map(
   (status) => ({
@@ -75,3 +78,33 @@ export const MARITAL_STATUS_OPTIONS: IStatusOption[] = Object.values(MaritalStat
     labelKey: `marital_${status}`,
   }),
 );
+
+
+
+// Exam Candidate Status Options
+export const EXAM_CANDIDATE_STATUS_OPTIONS: IStatusOption[] = Object.values(
+  ExamCandidateStatus,
+).map((status) => ({
+  key: `exam_candidate_${status}`,
+  value: status,
+  labelKey: `exam_candidate_${status}`,
+}));
+
+
+// Exam Candidate Status Options
+export const EXAM_RESULT_STATUS_OPTIONS: IStatusOption[] = Object.values(
+  ExamResultStatus,
+).map((status) => ({
+  key: `${status}`,
+  value: status,
+  labelKey: `${status}`,
+}));
+
+// Exam Candidate Status Options
+export const COURSE_ASSIGNMENT_STATUS_OPTIONS: IStatusOption[] = Object.values(
+  CourseAssignment,
+).map((status) => ({
+  key: `${status}`,
+  value: status,
+  labelKey: `${status}`,
+}));

@@ -1,4 +1,6 @@
-import { IAddress } from './address';
+import {EntityStatus} from '@/enums/status';
+
+import {IAddress} from './address';
 
 export interface IInstitute {
   id: number;
@@ -8,7 +10,7 @@ export interface IInstitute {
   addressId: number;
   website: string;
   institutionCode: string;
-  status: string;
+  status: EntityStatus;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -22,7 +24,7 @@ export interface IInstituteCreate {
   addressId: number;
   website: string;
   institutionCode: string;
-  status: string;
+  status: EntityStatus;
 }
 
 export interface IInstituteUpdate {
@@ -32,5 +34,5 @@ export interface IInstituteUpdate {
   addressId?: number;
   website?: string;
   institutionCode?: string;
-  status?: string;
+  status?: EntityStatus;
 }

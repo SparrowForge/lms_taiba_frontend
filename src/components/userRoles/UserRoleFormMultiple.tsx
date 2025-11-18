@@ -209,7 +209,7 @@ function UserRoleFormMultiple({
             >
               {users.map((user) => (
                 <Select.Option key={user.id} value={user.id}>
-                  {`${user.firstName} ${user.lastName} (${user.email})`}
+                  {`${user.name || user.email} (${user.email})`}
                 </Select.Option>
               ))}
             </Select>

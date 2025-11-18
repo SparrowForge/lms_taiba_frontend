@@ -5,7 +5,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import { ClassScheduleStatus, Status } from '@/enums';
 
 import { useClassSchedules } from '@/hooks/useClassSchedules';
 import { useLocalization } from '@/hooks/useLocalization';
@@ -183,11 +183,11 @@ function ClassScheduleCalendarView() {
 
   // Get color for schedule based on status or type
   const getScheduleColor = (schedule: IClassSchedule): string => {
-    if (schedule.status === 'ACTIVE') {
+    if (schedule.status === ClassScheduleStatus.ACTIVE) {
       return 'green';
-    } else if (schedule.status === 'INACTIVE') {
+    } else if (schedule.status === ClassScheduleStatus.INACTIVE) {
       return 'red';
-    } else if (schedule.status === 'PENDING') {
+    } else if (schedule.status === ClassScheduleStatus.CANCELLED) {
       return 'orange';
     }
     return 'default';

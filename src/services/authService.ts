@@ -1,5 +1,6 @@
 import type { IAuthResponse, LoginCredentials, RegisterCredentials } from '@/types/auth';
 import { IUser } from '@/types/user';
+import { IBaseResponse } from '@/types/common';
 
 import { apiService } from '@/lib/axios';
 
@@ -25,10 +26,11 @@ class AuthService {
     try {
       const response = await apiService.post<IAuthResponse>('/auth/login', credentials);
 
-      // Store tokens in both localStorage and cookies
+      // Store tokens and user in both localStorage and cookies
       if (typeof window !== 'undefined') {
         localStorage.setItem('token', response.data.access_token);
         localStorage.setItem('refreshToken', response.data.refresh_token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
 
         // Also store in cookies for server-side access
         this.setCookie('token', response.data.access_token, 7);
@@ -46,10 +48,11 @@ class AuthService {
     try {
       const response = await apiService.post<IAuthResponse>('/auth/register', credentials);
 
-      // Store tokens in both localStorage and cookies
+      // Store tokens and user in both localStorage and cookies
       if (typeof window !== 'undefined') {
         localStorage.setItem('token', response.data.access_token);
         localStorage.setItem('refreshToken', response.data.refresh_token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
 
         // Also store in cookies for server-side access
         this.setCookie('token', response.data.access_token, 7);
@@ -83,10 +86,10 @@ class AuthService {
   }
 
   // Get current user profile
-  async getCurrentUser(): Promise<IUser> {
+  async getMe(): Promise<IBaseResponse<IUser>> {
     try {
       const response = await apiService.get<IUser>('/auth/me');
-      return response.data;
+      return response;
     } catch (error) {
       throw this.handleError(error);
     }
@@ -106,10 +109,11 @@ class AuthService {
         refresh_token: refreshToken,
       });
 
-      // Update tokens in both localStorage and cookies
+      // Update tokens and user in both localStorage and cookies
       if (typeof window !== 'undefined') {
         localStorage.setItem('token', response.data.access_token);
         localStorage.setItem('refreshToken', response.data.refresh_token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
 
         // Update cookies
         this.setCookie('token', response.data.access_token, 7);
@@ -138,6 +142,20 @@ class AuthService {
   getRefreshToken(): string | null {
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('refreshToken');
+  }
+
+  // Get stored user (client-side only)
+  getUser(): IUser | null {
+    if (typeof window === 'undefined') return null;
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return null;
+    try {
+      return JSON.parse(userStr);
+    } catch (error) {
+      console.error('Failed to parse user from localStorage:', error);
+      localStorage.removeItem('user');
+      return null;
+    }
   }
 
   // Error handler

@@ -99,7 +99,7 @@ export default function UserRolesPage() {
         title: t(LOCALE_KEYS.USER),
         key: 'user',
         render: (userRole: IUserRole) =>
-          userRole.user ? `${userRole.user.firstName} ${userRole.user.lastName}` : 'N/A',
+          userRole.user ? userRole.user.name || userRole.user.email : 'N/A',
       },
       {
         title: t(LOCALE_KEYS.EMAIL),

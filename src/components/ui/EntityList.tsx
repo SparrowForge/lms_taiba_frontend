@@ -1,7 +1,12 @@
 'use client';
 
-import { FileExcelOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
-import { Alert, Button, Card, Input, Pagination, Table, Typography } from 'antd';
+import {
+  CloseCircleOutlined,
+  FileExcelOutlined,
+  SearchOutlined,
+  UserAddOutlined,
+} from '@ant-design/icons';
+import { Alert, Button, Card, Input, Pagination, Select, Table, Typography } from 'antd';
 import { TableProps } from 'antd/es/table';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -28,6 +33,12 @@ export interface EntityConfig<T> {
   loading: boolean;
   error: string | null | undefined;
   extraActions?: React.ReactNode[];
+  filters?: Array<{
+    key: string;
+    label: string;
+    options: Array<{ label: string; value: string }>;
+    allowClear?: boolean;
+  }>;
 }
 
 // Generic EntityList component
@@ -37,6 +48,19 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+
+  const pushWithParams = (next: Record<string, string | number | undefined | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(next).forEach(([k, v]) => {
+      if (v === undefined || v === null || v === '') {
+        params.delete(k);
+      } else {
+        params.set(k, String(v));
+      }
+    });
+    const qs = params.toString();
+    router.push(qs ? `${config.route}?${qs}` : `${config.route}`);
+  };
   const handleAddItem = () => {
     // if (config.onAdd) {
     //   config.onAdd()
@@ -122,20 +146,62 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
             />
           )}
 
-          {config.onSearch && (
-            <Search
-              placeholder={t(LOCALE_KEYS.SEARCH_NAME, {
-                name: config.name,
-                fields: config.searchFields.join(', '),
+          {(config.onSearch || (config.filters && config.filters.length > 0)) && (
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+              {config.onSearch && (
+                <Search
+                  placeholder={t(LOCALE_KEYS.SEARCH_NAME, {
+                    name: config.name,
+                    fields: config.searchFields.join(', '),
+                  })}
+                  allowClear
+                  enterButton={<SearchOutlined />}
+                  onSearch={(value) => {
+                    config.onSearch?.(value);
+                  }}
+                  size="large"
+                  style={{ maxWidth: '400px' }}
+                />
+              )}
+
+              {config.filters?.map((f) => {
+                const value = searchParams.get(f.key) ?? undefined;
+                return (
+                  <Select
+                    key={f.key}
+                    value={value}
+                    placeholder={f.label}
+                    allowClear={f.allowClear ?? true}
+                    options={f.options}
+                    style={{ minWidth: 160 }}
+                    onChange={(val) => {
+                      const nextVal = (val as string | undefined) ?? '';
+                      // reset to first page when filters change
+                      pushWithParams({ [f.key]: nextVal, skip: 0 });
+                    }}
+                  />
+                );
               })}
-              allowClear
-              enterButton={<SearchOutlined />}
-              onSearch={(value) => {
-                config.onSearch?.(value);
-              }}
-              size="large"
-              style={{ maxWidth: '400px' }}
-            />
+
+              {config.filters &&
+                config.filters.length > 0 &&
+                (() => {
+                  const hasActiveFilter = config.filters!.some((f) => !!searchParams.get(f.key));
+                  if (!hasActiveFilter) return null;
+                  const handleClearAll = () => {
+                    const params = new URLSearchParams(searchParams.toString());
+                    config.filters!.forEach((f) => params.delete(f.key));
+                    params.set('skip', '0');
+                    const qs = params.toString();
+                    router.push(qs ? `${config.route}?${qs}` : `${config.route}`);
+                  };
+                  return (
+                    <Button icon={<CloseCircleOutlined />} onClick={handleClearAll}>
+                      Clear filters
+                    </Button>
+                  );
+                })()}
+            </div>
           )}
         </div>
 
@@ -178,7 +244,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
               `${range[0]}-${range[1]} ${t(LOCALE_KEYS.OF)} ${total} ${config.name}`
             }
             onChange={(page, pageSize) => {
-              router.push(`${config.route}?skip=${(page - 1) * pageSize}&limit=${pageSize}`);
+              pushWithParams({ skip: (page - 1) * pageSize, limit: pageSize });
             }}
           />
         </div>

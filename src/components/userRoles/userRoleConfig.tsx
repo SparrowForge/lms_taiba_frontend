@@ -8,12 +8,17 @@ import { IUserRole } from '@/types/userRole';
 
 export const getUserRoleDisplayName = (userRole: IUserRole | null): string => {
   if (!userRole) return 'N/A';
-  return `${userRole.user?.firstName} ${userRole.user?.lastName} - ${userRole.role?.name}`;
+  return `${userRole.user?.name || userRole.user?.email} - ${userRole.role?.name}`;
 };
 
 export const getUserRoleInitials = (userRole: IUserRole | null): string => {
   if (!userRole?.user) return 'UR';
-  return `${userRole.user.firstName?.slice(0, 1)}${userRole.user.lastName?.slice(0, 1)}`.toUpperCase();
+  const name = userRole.user?.name || '';
+  const nameParts = name.split(' ');
+  if (nameParts.length >= 2) {
+    return `${nameParts[0].slice(0, 1)}${nameParts[1].slice(0, 1)}`.toUpperCase();
+  }
+  return name.slice(0, 1).toUpperCase() || 'U';
 };
 
 export const useCreateUserRoleDetailsConfig = (
@@ -45,7 +50,7 @@ export const useCreateUserRoleDetailsConfig = (
         key: 'user.fullName',
         label: t(LOCALE_KEYS.USER),
         render: (value: string, item: IUserRole) =>
-          item?.user ? `${item.user.firstName} ${item.user.lastName}` : 'N/A',
+          item?.user ? item.user.name || item.user.email : 'N/A',
       },
       {
         key: 'user.email',

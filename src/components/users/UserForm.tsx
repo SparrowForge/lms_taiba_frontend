@@ -1,22 +1,25 @@
 'use client';
 
-import { Button, Form, Input, Space } from 'antd';
-import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import {Button, Form, Input, Select, Space} from 'antd';
+import {useRouter} from 'next/navigation';
+import React, {useEffect} from 'react';
+import {toast} from 'react-toastify';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
+import {UserType} from '@/enums/user-type.enum';
 
-import { useLocalization } from '@/hooks/useLocalization';
-import { useUsers } from '@/hooks/useUsers';
+import {useFaculties} from '@/hooks/useFaculties';
+import {useLocalization} from '@/hooks/useLocalization';
+import {useStudents} from '@/hooks/useStudents';
+import {useUsers} from '@/hooks/useUsers';
 
-import { getErrorMessage } from '@/types/errors';
-import { IUserCreate, IUserUpdate } from '@/types/user';
+import {getErrorMessage} from '@/types/errors';
+import {IUserCreate, IUserUpdate} from '@/types/user';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
+import {StatusSelectFormItem} from '../ui/StatusSelect';
 
 interface UserFormProps {
   mode: 'create' | 'edit';
@@ -40,6 +43,13 @@ const UserForm: React.FC<UserFormProps> = ({
   const router = useRouter();
   const [form] = Form.useForm();
   const { addUser, editUser, actionStatus } = useUsers();
+  const { faculties, loadFacultiesWithoutUser } = useFaculties();
+  const { students, loadStudentsWithoutUser } = useStudents();
+
+  // State for profile selection
+  const [selectedType, setSelectedType] = React.useState<UserType | undefined>();
+  const [selectedFacultyId, setSelectedFacultyId] = React.useState<number | undefined>();
+  const [selectedStudentId, setSelectedStudentId] = React.useState<number | undefined>();
 
   useEffect(() => {
     if (mode === 'create') {
@@ -47,10 +57,51 @@ const UserForm: React.FC<UserFormProps> = ({
     }
   }, [mode, form]);
 
+  // Load faculties and students without user accounts when component mounts
+  useEffect(() => {
+    loadFacultiesWithoutUser();
+    loadStudentsWithoutUser();
+  }, [loadFacultiesWithoutUser, loadStudentsWithoutUser]);
+
+  // Handle type change
+  const handleTypeChange = (type: UserType) => {
+    setSelectedType(type);
+    setSelectedFacultyId(undefined);
+    setSelectedStudentId(undefined);
+    form.setFieldsValue({ facultyId: undefined, studentId: undefined, name: '', email: '' });
+  };
+
+  // Handle faculty selection
+  const handleFacultyChange = (facultyId: number) => {
+    setSelectedFacultyId(facultyId);
+    const faculty = faculties.find((f) => f.id === facultyId);
+    if (faculty) {
+      form.setFieldsValue({
+        name: faculty.fullName,
+        email: faculty.email,
+      });
+    }
+  };
+
+  // Handle student selection
+  const handleStudentChange = (studentId: number) => {
+    setSelectedStudentId(studentId);
+    const student = students.find((s) => s.id === studentId);
+    if (student) {
+      form.setFieldsValue({
+        name: student.firstName + ' ' + (student.middleName ?? '') + ' ' + student.lastName,
+        email: student.profile.email,
+      });
+    }
+  };
+
   const handleSubmit = async (values: IUserCreate | IUserUpdate) => {
     try {
+      // Remove confirmPassword from values before sending to API
+      const { confirmPassword, ...apiValues } = values as any;
+
       if (mode === 'create') {
-        await addUser(values as IUserCreate);
+        await addUser(apiValues as IUserCreate);
         toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
@@ -58,7 +109,7 @@ const UserForm: React.FC<UserFormProps> = ({
           router.push('/users');
         }
       } else if (mode === 'edit' && userId) {
-        await editUser(userId, values as IUserUpdate);
+        await editUser(userId, apiValues as IUserUpdate);
         toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
@@ -96,30 +147,118 @@ const UserForm: React.FC<UserFormProps> = ({
         initialValues={mode === 'edit' ? initialValues : undefined}
         aria-label={`${mode === 'create' ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName }) : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} form`}
         role="form"
+        autoComplete="off"
       >
+        {/* Hidden fields to prevent browser autofill */}
+        <input type="text" style={{ display: 'none' }} autoComplete="username" />
+        <input type="password" style={{ display: 'none' }} autoComplete="current-password" />
         <Form.Item
-          name="firstName"
-          label={t(LOCALE_KEYS.FIRST_NAME)}
-          rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_FIRST_NAME) }]}
+          name="type"
+          label={t(LOCALE_KEYS.TYPE)}
+          rules={[
+            {
+              required: true,
+              message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TYPE) }),
+            },
+          ]}
         >
-          <Input
-            placeholder={t(LOCALE_KEYS.FIRST_NAME)}
-            aria-label={t(LOCALE_KEYS.FIRST_NAME)}
+          <Select
+            placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}
+            aria-label={t(LOCALE_KEYS.TYPE)}
             aria-required="true"
-            aria-describedby="firstName-help"
-          />
+            aria-describedby="type-help"
+            onChange={handleTypeChange}
+          >
+            <Select.Option value="admin">{t(LOCALE_KEYS.ADMIN)}</Select.Option>
+            <Select.Option value="faculty">{t(LOCALE_KEYS.FACULTY)}</Select.Option>
+            <Select.Option value="student">{t(LOCALE_KEYS.STUDENT)}</Select.Option>
+            <Select.Option value="employee">{t(LOCALE_KEYS.EMPLOYEE)}</Select.Option>
+          </Select>
         </Form.Item>
 
+        {/* Faculty Selection - Only show when type is faculty */}
+        {selectedType === UserType.FACULTY && (
+          <Form.Item
+            name="facultyId"
+            label={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) })}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.FACULTY) })}
+              aria-label={t(LOCALE_KEYS.FACULTY)}
+              aria-required="true"
+              onChange={handleFacultyChange}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.children || '')
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            >
+              {faculties.map((faculty) => (
+                <Select.Option key={faculty.id} value={faculty.id}>
+                  {faculty.fullName} ({faculty.email})
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+
+        {/* Student Selection - Only show when type is student */}
+        {selectedType === UserType.STUDENT && (
+          <Form.Item
+            name="studentId"
+            label={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.STUDENT) })}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.STUDENT) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.STUDENT) })}
+              aria-label={t(LOCALE_KEYS.STUDENT)}
+              aria-required="true"
+              onChange={handleStudentChange}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.children || '')
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            >
+              {students.map((student) => (
+                <Select.Option key={student.id} value={student.id}>
+                  {student.firstName + ' ' + (student?.middleName ?? '') + ' ' + student.lastName} (
+                  {student.registrationNo})
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+
         <Form.Item
-          name="lastName"
-          label={t(LOCALE_KEYS.LAST_NAME)}
-          rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_LAST_NAME) }]}
+          name="name"
+          label={t(LOCALE_KEYS.NAME)}
+          rules={[
+            {
+              required: true,
+              message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+            },
+          ]}
         >
           <Input
-            placeholder={t(LOCALE_KEYS.LAST_NAME)}
-            aria-label={t(LOCALE_KEYS.LAST_NAME)}
+            placeholder={t(LOCALE_KEYS.NAME)}
+            aria-label={t(LOCALE_KEYS.NAME)}
             aria-required="true"
-            aria-describedby="lastName-help"
+            aria-describedby="name-help"
+            disabled={selectedType === UserType.FACULTY || selectedType === UserType.STUDENT}
           />
         </Form.Item>
 
@@ -137,6 +276,11 @@ const UserForm: React.FC<UserFormProps> = ({
             aria-label={t(LOCALE_KEYS.EMAIL)}
             aria-required="true"
             aria-describedby="email-help"
+            disabled={selectedType === UserType.FACULTY || selectedType === UserType.STUDENT}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
           />
         </Form.Item>
 
@@ -154,21 +298,55 @@ const UserForm: React.FC<UserFormProps> = ({
         </Form.Item>
 
         {mode === 'create' && (
-          <Form.Item
-            name="password"
-            label={t(LOCALE_KEYS.PASSWORD)}
-            rules={[
-              { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_PASSWORD) },
-              { min: 6, message: t(LOCALE_KEYS.PASSWORD_MIN_LENGTH) },
-            ]}
-          >
-            <Input.Password
-              placeholder={t(LOCALE_KEYS.PASSWORD)}
-              aria-label={t(LOCALE_KEYS.PASSWORD)}
-              aria-required="true"
-              aria-describedby="password-help"
-            />
-          </Form.Item>
+          <>
+            <Form.Item
+              name="password"
+              label={t(LOCALE_KEYS.PASSWORD)}
+              rules={[
+                { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_PASSWORD) },
+                { min: 6, message: t(LOCALE_KEYS.PASSWORD_MIN_LENGTH) },
+              ]}
+            >
+              <Input.Password
+                placeholder={t(LOCALE_KEYS.PASSWORD)}
+                aria-label={t(LOCALE_KEYS.PASSWORD)}
+                aria-required="true"
+                aria-describedby="password-help"
+                autoComplete="new-password"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="confirmPassword"
+              label={t(LOCALE_KEYS.CONFIRM_PASSWORD)}
+              dependencies={['password']}
+              rules={[
+                { required: true, message: t(LOCALE_KEYS.PLEASE_ENTER_CONFIRM_PASSWORD) },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error(t(LOCALE_KEYS.PASSWORDS_DO_NOT_MATCH)));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password
+                placeholder={t(LOCALE_KEYS.CONFIRM_PASSWORD)}
+                aria-label={t(LOCALE_KEYS.CONFIRM_PASSWORD)}
+                aria-required="true"
+                aria-describedby="confirm-password-help"
+                autoComplete="new-password"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+              />
+            </Form.Item>
+          </>
         )}
 
         <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />

@@ -33,4 +33,10 @@ export const facultyService = {
     const response = await api.delete(`/faculty/${id}`);
     return response.data;
   },
+
+  // Get faculties without user accounts
+  getFacultiesWithoutUser: async (params = {}): Promise<IBaseResponse<IFaculty[]>> => {
+    const response = await api.get<IBaseResponse<IFaculty[]>>('/faculty/without-user', { params });
+    return response.data;
+  },
 };

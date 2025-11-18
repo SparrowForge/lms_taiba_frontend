@@ -9,15 +9,17 @@ import {
 } from '@ant-design/icons';
 import { Button, Card } from 'antd';
 import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+
+import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
+
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import IconBgColoredCard from '../dashboardui/cards/IconBgColoredCard';
-import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
-import { useRouter } from 'next/navigation';
 
 const getAssignmentStyle = (assignment: any) => {
   switch (assignment.type?.toLowerCase()) {

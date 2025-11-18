@@ -200,12 +200,12 @@ export const Sidebar = ({ collapsed }: SidebarProps) => {
   // Memoize user profile section to prevent unnecessary re-renders
   const userProfileSection = useMemo(
     () => (
-      <div className="p-4 border-b border-gray-100">
+      <div className="p-4 border-b border-gray-100 ">
         <div className="flex items-center space-x-3">
           <Avatar
             size={collapsed ? 32 : 40}
             icon={<UserOutlined />}
-            className="bg-gradient-to-r from-blue-500 to-purple-600"
+            className="bg-gradient-to-r from-blue-500 to-purple-600 "
           />
           {!collapsed && (
             <div className="flex-1 min-w-0">

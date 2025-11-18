@@ -1,15 +1,15 @@
 'use client';
-import { Col } from 'antd';
+import {Col} from 'antd';
 
 import RecentAnnouncenments from '@/components/dashboard/newComponents/RecentAnnouncenments';
 import StudentPerformance from '@/components/dashboard/newComponents/StudentPerformance';
-import WeeklySchedule from '@/components/dashboard/newComponents/WeeklySchedule';
+import ScheduleView from '@/components/dashboard/schedule/ScheduleView';
 
 const TeacherLayout = () => {
   return (
     <>
       <Col xs={24} lg={16}>
-        <WeeklySchedule />
+        <ScheduleView />
       </Col>
       <Col xs={24} lg={8}>
         <RecentAnnouncenments />

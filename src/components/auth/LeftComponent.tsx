@@ -1,7 +1,7 @@
 'use client';
 
 import { LineChartOutlined } from '@ant-design/icons';
-import { Card, Row, Col, Typography } from 'antd';
+import { Card, Col, Row, Typography } from 'antd';
 import Image from 'next/image';
 import { useLocale } from 'next-intl';
 import React from 'react';
@@ -50,11 +50,11 @@ const LeftComponent = () => {
     <div className="bg-[#1F4BCA] w-full  flex flex-col justify-center items-center py-10 md:py-0">
       {/* Logo */}
       <div style={{ marginBottom: 10 }}>
-        <Image src="/logo.PNG" alt="logo" width={80} height={80} />
+        <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
       </div>
 
       <Title level={3} style={{ color: '#fff', marginBottom: 0, fontSize: '30px' }}>
-        EduTrain Institute
+        {t(LOCALE_KEYS.EDUTRAIN_INSTITUTE)}
       </Title>
       <Text style={{ color: '#fff', fontSize: '18px' }}>{t(LOCALE_KEYS.ERP_TAGLINE)}</Text>
 
@@ -73,7 +73,7 @@ const LeftComponent = () => {
         }}
       >
         <Title level={5} style={{ color: '#fff', fontSize: '20px' }}>
-          Complete Education Management Solution
+          {t(LOCALE_KEYS.COMPLETE_EDUCATION_MANAGEMENT_SOLUTION)}
         </Title>
 
         <Row gutter={[16, 16]} style={{ marginTop: 20 }}>

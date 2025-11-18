@@ -1,7 +1,12 @@
-import { IClassSchedule, IClassScheduleCreate, IClassScheduleUpdate } from '@/types/classSchedule';
-import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
+import {
+    IClassSchedule,
+    IClassScheduleBulkCreate,
+    IClassScheduleCreate,
+    IClassScheduleUpdate,
+} from '@/types/classSchedule';
+import {IBasePaginatedResponse, IBaseResponse} from '@/types/common';
 
-import { api } from '@/lib/axios';
+import {api} from '@/lib/axios';
 
 export const classScheduleService = {
   getClassSchedules: async (params = {}): Promise<IBasePaginatedResponse<IClassSchedule>> => {
@@ -18,6 +23,13 @@ export const classScheduleService = {
 
   createClassSchedule: async (data: IClassScheduleCreate): Promise<IClassSchedule> => {
     const response = await api.post<IClassSchedule>('/class-schedules', data);
+    return response.data;
+  },
+
+  createBulkClassSchedule: async (
+    data: IClassScheduleBulkCreate,
+  ): Promise<IBaseResponse<IClassSchedule[]>> => {
+    const response = await api.post<IBaseResponse<IClassSchedule[]>>('/class-schedules/bulk', data);
     return response.data;
   },
 

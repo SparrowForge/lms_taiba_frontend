@@ -79,7 +79,7 @@ export const useUsers = () => {
         dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
       }
     },
-    [dispatch, users],
+    [dispatch],
   );
 
   // Create user (Action)
@@ -222,8 +222,7 @@ export const useUsers = () => {
       const lowercaseQuery = query.toLowerCase();
       return users.filter(
         (user: IUser) =>
-          user.firstName.toLowerCase().includes(lowercaseQuery) ||
-          user.lastName.toLowerCase().includes(lowercaseQuery) ||
+          user.name.toLowerCase().includes(lowercaseQuery) ||
           user.phone?.toLowerCase().includes(lowercaseQuery),
       );
     },

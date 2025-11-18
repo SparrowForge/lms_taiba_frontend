@@ -7,12 +7,14 @@ import RecentActivity from './RecentActivity';
 import StudentProgress from './StudentProgress';
 import UpperSection from './UpperSection';
 import UpperTab from './UpperTab';
+import UpperTabDatalms from './UpperTabDatalms';
 
 const LMSMainComponent = () => {
   const [activeTab, setActiveTab] = useState('courses');
+
   return (
     <div>
-      <UpperTab onTabChange={(key) => setActiveTab(key)} />
+      <UpperTab items={UpperTabDatalms} onTabChange={(key) => setActiveTab(key)} />
       <UpperSection />
       <Row
         gutter={[24, 24]}

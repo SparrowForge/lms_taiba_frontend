@@ -1,11 +1,11 @@
 'use client';
 
-import { Card, Calendar, Tag, Tooltip } from 'antd';
+import { Calendar, Card, Tag, Tooltip } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import { ClassScheduleStatus, Status } from '@/enums';
 
 import ClassScheduleDetailsDrawer from '@/components/classSchedules/ClassScheduleDetailsDrawer';
 
@@ -80,9 +80,9 @@ const MonthSchedule: React.FC = () => {
   }, [classSchedules, currentMonth]);
 
   const getScheduleColor = (schedule: IClassSchedule): string => {
-    if (schedule.status === 'ACTIVE') return 'green';
-    if (schedule.status === 'INACTIVE') return 'red';
-    if (schedule.status === 'PENDING') return 'orange';
+    if (schedule.status === ClassScheduleStatus.ACTIVE) return 'green';
+    if (schedule.status === ClassScheduleStatus.INACTIVE) return 'red';
+    if (schedule.status === ClassScheduleStatus.CANCELLED) return 'orange';
 
     // switch (schedule.scheduleType) {
     //   case "REGULAR":

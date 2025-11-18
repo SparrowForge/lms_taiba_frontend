@@ -23,11 +23,12 @@ const UserRoleEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ param
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.USER_ROLE, { defaultValue: 'User Role' });
 
+  const userRoleId = parseInt(resolvedParams.id);
+
   useEffect(() => {
-    const userRoleId = parseInt(resolvedParams.id);
     //getUserRoleById(userRoleId);
     loadUserRole(userRoleId);
-  }, [resolvedParams.id, loadUserRole]);
+  }, [userRoleId, loadUserRole]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;

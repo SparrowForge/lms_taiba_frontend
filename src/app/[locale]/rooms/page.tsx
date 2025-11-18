@@ -19,9 +19,12 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { useRooms } from '@/hooks/useRooms';
 
 import { IRoom } from '@/types/room';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function RoomsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.ROOM, { defaultValue: 'Room' });
   const router = useRouter();
 
@@ -40,14 +43,22 @@ export default function RoomsPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadRooms({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadRooms({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadRooms({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadRooms]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadRooms]);
 
   // Handler functions
   const handleEditDrawer = (id: number) => {
@@ -85,14 +96,28 @@ export default function RoomsPage() {
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/rooms',
     searchFields: ['name', 'levelFloor', 'status'] as (keyof IRoom)[],
-    onSearch: (searchText: string) => {
-      loadRooms({ page: 1, limit: 10, search: searchText });
+     onSearch: (searchText: string) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadRooms({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: rooms,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+        
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),

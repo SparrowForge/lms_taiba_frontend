@@ -1,27 +1,31 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import InstituteDetailsDrawer from '@/components/institutes/InstituteDetailsDrawer';
 import InstituteFormDrawer from '@/components/institutes/InstituteFormDrawer';
-import { MainLayout } from '@/components/layout/MainLayout';
+import {MainLayout} from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import { EntityConfig, EntityList } from '@/components/ui/EntityList';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import { useInstitutes } from '@/hooks/useInstitutes';
-import { useLocalization } from '@/hooks/useLocalization';
+import {useInstitutes} from '@/hooks/useInstitutes';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import { IInstitute } from '@/types/institute';
+import {IInstitute} from '@/types/institute';
+import {IStatusOption} from '@/types/statusSelect';
 
 export default function InstitutesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.INSTITUTE, { defaultValue: 'Institute' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -36,18 +40,22 @@ export default function InstitutesPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
-  const loadListWithPagination = () => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadInstitutes({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadInstitutes({ page: 1, limit: 10 });
-    }
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadInstitutes({ page, limit: limitNum, ...params });
   };
 
   useEffect(() => {
-    loadListWithPagination();
-  }, [skip, limit, loadInstitutes]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadInstitutes]);
 
   const handleEditDrawer = (id: number) => {
     setSelectedInstituteId(id);
@@ -61,7 +69,7 @@ export default function InstitutesPage() {
   };
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
-    loadListWithPagination();
+    loadWithParams(searchParams, skip, limit);
   };
   const handleViewDetails = (id: number) => {
     setSelectedInstituteId(id);
@@ -80,7 +88,10 @@ export default function InstitutesPage() {
     route: '/institutes',
     searchFields: ['name', 'code', 'type', 'status'] as (keyof IInstitute)[],
     onSearch: (searchText: string) => {
-      loadInstitutes({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadInstitutes({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: institutes,
@@ -148,6 +159,20 @@ export default function InstitutesPage() {
           />
         ),
       },
+    ],
+    filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          ...ENTITY_STATUS_OPTIONS.map((s: IStatusOption) => ({
+            label: translate(s.labelKey),
+            value: s.value,
+          })),
+        ],
+      },
+      
+       
     ],
   };
 

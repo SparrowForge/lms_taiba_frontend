@@ -1,9 +1,11 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -18,11 +20,12 @@ import StatusTag from '@/components/ui/StatusTag';
 import { useDepartments } from '@/hooks/useDepartments';
 import { useLocalization } from '@/hooks/useLocalization';
 
-import { IBranch } from '@/types/branch';
 import { IDepartment } from '@/types/department';
+import { useBranches } from '@/hooks/useBranches';
 
 export default function DepartmentsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.DEPARTMENT, { defaultValue: 'Department' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -35,20 +38,42 @@ export default function DepartmentsPage() {
 
   const { departments, listStatus, pagination, loadDepartments, removeDepartment } =
     useDepartments();
+  const {branches,loadBranches} = useBranches()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const branchId = searchParams.get('branchId');
+
+    const loadWithParams = (
+      searchParams: URLSearchParams,
+      skip: string | null,
+      limit: string | null,
+    ) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      const limitNum = parseInt(limit ?? '10');
+      const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+      loadDepartments({ page, limit: limitNum, ...params });
+    };
+  
+    useEffect(() => {
+      loadWithParams(searchParams, skip, limit);
+    }, [searchParams, skip, limit, loadDepartments]);
+
+      // Load batch options for filter
+    useEffect(() => {
+        loadBranches({ page: 1, limit: 99 });
+      }, [loadBranches]);
 
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadDepartments({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadDepartments({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadDepartments]);
+    if (branchId) {
+      loadDepartments({ page: 1, limit: 99, branchId: parseInt(branchId) });
+    } 
+  }, [loadDepartments, branchId]);
+
 
   const handleEditDrawer = (departmentId: number) => {
     setSelectedDepartmentId(departmentId);
@@ -85,7 +110,10 @@ export default function DepartmentsPage() {
     route: '/departments',
     searchFields: ['name', 'code', 'status'] as (keyof IDepartment)[],
     onSearch: (searchText: string) => {
-      loadDepartments({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadDepartments({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: departments,
@@ -108,7 +136,7 @@ export default function DepartmentsPage() {
       {
         title: t(LOCALE_KEYS.BRANCH),
         key: 'branch',
-        render: (branch: IBranch) => <span>{branch?.name || 'N/A'}</span>,
+        render: (department: IDepartment) => <span>{department.branch?.name || 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.HEAD),
@@ -159,6 +187,32 @@ export default function DepartmentsPage() {
           />
         ),
       },
+    ],
+    filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+        ],
+      },
+      {
+        key: 'branchId',
+        label: t(LOCALE_KEYS.BRANCH),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+            ...branches.map((b) => ({ label: b.name, value: String(b.id) })),
+          ],
+      },
+      // {
+      //   key: 'name',
+      //   label: t(LOCALE_KEYS.DEPARTMENT),
+      //   options: [
+      //     { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+      //       ...departments.map((d) => ({ label: d.name, value: String(d.name) })),
+      //     ],
+      // },
     ],
   };
 

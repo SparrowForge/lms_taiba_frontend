@@ -6,7 +6,13 @@ import { Status } from '@/enums';
 import { RootState } from '@/store';
 
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IStudent, IStudentCreate, IStudentUpdate } from '@/types/student';
+import {
+  IStudent,
+  IStudentCreate,
+  IStudentRegistrationCreate,
+  IStudentUpdate,
+  IStudentWithFeeInfo,
+} from '@/types/student';
 
 import { studentService } from '@/services/studentService';
 
@@ -21,13 +27,21 @@ import {
   setPagination,
   setSelectedStudent,
   setStudents,
+  setStudentWithFeeInfo,
   updateStudent,
 } from '@/store/slices/studentSlice';
 
 export const useStudents = () => {
   const dispatch = useDispatch();
-  const { students, selectedStudent, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.students);
+  const {
+    students,
+    selectedStudent,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+    studentWithFeeInfo,
+  } = useSelector((state: RootState) => state.students);
 
   const loadStudents = useCallback(
     async (params = {}) => {
@@ -77,6 +91,29 @@ export const useStudents = () => {
     [dispatch],
   );
 
+  const loadStudentWithFeeInfo = useCallback(
+    async (id: number) => {
+      try {
+        dispatch(setDetailsStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IStudentWithFeeInfo> =
+          await studentService.getStudentWithFeeInfo(id);
+        dispatch(setStudentWithFeeInfo(response.data));
+        dispatch(setDetailsStatus({ status: Status.SUCCESS }));
+        return response.data;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load student with fee info'
+            : 'Failed to load student with fee info';
+        dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   const createStudent = useCallback(
     async (data: IStudentCreate) => {
       try {
@@ -99,7 +136,7 @@ export const useStudents = () => {
   );
 
   const editStudent = useCallback(
-    async (id: number, data: IStudentUpdate) => {
+    async (id: number, data: Partial<IStudentUpdate>) => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
         const response: IStudent = await studentService.updateStudent(id, data);
@@ -171,19 +208,90 @@ export const useStudents = () => {
     [dispatch],
   );
 
+  // Load students without user accounts
+  const loadStudentsWithoutUser = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IStudent[]> =
+          await studentService.getStudentsWithoutUser(params);
+        dispatch(setStudents(response?.data ?? []));
+        // Reset pagination since this is not a paginated response
+        dispatch(
+          setPagination({
+            page: 1,
+            limit: response?.data?.length ?? 0,
+            total: response?.data?.length ?? 0,
+            totalPages: 1,
+            hasNextPage: false,
+            hasPreviousPage: false,
+          }),
+        );
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load students without user accounts'
+            : 'Failed to load students without user accounts';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
+  // Public student registration
+  const registerStudent = useCallback(
+    async (data: IStudentRegistrationCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IStudent> = await studentService.registerStudent(data);
+
+        if (response.success) {
+          // Add the newly created student to the list
+          dispatch(addStudent(response.data));
+          dispatch(
+            setActionStatus({
+              status: Status.SUCCESS,
+              message: 'Student registration completed successfully',
+            }),
+          );
+          return response.data;
+        } else {
+          throw new Error(response.message || 'Registration failed');
+        }
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to register student'
+            : error instanceof Error
+              ? error.message
+              : 'Failed to register student';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   return {
     students,
     selectedStudent,
+    studentWithFeeInfo,
     listStatus,
     detailsStatus,
     actionStatus,
     pagination,
 
     loadStudents,
+    loadStudentsWithoutUser,
     loadStudent,
+    loadStudentWithFeeInfo,
     createStudent,
     editStudent,
     removeStudent,
+    registerStudent,
     getStudentById,
     clearAction,
     clearDetails,

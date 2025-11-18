@@ -181,6 +181,39 @@ export const useFaculties = () => {
     [dispatch],
   );
 
+  // Load faculties without user accounts
+  const loadFacultiesWithoutUser = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IFaculty[]> =
+          await facultyService.getFacultiesWithoutUser(params);
+        dispatch(setFaculties(response?.data ?? []));
+        // Reset pagination since this is not a paginated response
+        dispatch(
+          setPagination({
+            page: 1,
+            limit: response?.data?.length ?? 0,
+            total: response?.data?.length ?? 0,
+            totalPages: 1,
+            hasNextPage: false,
+            hasPreviousPage: false,
+          }),
+        );
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load faculties without user accounts'
+            : 'Failed to load faculties without user accounts';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
   return {
     // State
     faculties,
@@ -192,6 +225,7 @@ export const useFaculties = () => {
 
     // Actions
     loadFaculties,
+    loadFacultiesWithoutUser,
     loadFaculty,
     createFaculty,
     editFaculty,

@@ -16,6 +16,12 @@ export const batchService = {
     return response.data;
   },
 
+  // Get a single batch by code (public endpoint)
+  getBatchByCodePublic: async (code: string): Promise<IBaseResponse<IBatch>> => {
+    const response = await api.get<IBaseResponse<IBatch>>(`/public/batches/${code}`);
+    return response.data;
+  },
+
   // Get a single batch by ID
   getBatch: async (id: number): Promise<IBaseResponse<IBatch>> => {
     const response = await api.get<IBaseResponse<IBatch>>(`/batches/${id}`);

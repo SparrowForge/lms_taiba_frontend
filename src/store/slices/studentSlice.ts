@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status } from '@/enums';
 
 import { IPaginationMeta, IStatusState } from '@/types/common';
-import { IStudent } from '@/types/student';
+import { IStudent, IStudentWithFeeInfo } from '@/types/student';
 
 interface IStudentsState {
   listStatus: IStatusState;
@@ -11,6 +11,7 @@ interface IStudentsState {
   actionStatus: IStatusState;
   students: IStudent[];
   selectedStudent: IStudent | null;
+  studentWithFeeInfo: IStudentWithFeeInfo | null;
   pagination: IPaginationMeta;
 }
 
@@ -20,6 +21,7 @@ const initialState: IStudentsState = {
   actionStatus: { status: Status.INITIAL },
   students: [],
   selectedStudent: null,
+  studentWithFeeInfo: null,
   pagination: {
     page: 1,
     limit: 10,
@@ -76,6 +78,9 @@ const studentSlice = createSlice({
     clearDetailsStatus: (state) => {
       state.detailsStatus = { status: Status.INITIAL };
     },
+    setStudentWithFeeInfo: (state, action: PayloadAction<IStudentWithFeeInfo>) => {
+      state.studentWithFeeInfo = action.payload;
+    },
   },
 });
 
@@ -91,6 +96,7 @@ export const {
   setPagination,
   clearActionStatus,
   clearDetailsStatus,
+  setStudentWithFeeInfo,
 } = studentSlice.actions;
 
 export default studentSlice.reducer;

@@ -1,13 +1,13 @@
 'use client';
 
-import { Button, DatePicker, Form, Input, Select } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { STUDENT_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
 import { useBatches } from '@/hooks/useBatches';
@@ -156,18 +156,44 @@ const StudentForm: React.FC<StudentFormProps> = ({
         <Input />
       </Form.Item>
 
-      <Form.Item
-        name="name"
-        label={t(LOCALE_KEYS.NAME, { defaultValue: 'Name' })}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+      <Row gutter={16}>
+        <Col span={8}>
+          <Form.Item
+            name="firstName"
+            label={t(LOCALE_KEYS.FIRST_NAME, { defaultValue: 'First Name' })}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.FIRST_NAME) }),
+              },
+            ]}
+          >
+            <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.FIRST_NAME) })} />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item
+            name="middleName"
+            label={t(LOCALE_KEYS.MIDDLE_NAME, { defaultValue: 'Middle Name' })}
+          >
+            <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.MIDDLE_NAME) })} />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item
+            name="lastName"
+            label={t(LOCALE_KEYS.LAST_NAME, { defaultValue: 'Last Name' })}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.LAST_NAME) }),
+              },
+            ]}
+          >
+            <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.LAST_NAME) })} />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="cardNo"
@@ -295,9 +321,9 @@ const StudentForm: React.FC<StudentFormProps> = ({
         <Input />
       </Form.Item>
 
-      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
+      <StatusSelectFormItem options={STUDENT_STATUS_OPTIONS} />
       <Form.Item>
-        <div className="flex justify-end space-x-2">
+        <div className="flex justify-end space-x-2 gap-2">
           <Button onClick={handleCancel}>
             {t(LOCALE_KEYS.CANCEL, { defaultValue: 'Cancel' })}
           </Button>

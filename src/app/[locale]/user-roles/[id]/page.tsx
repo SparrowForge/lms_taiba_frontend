@@ -28,7 +28,7 @@ export default function UserRoleDetailPage({ params }: { params: Promise<{ id: s
   useEffect(() => {
     //getUserRoleById(userRoleId);
     loadUserRole(userRoleId);
-  }, [loadUserRole, userRoleId]);
+  }, [userRoleId, loadUserRole]);
 
   const config = useCreateUserRoleDetailsConfig(
     selectedUserRole,

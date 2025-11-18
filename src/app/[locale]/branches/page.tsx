@@ -1,27 +1,32 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+import {useEffect, useState} from 'react';
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
+import {Status} from '@/enums';
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import BranchDetailsDrawer from '@/components/branches/BranchDetailsDrawer';
 import BranchFormDrawer from '@/components/branches/BranchFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import { MainLayout } from '@/components/layout/MainLayout';
+import {MainLayout} from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
-import { EntityConfig, EntityList } from '@/components/ui/EntityList';
+import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
-import { useBranches } from '@/hooks/useBranches';
-import { useLocalization } from '@/hooks/useLocalization';
+import {useBranches} from '@/hooks/useBranches';
+import {useLocalization} from '@/hooks/useLocalization';
 
-import { IBranch } from '@/types/branch';
+import {IBranch} from '@/types/branch';
+import {IStatusOption} from '@/types/statusSelect';
+import { useInstitutes } from '@/hooks/useInstitutes';
 
 export default function BranchesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -31,20 +36,35 @@ export default function BranchesPage() {
   const [selectedDetailsBranchId, setSelectedDetailsBranchId] = useState<number | undefined>();
 
   const { branches, listStatus, pagination, loadBranches, removeBranch } = useBranches();
+  const {institutes,loadInstitutes} = useInstitutes()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadBranches({ page, limit: limitNum, ...params });
+    
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadBranches({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadBranches({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadBranches]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit]);
+
+  useEffect(()=>{
+    loadInstitutes({ page:1, limit:99 })
+  },[loadInstitutes])
+
 
   const handleEditDrawer = (branchId: number) => {
     setSelectedBranchId(branchId);
@@ -60,7 +80,7 @@ export default function BranchesPage() {
 
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
-    loadBranches({ page: 1, limit: 10 });
+    loadWithParams(searchParams, skip, limit);
   };
 
   const handleViewDetails = (branchId: number) => {
@@ -81,7 +101,10 @@ export default function BranchesPage() {
     route: '/branches',
     searchFields: ['name', 'code'] as (keyof IBranch)[],
     onSearch: (searchText: string) => {
-      loadBranches({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadBranches({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: branches,
@@ -120,7 +143,7 @@ export default function BranchesPage() {
       {
         title: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID),
         key: 'campusDirectorUserId',
-        render: (branch: IBranch) => <span>{branch.campusDirector?.firstName}</span>,
+        render: (branch: IBranch) => <span>{branch.campusDirector?.name}</span>,
       },
       {
         title: t(LOCALE_KEYS.STATUS),
@@ -151,6 +174,27 @@ export default function BranchesPage() {
           />
         ),
       },
+    ],
+    filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          ...ENTITY_STATUS_OPTIONS.map((s: IStatusOption) => ({
+            label: translate(s.labelKey),
+            value: s.value,
+          })),
+        ],
+      },
+      {
+          key: 'instituteId',
+          label: t(LOCALE_KEYS.INSTITUTE),
+          options: [              
+            { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+                ...institutes.map((i) => ({ label: i.name, value: String(i.id) })),
+              ],
+      },
+    
     ],
   };
 

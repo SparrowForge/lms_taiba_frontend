@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
-import { routing } from './i18n/routing';
+import {routing} from './i18n/routing';
 
 // Protected routes that require authentication
 const protectedRoutes = [
@@ -27,10 +27,22 @@ const protectedRoutes = [
   '/schedule-types',
   '/employment-types',
   '/institutes',
+  '/grade-rules',
+  '/mark-distributions',
+  '/exams',
+  '/exam-candidates',
+  '/exam-mcq-questions',
+  '/exam-results',
+  '/exam-schedules',
+  '/exam-types',
+  '/rooms',
+  '/room-types',
+  '/class-schedules',
+  '/week-days',
 ];
 
 // Public routes that don't require authentication
-const publicRoutes = ['/login', '/register', '/forgot-password'];
+const publicRoutes = ['/login', '/register', '/forgot-password', '/register-student'];
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -100,5 +112,7 @@ export const config = {
   // Match all pathnames except for
   // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
   // - … the ones containing a dot (e.g. `favicon.ico`)
-  matcher: '/((?!api|trpc|_next|_vercel|.*\\..*).*)',
+  // - … internal not-found routes `/_not-found` and localized `/{locale}/_not-found`
+  // We explicitly skip `/_not-found` and `/(en|ar)/_not-found` so Next can handle 404 rendering
+  matcher: ['/((?!api|trpc|_next|_vercel|_not-found|en/_not-found|ar/_not-found|.*\\..*).*)'],
 };

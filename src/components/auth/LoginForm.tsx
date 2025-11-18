@@ -15,12 +15,17 @@ import type { LoginCredentials } from '@/types/auth';
 import { getErrorMessage } from '@/types/errors';
 
 import SocialLogin from './SocialLogin';
+import VerifyModalTwofa from './VerifyMailTwofa';
+import Link from 'next/link';
 
 export const LoginForm = () => {
   const { t } = useLocalization();
   const { login, isLoading, error, clearError } = useAuth();
   const [form] = Form.useForm();
   const [showForm, setShowForm] = useState(false);
+  const [showError, setShowError] = useState("")
+
+    const [verifyTwofa, setVerifyTwofa] = useState(false);
 
   // Simple solution: Show loading for 500ms, then show form
   useEffect(() => {
@@ -33,13 +38,14 @@ export const LoginForm = () => {
 
   const handleSubmit = async (values: LoginCredentials) => {
     try {
-      await login(values);
+      await login(values,setVerifyTwofa);
       //show toast message using nextjs toast
-      toast.success('Login successful!');
+
     } catch (error: unknown) {
       // Error is already handled by Redux store and displayed via error state
       console.error('Login failed:', error);
       toast.error(getErrorMessage(error) || 'Login failed!');
+      setShowError(getErrorMessage(error))
     }
   };
 
@@ -61,6 +67,10 @@ export const LoginForm = () => {
 
   return (
     <>
+    <VerifyModalTwofa
+      twoFaState={verifyTwofa}
+      setVerifyTwofa={setVerifyTwofa}
+    />
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
       <Card style={{ width: 400, padding: '0px' }} className="shadow-lg rounded-lg">
         <div className="flex justify-center items-center pt-4 pb-2">
@@ -85,10 +95,20 @@ export const LoginForm = () => {
             }
             style={{ marginBottom: 8 }} // controls spacing to next item
             className="[&_.ant-form-item-label]:mb-0" // removes label→input gap
+            rules={[
+              {
+                required: true,
+                message: "Please enter your email!",
+              },
+              {
+                type: "email",
+                message: "Please enter a valid email address!",
+              },
+            ]}
           >
             <Input
               prefix={<UserOutlined className="text-gray-400" />}
-              placeholder="Enter your email"
+              placeholder={t(LOCALE_KEYS.PLEASE_ENTER_EMAIL)}
               disabled={isLoading}
               className="h-8 text-sm"
             />
@@ -103,43 +123,55 @@ export const LoginForm = () => {
             }
             rules={[
               {
-                // required: true,
+                required: true,
                 message: 'Please enter your password!',
               },
               { min: 6, message: 'Password must be at least 6 characters!' },
+              // {
+              //   pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/,
+              //   message: "Password must contain letters and numbers!",
+              // },
             ]}
           >
             <Input.Password
               prefix={<LockOutlined className="text-gray-400" />}
-              placeholder="Enter your password"
+              placeholder={t(LOCALE_KEYS.PLEASE_ENTER_PASSWORD)}
               disabled={isLoading}
               className="h-9 text-sm" // reduced height
             />
           </Form.Item>
 
           {/* API Error Display */}
-          {error && (
+          {error || showError && (
             <div className="mb-4">
               <div className="ant-form-item-explain ant-form-item-explain-error">
-                <div className="ant-form-item-explain-error">{error}</div>
+                <div className="ant-form-item-explain-error">{error || showError}</div>
               </div>
             </div>
           )}
           <div className="text-center flex justify-end">
-            <p className="text-sm text-[#1e45bf]">{t(LOCALE_KEYS.FORGET_PASSWORD)}</p>
+            <Link href="/forgot-password"> <p className="text-sm text-[#1e45bf]">{t(LOCALE_KEYS.FORGET_PASSWORD)}</p></Link>
           </div>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={isLoading}
-              block
-              size="middle"
-              className="h-9 text-base font-medium mb-0"
-            >
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
+          <Form.Item shouldUpdate>
+            {() => (
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isLoading}
+                block
+                size="middle"
+                className="h-9 text-base font-medium mb-0"
+                disabled={
+                  isLoading ||
+                  !form.isFieldsTouched(true) ||
+                  form.getFieldsError().some(({ errors }) => errors.length > 0)
+                }
+              >
+                {isLoading ? t(LOCALE_KEYS.SIGNING_IN) : t(LOCALE_KEYS.SIGN_IN)}
+              </Button>
+            )}
           </Form.Item>
+
         </Form>
         <SocialLogin />
         {/* Footer */}

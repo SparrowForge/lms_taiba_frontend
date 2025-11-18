@@ -62,9 +62,9 @@ export const useCreateBranchDetailsConfig = (
         label: t(LOCALE_KEYS.EXTERNAL_INSTITUTE_ID_NO),
       },
       {
-        key: 'campusDirector.firstName',
+        key: 'campusDirector.name',
         label: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID),
-        render: (value: string, item: IBranch) => item?.campusDirector?.firstName || 'N/A',
+        render: (value: string, item: IBranch) => item?.campusDirector?.name || 'N/A',
       },
       {
         key: 'status',

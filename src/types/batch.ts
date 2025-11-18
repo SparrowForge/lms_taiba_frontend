@@ -1,3 +1,5 @@
+import { EntityStatus } from '@/enums';
+
 import { ICourse } from './course';
 import { ISemesterCreate, ISemesterUpdate } from './semester';
 
@@ -5,12 +7,13 @@ export interface IBatch {
   id: number;
   courseId: number;
   name: string;
+  code: string;
   academicYear: number;
   session: string;
   intakeCapacity: number;
   startDate: string;
   endDate: string;
-  status: string;
+  status: EntityStatus;
   remarks: string;
   createdAt: string;
   updatedAt: string;
@@ -21,24 +24,26 @@ export interface IBatch {
 export interface IBatchCreate {
   courseId: number;
   name: string;
+  code: string;
   academicYear: number;
   session: string;
   intakeCapacity: number;
   startDate: string;
   endDate: string;
-  status: string;
+  status: EntityStatus;
   remarks: string;
 }
 
 export interface IBatchUpdate {
   courseId?: number;
   name?: string;
+  code?: string;
   academicYear?: number;
   session?: string;
   intakeCapacity?: number;
   startDate?: string;
   endDate?: string;
-  status?: string;
+  status?: EntityStatus;
   remarks?: string;
 }
 

@@ -21,6 +21,10 @@ import {
 } from '@/store/slices/authSlice';
 
 import type { AppDispatch, RootState } from '@/store';
+import { TwofaStatus } from '@/types/twofa';
+import { useTwofa } from './useTwofa';
+import { twofaService } from '@/services/twofaService';
+import { toast } from 'react-toastify';
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,20 +40,38 @@ export const useAuth = () => {
     error,
   } = useSelector((state: RootState) => state.auth);
 
+
+
   // Login function
   const handleLogin = useCallback(
-    async (credentials: LoginCredentials) => {
+    async (credentials: LoginCredentials, setVerifyTwofa:React.Dispatch<React.SetStateAction<boolean>>) => {
       try {
         dispatch(setLoading(true));
-
         const response = await authService.login(credentials);
-        dispatch(setUser(response.user));
-        dispatch(setToken(response.access_token));
-        dispatch(setRefreshToken(response.refresh_token));
-        dispatch(setIsAuthenticated(true));
-        dispatch(setLoading(false));
-
-        router.push('/'); // Redirect to main page (dashboard) after login
+        const {email} = response.user
+        const {twoFaStatus} = response.user
+        if(twoFaStatus == TwofaStatus.ACTIVE){
+         if(response.user){
+           const res = await twofaService.sendCodeTwofa({email})
+           if(res.message){
+              toast.success(res.message)
+              setVerifyTwofa(true)
+           }
+         }
+          dispatch(setUser(response.user));
+          dispatch(setToken(response.access_token));
+          dispatch(setRefreshToken(response.refresh_token));
+          dispatch(setIsAuthenticated(true));
+          dispatch(setLoading(false));
+        }else if(twoFaStatus == TwofaStatus.INACTIVE){
+          dispatch(setUser(response.user));
+          dispatch(setToken(response.access_token));
+          dispatch(setRefreshToken(response.refresh_token));
+          dispatch(setIsAuthenticated(true));
+          dispatch(setLoading(false));
+          toast.success('Login successful!');
+          router.push('/')
+        }
       } catch (error: unknown) {
         const errorMessage =
           error instanceof AxiosError
@@ -109,8 +131,8 @@ export const useAuth = () => {
     try {
       dispatch(setLoading(true));
 
-      const user = await authService.getCurrentUser();
-      dispatch(setUser(user));
+      const response = await authService.getMe();
+      dispatch(setUser(response.data));
       dispatch(setIsAuthenticated(true));
       dispatch(setLoading(false));
     } catch (error: unknown) {
@@ -173,8 +195,13 @@ export const useAuth = () => {
   // Get user's full name
   const getUserFullName = useCallback(() => {
     if (!user) return '';
-    return `${user.firstName} ${user.lastName}`.trim();
+    return user.name || user.email || 'Unknown User';
   }, [user]);
+
+  // Get stored user from localStorage (useful for initial checks)
+  const getStoredUser = useCallback(() => {
+    return authService.getUser();
+  }, []);
 
   return {
     // State
@@ -198,5 +225,6 @@ export const useAuth = () => {
     // Utilities
     isUserActive,
     getUserFullName,
+    getStoredUser,
   };
 };

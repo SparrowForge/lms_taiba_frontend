@@ -85,6 +85,26 @@ export const useBatches = () => {
     [dispatch],
   );
 
+  // Load a single batch by code from public endpoint
+  const loadBatchByCodePublic = useCallback(
+    async (code: string) => {
+      try {
+        dispatch(setDetailsStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IBatch> = await batchService.getBatchByCodePublic(code);
+        dispatch(setSelectedBatch(response.data));
+        dispatch(setDetailsStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load batch'
+            : 'Failed to load batch';
+        dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   // Create a new batch
   const createBatch = useCallback(
     async (data: IBatchCreate) => {
@@ -257,6 +277,7 @@ export const useBatches = () => {
     // Actions
     loadBatches,
     loadBatch,
+    loadBatchByCodePublic,
     createBatch,
     createBatchWithSemesters,
     editBatch,

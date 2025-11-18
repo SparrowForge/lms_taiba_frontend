@@ -20,9 +20,13 @@ import { useSubjects } from '@/hooks/useSubjects';
 
 import { ICourse } from '@/types/course';
 import { ISubject } from '@/types/subject';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useCourses } from '@/hooks/useCourses';
 
 export default function SubjectsPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.SUBJECT, { defaultValue: 'Subject' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -32,20 +36,33 @@ export default function SubjectsPage() {
   const [selectedDetailsSubjectId, setSelectedDetailsSubjectId] = useState<number | undefined>();
 
   const { subjects, listStatus, pagination, loadSubjects, removeSubject } = useSubjects();
+  const {courses,loadCourses} = useCourses()
+
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadSubjects({ page, limit: limitNum, ...params });
+    loadCourses({ page, limit: limitNum, ...params })
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadSubjects({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadSubjects({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadSubjects]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadSubjects]);
+
+
 
   const handleEditDrawer = (subjectId: number) => {
     setSelectedSubjectId(subjectId);
@@ -82,13 +99,34 @@ export default function SubjectsPage() {
     route: '/subjects',
     searchFields: ['name', 'code', 'status'] as (keyof ISubject)[],
     onSearch: (searchText: string) => {
-      loadSubjects({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadSubjects({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: subjects,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'courseId',
+            label: t(LOCALE_KEYS.COURSE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),

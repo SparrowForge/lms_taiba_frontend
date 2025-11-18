@@ -20,9 +20,14 @@ import { useSemesters } from '@/hooks/useSemesters';
 
 import { IBatch } from '@/types/batch';
 import { ISemester } from '@/types/semester';
+import { SEMESTER_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useTranslations } from 'next-intl';
+import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
 
 export default function SemestersPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -32,20 +37,45 @@ export default function SemestersPage() {
   const [selectedDetailsSemesterId, setSelectedDetailsSemesterId] = useState<number | undefined>();
 
   const { semesters, listStatus, pagination, loadSemesters, removeSemester } = useSemesters();
+  const {courses, loadCourses} = useCourses()
+  const {loadBatches, batches, clearBatches} = useBatches()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const courseId = searchParams.get('courseId')
 
-  useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadSemesters({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadSemesters({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadSemesters]);
+    const loadWithParams = (
+      searchParams: URLSearchParams,
+      skip: string | null,
+      limit: string | null,
+    ) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      const limitNum = parseInt(limit ?? '10');
+      const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+      delete params.courseId
+      loadSemesters({ page, limit: limitNum, ...params });
+    };
+  
+    useEffect(() => {
+      loadWithParams(searchParams, skip, limit);
+    }, [searchParams, skip, limit, loadSemesters]);
+
+    useEffect(()=>{
+      loadCourses({ page: 1, limit: 99 })
+    },[loadCourses])
+
+    useEffect(()=>{
+      if(courseId){
+        loadBatches({ page: 1, limit: 99, courseId:parseInt(courseId) })
+      }else{
+        clearBatches()
+      }
+    },[loadBatches, courseId,clearBatches])
+
 
   const handleEditDrawer = (semesterId: number) => {
     setSelectedSemesterId(semesterId);
@@ -82,13 +112,42 @@ export default function SemestersPage() {
     route: '/semesters',
     searchFields: ['name', 'termNo', 'status'] as (keyof ISemester)[],
     onSearch: (searchText: string) => {
-      loadSemesters({ page: 1, limit: 10, search: searchText });
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadSemesters({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: semesters,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...SEMESTER_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+          {
+            key: 'courseId',
+            label: t(LOCALE_KEYS.COURSE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+          {
+            key: 'batchId',
+            label: t(LOCALE_KEYS.BATCH),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...batches.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),

@@ -92,16 +92,17 @@ export const Sidebar2 = React.memo(
     }, []);
 
     useEffect(() => {
-      if (!myMenus || myMenus.length === 0) {
-        loadMyMenus();
-      }
-    }, [myMenus, loadMyMenus]);
+      loadMyMenus();
+      // if (!myMenus || myMenus.length === 0) {
+      //   loadMyMenus();
+      // }
+    }, []);
 
     // ✅ Load branches once (or when empty)
     useEffect(() => {
       if (!branches || branches.length === 0) {
         // fetch a sensible page size for dropdown
-        loadBranches({ page: 1, limit: 100 });
+        // loadBranches({ page: 1, limit: 100 });
       }
     }, [branches, loadBranches]);
 
@@ -288,7 +289,7 @@ export const Sidebar2 = React.memo(
               className="bg-gradient-to-r from-blue-500 to-purple-600 "
             />
             {!collapsed && (
-              <div className="flex-1 min-w-0 text-white">
+              <div className="flex-1 min-w-0 text-white pl-6">
                 <Text strong className="block text-sm truncate text-white">
                   {getUserFullName()}
                 </Text>
@@ -339,6 +340,7 @@ export const Sidebar2 = React.memo(
         collapsed,
         getUserFullName,
         user?.email,
+        //  user?.type,
         t,
         selectedBranch?.id,
         branchListStatus.status,
@@ -365,6 +367,12 @@ export const Sidebar2 = React.memo(
         icon: <SignatureOutlined />,
         label: t(LOCALE_KEYS.UPGRADE_PLAN),
         onClick: () => router.push('/upgrade'),
+      },
+      {
+        key: 'settings',
+        icon: <SettingOutlined />,
+        label: t(LOCALE_KEYS.SETTINGS),
+        onClick: () => router.push('/settings'),
       },
       {
         key: 'signout',
@@ -429,7 +437,7 @@ export const Sidebar2 = React.memo(
             overflow: 'auto',
             height: '100vh',
             position: 'fixed',
-            left: 0,
+            [locale === 'ar' ? 'right' : 'left']: 0,
             top: 0,
             bottom: 0,
             zIndex: 1000,
@@ -446,8 +454,8 @@ export const Sidebar2 = React.memo(
                     <span className="text-white font-bold text-lg">L</span>
                   </div>
                   <h1 className="text-xl font-bold mb-1">LMS Taiba</h1>
-                  <Text className="text-xs " style={{ color: '#ffffff' }}>
-                    Admin Panel
+                  <Text className="text-xs uppercase" style={{ color: '#52d1f8ff' }}>
+                    {user?.type} Panel
                   </Text>
                 </div>
               ) : (

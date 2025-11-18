@@ -12,9 +12,10 @@ import { CSS } from '@dnd-kit/utilities';
 import { useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { UserType } from '@/enums/user-type.enum';
 
+import { useAuth } from '@/hooks/useAuth';
 import { useLocalization } from '@/hooks/useLocalization';
-import { useRole } from '@/hooks/useRole';
 
 import WelcomeSection from './WelcomeSection';
 import LeftBorderCard from '../dashboardui/cards/LeftBorderCard';
@@ -42,7 +43,7 @@ const SortableCard = ({ id, children }: { id: string; children: React.ReactNode 
 
 // ===== MAIN COMPONENT =====
 const DashboardStartSection = () => {
-  const role = useRole();
+  const { user } = useAuth();
   const { t } = useLocalization();
 
   const teacherInitial = [
@@ -154,7 +155,7 @@ const DashboardStartSection = () => {
     <div>
       <WelcomeSection />
 
-      {role === 'teacher' ? (
+      {user?.type === UserType.FACULTY ? (
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -173,7 +174,7 @@ const DashboardStartSection = () => {
             </div>
           </SortableContext>
         </DndContext>
-      ) : (
+      ) : user?.type === UserType.STUDENT ? (
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -192,6 +193,8 @@ const DashboardStartSection = () => {
             </div>
           </SortableContext>
         </DndContext>
+      ) : (
+        <div />
       )}
     </div>
   );

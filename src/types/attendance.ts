@@ -1,3 +1,5 @@
+import { AttendanceStatus } from '@/enums';
+
 import { IBatch } from './batch';
 import { IClassSchedule } from './classSchedule';
 import { ICourse } from './course';
@@ -16,7 +18,7 @@ export interface IAttendance {
   classNo: number;
   date: string;
   remarks: string;
-  status: string;
+  status: AttendanceStatus;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -38,7 +40,7 @@ export interface IAttendanceCreate {
   classNo: number;
   date: string;
   remarks: string;
-  status: string;
+  status: AttendanceStatus;
 }
 
 export interface IAttendanceUpdate {
@@ -51,5 +53,5 @@ export interface IAttendanceUpdate {
   classNo?: number;
   date?: string;
   remarks?: string;
-  status?: string;
+  status?: AttendanceStatus;
 }

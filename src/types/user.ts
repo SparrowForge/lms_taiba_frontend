@@ -1,37 +1,47 @@
+import { EntityStatus } from '@/enums';
+import { UserType } from '@/enums/user-type.enum';
+
 import { IPaginationMeta, IStatusState } from './common';
+import { IRole } from './role';
 
 // User interface matching the API response
 export interface IUser {
   id: number;
   email: string;
-  firstName: string;
-  lastName: string;
-  status: 'active' | 'inactive' | 'pending';
+  name: string;
+  status: EntityStatus;
   phone: string;
+  type: UserType;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  roles: IRole[];
+  twoFaStatus:'active' | 'inactive'
 }
 
 export interface IUserCreate {
   email: string;
-  firstName: string;
-  lastName: string;
-  status: 'active' | 'inactive' | 'pending';
+  name: string;
+  status: EntityStatus;
   phone: string;
+  type: UserType;
+  facultyId?: number;
+  studentId?: number;
 }
 
 export interface IUserUpdate {
-  firstName: string;
-  lastName: string;
+  name: string;
   phone: string;
-  status?: 'active' | 'inactive' | 'pending';
+  status?: EntityStatus;
+  type?: UserType;
+  facultyId?: number;
+  studentId?: number;
 }
 
 export interface IUserFilters {
   search?: string;
-  role?: 'admin' | 'teacher' | 'student';
-  status?: 'active' | 'inactive' | 'pending';
+  type?: UserType;
+  status?: EntityStatus;
   page?: number;
   limit?: number;
 }

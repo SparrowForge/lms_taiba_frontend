@@ -1,11 +1,10 @@
 import { Column } from '@ant-design/plots';
 
 interface ColumnGraphProps {
-  data: { xdata: string; ydata: number }[];
-  color?: string; // hex or rgba
+  data: { xdata: string; ydata: number; color: string }[];
 }
 
-const ColumnGraph: React.FC<ColumnGraphProps> = ({ data, color = '#1F4BCA' }) => {
+const ColumnGraph: React.FC<ColumnGraphProps> = ({ data }) => {
   const config = {
     data,
     xField: 'xdata',
@@ -13,28 +12,10 @@ const ColumnGraph: React.FC<ColumnGraphProps> = ({ data, color = '#1F4BCA' }) =>
     columnWidthRatio: 0.5,
     intervalPadding: 20,
     columnStyle: {
-      radius: [8, 8, 0, 0], // rounded top corners
-      fill: color, // dynamic color
+      radius: [8, 8, 0, 0],
     },
-
-    // label: {
-    //   text: (originData: { ydata: any; }) => `${originData.attendance}%`,
-    //   offset: 10,
-    //   style: {
-    //     fill: "#333",
-    //     fontSize: 12,
-    //   },
-    // },
-    // xAxis: {
-    //   label: {
-    //     style: { fontSize: 12 },
-    //   },
-    // },
-    // yAxis: {
-    //   label: {
-    //     style: { fontSize: 12 },
-    //   },
-    // },
+    colorField: 'color', // 🔹 tell Column to look at "color"
+    color: (d: any) => d.color, // 🔹 apply color from dataset
     legend: false,
   };
 

@@ -19,9 +19,12 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { useWeekDays } from '@/hooks/useWeekDays';
 
 import { IWeekDay } from '@/types/weekDay';
+import { useTranslations } from 'next-intl';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function WeekDaysPage() {
   const { t } = useLocalization();
+  const translate = useTranslations()
   const entityName = t(LOCALE_KEYS.WEEK_DAY, { defaultValue: 'Week Day' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -36,14 +39,22 @@ export default function WeekDaysPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
 
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadWeekDays({ page, limit: limitNum, ...params });
+  };
+
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadWeekDays({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadWeekDays({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadWeekDays]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadWeekDays]);
 
   const handleEditDrawer = (id: number) => {
     setSelectedId(id);
@@ -75,14 +86,28 @@ export default function WeekDaysPage() {
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
     route: '/week-days',
     searchFields: ['name', 'status'] as (keyof IWeekDay)[],
-    onSearch: (searchText: string) => {
-      loadWeekDays({ page: 1, limit: 10, search: searchText });
+     onSearch: (searchText: string) => {
+      const params = Object.fromEntries(searchParams.entries());
+      delete params.skip;
+      delete params.limit;
+      loadWeekDays({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
     items: weekDays,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+        filters: [
+          {
+            key: 'status',
+            label: t(LOCALE_KEYS.STATUS),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+            ],
+          },
+        
+        ],
     columns: [
       {
         title: t(LOCALE_KEYS.NAME),
