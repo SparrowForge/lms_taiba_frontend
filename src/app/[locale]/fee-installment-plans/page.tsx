@@ -22,6 +22,8 @@ import { useTranslations } from 'next-intl';
 import { useFeeStructures } from '@/hooks/useFeeStructures';
 import { useSemesters } from '@/hooks/useSemesters';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useCourses } from '@/hooks/useCourses';
+import { useBatches } from '@/hooks/useBatches';
 
 export default function FeeInstallmentPlansPage() {
   const { t } = useLocalization();
@@ -33,8 +35,6 @@ export default function FeeInstallmentPlansPage() {
   const [selectedId, setSelectedId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsId, setSelectedDetailsId] = useState<number | undefined>();
-  const {feeStructures, loadFeeStructures} = useFeeStructures()
-  const {semesters, loadSemesters} = useSemesters()
 
   const {
     feeInstallmentPlans,
@@ -43,11 +43,18 @@ export default function FeeInstallmentPlansPage() {
     loadFeeInstallmentPlans,
     removeFeeInstallmentPlan,
   } = useFeeInstallmentPlans();
+  const {feeStructures, loadFeeStructures} = useFeeStructures()
+  const {semesters, loadSemesters} = useSemesters()
+  const {courses, loadCourses} = useCourses()
+  const {batches,loadBatches,clearBatches} = useBatches()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const courseId = searchParams.get('courseId')
+  const batchId = searchParams.get('batchId')
+
 
 
   const loadWithParams = (
@@ -71,11 +78,23 @@ export default function FeeInstallmentPlansPage() {
     loadFeeStructures({page:1, limit:99})
   },[loadFeeStructures])
 
-  useEffect(()=>{
-    
-      loadSemesters({page:1, limit:99, })
-    
-  },[loadSemesters,])
+  useEffect(()=>{ 
+    loadCourses({page:1, limit:99})
+  },[loadCourses])
+
+  useEffect(()=>{ 
+    if(courseId){
+      loadBatches({page:1, limit:99,courseId: parseInt(courseId) })
+    }else{
+      clearBatches()
+    }
+  },[loadBatches,courseId,clearBatches])
+
+  useEffect(()=>{ 
+    if(batchId){
+      loadSemesters({page:1, limit:99, batchId:parseInt(batchId) })
+    }
+  },[loadSemesters,batchId])
 
   const handleEditDrawer = (id: number) => {
     setSelectedId(id);
@@ -140,6 +159,22 @@ export default function FeeInstallmentPlansPage() {
             ],
           },
           {
+            key: 'courseId',
+            label: t(LOCALE_KEYS.COURSE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courses.map((b) => ({ label: b.name, value: String(b.id) })),
+            ],
+          },
+           {
+            key: 'batchId',
+            label: t(LOCALE_KEYS.BATCH),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...batches.map((b) => ({ label: b.name, value: String(b.id) })),
+            ],
+          },
+           {
             key: 'semesterId',
             label: t(LOCALE_KEYS.SEMESTER),
             options: [
