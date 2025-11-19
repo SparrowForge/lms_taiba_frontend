@@ -7,7 +7,7 @@ import { Status } from '@/enums';
 import { RootState } from '@/store';
 
 import { IBaseResponse } from '@/types/common';
-import { IUser, IUserCreate, IUserFilters, IUserUpdate } from '@/types/user';
+import { IDomainInfo, IUser, IUserCreate, IUserFilters, IUserUpdate } from '@/types/user';
 
 import { userService } from '@/services/userService';
 
@@ -19,6 +19,8 @@ import {
   deleteUser,
   setActionStatus,
   setDetailsStatus,
+  setDomains,
+  setDomainStatus,
   setFilters,
   setListStatus,
   setPagination,
@@ -29,7 +31,7 @@ import {
 
 export const useUsers = () => {
   const dispatch = useAppDispatch();
-  const { listStatus, detailsStatus, actionStatus, users, selectedUser, pagination, filters } =
+  const { listStatus, detailsStatus, actionStatus, users, selectedUser, pagination, filters, domains } =
     useAppSelector((state: RootState) => state.users);
 
   // Load users with filters (List action)
@@ -77,6 +79,26 @@ export const useUsers = () => {
             ? error.response?.data?.message || error.message || 'Failed to fetch user'
             : 'Failed to fetch user';
         dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
+    // Load single user (Details action)
+  const loadDomains = useCallback(
+    async () => {
+      try {
+        dispatch(setDomainStatus({ status: Status.LOADING }));
+
+        const response: IBaseResponse<IDomainInfo[]> = await userService.getDomains();
+        dispatch(setDomains(response.data));
+        dispatch(setDomainStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error.response?.data?.message || error.message || 'Failed to fetch user'
+            : 'Failed to fetch user';
+        dispatch(setDomainStatus({ status: Status.FAILED, message: errorMessage }));
       }
     },
     [dispatch],
@@ -247,6 +269,7 @@ export const useUsers = () => {
   return {
     // State
     users,
+    domains,
     selectedUser,
     pagination,
     filters,
@@ -259,6 +282,7 @@ export const useUsers = () => {
     // Actions
     loadUsers,
     loadUser,
+    loadDomains,
     addUser: addUserAction,
     editUser,
     removeUser,
@@ -266,6 +290,7 @@ export const useUsers = () => {
     setUserFilters,
     clearUserFilters,
     clearUserList,
+    
 
     // Helpers
     getUserById,

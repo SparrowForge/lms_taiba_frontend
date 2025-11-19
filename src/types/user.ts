@@ -19,6 +19,28 @@ export interface IUser {
   twoFaStatus:'active' | 'inactive'
 }
 
+export interface IDomainInfo {
+  id: number;
+  externalId: string;
+  name: string;
+  authenticationType: string;
+  availabilityStatus: string | null;
+  isAdminManaged: boolean;
+  isDefault: boolean;
+  isInitial: boolean;
+  isRoot: boolean;
+  isVerified: boolean;
+  supportedServices: any[]; // or string[] if you know the type
+  passwordValidityPeriodInDays: number | null;
+  passwordNotificationWindowInDays: number | null;
+  state: string | null;
+  syncedAt: string;   // or Date if you prefer
+  createdAt: string;  // or Date if you prefer
+  updatedAt: string;  // or Date if you prefer
+  deletedAt: string | null; // or Date | null
+}
+
+
 export interface IUserCreate {
   email: string;
   name: string;
@@ -51,10 +73,12 @@ export interface IUsersState {
   listStatus: IStatusState;
   detailsStatus: IStatusState;
   actionStatus: IStatusState;
+  domainStatus:IStatusState
 
   // Data
   users: IUser[];
   selectedUser: IUser | null;
+  domains: IDomainInfo[]
 
   pagination: IPaginationMeta;
   filters: IUserFilters;

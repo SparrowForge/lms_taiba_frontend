@@ -16,7 +16,7 @@ import {useStudents} from '@/hooks/useStudents';
 import {useUsers} from '@/hooks/useUsers';
 
 import {getErrorMessage} from '@/types/errors';
-import {IUserCreate, IUserUpdate} from '@/types/user';
+import {IDomainInfo, IUserCreate, IUserUpdate} from '@/types/user';
 
 import FormLayout from '../layout/FormLayout';
 import {StatusSelectFormItem} from '../ui/StatusSelect';
@@ -43,10 +43,11 @@ const UserForm: React.FC<UserFormProps> = ({
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
   const router = useRouter();
   const [form] = Form.useForm();
-  const { addUser, editUser, actionStatus } = useUsers();
+  const { addUser, editUser, actionStatus, domains, loadDomains } = useUsers();
   const { faculties, loadFacultiesWithoutUser } = useFaculties();
   const { students, loadStudentsWithoutUser } = useStudents();
   const {roles, loadRoles} = useRoles()
+   
 
   // State for profile selection
   const [selectedType, setSelectedType] = React.useState<UserType | undefined>();
@@ -70,6 +71,12 @@ const UserForm: React.FC<UserFormProps> = ({
     loadRoles({page:1, limit:99})
   },[loadRoles])
 
+  useEffect(()=>{
+    loadDomains()
+  },[loadDomains])
+
+
+  const defaultDomain = domains?.items?.find((d: IDomainInfo) => d.isDefault)?.externalId;
 
 
   // Handle type change
@@ -110,7 +117,7 @@ const UserForm: React.FC<UserFormProps> = ({
     if (student) {
       form.setFieldsValue({
         name: student.firstName + ' ' + (student.middleName ?? '') + ' ' + student.lastName,
-        personal_email: student.profile.email,
+        email: student.profile?.email,
       });
     }
   };
@@ -158,6 +165,7 @@ const UserForm: React.FC<UserFormProps> = ({
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
   };
 
+
   const formContent = (
     <>
       <Form
@@ -168,6 +176,7 @@ const UserForm: React.FC<UserFormProps> = ({
         aria-label={`${mode === 'create' ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName }) : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} form`}
         role="form"
         autoComplete="off"
+        
       >
         {/* Hidden fields to prevent browser autofill */}
         <input type="text" style={{ display: 'none' }} autoComplete="username" />
@@ -284,7 +293,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
         
         <Form.Item
-          name="role"
+          name="roleId"
           label={t(LOCALE_KEYS.ROLE)}
           rules={[
             {
@@ -307,7 +316,6 @@ const UserForm: React.FC<UserFormProps> = ({
         </Form.Item>
 
         <Form.Item
-          name="domain"
           label={t(LOCALE_KEYS.DOMAIN)}
           rules={[
             {
@@ -317,6 +325,7 @@ const UserForm: React.FC<UserFormProps> = ({
           ]}
         >
           <Select
+            defaultValue={defaultDomain}
             placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DOMAIN) })}
             aria-label={t(LOCALE_KEYS.DOMAIN)}
             aria-required="true"
@@ -324,7 +333,7 @@ const UserForm: React.FC<UserFormProps> = ({
             onChange={handleDomainChange}
           >
             {
-              DomainOptions.map(item=><Select.Option key={item} value={item}>{item}</Select.Option>)
+              domains?.items?.map((item:IDomainInfo)=><Select.Option key={item.id} value={item.externalId}>{item.externalId}</Select.Option>)
             }
           </Select>
         </Form.Item>

@@ -1,5 +1,5 @@
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IUser, IUserCreate, IUserUpdate } from '@/types/user';
+import { IDomainInfo, IUser, IUserCreate, IUserUpdate } from '@/types/user';
 
 import { api } from '@/lib/axios';
 
@@ -15,6 +15,13 @@ export const userService = {
     const response = await api.get<IBaseResponse<IUser>>(`/users/${id}`);
     return response.data;
   },
+
+    // Get domain
+  async getDomains(): Promise<IBaseResponse<IDomainInfo[]>> {
+    const response = await api.get<IBaseResponse<IDomainInfo[]>>(`/external-sync/domains`);
+    return response.data;
+  },
+
 
   // Create new user
   async createUser(userData: IUserCreate): Promise<IUser> {
