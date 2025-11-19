@@ -35,6 +35,8 @@
   "not_found_description": "{name} غير موجود.",
   "back": "رجوع",
 
+  "domain":"اِختِصاص",
+  "personal_email":"البريد الإلكتروني الشخصي",
   "email": "البريد الإلكتروني",
   "phone": "الهاتف",
   "password": "كلمة المرور",

@@ -2,13 +2,13 @@
 
 import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
 import {Status} from '@/enums';
-import {UserType} from '@/enums/user-type.enum';
+import {DomainOptions, UserType} from '@/enums/user-type.enum';
 
 import {useFaculties} from '@/hooks/useFaculties';
 import {useLocalization} from '@/hooks/useLocalization';
@@ -16,10 +16,11 @@ import {useStudents} from '@/hooks/useStudents';
 import {useUsers} from '@/hooks/useUsers';
 
 import {getErrorMessage} from '@/types/errors';
-import {IUserCreate, IUserUpdate} from '@/types/user';
+import {IDomainInfo, IUserCreate, IUserUpdate} from '@/types/user';
 
 import FormLayout from '../layout/FormLayout';
 import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { useRoles } from '@/hooks/useRoles';
 
 interface UserFormProps {
   mode: 'create' | 'edit';
@@ -42,14 +43,17 @@ const UserForm: React.FC<UserFormProps> = ({
   const entityName = t(LOCALE_KEYS.USER, { defaultValue: 'User' });
   const router = useRouter();
   const [form] = Form.useForm();
-  const { addUser, editUser, actionStatus } = useUsers();
+  const { addUser, editUser, actionStatus, domains, loadDomains } = useUsers();
   const { faculties, loadFacultiesWithoutUser } = useFaculties();
   const { students, loadStudentsWithoutUser } = useStudents();
+  const {roles, loadRoles} = useRoles()
+   
 
   // State for profile selection
   const [selectedType, setSelectedType] = React.useState<UserType | undefined>();
   const [selectedFacultyId, setSelectedFacultyId] = React.useState<number | undefined>();
   const [selectedStudentId, setSelectedStudentId] = React.useState<number | undefined>();
+  const [selectedStudentName, setSelectedStudentName] = useState('')
 
   useEffect(() => {
     if (mode === 'create') {
@@ -63,6 +67,18 @@ const UserForm: React.FC<UserFormProps> = ({
     loadStudentsWithoutUser();
   }, [loadFacultiesWithoutUser, loadStudentsWithoutUser]);
 
+  useEffect(()=>{
+    loadRoles({page:1, limit:99})
+  },[loadRoles])
+
+  useEffect(()=>{
+    loadDomains()
+  },[loadDomains])
+
+
+  const defaultDomain = domains?.items?.find((d: IDomainInfo) => d.isDefault)?.externalId;
+
+
   // Handle type change
   const handleTypeChange = (type: UserType) => {
     setSelectedType(type);
@@ -70,6 +86,15 @@ const UserForm: React.FC<UserFormProps> = ({
     setSelectedStudentId(undefined);
     form.setFieldsValue({ facultyId: undefined, studentId: undefined, name: '', email: '' });
   };
+
+  const handleDomainChange = (domain:any) => {
+    if (selectedStudentName) {
+      form.setFieldsValue({
+        email: `${selectedStudentName.toLowerCase()}@${domain}`
+      });
+    }
+};
+
 
   // Handle faculty selection
   const handleFacultyChange = (facultyId: number) => {
@@ -87,10 +112,12 @@ const UserForm: React.FC<UserFormProps> = ({
   const handleStudentChange = (studentId: number) => {
     setSelectedStudentId(studentId);
     const student = students.find((s) => s.id === studentId);
+    console.log("student name", student)
+    setSelectedStudentName(student?.firstName)
     if (student) {
       form.setFieldsValue({
         name: student.firstName + ' ' + (student.middleName ?? '') + ' ' + student.lastName,
-        email: student.profile.email,
+        email: student.profile?.email,
       });
     }
   };
@@ -138,6 +165,7 @@ const UserForm: React.FC<UserFormProps> = ({
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
   };
 
+
   const formContent = (
     <>
       <Form
@@ -148,6 +176,7 @@ const UserForm: React.FC<UserFormProps> = ({
         aria-label={`${mode === 'create' ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName }) : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} form`}
         role="form"
         autoComplete="off"
+        
       >
         {/* Hidden fields to prevent browser autofill */}
         <input type="text" style={{ display: 'none' }} autoComplete="username" />
@@ -262,6 +291,53 @@ const UserForm: React.FC<UserFormProps> = ({
           />
         </Form.Item>
 
+        
+        <Form.Item
+          name="roleId"
+          label={t(LOCALE_KEYS.ROLE)}
+          rules={[
+            {
+              required: true,
+              message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROLE) }),
+            },
+          ]}
+        >
+          <Select
+            placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}
+            aria-label={t(LOCALE_KEYS.ROLE)}
+            aria-required="true"
+            aria-describedby="role-help"
+            // onChange={handleTypeChange}
+          >
+             {
+              roles.map(role=><Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>)
+            }
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label={t(LOCALE_KEYS.DOMAIN)}
+          rules={[
+            {
+              required: true,
+              message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DOMAIN) }),
+            },
+          ]}
+        >
+          <Select
+            defaultValue={defaultDomain}
+            placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DOMAIN) })}
+            aria-label={t(LOCALE_KEYS.DOMAIN)}
+            aria-required="true"
+            aria-describedby="domain-help"
+            onChange={handleDomainChange}
+          >
+            {
+              domains?.items?.map((item:IDomainInfo)=><Select.Option key={item.id} value={item.externalId}>{item.externalId}</Select.Option>)
+            }
+          </Select>
+        </Form.Item>
+
         <Form.Item
           name="email"
           label={t(LOCALE_KEYS.EMAIL)}
@@ -276,7 +352,6 @@ const UserForm: React.FC<UserFormProps> = ({
             aria-label={t(LOCALE_KEYS.EMAIL)}
             aria-required="true"
             aria-describedby="email-help"
-            disabled={selectedType === UserType.FACULTY || selectedType === UserType.STUDENT}
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"

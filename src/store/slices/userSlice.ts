@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status } from '@/enums';
 
 import { IPaginationMeta, IStatusState } from '@/types/common';
-import { IUser, IUserFilters, IUsersState } from '@/types/user';
+import { IDomainInfo, IUser, IUserFilters, IUsersState } from '@/types/user';
 
 const initialState: IUsersState = {
   // Status fields as IStatusState objects
@@ -15,6 +15,10 @@ const initialState: IUsersState = {
     status: Status.INITIAL,
     message: undefined,
   },
+  domainStatus: {
+    status: Status.INITIAL,
+    message: undefined,
+  },
   actionStatus: {
     status: Status.INITIAL,
     message: undefined,
@@ -22,6 +26,7 @@ const initialState: IUsersState = {
 
   // Data
   users: [],
+  domains:[],
   selectedUser: null,
 
   pagination: {
@@ -53,6 +58,11 @@ const userSlice = createSlice({
       state.detailsStatus = action.payload;
     },
 
+        // Details status actions
+    setDomainStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.domainStatus = action.payload;
+    },
+
     // Action status actions
     setActionStatus: (state, action: PayloadAction<IStatusState>) => {
       state.actionStatus = action.payload;
@@ -61,6 +71,11 @@ const userSlice = createSlice({
     // Data actions
     setUsers: (state, action: PayloadAction<IUser[]>) => {
       state.users = action.payload;
+    },
+
+    // Data actions
+    setDomains: (state, action: PayloadAction<IDomainInfo[]>) => {
+      state.domains = action.payload;
     },
 
     // Pagination actions
@@ -121,6 +136,8 @@ const userSlice = createSlice({
 export const {
   setListStatus,
   setDetailsStatus,
+  setDomainStatus,
+  setDomains,
   setActionStatus,
   setUsers,
   setSelectedUser,

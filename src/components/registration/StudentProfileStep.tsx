@@ -1,6 +1,6 @@
 'use client';
 
-import { Col, DatePicker, Form, Input, Row, Select, Switch } from 'antd';
+import { Checkbox, Col, DatePicker, Form, Input, Row, Select, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 
@@ -262,7 +262,49 @@ const StudentProfileStep: React.FC<StudentProfileStepProps> = ({ form }) => {
           </Col>
         </Row>
       </div>
+      <Form.Item valuePropName="checked">
+        <Checkbox
+          onChange={(e) => {
+            const checked = e.target.checked;
+            if (checked) {
+              const values = form.getFieldsValue([
+                "presentAddressName",
+                "presentAddressEmail",
+                "presentAddressPhone",
+                "presentAddress",
+                "presentCity",
+                "presentState",
+                "presentZipCode",
+                "presentCountry",
+              ]);
 
+              form.setFieldsValue({
+                permanentAddressName: values.presentAddressName,
+                permanentAddressEmail: values.presentAddressEmail,
+                permanentAddressPhone: values.presentAddressPhone,
+                permanentAddress: values.presentAddress,
+                permanentCity: values.presentCity,
+                permanentState: values.presentState,
+                permanentZipCode: values.presentZipCode,
+                permanentCountry: values.presentCountry,
+              });
+            } else {
+              form.setFieldsValue({
+                permanentAddressName: "",
+                permanentAddressEmail: "",
+                permanentAddressPhone: "",
+                permanentAddress: "",
+                permanentCity: "",
+                permanentState: "",
+                permanentZipCode: "",
+                permanentCountry: "",
+              });
+            }
+          }}
+        >
+          Same as Present Address
+        </Checkbox>
+      </Form.Item>
       {/* Permanent Address Information */}
       <div className="mb-6">
         <h4 className="text-md font-medium mb-4 text-gray-700">
