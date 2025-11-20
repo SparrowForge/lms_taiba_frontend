@@ -22,6 +22,7 @@ import {ICourseMaterial, ICourseMaterialCreate, ICourseMaterialUpdate,} from '@/
 import {getErrorMessage} from '@/types/errors';
 import FormLayoutFull from '../layout/FormLayoutFull';
 import {StatusSelect} from '../ui/StatusSelect';
+import { useAttendances } from '@/hooks/useAttendances';
 
 const { TextArea } = Input;
 
@@ -52,6 +53,7 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
   const { batches, loadBatches, clearBatches } = useBatches();
   const { semesterSubjects, loadSemesterSubjects } = useSemesterSubjects();
   const { faculties, loadFaculties } = useFaculties();
+  const {attendances, loadAttendances} = useAttendances()
 
   // State for cascading dropdowns
   const [selectedCourseId, setSelectedCourseId] = useState<number | undefined>(
@@ -64,6 +66,10 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
     initialValues?.semesterId,
   );
 
+  const [selectedClassNo, setSelectedClassNo] = useState<number | undefined>(
+    initialValues?.classNo,
+  );
+
   // Track which fields were pre-filled from URL (should be disabled)
   const [prefilledFields, setPrefilledFields] = useState<{
     courseId?: boolean;
@@ -71,6 +77,7 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
     semesterId?: boolean;
     subjectId?: boolean;
     facultyId?: boolean;
+    classNo?:boolean
   }>({});
 
   // Extract subjects from semesterSubjects
@@ -114,6 +121,13 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
       loadSemesterSubjects({ page: 1, limit: 100, semesterId: selectedSemesterId });
     }
   }, [selectedSemesterId, loadSemesterSubjects]);
+
+    // Load class no when semester is selected
+  useEffect(() => {
+    if (selectedSemesterId) {
+      loadAttendances({ page: 1, limit: 100, semesterId: selectedSemesterId });
+    }
+  }, [selectedSemesterId, loadAttendances]);
 
   // Handle URL query parameters for pre-filled values
   useEffect(() => {
@@ -239,6 +253,13 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
     });
   };
 
+  const handleClassNoChange = (value: number) => {
+    setSelectedClassNo(value);
+    form.setFieldsValue({
+      subjectId: undefined,
+    });
+  };
+
   const getSubmitText = () =>
     mode === 'create'
       ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
@@ -336,6 +357,36 @@ const CourseMaterialForm: React.FC<CourseMaterialFormProps> = ({
               options={semesters.map((semester) => ({
                 value: semester.id,
                 label: `${semester.name}`,
+              }))}
+            />
+          </Form.Item>
+
+          {/* 3. Class Selection (enabled after batch) */}
+          <Form.Item
+            name="classNo"
+            label={t(LOCALE_KEYS.CLASS_NO)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.CLASS_NO) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={
+                selectedSemesterId
+                  ? t(LOCALE_KEYS.CLASS_NO, { name: t(LOCALE_KEYS.CLASS_NO) })
+                  : t(LOCALE_KEYS.CLASS_NO, { name: t(LOCALE_KEYS.BATCH) }) + ' first'
+              }
+              showSearch
+              disabled={!selectedSemesterId || prefilledFields.classNo}
+              onChange={handleClassNoChange}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={attendances.map((attendance) => ({
+                value: attendance.classNo,
+                label: `${attendance.classNo}`,
               }))}
             />
           </Form.Item>
