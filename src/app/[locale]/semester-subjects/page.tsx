@@ -60,13 +60,24 @@ export default function SemesterSubjectsPage() {
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
     loadSemesterSubjects({ page, limit: limitNum, ...params });
-    loadSemesters({ page, limit: limitNum, ...params })
-    loadSubjects({ page, limit: limitNum, ...params })
+
   };
 
   useEffect(() => {
     loadWithParams(searchParams, skip, limit);
+
   }, [searchParams, skip, limit, loadSemesterSubjects]);
+
+
+  useEffect(()=>{
+    loadSemesters({ page:1, limit:99 })
+  },[loadSemesters])
+
+  useEffect(()=>{
+    loadSubjects({ page:1, limit:99 })
+  },[loadSubjects])
+
+  
 
   const handleEditDrawer = (semesterSubjectId: number) => {
     setSelectedSemesterSubjectId(semesterSubjectId);

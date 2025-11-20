@@ -2,7 +2,7 @@
 
 import {Button, Form, Input, Select, Space} from 'antd';
 import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
@@ -53,7 +53,7 @@ const UserForm: React.FC<UserFormProps> = ({
   const [selectedType, setSelectedType] = React.useState<UserType | undefined>();
   const [selectedFacultyId, setSelectedFacultyId] = React.useState<number | undefined>();
   const [selectedStudentId, setSelectedStudentId] = React.useState<number | undefined>();
-  const [selectedStudentName, setSelectedStudentName] = useState('')
+  const [selectedEmailDomain, setSelectedEmailDomain] = useState('')
 
   useEffect(() => {
     if (mode === 'create') {
@@ -88,9 +88,9 @@ const UserForm: React.FC<UserFormProps> = ({
   };
 
   const handleDomainChange = (domain:any) => {
-    if (selectedStudentName) {
+    if (selectedEmailDomain) {
       form.setFieldsValue({
-        email: `${selectedStudentName.toLowerCase()}@${domain}`
+        email: `${selectedEmailDomain.replace(/\s+/g, "").toLowerCase()}@${domain}`
       });
     }
 };
@@ -100,10 +100,11 @@ const UserForm: React.FC<UserFormProps> = ({
   const handleFacultyChange = (facultyId: number) => {
     setSelectedFacultyId(facultyId);
     const faculty = faculties.find((f) => f.id === facultyId);
+    setSelectedEmailDomain(faculty.fullName)
     if (faculty) {
       form.setFieldsValue({
         name: faculty.fullName,
-        email: faculty.email,
+        // email: faculty.email,
       });
     }
   };
@@ -113,14 +114,26 @@ const UserForm: React.FC<UserFormProps> = ({
     setSelectedStudentId(studentId);
     const student = students.find((s) => s.id === studentId);
     console.log("student name", student)
-    setSelectedStudentName(student?.firstName)
+    setSelectedEmailDomain(student?.firstName)
     if (student) {
       form.setFieldsValue({
         name: student.firstName + ' ' + (student.middleName ?? '') + ' ' + student.lastName,
-        email: student.profile?.email,
+        // email: student.profile?.email,
       });
     }
   };
+
+const computedInitialValues = useMemo(() => {
+  if (mode === 'edit') {
+    return initialValues; // existing values from API
+  }
+
+  // mode === 'create'
+  return {
+    domain: defaultDomain, // auto-set default domain
+  };
+}, [mode, initialValues, defaultDomain]);
+
 
   const handleSubmit = async (values: IUserCreate | IUserUpdate) => {
     try {
@@ -166,13 +179,15 @@ const UserForm: React.FC<UserFormProps> = ({
   };
 
 
+
+
   const formContent = (
     <>
       <Form
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        initialValues={mode === 'edit' ? initialValues : undefined}
+        initialValues={computedInitialValues}
         aria-label={`${mode === 'create' ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName }) : t(LOCALE_KEYS.EDIT_NAME, { name: entityName })} form`}
         role="form"
         autoComplete="off"
@@ -325,7 +340,6 @@ const UserForm: React.FC<UserFormProps> = ({
           ]}
         >
           <Select
-            defaultValue={defaultDomain}
             placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DOMAIN) })}
             aria-label={t(LOCALE_KEYS.DOMAIN)}
             aria-required="true"
