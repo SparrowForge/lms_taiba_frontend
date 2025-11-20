@@ -56,6 +56,9 @@ const StudentCourse = () => {
     }
   }, [semesters, selectedSemesterId]);
 
+
+  console.log("selectedSemesterId", selectedSemesterId)
+
   return (
     <div className="space-y-4">
       <StudentCourseHeader course={meData?.data?.course || null} />
@@ -100,6 +103,7 @@ const StudentCourse = () => {
                   <SubjectCard
                     key={subject.id}
                     subject={subject}
+                    semesterId={selectedSemesterId}
                     onClick={() => router.push(`/dashboard/course/${subject.id}`)}
                   />
                 ))}

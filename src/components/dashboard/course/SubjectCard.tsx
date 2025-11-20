@@ -5,10 +5,11 @@ import {ISubject} from '@/types/subject';
 
 interface SubjectCardProps {
   subject: ISubject;
+  semesterId:string;
   onClick?: () => void;
 }
 
-const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick }) => {
+const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick, semesterId }) => {
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'active':
@@ -21,6 +22,9 @@ const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick }) => {
         return 'blue';
     }
   };
+
+  console.log(semesterId)
+  console.log(subject)
 
   return (
     <Card
