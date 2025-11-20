@@ -2,6 +2,7 @@
 // This ensures we only use keys that exist in our localization files
 export const LOCALE_KEYS = {
   // Common
+  TIMELINE:'timeline',
   PANEL: 'panel',
   USER: 'user',
   MANAGEMENT_NAME: 'management_name',

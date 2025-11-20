@@ -54,6 +54,7 @@ const UserForm: React.FC<UserFormProps> = ({
   const [selectedFacultyId, setSelectedFacultyId] = React.useState<number | undefined>();
   const [selectedStudentId, setSelectedStudentId] = React.useState<number | undefined>();
   const [selectedEmailDomain, setSelectedEmailDomain] = useState('')
+  const [defaultDomain, setDefaultDomain] = useState('')
 
   useEffect(() => {
     if (mode === 'create') {
@@ -76,9 +77,17 @@ const UserForm: React.FC<UserFormProps> = ({
   },[loadDomains])
 
 
-  const defaultDomain = domains?.items?.find((d: IDomainInfo) => d.isDefault)?.externalId;
+  useEffect(()=>{
+    const dDomain = domains?.items?.find((d: IDomainInfo) => d.isDefault)?.externalId;
+    setDefaultDomain(dDomain)
+    if (selectedEmailDomain) {
+      form.setFieldsValue({
+        email: `${selectedEmailDomain.replace(/\s+/g, "").toLowerCase()}@${dDomain}`
+      });
+    }
+  },[domains, selectedEmailDomain, form])
 
-
+  console.log(defaultDomain)
   // Handle type change
   const handleTypeChange = (type: UserType) => {
     setSelectedType(type);
@@ -125,10 +134,9 @@ const UserForm: React.FC<UserFormProps> = ({
 
 const computedInitialValues = useMemo(() => {
   if (mode === 'edit') {
-    return initialValues; // existing values from API
+    return initialValues; 
   }
 
-  // mode === 'create'
   return {
     domain: defaultDomain, // auto-set default domain
   };
@@ -138,7 +146,7 @@ const computedInitialValues = useMemo(() => {
   const handleSubmit = async (values: IUserCreate | IUserUpdate) => {
     try {
       // Remove confirmPassword from values before sending to API
-      const { confirmPassword, ...apiValues } = values as any;
+      const { confirmPassword, domain, ...apiValues } = values as any;
 
       if (mode === 'create') {
         await addUser(apiValues as IUserCreate);
@@ -177,8 +185,6 @@ const computedInitialValues = useMemo(() => {
       ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
   };
-
-
 
 
   const formContent = (
@@ -331,6 +337,7 @@ const computedInitialValues = useMemo(() => {
         </Form.Item>
 
         <Form.Item
+          name="domain"
           label={t(LOCALE_KEYS.DOMAIN)}
           rules={[
             {
