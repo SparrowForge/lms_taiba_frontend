@@ -1,10 +1,12 @@
 "use client"
 
 import { Button, Card, Timeline } from "antd"
+import { useEffect, useState } from "react"
+
+import CourseMaterialFormDrawer from "@/components/courseMaterials/CourseMaterialFormDrawer"
 
 import { useAttendances } from "@/hooks/useAttendances"
-import { useEffect, useState } from "react"
-import CourseMaterialFormDrawer from "@/components/courseMaterials/CourseMaterialFormDrawer"
+
 
 interface CourseMaterial {
   id: number
@@ -28,6 +30,7 @@ interface TimelineItem {
 }
 
 export default function CourseTimeline() {
+
   const {attendances, loadAttendances} = useAttendances()
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedCourseMaterialId, setSelectedCourseMaterialId] = useState<number | undefined>();
@@ -35,31 +38,36 @@ export default function CourseTimeline() {
   useEffect(()=>{
     loadAttendances({page:1, limit:99, semesterId:1, subjectId:1})
   },[loadAttendances, drawerVisible])
-  const timelineData = attendances as TimelineItem[]
 
-  
+  const timelineData = attendances as unknown as TimelineItem[]
+
+
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+  };
+
   const handleEditDrawer = (courseMaterialId: number) => {
     setSelectedCourseMaterialId(courseMaterialId);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
 
-  const handleCreateDrawer = () => {
-    setSelectedCourseMaterialId(undefined);
-    setDrawerMode('create');
-    setDrawerVisible(true);
-  };
 
-  const handleDrawerSuccess = () => {
-    setDrawerVisible(false);
-  };
 
   const items = timelineData.map((item) => ({
     label: <div className="font-bold text-slate-900">Class {item.classNo}</div>,
     children: (
       <div className="space-y-3">
-        <div className="text-sm text-slate-600">
-          <span className="font-semibold">Date:</span> {new Date(item.date).toLocaleDateString()}
+        <div className="text-sm text-slate-600 mt-3 flex justify-between">
+          <h1><span className="font-semibold">Date:</span> {new Date(item.date).toLocaleDateString()}</h1>
+           <Button
+              onClick={()=>setDrawerVisible(true)}
+              type="primary"
+              size="small"
+              className="h-9 text-base font-medium mb-0"
+              >
+                Add Course Material
+            </Button>
         </div>
 
         {item.subject.courseMaterial && item.subject.courseMaterial.length > 0 ? (
@@ -71,16 +79,17 @@ export default function CourseTimeline() {
                   <div key={material.id} className="p-2 bg-slate-50 rounded border border-slate-100">
                     <p className="text-sm font-medium text-slate-800">{material.title}</p>
                     {material.description && <p className="text-xs text-slate-600 mt-1">{material.description}</p>}
+                    <Button
+                      onClick={()=>handleEditDrawer(material.id)}
+                      type="primary"
+                      size="small"
+                      className="h-9 text-base font-medium mb-0"
+                      >
+                        Edit Course Material
+                    </Button>
                   </div>
                 ))}
-              <Button
-                onClick={()=>setDrawerVisible(true)}
-                type="primary"
-                size="small"
-                className="h-9 text-base font-medium mb-0"
-              >
-                Add Course Material
-              </Button>
+                
               </div>
             </div>
           </Card>

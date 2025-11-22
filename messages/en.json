@@ -696,5 +696,12 @@
   "terms_of_services":"Terms of Service",
   "help":"Help",
   "two_factor_authentication":"Two Factor Authentication",
-  "two_fa":"twofa"
+  "two_fa":"twofa",
+  "mathematics":"Mathematics",
+  "join_live_class":"Join Live Class",
+  "download_materials":"Download Materials",
+  "completed_units":"Completed Units",
+  "average_grade":"Average Grade",
+  "time_spent":"Time Spent",
+  "next_exam":"Next Exam"
 }

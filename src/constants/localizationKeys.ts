@@ -689,6 +689,13 @@ export const LOCALE_KEYS = {
   CLOSE: 'close',
   STUDENT_ALREADY_HAS_FEE_STRUCTURE: 'student_already_has_fee_structure',
   APPROVE: 'approve',
+  MATHEMATICS:"Mathematics",
+  JOIN_LIVE_CLASS:"Join Live Class",
+  DOWNLOAD_MATERIALS:"Download Materials",
+  COMPLETED_UNITS:"Completed Units",
+  AVERAGE_GRADE:"Average Grade",
+  TIME_SPENT:"Time Spent",
+  NEXT_EXAM:"Next Exam"
 } as const;
 
 // Type for the keys
