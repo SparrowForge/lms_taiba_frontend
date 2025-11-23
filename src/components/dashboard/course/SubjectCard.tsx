@@ -5,7 +5,7 @@ import {ISubject} from '@/types/subject';
 
 interface SubjectCardProps {
   subject: ISubject;
-  semesterId:string;
+  semesterId:number;
   onClick?: () => void;
 }
 

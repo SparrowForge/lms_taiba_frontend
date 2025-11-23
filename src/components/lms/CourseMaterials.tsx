@@ -11,7 +11,7 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Empty, Select, Spin, Tag } from 'antd';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 
@@ -25,13 +25,17 @@ import { ICourseMaterial } from '@/types/courseMaterial';
 
 import CourseMaterialDetailsDrawer from '../courseMaterials/CourseMaterialDetailsDrawer';
 import CourseMaterialFormDrawer from '../courseMaterials/CourseMaterialFormDrawer';
+import { useAuth } from '@/hooks/useAuth';
 
 const materialTypes = ['pdf', 'lecture', 'video', 'slide', 'assignment', 'material'];
 
 const CourseMaterials = () => {
   const { t } = useLocalization();
+  const {id} = useParams()
   const locale = useLocale();
   const router = useRouter();
+  const {user} = useAuth()
+
   const { courseMaterials, listStatus, loadCourseMaterials } = useCourseMaterials();
   const [selectedCourse, setSelectedCourse] = useState<string>('allCourses');
   const [selectedType, setSelectedType] = useState<string>('allTypes');
@@ -45,8 +49,8 @@ const CourseMaterials = () => {
 
   // Fetch materials on mount
   useEffect(() => {
-    loadCourseMaterials();
-  }, [loadCourseMaterials]);
+    loadCourseMaterials({batchId:user?.student.batchId, subjectId:id});
+  }, [id, loadCourseMaterials, user?.student.batchId]);
 
   // Filter materials based on selected type and course
   const filteredMaterials = courseMaterials.filter((m) => {
@@ -160,15 +164,12 @@ const CourseMaterials = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">{t(LOCALE_KEYS.COURSE_MATERIALS)}</h2>
-        <Button type="primary" onClick={() => router.push('/course-materials/create')}>
-          <PlusOutlined />
-          {t(LOCALE_KEYS.UPLOAD_NEW)}
-        </Button>
+        
       </div>
 
       {/* Filters */}
       <div className="flex gap-2 mb-4 w-full">
-        <Select
+        {/* <Select
           defaultValue="allCourses"
           style={{ width: '100%' }}
           value={selectedCourse}
@@ -183,7 +184,7 @@ const CourseMaterials = () => {
                 label: c!.name,
               })),
           ]}
-        />
+        /> */}
 
         <Select
           defaultValue="allTypes"

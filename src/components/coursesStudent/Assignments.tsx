@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Card, Empty, Spin, Tag } from 'antd';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -19,6 +19,7 @@ import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/Course
 
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useAuth } from '@/hooks/useAuth';
 
 // 🔹 Icon map for assignment types
 const getIcon = (type: string) => {
@@ -74,13 +75,17 @@ const getAssignmentTag = (assignment: any) => {
 const Assignments: React.FC = () => {
   const { t } = useLocalization();
   const router = useRouter();
+  const {user} = useAuth()
+  const {id} = useParams()
   const { courseAssignments, listStatus, loadCourseAssignments } = useCourseAssignments();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<number | undefined>();
 
   useEffect(() => {
-    loadCourseAssignments({ page: 1, limit: 20 });
-  }, [loadCourseAssignments]);
+    if(user?.student?.batchId){
+      loadCourseAssignments({ batchId:user?.student?.batchId, subjectId:id});
+    }
+  }, [id,loadCourseAssignments, user?.student?.batchId]);
 
   const sortedAssignments = [...(courseAssignments || [])].sort(
     (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf(),
