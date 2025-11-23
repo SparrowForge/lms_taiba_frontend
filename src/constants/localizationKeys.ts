@@ -682,6 +682,7 @@ export const LOCALE_KEYS = {
   WHATSAPP_NUMBER: 'whatsapp_number',
   ENTER_WHATSAPP_NUMBER: 'enter_whatsapp_number',
   PLEASE_ENTER_WHATSAPP_NUMBER: 'please_enter_whatsapp_number',
+  ADD_ASSIGNMENT:'add_assignment',
 
   // Fee Structure Assignment
   ASSIGN_FEE_STRUCTURE: 'assign_fee_structure',

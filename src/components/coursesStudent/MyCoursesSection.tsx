@@ -1,17 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Assignments from './Assignments';
 import TabData from './TabData';
 import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
 
+import { useSearchParams } from 'next/navigation';
+
 const MyCoursesSection = () => {
-  const [activeTab, setActiveTab] = useState('materials');
+  const [activeTab, setActiveTab] = useState('');
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab");
+
+  useEffect(()=>{
+    if(tab){
+      setActiveTab(tab)
+    }
+  },[tab])
+
   return (
     <div className="md:my-6">
-      <UpperTab items={TabData} onTabChange={(key) => setActiveTab(key)} />
+      <UpperTab items={TabData} onTabChange={(tab) => setActiveTab(tab)} />
 
       {activeTab === 'materials' && <CourseMaterials />}
       {activeTab === 'assignments' && <Assignments />}

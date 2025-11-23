@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Card, Empty, Spin, Tag } from 'antd';
 import dayjs from 'dayjs';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -80,12 +80,12 @@ const Assignments: React.FC = () => {
   const { courseAssignments, listStatus, loadCourseAssignments } = useCourseAssignments();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<number | undefined>();
+  const searchParams = useSearchParams();
+  const semesterId = searchParams.get("semesterId");
 
   useEffect(() => {
-    if(user?.student?.batchId){
-      loadCourseAssignments({ batchId:user?.student?.batchId, subjectId:id});
-    }
-  }, [id,loadCourseAssignments, user?.student?.batchId]);
+      loadCourseAssignments({ semesterId, subjectId:id});
+  }, [id,loadCourseAssignments, semesterId]);
 
   const sortedAssignments = [...(courseAssignments || [])].sort(
     (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf(),
@@ -102,7 +102,7 @@ const Assignments: React.FC = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">{t(LOCALE_KEYS.UPCOMING_ASSIGNMENT)}</h2>
         <Button type="primary" onClick={() => router.push('/course-assignments')}>
-          {t(LOCALE_KEYS.ALL_TASKS)}
+          {t(LOCALE_KEYS.ADD_ASSIGNMENT)}
         </Button>
       </div>
 

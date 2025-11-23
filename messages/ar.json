@@ -702,5 +702,6 @@
   "completed_units":"الوحدات المكتملة",
   "average_grade":"متوسط ​​​​الدرجة",
   "time_spent":"الوقت الذي يقضيه",
-  "next_exam":"الامتحان القادم"
+  "next_exam":"الامتحان القادم",
+  "add_assignment":"إضافة مهمة"
 }

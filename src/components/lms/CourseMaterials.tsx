@@ -11,7 +11,7 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Empty, Select, Spin, Tag } from 'antd';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 
@@ -35,6 +35,9 @@ const CourseMaterials = () => {
   const locale = useLocale();
   const router = useRouter();
   const {user} = useAuth()
+  const searchParams = useSearchParams();
+
+  const semesterId = searchParams.get("semesterId");
 
   const { courseMaterials, listStatus, loadCourseMaterials } = useCourseMaterials();
   const [selectedCourse, setSelectedCourse] = useState<string>('allCourses');
@@ -49,8 +52,8 @@ const CourseMaterials = () => {
 
   // Fetch materials on mount
   useEffect(() => {
-    loadCourseMaterials({batchId:user?.student.batchId, subjectId:id});
-  }, [id, loadCourseMaterials, user?.student.batchId]);
+    loadCourseMaterials({semesterId, subjectId:id});
+  }, [id, loadCourseMaterials,semesterId]);
 
   // Filter materials based on selected type and course
   const filteredMaterials = courseMaterials.filter((m) => {

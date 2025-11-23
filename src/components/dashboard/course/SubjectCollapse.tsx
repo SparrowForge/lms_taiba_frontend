@@ -2,6 +2,7 @@
 
 import { Collapse, Card, Button } from "antd"
 import type { CollapseProps } from "antd"
+import { useRouter } from "next/navigation"
 import { BiBookOpen, BiDetail } from "react-icons/bi"
 import { FaClipboardList } from "react-icons/fa"
 
@@ -62,40 +63,51 @@ interface SubjectCollapseProps {
 }
 
 export function SubjectCollapse({ data }: SubjectCollapseProps) {
+  const router = useRouter()
+  const handleAddMaterials =(subjectId:number, semesterId:number) =>{
+      router.push(`/dashboard/course/${subjectId}/timeline?semesterId=${semesterId}`)
+  }
+  const handleAddAssignments =(subjectId:number, semesterId:number) =>{
+      router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&tab=assignments`)
+  }
+
+    console.log("data", data)
   const items: CollapseProps["items"] = data.map((group, index) => {
     const batchName = group.subjects[0]?.batch?.name || "No Batch Assigned"
     const semesterName = group.subjects[0]?.semester.name || "Unknown Semester"
     const headerTitle = `${batchName} - ${semesterName}`
+    
+ 
 
     return {
       key: `group-${index}`,
       label: headerTitle,
       children: (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {group.subjects.map((assignment) => (
-            <Card key={assignment.id} size="small" className="h-full hover:shadow-md transition-shadow">
+          {group.subjects.map((item) => (
+            <Card key={item.id} size="small" className="h-full hover:shadow-md transition-shadow">
               <div className="space-y-3">
                 <div>
-                  <h3 className="font-semibold text-sm leading-tight">{assignment.subject.name}</h3>
-                  <p className="text-xs text-gray-500 mt-1">{assignment.subject.code}</p>
+                  <h3 className="font-semibold text-sm leading-tight">{item.subject.name}</h3>
+                  <p className="text-xs text-gray-500 mt-1">{item.subject.code}</p>
                 </div>
 
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Credit Hours:</span>
-                    <span className="font-semibold">{assignment.subject.creditHours}</span>
+                    <span className="font-semibold">{item.subject.creditHours}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Theory:</span>
-                    <span className="font-semibold">{assignment.subject.theoryHours}h</span>
+                    <span className="font-semibold">{item.subject.theoryHours}h</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Practical:</span>
-                    <span className="font-semibold">{assignment.subject.practicalHours}h</span>
+                    <span className="font-semibold">{item.subject.practicalHours}h</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Weekly Hours:</span>
-                    <span className="font-semibold">{assignment.hoursPerWeek}h</span>
+                    <span className="font-semibold">{item.hoursPerWeek}h</span>
                   </div>
                 </div>
 
@@ -103,14 +115,14 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                   <p className="text-xs text-gray-600 mb-1">
                     <span className="font-medium">Description:</span>
                   </p>
-                  <p className="text-xs text-gray-700 line-clamp-2">{assignment.subject.description}</p>
-                  <p className="text-xs text-gray-600">Role: {assignment.role}</p>
+                  <p className="text-xs text-gray-700 line-clamp-2">{item.subject.description}</p>
+                  <p className="text-xs text-gray-600">Role: {item.role}</p>
                 </div>
 
-                {assignment.subject.prerequisite && (
+                {item.subject.prerequisite && (
                   <div>
                     <p className="text-xs text-gray-600">
-                      <span className="font-medium">Prerequisite:</span> {assignment.subject.prerequisite}
+                      <span className="font-medium">Prerequisite:</span> {item.subject.prerequisite}
                     </p>
                   </div>
                 )}
@@ -123,7 +135,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                     size="small"
                     className="flex-1"
                     icon={<BiBookOpen size={14} />}
-                    // onClick={() => handleAddMaterials(assignment.subject.id, assignment.subject.name)}
+                    onClick={() => handleAddMaterials(item.subject.id, item.semesterId)}
                   >
                     Materials
                   </Button>
@@ -131,7 +143,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                     size="small"
                     className="flex-1"
                     icon={<FaClipboardList size={14} />}
-                    // onClick={() => handleAddAssignments(assignment.subject.id, assignment.subject.name)}
+                    onClick={() => handleAddAssignments(item.subject.id, item.semesterId)}
                   >
                     Assignments
                   </Button>
@@ -139,7 +151,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                     size="small"
                     className="flex-1"
                     icon={<BiDetail size={14} />}
-                    // onClick={() => handleAddAssignments(assignment.subject.id, assignment.subject.name)}
+                    // onClick={() => handleAddAssignments(item.subject.id, item.subject.name)}
                   >
                     Details
                   </Button>

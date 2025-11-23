@@ -703,5 +703,6 @@
   "completed_units":"Completed Units",
   "average_grade":"Average Grade",
   "time_spent":"Time Spent",
-  "next_exam":"Next Exam"
+  "next_exam":"Next Exam",
+  "add_assignment":"Add Assignment"
 }
