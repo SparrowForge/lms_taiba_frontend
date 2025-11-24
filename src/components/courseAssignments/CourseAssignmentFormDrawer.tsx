@@ -12,6 +12,7 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { ICourseAssignment } from '@/types/courseAssignment';
 
 import CourseAssignmentForm from './CourseAssignmentForm';
+import CourseAssignmentFacultyForm from './CourseAssignmentFacultyForm';
 
 interface CourseAssignmentFormDrawerProps {
   mode: 'create' | 'edit';
@@ -19,6 +20,7 @@ interface CourseAssignmentFormDrawerProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
+  isAdmin:boolean
 }
 
 const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
@@ -27,6 +29,7 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
   visible,
   onCancel,
   onSuccess,
+  isAdmin
 }) => {
   const { getCourseAssignmentById, selectedCourseAssignment, loadCourseAssignment, detailsStatus } =
     useCourseAssignments();
@@ -63,6 +66,9 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
     return <Spin />;
   }
 
+
+  console.log("CourseAssignmentFormDrawer",isAdmin)
+
   return (
     <Drawer
       key={courseAssignmentId} // Force remount when courseAssignmentId changes
@@ -76,7 +82,16 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
       onClose={handleCancel}
       destroyOnHidden={true}
     >
-      <CourseAssignmentForm
+      {
+        isAdmin === true ? <CourseAssignmentForm
+        mode={mode}
+        courseAssignmentId={courseAssignmentId}
+        initialValues={convertToFormValues(selectedCourseAssignment)}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
+        embedded={true}
+      /> :
+       <CourseAssignmentFacultyForm
         mode={mode}
         courseAssignmentId={courseAssignmentId}
         initialValues={convertToFormValues(selectedCourseAssignment)}
@@ -84,6 +99,8 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
         onCancel={handleCancel}
         embedded={true}
       />
+      }
+     
     </Drawer>
   );
 };
