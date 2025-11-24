@@ -95,8 +95,8 @@ const Assignments: React.FC = () => {
   const [selectedAssignmentSubmissionId, setSelectedAssignmentSubmissionId] = useState<number | undefined>();
 
   useEffect(() => {
-      loadCourseAssignments()
-      // {subjectId:id, semesterId}
+      loadCourseAssignments({subjectId:id, semesterId})
+      
   }, [id,loadCourseAssignments, semesterId]);
 
   const sortedAssignments = [...(courseAssignments || [])].sort(
