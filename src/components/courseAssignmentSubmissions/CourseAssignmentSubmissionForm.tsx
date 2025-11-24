@@ -60,7 +60,6 @@ const CourseAssignmentSubmissionForm: React.FC<CourseAssignmentSubmissionFormPro
     useCourseAssignmentSubmissions();
   const { courseAssignments, loadCourseAssignments } = useCourseAssignments();
   const { students, loadStudents } = useStudents();
-  const { uploadedFile, uploadFile } = useFiles();
   const { faculties, loadFaculties } = useFaculties();
 
   useEffect(() => {
