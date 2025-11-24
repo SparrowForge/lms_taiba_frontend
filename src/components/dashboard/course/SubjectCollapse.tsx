@@ -67,18 +67,16 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
   const handleAddMaterials =(subjectId:number, semesterId:number) =>{
       router.push(`/dashboard/course/${subjectId}/timeline?semesterId=${semesterId}`)
   }
-  const handleAddAssignments =(subjectId:number, semesterId:number) =>{
-      router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&tab=assignments`)
+  const handleAddAssignments =(subjectId:number, semesterId:number, batchId:number) =>{
+      router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&tab=assignments&batchId=${batchId}`)
   }
 
-    console.log("data", data)
   const items: CollapseProps["items"] = data.map((group, index) => {
-    const batchName = group.subjects[0]?.batch?.name || "No Batch Assigned"
-    const semesterName = group.subjects[0]?.semester.name || "Unknown Semester"
-    const headerTitle = `${batchName} - ${semesterName}`
+  const batchName = group.subjects[0]?.batch?.name || "No Batch Assigned"
+  const semesterName = group.subjects[0]?.semester.name || "Unknown Semester"
+  const headerTitle = `${batchName} - ${semesterName}`
     
  
-
     return {
       key: `group-${index}`,
       label: headerTitle,
@@ -143,7 +141,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                     size="small"
                     className="flex-1"
                     icon={<FaClipboardList size={14} />}
-                    onClick={() => handleAddAssignments(item.subject.id, item.semesterId)}
+                    onClick={() => handleAddAssignments(item.subject.id, item.semesterId, item.batchId)}
                   >
                     Assignments
                   </Button>

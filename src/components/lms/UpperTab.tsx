@@ -7,11 +7,13 @@ type TabItem = {
   key: string;
   title: string;
   localeTitle: string;
+  initial:string
 };
 
 const UpperTab: React.FC<{ onTabChange: (key: string) => void; items: TabItem[] }> = ({
   onTabChange,
   items,
+  initial
 }) => {
   const locale = useLocale();
 
@@ -19,7 +21,7 @@ const UpperTab: React.FC<{ onTabChange: (key: string) => void; items: TabItem[] 
     <Tabs
       size="large"
       className="uppertab full-width-tabs"
-      defaultActiveKey="courses"
+      defaultActiveKey={initial}
       items={items.map((item) => ({
         key: item.key,
         label: (

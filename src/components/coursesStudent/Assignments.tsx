@@ -23,6 +23,7 @@ import { useAuth } from '@/hooks/useAuth';
 import CourseAssignmentFormDrawer from '../courseAssignments/CourseAssignmentFormDrawer';
 import { UserType } from '@/enums/user-type.enum';
 import CourseAssignmentSubmissionFormDrawer from '../courseAssignmentSubmissions/CourseAssignmentSubmissionFormDrawer';
+import { BiDetail, BiEditAlt } from 'react-icons/bi';
 
 // 🔹 Icon map for assignment types
 const getIcon = (type: string) => {
@@ -104,6 +105,12 @@ const Assignments: React.FC = () => {
     setDetailsDrawerVisible(true);
   };
 
+  
+  const handleEditDrawer = (courseAssignmentId: number) => {
+    setSelectedCourseAssignmentId(courseAssignmentId);
+    setDrawerMode('edit');
+    setDrawerVisible(true);
+  };
 
   const handleCreateDrawer = () => {
     setSelectedCourseAssignmentId(undefined);
@@ -162,12 +169,29 @@ const Assignments: React.FC = () => {
                     <p className="text-xs text-gray-500">
                       Due: {dayjs(a.dueDate).format('MMM D, YYYY')}
                     </p>
+                  <Button
+                    size="small"
+                    className="flex-1"
+                    icon={<BiDetail size={14} />}
+                    onClick={()=>getAssignmentTag(a)}
+                    >
+                      View
+                  </Button>
                   </div>
                 </div>
 
                 {/* Right section: Tag */}
                 <div className="flex items-center gap-4">
-                  <Tag color="blue">{getAssignmentTag(a)}</Tag>
+                  
+                  <Button
+                    type="primary"
+                    size="small"
+                    className="flex-1"
+                    icon={<BiEditAlt size={14} />}
+                    onClick={() => handleEditDrawer(a.id)}
+                    >
+                      Edit
+                  </Button>
                 </div>
               </div>
             </Card>

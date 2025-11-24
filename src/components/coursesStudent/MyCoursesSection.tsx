@@ -22,7 +22,7 @@ const MyCoursesSection = () => {
 
   return (
     <div className="md:my-6">
-      <UpperTab items={TabData} onTabChange={(tab) => setActiveTab(tab)} />
+      <UpperTab items={TabData} initial={tab} onTabChange={(tab) => setActiveTab(tab)} />
 
       {activeTab === 'materials' && <CourseMaterials />}
       {activeTab === 'assignments' && <Assignments />}

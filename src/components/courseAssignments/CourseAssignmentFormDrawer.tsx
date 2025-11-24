@@ -67,7 +67,6 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
   }
 
 
-  console.log("CourseAssignmentFormDrawer",isAdmin)
 
   return (
     <Drawer

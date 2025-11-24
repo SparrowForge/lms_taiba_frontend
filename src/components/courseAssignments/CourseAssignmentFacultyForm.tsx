@@ -28,6 +28,7 @@ import { getErrorMessage } from '@/types/errors';
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
 import CourseAssignmentsFacultyDetails from './CourseAssignmentFacultyDetails';
+import { useAuth } from '@/hooks/useAuth';
 
 const { TextArea } = Input;
 
@@ -51,69 +52,88 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
     const {id} = useParams()
     const searchParams = useSearchParams();
     const semesterId = searchParams.get("semesterId");
+    const batchId = searchParams.get("batchId");
     const { t } = useLocalization();
     const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
     const router = useRouter();
     const [form] = Form.useForm();
     const { createCourseAssignment, editCourseAssignment, actionStatus } = useCourseAssignments();
     const {loadCourseAssignments, courseAssignments} = useCourseAssignments()
-        useEffect(() => {
-            loadCourseAssignments({ semesterId, subjectId:id});
-        }, [id,loadCourseAssignments, semesterId]);
+    const {loadSubject, selectedSubject} = useSubjects()
+    const {loadCourse, selectedCourse} = useCourses()
+    const {loadBatch, selectedBatch} = useBatches()
+    const {loadSemester, selectedSemester} = useSemesters()
+    const {user} = useAuth()
+    
+      useEffect(()=>{
+          loadSubject(parseInt(id))
+      },[loadSubject,id])
 
-  useEffect(() => {
-    if (mode === 'create') {
-      form.resetFields();
-    }
-  }, [mode, form]);
+      useEffect(() => {
+          loadCourseAssignments({ semesterId, subjectId:id});
+      }, [id,loadCourseAssignments, semesterId]);
 
-
-  const handleSubmit = async (values: Partial<ICourseAssignment>) => {
-    const mValues ={
-        ...values,
-        courseId: courseAssignments[0].courseId,
-        subjectId: courseAssignments[0].subjectId,
-        semesterId: courseAssignments[0].semesterId,
-        batchId: courseAssignments[0].batchId,
-        facultyId: courseAssignments[0].facultyId
-    }
-    try {
-      if (mode === 'create') {
-        await createCourseAssignment(mValues as ICourseAssignmentCreate);
-        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          router.push('/course-assignments');
+      useEffect(() => {
+        if (mode === 'create') {
+          form.resetFields();
         }
-      } else if (mode === 'edit' && courseAssignmentId) {
-        await editCourseAssignment(courseAssignmentId, values as ICourseAssignmentUpdate);
-        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          router.push(`/course-assignments/${courseAssignmentId}`);
-        }
+      }, [mode, form]);
+
+      useEffect(()=>{
+        loadCourse(selectedSubject?.courseId)
+        loadBatch(batchId)
+        loadSemester(semesterId)
+      },[])
+
+    console.log("selectedSubject", selectedSubject)
+
+
+    const handleSubmit = async (values: Partial<ICourseAssignment>) => {
+      const mValues ={
+          ...values,
+          courseId: selectedSubject?.courseId,
+          subjectId: id,
+          semesterId: semesterId,
+          batchId: batchId,
+          facultyId: user?.faculty.facultyId
       }
-    } catch (error: unknown) {
-      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
-        name: entityName,
-        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
-      });
-
-      // Try to extract error message from API response
-      if (error && typeof error === 'object' && 'response' in error) {
-        const apiError = error as { response?: { data?: { message?: string } } };
-        if (apiError.response?.data?.message) {
-          errorMessage = apiError.response.data.message;
+      try {
+        if (mode === 'create') {
+          await createCourseAssignment(mValues as ICourseAssignmentCreate);
+          toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            router.push('/course-assignments');
+          }
+        } else if (mode === 'edit' && courseAssignmentId) {
+          await editCourseAssignment(courseAssignmentId, values as ICourseAssignmentUpdate);
+          toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            router.push(`/course-assignments/${courseAssignmentId}`);
+          }
         }
-      } else {
-        errorMessage = getErrorMessage(error);
-      }
+      } catch (error: unknown) {
+        let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+          name: entityName,
+          defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+        });
 
-      toast.error(errorMessage);
-    }
-  };
+        // Try to extract error message from API response
+        if (error && typeof error === 'object' && 'response' in error) {
+          const apiError = error as { response?: { data?: { message?: string } } };
+          if (apiError.response?.data?.message) {
+            errorMessage = apiError.response.data.message;
+          }
+        } else {
+          errorMessage = getErrorMessage(error);
+        }
+
+        toast.error(errorMessage);
+      }
+    };
 
   const handleCancel = () => {
     if (onCancel) {
@@ -148,7 +168,13 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
       }
     >
 
-    <CourseAssignmentsFacultyDetails data={courseAssignments[0]}/>
+      <CourseAssignmentsFacultyDetails 
+        semester={selectedSemester} 
+        batch={selectedBatch} 
+        course={selectedCourse} 
+        faculty={user} 
+        subject={selectedSubject}
+      />
       
       <Form.Item
         name="title"
