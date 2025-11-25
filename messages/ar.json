@@ -1,4 +1,5 @@
 {
+  "timeline":"الجدول الزمني",
   "panel": "لوحة",
   "user": "مستخدم",
   "management_name": "إدارة {name}",
@@ -698,5 +699,13 @@
   "terms_of_services":"شروط الخدمة",
   "help":"يساعد",
   "two_factor_authentication":"المصادقة الثنائية",
-  "two_fa":"اثنين"
+  "two_fa":"اثنين",
+  "mathematics":"الرياضيات",
+  "join_live_class":"انضم إلى الفصل المباشر",
+  "download_materials":"تنزيل المواد",
+  "completed_units":"الوحدات المكتملة",
+  "average_grade":"متوسط ​​​​الدرجة",
+  "time_spent":"الوقت الذي يقضيه",
+  "next_exam":"الامتحان القادم",
+  "add_assignment":"إضافة مهمة"
 }

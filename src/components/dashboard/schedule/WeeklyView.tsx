@@ -6,6 +6,7 @@ import React, {useMemo} from 'react';
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IClassSchedule} from '@/types/classSchedule';
+import { useLocale } from 'next-intl';
 
 interface WeeklyViewProps {
   weekSchedules: IClassSchedule[];
@@ -21,7 +22,7 @@ const WEEKDAYS = [
 ];
 
 const WeeklyView: React.FC<WeeklyViewProps> = ({ weekSchedules, onScheduleClick }) => {
-  const { t } = useLocalization();
+  const locale = useLocale();
 
   // Group schedules by weekday
   const schedulesByDay = useMemo(() => {
@@ -67,8 +68,9 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({ weekSchedules, onScheduleClick 
           <div key={day.key} className="flex flex-col">
             {/* Day Header */}
             <div className="text-center font-medium mb-3 bg-gray-50 p-3 rounded-lg">
-              <div className="text-sm">{day.key}</div>
-              <div className="text-xs text-gray-500">{day.arName}</div>
+              {locale === 'en' ? <div className="text-sm">{day.key}</div> :<div className="text-xs text-gray-500">{day.arName}</div>}
+              
+              
             </div>
 
             {/* Classes */}

@@ -10,6 +10,7 @@ import { useCourseAssignmentSubmissions } from '@/hooks/useCourseAssignmentSubmi
 import { useLocalization } from '@/hooks/useLocalization';
 
 import CourseAssignmentSubmissionForm from './CourseAssignmentSubmissionForm';
+import CourseAssignmentSubmissionFormByStudent from './CourseAssignmentSubmissionFormByStudent';
 
 interface CourseAssignmentSubmissionFormDrawerProps {
   mode: 'create' | 'edit';
@@ -17,6 +18,7 @@ interface CourseAssignmentSubmissionFormDrawerProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
+  isAdmin:boolean
 }
 
 const CourseAssignmentSubmissionFormDrawer: React.FC<CourseAssignmentSubmissionFormDrawerProps> = ({
@@ -25,6 +27,7 @@ const CourseAssignmentSubmissionFormDrawer: React.FC<CourseAssignmentSubmissionF
   visible,
   onCancel,
   onSuccess,
+  isAdmin
 }) => {
   const {
     getCourseAssignmentSubmissionById,
@@ -69,6 +72,7 @@ const CourseAssignmentSubmissionFormDrawer: React.FC<CourseAssignmentSubmissionF
       onClose={handleCancel}
       destroyOnHidden={true}
     >
+      { isAdmin === true ?
       <CourseAssignmentSubmissionForm
         mode={mode}
         courseAssignmentSubmissionId={courseAssignmentSubmissionId}
@@ -77,6 +81,16 @@ const CourseAssignmentSubmissionFormDrawer: React.FC<CourseAssignmentSubmissionF
         onCancel={handleCancel}
         embedded={true}
       />
+      :
+      <CourseAssignmentSubmissionFormByStudent
+        mode={mode}
+        courseAssignmentSubmissionId={courseAssignmentSubmissionId}
+        initialValues={selectedCourseAssignmentSubmission || undefined}
+        onSuccess={handleSuccess}
+        onCancel={handleCancel}
+        embedded={true}
+      />
+}
     </Drawer>
   );
 };
