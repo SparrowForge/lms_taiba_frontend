@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { Status } from '@/enums';
+import { ASSIGNMENT_TYPE_OPTIONS, Status } from '@/enums';
 
 import { useBatches } from '@/hooks/useBatches';
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
@@ -28,6 +28,7 @@ import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
 import CourseAssignmentsFacultyDetails from './CourseAssignmentFacultyDetails';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslations } from 'next-intl';
 
 const { TextArea } = Input;
 
@@ -58,6 +59,7 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
     const {id} = useParams()
     const searchParams = useSearchParams();
     const { t } = useLocalization();
+    const translate = useTranslations();
     const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
     const router = useRouter();
     const [form] = Form.useForm();
@@ -211,23 +213,23 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="type"
-        label={t(LOCALE_KEYS.TYPE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TYPE) }),
-          },
-        ]}
-      >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}>
-          <Select.Option value="Homework">Homework</Select.Option>
-          <Select.Option value="Project">Project</Select.Option>
-          <Select.Option value="Quiz">Quiz</Select.Option>
-          <Select.Option value="Exam">Exam</Select.Option>
-          <Select.Option value="Presentation">Presentation</Select.Option>
-        </Select>
-      </Form.Item>
+              name="type"
+              label={t(LOCALE_KEYS.TYPE)}
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.TYPE) }),
+                },
+              ]}
+            >
+              <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}>
+                {ASSIGNMENT_TYPE_OPTIONS.map((option) => (
+                  <Select.Option key={option.key} value={option.value}>
+                    {translate(option.labelKey, { defaultValue: option.value })}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
 
       <Form.Item
         name="totalMarks"
