@@ -9,6 +9,7 @@ import UpcomingExam from './UpcomingExam';
 import UpperDataSection from './UpperDataSection';
 import WeeklySchedule from '../dashboard/newComponents/WeeklySchedule';
 import UpperTab from '../lms/UpperTab';
+import { ScheduleView } from '../dashboard/schedule';
 
 // import CourseMaterials from './CourseMaterials';
 // import RecentActivity from './RecentActivity';
@@ -31,7 +32,7 @@ const AcademicDashboard = () => {
         style={{ width: '100%', minWidth: 0, height: '100%' }}
       >
         <Col xs={24} lg={16} style={{ marginBottom: '40px' }}>
-          {activeTab === 'courses_schedule' && <WeeklySchedule />}
+          {activeTab === 'courses_schedule' && <ScheduleView />}
           {activeTab === 'attendance' && <div>Attendence</div>}
           {activeTab === 'exams' && <div>exams Content</div>}
           {activeTab === 'grade_book' && <div>grade_book Content</div>}

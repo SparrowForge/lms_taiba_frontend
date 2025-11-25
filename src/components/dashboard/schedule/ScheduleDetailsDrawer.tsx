@@ -17,13 +17,14 @@ import {
 import {Button, Descriptions, Divider, Drawer, Tag} from 'antd';
 import dayjs from 'dayjs';
 import {useRouter} from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IClassSchedule} from '@/types/classSchedule';
+import CourseAssignmentFormDrawer from '@/components/courseAssignments/CourseAssignmentFormDrawer';
 
 interface ScheduleDetailsDrawerProps {
   schedule: IClassSchedule | null;
@@ -38,10 +39,16 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
   onClose,
   clickedDate,
 }) => {
+  const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create')
+  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<number | undefined>();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
   const { t } = useLocalization();
   const router = useRouter();
 
   if (!schedule) return null;
+
+
 
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format('MMMM D, YYYY');
@@ -86,13 +93,13 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
     onClose();
   };
 
-  const handleCreateAssignment = () => {
-    // Navigate to create assignment page
-    router.push(
-      `/course-assignments/create?subjectId=${schedule.subjectId}&batchId=${schedule.batchId}&semesterId=${schedule.semesterId}`,
-    );
-    onClose();
-  };
+  // const handleCreateAssignment = () => {
+  //   // Navigate to create assignment page
+  //   router.push(
+  //     `/course-assignments/create?subjectId=${schedule.subjectId}&batchId=${schedule.batchId}&semesterId=${schedule.semesterId}`,
+  //   );
+  //   onClose();
+  // };
 
   const handleViewSubmissions = () => {
     // Navigate to assignment submissions page
@@ -100,6 +107,16 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
       `/course-assignment-submissions?subjectId=${schedule.subjectId}&batchId=${schedule.batchId}`,
     );
     onClose();
+  };
+
+    const handleCreateDrawer = () => {
+    setSelectedCourseAssignmentId(undefined);
+    setDrawerMode('create');
+    setDrawerVisible(true);
+  };
+    const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+    // loadCourseAssignments({ page: 1, limit: 10 });
   };
 
   return (
@@ -148,7 +165,7 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
           >
             Take Attendance
           </Button>
-          <Button icon={<EditOutlined />} onClick={handleCreateAssignment} block className="h-10">
+          <Button icon={<EditOutlined />} onClick={handleCreateDrawer} block className="h-10">
             Create Assignment
           </Button>
           <Button
@@ -331,6 +348,18 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
           </Tag>
         </Descriptions.Item>
       </Descriptions>
+
+      <CourseAssignmentFormDrawer
+          mode={drawerMode}
+          courseAssignmentId={selectedCourseAssignmentId}
+          visible={drawerVisible}
+          onCancel={() => setDrawerVisible(false)}
+          onSuccess={handleDrawerSuccess}
+          isAdmin={false}
+          subjectId={schedule.subjectId}
+          semesId={schedule.semesterId}
+          batId={schedule.batchId}
+      />
     </Drawer>
   );
 };

@@ -39,6 +39,9 @@ interface CourseAssignmentFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
+  subjectId?:number,
+  semesId:number,
+  batId:number
 }
 
 const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
@@ -48,7 +51,11 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   onSuccess,
   onCancel,
   embedded = false,
+  subjectId,
+  semesId,
+  batId
 }) => {
+  
     const {id} = useParams()
     const searchParams = useSearchParams();
     const semesterId = searchParams.get("semesterId");
@@ -64,14 +71,18 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
     const {loadBatch, selectedBatch} = useBatches()
     const {loadSemester, selectedSemester} = useSemesters()
     const {user} = useAuth()
-    
+    const finalSubjectId = id ?? subjectId
+    const finalSemesterId = semesterId ?? semesId
+    const finalBatchId = batchId ?? batId
+
       useEffect(()=>{
-          loadSubject(parseInt(id))
-      },[loadSubject,id])
+        
+          loadSubject(parseInt(finalSubjectId))
+      },[loadSubject,finalSubjectId])
 
       useEffect(() => {
-          loadCourseAssignments({ semesterId, subjectId:id});
-      }, [id,loadCourseAssignments, semesterId]);
+          loadCourseAssignments({ finalSemesterId, subjectId:finalSubjectId});
+      }, [finalSubjectId,loadCourseAssignments, finalSemesterId]);
 
       useEffect(() => {
         if (mode === 'create') {
@@ -81,9 +92,9 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
 
       useEffect(()=>{
         loadCourse(selectedSubject?.courseId)
-        loadBatch(batchId)
-        loadSemester(semesterId)
-      },[])
+        loadBatch(finalBatchId)
+        loadSemester(finalSemesterId)
+      },[finalBatchId, loadBatch, loadCourse, loadSemester, selectedSubject?.courseId, finalSemesterId])
 
     console.log("selectedSubject", selectedSubject)
 
@@ -92,9 +103,9 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
       const mValues ={
           ...values,
           courseId: selectedSubject?.courseId,
-          subjectId: id,
-          semesterId: semesterId,
-          batchId: batchId,
+          subjectId: finalSubjectId,
+          semesterId: finalSemesterId,
+          batchId: finalBatchId,
           facultyId: user?.faculty.facultyId
       }
       try {

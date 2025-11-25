@@ -88,7 +88,7 @@ const Assignments: React.FC = () => {
   const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<number | undefined>();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [assignmentSubmissionDrawerVisible, setAssignmentSubmissionDrawerVisible] = useState(false);
-  const { courseAssignments, listStatus, loadCourseAssignments, detailsStatus } = useCourseAssignments();
+  const { courseAssignments, listStatus, loadCourseAssignments, } = useCourseAssignments();
   const {  loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<number | undefined>();

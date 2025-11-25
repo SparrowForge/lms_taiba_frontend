@@ -29,7 +29,10 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
   visible,
   onCancel,
   onSuccess,
-  isAdmin
+  isAdmin,
+  subjectId,
+  semesId,
+  batId
 }) => {
   const { getCourseAssignmentById, selectedCourseAssignment, loadCourseAssignment, detailsStatus } =
     useCourseAssignments();
@@ -97,6 +100,9 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded={true}
+        subjectId={subjectId}
+        semesId={semesId}
+        batId={batId}
       />
       }
      
