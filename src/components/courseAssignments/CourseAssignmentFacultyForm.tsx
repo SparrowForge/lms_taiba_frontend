@@ -13,7 +13,6 @@ import { Status } from '@/enums';
 import { useBatches } from '@/hooks/useBatches';
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useCourses } from '@/hooks/useCourses';
-import { useFaculties } from '@/hooks/useFaculties';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useSemesters } from '@/hooks/useSemesters';
 import { useSubjects } from '@/hooks/useSubjects';
