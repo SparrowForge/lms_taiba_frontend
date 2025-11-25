@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { Status } from '@/enums';
+import { ASSIGNMENT_TYPE_OPTIONS, Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
@@ -20,7 +20,7 @@ import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { ICourseAssignment } from '@/types/courseAssignment';
-import { COURSE_ASSIGNMENT_STATUS_OPTIONS, COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS, ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { useCourses } from '@/hooks/useCourses';
 import { useBatches } from '@/hooks/useBatches';
 import { useSubjects } from '@/hooks/useSubjects';
@@ -160,7 +160,7 @@ export default function CourseAssignmentsPage() {
             label: t(LOCALE_KEYS.COURSE_ASSIGNMENT),
             options: [
               { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...COURSE_ASSIGNMENT_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+              ...ASSIGNMENT_TYPE_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
             ],
           },
           {
@@ -233,7 +233,7 @@ export default function CourseAssignmentsPage() {
         title: t(LOCALE_KEYS.TYPE),
         dataIndex: 'type',
         key: 'type',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <span>{translate(ASSIGNMENT_TYPE_OPTIONS.find(o => o.value === text)?.labelKey ?? '')}</span>,
       },
       {
         title: t(LOCALE_KEYS.TOTAL_MARKS),
