@@ -41,6 +41,11 @@ export default function CourseTimeline() {
 
   const timelineData = attendances as unknown as TimelineItem[]
 
+  const handleCreateDrawer = () => {
+    setSelectedCourseMaterialId(undefined);
+    setDrawerMode('create');
+    setDrawerVisible(true);
+  };
 
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
@@ -61,7 +66,7 @@ export default function CourseTimeline() {
         <div className="text-sm text-slate-600 mt-3 flex justify-between">
           <h1><span className="font-semibold">Date:</span> {new Date(item.date).toLocaleDateString()}</h1>
            <Button
-              onClick={()=>setDrawerVisible(true)}
+              onClick={()=>handleCreateDrawer()}
               type="primary"
               size="small"
               className="h-9 text-base font-medium mb-0"

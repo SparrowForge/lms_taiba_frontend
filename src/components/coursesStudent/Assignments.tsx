@@ -88,8 +88,8 @@ const Assignments: React.FC = () => {
   const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<number | undefined>();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [assignmentSubmissionDrawerVisible, setAssignmentSubmissionDrawerVisible] = useState(false);
-  const { courseAssignments, listStatus, loadCourseAssignments } = useCourseAssignments();
-  const { createCourseAssignmentSubmission, loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions();
+  const { courseAssignments, listStatus, loadCourseAssignments, detailsStatus } = useCourseAssignments();
+  const {  loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<number | undefined>();
   const [selectedAssignmentSubmissionId, setSelectedAssignmentSubmissionId] = useState<number | undefined>();
@@ -136,6 +136,8 @@ const Assignments: React.FC = () => {
     setAssignmentSubmissionDrawerVisible(false);
     loadCourseAssignmentSubmissions({ page: 1, limit: 10 });
   };
+
+
 
   return (
     <Card className="rounded-xl shadow-sm mb-6">
