@@ -3,6 +3,8 @@ import { UserType } from '@/enums/user-type.enum';
 
 import { IPaginationMeta, IStatusState } from './common';
 import { IRole } from './role';
+import { IFaculty } from './faculty';
+import { IStudent } from './student';
 
 // User interface matching the API response
 export interface IUser {
@@ -12,6 +14,8 @@ export interface IUser {
   status: EntityStatus;
   phone: string;
   type: UserType;
+  faculty?: IFaculty;
+  student?: IStudent;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;

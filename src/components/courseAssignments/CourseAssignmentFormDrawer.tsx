@@ -20,7 +20,10 @@ interface CourseAssignmentFormDrawerProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
-  isAdmin:boolean
+  isAdmin?:boolean
+  subjectId?: string
+  semesterId?: string
+  batchId?: string
 }
 
 const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
@@ -31,8 +34,8 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
   onSuccess,
   isAdmin,
   subjectId,
-  semesId,
-  batId
+  semesterId,
+  batchId
 }) => {
   const { getCourseAssignmentById, selectedCourseAssignment, loadCourseAssignment, detailsStatus } =
     useCourseAssignments();
@@ -101,8 +104,8 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
         onCancel={handleCancel}
         embedded={true}
         subjectId={subjectId}
-        semesId={semesId}
-        batId={batId}
+        semesterId={semesterId}
+        batchId={batchId}
       />
       }
      

@@ -39,9 +39,9 @@ interface CourseAssignmentFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
-  subjectId?:number,
-  semesId:number,
-  batId:number
+  subjectId?: string,
+  semesterId?: string,
+  batchId?: string
 }
 
 const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
@@ -52,14 +52,12 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   onCancel,
   embedded = false,
   subjectId,
-  semesId,
-  batId
+  semesterId,
+  batchId
 }) => {
   
     const {id} = useParams()
     const searchParams = useSearchParams();
-    const semesterId = searchParams.get("semesterId");
-    const batchId = searchParams.get("batchId");
     const { t } = useLocalization();
     const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
     const router = useRouter();
@@ -71,12 +69,12 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
     const {loadBatch, selectedBatch} = useBatches()
     const {loadSemester, selectedSemester} = useSemesters()
     const {user} = useAuth()
-    const finalSubjectId = id ?? subjectId
-    const finalSemesterId = semesterId ?? semesId
-    const finalBatchId = batchId ?? batId
+
+    const finalSubjectId:string = (id as string) ?? (subjectId as string) ?? '';
+    const finalSemesterId:string = searchParams.get("semesterId") ?? semesterId ?? '';
+    const finalBatchId:string = searchParams.get("batchId") ?? batchId ?? '';
 
       useEffect(()=>{
-        
           loadSubject(parseInt(finalSubjectId))
       },[loadSubject,finalSubjectId])
 
@@ -91,9 +89,9 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
       }, [mode, form]);
 
       useEffect(()=>{
-        loadCourse(selectedSubject?.courseId)
-        loadBatch(finalBatchId)
-        loadSemester(finalSemesterId)
+        loadCourse(selectedSubject?.courseId ?? 0)
+        loadBatch(parseInt(finalBatchId))
+        loadSemester(parseInt(finalSemesterId))
       },[finalBatchId, loadBatch, loadCourse, loadSemester, selectedSubject?.courseId, finalSemesterId])
 
     console.log("selectedSubject", selectedSubject)
@@ -103,10 +101,10 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
       const mValues ={
           ...values,
           courseId: selectedSubject?.courseId,
-          subjectId: finalSubjectId,
-          semesterId: finalSemesterId,
-          batchId: finalBatchId,
-          facultyId: user?.faculty.facultyId
+          subjectId: parseInt(finalSubjectId),
+          semesterId: parseInt(finalSemesterId),
+          batchId: parseInt(finalBatchId),
+          facultyId: user?.faculty?.id
       }
       try {
         if (mode === 'create') {
