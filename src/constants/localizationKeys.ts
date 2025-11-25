@@ -2,6 +2,7 @@
 // This ensures we only use keys that exist in our localization files
 export const LOCALE_KEYS = {
   // Common
+  TIMELINE:'timeline',
   PANEL: 'panel',
   USER: 'user',
   MANAGEMENT_NAME: 'management_name',
@@ -681,6 +682,7 @@ export const LOCALE_KEYS = {
   WHATSAPP_NUMBER: 'whatsapp_number',
   ENTER_WHATSAPP_NUMBER: 'enter_whatsapp_number',
   PLEASE_ENTER_WHATSAPP_NUMBER: 'please_enter_whatsapp_number',
+  ADD_ASSIGNMENT:'add_assignment',
 
   // Fee Structure Assignment
   ASSIGN_FEE_STRUCTURE: 'assign_fee_structure',
@@ -688,6 +690,13 @@ export const LOCALE_KEYS = {
   CLOSE: 'close',
   STUDENT_ALREADY_HAS_FEE_STRUCTURE: 'student_already_has_fee_structure',
   APPROVE: 'approve',
+  MATHEMATICS:"Mathematics",
+  JOIN_LIVE_CLASS:"Join Live Class",
+  DOWNLOAD_MATERIALS:"Download Materials",
+  COMPLETED_UNITS:"Completed Units",
+  AVERAGE_GRADE:"Average Grade",
+  TIME_SPENT:"Time Spent",
+  NEXT_EXAM:"Next Exam"
 } as const;
 
 // Type for the keys

@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Card, Empty, Spin, Tag } from 'antd';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -19,6 +19,12 @@ import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/Course
 
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useAuth } from '@/hooks/useAuth';
+import CourseAssignmentFormDrawer from '../courseAssignments/CourseAssignmentFormDrawer';
+import { UserType } from '@/enums/user-type.enum';
+import CourseAssignmentSubmissionFormDrawer from '../courseAssignmentSubmissions/CourseAssignmentSubmissionFormDrawer';
+import { BiDetail, BiEditAlt } from 'react-icons/bi';
+import { useCourseAssignmentSubmissions } from '@/hooks/useCourseAssignmentSubmissions';
 
 // 🔹 Icon map for assignment types
 const getIcon = (type: string) => {
@@ -73,14 +79,25 @@ const getAssignmentTag = (assignment: any) => {
 
 const Assignments: React.FC = () => {
   const { t } = useLocalization();
-  const router = useRouter();
-  const { courseAssignments, listStatus, loadCourseAssignments } = useCourseAssignments();
+  const {user} = useAuth()
+  const {id} = useParams()
+  const searchParams = useSearchParams();
+  const semesterId = searchParams.get("semesterId");
+  const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
+  const [assignmentSubmissiondrawerMode, setAssignmentSubmissionDrawerMode] = useState<'create' | 'edit'>('create');
+  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<number | undefined>();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [assignmentSubmissionDrawerVisible, setAssignmentSubmissionDrawerVisible] = useState(false);
+  const { courseAssignments, listStatus, loadCourseAssignments, } = useCourseAssignments();
+  const {  loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<number | undefined>();
+  const [selectedAssignmentSubmissionId, setSelectedAssignmentSubmissionId] = useState<number | undefined>();
 
   useEffect(() => {
-    loadCourseAssignments({ page: 1, limit: 20 });
-  }, [loadCourseAssignments]);
+      loadCourseAssignments({subjectId:id, semesterId})
+      
+  }, [id,loadCourseAssignments, semesterId]);
 
   const sortedAssignments = [...(courseAssignments || [])].sort(
     (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf(),
@@ -91,14 +108,47 @@ const Assignments: React.FC = () => {
     setDetailsDrawerVisible(true);
   };
 
+  
+  const handleEditDrawer = (courseAssignmentId: number) => {
+    setSelectedCourseAssignmentId(courseAssignmentId);
+    setDrawerMode('edit');
+    setDrawerVisible(true);
+  };
+
+  const handleCreateDrawer = () => {
+    setSelectedCourseAssignmentId(undefined);
+    setDrawerMode('create');
+    setDrawerVisible(true);
+  };
+
+  const handleCoureseAssignmentSubmissionCreateDrawer = (assignmentId:number) => {
+    setSelectedAssignmentSubmissionId(assignmentId);
+    setAssignmentSubmissionDrawerMode('create');
+    setAssignmentSubmissionDrawerVisible(true);
+  };
+
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+    // loadCourseAssignments({ page: 1, limit: 10 });
+  };
+
+  const handleAssignmentSubmissionDrawerSuccess = () => {
+    setAssignmentSubmissionDrawerVisible(false);
+    loadCourseAssignmentSubmissions({ page: 1, limit: 10 });
+  };
+
+
+
   return (
     <Card className="rounded-xl shadow-sm mb-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">{t(LOCALE_KEYS.UPCOMING_ASSIGNMENT)}</h2>
-        <Button type="primary" onClick={() => router.push('/course-assignments')}>
-          {t(LOCALE_KEYS.ALL_TASKS)}
-        </Button>
+        {user?.type === UserType.FACULTY && 
+        <Button type="primary" onClick={() => handleCreateDrawer()}>
+          {t(LOCALE_KEYS.ADD_ASSIGNMENT)}
+        </Button>}
+        
       </div>
 
       {/* States */}
@@ -121,7 +171,7 @@ const Assignments: React.FC = () => {
               key={a.id}
               className="shadow-sm"
               bodyStyle={{ padding: '12px 16px' }}
-              onClick={() => handleViewDetails(a.id)}
+              
             >
               <div className="flex items-center justify-between">
                 {/* Left section: Icon + Title */}
@@ -132,18 +182,72 @@ const Assignments: React.FC = () => {
                     <p className="text-xs text-gray-500">
                       Due: {dayjs(a.dueDate).format('MMM D, YYYY')}
                     </p>
+                    <Tag color="blue">{getAssignmentTag(a)}</Tag>
+                  <Button
+                    size="small"
+                    className="flex-1"
+                    icon={<BiDetail size={14} />}
+                    onClick={() => handleViewDetails(a.id)}
+                    
+                    >
+                      View
+                  </Button>
                   </div>
                 </div>
 
                 {/* Right section: Tag */}
-                <div className="flex items-center gap-4">
-                  <Tag color="blue">{getAssignmentTag(a)}</Tag>
+                {
+                  user?.type === UserType.FACULTY && <div className="flex items-center gap-4">
+                  
+                  <Button
+                    type="primary"
+                    size="small"
+                    className="flex-1"
+                    icon={<BiEditAlt size={14} />}
+                    onClick={() => handleEditDrawer(a.id)}
+                    >
+                      Edit
+                  </Button>
                 </div>
+                }
+                                {
+                  user?.type === UserType.STUDENT && <div className="flex items-center gap-4">
+                  
+                  <Button
+                    type="primary"
+                    size="small"
+                    className="flex-1"
+                    // icon={< size={14} />}
+                    onClick={() => handleCoureseAssignmentSubmissionCreateDrawer(a.id)}
+                    >
+                      Submit
+                  </Button>
+                </div>
+                }
               </div>
             </Card>
           ))}
         </div>
       )}
+
+      <CourseAssignmentFormDrawer
+        mode={drawerMode}
+        courseAssignmentId={selectedCourseAssignmentId}
+        visible={drawerVisible}
+        onCancel={() => setDrawerVisible(false)}
+        onSuccess={handleDrawerSuccess}
+        isAdmin={false}
+      />
+
+      <CourseAssignmentSubmissionFormDrawer
+        mode={assignmentSubmissiondrawerMode}
+        courseAssignmentSubmissionId={selectedAssignmentSubmissionId}
+        visible={assignmentSubmissionDrawerVisible}
+        onCancel={() => setAssignmentSubmissionDrawerVisible(false)}
+        onSuccess={handleAssignmentSubmissionDrawerSuccess}
+        isAdmin={false}
+      />
+      
 
       <CourseAssignmentDetailsDrawer
         courseAssignmentId={selectedAssignmentId}

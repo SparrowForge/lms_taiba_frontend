@@ -29,7 +29,7 @@ export const courseMaterialService = {
     id: number,
     data: ICourseMaterialUpdate,
   ): Promise<ICourseMaterial> => {
-    const response = await api.put<IBaseResponse<ICourseMaterial>>(`/course-materials/${id}`, data);
+    const response = await api.patch<IBaseResponse<ICourseMaterial>>(`/course-materials/${id}`, data);
     return response.data.data;
   },
 

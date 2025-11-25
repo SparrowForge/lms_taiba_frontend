@@ -65,8 +65,7 @@ const ScheduleView: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h3 className="font-semibold text-lg m-0">
-          {t(LOCALE_KEYS.WEEKLY_SCHEDULE_TITLE, { defaultValue: 'Weekly Schedule' })} | الجدول
-          الأسبوعي
+          {t(LOCALE_KEYS.WEEKLY_SCHEDULE_TITLE, { defaultValue: 'Weekly Schedule' })}
         </h3>
         <Segmented
           options={['Week', 'Month']}

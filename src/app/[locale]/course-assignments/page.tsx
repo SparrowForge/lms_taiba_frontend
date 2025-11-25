@@ -165,7 +165,7 @@ export default function CourseAssignmentsPage() {
           },
           {
             key: 'courseId',
-            label: t(LOCALE_KEYS.COURSE),
+            label: t(LOCALE_KEYS.TYPE),
             options: [
               { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
               ...courses.map((c) => ({ label: c.name, value: String(c.id) })),

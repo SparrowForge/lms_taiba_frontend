@@ -14,7 +14,7 @@ import SubjectCard from './SubjectCard';
 
 const StudentCourse = () => {
   const router = useRouter();
-  const { data: meData, isLoading: meLoading, error: meError } = useGetMeQuery();
+  const { data: meData } = useGetMeQuery();
   const { semesters, loadSemesters } = useSemesters();
 
   const [selectedSemesterId, setSelectedSemesterId] = useState<number | undefined>(undefined);
@@ -33,7 +33,7 @@ const StudentCourse = () => {
     if (meData?.data?.course?.id) {
       loadSemesters({ page: 1, limit: 100, batchId: meData?.data?.batch?.id });
     }
-  }, [loadSemesters, meData?.data?.batch?.id]);
+  }, [loadSemesters, meData?.data?.batch?.id, meData?.data?.course?.id]);
 
   // Auto-select current semester based on current date
   useEffect(() => {
@@ -55,6 +55,8 @@ const StudentCourse = () => {
       }
     }
   }, [semesters, selectedSemesterId]);
+
+
 
   return (
     <div className="space-y-4">
@@ -100,6 +102,7 @@ const StudentCourse = () => {
                   <SubjectCard
                     key={subject.id}
                     subject={subject}
+                    semesterId={selectedSemesterId}
                     onClick={() => router.push(`/dashboard/course/${subject.id}`)}
                   />
                 ))}
