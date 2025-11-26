@@ -2,12 +2,14 @@
 
 import { Button, DatePicker, Form, Input, InputNumber, Select, Space, Switch } from 'antd';
 import dayjs from 'dayjs';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { ASSIGNMENT_TYPE_OPTIONS } from '@/enums/courseAssignment';
 import { Status } from '@/enums';
 
 import { useBatches } from '@/hooks/useBatches';
@@ -48,6 +50,7 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
   embedded = false,
 }) => {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
   const router = useRouter();
   const [form] = Form.useForm();
@@ -310,11 +313,11 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
         ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}>
-          <Select.Option value="Homework">Homework</Select.Option>
-          <Select.Option value="Project">Project</Select.Option>
-          <Select.Option value="Quiz">Quiz</Select.Option>
-          <Select.Option value="Exam">Exam</Select.Option>
-          <Select.Option value="Presentation">Presentation</Select.Option>
+          {ASSIGNMENT_TYPE_OPTIONS.map((option) => (
+            <Select.Option key={option.key} value={option.value}>
+              {translate(option.labelKey, { defaultValue: option.value })}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 
