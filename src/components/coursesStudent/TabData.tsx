@@ -10,6 +10,11 @@ const TabData = [
     localeTitle: ' الواجبات',
   },
   {
+    key: 'submittedAssignments',
+    title: 'Submitted Assignments',
+    localeTitle: 'المهام المقدمة',
+  },
+  {
     key: 'grading',
     title: 'Grading',
     localeTitle: 'الدرجات',
@@ -19,6 +24,7 @@ const TabData = [
     title: 'Discussion',
     localeTitle: 'المناقشات',
   },
+  
 ];
 
 export default TabData;

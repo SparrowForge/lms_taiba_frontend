@@ -89,7 +89,7 @@ const Assignments: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [assignmentSubmissionDrawerVisible, setAssignmentSubmissionDrawerVisible] = useState(false);
   const { courseAssignments, listStatus, loadCourseAssignments, } = useCourseAssignments();
-  const {  loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions();
+  const { courseAssignmentSubmissions, loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<number | undefined>();
   const [selectedAssignmentSubmissionId, setSelectedAssignmentSubmissionId] = useState<number | undefined>();
@@ -98,6 +98,12 @@ const Assignments: React.FC = () => {
       loadCourseAssignments({subjectId:id, semesterId})
       
   }, [id,loadCourseAssignments, semesterId]);
+
+  useEffect(()=>{
+    if(user?.student.id){
+      loadCourseAssignmentSubmissions({studentId:user?.student.id})
+    }
+  },[loadCourseAssignmentSubmissions, user?.student.id])
 
   const sortedAssignments = [...(courseAssignments || [])].sort(
     (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf(),
@@ -136,6 +142,11 @@ const Assignments: React.FC = () => {
     setAssignmentSubmissionDrawerVisible(false);
     loadCourseAssignmentSubmissions({ page: 1, limit: 10 });
   };
+
+  const checkAlreadySubmitted = (assignmentId:number) =>{
+    return  courseAssignmentSubmissions.find(item=>item.assignment.id === assignmentId)
+  
+  }
 
 
 
@@ -210,17 +221,17 @@ const Assignments: React.FC = () => {
                   </Button>
                 </div>
                 }
-                                {
+                {
                   user?.type === UserType.STUDENT && <div className="flex items-center gap-4">
-                  
                   <Button
                     type="primary"
                     size="small"
                     className="flex-1"
+                    disabled={checkAlreadySubmitted(a.id)}
                     // icon={< size={14} />}
                     onClick={() => handleCoureseAssignmentSubmissionCreateDrawer(a.id)}
                     >
-                      Submit
+                      {checkAlreadySubmitted(a.id) ? 'Alreday Submitted' : "Submit"} 
                   </Button>
                 </div>
                 }

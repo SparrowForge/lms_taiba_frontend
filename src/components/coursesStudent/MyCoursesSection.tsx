@@ -8,9 +8,10 @@ import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
 
 import { useSearchParams } from 'next/navigation';
+import AssignmentSubmissionStudent from './AssignmentSumissionStudent';
 
 const MyCoursesSection = () => {
-  const [activeTab, setActiveTab] = useState('');
+  const [activeTab, setActiveTab] = useState('materials');
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab");
 
@@ -26,6 +27,7 @@ const MyCoursesSection = () => {
 
       {activeTab === 'materials' && <CourseMaterials />}
       {activeTab === 'assignments' && <Assignments />}
+      {activeTab === 'submittedAssignments' && <AssignmentSubmissionStudent />}
       {activeTab === 'grading' && <div>Grading Content is empty</div>}
       {activeTab === 'discussion' && <div>Discussion Content</div>}
     </div>
