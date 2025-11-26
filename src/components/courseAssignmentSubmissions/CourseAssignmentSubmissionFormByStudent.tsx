@@ -7,7 +7,7 @@ import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS, ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { EntityType, FileCategory, FileType, Status } from '@/enums';
 
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
@@ -80,6 +80,7 @@ const {user} = useAuth()
   const handleSubmit = async (values: Partial<ICourseAssignmentSubmission>) => {
     const mValues ={
         ...values,
+        // submittedAt:dayjs().format("YYYY-MM-DD HH:mm:ss"),
         assignmentId:courseAssignmentSubmissionId,
         studentId: user?.student.id
     }
@@ -154,32 +155,39 @@ const {user} = useAuth()
       <Card title="Assignment Details">
         <Row gutter={[16, 16]}>
             <Col span={12}>
-            <strong>Assignment:</strong>
-            <div>{selectedCourseAssignment?.title || "—"}</div>
+              <strong>Assignment:</strong>
+              <div>{selectedCourseAssignment?.title || "—"}</div>
             </Col>
 
             <Col span={12}>
-            <strong>Subject:</strong>
-            <div>{user?.student.firstName + user?.student.lastName || "—"}</div>
+              <strong>Course:</strong>
+              <div>{selectedCourseAssignment?.course.name || "—"}</div>
             </Col>
 
-        
-      </Row>
+            <Col span={12}>
+              <strong>Course:</strong>
+              <div>{selectedCourseAssignment?.subject.name || "—"}</div>
+            </Col>
+
+            <Col span={12}>
+              <strong>Course:</strong>
+              <div>{selectedCourseAssignment?.batch.name || "—"}</div>
+            </Col>
+
+            <Col span={12}>
+              <strong>Course:</strong>
+              <div>{selectedCourseAssignment?.semester.name || "—"}</div>
+            </Col>
+
+             <Col span={12}>
+              <strong>Course:</strong>
+              <div>{selectedCourseAssignment?.faculty.fullName || "—"}</div>
+            </Col>
+        </Row>
       </Card>
 
 
-      <Form.Item
-        name="submittedAt"
-        label={t(LOCALE_KEYS.SUBMITTED_AT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
-      >
-        <DatePicker
-          showTime
-          format="YYYY-MM-DD HH:mm:ss"
-          style={{ width: '100%' }}
-          placeholder={t(LOCALE_KEYS.SELECT_SUBMITTED_DATE)}
-        />
-      </Form.Item>
+      
 
       <Form.Item name="remark" label={t(LOCALE_KEYS.REMARK)}>
         <TextArea rows={3} placeholder={t(LOCALE_KEYS.ENTER_REMARK)} />
@@ -196,60 +204,8 @@ const {user} = useAuth()
         />
       </Form.Item>
 
-      <Form.Item
-        name="marksObtained"
-        label={t(LOCALE_KEYS.MARKS_OBTAINED)}
-        rules={[
-          { required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) },
-          { type: 'number', min: 0, message: t(LOCALE_KEYS.MARKS_MUST_BE_POSITIVE) },
-        ]}
-      >
-        <InputNumber
-          min={0}
-          style={{ width: '100%' }}
-          placeholder={t(LOCALE_KEYS.ENTER_MARKS_OBTAINED)}
-        />
-      </Form.Item>
 
-      <Form.Item name="feedback" label={t(LOCALE_KEYS.FEEDBACK)}>
-        <TextArea rows={4} placeholder={t(LOCALE_KEYS.ENTER_FEEDBACK)} />
-      </Form.Item>
-
-      <Form.Item
-        name="gradedBy"
-        label={t(LOCALE_KEYS.GRADER)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_GRADER)}
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {faculties.map((faculty) => (
-            <Select.Option key={faculty.id} value={faculty.id}>
-              {faculty.fullName} ({faculty.employeeCode})
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-
-      <Form.Item
-        name="gradedAt"
-        label={t(LOCALE_KEYS.GRADED_AT)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED_FIELD) }]}
-      >
-        <DatePicker
-          showTime
-          format="YYYY-MM-DD HH:mm:ss"
-          style={{ width: '100%' }}
-          placeholder={t(LOCALE_KEYS.SELECT_GRADED_DATE)}
-        />
-      </Form.Item>
-
-      <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
+      <StatusSelectFormItem options={COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS} />
 
       <Form.Item>
         <Space>
