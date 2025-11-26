@@ -81,6 +81,7 @@ const Assignments: React.FC = () => {
   const { t } = useLocalization();
   const {user} = useAuth()
   const {id} = useParams()
+  const router = useRouter()
   const searchParams = useSearchParams();
   const semesterId = searchParams.get("semesterId");
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -145,8 +146,12 @@ const Assignments: React.FC = () => {
 
   const checkAlreadySubmitted = (assignmentId:number) =>{
     return  courseAssignmentSubmissions.find(item=>item.assignment.id === assignmentId)
-  
   }
+
+  const handleViewAll = (assignmentId) =>{
+    return router.push(`/course-assignment-submissions?assignmentId=${assignmentId}`)
+  }
+
 
 
 
@@ -194,15 +199,19 @@ const Assignments: React.FC = () => {
                       Due: {dayjs(a.dueDate).format('MMM D, YYYY')}
                     </p>
                     <Tag color="blue">{getAssignmentTag(a)}</Tag>
-                  <Button
+                  
+
+                  {
+                    user?.type === UserType.FACULTY && <Button
                     size="small"
                     className="flex-1"
                     icon={<BiDetail size={14} />}
-                    onClick={() => handleViewDetails(a.id)}
+                    onClick={() => handleViewAll(a.id)}
                     
                     >
-                      View
+                      View All
                   </Button>
+                  }
                   </div>
                 </div>
 

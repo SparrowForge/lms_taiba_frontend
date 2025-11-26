@@ -4,15 +4,17 @@ import { BiEditAlt } from "react-icons/bi";
 import CourseAssignmentSubmissionFormDrawer from "../courseAssignmentSubmissions/CourseAssignmentSubmissionFormDrawer";
 import { useState } from "react";
 import { useCourseAssignmentSubmissions } from "@/hooks/useCourseAssignmentSubmissions";
+import { useAuth } from "@/hooks/useAuth";
 
 const AssignmentSubmissionCardByStudent = ({ data }) => {
-
     const {
+    student,
     assignment,
     submittedAt,
     status,
     marksObtained,
   } = data;
+    const {user} = useAuth()
     const { loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions()
     const [assignmentSubmissiondrawerMode, setAssignmentSubmissionDrawerMode] = useState<'create' | 'edit'>('create');
     const [assignmentSubmissionDrawerVisible, setAssignmentSubmissionDrawerVisible] = useState(false);
@@ -43,7 +45,16 @@ const AssignmentSubmissionCardByStudent = ({ data }) => {
       <p><strong>Pass Marks:</strong> {assignment?.passMarks}</p>
       <p><strong>Due Date:</strong> {assignment?.dueDate}</p>
 
+      {
+         user?.faculty?.id && <>
+         
+         <hr style={{ margin: "12px 0" }} />
 
+      {/* Student Info */}
+      <p><strong>Student:</strong> {student?.firstName} {student?.middleName} {student?.lastName}</p>
+      <p><strong>Student ID:</strong> {student?.id}</p>
+</>
+      }
 
       <hr style={{ margin: "12px 0" }} />
 

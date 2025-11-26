@@ -41,11 +41,9 @@ const SubmittedAssignment: React.FC = () => {
     if (user?.student?.id) {
       loadCourseAssignmentSubmissions({ studentId: user?.student?.id });
     } else if (user?.faculty?.id) {
-      loadCourseAssignmentSubmissions({ studentId: user?.faculty?.id });
+      loadCourseAssignmentSubmissions({ facultyId: user?.faculty?.id });
     }
   }, [loadCourseAssignmentSubmissions, user]);
-
-
 
 
   return (
