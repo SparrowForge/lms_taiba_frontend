@@ -1,14 +1,16 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import Assignments from './Assignments';
+import SubmittedAssignment from './SubmittedAssignment';
 import TabData from './TabData';
 import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
 
-import { useSearchParams } from 'next/navigation';
-import AssignmentSubmissionStudent from './AssignmentSumissionStudent';
+
+
 
 const MyCoursesSection = () => {
   const [activeTab, setActiveTab] = useState('materials');
@@ -27,7 +29,7 @@ const MyCoursesSection = () => {
 
       {activeTab === 'materials' && <CourseMaterials />}
       {activeTab === 'assignments' && <Assignments />}
-      {activeTab === 'submittedAssignments' && <AssignmentSubmissionStudent />}
+      {activeTab === 'submittedAssignments' && <SubmittedAssignment />}
       {activeTab === 'grading' && <div>Grading Content is empty</div>}
       {activeTab === 'discussion' && <div>Discussion Content</div>}
     </div>

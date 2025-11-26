@@ -100,10 +100,10 @@ const Assignments: React.FC = () => {
   }, [id,loadCourseAssignments, semesterId]);
 
   useEffect(()=>{
-    if(user?.student.id){
-      loadCourseAssignmentSubmissions({studentId:user?.student.id})
+    if(user?.student?.id){
+      loadCourseAssignmentSubmissions({studentId:user?.student?.id})
     }
-  },[loadCourseAssignmentSubmissions, user?.student.id])
+  },[loadCourseAssignmentSubmissions, user])
 
   const sortedAssignments = [...(courseAssignments || [])].sort(
     (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf(),

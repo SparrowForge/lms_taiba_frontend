@@ -1,21 +1,19 @@
 'use client';
 
-import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space } from 'antd';
+import { Button, Card, Col, Form, Input, Row, Space,  } from 'antd';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
-import { COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS, ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS,  } from '@/constants/statusOptions';
 import { EntityType, FileCategory, FileType, Status } from '@/enums';
 
+import { useAuth } from '@/hooks/useAuth';
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useCourseAssignmentSubmissions } from '@/hooks/useCourseAssignmentSubmissions';
-import { useFaculties } from '@/hooks/useFaculties';
-import { useFiles } from '@/hooks/useFiles';
 import { useLocalization } from '@/hooks/useLocalization';
-import { useStudents } from '@/hooks/useStudents';
 
 import {
   ICourseAssignmentSubmission,
@@ -26,7 +24,6 @@ import {
 import FormLayout from '../layout/FormLayout';
 import FileUpload from '../ui/FileUpload';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
-import { useAuth } from '@/hooks/useAuth';
 
 const { TextArea } = Input;
 
@@ -58,11 +55,9 @@ const {user} = useAuth()
   });
   const router = useRouter();
   const [form] = Form.useForm();
-  const { createCourseAssignmentSubmission, editCourseAssignmentSubmission, actionStatus } =
-    useCourseAssignmentSubmissions();
+  const { createCourseAssignmentSubmission, editCourseAssignmentSubmission, actionStatus, loadCourseAssignmentSubmission } = useCourseAssignmentSubmissions();
   const {loadCourseAssignment, selectedCourseAssignment} = useCourseAssignments()
 
-  const { faculties, loadFaculties } = useFaculties();
 
   useEffect(() => {
     if (mode === 'create') {
@@ -71,18 +66,23 @@ const {user} = useAuth()
   }, [mode, form]);
 
   useEffect(() => {
-    loadFaculties({ page: 1, limit: 100 });
-    if(courseAssignmentSubmissionId){
+    if(mode == "create" && courseAssignmentSubmissionId){
         loadCourseAssignment(courseAssignmentSubmissionId)
     }
-  }, [ loadFaculties, loadCourseAssignment,courseAssignmentSubmissionId]);
+  }, [ loadCourseAssignment, courseAssignmentSubmissionId, mode]);
+
+  useEffect(()=>{
+    if (mode == "edit" && courseAssignmentSubmissionId){
+      loadCourseAssignmentSubmission(courseAssignmentSubmissionId)
+    }
+  },[])
 
   const handleSubmit = async (values: Partial<ICourseAssignmentSubmission>) => {
     const mValues ={
         ...values,
         // submittedAt:dayjs().format("YYYY-MM-DD HH:mm:ss"),
         assignmentId:courseAssignmentSubmissionId,
-        studentId: user?.student.id
+        studentId: user?.student?.id
     }
     try {
       if (mode === 'create') {

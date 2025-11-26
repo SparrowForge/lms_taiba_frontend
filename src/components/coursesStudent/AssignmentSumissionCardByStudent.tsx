@@ -1,16 +1,36 @@
 import { Button, Card, Tag } from "antd";
 import dayjs from "dayjs";
 import { BiEditAlt } from "react-icons/bi";
+import CourseAssignmentSubmissionFormDrawer from "../courseAssignmentSubmissions/CourseAssignmentSubmissionFormDrawer";
+import { useState } from "react";
+import { useCourseAssignmentSubmissions } from "@/hooks/useCourseAssignmentSubmissions";
 
 const AssignmentSubmissionCardByStudent = ({ data }) => {
-  if (!data) return null;
 
-  const {
+    const {
     assignment,
     submittedAt,
     status,
     marksObtained,
   } = data;
+    const { loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions()
+    const [assignmentSubmissiondrawerMode, setAssignmentSubmissionDrawerMode] = useState<'create' | 'edit'>('create');
+    const [assignmentSubmissionDrawerVisible, setAssignmentSubmissionDrawerVisible] = useState(false);
+    const [selectedAssignmentSubmissionId, setSelectedAssignmentSubmissionId] = useState<number | undefined>();
+
+      const handleAssignmentSubmissionDrawerSuccess = () => {
+        setAssignmentSubmissionDrawerVisible(false);
+        loadCourseAssignmentSubmissions({ page: 1, limit: 10 });
+      };
+    
+    const handleEditDrawer = (courseAssignmentSubmissionId: number) => {
+        setSelectedAssignmentSubmissionId(courseAssignmentSubmissionId);
+        setAssignmentSubmissionDrawerMode('edit');
+        setAssignmentSubmissionDrawerVisible(true);
+      };
+    
+
+
 
   return (
     <Card
@@ -60,10 +80,19 @@ const AssignmentSubmissionCardByStudent = ({ data }) => {
           size="small"
           className="flex-1"
           icon={<BiEditAlt size={14} />}
-          // onClick={() => handleEditDrawer(a.id)}
+          onClick={() => handleEditDrawer(data.id)}
       >
           Edit
       </Button>
+
+      <CourseAssignmentSubmissionFormDrawer
+        mode={assignmentSubmissiondrawerMode}
+        courseAssignmentSubmissionId={selectedAssignmentSubmissionId}
+        visible={assignmentSubmissionDrawerVisible}
+        onCancel={() => setAssignmentSubmissionDrawerVisible(false)}
+        onSuccess={handleAssignmentSubmissionDrawerSuccess}
+        isAdmin={false}
+      />
     </Card>
   );
 };
