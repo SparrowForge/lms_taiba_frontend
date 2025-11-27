@@ -53,7 +53,8 @@ export default function CourseTimeline() {
     setDrawerVisible(false);
   };
 
-  const handleEditDrawer = (courseMaterialId: number) => {
+  const handleEditDrawer = (courseMaterialId: number,classnumber:number) => {
+    setClassNo(classnumber)
     setSelectedCourseMaterialId(courseMaterialId);
     setDrawerMode('edit');
     setDrawerVisible(true);
@@ -87,7 +88,7 @@ export default function CourseTimeline() {
                     <p className="text-sm font-medium text-slate-800">{material.title}</p>
                     {material.description && <p className="text-xs text-slate-600 mt-1">{material.description}</p>}
                     <Button
-                      onClick={()=>handleEditDrawer(material.id)}
+                      onClick={()=>handleEditDrawer(material.id,item.classNo)}
                       type="primary"
                       size="small"
                       className="h-9 text-base font-medium mb-0"
