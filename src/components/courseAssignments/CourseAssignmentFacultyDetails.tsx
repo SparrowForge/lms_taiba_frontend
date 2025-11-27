@@ -1,6 +1,6 @@
 import { Card, Row, Col } from "antd";
 
-const CourseAssignmentsFacultyDetails = ({semester,batch, course, faculty,subject}) => {
+const CourseAssignmentsFacultyDetails = ({semester,batch, course, faculty,subject, classNo}) => {
   return (
     <Card title="Assignment Details" bordered className="shadow-sm" style={{marginBottom:"10px"}}>
       <Row gutter={[16, 16]}>
@@ -27,6 +27,10 @@ const CourseAssignmentsFacultyDetails = ({semester,batch, course, faculty,subjec
         <Col span={12}>
           <strong>Faculty:</strong>
           <div>{faculty?.faculty?.fullName || "—"}</div>
+        </Col>
+        <Col span={12}>
+          <strong>Class NO:</strong>
+          <div>{classNo + 1 || "—"}</div>
         </Col>
       </Row>
     </Card>

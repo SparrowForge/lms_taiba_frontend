@@ -35,13 +35,15 @@ export default function CourseTimeline() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedCourseMaterialId, setSelectedCourseMaterialId] = useState<number | undefined>();
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [classNo, setClassNo] = useState<number | undefined>()
   useEffect(()=>{
     loadAttendances({page:1, limit:99, semesterId:1, subjectId:1})
   },[loadAttendances, drawerVisible])
 
   const timelineData = attendances as unknown as TimelineItem[]
 
-  const handleCreateDrawer = () => {
+  const handleCreateDrawer = (classnumber:number) => {
+    setClassNo(classnumber)
     setSelectedCourseMaterialId(undefined);
     setDrawerMode('create');
     setDrawerVisible(true);
@@ -59,14 +61,14 @@ export default function CourseTimeline() {
 
 
 
-  const items = timelineData.map((item) => ({
-    label: <div className="font-bold text-slate-900">Class {item.classNo}</div>,
+  const items = timelineData?.map((item) => ({
+    label: <div className="font-bold text-slate-900">Class {item.classNo + 1}</div>,
     children: (
       <div className="space-y-3">
         <div className="text-sm text-slate-600 mt-3 flex justify-between">
           <h1><span className="font-semibold">Date:</span> {new Date(item.date).toLocaleDateString()}</h1>
            <Button
-              onClick={()=>handleCreateDrawer()}
+              onClick={()=>handleCreateDrawer(item.classNo)}
               type="primary"
               size="small"
               className="h-9 text-base font-medium mb-0"
@@ -117,6 +119,7 @@ export default function CourseTimeline() {
       visible={drawerVisible}
       onCancel={() => setDrawerVisible(false)}
       onSuccess={handleDrawerSuccess}
+      classNo={classNo}
     />
     <div className="bg-white rounded-lg border border-slate-200 p-6">
       <div className="max-h-[800px] overflow-y-auto overflow-x-hidden pr-2">

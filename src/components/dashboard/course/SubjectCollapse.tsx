@@ -64,8 +64,8 @@ interface SubjectCollapseProps {
 
 export function SubjectCollapse({ data }: SubjectCollapseProps) {
   const router = useRouter()
-  const handleAddMaterials =(subjectId:number, semesterId:number) =>{
-      router.push(`/dashboard/course/${subjectId}/timeline?semesterId=${semesterId}`)
+  const handleAddMaterials =(subjectId:number, semesterId:number, batchId:number) =>{
+      router.push(`/dashboard/course/${subjectId}/timeline?semesterId=${semesterId}&batchId=${batchId}`)
   }
   const handleAddAssignments =(subjectId:number, semesterId:number, batchId:number) =>{
       router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&tab=assignments&batchId=${batchId}`)
@@ -133,7 +133,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                     size="small"
                     className="flex-1"
                     icon={<BiBookOpen size={14} />}
-                    onClick={() => handleAddMaterials(item.subject.id, item.semesterId)}
+                    onClick={() => handleAddMaterials(item.subject.id, item.semesterId, item?.batch?.id)}
                   >
                     Materials
                   </Button>

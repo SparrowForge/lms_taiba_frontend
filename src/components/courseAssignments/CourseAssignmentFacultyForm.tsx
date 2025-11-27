@@ -96,7 +96,6 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
         loadSemester(finalSemesterId)
       },[finalBatchId, loadBatch, loadCourse, loadSemester, selectedSubject?.courseId, finalSemesterId])
 
-    console.log("selectedSubject", selectedSubject)
 
 
     const handleSubmit = async (values: Partial<ICourseAssignment>) => {
@@ -106,7 +105,7 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
           subjectId: finalSubjectId,
           semesterId: finalSemesterId,
           batchId: finalBatchId,
-          facultyId: user?.faculty.facultyId
+          facultyId: user?.faculty.id
       }
       try {
         if (mode === 'create') {
@@ -118,7 +117,7 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
             router.push('/course-assignments');
           }
         } else if (mode === 'edit' && courseAssignmentId) {
-          await editCourseAssignment(courseAssignmentId, values as ICourseAssignmentUpdate);
+          await editCourseAssignment(courseAssignmentId, mValues as ICourseAssignmentUpdate);
           toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
           if (onSuccess) {
             onSuccess();
