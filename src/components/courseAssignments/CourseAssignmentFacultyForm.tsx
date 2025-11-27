@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { Status } from '@/enums';
+import { EntityType, FileCategory, FileType, Status } from '@/enums';
 
 import { useBatches } from '@/hooks/useBatches';
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
@@ -29,6 +29,7 @@ import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
 import CourseAssignmentsFacultyDetails from './CourseAssignmentFacultyDetails';
 import { useAuth } from '@/hooks/useAuth';
+import FileUpload from '../ui/FileUpload';
 
 const { TextArea } = Input;
 
@@ -39,9 +40,9 @@ interface CourseAssignmentFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
-  subjectId?:number,
-  semesId:number,
-  batId:number
+  subjectId?: number,
+  semesId: number,
+  batId: number
 }
 
 const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
@@ -55,95 +56,95 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   semesId,
   batId
 }) => {
-  
-    const {id} = useParams()
-    const searchParams = useSearchParams();
-    const semesterId = searchParams.get("semesterId");
-    const batchId = searchParams.get("batchId");
-    const { t } = useLocalization();
-    const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
-    const router = useRouter();
-    const [form] = Form.useForm();
-    const { createCourseAssignment, editCourseAssignment, actionStatus } = useCourseAssignments();
-    const {loadCourseAssignments, courseAssignments} = useCourseAssignments()
-    const {loadSubject, selectedSubject} = useSubjects()
-    const {loadCourse, selectedCourse} = useCourses()
-    const {loadBatch, selectedBatch} = useBatches()
-    const {loadSemester, selectedSemester} = useSemesters()
-    const {user} = useAuth()
-    const finalSubjectId = id ?? subjectId
-    const finalSemesterId = semesterId ?? semesId
-    const finalBatchId = batchId ?? batId
 
-      useEffect(()=>{
-        
-          loadSubject(parseInt(finalSubjectId))
-      },[loadSubject,finalSubjectId])
+  const { id } = useParams()
+  const searchParams = useSearchParams();
+  const semesterId = searchParams.get("semesterId");
+  const batchId = searchParams.get("batchId");
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
+  const router = useRouter();
+  const [form] = Form.useForm();
+  const { createCourseAssignment, editCourseAssignment, actionStatus } = useCourseAssignments();
+  const { loadCourseAssignments, courseAssignments } = useCourseAssignments()
+  const { loadSubject, selectedSubject } = useSubjects()
+  const { loadCourse, selectedCourse } = useCourses()
+  const { loadBatch, selectedBatch } = useBatches()
+  const { loadSemester, selectedSemester } = useSemesters()
+  const { user } = useAuth()
+  const finalSubjectId = id ?? subjectId
+  const finalSemesterId = semesterId ?? semesId
+  const finalBatchId = batchId ?? batId
 
-      useEffect(() => {
-          loadCourseAssignments({ finalSemesterId, subjectId:finalSubjectId});
-      }, [finalSubjectId,loadCourseAssignments, finalSemesterId]);
+  useEffect(() => {
 
-      useEffect(() => {
-        if (mode === 'create') {
-          form.resetFields();
-        }
-      }, [mode, form]);
+    loadSubject(parseInt(finalSubjectId))
+  }, [loadSubject, finalSubjectId])
 
-      useEffect(()=>{
-        loadCourse(selectedSubject?.courseId)
-        loadBatch(finalBatchId)
-        loadSemester(finalSemesterId)
-      },[finalBatchId, loadBatch, loadCourse, loadSemester, selectedSubject?.courseId, finalSemesterId])
+  useEffect(() => {
+    loadCourseAssignments({ finalSemesterId, subjectId: finalSubjectId });
+  }, [finalSubjectId, loadCourseAssignments, finalSemesterId]);
+
+  useEffect(() => {
+    if (mode === 'create') {
+      form.resetFields();
+    }
+  }, [mode, form]);
+
+  useEffect(() => {
+    loadCourse(selectedSubject?.courseId)
+    loadBatch(finalBatchId)
+    loadSemester(finalSemesterId)
+  }, [finalBatchId, loadBatch, loadCourse, loadSemester, selectedSubject?.courseId, finalSemesterId])
 
 
 
-    const handleSubmit = async (values: Partial<ICourseAssignment>) => {
-      const mValues ={
-          ...values,
-          courseId: selectedSubject?.courseId,
-          subjectId: finalSubjectId,
-          semesterId: finalSemesterId,
-          batchId: finalBatchId,
-          facultyId: user?.faculty.id
-      }
-      try {
-        if (mode === 'create') {
-          await createCourseAssignment(mValues as ICourseAssignmentCreate);
-          toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
-          if (onSuccess) {
-            onSuccess();
-          } else {
-            router.push('/course-assignments');
-          }
-        } else if (mode === 'edit' && courseAssignmentId) {
-          await editCourseAssignment(courseAssignmentId, mValues as ICourseAssignmentUpdate);
-          toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
-          if (onSuccess) {
-            onSuccess();
-          } else {
-            router.push(`/course-assignments/${courseAssignmentId}`);
-          }
-        }
-      } catch (error: unknown) {
-        let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
-          name: entityName,
-          defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
-        });
-
-        // Try to extract error message from API response
-        if (error && typeof error === 'object' && 'response' in error) {
-          const apiError = error as { response?: { data?: { message?: string } } };
-          if (apiError.response?.data?.message) {
-            errorMessage = apiError.response.data.message;
-          }
+  const handleSubmit = async (values: Partial<ICourseAssignment>) => {
+    const mValues = {
+      ...values,
+      courseId: selectedSubject?.courseId,
+      subjectId: finalSubjectId,
+      semesterId: finalSemesterId,
+      batchId: finalBatchId,
+      facultyId: user?.faculty.id
+    }
+    try {
+      if (mode === 'create') {
+        await createCourseAssignment(mValues as ICourseAssignmentCreate);
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+        if (onSuccess) {
+          onSuccess();
         } else {
-          errorMessage = getErrorMessage(error);
+          router.push('/course-assignments');
         }
-
-        toast.error(errorMessage);
+      } else if (mode === 'edit' && courseAssignmentId) {
+        await editCourseAssignment(courseAssignmentId, mValues as ICourseAssignmentUpdate);
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          router.push(`/course-assignments/${courseAssignmentId}`);
+        }
       }
-    };
+    } catch (error: unknown) {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
+
+      // Try to extract error message from API response
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { data?: { message?: string } } };
+        if (apiError.response?.data?.message) {
+          errorMessage = apiError.response.data.message;
+        }
+      } else {
+        errorMessage = getErrorMessage(error);
+      }
+
+      toast.error(errorMessage);
+    }
+  };
 
   const handleCancel = () => {
     if (onCancel) {
@@ -168,24 +169,24 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
       initialValues={
         mode === 'edit'
           ? {
-              ...initialValues,
-              publishDate: initialValues?.publishDate
-                ? dayjs(initialValues.publishDate)
-                : undefined,
-              dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined,
-            }
+            ...initialValues,
+            publishDate: initialValues?.publishDate
+              ? dayjs(initialValues.publishDate)
+              : undefined,
+            dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined,
+          }
           : undefined
       }
     >
 
-      <CourseAssignmentsFacultyDetails 
-        semester={selectedSemester} 
-        batch={selectedBatch} 
-        course={selectedCourse} 
-        faculty={user} 
+      <CourseAssignmentsFacultyDetails
+        semester={selectedSemester}
+        batch={selectedBatch}
+        course={selectedCourse}
+        faculty={user}
         subject={selectedSubject}
       />
-      
+
       <Form.Item
         name="title"
         label={t(LOCALE_KEYS.TITLE)}
@@ -366,8 +367,15 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
         />
       </Form.Item>
 
-      <Form.Item name="attachmentPath" label={t(LOCALE_KEYS.ATTACHMENT_PATH)}>
-        <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.ATTACHMENT_PATH) })} />
+      <Form.Item name="fileId" label={t(LOCALE_KEYS.FILE)}>
+        <FileUpload
+          fileType={FileType.DOCUMENT}
+          fileCategory={FileCategory.ACADEMIC}
+          entityType={EntityType.COURSE_ASSIGNMENT_SUBMISSION}
+          entityId={courseAssignmentId}
+          accept="file/*"
+          maxSize={50}
+        />
       </Form.Item>
 
       <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />

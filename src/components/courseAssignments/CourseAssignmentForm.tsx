@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { ASSIGNMENT_TYPE_OPTIONS } from '@/enums/courseAssignment';
-import { Status } from '@/enums';
+import { EntityType, FileCategory, FileType, Status } from '@/enums';
 
 import { useBatches } from '@/hooks/useBatches';
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
@@ -29,6 +29,7 @@ import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import FileUpload from '../ui/FileUpload';
 
 const { TextArea } = Input;
 
@@ -456,9 +457,16 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
         />
       </Form.Item>
 
-      <Form.Item name="attachmentPath" label={t(LOCALE_KEYS.ATTACHMENT_PATH)}>
-        <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.ATTACHMENT_PATH) })} />
-      </Form.Item>
+     <Form.Item name="fileId" label={t(LOCALE_KEYS.FILE)}>
+        <FileUpload
+                fileType={FileType.DOCUMENT}
+                fileCategory={FileCategory.ACADEMIC}
+                entityType={EntityType.COURSE_MATERIAL}
+                entityId={courseAssignmentId}
+                accept="file/*"
+                maxSize={50}
+                />
+            </Form.Item>
 
       <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
