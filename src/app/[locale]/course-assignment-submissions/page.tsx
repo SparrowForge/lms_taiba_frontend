@@ -23,6 +23,10 @@ import { useTranslations } from 'next-intl';
 import { useStudents } from '@/hooks/useStudents';
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { COURSE_ASSIGNMENT_SUBMISSION_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useCourses } from '@/hooks/useCourses';
+import { useBatches } from '@/hooks/useBatches';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSubjects } from '@/hooks/useSubjects';
 
 export default function CourseAssignmentSubmissionsPage() {
   const { t } = useLocalization();
@@ -52,11 +56,16 @@ export default function CourseAssignmentSubmissionsPage() {
 
   const {students, loadStudents} = useStudents()
   const {courseAssignments, loadCourseAssignments} = useCourseAssignments()
+  const {loadCourses, courses} = useCourses()
+  const {loadSubjects, subjects} = useSubjects()
 
   //get skip & limit from url
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const courseId = searchParams.get('courseId');
+
+  const subjectId = searchParams.get('subjectId');
   const loadWithParams = (
     searchParams: URLSearchParams,
     skip: string | null,
@@ -67,16 +76,34 @@ export default function CourseAssignmentSubmissionsPage() {
     delete params.limit;
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    delete params.courseId
+    delete params.subjectId
     loadCourseAssignmentSubmissions({ page, limit: limitNum, ...params });
   };
+
+  useEffect(()=>{
+    loadCourses({page:1, limit:99})
+  },[loadCourses])
+
+
+
+  useEffect(()=>{
+    if(courseId){
+      loadSubjects({page:1, limit:99, courseId})
+    }
+  },[loadSubjects, courseId])
+
+  useEffect(()=>{
+    if(subjectId){
+      loadCourseAssignments({page:1, limit:99, subjectId})
+    }
+  },[loadCourseAssignments, subjectId])
 
   useEffect(() => {
     loadWithParams(searchParams, skip, limit);
   }, [searchParams, skip, limit, loadCourseAssignmentSubmissions]);
 
-  useEffect(()=>{
-    loadCourseAssignments({page:1, limit:99})
-  },[loadCourseAssignments])
+
 
   useEffect(()=>{
     loadStudents({page:1, limit:99})
@@ -145,7 +172,24 @@ export default function CourseAssignmentSubmissionsPage() {
             label: t(LOCALE_KEYS.STUDENT),
             options: [
               { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...students.map((c) => ({ label: c.firstName , value: String(c.id) })),
+              ...students.map((s) => ({ label: s.firstName , value: String(s.id) })),
+            ],
+          },
+          {
+            key: 'courseId',
+            label: t(LOCALE_KEYS.TYPE),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+            ],
+          },
+          
+          {
+            key: 'subjectId',
+            label: t(LOCALE_KEYS.SUBJECT),
+            options: [
+              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+              ...subjects.map((s) => ({ label: s.name, value: String(s.id) })),
             ],
           },
           {
@@ -270,7 +314,6 @@ export default function CourseAssignmentSubmissionsPage() {
           onSuccess={handleDrawerSuccess}
         />
 
-        
 
         <CourseAssignmentSubmissionDetailsDrawer
           courseAssignmentSubmissionId={selectedDetailsCourseAssignmentSubmissionId}
