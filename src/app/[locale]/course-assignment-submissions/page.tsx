@@ -64,8 +64,8 @@ export default function CourseAssignmentSubmissionsPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
   const courseId = searchParams.get('courseId');
-
   const subjectId = searchParams.get('subjectId');
+  
   const loadWithParams = (
     searchParams: URLSearchParams,
     skip: string | null,
@@ -169,7 +169,7 @@ export default function CourseAssignmentSubmissionsPage() {
           },
           {
             key: 'studentId',
-            label: t(LOCALE_KEYS.STUDENT),
+            label: t(LOCALE_KEYS.STUDENT_PROFILE),
             options: [
               { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
               ...students.map((s) => ({ label: s.firstName , value: String(s.id) })),
@@ -177,7 +177,7 @@ export default function CourseAssignmentSubmissionsPage() {
           },
           {
             key: 'courseId',
-            label: t(LOCALE_KEYS.TYPE),
+            label: t(LOCALE_KEYS.COURSE),
             options: [
               { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
               ...courses.map((c) => ({ label: c.name, value: String(c.id) })),

@@ -148,8 +148,8 @@ const Assignments: React.FC = () => {
     return  courseAssignmentSubmissions.find(item=>item.assignment.id === assignmentId)
   }
 
-  const handleViewAll = (assignmentId) =>{
-    return router.push(`/course-assignment-submissions?assignmentId=${assignmentId}`)
+  const handleViewAll = (assignmentId, courseId, subjectId) =>{
+    return router.push(`/course-assignment-submissions?courseId=${courseId}&subjectId=${subjectId}&assignmentId=${assignmentId}`)
   }
 
 
@@ -206,7 +206,7 @@ const Assignments: React.FC = () => {
                     size="small"
                     className="flex-1"
                     icon={<BiDetail size={14} />}
-                    onClick={() => handleViewAll(a.id)}
+                    onClick={() => handleViewAll(a.id, a.course.id, a.subject.id)}
                     
                     >
                       View All

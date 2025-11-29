@@ -1,10 +1,11 @@
 'use client';
 
 import { InboxOutlined } from '@ant-design/icons';
-import { message, Typography, Upload as AntUpload } from 'antd';
+import { message, Typography, Upload as AntUpload, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 
 import { useFiles } from '@/hooks/useFiles';
+import { toast } from 'react-toastify';
 
 const { Text } = Typography;
 const { Dragger } = AntUpload;
@@ -51,6 +52,17 @@ const FileUpload: React.FC<FileUploadProps> = ({
   }, [uploadedFile, onChange]);
 
   const handleUpload = async (file: File) => {
+
+  const isPDF =
+    file.type === "application/pdf" ||
+    file.name.toLowerCase().endsWith(".pdf");
+
+  if (!isPDF) {
+    toast.error("Only PDF files are allowed!");
+    return Upload.LIST_IGNORE; // <— IMPORTANT! Block the file
+  }
+
+
     // Check file size
     if (file.size > maxSize * 1024 * 1024) {
       message.error(`File size must be less than ${maxSize}MB`);

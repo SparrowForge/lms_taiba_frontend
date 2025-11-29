@@ -463,7 +463,7 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
                 fileCategory={FileCategory.ACADEMIC}
                 entityType={EntityType.COURSE_MATERIAL}
                 entityId={courseAssignmentId}
-                accept="file/*"
+                accept=".pdf"
                 maxSize={50}
                 />
             </Form.Item>
