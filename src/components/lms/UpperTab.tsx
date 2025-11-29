@@ -1,32 +1,28 @@
 'use client';
 
 import { Tabs } from 'antd';
-import { useLocale } from 'next-intl';
 
-type TabItem = {
+export type UpperTabItem = {
   key: string;
   title: string;
-  localeTitle: string;
-  initial:string
 };
 
-const UpperTab: React.FC<{ onTabChange: (key: string) => void; items: TabItem[] }> = ({
+const UpperTab: React.FC<{ onTabChange: (key: string) => void; items: UpperTabItem[], initial:string | null }> = ({
   onTabChange,
   items,
   initial
 }) => {
-  const locale = useLocale();
 
   return (
     <Tabs
       size="large"
       className="uppertab full-width-tabs"
-      defaultActiveKey={initial}
+      defaultActiveKey={initial ?? undefined}
       items={items.map((item) => ({
         key: item.key,
         label: (
           <div className="w-full text-center text-lg font-semibold">
-            {locale === 'ar' ? item.localeTitle : item.title}
+            {item.title}
           </div>
         ),
       }))}

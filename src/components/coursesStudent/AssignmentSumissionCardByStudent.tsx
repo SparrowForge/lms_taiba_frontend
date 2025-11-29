@@ -5,8 +5,9 @@ import CourseAssignmentSubmissionFormDrawer from "../courseAssignmentSubmissions
 import { useState } from "react";
 import { useCourseAssignmentSubmissions } from "@/hooks/useCourseAssignmentSubmissions";
 import { useAuth } from "@/hooks/useAuth";
+import { ICourseAssignmentSubmission } from "@/types/courseAssignmentSubmission";
 
-const AssignmentSubmissionCardByStudent = ({ data }) => {
+const AssignmentSubmissionCardByStudent = ({ data }: { data: ICourseAssignmentSubmission }) => {
     const {
     student,
     assignment,

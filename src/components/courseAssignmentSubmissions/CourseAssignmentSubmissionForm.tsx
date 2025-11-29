@@ -178,7 +178,7 @@ const CourseAssignmentSubmissionForm: React.FC<CourseAssignmentSubmissionFormPro
         >
           {students.map((student) => (
             <Select.Option key={student.id} value={student.id}>
-              {student.name} ({student.applicationNo})
+              {student.firstName} {student.lastName} ({student.applicationNo})
             </Select.Option>
           ))}
         </Select>

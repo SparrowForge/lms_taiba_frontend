@@ -20,7 +20,7 @@ interface CourseAssignmentSubmissionFormDrawerProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
-  isAdmin: boolean
+  isAdmin?: boolean
 }
 
 const CourseAssignmentSubmissionFormDrawer: React.FC<CourseAssignmentSubmissionFormDrawerProps> = ({
@@ -29,14 +29,14 @@ const CourseAssignmentSubmissionFormDrawer: React.FC<CourseAssignmentSubmissionF
   visible,
   onCancel,
   onSuccess,
-  isAdmin
+  isAdmin = false,
 }) => {
   const {
     selectedCourseAssignmentSubmission,
     loadCourseAssignmentSubmission,
     detailsStatus,
   } = useCourseAssignmentSubmissions();
-  
+
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT_SUBMISSION, {
     defaultValue: 'Course Assignment Submission',

@@ -40,9 +40,9 @@ interface CourseAssignmentFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
-  subjectId?: number,
-  semesId: number,
-  batId: number
+  subjectId?: string,
+  semesterId?: string,
+  batchId?: string
 }
 
 const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
@@ -53,14 +53,14 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   onCancel,
   embedded = false,
   subjectId,
-  semesId,
-  batId
+  semesterId,
+  batchId
 }) => {
 
   const { id } = useParams()
   const searchParams = useSearchParams();
-  const semesterId = searchParams.get("semesterId");
-  const batchId = searchParams.get("batchId");
+  const finalSemesterId = semesterId ?? searchParams.get("semesterId");
+  const finalBatchId = batchId ?? searchParams.get("batchId");
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
   const router = useRouter();
@@ -72,9 +72,7 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   const { loadBatch, selectedBatch } = useBatches()
   const { loadSemester, selectedSemester } = useSemesters()
   const { user } = useAuth()
-  const finalSubjectId = id ?? subjectId
-  const finalSemesterId = semesterId ?? semesId
-  const finalBatchId = batchId ?? batId
+  const finalSubjectId = (id ?? subjectId) as string;
 
   useEffect(() => {
 
@@ -92,9 +90,9 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   }, [mode, form]);
 
   useEffect(() => {
-    loadCourse(selectedSubject?.courseId)
-    loadBatch(finalBatchId)
-    loadSemester(finalSemesterId)
+    loadCourse(selectedSubject?.courseId ?? 0)
+    loadBatch(parseInt(finalBatchId ?? '0'))
+    loadSemester(parseInt(finalSemesterId ?? '0'))
   }, [finalBatchId, loadBatch, loadCourse, loadSemester, selectedSubject?.courseId, finalSemesterId])
 
 
@@ -102,11 +100,11 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   const handleSubmit = async (values: Partial<ICourseAssignment>) => {
     const mValues = {
       ...values,
-      courseId: selectedSubject?.courseId,
-      subjectId: finalSubjectId,
-      semesterId: finalSemesterId,
-      batchId: finalBatchId,
-      facultyId: user?.faculty.id
+      courseId: selectedSubject?.courseId ?? 0,
+      subjectId: parseInt(finalSubjectId ?? '0'),
+      semesterId: parseInt(finalSemesterId ?? '0'),
+      batchId: parseInt(finalBatchId ?? '0'),
+      facultyId: user?.faculty?.id ?? 0
     }
     try {
       if (mode === 'create') {
@@ -183,8 +181,9 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
         semester={selectedSemester}
         batch={selectedBatch}
         course={selectedCourse}
-        faculty={user}
+        faculty={user?.faculty ?? null}
         subject={selectedSubject}
+        classNo={0}
       />
 
       <Form.Item

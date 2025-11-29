@@ -64,10 +64,10 @@ interface SubjectCollapseProps {
 
 export function SubjectCollapse({ data }: SubjectCollapseProps) {
   const router = useRouter()
-  const handleAddMaterials =(subjectId:number, semesterId:number, batchId:number) =>{
+  const handleAddMaterials =(subjectId:number, semesterId:number, batchId:number | null | undefined) =>{
       router.push(`/dashboard/course/${subjectId}/timeline?semesterId=${semesterId}&batchId=${batchId}`)
   }
-  const handleAddAssignments =(subjectId:number, semesterId:number, batchId:number) =>{
+  const handleAddAssignments =(subjectId:number, semesterId:number, batchId:number | null) =>{
       router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&tab=assignments&batchId=${batchId}`)
   }
 

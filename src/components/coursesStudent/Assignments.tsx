@@ -148,7 +148,7 @@ const Assignments: React.FC = () => {
     return  courseAssignmentSubmissions.find(item=>item.assignment.id === assignmentId)
   }
 
-  const handleViewAll = (assignmentId, courseId, subjectId) =>{
+  const handleViewAll = (assignmentId: number, courseId: number, subjectId: number) =>{
     return router.push(`/course-assignment-submissions?courseId=${courseId}&subjectId=${subjectId}&assignmentId=${assignmentId}`)
   }
 
@@ -236,7 +236,7 @@ const Assignments: React.FC = () => {
                     type="primary"
                     size="small"
                     className="flex-1"
-                    disabled={checkAlreadySubmitted(a.id)}
+                    disabled={checkAlreadySubmitted(a.id) ? true : false}
                     // icon={< size={14} />}
                     onClick={() => handleCoureseAssignmentSubmissionCreateDrawer(a.id)}
                     >

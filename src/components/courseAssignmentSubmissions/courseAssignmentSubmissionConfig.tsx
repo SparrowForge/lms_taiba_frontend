@@ -7,7 +7,7 @@ import { ICourseAssignmentSubmission } from '@/types/courseAssignmentSubmission'
 export const getCourseAssignmentSubmissionDisplayName = (
   courseAssignmentSubmission: ICourseAssignmentSubmission,
 ) =>
-  `${courseAssignmentSubmission.assignment?.title} - ${courseAssignmentSubmission.student?.name}`;
+  `${courseAssignmentSubmission.assignment?.title} - ${courseAssignmentSubmission.student?.firstName} ${courseAssignmentSubmission.student?.lastName}`;
 
 export const useCreateCourseAssignmentSubmissionDetailsConfig = (
   courseAssignmentSubmission: ICourseAssignmentSubmission | null,
@@ -28,7 +28,7 @@ export const useCreateCourseAssignmentSubmissionDetailsConfig = (
     route: '/course-assignment-submissions',
     getDisplayName: getCourseAssignmentSubmissionDisplayName,
     getInitials: (courseAssignmentSubmission: ICourseAssignmentSubmission) =>
-      courseAssignmentSubmission.student?.name?.charAt(0).toUpperCase() || 'S',
+      courseAssignmentSubmission.student?.firstName?.charAt(0).toUpperCase() || 'S',
     item: courseAssignmentSubmission,
     loading,
     error,
@@ -46,7 +46,7 @@ export const useCreateCourseAssignmentSubmissionDetailsConfig = (
         key: 'student.fullName',
         label: t(LOCALE_KEYS.STUDENT),
         render: (value: string, item: ICourseAssignmentSubmission) =>
-          item?.student?.name ? `${item.student.name} (${item.student.applicationNo})` : 'N/A',
+          item?.student?.firstName ? `${item.student.firstName} (${item.student.applicationNo})` : 'N/A',
       },
       {
         key: 'submittedAt',
