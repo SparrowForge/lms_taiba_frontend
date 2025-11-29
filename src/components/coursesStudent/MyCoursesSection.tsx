@@ -3,12 +3,13 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { useAuth } from '@/hooks/useAuth';
+
 import Assignments from './Assignments';
 import SubmittedAssignment from './SubmittedAssignment';
 import TabData from './TabData';
 import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
-import { useAuth } from '@/hooks/useAuth';
 
 
 

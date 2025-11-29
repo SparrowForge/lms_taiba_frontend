@@ -75,8 +75,8 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
   const batchName = group.subjects[0]?.batch?.name || "No Batch Assigned"
   const semesterName = group.subjects[0]?.semester.name || "Unknown Semester"
   const headerTitle = `${batchName} - ${semesterName}`
-    
- 
+
+
     return {
       key: `group-${index}`,
       label: headerTitle,

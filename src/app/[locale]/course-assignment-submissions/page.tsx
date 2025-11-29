@@ -65,7 +65,7 @@ export default function CourseAssignmentSubmissionsPage() {
   const limit = searchParams.get('limit');
   const courseId = searchParams.get('courseId');
   const subjectId = searchParams.get('subjectId');
-  
+
   const loadWithParams = (
     searchParams: URLSearchParams,
     skip: string | null,
@@ -183,7 +183,7 @@ export default function CourseAssignmentSubmissionsPage() {
               ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
             ],
           },
-          
+
           {
             key: 'subjectId',
             label: t(LOCALE_KEYS.SUBJECT),
@@ -313,6 +313,8 @@ export default function CourseAssignmentSubmissionsPage() {
           onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}
         />
+
+
 
 
         <CourseAssignmentSubmissionDetailsDrawer
