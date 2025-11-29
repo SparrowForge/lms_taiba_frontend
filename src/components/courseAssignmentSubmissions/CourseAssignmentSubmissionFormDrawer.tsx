@@ -11,6 +11,8 @@ import { useLocalization } from '@/hooks/useLocalization';
 
 import CourseAssignmentSubmissionForm from './CourseAssignmentSubmissionForm';
 import CourseAssignmentSubmissionFormByStudent from './CourseAssignmentSubmissionFormByStudent';
+import { useAuth } from '@/hooks/useAuth';
+import CourseAssignmentSubmissionFormFaculty from './CourseAssignmentSubmissionFormFaculty';
 
 interface CourseAssignmentSubmissionFormDrawerProps {
   mode: 'create' | 'edit';
@@ -18,7 +20,7 @@ interface CourseAssignmentSubmissionFormDrawerProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
-  isAdmin:boolean
+  isAdmin?: boolean
 }
 
 const CourseAssignmentSubmissionFormDrawer: React.FC<CourseAssignmentSubmissionFormDrawerProps> = ({
@@ -27,18 +29,19 @@ const CourseAssignmentSubmissionFormDrawer: React.FC<CourseAssignmentSubmissionF
   visible,
   onCancel,
   onSuccess,
-  isAdmin
+  isAdmin = false,
 }) => {
   const {
-    getCourseAssignmentSubmissionById,
     selectedCourseAssignmentSubmission,
     loadCourseAssignmentSubmission,
     detailsStatus,
   } = useCourseAssignmentSubmissions();
+
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT_SUBMISSION, {
     defaultValue: 'Course Assignment Submission',
   });
+  const { user } = useAuth()
 
   useEffect(() => {
     if (visible && mode === 'edit' && courseAssignmentSubmissionId) {
@@ -72,25 +75,32 @@ const CourseAssignmentSubmissionFormDrawer: React.FC<CourseAssignmentSubmissionF
       onClose={handleCancel}
       destroyOnHidden={true}
     >
-      { isAdmin === true ?
-      <CourseAssignmentSubmissionForm
-        mode={mode}
-        courseAssignmentSubmissionId={courseAssignmentSubmissionId}
-        initialValues={selectedCourseAssignmentSubmission || undefined}
-        onSuccess={handleSuccess}
-        onCancel={handleCancel}
-        embedded={true}
-      />
-      :
-      <CourseAssignmentSubmissionFormByStudent
-        mode={mode}
-        courseAssignmentSubmissionId={courseAssignmentSubmissionId}
-        initialValues={selectedCourseAssignmentSubmission || undefined}
-        onSuccess={handleSuccess}
-        onCancel={handleCancel}
-        embedded={true}
-      />
-}
+      {isAdmin === true ?
+        <CourseAssignmentSubmissionForm
+          mode={mode}
+          courseAssignmentSubmissionId={courseAssignmentSubmissionId}
+          initialValues={selectedCourseAssignmentSubmission || undefined}
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
+          embedded={true}
+        />
+        :
+        user?.student?.id ? <CourseAssignmentSubmissionFormByStudent
+          mode={mode}
+          courseAssignmentSubmissionId={courseAssignmentSubmissionId}
+          initialValues={selectedCourseAssignmentSubmission || undefined}
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
+          embedded={true}
+        /> : <CourseAssignmentSubmissionFormFaculty
+          mode={mode}
+          courseAssignmentSubmissionId={courseAssignmentSubmissionId}
+          initialValues={selectedCourseAssignmentSubmission || undefined}
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
+          embedded={true}
+        />
+      }
     </Drawer>
   );
 };

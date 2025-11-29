@@ -589,6 +589,7 @@ export const LOCALE_KEYS = {
   VIEW_ALL: 'view-all',
 
   UPCOMING_ASSIGNMENT: 'upcoming-assignment',
+  SUBMITTED_ASSIGNMENT: 'submitted-assignment',
   ALL_TASKS: 'all-tasks',
   MONTHLY_ATTENDANCE: 'monthly-attendance',
   MARK_ALL_READ: 'mark-all-read',

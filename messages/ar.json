@@ -707,5 +707,6 @@
   "average_grade":"متوسط ​​​​الدرجة",
   "time_spent":"الوقت الذي يقضيه",
   "next_exam":"الامتحان القادم",
-  "add_assignment":"إضافة مهمة"
+  "add_assignment":"إضافة مهمة",
+  "submitted-assignment":"المهام المقدمة"
 }

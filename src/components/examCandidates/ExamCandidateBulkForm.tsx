@@ -287,11 +287,11 @@ function ExamCandidateBulkForm() {
                         {/* Left: Student Info */}
                         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <Avatar size="small" style={{ backgroundColor: '#1890ff' }}>
-                            {student.name.charAt(0).toUpperCase()}
+                            {student.firstName.charAt(0).toUpperCase()}
                           </Avatar>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <Typography.Text strong style={{ fontSize: '13px', display: 'block' }}>
-                              {student.name}
+                              {student.firstName} {student.lastName}
                             </Typography.Text>
                             <Typography.Text type="secondary" style={{ fontSize: '11px' }}>
                               {student.registrationNo} • {student.applicationNo}

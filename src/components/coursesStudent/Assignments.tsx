@@ -81,6 +81,7 @@ const Assignments: React.FC = () => {
   const { t } = useLocalization();
   const {user} = useAuth()
   const {id} = useParams()
+  const router = useRouter()
   const searchParams = useSearchParams();
   const semesterId = searchParams.get("semesterId");
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -89,7 +90,7 @@ const Assignments: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [assignmentSubmissionDrawerVisible, setAssignmentSubmissionDrawerVisible] = useState(false);
   const { courseAssignments, listStatus, loadCourseAssignments, } = useCourseAssignments();
-  const {  loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions();
+  const { courseAssignmentSubmissions, loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<number | undefined>();
   const [selectedAssignmentSubmissionId, setSelectedAssignmentSubmissionId] = useState<number | undefined>();
@@ -98,6 +99,12 @@ const Assignments: React.FC = () => {
       loadCourseAssignments({subjectId:id, semesterId})
       
   }, [id,loadCourseAssignments, semesterId]);
+
+  useEffect(()=>{
+    if(user?.student?.id){
+      loadCourseAssignmentSubmissions({studentId:user?.student?.id})
+    }
+  },[loadCourseAssignmentSubmissions, user])
 
   const sortedAssignments = [...(courseAssignments || [])].sort(
     (a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf(),
@@ -136,6 +143,15 @@ const Assignments: React.FC = () => {
     setAssignmentSubmissionDrawerVisible(false);
     loadCourseAssignmentSubmissions({ page: 1, limit: 10 });
   };
+
+  const checkAlreadySubmitted = (assignmentId:number) =>{
+    return  courseAssignmentSubmissions.find(item=>item.assignment.id === assignmentId)
+  }
+
+  const handleViewAll = (assignmentId: number, courseId: number, subjectId: number) =>{
+    return router.push(`/course-assignment-submissions?courseId=${courseId}&subjectId=${subjectId}&assignmentId=${assignmentId}`)
+  }
+
 
 
 
@@ -183,15 +199,19 @@ const Assignments: React.FC = () => {
                       Due: {dayjs(a.dueDate).format('MMM D, YYYY')}
                     </p>
                     <Tag color="blue">{getAssignmentTag(a)}</Tag>
-                  <Button
+                  
+
+                  {
+                    user?.type === UserType.FACULTY && <Button
                     size="small"
                     className="flex-1"
                     icon={<BiDetail size={14} />}
-                    onClick={() => handleViewDetails(a.id)}
+                    onClick={() => handleViewAll(a.id, a.course.id, a.subject.id)}
                     
                     >
-                      View
+                      View All
                   </Button>
+                  }
                   </div>
                 </div>
 
@@ -210,17 +230,17 @@ const Assignments: React.FC = () => {
                   </Button>
                 </div>
                 }
-                                {
+                {
                   user?.type === UserType.STUDENT && <div className="flex items-center gap-4">
-                  
                   <Button
                     type="primary"
                     size="small"
                     className="flex-1"
+                    disabled={checkAlreadySubmitted(a.id) ? true : false}
                     // icon={< size={14} />}
                     onClick={() => handleCoureseAssignmentSubmissionCreateDrawer(a.id)}
                     >
-                      Submit
+                      {checkAlreadySubmitted(a.id) ? 'Alreday Submitted' : "Submit"} 
                   </Button>
                 </div>
                 }

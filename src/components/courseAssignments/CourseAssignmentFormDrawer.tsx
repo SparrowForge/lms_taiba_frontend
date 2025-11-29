@@ -11,8 +11,8 @@ import { useLocalization } from '@/hooks/useLocalization';
 
 import { ICourseAssignment } from '@/types/courseAssignment';
 
-import CourseAssignmentForm from './CourseAssignmentForm';
 import CourseAssignmentFacultyForm from './CourseAssignmentFacultyForm';
+import CourseAssignmentForm from './CourseAssignmentForm';
 
 interface CourseAssignmentFormDrawerProps {
   mode: 'create' | 'edit';
@@ -108,7 +108,7 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
         batchId={batchId}
       />
       }
-     
+
     </Drawer>
   );
 };

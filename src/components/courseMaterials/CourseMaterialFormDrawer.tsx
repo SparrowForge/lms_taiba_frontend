@@ -12,6 +12,9 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { ICourseMaterial } from '@/types/courseMaterial';
 
 import CourseMaterialForm from './CourseMaterialForm';
+import { useAuth } from '@/hooks/useAuth';
+import { UserType } from '@/enums/user-type.enum';
+import CourseMaterialFacultyForm from '../dashboard/course/CourseMaterialFormFaculty';
 
 interface CourseMaterialFormDrawerProps {
   mode: 'create' | 'edit';
@@ -19,6 +22,7 @@ interface CourseMaterialFormDrawerProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess?: () => void;
+  classNo?:number
 }
 
 const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
@@ -27,7 +31,9 @@ const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
   visible,
   onCancel,
   onSuccess,
+  classNo
 }) => {
+  const {user} = useAuth()
   const { t } = useLocalization();
   const { selectedCourseMaterial, getCourseMaterialById, loadCourseMaterial, detailsStatus } =
     useCourseMaterials();
@@ -70,7 +76,16 @@ const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
       onClose={onCancel}
       destroyOnHidden={true}
     >
-      <CourseMaterialForm
+      {
+        user?.type === UserType.FACULTY ? <CourseMaterialFacultyForm
+        mode={mode}
+        courseMaterialId={courseMaterialId}
+        initialValues={convertToFormValues(selectedCourseMaterial)}
+        onSuccess={onSuccess}
+        onCancel={onCancel}
+        embedded={true}
+        classNo={classNo}
+      /> :<CourseMaterialForm
         mode={mode}
         courseMaterialId={courseMaterialId}
         initialValues={convertToFormValues(selectedCourseMaterial)}
@@ -78,6 +93,7 @@ const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
         onCancel={onCancel}
         embedded={true}
       />
+      }
     </Drawer>
   );
 };

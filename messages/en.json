@@ -708,5 +708,6 @@
   "average_grade":"Average Grade",
   "time_spent":"Time Spent",
   "next_exam":"Next Exam",
-  "add_assignment":"Add Assignment"
+  "add_assignment":"Add Assignment",
+  "submitted-assignment":"Submitted Assignment"
 }
