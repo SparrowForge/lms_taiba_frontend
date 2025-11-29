@@ -71,6 +71,10 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
       router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&tab=assignments&batchId=${batchId}`)
   }
 
+  const handleAddExam =(subjectId:number, semesterId:number, batchId:number | null) =>{
+      router.push(`/exams/create?subjectId=${subjectId}&semesterId=${semesterId}&batchId=${batchId}`)
+  }
+
   const items: CollapseProps["items"] = data.map((group, index) => {
   const batchName = group.subjects[0]?.batch?.name || "No Batch Assigned"
   const semesterName = group.subjects[0]?.semester.name || "Unknown Semester"
@@ -149,9 +153,9 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                     size="small"
                     className="flex-1"
                     icon={<BiDetail size={14} />}
-                    // onClick={() => handleAddAssignments(item.subject.id, item.subject.name)}
+                    onClick={() => handleAddExam(item.subject.id, item.semesterId, item.batchId)}
                   >
-                    Details
+                    Exam
                   </Button>
                 </div>
               </div>

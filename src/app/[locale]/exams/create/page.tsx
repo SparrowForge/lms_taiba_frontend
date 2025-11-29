@@ -1,12 +1,15 @@
 'use client';
 
+import { Button, Steps } from 'antd';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import ExamForm from '@/components/exams/ExamForm';
+import ExamCandidateBulkForm from '@/components/examCandidates/ExamCandidateBulkForm';
+import ExamFormFaculty from '@/components/exams/ExamFormFaculty';
+import ExamScheduleFacultyForm from '@/components/examSchedules/ExamScheduleFacultyForm';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageHeader } from '@/components/ui/PageHeader';
 
@@ -16,6 +19,28 @@ export default function CreateExamPage() {
   const { t } = useLocalization();
   const router = useRouter();
   const entityName = t(LOCALE_KEYS.EXAM, { defaultValue: 'Exam' });
+  const [examResponse, setExamResponse] = useState({})
+
+  const [current, setCurrent] = useState(0);
+
+  const steps = [
+    {
+      title: "Create Exam",
+        content: <ExamFormFaculty 
+        setCurrent={setCurrent} 
+        setExamResponse={setExamResponse} 
+        current={current}
+      mode='create' />
+    },
+    {
+      title: "Exam Schedule",
+      content: <ExamScheduleFacultyForm examResponse={examResponse} mode='create' />
+    },
+    {
+      title: "Exam Candidates",
+      content: <ExamCandidateBulkForm />
+    }
+  ];
 
   return (
     <ProtectedRoute>
@@ -24,7 +49,35 @@ export default function CreateExamPage() {
           title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
           onBack={() => router.back()}
         />
-        <ExamForm mode="create" />
+        <div style={{ width: 1000, margin: "auto" , marginTop:16 }}>
+          <Steps
+            current={current}
+            onChange={(value) => setCurrent(value)}
+            items={steps.map((item) => ({ key: item.title, title: item.title }))}
+          />
+        </div>
+            <div style={{ marginTop: 24 }}>
+              {steps[current].content}
+            </div>
+
+            <div style={{ marginTop: 24 }}>
+              {current > 0 && (
+                <Button type='primary' onClick={() => setCurrent(current - 1)}>Previous</Button>
+              )}
+
+              {current < steps.length - 1 && (
+                <Button
+                  type="primary"
+                  style={{ marginLeft: 8 }}
+                  onClick={() => setCurrent(current + 1)}
+                >
+                  Next
+                </Button>
+              )}
+    
+          </div>    
+        {/* <ExamForm mode="create" /> */}
+        {/* <ExamFormFaculty mode="create"/> */}
       </MainLayout>
     </ProtectedRoute>
   );
