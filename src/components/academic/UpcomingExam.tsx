@@ -1,12 +1,13 @@
 'use client';
-import { Card } from 'antd';
-import React from 'react';
+import { Button, Card } from 'antd';
+import React, { useEffect } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 import { useLocalization } from '@/hooks/useLocalization';
 
 import DateCard from '../dashboard/dashboardui/cards/DateCard';
+import { useExams } from '../../hooks/useExams';
 
 interface Exam {
   date: string;
@@ -42,27 +43,33 @@ const data: Exam[] = [
 
 const UpcomingExam = () => {
   const { t } = useLocalization();
+  const {exams, loadExams} = useExams()
+
+  useEffect(()=>{
+    loadExams({page:1, limit:99})
+  },[loadExams])
+
+
   return (
     <Card className="p-4 bg-white rounded-2xl shadow-md w-full md:w-[400px]">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">{t(LOCALE_KEYS.UPCOMING_EXAMS)}</h2>
 
-        <button className="text-sm font-medium" style={{ color: '#1F4BCA' }}>
+        <Button className="text-sm font-medium" style={{ color: '#1F4BCA' }}>
           {t(LOCALE_KEYS.VIEW_ALL)}
-        </button>
+        </Button>
       </div>
 
       {/* List */}
       <div className="flex flex-col gap-3">
-        {data.map((exam, idx) => (
+        {exams?.map((exam, idx) => (
           <DateCard
             key={idx}
-            date={exam.date}
-            title={exam.title}
-            time={exam.time}
-            location={exam.location}
-            color={exam.color}
+            dateTime={exam.examDatetime}
+            title={exam.name}
+            location={exam.questionType}
+            color='#ede9fe'
           />
         ))}
       </div>
