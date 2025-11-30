@@ -18,11 +18,11 @@ import { useTimeSlots } from '@/hooks/useTimeSlots';
 import { useWeekDays } from '@/hooks/useWeekDays';
 
 import { getErrorMessage } from '@/types/errors';
-import { IExam } from '@/types/exam';
 import { IExamSchedule, IExamScheduleCreate, IExamScheduleUpdate } from '@/types/examSchedule';
 
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import { IExam } from '@/types/exam';
 
 
 const { Option } = Select;
@@ -35,7 +35,10 @@ interface ExamScheduleFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
-  examResponse:IExam | {}
+  response:IExam;
+  setResponse:React.Dispatch<React.SetStateAction<IExamSchedule>>
+  setCurrent:React.Dispatch<React.SetStateAction<number>>
+    current:number
 }
 
 const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
@@ -45,7 +48,9 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
   onSuccess,
   onCancel,
   embedded = false,
-  examResponse
+  response,
+  setCurrent,
+  current
 }) => {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EXAM_SCHEDULE, { defaultValue: 'Exam Schedule' });
@@ -66,14 +71,14 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
   }, [mode, form]);
 
   useEffect(() => {
-    if(examResponse){
-      loadExam(examResponse.examTypeId);
-      loadRoom(examResponse.roomId);
+    if(response){
+      loadExam(response.examTypeId);
+      loadRoom(response.roomId);
     }
    
     loadWeekDays();
     loadTimeSlots();
-  }, [loadExam, loadRoom, loadWeekDays, loadTimeSlots, examResponse]);
+  }, [loadExam, loadRoom, loadWeekDays, loadTimeSlots, response]);
 
   const handleSubmit = async (values: Partial<IExamSchedule>) => {
     try {
@@ -85,11 +90,12 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
 
       if (mode === 'create') {
         await createExamSchedule(payload as IExamScheduleCreate);
+
         toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
-          router.push('/exam-schedules');
+          setCurrent(current + 1);
         }
       } else if (mode === 'edit' && examScheduleId) {
         await editExamSchedule(examScheduleId, payload as IExamScheduleUpdate);
@@ -97,7 +103,8 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
         if (onSuccess) {
           onSuccess();
         } else {
-          router.push(`/exam-schedules/${examScheduleId}`);
+          // router.push(`/exam-schedules/${examScheduleId}`);
+          setCurrent(current + 1)
         }
       }
     } catch (error: unknown) {

@@ -14,31 +14,37 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 import { useLocalization } from '@/hooks/useLocalization';
+import ExamCandidateFacultyBulkForm from '@/components/examCandidates/ExamCandidateFacultyBulkForm';
 
 export default function CreateExamPage() {
   const { t } = useLocalization();
   const router = useRouter();
   const entityName = t(LOCALE_KEYS.EXAM, { defaultValue: 'Exam' });
-  const [examResponse, setExamResponse] = useState({})
+  const [response, setResponse] = useState({})
 
   const [current, setCurrent] = useState(0);
 
   const steps = [
     {
       title: "Create Exam",
-        content: <ExamFormFaculty 
-        setCurrent={setCurrent} 
-        setExamResponse={setExamResponse} 
-        current={current}
-      mode='create' />
+        content: 
+        <ExamFormFaculty 
+          setCurrent={setCurrent} 
+          setResponse={setResponse} 
+          current={current}
+          mode='create' />
     },
     {
       title: "Exam Schedule",
-      content: <ExamScheduleFacultyForm examResponse={examResponse} mode='create' />
+      content: <ExamScheduleFacultyForm 
+          setCurrent={setCurrent} 
+          current={current} 
+          response={response}
+          mode='create' />
     },
     {
       title: "Exam Candidates",
-      content: <ExamCandidateBulkForm />
+      content: <ExamCandidateFacultyBulkForm response={response} />
     }
   ];
 

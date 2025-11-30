@@ -53,7 +53,7 @@ interface ExamFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
-  setExamResponse:React.Dispatch<React.SetStateAction<IExam>>
+  setResponse:React.Dispatch<React.SetStateAction<IExam>>
   setCurrent:React.Dispatch<React.SetStateAction<number>>
   current:number
 }
@@ -65,7 +65,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
   onSuccess,
   onCancel,
   embedded = false,
-  setExamResponse,
+  setResponse,
   setCurrent,
   current
 }) => {
@@ -139,7 +139,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
 
       if (mode === 'create') {
         const res = await createExam(payload as IExamCreate);
-        setExamResponse(res)
+        setResponse(res)
         toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
