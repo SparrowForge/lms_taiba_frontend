@@ -1,8 +1,9 @@
 "use client";
 
-import { Card, Tag } from "antd";
+import { Button, Card, Tag } from "antd";
 
 import { IExam } from "@/types/exam";
+import { useRouter } from "next/navigation";
 
 
 
@@ -31,6 +32,10 @@ interface ExamListProps {
 }
 
 const FacultyExamList = ({ data }: ExamListProps) => {
+  const router = useRouter()
+  const handleAddQuestion =(subjectId:number) =>{
+    return router.push(`/exam-mcq-questions/create?subjectId=${subjectId}`)
+  }
   return (
     
         <Card
@@ -77,6 +82,14 @@ const FacultyExamList = ({ data }: ExamListProps) => {
               <span className="font-medium">Room:</span>{" "}
               {data.room?.name}
             </p>
+            <Button
+              type="primary"
+              // icon={<PlusOutlined />}
+              style={{ width: "20%", marginBottom: 12 }}
+              onClick={()=>handleAddQuestion(data.subjectId)}
+            >
+              Add Question
+            </Button>
           </div>
         </Card>
 

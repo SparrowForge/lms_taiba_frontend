@@ -26,6 +26,8 @@ export const examMCQQuestionService = {
     return response.data;
   },
 
+  
+
   updateExamMCQQuestion: async (
     id: number,
     data: IExamMCQQuestionUpdate,
