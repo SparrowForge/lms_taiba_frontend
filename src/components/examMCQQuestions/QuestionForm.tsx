@@ -25,6 +25,8 @@ import {
 } from "@/enums/question";
 import { useSubjects } from "@/hooks/useSubjects";
 import { useCourses } from "@/hooks/useCourses";
+import { IExamMCQMultipleQuestion } from "@/types/examMCQQuestion";
+import { useAuth } from "@/hooks/useAuth";
 
 const { Text } = Typography;
 
@@ -46,6 +48,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   onSubmit,
   isLoading = false,
 }) => {
+  const {user} = useAuth()
   const { t } = useLocalization();
   const router = useRouter();
   const {selectedCourse, loadCourse} = useCourses()
@@ -90,6 +93,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
           difficultyLevel: "easy",
           courseId:selectedCourse?.id,
           subjectId:selectedSubject?.id,
+          facultyId:user?.faculty.id
         },
       ]);
       setSelectedQuestionIndex(0);
@@ -147,7 +151,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       correctOptionNumber: "a",
       difficultyLevel: "easy",
       courseId:selectedCourse?.id,
-          subjectId:selectedSubject?.id,
+      subjectId:selectedSubject?.id,
     };
 
     setQuestions((prev) => [...prev, newQ]);
@@ -191,41 +195,39 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   // ------------------------------------------
   // Submit Handler
   // ------------------------------------------
-  const handleSubmit = async () => {
-    try {
-      if (!canSubmit) {
-        message.error("Please fix all errors before submitting");
-        return;
-      }
-
-      setSubmitting(true);
-
-      const payload: IQuestionsPayload = {
-        courseId:selectedCourse?.id,
-        subjectId:selectedSubject?.id,
-        questions,
-      };
-
-      if (onSubmit) await onSubmit(payload);
-
-      toast.success(
-        `${mode === "create" ? "Created" : "Updated"} ${
-          questions.length
-        } question(s) successfully`
-      );
-
-      if (onSuccess) onSuccess();
-
-      // Default redirect
-      if (mode === "create") {
-        // router.push("/questions");
-      }
-    } catch (err) {
-      toast.error(getErrorMessage(err));
-    } finally {
-      setSubmitting(false);
+const handleSubmit = async () => {
+  try {
+    if (!canSubmit) {
+      message.error("Please fix all errors before submitting");
+      return;
     }
-  };
+
+    setSubmitting(true);
+
+    // Submit ARRAY ONLY (not wrapped)
+    const finalPayload: IExamMCQMultipleQuestion[] = questions.map((q) => ({
+      ...q,
+      courseId: selectedCourse?.id,
+      subjectId: selectedSubject?.id,
+      facultyId: user?.faculty.id
+    }));
+
+    if (onSubmit) await onSubmit(finalPayload);
+
+    toast.success(
+      `${mode === "create" ? "Created" : "Updated"} ${
+        questions.length
+      } question(s) successfully`
+    );
+
+    if (onSuccess) onSuccess();
+  } catch (err) {
+    toast.error(getErrorMessage(err));
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   // ------------------------------------------
   // Render
@@ -241,7 +243,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
           <Card size="small" title="Questions">
             <p className="font-medium text-md">Course: {selectedCourse?.name}</p>
             <p className="font-medium text-md">Subject: {selectedSubject?.name}</p>
-            
+            <p className="font-medium text-md">Subject: {user?.faculty?.fullName}</p>
             <Button
               type="dashed"
               icon={<PlusOutlined />}

@@ -13,6 +13,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { useLocalization } from '@/hooks/useLocalization';
 import { IQuestionsPayload } from '@/enums/question';
 import QuestionForm from '@/components/examMCQQuestions/QuestionForm';
+import { useExamMCQQuestions } from '@/hooks/useExamMCQQuestions';
 
 
 export default function CreateExamMCQQuestionPage() {
@@ -20,14 +21,13 @@ export default function CreateExamMCQQuestionPage() {
   const router = useRouter();
   const entityName = t(LOCALE_KEYS.EXAM_MCQ_QUESTION, { defaultValue: 'Exam MCQ Question' });
     const [submittingQuestions, setSubmittingQuestions] = useState(false)
+    const {createMultipleExamMCQQuestion} = useExamMCQQuestions()
 
   const handleSubmitQuestions = async (payload: IQuestionsPayload) => {
     try {
       setSubmittingQuestions(true)
       console.log("Submitting questions:", payload)
-      // Here you would call your API to save the questions
-      // await api.post('/questions', payload);
-      // await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate API call
+       await createMultipleExamMCQQuestion(payload)
     } finally {
       setSubmittingQuestions(false)
     }

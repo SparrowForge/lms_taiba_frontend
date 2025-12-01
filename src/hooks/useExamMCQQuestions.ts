@@ -9,6 +9,7 @@ import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
   IExamMCQQuestion,
   IExamMCQQuestionCreate,
+  IExamMCQQuestionMultipleCreate,
   IExamMCQQuestionUpdate,
 } from '@/types/examMCQQuestion';
 
@@ -16,6 +17,7 @@ import { examMCQQuestionService } from '@/services/examMCQQuestionService';
 
 import {
   addExamMCQQuestion,
+  addExamMCQMultipleQuestion,
   clearActionStatus,
   clearDetailsStatus,
   deleteExamMCQQuestion,
@@ -117,6 +119,38 @@ export const useExamMCQQuestions = () => {
     [dispatch],
   );
 
+    // Create multiple semester subjects with faculty assignments
+    const createMultipleExamMCQQuestion = useCallback(
+      async (data: IExamMCQQuestionMultipleCreate) => {
+        try {
+          dispatch(setActionStatus({ status: Status.LOADING }));
+          const response = await examMCQQuestionService.createMultipleExamMCQQuestion(data);
+          dispatch(addExamMCQMultipleQuestion(response));
+          // Add all created semester subjects to the store
+          // response.forEach(semesterSubject => {
+          //   dispatch(addSemesterSubject(semesterSubject));
+          // });
+          dispatch(
+            setActionStatus({
+              status: Status.SUCCESS,
+              message: 'Exam MCQ Questions created successfully',
+            }),
+          );
+        } catch (error: unknown) {
+          const errorMessage =
+            error instanceof AxiosError
+              ? error?.response?.data?.message ||
+                error?.message ||
+                'Failed to create semester subjects'
+              : 'Failed to create semester subjects';
+          dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+          throw error;
+        }
+      },
+      [dispatch],
+    );
+  
+
   const editExamMCQQuestion = useCallback(
     async (id: number, data: IExamMCQQuestionUpdate) => {
       try {
@@ -214,6 +248,7 @@ export const useExamMCQQuestions = () => {
     loadExamMCQQuestions,
     loadExamMCQQuestion,
     createExamMCQQuestion,
+    createMultipleExamMCQQuestion,
     editExamMCQQuestion,
     removeExamMCQQuestion,
     getExamMCQQuestionById,
