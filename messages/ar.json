@@ -708,5 +708,6 @@
   "time_spent":"الوقت الذي يقضيه",
   "next_exam":"الامتحان القادم",
   "add_assignment":"إضافة مهمة",
-  "submitted-assignment":"المهام المقدمة"
+  "submitted-assignment":"المهام المقدمة",
+  "question_set":"مجموعة الأسئلة"
 }

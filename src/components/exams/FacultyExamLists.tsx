@@ -4,6 +4,7 @@ import { Button, Card, Tag } from "antd";
 
 import { IExam } from "@/types/exam";
 import { useRouter } from "next/navigation";
+import { PlusOutlined } from "@ant-design/icons";
 
 
 
@@ -35,6 +36,10 @@ const FacultyExamList = ({ data }: ExamListProps) => {
   const router = useRouter()
   const handleAddQuestion =(subjectId:number) =>{
     return router.push(`/exam-mcq-questions/create?subjectId=${subjectId}`)
+  }
+
+  const handleAddQuestionSet =(examId:number) =>{
+    return router.push(`/question-set/create?examId=${examId}`)
   }
   return (
     
@@ -84,11 +89,19 @@ const FacultyExamList = ({ data }: ExamListProps) => {
             </p>
             <Button
               type="primary"
-              // icon={<PlusOutlined />}
-              style={{ width: "20%", marginBottom: 12 }}
+              icon={<PlusOutlined />}
+              
               onClick={()=>handleAddQuestion(data.subjectId)}
             >
               Add Question
+            </Button>
+            <Button
+              
+              icon={<PlusOutlined />}
+              style={{marginLeft:16}}
+              onClick={()=>handleAddQuestionSet(data.id)}
+            >
+              Add Question Set
             </Button>
           </div>
         </Card>
