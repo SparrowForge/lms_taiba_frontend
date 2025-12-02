@@ -13,7 +13,7 @@ import { useLocalization } from '@/hooks/useLocalization';
 import QuestionSet from '@/components/questionSet/QuestionSet';
 
 
-export default function CreateExamMCQQuestionPage() {
+export default function CreateExamMCQQuestionSetPage() {
   const { t } = useLocalization();
   const router = useRouter();
   const entityName = t(LOCALE_KEYS.QUESTION_SET, { defaultValue: 'Question Set' });

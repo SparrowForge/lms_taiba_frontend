@@ -698,7 +698,8 @@ export const LOCALE_KEYS = {
   AVERAGE_GRADE:"Average Grade",
   TIME_SPENT:"Time Spent",
   NEXT_EXAM:"Next Exam",
-  QUESTION_SET:"question_set"
+  QUESTION_SET:"question_set",
+  PARTICIPATE_EXAM:"participate_exam"
 } as const;
 
 // Type for the keys
