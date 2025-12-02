@@ -18,6 +18,8 @@ export default function CreateExamMCQQuestionPage() {
   const router = useRouter();
   const entityName = t(LOCALE_KEYS.QUESTION_SET, { defaultValue: 'Question Set' });
 
+  
+
 
   return (
     <ProtectedRoute>

@@ -1,6 +1,11 @@
 
 import { Checkbox, Table, Alert, Button, Card, Select, Row, Col } from "antd"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+
+import QuestionSetDrawer from "./QuestionSetDrawer"
+import { useFaculties } from "@/hooks/useFaculties"
+import { LOCALE_KEYS } from "@/constants/localizationKeys"
+import { useLocalization } from "@/hooks/useLocalization"
 
 interface Question {
   id: number
@@ -22,28 +27,26 @@ interface QuestionsTableProps {
 }
 
 export default function QuestionsTable({ questions, selectedQuestions, setSelectedQuestion }: QuestionsTableProps) {
-  const [expandedRows, setExpandedRows] = useState<number[]>([])
+  const { t } = useLocalization()
+  const { faculties, loadFaculties } = useFaculties()
+  const [selectedFaculty, setSelectedFaculty] = useState({})
+  const [difficultyLevel, setDifficultyLevel] = useState({})
 
-  const [filters, setFilters] = useState({
-    course: "",
-    batch: "",
-    semester: "",
-    subject: "",
-  })
+  useEffect(() => {
+    loadFaculties({ page: 1, limit: 99 })
+  }, [loadFaculties])
 
-  const uniqueCourses = Array.from(new Set(questions.map((q) => q.course).filter(Boolean)))
-  const uniqueBatches = Array.from(new Set(questions.map((q) => q.batch).filter(Boolean)))
-  const uniqueSemesters = Array.from(new Set(questions.map((q) => q.semester).filter(Boolean)))
-  const uniqueSubjects = Array.from(new Set(questions.map((q) => q.subject).filter(Boolean)))
+  const [drawerVisible, setDrawerVisible] = useState<boolean>(false)
+  const handleCreateDrawer = () => {
+    setDrawerVisible(true);
+  };
 
-  const filteredQuestions = questions.filter((q) => {
-    return (
-      (!filters.course || q.course === filters.course) &&
-      (!filters.batch || q.batch === filters.batch) &&
-      (!filters.semester || q.semester === filters.semester) &&
-      (!filters.subject || q.subject === filters.subject)
-    )
-  })
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+  };
+
+
+
 
   const handleCheckboxChange = (questionId: number) => {
     const newSelected = selectedQuestions.includes(questionId)
@@ -110,85 +113,58 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
   return (
     <Card style={{ margin: '8px' }}>
       <Card className="">
-        <Row gutter={[16,16]}>
+        <Row gutter={[16, 16]}>
           <Col xs={24} sm={6}>
-            <label className="block text-sm font-medium  mb-2">Course</label>
+            <label className="block text-sm font-medium  mb-2">Faculty</label>
             <Select
-              value={filters.course}
-              onChange={(e) => setFilters({ ...filters, course: e.target.value })}
+              value={selectedFaculty?.fullName}
+              onChange={(e) => setSelectedFaculty(e)}
               className="w-full"
+              placeholder={t(LOCALE_KEYS.FACULTY)}
             >
-              <option value="">All Courses</option>
-              {uniqueCourses.map((course) => (
-                <option key={course} value={course}>
-                  {course}
+              <option value="">All Faculty</option>
+              {faculties.map((item) => (
+                <option key={item.branchId} value={item.fullName}>
+                  {item.fullName}
                 </option>
               ))}
             </Select>
           </Col>
 
           <Col xs={24} sm={6}>
-            <label className="block text-sm font-medium  mb-2">Batch</label>
+            <label className="block text-sm font-medium  mb-2">Difficulty Level</label>
             <Select
-              value={filters.batch}
-              onChange={(e) => setFilters({ ...filters, batch: e.target.value })}
+              value={difficultyLevel?.label}
+              onChange={(e) => setDifficultyLevel(e)}
+              placeholder={t(LOCALE_KEYS.PLEASE_SELECT_STATUS)}
+              options={[
+                { label: "🟢 Easy", value: "easy" },
+                { label: "🟡 Medium", value: "medium" },
+                { label: "🔴 Hard", value: "hard" },
+              ]}
               className="w-full"
-            >
-              <option value="">All Batches</option>
-              {uniqueBatches.map((batch) => (
-                <option key={batch} value={batch}>
-                  {batch}
-                </option>
-              ))}
-            </Select>
-          </Col>
-
-          <Col xs={24} sm={6}>
-            <label className="block text-sm font-medium  mb-2">Semester</label>
-            <Select
-              value={filters.semester}
-              onChange={(e) => setFilters({ ...filters, semester: e.target.value })}
-              className="w-full"
-            >
-              <option value="">All Semesters</option>
-              {uniqueSemesters.map((semester) => (
-                <option key={semester} value={semester}>
-                  {semester}
-                </option>
-              ))}
-            </Select>
-          </Col>
-
-          <Col xs={24} sm={6}>
-            <label className="block text-sm font-medium  mb-2">Subject</label>
-            <Select
-              value={filters.subject}
-              onChange={(e) => setFilters({ ...filters, subject: e.target.value })}
-              className="w-full"
-            >
-              <option value="">All Subjects</option>
-              {uniqueSubjects.map((subject) => (
-                <option key={subject} value={subject}>
-                  {subject}
-                </option>
-              ))}
-            </Select>
+            />
           </Col>
         </Row>
-
-        {Object.values(filters).some((v) => v) && (
-          <div className="mt-3 text-sm text-muted-foreground">
-            Showing {filteredQuestions.length} of {questions.length} questions
-          </div>
-        )}
       </Card>
-      <div className="flex justify-end mr-10">
+
+      <div className="flex justify-between mr-10">
         <div className="relative">
           <Button
-            style={{margin:"16px 0"}}
+            style={{ margin: "16px 0" }}
             type="primary"
+            onClick={() => handleCreateDrawer()}
           >
             Selected: {selectedQuestions.length}
+          </Button>
+        </div>
+        <div className="relative">
+          <Button
+            style={{ margin: "16px 0" }}
+            type="primary"
+            // onClick={() => handleCreateDrawer()}
+          >
+            Submit
           </Button>
         </div>
       </div>
@@ -228,6 +204,11 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
           </div>
         </div>
       )} */}
+
+      <QuestionSetDrawer
+        onCancel={() => setDrawerVisible(false)}
+        onSuccess={handleDrawerSuccess}
+        visible={drawerVisible} />
     </Card>
   )
 }

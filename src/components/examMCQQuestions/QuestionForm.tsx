@@ -243,7 +243,7 @@ const handleSubmit = async () => {
           <Card size="small" title="Questions">
             <p className="font-medium text-md">Course: {selectedCourse?.name}</p>
             <p className="font-medium text-md">Subject: {selectedSubject?.name}</p>
-            <p className="font-medium text-md">Subject: {user?.faculty?.fullName}</p>
+            <p className="font-medium text-md">Faculty: {user?.faculty?.fullName}</p>
             <Button
               type="dashed"
               icon={<PlusOutlined />}
