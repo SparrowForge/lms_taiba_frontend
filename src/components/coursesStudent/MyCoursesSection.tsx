@@ -13,6 +13,7 @@ import  { FacultyTabData, StudentTabData } from './TabData';
 import FacultyExamsManagement from '../exams/FacultyExamsManagement';
 import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
+import StudentExamParticipate from '../exams/StudentExamParticipate';
 
 
 
@@ -40,6 +41,7 @@ const MyCoursesSection = () => {
       {activeTab === 'assignments' && <Assignments />}
       {user?.type === UserType.STUDENT && activeTab === 'submittedAssignments' && <SubmittedAssignment />}
       {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement/>}
+      {user?.type === UserType.STUDENT && activeTab === 'exam' && <StudentExamParticipate/>}
       {activeTab === 'grading' && <div>Grading Content is empty</div>}
       {activeTab === 'discussion' && <div>Discussion Content</div>}
     </div>
