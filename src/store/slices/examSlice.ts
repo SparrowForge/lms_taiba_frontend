@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status } from '@/enums';
 
 import { IPaginationMeta, IStatusState } from '@/types/common';
-import { IExam } from '@/types/exam';
+import { IExam,  } from '@/types/exam';
 
 export interface IExamsState {
   exams: IExam[];
@@ -49,6 +49,7 @@ const examSlice = createSlice({
     addExam: (state, action: PayloadAction<IExam>) => {
       state.exams.unshift(action.payload);
     },
+
     updateExam: (state, action: PayloadAction<IExam>) => {
       const index = state.exams.findIndex((exam) => exam.id === action.payload.id);
       if (index !== -1) {

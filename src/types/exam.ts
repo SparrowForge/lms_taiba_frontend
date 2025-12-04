@@ -38,6 +38,7 @@ export interface IExam {
   batch: IBatch;
   examType: IExamType;
   room: IRoom;
+  selectedQuestionSetId:number
 }
 
 export interface IExamCreate {
@@ -84,4 +85,10 @@ export interface IExamUpdate {
   totalStudent?: number;
   isApproved?: boolean;
   status?: EntityStatus;
+}
+
+
+export interface IExamWithQuestionSetCreate {
+  examId:number,
+  questionSetId:number
 }

@@ -1,12 +1,15 @@
 "use client";
 
+import { PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Tag } from "antd";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { IExam } from "@/types/exam";
-import { useRouter } from "next/navigation";
-import { PlusOutlined } from "@ant-design/icons";
 
 
+
+import ExamSetManageDrawer from "./ExamSetManageDrawer";
 
 
 
@@ -33,78 +36,108 @@ interface ExamListProps {
 }
 
 const FacultyExamList = ({ data }: ExamListProps) => {
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const router = useRouter()
-  const handleAddQuestion =(subjectId:number) =>{
+  const handleAddQuestion = (subjectId: number) => {
     return router.push(`/exam-mcq-questions/create?subjectId=${subjectId}`)
   }
 
-  const handleAddQuestionSet =(examId:number) =>{
+  const handleAddQuestionSet = (examId: number) => {
     return router.push(`/question-set/create?examId=${examId}`)
   }
+
+  const handleCreateDrawer = () => {
+    setDrawerMode('create');
+    setDrawerVisible(true);
+  };
+
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+
+  };
+
+
+
   return (
-    
-        <Card
-          key={data.id}
-          className="shadow-md rounded-xl border"
-          title={
-            <div className="flex justify-between items-center">
-              <span className="font-semibold">{data.name}</span>
-              <Tag color="blue">{data.examType?.name}</Tag>
-            </div>
-          }
+
+    <Card
+      key={data.id}
+      className="shadow-md rounded-xl border"
+      title={
+        <div className="flex justify-between items-center">
+          <span className="font-semibold">{data.name}</span>
+          <Tag color="blue">{data.examType?.name}</Tag>
+        </div>
+      }
+    >
+      <div className="space-y-2 text-sm">
+        <p>
+          <span className="font-medium">Subject:</span>{" "}
+          {data.subject?.name}
+        </p>
+
+        <p>
+          <span className="font-medium">Marks:</span> {data.marks}
+        </p>
+
+        <p>
+          <span className="font-medium">Date:</span>{" "}
+          {formatDate(data.examDatetime)}
+        </p>
+
+        <p>
+          <span className="font-medium">Time:</span>{" "}
+          {formatTime(data.examDatetime)}
+        </p>
+
+        <p>
+          <span className="font-medium">Duration:</span>{" "}
+          {data.duration?.hours
+            ? `${data.duration.hours} hr${data.duration.hours > 1 ? "s" : ""}`
+            : ""}
+          {data.duration?.minutes
+            ? ` ${data.duration.minutes} min`
+            : ""}
+        </p>
+
+        <p>
+          <span className="font-medium">Room:</span>{" "}
+          {data.room?.name}
+        </p>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+
+          onClick={() => handleAddQuestion(data.subjectId)}
         >
-          <div className="space-y-2 text-sm">
-            <p>
-              <span className="font-medium">Subject:</span>{" "}
-              {data.subject?.name}
-            </p>
+          Add Question
+        </Button>
+        <Button
 
-            <p>
-              <span className="font-medium">Marks:</span> {data.marks}
-            </p>
+          icon={<PlusOutlined />}
+          style={{ marginLeft: 16 }}
+          onClick={() => handleAddQuestionSet(data.id)}
+        >
+          Add Question Set
+        </Button>
+        <Button
+          icon={<PlusOutlined />}
+          style={{ marginLeft: 16 }}
+          onClick={() => handleCreateDrawer()}
+        >
+          Manage Question Set
+        </Button>
+      </div>
 
-            <p>
-              <span className="font-medium">Date:</span>{" "}
-              {formatDate(data.examDatetime)}
-            </p>
-
-            <p>
-              <span className="font-medium">Time:</span>{" "}
-              {formatTime(data.examDatetime)}
-            </p>
-
-            <p>
-              <span className="font-medium">Duration:</span>{" "}
-              {data.duration?.hours
-                ? `${data.duration.hours} hr${data.duration.hours > 1 ? "s" : ""}`
-                : ""}
-              {data.duration?.minutes
-                ? ` ${data.duration.minutes} min`
-                : ""}
-            </p>
-
-            <p>
-              <span className="font-medium">Room:</span>{" "}
-              {data.room?.name}
-            </p>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              
-              onClick={()=>handleAddQuestion(data.subjectId)}
-            >
-              Add Question
-            </Button>
-            <Button
-              
-              icon={<PlusOutlined />}
-              style={{marginLeft:16}}
-              onClick={()=>handleAddQuestionSet(data.id)}
-            >
-              Add Question Set
-            </Button>
-          </div>
-        </Card>
+      <ExamSetManageDrawer
+        mode={drawerMode}
+        examId={data.id}
+        visible={drawerVisible}
+        onCancel={() => setDrawerVisible(false)}
+        onSuccess={handleDrawerSuccess}
+      />
+    </Card>
 
   );
 };

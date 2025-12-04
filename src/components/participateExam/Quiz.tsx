@@ -2,7 +2,10 @@
 
 import { Button, Card, Col, Radio, Row, Space, Typography } from "antd"
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+import { useExams } from "@/hooks/useExams"
+import { useQuestionSets } from "@/hooks/useQuestionSets"
 
 interface QuestionOption {
   text: string
@@ -39,7 +42,27 @@ export default function Quiz({
   const [answers, setAnswers] = useState<Record<number, string>>({})
   const [submitting, setSubmitting] = useState(false)
 
-  const currentQuestion = questions[currentQuestionIndex]
+  const searchParams = useSearchParams()
+  const examId = searchParams.get("examId")
+
+  const { selectedExam, loadExam } = useExams()
+  const {selectedQuestionSet, loadQuestionSet} = useQuestionSets()
+
+  useEffect(() => {
+    if (examId) {
+      loadExam(Number(examId))
+    }
+  }, [examId, loadExam])
+
+  console.log(selectedExam?.selectedQuestionSetId)
+
+  useEffect(()=>{
+    if(selectedExam?.selectedQuestionSetId){
+      loadQuestionSet(Number(selectedExam?.selectedQuestionSetId))
+    }
+  },[loadQuestionSet, selectedExam?.selectedQuestionSetId])
+
+  const currentQuestion = selectedQuestionSet?.items[currentQuestionIndex]
   const optionLabels = ["a", "b", "c", "d"]
   const optionLetters = ["A", "B", "C", "D"]
 
@@ -51,7 +74,7 @@ export default function Quiz({
   }
 
   const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
+    if (currentQuestionIndex < selectedQuestionSet?.items.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
     }
   }
@@ -75,8 +98,8 @@ export default function Quiz({
 
   const currentAnswer = answers[currentQuestionIndex] || ""
   const progressPercentage = useMemo(
-    () => Math.round(((currentQuestionIndex + 1) / questions.length) * 100),
-    [currentQuestionIndex, questions.length],
+    () => Math.round(((currentQuestionIndex + 1) / selectedQuestionSet?.items.length) * 100),
+    [currentQuestionIndex, selectedQuestionSet?.items.length],
   )
 
   const getDifficultyColor = (level: string) => {
@@ -105,7 +128,7 @@ export default function Quiz({
               style={{ maxHeight: "calc(100vh - 48px)", overflowY: "auto" }}
             >
               <Space direction="vertical" style={{ width: "100%" }} size={8}>
-                {questions.map((_, idx) => {
+                {selectedQuestionSet?.items?.map((_, idx) => {
                   const isAnswered = idx in answers
                   const isCurrentQuestion = idx === currentQuestionIndex
 
@@ -172,7 +195,7 @@ export default function Quiz({
           <Col xs={24} sm={16} md={18}>
             {currentQuestion && (
               <Card
-                title={`Question ${currentQuestionIndex + 1} of ${questions.length}`}
+                title={`Question ${currentQuestionIndex + 1} of ${selectedQuestionSet?.items.length}`}
                 extra={
                   <span
                     style={{
@@ -203,7 +226,7 @@ export default function Quiz({
                     onChange={(e) => handleOptionChange(e.target.value)}
                     style={{ display: "flex", flexDirection: "column", gap: 12 }}
                   >
-                    {currentQuestion.options.map((option, idx) => (
+                    {currentQuestion.options?.map((option, idx) => (
                       <Card
                         key={idx}
                         hoverable
@@ -248,7 +271,7 @@ export default function Quiz({
                         Cancel
                       </Button>
                     )}
-                    {currentQuestionIndex === questions.length - 1 ? (
+                    {currentQuestionIndex === selectedQuestionSet?.items.length - 1 ? (
                       <Button type="primary" size="large" onClick={handleSubmit} loading={submitting || isLoading}>
                         Submit Quiz
                       </Button>
@@ -270,7 +293,7 @@ export default function Quiz({
                   }}
                 >
                   <Text type="secondary" className="text-xs">
-                    Answered: {Object.keys(answers).length} of {questions.length} questions
+                    Answered: {Object.keys(answers).length} of {selectedQuestionSet?.items.length} selectedQuestionSet?.items
                   </Text>
                 </div>
               </Card>
