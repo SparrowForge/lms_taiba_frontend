@@ -10,33 +10,32 @@ import {
   message,
   Row,
   Select,
+  Spin,
   Typography,
 } from "antd";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
-import { useLocalization } from "@/hooks/useLocalization";
-import { getErrorMessage } from "@/types/errors";
-import {
-  IQuestion,
-  IQuestionOption,
-  IQuestionsPayload,
-} from "@/enums/question";
-import { useSubjects } from "@/hooks/useSubjects";
-import { useCourses } from "@/hooks/useCourses";
-import { IExamMCQMultipleQuestion } from "@/types/examMCQQuestion";
+import { DIFFICULTY_LEVEL_OPTIONS } from "@/enums/difficulty-level.enum";
+import { IQuestion } from "@/enums/question";
+
 import { useAuth } from "@/hooks/useAuth";
+import { useCourses } from "@/hooks/useCourses";
+import { useSubjects } from "@/hooks/useSubjects";
+
+import { getErrorMessage } from "@/types/errors";
+import { IMCQQuestionBulkCreate } from "@/types/mcqQuestion";
+import { Status } from "@/enums";
 
 const { Text } = Typography;
 
 interface QuestionFormProps {
-
   mode: "create" | "edit";
   initialQuestions?: IQuestion[];
   onSuccess?: () => void;
   onCancel?: () => void;
-  onSubmit?: (payload: IQuestionsPayload) => Promise<void>;
+  onSubmit?: (payload: IMCQQuestionBulkCreate) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -48,36 +47,31 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   onSubmit,
   isLoading = false,
 }) => {
-  const {user} = useAuth()
-  const { t } = useLocalization();
-  const router = useRouter();
-  const {selectedCourse, loadCourse} = useCourses()
-  const {selectedSubject, loadSubject} = useSubjects()
+  const { user } = useAuth();
+  const { selectedCourse, loadCourse } = useCourses();
+  const { selectedSubject, loadSubject } = useSubjects();
+  const {actionStatus} = useMcqQuestions()
+
   const [questions, setQuestions] = useState<IQuestion[]>(initialQuestions);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
-  const searchParams = useSearchParams()
-  const subjectId = searchParams.get("subjectId")
 
-  useEffect(()=>{
-    if(subjectId){
-      loadSubject(Number(subjectId))
+  const searchParams = useSearchParams();
+  const subjectId = searchParams.get("subjectId");
+
+  // Load subject
+  useEffect(() => {
+    if (subjectId) loadSubject(Number(subjectId));
+  }, [subjectId, loadSubject]);
+
+  // Load course
+  useEffect(() => {
+    if (selectedSubject?.course.id) {
+      loadCourse(Number(selectedSubject.course.id));
     }
-  },[loadSubject, subjectId])
+  }, [selectedSubject?.course.id, loadCourse]);
 
-  useEffect(()=>{
-    if(selectedSubject?.course.id){
-      loadCourse(Number(selectedSubject?.course.id))
-    }
-  },[loadCourse, selectedSubject?.course.id])
-
-
-
-  
-
-  // ------------------------------------------
-  // Initialize at least 1 question (IMPORTANT)
-  // ------------------------------------------
+  // Ensure at least 1 question exists
   useEffect(() => {
     if (questions.length === 0) {
       setQuestions([
@@ -91,38 +85,31 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
           ],
           correctOptionNumber: "a",
           difficultyLevel: "easy",
-          courseId:selectedCourse?.id,
-          subjectId:selectedSubject?.id,
-          facultyId:user?.faculty.id
+          courseId: selectedCourse?.id,
+          subjectId: selectedSubject?.id,
+          facultyId: user?.faculty?.id,
         },
       ]);
       setSelectedQuestionIndex(0);
     }
   }, []);
 
-  // ------------------------------------------
-  // Memoized validation
-  // ------------------------------------------
+  // VALIDATION
   const validationErrors = useMemo(() => {
-    const errors: { [key: number]: string[] } = {};
+    const errors: Record<number, string[]> = {};
 
     questions.forEach((q, idx) => {
-      const e: string[] = [];
+      const err: string[] = [];
+      if (!q.questionText) err.push("Question text is required");
+      if (q.options.some((opt) => !opt.text)) err.push("All options must have text");
 
-      if (!q?.questionText.trim()) e.push("Question text is required");
-      if (q?.options.some((o) => !o.text.trim()))
-        e.push("All options must have text");
-
-      if (e.length > 0) errors[idx] = e;
+      if (err.length) errors[idx] = err;
     });
 
     return errors;
   }, [questions]);
 
-  const hasErrors = useMemo(
-    () => Object.keys(validationErrors).length > 0,
-    [validationErrors]
-  );
+  const hasErrors = Object.keys(validationErrors).length > 0;
 
   const canSubmit = useMemo(() => {
     return (
@@ -130,15 +117,13 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       !hasErrors &&
       questions.every(
         (q) =>
-          q?.questionText.trim() &&
-          q?.options.every((opt) => opt.text.trim())
+          q.questionText &&
+          q.options.every((o) => o.text)
       )
     );
   }, [questions, hasErrors]);
 
-  // ------------------------------------------
-  // Add Question
-  // ------------------------------------------
+  // ADD QUESTION
   const addQuestion = () => {
     const newQ: IQuestion = {
       questionText: "",
@@ -150,33 +135,28 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       ],
       correctOptionNumber: "a",
       difficultyLevel: "easy",
-      courseId:selectedCourse?.id,
-      subjectId:selectedSubject?.id,
+      courseId: selectedCourse?.id,
+      subjectId: selectedSubject?.id,
+      facultyId: user?.faculty?.id,
     };
 
     setQuestions((prev) => [...prev, newQ]);
-    setSelectedQuestionIndex(questions.length); // move to new question
+    setSelectedQuestionIndex(questions.length);
   };
 
-  // ------------------------------------------
-  // Remove Question
-  // ------------------------------------------
+  // REMOVE QUESTION
   const removeQuestion = () => {
     if (questions.length === 1) {
       message.warning("At least one question is required");
       return;
     }
 
-    const updated = questions.filter(
-      (_, idx) => idx !== selectedQuestionIndex
-    );
+    const updated = questions.filter((_, i) => i !== selectedQuestionIndex);
     setQuestions(updated);
     setSelectedQuestionIndex(Math.max(0, selectedQuestionIndex - 1));
   };
 
-  // ------------------------------------------
-  // Update Question Fields
-  // ------------------------------------------
+  // UPDATE FIELD
   const updateQuestionField = (field: keyof IQuestion, value: any) => {
     const updated = [...questions];
     updated[selectedQuestionIndex] = {
@@ -186,64 +166,64 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
     setQuestions(updated);
   };
 
-  const updateOptionText = (optIndex: number, text: string) => {
+  // UPDATE OPTION TEXT
+  const updateOptionText = (index: number, value: string) => {
     const updated = [...questions];
-    updated[selectedQuestionIndex]?.options[optIndex].text = text;
+    updated[selectedQuestionIndex].options[index].text = value;
     setQuestions(updated);
   };
 
-  // ------------------------------------------
-  // Submit Handler
-  // ------------------------------------------
-const handleSubmit = async () => {
-  try {
-    if (!canSubmit) {
-      message.error("Please fix all errors before submitting");
-      return;
+  // SUBMIT
+  const handleSubmit = async () => {
+    try {
+      if (!canSubmit) {
+        message.error("Please fix all errors before submitting");
+        return;
+      }
+
+      setSubmitting(true);
+
+      const formattedQuestions = questions.map((q) => ({
+        questionText: q.questionText,
+        options: q.options.map((o) => o.text),
+        correctOptionNumber: q.correctOptionNumber,
+        courseId: selectedCourse?.id,
+        subjectId: selectedSubject?.id,
+        facultyId: user?.faculty?.id,
+        difficultyLevel: q.difficultyLevel,
+        status: "active",
+      }));
+
+      const finalPayload: IMCQQuestionBulkCreate = {
+        questions: formattedQuestions,
+      };
+
+      if (onSubmit) await onSubmit(finalPayload);
+
+      // toast.success(`${mode === "create" ? "Created" : "Updated"} ${questions.length} question(s)`);
+        
+        setQuestions([])
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      // toast.error(getErrorMessage(err));
+    } finally {
+      setSubmitting(false);
     }
+  };
 
-    setSubmitting(true);
-
-    // Submit ARRAY ONLY (not wrapped)
-    const finalPayload: IExamMCQMultipleQuestion[] = questions.map((q) => ({
-      ...q,
-      courseId: selectedCourse?.id,
-      subjectId: selectedSubject?.id,
-      facultyId: user?.faculty.id
-    }));
-
-    if (onSubmit) await onSubmit(finalPayload);
-
-    toast.success(
-      `${mode === "create" ? "Created" : "Updated"} ${
-        questions.length
-      } question(s) successfully`
-    );
-
-    if (onSuccess) onSuccess();
-  } catch (err) {
-    toast.error(getErrorMessage(err));
-  } finally {
-    setSubmitting(false);
-  }
-};
-
-
-  // ------------------------------------------
-  // Render
-  // ------------------------------------------
   const q = questions[selectedQuestionIndex];
   const errors = validationErrors[selectedQuestionIndex] || [];
 
   return (
     <div className="p-6 min-h-screen">
       <Row gutter={24}>
-        {/* Left Side Panel */}
+        {/* LEFT PANEL */}
         <Col span={8}>
           <Card size="small" title="Questions">
             <p className="font-medium text-md">Course: {selectedCourse?.name}</p>
             <p className="font-medium text-md">Subject: {selectedSubject?.name}</p>
             <p className="font-medium text-md">Faculty: {user?.faculty?.fullName}</p>
+
             <Button
               type="dashed"
               icon={<PlusOutlined />}
@@ -268,9 +248,7 @@ const handleSubmit = async () => {
                 onClick={() => setSelectedQuestionIndex(idx)}
               >
                 <Text strong>Question {idx + 1}</Text>
-                {validationErrors[idx] && (
-                  <Text type="danger"> • Error</Text>
-                )}
+                {validationErrors[idx] && <Text type="danger"> • Error</Text>}
               </Card>
             ))}
 
@@ -285,55 +263,40 @@ const handleSubmit = async () => {
           </Card>
         </Col>
 
-        {/* Right Side Editor */}
+        {/* RIGHT PANEL */}
         <Col span={16}>
           <Card title={`Question ${selectedQuestionIndex + 1}`} size="small">
             {/* Question Text */}
             <Form.Item
               label="Question Text"
-              validateStatus={
-                !q?.questionText.trim() && errors.length ? "error" : ""
-              }
-              help={
-                !q?.questionText.trim() && errors.length
-                  ? "Question text is required"
-                  : ""
-              }
+              validateStatus={!q?.questionText && errors.length ? "error" : ""}
+              help={!q?.questionText && errors.length ? "Question text is required" : ""}
             >
               <Input.TextArea
                 rows={3}
                 value={q?.questionText}
-                onChange={(e) =>
-                  updateQuestionField("questionText", e.target.value)
-                }
+                onChange={(e) => updateQuestionField("questionText", e.target.value)}
               />
             </Form.Item>
 
-            {/* Options */}
+            {/* OPTIONS */}
             <Text strong>Options</Text>
             <br />
             <br />
 
             {q?.options.map((opt, idx) => {
               const labels = ["A", "B", "C", "D"];
-              const key = ["a", "b", "c", "d"][idx] as
-                | "a"
-                | "b"
-                | "c"
-                | "d";
-
-              const isCorrect = q?.correctOptionNumber === key;
+              const key = ["a", "b", "c", "d"][idx] as "a" | "b" | "c" | "d";
+              const isCorrect = q.correctOptionNumber === key;
 
               return (
                 <Form.Item
                   key={idx}
                   label={`Option ${labels[idx]}`}
                   required
-                  validateStatus={
-                    !opt.text.trim() && errors.length ? "error" : ""
-                  }
+                  validateStatus={!opt.text && errors.length ? "error" : ""}
                   help={
-                    !opt.text.trim() && errors.length
+                    !opt.text
                       ? "Option text required"
                       : isCorrect
                       ? "✓ Correct Answer"
@@ -342,23 +305,19 @@ const handleSubmit = async () => {
                 >
                   <Input
                     value={opt.text}
-                    onChange={(e) =>
-                      updateOptionText(idx, e.target.value)
-                    }
+                    onChange={(e) => updateOptionText(idx, e.target.value)}
                   />
                 </Form.Item>
               );
             })}
 
-            {/* Correct Answer + Difficulty */}
+            {/* Correct + Difficulty */}
             <Row gutter={12}>
               <Col span={12}>
                 <Form.Item label="Correct Option">
                   <Select
                     value={q?.correctOptionNumber}
-                    onChange={(val) =>
-                      updateQuestionField("correctOptionNumber", val)
-                    }
+                    onChange={(val) => updateQuestionField("correctOptionNumber", val)}
                     options={[
                       { label: "Option A", value: "a" },
                       { label: "Option B", value: "b" },
@@ -373,20 +332,13 @@ const handleSubmit = async () => {
                 <Form.Item label="Difficulty Level">
                   <Select
                     value={q?.difficultyLevel}
-                    onChange={(val) =>
-                      updateQuestionField("difficultyLevel", val)
-                    }
-                    options={[
-                      { label: "🟢 Easy", value: "easy" },
-                      { label: "🟡 Medium", value: "medium" },
-                      { label: "🔴 Hard", value: "hard" },
-                    ]}
+                    onChange={(val) => updateQuestionField("difficultyLevel", val)}
+                    options={DIFFICULTY_LEVEL_OPTIONS}
                   />
                 </Form.Item>
               </Col>
             </Row>
 
-            {/* Submit */}
             <Button
               type="primary"
               onClick={handleSubmit}
@@ -398,7 +350,7 @@ const handleSubmit = async () => {
                 marginTop: 18,
               }}
             >
-              Submit Questions ({questions.length})
+              {actionStatus.status === Status.LOADING ?<Spin /> :`Submit Questions (${questions.length})`}
             </Button>
 
             {onCancel && (

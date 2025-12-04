@@ -13,9 +13,9 @@ import { Status } from '@/enums'
 import { FormState } from './QuestionSet'
 
 interface QuestionSetFormProps {
-  formData: FormState;
-  setFormData: React.Dispatch<React.SetStateAction<FormState>>;
-  changeHandler: (key: keyof FormState, value: string) => void;
+    formData: FormState;
+    setFormData: React.Dispatch<React.SetStateAction<FormState>>;
+    changeHandler: (key: keyof FormState, value: string) => void;
 }
 
 
@@ -37,20 +37,24 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ formData, changeHandl
             <Card style={{ margin: '8px' }}>
                 <Row gutter={[16, 16]}>
                     <Col xs={24} sm={6}>
-                        <p className='font-semibold text-md'>Course: {selectedExam?.course.name}</p>
-                    </Col>
-                    <Col xs={24} sm={6}>
-                        <p className='font-semibold text-md'>Batch: {selectedExam?.batch.name}</p>
-                    </Col>
-                    <Col xs={24} sm={6}>
-                        <p className='font-semibold text-md'>Semester: {selectedExam?.semester.name}</p>
+                        <p className='font-semibold text-md'>Exam: {selectedExam?.examType.name}</p>
                     </Col>
                     <Col xs={24} sm={6}>
                         <p className='font-semibold text-md'>Subject: {selectedExam?.subject.name}</p>
                     </Col>
                     <Col xs={24} sm={6}>
-                        <p className='font-semibold text-md'>Exam: {selectedExam?.examType.name}</p>
+                        <p className='font-semibold text-md'>Semester: {selectedExam?.semester.name}</p>
                     </Col>
+                    <Col xs={24} sm={6}>
+                        <p className='font-semibold text-md'>Batch: {selectedExam?.batch.name}</p>
+                    </Col>
+                    <Col xs={24} sm={6}>
+                        <p className='font-semibold text-md'>Course: {selectedExam?.course.name}</p>
+                    </Col>
+
+
+
+
                 </Row>
 
                 <Form layout="vertical">
@@ -58,7 +62,7 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ formData, changeHandl
                         <Col xs={24} sm={8}>
                             <Form.Item label="Name">
                                 <Input
-                                    placeholder={LOCALE_KEYS.ENTER_NAME}
+                                    placeholder={t(LOCALE_KEYS.NAME)}
                                     value={formData.name}
                                     onChange={(e) => changeHandler("name", e.target.value)}
                                 />
@@ -68,10 +72,10 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ formData, changeHandl
                         <Col xs={24} sm={8}>
                             <Form.Item label="Description">
                                 <Input
-                                    placeholder={LOCALE_KEYS.ENTER_DESCRIPTION}
-                                    value={formData.descriptionText}
+                                    placeholder={t(LOCALE_KEYS.ENTER_DESCRIPTION)}
+                                    value={formData.description}
                                     onChange={(e) =>
-                                        changeHandler("descriptionText", e.target.value)
+                                        changeHandler("description", e.target.value)
                                     }
                                 />
                             </Form.Item>
@@ -80,7 +84,7 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ formData, changeHandl
                         <Col xs={24} sm={8}>
                             <Form.Item label="Status">
                                 <Select
-                                    placeholder={LOCALE_KEYS.STATUS}   
+                                    placeholder={t(LOCALE_KEYS.STATUS)}
                                     value={formData.status}
                                     onChange={(value) => changeHandler("status", value)}
                                     options={[

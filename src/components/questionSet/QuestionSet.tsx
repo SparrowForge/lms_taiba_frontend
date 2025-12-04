@@ -1,66 +1,64 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+
+import { useMcqQuestions } from '@/hooks/useMcqQuestions';
 
 import QuestionSetForm from './QuestionSetForm'
 import QuestionsTable from './QuestionsTable'
+import { useSearchParams } from 'next/navigation';
+import { useExams } from '@/hooks/useExams';
+import { useQuestionSets } from '@/hooks/useQuestionSets';
+import { toast } from 'react-toastify';
 
 export interface FormState {
   name: string;
-  descriptionText: string;
+  description: string;
   status: string;
 }
 
-
-const mockQuestions = [
-  {
-    id: 1,
-    examId: 1,
-    questionOrder: 1,
-    questionText: "What is 2 + 2?",
-    correctOptionNumber: 2,
-    options: ["3", "4", "5", "6"],
-    status: "active",
-    createdAt: "2025-11-10T07:00:37.641Z",
-    updatedAt: "2025-11-10T07:00:37.641Z",
-    deletedAt: null,
-  },
-  {
-    id: 2,
-    examId: 1,
-    questionOrder: 2,
-    questionText: "What is the capital of France?",
-    correctOptionNumber: 1,
-    options: ["Paris", "London", "Berlin", "Madrid"],
-    status: "active",
-    createdAt: "2025-11-10T07:00:37.641Z",
-    updatedAt: "2025-11-10T07:00:37.641Z",
-    deletedAt: null,
-  },
-  {
-    id: 3,
-    examId: 1,
-    questionOrder: 3,
-    questionText: "Which planet is known as the Red Planet?",
-    correctOptionNumber: 3,
-    options: ["Venus", "Jupiter", "Mars", "Saturn"],
-    status: "inactive",
-    createdAt: "2025-11-10T07:00:37.641Z",
-    updatedAt: "2025-11-10T07:00:37.641Z",
-    deletedAt: null,
-  },
-]
-
 const QuestionSet = () => {
+  const searchParams = useSearchParams()
+  const examId = searchParams.get("examId")
+  const { loadExam, selectedExam } = useExams()
   const [selectedQuestion, setSelectedQuestion] = useState<number[]>([])
+  const { mcqQuestions, loadMcqQuestions } = useMcqQuestions()
+  const {createQuestionSetWithQuestions, actionStatus} = useQuestionSets()
 
   const [questionSetformData, setQuestionSetFormData] = useState<FormState>({
     name: "",
-    descriptionText: "",
+    description: "",
     status: "active",
   });
   const handleChange = (key: keyof FormState, value: string) => {
     setQuestionSetFormData(prev => ({ ...prev, [key]: value }));
   };
 
+  useEffect(() => {
+    if (examId) {
+      loadExam(Number(examId))
+    }
+  }, [loadExam, examId])
+
+  useEffect(() => {
+    loadMcqQuestions()
+  }, [loadMcqQuestions])
+
+  const handleQuestionsetSubmit = async() => {
+    const questionSet = {
+      ...questionSetformData,
+      courseId: selectedExam?.courseId,
+      subjectId: selectedExam?.subjectId,
+      examId:Number(examId),
+      semesterId: selectedExam?.semesterId,
+      batchId: selectedExam?.batchId,
+    }
+    const data = {
+      questionSet,
+      questionIds: selectedQuestion
+    }
+
+    await createQuestionSetWithQuestions(data)
+    toast.success(actionStatus.message)
+  }
 
 
 
@@ -68,10 +66,10 @@ const QuestionSet = () => {
     <div>
       <QuestionSetForm formData={questionSetformData} setFormData={setQuestionSetFormData} changeHandler={handleChange} />
       <QuestionsTable
-        questions={mockQuestions}
+        questions={mcqQuestions}
         selectedQuestions={selectedQuestion}
         setSelectedQuestion={setSelectedQuestion}
-        
+        onSubmit={handleQuestionsetSubmit}
       />
     </div>
   )

@@ -1,11 +1,19 @@
 
-import { Checkbox, Table, Alert, Button, Card, Select, Row, Col } from "antd"
+import { Checkbox, Table, Alert, Button, Card, Select, Row, Col, Spin } from "antd"
 import { useEffect, useState } from "react"
 
-import QuestionSetDrawer from "./QuestionSetDrawer"
-import { useFaculties } from "@/hooks/useFaculties"
 import { LOCALE_KEYS } from "@/constants/localizationKeys"
+import { DIFFICULTY_LEVEL_OPTIONS } from "@/enums/difficulty-level.enum"
+
+import { useFaculties } from "@/hooks/useFaculties"
 import { useLocalization } from "@/hooks/useLocalization"
+
+import { IMCQQuestion } from "@/types/mcqQuestion"
+
+import QuestionSetDrawer from "./QuestionSetDrawer"
+import { IQuestionSetCreate } from "@/types/questionSet"
+import { useQuestionSets } from "@/hooks/useQuestionSets"
+import { Status } from "@/enums"
 
 interface Question {
   id: number
@@ -21,16 +29,18 @@ interface Question {
 }
 
 interface QuestionsTableProps {
-  questions: Question[]
+  questions: IMCQQuestion[]
   selectedQuestions: number[]
-  setSelectedQuestion: (ids: number[]) => void
+  setSelectedQuestion: (ids: number[]) => void,
+  onSubmit?: () => void
 }
 
-export default function QuestionsTable({ questions, selectedQuestions, setSelectedQuestion }: QuestionsTableProps) {
+export default function QuestionsTable({ questions, selectedQuestions, setSelectedQuestion, onSubmit }: QuestionsTableProps) {
   const { t } = useLocalization()
   const { faculties, loadFaculties } = useFaculties()
   const [selectedFaculty, setSelectedFaculty] = useState({})
   const [difficultyLevel, setDifficultyLevel] = useState({})
+  const { actionStatus} = useQuestionSets()
 
   useEffect(() => {
     loadFaculties({ page: 1, limit: 99 })
@@ -44,8 +54,6 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
   };
-
-
 
 
   const handleCheckboxChange = (questionId: number) => {
@@ -111,7 +119,7 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
   ]
 
   return (
-    <Card style={{ margin: '8px' }}>
+    <Card style={{ margin: '8px',  height: "60vh", overflowY: "auto" }}>
       <Card className="">
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={6}>
@@ -137,11 +145,7 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
               value={difficultyLevel?.label}
               onChange={(e) => setDifficultyLevel(e)}
               placeholder={t(LOCALE_KEYS.PLEASE_SELECT_STATUS)}
-              options={[
-                { label: "🟢 Easy", value: "easy" },
-                { label: "🟡 Medium", value: "medium" },
-                { label: "🔴 Hard", value: "hard" },
-              ]}
+              options={DIFFICULTY_LEVEL_OPTIONS}
               className="w-full"
             />
           </Col>
@@ -162,9 +166,9 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
           <Button
             style={{ margin: "16px 0" }}
             type="primary"
-            // onClick={() => handleCreateDrawer()}
+            onClick={() => onSubmit()}
           >
-            Submit
+            {actionStatus.status === Status.LOADING ? <Spin /> : 'Submit'}
           </Button>
         </div>
       </div>
@@ -192,18 +196,6 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
         />
       </div>
 
-      {/* {selectedQuestions.length > 0 && (
-        <div className="bg-muted p-4 rounded-lg">
-          <p className="text-sm font-medium text-muted-foreground mb-2">Selected Question IDs:</p>
-          <div className="flex flex-wrap gap-2">
-            {selectedQuestions.map((id) => (
-              <span key={id} className="bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
-                #{id}
-              </span>
-            ))}
-          </div>
-        </div>
-      )} */}
 
       <QuestionSetDrawer
         onCancel={() => setDrawerVisible(false)}
