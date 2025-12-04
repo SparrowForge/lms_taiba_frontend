@@ -21,21 +21,19 @@ interface Question {
 }
 
 interface QuizParticipantProps {
-  questions: Question[]
+
   onSubmit?: (answers: Record<number, string>) => Promise<void>
   onCancel?: () => void
   title?: string
-  isLoading?: boolean
+
 }
 
 const { Title, Text } = Typography
 
-export default function QuizParticipant({
-  questions,
+export default function Quiz({
   onSubmit,
   onCancel,
-  title = "Quiz",
-  isLoading = false,
+  title = "Quiz"
 }: QuizParticipantProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<number, string>>({})
