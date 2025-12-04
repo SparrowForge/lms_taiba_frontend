@@ -31,8 +31,10 @@ import feeStructureReducer from './slices/feeStructureSlice';
 import gradeRuleReducer from './slices/gradeRuleSlice';
 import instituteReducer from './slices/instituteSlice';
 import markDistributionReducer from './slices/markDistributionSlice';
+import mcqQuestionReducer from './slices/mcqQuestionSlice';
 import menuReducer from './slices/menuSlice';
 import panelReducer from './slices/panelSlice';
+import questionSetReducer from './slices/questionSetSlice';
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice';
 import roleReducer from './slices/roleSlice';
 import roomReducer from './slices/roomSlice';
@@ -61,6 +63,7 @@ export interface RootState {
   auth: ReturnType<typeof authReducer>;
   users: ReturnType<typeof userReducer>;
   panels: ReturnType<typeof panelReducer>;
+  questionSets: ReturnType<typeof questionSetReducer>;
   branches: ReturnType<typeof branchReducer>;
   departments: ReturnType<typeof departmentReducer>;
   roles: ReturnType<typeof roleReducer>;
@@ -82,6 +85,7 @@ export interface RootState {
   feeStructures: ReturnType<typeof feeStructureReducer>;
   gradeRules: ReturnType<typeof gradeRuleReducer>;
   markDistributions: ReturnType<typeof markDistributionReducer>;
+  mcqQuestions: ReturnType<typeof mcqQuestionReducer>;
   audits: ReturnType<typeof auditReducer>;
   userRoles: ReturnType<typeof userRoleReducer>;
   addresses: ReturnType<typeof addressReducer>;
@@ -117,6 +121,7 @@ export const store = configureStore({
     auth: authReducer,
     users: userReducer,
     panels: panelReducer,
+    questionSets: questionSetReducer,
     branches: branchReducer,
     departments: departmentReducer,
     roles: roleReducer,
@@ -138,6 +143,7 @@ export const store = configureStore({
     feeStructures: feeStructureReducer,
     gradeRules: gradeRuleReducer,
     markDistributions: markDistributionReducer,
+    mcqQuestions: mcqQuestionReducer,
     audits: auditReducer,
     userRoles: userRoleReducer,
     addresses: addressReducer,
