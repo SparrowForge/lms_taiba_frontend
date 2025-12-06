@@ -3,6 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button, Card, Divider, Space, Typography, Alert, Row, Col } from "antd"
 import { CheckCircleOutlined } from "@ant-design/icons"
+import { useExams } from "../../hooks/useExams"
+import { useEffect } from "react"
 
 const { Title, Text } = Typography
 
@@ -11,6 +13,22 @@ export default function ExamInstruction() {
   const searchParams = useSearchParams()
   const subjectId = searchParams.get("subjectId")
   const examId = searchParams.get("examId")
+
+  const {selectedExam, loadExam} = useExams()
+
+  useEffect(()=>{
+    if(examId){
+      loadExam(Number(examId))
+    }
+  },[examId, loadExam])
+
+  const now = new Date().getTime();
+  const examStart = new Date(selectedExam?.examDatetime).getTime();
+  const examEnd =
+  examStart + selectedExam?.duration?.hours * 60 * 60 * 1000;
+
+  const canStartExam = now >= examStart && now < examEnd;
+
 
   return (
     <div style={{marginTop:16}}>
@@ -124,6 +142,7 @@ export default function ExamInstruction() {
                 type="primary"
                 size="large"
                 style={{ paddingInline: 32, height: 48 }}
+                disabled={!canStartExam}
                 onClick={() => router.push(`/participate-exam?subjectId=${subjectId}&examId=${examId}`)}
               >
                 Start Exam
