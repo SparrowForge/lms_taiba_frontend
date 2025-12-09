@@ -11,22 +11,37 @@ import { useExams } from '@/hooks/useExams';
 
 import { IClassSchedule } from '@/types/classSchedule';
 
-import ClassScheduleDetailsDrawer from './ClassScheduleDetailsDrawer';
 import ClassScheduleFormDrawer from './ClassScheduleFormDrawer';
+import { ScheduleDetailsDrawer } from '../dashboard/schedule';
+import ExamScheduleDetailsDrawer from '../dashboard/schedule/ExamScheduleDetailsDrawer';
+
 
 function ClassScheduleCalendarView() {
   const { user } = useAuth();
 
+  /* ------------------ State ------------------ */
+
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
-  const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedScheduleId, setSelectedScheduleId] = useState<number>();
+
+  const [classDrawerVisible, setClassDrawerVisible] = useState(false);
+  const [examDrawerVisible, setExamDrawerVisible] = useState(false);
+
+  const [selectedSchedule, setSelectedSchedule] =
+    useState<IClassSchedule | null>(null);
+  const [selectedExam, setSelectedExam] = useState<any | null>(null);
+
+  const [clickedDate, setClickedDate] = useState<string>();
+
   const [formDrawerVisible, setFormDrawerVisible] = useState(false);
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+
+  /* ------------------ Data ------------------ */
 
   const { classSchedules, loadClassSchedules } = useClassSchedules();
   const { exams, loadExams } = useExams();
 
-  /* Load class schedules */
+  /* ------------------ Load Class Schedules ------------------ */
+
   useEffect(() => {
     loadClassSchedules({
       page: 1,
@@ -34,19 +49,48 @@ function ClassScheduleCalendarView() {
       year: currentMonth.year(),
       month: currentMonth.month() + 1,
     });
-  }, [loadClassSchedules, currentMonth]);
+  }, [currentMonth, loadClassSchedules]);
 
-  /* Load exams */
+  /* ------------------ Load Exams ------------------ */
+
   useEffect(() => {
     if (!user?.student?.batchId) return;
+
     loadExams({
       page: 1,
       limit: 100,
       batchId: user.student.batchId,
     });
-  }, [loadExams, user?.student?.batchId]);
+  }, [user?.student?.batchId, loadExams]);
 
-  /* ✅ Keep your original recurring class logic */
+  /* ------------------ Handlers ------------------ */
+
+  const handleClassClick = (schedule: IClassSchedule, date: string) => {
+    setSelectedSchedule(schedule);
+    setClickedDate(date);
+    setClassDrawerVisible(true);
+  };
+
+  const handleExamClick = (exam: any, date: string) => {
+    setSelectedExam(exam);
+    setClickedDate(date);
+    setExamDrawerVisible(true);
+  };
+
+  const closeClassDrawer = () => {
+    setClassDrawerVisible(false);
+    setSelectedSchedule(null);
+    setClickedDate(undefined);
+  };
+
+  const closeExamDrawer = () => {
+    setExamDrawerVisible(false);
+    setSelectedExam(null);
+    setClickedDate(undefined);
+  };
+
+  /* ------------------ Group Classes ------------------ */
+
   const schedulesByDate = useMemo(() => {
     const grouped: Record<string, IClassSchedule[]> = {};
 
@@ -54,7 +98,7 @@ function ClassScheduleCalendarView() {
       const startDate = dayjs(schedule.startDate);
       const endDate = dayjs(schedule.endDate);
 
-      if (schedule.isRecurring && schedule.weekDay?.dayNumber !== undefined) {
+      if (schedule.isRecurring && schedule.weekDay?.dayNumber != null) {
         const monthStart = currentMonth.startOf('month');
         let currentDate = monthStart;
 
@@ -66,7 +110,8 @@ function ClassScheduleCalendarView() {
           if (
             currentDate.isSame(startDate, 'day') ||
             (currentDate.isAfter(startDate) &&
-              (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')))
+              (currentDate.isBefore(endDate) ||
+                currentDate.isSame(endDate, 'day')))
           ) {
             const key = currentDate.format('YYYY-MM-DD');
             grouped[key] ??= [];
@@ -74,19 +119,18 @@ function ClassScheduleCalendarView() {
           }
           currentDate = currentDate.add(7, 'day');
         }
-      } else {
-        if (startDate.isSame(currentMonth, 'month')) {
-          const key = startDate.format('YYYY-MM-DD');
-          grouped[key] ??= [];
-          grouped[key].push(schedule);
-        }
+      } else if (startDate.isSame(currentMonth, 'month')) {
+        const key = startDate.format('YYYY-MM-DD');
+        grouped[key] ??= [];
+        grouped[key].push(schedule);
       }
     });
 
     return grouped;
   }, [classSchedules, currentMonth]);
 
-  /* ✅ Exams grouped by examDatetime */
+  /* ------------------ Group Exams ------------------ */
+
   const examsByDate = useMemo(() => {
     const grouped: Record<string, any[]> = {};
 
@@ -99,7 +143,8 @@ function ClassScheduleCalendarView() {
     return grouped;
   }, [exams]);
 
-  /* Colors */
+  /* ------------------ Helpers ------------------ */
+
   const getClassColor = (schedule: IClassSchedule) => {
     switch (schedule.status) {
       case ClassScheduleStatus.ACTIVE:
@@ -113,7 +158,8 @@ function ClassScheduleCalendarView() {
     }
   };
 
-  /* Cell render */
+  /* ------------------ Calendar Cell ------------------ */
+
   const dateCellRender = (date: Dayjs) => {
     const key = date.format('YYYY-MM-DD');
     const dayClasses = schedulesByDate[key] || [];
@@ -131,10 +177,7 @@ function ClassScheduleCalendarView() {
             <Tag
               color={getClassColor(schedule)}
               className="cursor-pointer"
-              onClick={() => {
-                setSelectedScheduleId(schedule.id);
-                setDetailsDrawerVisible(true);
-              }}
+              onClick={() => handleClassClick(schedule, key)}
             >
               📘 {schedule.subject?.name?.slice(0, 8)}
             </Tag>
@@ -146,7 +189,13 @@ function ClassScheduleCalendarView() {
             key={`exam-${exam.id}`}
             title={`${exam.name} • ${exam.examType?.name}`}
           >
-            <Tag color="purple">📝 {exam.subject?.name?.slice(0, 8)}</Tag>
+            <Tag
+              color="purple"
+              className="cursor-pointer"
+              onClick={() => handleExamClick(exam, key)}
+            >
+              📝 {exam.subject?.name?.slice(0, 8)}
+            </Tag>
           </Tooltip>
         ))}
 
@@ -157,32 +206,38 @@ function ClassScheduleCalendarView() {
     );
   };
 
+  /* ------------------ Render ------------------ */
+
   return (
     <Card>
       <Calendar
-        value={currentMonth}
         fullscreen
+        value={currentMonth}
         onChange={setCurrentMonth}
         cellRender={dateCellRender}
       />
 
-      {/* Class details */}
-      <ClassScheduleDetailsDrawer
-        visible={detailsDrawerVisible}
-        classScheduleId={selectedScheduleId}
-        onClose={() => setDetailsDrawerVisible(false)}
-        onEdit={(id) => {
-          setSelectedScheduleId(id);
-          setFormMode('edit');
-          setFormDrawerVisible(true);
-        }}
+      {/* Class Schedule Drawer */}
+      <ScheduleDetailsDrawer
+        visible={classDrawerVisible}
+        schedule={selectedSchedule}
+        clickedDate={clickedDate}
+        onClose={closeClassDrawer}
       />
 
-      {/* Create / Edit */}
+      {/* Exam Schedule Drawer */}
+      <ExamScheduleDetailsDrawer
+        visible={examDrawerVisible}
+        exam={selectedExam}
+        clickedDate={clickedDate}
+        onClose={closeExamDrawer}
+      />
+
+      {/* Create / Edit Class Schedule */}
       <ClassScheduleFormDrawer
         visible={formDrawerVisible}
         mode={formMode}
-        classScheduleId={selectedScheduleId}
+        classScheduleId={selectedSchedule?.id}
         onCancel={() => setFormDrawerVisible(false)}
         onSuccess={() => setFormDrawerVisible(false)}
       />
