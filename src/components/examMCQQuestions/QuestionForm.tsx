@@ -27,6 +27,7 @@ import { useSubjects } from "@/hooks/useSubjects";
 import { getErrorMessage } from "@/types/errors";
 import { IMCQQuestionBulkCreate } from "@/types/mcqQuestion";
 import { Status } from "@/enums";
+import { useMcqQuestions } from "@/hooks/useMcqQuestions";
 
 const { Text } = Typography;
 

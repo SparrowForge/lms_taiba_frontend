@@ -9,16 +9,16 @@ const TabData = [
     title: 'Attendance',
     localeTitle: 'الحضور ',
   },
-  {
-    key: 'exams',
-    title: 'Exams',
-    localeTitle: 'اإلختبارات',
-  },
-  {
-    key: 'grade_book',
-    title: 'Grade Book',
-    localeTitle: 'سجل الدرجات',
-  },
+  // {
+  //   key: 'exams',
+  //   title: 'Exams',
+  //   localeTitle: 'اإلختبارات',
+  // },
+  // {
+  //   key: 'grade_book',
+  //   title: 'Grade Book',
+  //   localeTitle: 'سجل الدرجات',
+  // },
 ];
 
 export default TabData;

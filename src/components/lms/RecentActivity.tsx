@@ -55,7 +55,7 @@ const RecentActivity = () => {
         className="flex flex-col gap-3 overflow-y-auto"
         style={{ maxHeight: '225px' }} // around 2 items height
       >
-        {recentActive.map((a, i) => (
+        {/* {recentActive.map((a, i) => (
           <IconBgColoredCard
             key={i}
             text={a.title}
@@ -66,7 +66,7 @@ const RecentActivity = () => {
             color=""
             bgColor=""
           />
-        ))}
+        ))} */}
       </div>
     </Card>
   );

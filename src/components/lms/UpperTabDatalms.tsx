@@ -14,16 +14,7 @@ const UpperTabDatalms = [
     title: 'Submissions',
     localeTitle: 'التسليمات',
   },
-  {
-    key: 'discussion',
-    title: 'Discussion',
-    localeTitle: 'المناقشات',
-  },
-  {
-    key: 'grading',
-    title: 'Grading',
-    localeTitle: 'الدرجات',
-  },
+
 ];
 
 export default UpperTabDatalms;

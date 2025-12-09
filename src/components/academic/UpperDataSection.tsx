@@ -58,24 +58,24 @@ const UpperDataSection = () => {
       color: '#d97706',
       iconColor: '#d97706',
     },
-    {
-      id: '3',
-      title: 'Upcoming Exams',
-      localTitle: 'الإختبارات القادمة',
-      number: '-',
-      icon: <FileDoneOutlined />,
-      color: '#10b981',
-      iconColor: '#10b981',
-    },
-    {
-      id: '4',
-      title: 'Average Grade',
-      localTitle: 'متوسط الدرجات',
-      number: '-',
-      icon: <PieChartOutlined />,
-      color: '#7c3aed',
-      iconColor: '#7c3aed',
-    },
+    // {
+    //   id: '3',
+    //   title: 'Upcoming Exams',
+    //   localTitle: 'الإختبارات القادمة',
+    //   number: '-',
+    //   icon: <FileDoneOutlined />,
+    //   color: '#10b981',
+    //   iconColor: '#10b981',
+    // },
+    // {
+    //   id: '4',
+    //   title: 'Average Grade',
+    //   localTitle: 'متوسط الدرجات',
+    //   number: '-',
+    //   icon: <PieChartOutlined />,
+    //   color: '#7c3aed',
+    //   iconColor: '#7c3aed',
+    // },
   ];
 
   // 🔹 State for cards

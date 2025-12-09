@@ -17,7 +17,7 @@ const AttendenceSummary = () => {
     <Card className="rounded-2xl shadow-sm mb-10" style={{ marginBottom: '20px' }}>
       <h2 className="text-base font-semibold mb-3">{t(LOCALE_KEYS.ATTENDANCE_SUMMARTY)}</h2>
       <div style={{ height: 160 }}>
-        <ColumnGraph data={data} />
+        {/* <ColumnGraph data={data} /> */}
       </div>
     </Card>
   );

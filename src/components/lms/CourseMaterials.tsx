@@ -52,8 +52,8 @@ const CourseMaterials = () => {
 
   // Fetch materials on mount
   useEffect(() => {
-    loadCourseMaterials({semesterId, subjectId:id});
-  }, [id, loadCourseMaterials,semesterId]);
+    loadCourseMaterials({semesterId, subjectId:id, batchId:user?.student?.batchId});
+  }, [id, loadCourseMaterials, semesterId, user?.student?.batchId]);
 
   // Filter materials based on selected type and course
   const filteredMaterials = courseMaterials.filter((m) => {

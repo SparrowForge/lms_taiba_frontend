@@ -37,14 +37,13 @@ const SortableCard = ({ id, children }: { id: string; children: React.ReactNode 
 };
 
 const UpperSection = () => {
-  const { t } = useLocalization();
 
   const studentInitial = [
     {
       id: '1',
       title: 'My Courses',
       localTitle: 'دوراتي',
-      number: '4',
+      number: '-',
       icon: <ReadOutlined />,
       color: '#1F4BCA',
       iconColor: '#1F4BCA',
@@ -53,28 +52,10 @@ const UpperSection = () => {
       id: '2',
       title: 'Course Materials',
       localTitle: 'المحتوى',
-      number: '4',
+      number: '-',
       icon: <FileTextOutlined />,
       color: '#d97706',
       iconColor: '#d97706',
-    },
-    {
-      id: '3',
-      title: 'Pending Submissions',
-      localTitle: 'تسليمات معلقة',
-      number: '28',
-      icon: <ClockCircleOutlined />,
-      color: '#10b981',
-      iconColor: '#10b981',
-    },
-    {
-      id: '4',
-      title: 'Active Discussion',
-      localTitle: 'مناقشات نشطة',
-      number: '12',
-      icon: <CommentOutlined />,
-      color: '#7c3aed',
-      iconColor: '#7c3aed',
     },
   ];
 

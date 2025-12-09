@@ -24,9 +24,7 @@ const LMSMainComponent = () => {
         <Col xs={24} lg={16} style={{ marginBottom: '40px' }}>
           {activeTab === 'courses' && <CourseMaterials />}
           {activeTab === 'quizzes' && <div>Quizzes Content</div>}
-          {activeTab === 'submissions' && <div>Submissions Content</div>}
-          {activeTab === 'discussion' && <div>Discussion Content</div>}
-          {activeTab === 'grading' && <div>Grading Content</div>}
+
         </Col>
         <Col xs={24} lg={8}>
           <StudentProgress />
