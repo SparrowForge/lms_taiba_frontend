@@ -1,8 +1,8 @@
 'use client';
 
 
-import {  Card, Empty, Spin,  } from 'antd';
-import React, { useEffect,  } from 'react';
+import { Card, Empty, Spin, } from 'antd';
+import React, { useEffect, } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
@@ -13,6 +13,8 @@ import { useLocalization } from '@/hooks/useLocalization';
 
 import FacultyExamList from './FacultyExamLists';
 import StudentExamList from './StudentExamList';
+import { useAuth } from '@/hooks/useAuth';
+import { useParams } from 'next/navigation';
 
 
 
@@ -20,11 +22,13 @@ import StudentExamList from './StudentExamList';
 
 const StudentExamParticipate: React.FC = () => {
   const { t } = useLocalization();
-    const {exams, loadExams, listStatus} = useExams()
+  const { exams, loadExams, listStatus } = useExams()
+  const { user } = useAuth()
+  const { id } = useParams()
 
-    useEffect(()=>{
-        loadExams({page:1, limit:99})
-    },[loadExams])
+  useEffect(() => {
+    loadExams({ page: 1, limit: 99, subjectId: id, batchId: user?.student?.batchId })
+  }, [id, loadExams, user?.student?.batchId])
   return (
     <Card className="rounded-xl shadow-sm mb-6">
       {/* Header */}
@@ -47,12 +51,12 @@ const StudentExamParticipate: React.FC = () => {
       {listStatus.status === Status.SUCCESS && exams?.length > 0 && (
         <div className="flex flex-col gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
           {exams?.map((item) => (
-            <StudentExamList key={item.id} data={item}/>
+            <StudentExamList key={item.id} data={item} />
           ))}
         </div>
       )}
 
-      
+
 
     </Card>
   );

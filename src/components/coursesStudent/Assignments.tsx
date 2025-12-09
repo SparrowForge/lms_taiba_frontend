@@ -96,9 +96,9 @@ const Assignments: React.FC = () => {
   const [selectedAssignmentSubmissionId, setSelectedAssignmentSubmissionId] = useState<number | undefined>();
 
   useEffect(() => {
-      loadCourseAssignments({subjectId:id, semesterId})
+      loadCourseAssignments({subjectId:id, semesterId, batchId:user?.student?.batchId})
       
-  }, [id,loadCourseAssignments, semesterId]);
+  }, [id, loadCourseAssignments, semesterId, user?.student?.batchId]);
 
   useEffect(()=>{
     if(user?.student?.id){
