@@ -17,6 +17,9 @@ export interface IRoleCreate {
   name: string;
   description: string;
   status: string;
+  isHeadOfDepartment: false,
+  isHeadOfHR: false,
+  isHeadOfAccount: false
 }
 
 export interface IRoleUpdate {

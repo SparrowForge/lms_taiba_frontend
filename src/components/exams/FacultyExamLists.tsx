@@ -10,6 +10,8 @@ import { IExam } from "@/types/exam";
 
 
 import ExamSetManageDrawer from "./ExamSetManageDrawer";
+import ExamFacultyAssignDrawer from "../faculties/ExamFacultyAssignmentDrawer";
+import { useAuth } from "@/hooks/useAuth";
 
 
 
@@ -37,7 +39,9 @@ interface ExamListProps {
 
 const FacultyExamList = ({ data }: ExamListProps) => {
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [facultyDrawerVisible, setFacultyDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
+  const [facultyDrawerMode, setFacultyDrawerMode] = useState<'create' | 'edit'>('create');
   const router = useRouter()
   const handleAddQuestion = (subjectId: number) => {
     return router.push(`/exam-mcq-questions/create?subjectId=${subjectId}`)
@@ -52,10 +56,19 @@ const FacultyExamList = ({ data }: ExamListProps) => {
     setDrawerVisible(true);
   };
 
+  const handleCreateFacultyAddDrawer = () => {
+    setFacultyDrawerMode('create');
+    setFacultyDrawerVisible(true);
+  };
+
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
 
   };
+
+  const {user} = useAuth()
+
+  console.log("FacultyExamList",user)
 
 
 
@@ -128,6 +141,15 @@ const FacultyExamList = ({ data }: ExamListProps) => {
         >
           Manage Question Set
         </Button>
+
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          style={{ marginLeft: 16 }}
+          onClick={() => handleCreateFacultyAddDrawer()}
+        >
+          Add Faculty
+        </Button>
       </div>
 
       <ExamSetManageDrawer
@@ -135,6 +157,14 @@ const FacultyExamList = ({ data }: ExamListProps) => {
         examId={data.id}
         visible={drawerVisible}
         onCancel={() => setDrawerVisible(false)}
+        onSuccess={handleDrawerSuccess}
+      />
+
+      <ExamFacultyAssignDrawer
+        mode={facultyDrawerMode}
+        examId={data.id}
+        visible={facultyDrawerVisible}
+        onCancel={() => setFacultyDrawerVisible(false)}
         onSuccess={handleDrawerSuccess}
       />
     </Card>
