@@ -12,6 +12,7 @@ import { IExam } from "@/types/exam";
 import ExamSetManageDrawer from "./ExamSetManageDrawer";
 import ExamFacultyAssignDrawer from "../faculties/ExamFacultyAssignmentDrawer";
 import { useAuth } from "@/hooks/useAuth";
+import { hasAnyHeadRole } from "@/utils/roleUtils";
 
 
 
@@ -68,7 +69,8 @@ const FacultyExamList = ({ data }: ExamListProps) => {
 
   const {user} = useAuth()
 
-  console.log("FacultyExamList",user)
+  const isHead = hasAnyHeadRole(user)
+  
 
 
 
@@ -118,7 +120,9 @@ const FacultyExamList = ({ data }: ExamListProps) => {
           <span className="font-medium">Room:</span>{" "}
           {data.room?.name}
         </p>
-        <Button
+{
+  !isHead && <>
+          <Button
           type="primary"
           icon={<PlusOutlined />}
 
@@ -134,6 +138,18 @@ const FacultyExamList = ({ data }: ExamListProps) => {
         >
           Add Question Set
         </Button>
+  </>
+}
+{
+  isHead && <>
+  <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          style={{ marginLeft: 16 }}
+          onClick={() => handleCreateFacultyAddDrawer()}
+        >
+          Add Faculty
+        </Button>
         <Button
           icon={<PlusOutlined />}
           style={{ marginLeft: 16 }}
@@ -142,14 +158,9 @@ const FacultyExamList = ({ data }: ExamListProps) => {
           Manage Question Set
         </Button>
 
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          style={{ marginLeft: 16 }}
-          onClick={() => handleCreateFacultyAddDrawer()}
-        >
-          Add Faculty
-        </Button>
+  </>
+}
+        
       </div>
 
       <ExamSetManageDrawer

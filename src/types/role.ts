@@ -7,10 +7,14 @@ export interface IRole {
   description: string;
   branch: IBranch;
   status: string;
+  isHeadOfDepartment: boolean;
+  isHeadOfHR: boolean;
+  isHeadOfAccount: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
 }
+
 
 export interface IRoleCreate {
   branchId: number;
