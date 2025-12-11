@@ -8,6 +8,7 @@ import { useAudit } from '@/hooks/useAudit';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import PageHeaderDetails from './PageHeaderDetails';
+import StudentProfileQr from '../students/StudentProfileQr';
 
 const { Title, Text } = Typography;
 
@@ -88,6 +89,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
               <Text type="secondary">ID: {config.item.id}</Text>
             </div>
           </Card>
+          <StudentProfileQr/>
         </Col>
         {/* Details Table */}
         <Col xs={8} lg={config.embedded ? 24 : 16}>
