@@ -169,7 +169,7 @@ export default function QuestionSetsPage() {
         width: 100,
         render: (qSet: IQuestionSet) => (
           <EntityActions
-            onView={() => router.push(`/question-sets/${qSet.id}`)}
+            onView={() => router.push(`/question-set/${qSet.id}`)}
             onViewModal={handleViewDetails}
             viewText={t(LOCALE_KEYS.VIEW)}
             viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}

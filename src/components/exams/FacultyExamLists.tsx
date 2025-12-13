@@ -67,12 +67,15 @@ const FacultyExamList = ({ data }: ExamListProps) => {
 
   };
 
+
+  const handleAddResult = (examId:number) =>{
+    return router.push(`/result/create?examId=${examId}`)
+  }
+
   const {user} = useAuth()
 
   const isHead = hasAnyHeadRole(user)
   
-
-
 
   return (
 
@@ -160,6 +163,14 @@ const FacultyExamList = ({ data }: ExamListProps) => {
 
   </>
 }
+ <Button
+
+          icon={<PlusOutlined />}
+          style={{ marginLeft: 16 }}
+          onClick={() => handleAddResult(data.id)}
+        >
+          Add Result
+        </Button>
         
       </div>
 
