@@ -52,3 +52,38 @@ export const StudentTabData: UpperTabItem[] = [
   
 ];
 
+
+export const StudentProfileTabData: UpperTabItem[] = [
+   {
+    key: 'profile',
+    title: 'Profile',
+  },
+  {
+    key: 'materials',
+    title: 'Materials',
+  },
+ 
+  {
+    key: 'assignments',
+    title: 'Assignments',
+  },
+  {
+    key: 'submittedAssignments',
+    title: 'Submitted Assignments',
+  },
+    {
+    key: 'exam',
+    title: 'Exam',
+  },
+  {
+    key: 'grading',
+    title: 'Grading',
+  },
+  {
+    key: 'discussion',
+    title: 'Discussion',
+  },
+  
+];
+
+
