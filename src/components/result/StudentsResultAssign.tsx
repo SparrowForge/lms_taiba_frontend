@@ -15,48 +15,51 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
 import { LOCALE_KEYS } from "@/constants/localizationKeys"
-import { STUDENT_STATUS_OPTIONS } from "@/constants/statusOptions"
-import { Status } from "@/enums"
+import { ENTITY_STATUS_OPTIONS,  } from "@/constants/statusOptions"
+import { EntityStatus, Status, } from "@/enums"
+import { calculateGrade } from "@/utils/calculateGradeUtils"
 
 import { useExams } from "@/hooks/useExams"
+import { useGradeRules } from "@/hooks/useGradeRules"
 import { useLocalization } from "@/hooks/useLocalization"
 import { useStudents } from "@/hooks/useStudents"
 
+import { IExamResult } from "@/types/examResult"
 
-
-import { IStudent } from "@/types/student"
 
 import type { ColumnsType } from "antd/es/table"
+import { useExamResults } from "@/hooks/useExamResults"
 
 const { Title, Text } = Typography
 
 
 
-const calculateGrade = (marks: number | null): string => {
-  if (marks === null) return "-"
-  if (marks >= 90) return "A+"
-  if (marks >= 80) return "A"
-  if (marks >= 70) return "B"
-  if (marks >= 60) return "C"
-  if (marks >= 50) return "D"
-  return "F"
-}
 
 export default function StudentResultAssign() {
   const searchParams = useSearchParams()
   const examId = searchParams.get("examId")
-  const {t} = useLocalization()
+  const { t } = useLocalization()
+
   const { loadStudents, students, listStatus } = useStudents()
   const { loadExam, selectedExam } = useExams()
-   
+  const { gradeRules, loadGradeRules } = useGradeRules()
+  const {createExamResultBulk, actionStatus} = useExamResults()
 
-  const [tableData, setTableData] = useState<IStudent>([])
+  const [tableData, setTableData] = useState<IExamResult[]>([])
+
+
+
+  useEffect(() => {
+    loadGradeRules({ page: 1, limit: 99 })
+  }, [loadGradeRules])
+
 
   useEffect(() => {
     if (examId) {
       loadExam(Number(examId))
     }
   }, [examId, loadExam])
+
 
   useEffect(() => {
     if (selectedExam?.batchId) {
@@ -68,7 +71,7 @@ export default function StudentResultAssign() {
     }
   }, [loadStudents, selectedExam?.batchId])
 
-  // 🔹 Sync API students to local table state
+
   useEffect(() => {
     if (students?.length) {
       setTableData(
@@ -83,45 +86,41 @@ export default function StudentResultAssign() {
     }
   }, [students])
 
-  const handleMarksChange = (key: string, marks: number | null) => {
+  const handleMarksChange = (id: number, marks: number | null) => {
     setTableData((prev) =>
       prev.map((s) =>
-        s.key === key
-          ? { ...s, marks, grade: calculateGrade(marks) }
+        s.id === id
+          ? {
+            ...s,
+            marks,
+            grade: calculateGrade(marks, gradeRules),
+          }
           : s,
       ),
     )
   }
 
-  const handleStatusChange = (key: string, status: "draft" | "submitted") => {
+  const handleRemarksChange = (id: number, remarks: string) => {
     setTableData((prev) =>
-      prev.map((s) =>
-        s.key === key ? { ...s, status } : s,
-      ),
+      prev.map((s) => (s.id === id ? { ...s, remarks } : s)),
     )
   }
 
-  const handleRemarksChange = (key: string, remarks: string) => {
+  const handleStatusChange = (id: number, status: EntityStatus) => {
     setTableData((prev) =>
-      prev.map((s) =>
-        s.key === key ? { ...s, remarks } : s,
-      ),
+      prev.map((s) => (s.id === id ? { ...s, status } : s)),
     )
   }
+
+
 
   const handleSubmit = async () => {
-    const hasMissingMarks = tableData.some(
-      (s) => s.marks === null || s.marks === undefined,
-    )
-
-    if (hasMissingMarks) {
+    if (tableData.some((s) => s.marksObtained === null)) {
       toast.error("Please enter marks for all students")
       return
     }
 
-    const hasMissingStatus = tableData.some((s) => !s.status)
-
-    if (hasMissingStatus) {
+    if (tableData.some((s) => !s.status)) {
       toast.error("Please select status for all students")
       return
     }
@@ -129,17 +128,18 @@ export default function StudentResultAssign() {
     const payload = tableData.map((s) => ({
       examId: Number(examId),
       studentId: s.id,
-      marksObtained: s.marks!,
+      marksObtained: s.marksObtained!,
       grade: s.grade,
       remarks: s.remarks ?? "",
       status: s.status!,
     }))
 
-    console.log("SUBMIT PAYLOAD 👉", payload)
-
+    console.log("SUBMIT PAYLOAD", payload)
+    await createExamResultBulk(payload)
   }
 
-  const columns: ColumnsType<IStudent> = [
+  /* -------- Columns -------- */
+  const columns: ColumnsType<IExamResult> = [
     {
       title: "S.No",
       dataIndex: "id",
@@ -158,8 +158,8 @@ export default function StudentResultAssign() {
         <InputNumber
           min={0}
           max={100}
-          value={record.marks}
-          onChange={(value) => handleMarksChange(record.key, value)}
+          value={record.marksObtained}
+          onChange={(value) => handleMarksChange(record.id, value)}
           style={{ width: "100%" }}
         />
       ),
@@ -180,7 +180,7 @@ export default function StudentResultAssign() {
           placeholder="Remarks"
           value={record.remarks}
           onChange={(e) =>
-            handleRemarksChange(record.key, e.target.value)
+            handleRemarksChange(record.id, e.target.value)
           }
         />
       ),
@@ -194,10 +194,10 @@ export default function StudentResultAssign() {
           placeholder="Select status"
           value={record.status}
           onChange={(value) =>
-            handleStatusChange(record.key, value as "draft" | "submitted")
+            handleStatusChange(record.id, value as EntityStatus)
           }
           style={{ width: "100%" }}
-          options={STUDENT_STATUS_OPTIONS}
+          options={ENTITY_STATUS_OPTIONS}
         />
       ),
     },
@@ -206,13 +206,16 @@ export default function StudentResultAssign() {
   return (
     <Card>
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        <Title level={3}>{t(LOCALE_KEYS.STUDENT_MARKS_ENTRY)}</Title>
+        <Title level={3}>
+          {t(LOCALE_KEYS.STUDENT_MARKS_ENTRY)}
+        </Title>
+
         <Table
           columns={columns}
           dataSource={tableData}
           pagination={false}
           bordered
-          rowKey="key"
+          rowKey="id"
           loading={listStatus.status === Status.LOADING}
         />
 

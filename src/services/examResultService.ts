@@ -21,6 +21,11 @@ export const examResultService = {
     return response.data;
   },
 
+  createExamResultBulk: async (data: IExamResultCreate[]): Promise<IExamResult> => {
+    const response = await api.post<IExamResult>('/exam-results/bulk', data);
+    return response.data;
+  },
+
   updateExamResult: async (id: number, data: IExamResultUpdate): Promise<IExamResult> => {
     const response = await api.patch<IExamResult>(`/exam-results/${id}`, data);
     return response.data;

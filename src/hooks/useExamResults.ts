@@ -99,6 +99,27 @@ export const useExamResults = () => {
     [dispatch],
   );
 
+  const createExamResultBulk = useCallback(
+    async (data: IExamResultCreate[]) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IExamResult = await examResultService.createExamResultBulk(data);
+        dispatch(addExamResult(response));
+        dispatch(
+          setActionStatus({ status: Status.SUCCESS, message: 'Exam result created successfully' }),
+        );
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to create exam result'
+            : 'Failed to create exam result';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   const editExamResult = useCallback(
     async (id: number, data: IExamResultUpdate) => {
       try {
@@ -183,6 +204,7 @@ export const useExamResults = () => {
     loadExamResults,
     loadExamResult,
     createExamResult,
+    createExamResultBulk,
     editExamResult,
     removeExamResult,
     getExamResultById,
