@@ -1,22 +1,39 @@
 "use client"
 
-import { useState } from "react"
-import { Table, InputNumber, Button, message, Space, Typography, Card } from "antd"
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons"
+import {
+  Table,
+  InputNumber,
+  Button,
+  Space,
+  Typography,
+  Card,
+  Select,
+  Input,
+} from "antd"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
+
+import { LOCALE_KEYS } from "@/constants/localizationKeys"
+import { STUDENT_STATUS_OPTIONS } from "@/constants/statusOptions"
+import { Status } from "@/enums"
+
+import { useExams } from "@/hooks/useExams"
+import { useLocalization } from "@/hooks/useLocalization"
+import { useStudents } from "@/hooks/useStudents"
+
+
+
+import { IStudent } from "@/types/student"
+
 import type { ColumnsType } from "antd/es/table"
 
 const { Title, Text } = Typography
 
-interface Student {
-  key: string
-  id: number
-  name: string
-  marks: number | null
-  grade: string
-}
+
 
 const calculateGrade = (marks: number | null): string => {
-  if (marks === null || marks < 0) return "-"
+  if (marks === null) return "-"
   if (marks >= 90) return "A+"
   if (marks >= 80) return "A"
   if (marks >= 70) return "B"
@@ -26,61 +43,103 @@ const calculateGrade = (marks: number | null): string => {
 }
 
 export default function StudentResultAssign() {
-  const [students, setStudents] = useState<Student[]>([
-    { key: "1", id: 1, name: "Rahim Ahmed", marks: null, grade: "-" },
-    { key: "2", id: 2, name: "Karim Khan", marks: null, grade: "-" },
-  ])
+  const searchParams = useSearchParams()
+  const examId = searchParams.get("examId")
+  const {t} = useLocalization()
+  const { loadStudents, students, listStatus } = useStudents()
+  const { loadExam, selectedExam } = useExams()
+   
 
-  const [loading, setLoading] = useState(false)
+  const [tableData, setTableData] = useState<IStudent>([])
+
+  useEffect(() => {
+    if (examId) {
+      loadExam(Number(examId))
+    }
+  }, [examId, loadExam])
+
+  useEffect(() => {
+    if (selectedExam?.batchId) {
+      loadStudents({
+        page: 1,
+        limit: 99,
+        batchId: selectedExam.batchId,
+      })
+    }
+  }, [loadStudents, selectedExam?.batchId])
+
+  // 🔹 Sync API students to local table state
+  useEffect(() => {
+    if (students?.length) {
+      setTableData(
+        students.map((s: any) => ({
+          ...s,
+          marks: s.marks ?? null,
+          grade: s.grade ?? "-",
+          remarks: s.remarks ?? "",
+          status: s.status,
+        })),
+      )
+    }
+  }, [students])
 
   const handleMarksChange = (key: string, marks: number | null) => {
-    setStudents((prev) =>
+    setTableData((prev) =>
       prev.map((s) =>
-        s.key === key ? { ...s, marks, grade: calculateGrade(marks) } : s,
+        s.key === key
+          ? { ...s, marks, grade: calculateGrade(marks) }
+          : s,
       ),
     )
   }
 
-  const addStudent = () => {
-    const nextId = students.length + 1
-    setStudents([
-      ...students,
-      {
-        key: String(nextId),
-        id: nextId,
-        name: `Student ${nextId}`,
-        marks: null,
-        grade: "-",
-      },
-    ])
+  const handleStatusChange = (key: string, status: "draft" | "submitted") => {
+    setTableData((prev) =>
+      prev.map((s) =>
+        s.key === key ? { ...s, status } : s,
+      ),
+    )
   }
 
-  const deleteStudent = (key: string) => {
-    if (students.length === 1) {
-      message.warning("At least one student is required")
-      return
-    }
-    setStudents(students.filter((s) => s.key !== key))
+  const handleRemarksChange = (key: string, remarks: string) => {
+    setTableData((prev) =>
+      prev.map((s) =>
+        s.key === key ? { ...s, remarks } : s,
+      ),
+    )
   }
 
   const handleSubmit = async () => {
-    const invalid = students.some((s) => s.marks === null)
-    if (invalid) {
-      message.error("Please enter marks for all students")
+    const hasMissingMarks = tableData.some(
+      (s) => s.marks === null || s.marks === undefined,
+    )
+
+    if (hasMissingMarks) {
+      toast.error("Please enter marks for all students")
       return
     }
 
-    setLoading(true)
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      message.success("Student results submitted successfully")
-      console.log("Submitted:", students)
-    } finally {
-      setLoading(false)
+    const hasMissingStatus = tableData.some((s) => !s.status)
+
+    if (hasMissingStatus) {
+      toast.error("Please select status for all students")
+      return
     }
+
+    const payload = tableData.map((s) => ({
+      examId: Number(examId),
+      studentId: s.id,
+      marksObtained: s.marks!,
+      grade: s.grade,
+      remarks: s.remarks ?? "",
+      status: s.status!,
+    }))
+
+    console.log("SUBMIT PAYLOAD 👉", payload)
+
   }
 
-  const columns: ColumnsType<Student> = [
+  const columns: ColumnsType<IStudent> = [
     {
       title: "S.No",
       dataIndex: "id",
@@ -89,12 +148,12 @@ export default function StudentResultAssign() {
     },
     {
       title: "Student Name",
-      dataIndex: "name",
+      dataIndex: "firstName",
     },
     {
       title: "Marks",
       dataIndex: "marks",
-      width: 160,
+      width: 140,
       render: (_, record) => (
         <InputNumber
           min={0}
@@ -109,19 +168,36 @@ export default function StudentResultAssign() {
       title: "Grade",
       dataIndex: "grade",
       align: "center",
-      width: 100,
+      width: 90,
       render: (grade) => <Text strong>{grade}</Text>,
     },
     {
-      title: "Action",
-      align: "center",
-      width: 100,
+      title: "Remarks",
+      dataIndex: "remarks",
+      width: 200,
       render: (_, record) => (
-        <Button
-          type="text"
-          danger
-          icon={<DeleteOutlined />}
-          onClick={() => deleteStudent(record.key)}
+        <Input
+          placeholder="Remarks"
+          value={record.remarks}
+          onChange={(e) =>
+            handleRemarksChange(record.key, e.target.value)
+          }
+        />
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      width: 150,
+      render: (_, record) => (
+        <Select
+          placeholder="Select status"
+          value={record.status}
+          onChange={(value) =>
+            handleStatusChange(record.key, value as "draft" | "submitted")
+          }
+          style={{ width: "100%" }}
+          options={STUDENT_STATUS_OPTIONS}
         />
       ),
     },
@@ -130,21 +206,18 @@ export default function StudentResultAssign() {
   return (
     <Card>
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        <Title level={3}>Student Marks Entry</Title>
-
+        <Title level={3}>{t(LOCALE_KEYS.STUDENT_MARKS_ENTRY)}</Title>
         <Table
           columns={columns}
-          dataSource={students}
+          dataSource={tableData}
           pagination={false}
           bordered
+          rowKey="key"
+          loading={listStatus.status === Status.LOADING}
         />
 
-        <Space style={{ width: "100%", justifyContent: "space-between" }}>
-          <Button type="dashed" icon={<PlusOutlined />} onClick={addStudent}>
-            Add Student
-          </Button>
-
-          <Button type="primary" loading={loading} onClick={handleSubmit}>
+        <Space style={{ width: "100%", justifyContent: "flex-end" }}>
+          <Button type="primary" onClick={handleSubmit}>
             Submit Results
           </Button>
         </Space>
