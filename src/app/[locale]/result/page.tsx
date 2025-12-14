@@ -2,14 +2,14 @@ import React from 'react'
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import { MainLayout } from '@/components/layout/MainLayout'
-import StudentResultAssign from '@/components/result/StudentsResultAssign'
+import StudentsResult from '@/components/result/StudentsResult'
 
 
 const StudetListResultPage = () => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <StudentResultAssign/>
+        <StudentsResult/>
       </MainLayout>
     </ProtectedRoute>
   )

@@ -40,6 +40,7 @@ export default function ExamResultsPage() {
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const examId = searchParams.get('examId');
 
   const loadWithParams = (
     searchParams: URLSearchParams,
@@ -51,7 +52,7 @@ export default function ExamResultsPage() {
     delete params.limit;
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
-    loadExamResults({ page, limit: limitNum, ...params });
+    loadExamResults({ page, limit: limitNum, ...params, examId });
   };
 
   useEffect(() => {
