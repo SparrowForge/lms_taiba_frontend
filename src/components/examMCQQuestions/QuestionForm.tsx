@@ -17,17 +17,17 @@ import { useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
+import { Status } from "@/enums";
 import { DIFFICULTY_LEVEL_OPTIONS } from "@/enums/difficulty-level.enum";
 import { IQuestion } from "@/enums/question";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useCourses } from "@/hooks/useCourses";
+import { useMcqQuestions } from "@/hooks/useMcqQuestions";
 import { useSubjects } from "@/hooks/useSubjects";
 
-import { getErrorMessage } from "@/types/errors";
+
 import { IMCQQuestionBulkCreate } from "@/types/mcqQuestion";
-import { Status } from "@/enums";
-import { useMcqQuestions } from "@/hooks/useMcqQuestions";
 
 const { Text } = Typography;
 
@@ -51,11 +51,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   const { user } = useAuth();
   const { selectedCourse, loadCourse } = useCourses();
   const { selectedSubject, loadSubject } = useSubjects();
-  const {actionStatus} = useMcqQuestions()
+  const { actionStatus } = useMcqQuestions()
 
   const [questions, setQuestions] = useState<IQuestion[]>(initialQuestions);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [questionType, setQuestionType] = useState("mcq")
 
   const searchParams = useSearchParams();
   const subjectId = searchParams.get("subjectId");
@@ -95,6 +96,13 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
     }
   }, []);
 
+
+  const handleTypeChange = (value: string) => {
+    console.log("Selected type:", value)
+    // example: setQuestionType(value)
+    setQuestionType(value)
+  }
+
   // VALIDATION
   const validationErrors = useMemo(() => {
     const errors: Record<number, string[]> = {};
@@ -112,7 +120,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
   const hasErrors = Object.keys(validationErrors).length > 0;
 
-  const canSubmit = useMemo(() => {
+  const canMcqSubmit = useMemo(() => {
     return (
       questions.length > 0 &&
       !hasErrors &&
@@ -123,6 +131,15 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       )
     );
   }, [questions, hasErrors]);
+
+  const canWrittenSubmit = useMemo(() => {
+    return (
+      questions.length > 0 &&
+      questions.every(
+        (q) => q.questionText
+      )
+    );
+  }, [questions]);
 
   // ADD QUESTION
   const addQuestion = () => {
@@ -177,14 +194,18 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   // SUBMIT
   const handleSubmit = async () => {
     try {
-      if (!canSubmit) {
-        message.error("Please fix all errors before submitting");
+      if (questionType === "mcq" && !canMcqSubmit) {
+        toast.error("Please fix all errors before submitting");
         return;
+      } else if (questionType === "written" && !canWrittenSubmit) {
+        toast.error("Please fix all errors before submitting");
+        return
       }
+
 
       setSubmitting(true);
 
-      const formattedQuestions = questions.map((q) => ({
+      const formattedMcqQuestions = questions.map((q) => ({
         questionText: q.questionText,
         options: q.options.map((o) => o.text),
         correctOptionNumber: q.correctOptionNumber,
@@ -195,18 +216,28 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
         status: "active",
       }));
 
+      const formattedWrittenQuestions = questions.map((q) => ({
+        questionText: q.questionText,
+        courseId: selectedCourse?.id,
+        subjectId: selectedSubject?.id,
+        facultyId: user?.faculty?.id,
+        difficultyLevel: q.difficultyLevel,
+        status: "active",
+      }));
+
       const finalPayload: IMCQQuestionBulkCreate = {
-        questions: formattedQuestions,
+        questions: questionType === 'mcq' ? formattedMcqQuestions : formattedWrittenQuestions
       };
 
       if (onSubmit) await onSubmit(finalPayload);
 
       // toast.success(`${mode === "create" ? "Created" : "Updated"} ${questions.length} question(s)`);
-        
-        setQuestions([])
+
+      setQuestions([])
       if (onSuccess) onSuccess();
-    } catch (err) {
+    } catch (err: any) {
       // toast.error(getErrorMessage(err));
+      console.log(err)
     } finally {
       setSubmitting(false);
     }
@@ -224,7 +255,19 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
             <p className="font-medium text-md">Course: {selectedCourse?.name}</p>
             <p className="font-medium text-md">Subject: {selectedSubject?.name}</p>
             <p className="font-medium text-md">Faculty: {user?.faculty?.fullName}</p>
-
+            <div style={{ paddingTop: 4, paddingBottom: 8 }}>
+              <label className="font-medium text-md">Question Type</label>
+              <Select
+                placeholder="Select question type"
+                className="w-full"
+                onChange={handleTypeChange}
+                allowClear
+                defaultValue="mcq"
+              >
+                <Option value="mcq">MCQ</Option>
+                <Option value="written">Written</Option>
+              </Select>
+            </div>
             <Button
               type="dashed"
               icon={<PlusOutlined />}
@@ -266,103 +309,161 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
         {/* RIGHT PANEL */}
         <Col span={16}>
-          <Card title={`Question ${selectedQuestionIndex + 1}`} size="small">
-            {/* Question Text */}
-            <Form.Item
-              label="Question Text"
-              validateStatus={!q?.questionText && errors.length ? "error" : ""}
-              help={!q?.questionText && errors.length ? "Question text is required" : ""}
-            >
-              <Input.TextArea
-                rows={3}
-                value={q?.questionText}
-                onChange={(e) => updateQuestionField("questionText", e.target.value)}
-              />
-            </Form.Item>
+          {
+            questionType === "mcq" ? <Card title={`Question ${selectedQuestionIndex + 1}`} size="small">
 
-            {/* OPTIONS */}
-            <Text strong>Options</Text>
-            <br />
-            <br />
-
-            {q?.options.map((opt, idx) => {
-              const labels = ["A", "B", "C", "D"];
-              const key = ["a", "b", "c", "d"][idx] as "a" | "b" | "c" | "d";
-              const isCorrect = q.correctOptionNumber === key;
-
-              return (
-                <Form.Item
-                  key={idx}
-                  label={`Option ${labels[idx]}`}
-                  required
-                  validateStatus={!opt.text && errors.length ? "error" : ""}
-                  help={
-                    !opt.text
-                      ? "Option text required"
-                      : isCorrect
-                      ? "✓ Correct Answer"
-                      : ""
-                  }
-                >
-                  <Input
-                    value={opt.text}
-                    onChange={(e) => updateOptionText(idx, e.target.value)}
-                  />
-                </Form.Item>
-              );
-            })}
-
-            {/* Correct + Difficulty */}
-            <Row gutter={12}>
-              <Col span={12}>
-                <Form.Item label="Correct Option">
-                  <Select
-                    value={q?.correctOptionNumber}
-                    onChange={(val) => updateQuestionField("correctOptionNumber", val)}
-                    options={[
-                      { label: "Option A", value: "a" },
-                      { label: "Option B", value: "b" },
-                      { label: "Option C", value: "c" },
-                      { label: "Option D", value: "d" },
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
-
-              <Col span={12}>
-                <Form.Item label="Difficulty Level">
-                  <Select
-                    value={q?.difficultyLevel}
-                    onChange={(val) => updateQuestionField("difficultyLevel", val)}
-                    options={DIFFICULTY_LEVEL_OPTIONS}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Button
-              type="primary"
-              onClick={handleSubmit}
-              loading={submitting || isLoading}
-              disabled={!canSubmit}
-              style={{
-                width: "100%",
-                height: 40,
-                marginTop: 18,
-              }}
-            >
-              {actionStatus.status === Status.LOADING ?<Spin /> :`Submit Questions (${questions.length})`}
-            </Button>
-
-            {onCancel && (
-              <Button
-                style={{ width: "100%", marginTop: 8, height: 40 }}
-                onClick={onCancel}
+              <Form.Item
+                label="Question Text"
+                validateStatus={!q?.questionText && errors.length ? "error" : ""}
+                help={!q?.questionText && errors.length ? "Question text is required" : ""}
               >
-                Cancel
+                <Input.TextArea
+                  rows={3}
+                  value={q?.questionText}
+                  onChange={(e) => updateQuestionField("questionText", e.target.value)}
+                />
+              </Form.Item>
+
+
+              <Text strong>Options</Text>
+              <br />
+              <br />
+
+              {q?.options.map((opt, idx) => {
+                const labels = ["A", "B", "C", "D"];
+                const key = ["a", "b", "c", "d"][idx] as "a" | "b" | "c" | "d";
+                const isCorrect = q.correctOptionNumber === key;
+
+                return (
+                  <Form.Item
+                    key={idx}
+                    label={`Option ${labels[idx]}`}
+                    required
+                    validateStatus={!opt.text && errors.length ? "error" : ""}
+                    help={
+                      !opt.text
+                        ? "Option text required"
+                        : isCorrect
+                          ? "✓ Correct Answer"
+                          : ""
+                    }
+                  >
+                    <Input
+                      value={opt.text}
+                      onChange={(e) => updateOptionText(idx, e.target.value)}
+                    />
+                  </Form.Item>
+                );
+              })}
+
+              {/* Correct + Difficulty */}
+              <Row gutter={12}>
+                <Col span={12}>
+                  <Form.Item label="Correct Option">
+                    <Select
+                      value={q?.correctOptionNumber}
+                      onChange={(val) => updateQuestionField("correctOptionNumber", val)}
+                      options={[
+                        { label: "Option A", value: "a" },
+                        { label: "Option B", value: "b" },
+                        { label: "Option C", value: "c" },
+                        { label: "Option D", value: "d" },
+                      ]}
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col span={12}>
+                  <Form.Item label="Difficulty Level">
+                    <Select
+                      value={q?.difficultyLevel}
+                      onChange={(val) => updateQuestionField("difficultyLevel", val)}
+                      options={DIFFICULTY_LEVEL_OPTIONS}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Button
+                type="primary"
+                onClick={handleSubmit}
+                loading={submitting || isLoading}
+                disabled={!canMcqSubmit}
+                style={{
+                  width: "100%",
+                  height: 40,
+                  marginTop: 18,
+                }}
+              >
+                {actionStatus.status === Status.LOADING ? <Spin /> : `Submit Questions (${questions.length})`}
               </Button>
-            )}
-          </Card>
+
+              {onCancel && (
+                <Button
+                  style={{ width: "100%", marginTop: 8, height: 40 }}
+                  onClick={onCancel}
+                >
+                  Cancel
+                </Button>
+              )}
+            </Card> :
+              <Card title={`Question ${selectedQuestionIndex + 1}`} size="small">
+                {/* Question Text */}
+                <Form.Item
+                  label="Question Text"
+                  validateStatus={!q?.questionText && errors.length ? "error" : ""}
+                  help={!q?.questionText && errors.length ? "Question text is required" : ""}
+                >
+                  <Input.TextArea
+                    rows={3}
+                    value={q?.questionText}
+                    onChange={(e) => updateQuestionField("questionText", e.target.value)}
+                  />
+                </Form.Item>
+
+                {/* Correct + Difficulty */}
+                <Row gutter={12}>
+                  <Col span={12}>
+
+                  </Col>
+
+                  <Col span={12}>
+                    <Form.Item label="Difficulty Level">
+                      <Select
+                        value={q?.difficultyLevel}
+                        onChange={(val) => updateQuestionField("difficultyLevel", val)}
+                        options={DIFFICULTY_LEVEL_OPTIONS}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <Button
+                  type="primary"
+                  onClick={handleSubmit}
+                  loading={submitting || isLoading}
+                  disabled={!canWrittenSubmit}
+                  style={{
+                    width: "100%",
+                    height: 40,
+                    marginTop: 18,
+                  }}
+                >
+                  {actionStatus.status === Status.LOADING ? <Spin /> : `Submit Questions (${questions.length})`}
+                </Button>
+
+                {onCancel && (
+                  <Button
+                    style={{ width: "100%", marginTop: 8, height: 40 }}
+                    onClick={onCancel}
+                  >
+                    Cancel
+                  </Button>
+                )}
+              </Card>
+          }
+
+
         </Col>
       </Row>
     </div>
