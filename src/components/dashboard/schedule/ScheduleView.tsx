@@ -15,6 +15,7 @@ import MonthlyView from './MonthlyView';
 import ScheduleDetailsDrawer from './ScheduleDetailsDrawer';
 import TodayClasses from './TodayClasses';
 import WeeklyView from './WeeklyView';
+import ClassScheduleCalendarView from '@/components/classSchedules/ClassScheduleCalendarView';
 
 const ScheduleView: React.FC = () => {
   const { t } = useLocalization();
@@ -88,10 +89,7 @@ const ScheduleView: React.FC = () => {
           />
         </>
       ) : (
-        <MonthlyView
-          monthSchedules={schedulesData?.month.schedules || []}
-          onScheduleClick={handleScheduleClick}
-        />
+        <ClassScheduleCalendarView/>
       )}
 
       {/* Schedule Details Drawer */}
