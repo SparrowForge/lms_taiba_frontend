@@ -18,6 +18,9 @@ import { getErrorMessage } from '@/types/errors';
 import { IFaculty, IFacultyCreate, IFacultyUpdate } from '@/types/faculty';
 
 import FormLayout from '../layout/FormLayout';
+import { StatusSelect } from '../ui/StatusSelect';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { useEmploymentTypes } from '@/hooks/useEmploymentTypes';
 
 interface FacultyFormProps {
   mode: 'create' | 'edit';
@@ -43,11 +46,13 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
   const { createFaculty, editFaculty, actionStatus } = useFaculties();
   const { branches, loadBranches } = useBranches();
   const { departments, loadDepartments } = useDepartments();
+  const {loadEmploymentTypes, employmentTypes} = useEmploymentTypes()
 
   useEffect(() => {
     loadBranches({ page: 1, limit: 100 });
     loadDepartments({ page: 1, limit: 100 });
-  }, [loadBranches, loadDepartments]);
+    loadEmploymentTypes({ page: 1, limit: 100 });
+  }, [loadBranches, loadDepartments, loadEmploymentTypes]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -204,7 +209,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
         <Input />
       </Form.Item>
       <Form.Item
-        name="employmentType"
+        name="employmentTypeId"
         label={t(LOCALE_KEYS.EMPLOYMENT_TYPE)}
         rules={[
           {
@@ -213,13 +218,22 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
           },
         ]}
       >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) })}>
-          <Select.Option value="full-time">{t(LOCALE_KEYS.FULL_TIME)}</Select.Option>
-          <Select.Option value="part-time">{t(LOCALE_KEYS.PART_TIME)}</Select.Option>
-          <Select.Option value="visiting">{t(LOCALE_KEYS.VISITING)}</Select.Option>
-          <Select.Option value="contract">{t(LOCALE_KEYS.CONTRACT)}</Select.Option>
+        <Select
+          showSearch
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) })}
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {employmentTypes.map((employeeType) => (
+            <Select.Option key={employeeType.id} value={employeeType.id}>
+              {employeeType.name}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
+
       <Form.Item
         name="joinedDate"
         label={t(LOCALE_KEYS.JOINED_DATE)}
@@ -232,11 +246,17 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       >
         <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
       </Form.Item>
-      <Form.Item name="isActive" label={t(LOCALE_KEYS.STATUS)} valuePropName="checked">
-        <Switch
-          checkedChildren={t(LOCALE_KEYS.ACTIVE)}
-          unCheckedChildren={t(LOCALE_KEYS.INACTIVE)}
-        />
+      <Form.Item
+        name="status"
+        label={t(LOCALE_KEYS.STATUS)}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STATUS) }),
+          },
+        ]}
+      >
+        <StatusSelect options={ENTITY_STATUS_OPTIONS} />
       </Form.Item>
       <Form.Item>
         <Space>
