@@ -46,6 +46,7 @@ export default function StudentResultAssign() {
   const { gradeRules, loadGradeRules } = useGradeRules()
   const {createExamResultBulk, actionStatus} = useExamResults()
 
+
   const [tableData, setTableData] = useState<IExamResult[]>([])
 
 
@@ -88,18 +89,21 @@ export default function StudentResultAssign() {
   }, [students])
 
   const handleMarksChange = (id: number, marks: number | null) => {
+
     setTableData((prev) =>
       prev.map((s) =>
         s.id === id
           ? {
             ...s,
-            marks,
+           marksObtained: marks,
             grade: calculateGrade(marks, gradeRules),
           }
           : s,
       ),
     )
   }
+
+  console.log("handleMarksChange",tableData)
 
   const handleRemarksChange = (id: number, remarks: string) => {
     setTableData((prev) =>
@@ -128,7 +132,7 @@ export default function StudentResultAssign() {
     const payload = tableData.map((s) => ({
       examId: Number(examId),
       studentId: s.id,
-      marksObtained: s.marksObtained!,
+      marksObtained: s.marksObtained,
       grade: s.grade,
       remarks: s.remarks ?? "",
       status: s.status!,
@@ -195,7 +199,6 @@ export default function StudentResultAssign() {
       render: (_, record) => (
         <Select
           placeholder="Select status"
-          // value={record.status}
           onChange={(value) =>
             handleStatusChange(record.id, value as ExamResultStatus)
           }
