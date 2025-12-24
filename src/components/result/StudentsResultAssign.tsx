@@ -15,10 +15,12 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
 import { LOCALE_KEYS } from "@/constants/localizationKeys"
-import { ENTITY_STATUS_OPTIONS,  } from "@/constants/statusOptions"
-import { EntityStatus, Status, } from "@/enums"
+import {  EXAM_RESULT_STATUS_OPTIONS,  } from "@/constants/statusOptions"
+import {  Status, } from "@/enums"
+import { ExamResultStatus } from "@/enums/exam-candidate.enum"
 import { calculateGrade } from "@/utils/calculateGradeUtils"
 
+import { useExamResults } from "@/hooks/useExamResults"
 import { useExams } from "@/hooks/useExams"
 import { useGradeRules } from "@/hooks/useGradeRules"
 import { useLocalization } from "@/hooks/useLocalization"
@@ -28,7 +30,6 @@ import { IExamResult } from "@/types/examResult"
 
 
 import type { ColumnsType } from "antd/es/table"
-import { useExamResults } from "@/hooks/useExamResults"
 
 const { Title, Text } = Typography
 
@@ -106,12 +107,11 @@ export default function StudentResultAssign() {
     )
   }
 
-  const handleStatusChange = (id: number, status: EntityStatus) => {
+  const handleStatusChange = (id: number, status: ExamResultStatus) => {
     setTableData((prev) =>
       prev.map((s) => (s.id === id ? { ...s, status } : s)),
     )
   }
-
 
 
   const handleSubmit = async () => {
@@ -133,9 +133,12 @@ export default function StudentResultAssign() {
       remarks: s.remarks ?? "",
       status: s.status!,
     }))
+    const finalPayload = {
+      results:payload
+    }
 
-    console.log("SUBMIT PAYLOAD", payload)
-    await createExamResultBulk(payload)
+    console.log("SUBMIT PAYLOAD", finalPayload)
+    await createExamResultBulk(finalPayload)
   }
 
   /* -------- Columns -------- */
@@ -192,12 +195,12 @@ export default function StudentResultAssign() {
       render: (_, record) => (
         <Select
           placeholder="Select status"
-          value={record.status}
+          // value={record.status}
           onChange={(value) =>
-            handleStatusChange(record.id, value as EntityStatus)
+            handleStatusChange(record.id, value as ExamResultStatus)
           }
           style={{ width: "100%" }}
-          options={ENTITY_STATUS_OPTIONS}
+          options={EXAM_RESULT_STATUS_OPTIONS}
         />
       ),
     },

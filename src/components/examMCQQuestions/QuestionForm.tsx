@@ -388,7 +388,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
                 type="primary"
                 onClick={handleSubmit}
                 loading={submitting || isLoading}
-                disabled={!canMcqSubmit}
+                // disabled={!canMcqSubmit}
                 style={{
                   width: "100%",
                   height: 40,
@@ -442,7 +442,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
                   type="primary"
                   onClick={handleSubmit}
                   loading={submitting || isLoading}
-                  disabled={!canWrittenSubmit}
+                  // disabled={!canWrittenSubmit}
                   style={{
                     width: "100%",
                     height: 40,
