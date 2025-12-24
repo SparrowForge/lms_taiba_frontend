@@ -1,9 +1,11 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { EXAM_RESULT_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -14,12 +16,14 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
 import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
+import { useBatches } from '@/hooks/useBatches';
 import { useExamResults } from '@/hooks/useExamResults';
+import { useExams } from '@/hooks/useExams';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSubjects } from '@/hooks/useSubjects';
 
 import { IExamResult } from '@/types/examResult';
-import { useTranslations } from 'next-intl';
-import { EXAM_RESULT_STATUS_OPTIONS, STUDENT_STATUS_OPTIONS } from '@/constants/statusOptions';
 
 export default function ExamResultsPage() {
   const { t } = useLocalization();
@@ -33,6 +37,10 @@ export default function ExamResultsPage() {
   const [selectedDetailsExamResultId, setSelectedDetailsExamResultId] = useState<
     number | undefined
   >();
+  const { loadBatches, batches } = useBatches()
+  const { loadSemesters, semesters } = useSemesters()
+  const { loadSubjects, subjects } = useSubjects()
+  const { loadExams, exams } = useExams()
 
   const { examResults, listStatus, pagination, loadExamResults, removeExamResult } =
     useExamResults();
@@ -41,6 +49,9 @@ export default function ExamResultsPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
   const examId = searchParams.get('examId');
+  const batchId = searchParams.get('batchId');
+  const semesterId = searchParams.get('semesterId');
+  const subjectId = searchParams.get('subjectId');
 
   const loadWithParams = (
     searchParams: URLSearchParams,
@@ -50,10 +61,36 @@ export default function ExamResultsPage() {
     const params = Object.fromEntries(searchParams.entries());
     delete params.skip;
     delete params.limit;
+    delete params.batchId;
+    delete params.semesterId;
+    delete params.subjectId;
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
     loadExamResults({ page, limit: limitNum, ...params, examId });
   };
+
+  useEffect(() => {
+    loadBatches({ page: 1, limit: 99 })
+  }, [loadBatches])
+
+  useEffect(() => {
+    if (batchId) {
+      loadSemesters({ page: 1, limit: 99, batchId })
+    }
+  }, [batchId, loadSemesters])
+
+  useEffect(() => {
+    if (semesterId) {
+      loadSubjects({ page: 1, limit: 99, semesterId })
+    }
+  }, [semesterId, loadSubjects])
+
+  useEffect(() => {
+    if (subjectId) {
+      loadExams({ page: 1, limit: 99, subjectId })
+    }
+  }, [subjectId, loadExams])
+
 
   useEffect(() => {
     loadWithParams(searchParams, skip, limit);
@@ -104,17 +141,49 @@ export default function ExamResultsPage() {
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
-        filters: [
-          {
-            key: 'status',
-            label: t(LOCALE_KEYS.STATUS),
-            options: [
-              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...EXAM_RESULT_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
-            ],
-          },
-         
+    filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...EXAM_RESULT_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
         ],
+      },
+      {
+        key: 'batchId',
+        label: t(LOCALE_KEYS.BATCH),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...batches.map((b) => ({ label: b.name, value: String(b.id) })),
+        ],
+      },
+      {
+        key: 'semesterId',
+        label: t(LOCALE_KEYS.SEMESTER),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...semesters.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+      {
+        key: 'subjectId',
+        label: t(LOCALE_KEYS.SUBJECT),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...subjects.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+      {
+        key: 'examId',
+        label: t(LOCALE_KEYS.EXAM),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...exams.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+
+    ],
     columns: [
       {
         title: t(LOCALE_KEYS.EXAM_ID),
