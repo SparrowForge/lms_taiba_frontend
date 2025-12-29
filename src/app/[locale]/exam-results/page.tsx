@@ -269,7 +269,7 @@ export default function ExamResultsPage() {
         width: 100,
         render: (examResult: IExamResult) => (
           <EntityActions
-            onView={() => router.push(`/exam-results/${examResult.id}`)}
+            onView={() => router.push(`/result/${examResult.student.id}`)}
             onViewModal={handleViewDetails}
             viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
             onEdit={() => router.push(`/exam-results/${examResult.id}/edit`)}

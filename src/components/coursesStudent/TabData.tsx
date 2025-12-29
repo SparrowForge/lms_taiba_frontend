@@ -21,7 +21,7 @@ export const FacultyTabData: UpperTabItem[] = [
     key: 'discussion',
     title: 'Discussion',
   },
-  
+
 ];
 
 export const StudentTabData: UpperTabItem[] = [
@@ -37,9 +37,13 @@ export const StudentTabData: UpperTabItem[] = [
     key: 'submittedAssignments',
     title: 'Submitted Assignments',
   },
-    {
+  {
     key: 'exam',
     title: 'Exam',
+  },
+  {
+    key: 'result',
+    title: 'Result',
   },
   {
     key: 'grading',
@@ -49,12 +53,12 @@ export const StudentTabData: UpperTabItem[] = [
     key: 'discussion',
     title: 'Discussion',
   },
-  
+
 ];
 
 
 export const StudentProfileTabData: UpperTabItem[] = [
-   {
+  {
     key: 'profile',
     title: 'Profile',
   },
@@ -62,7 +66,7 @@ export const StudentProfileTabData: UpperTabItem[] = [
     key: 'materials',
     title: 'Materials',
   },
- 
+
   {
     key: 'assignments',
     title: 'Assignments',
@@ -71,7 +75,7 @@ export const StudentProfileTabData: UpperTabItem[] = [
     key: 'submittedAssignments',
     title: 'Submitted Assignments',
   },
-    {
+  {
     key: 'exam',
     title: 'Exam',
   },
@@ -83,7 +87,7 @@ export const StudentProfileTabData: UpperTabItem[] = [
     key: 'discussion',
     title: 'Discussion',
   },
-  
+
 ];
 
 

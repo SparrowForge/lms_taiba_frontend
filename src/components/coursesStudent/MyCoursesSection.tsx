@@ -14,6 +14,7 @@ import FacultyExamsManagement from '../exams/FacultyExamsManagement';
 import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
 import StudentExamParticipate from '../exams/StudentExamParticipate';
+import ExamResultIndividualSubject from '../examResults/ExamResultIndividualSubject';
 
 
 
@@ -42,6 +43,7 @@ const MyCoursesSection = () => {
       {user?.type === UserType.STUDENT && activeTab === 'submittedAssignments' && <SubmittedAssignment />}
       {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement/>}
       {user?.type === UserType.STUDENT && activeTab === 'exam' && <StudentExamParticipate/>}
+      {user?.type === UserType.STUDENT && activeTab === 'result' && <ExamResultIndividualSubject/>}
       {activeTab === 'grading' && <div>Grading Content is empty</div>}
       {activeTab === 'discussion' && <div>Discussion Content</div>}
     </div>

@@ -2,20 +2,18 @@
 
 
 import { Card, Empty, Spin, } from 'antd';
+import { useParams } from 'next/navigation';
 import React, { useEffect, } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
 
 
+import { useAuth } from '@/hooks/useAuth';
 import { useExams } from '@/hooks/useExams';
 import { useLocalization } from '@/hooks/useLocalization';
 
-import FacultyExamList from './FacultyExamLists';
 import StudentExamList from './StudentExamList';
-import { useAuth } from '@/hooks/useAuth';
-import { useParams } from 'next/navigation';
-
 
 
 
