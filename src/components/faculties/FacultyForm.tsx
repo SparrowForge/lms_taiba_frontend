@@ -141,7 +141,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
         >
           {branches.map((branch) => (
             <Select.Option key={branch.id} value={branch.id}>
-              {branch.name}
+              {branch.name} ({branch.code})
             </Select.Option>
           ))}
         </Select>

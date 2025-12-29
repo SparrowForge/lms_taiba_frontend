@@ -24,6 +24,9 @@ import { useSemesters } from '@/hooks/useSemesters';
 import { useSubjects } from '@/hooks/useSubjects';
 
 import { IExamResult } from '@/types/examResult';
+import { useSemesterSubjects } from '../../../hooks/useSemesterSubjects';
+import { useCourses } from '@/hooks/useCourses';
+import { useExamTypes } from '@/hooks/useExamTypes';
 
 export default function ExamResultsPage() {
   const { t } = useLocalization();
@@ -39,8 +42,10 @@ export default function ExamResultsPage() {
   >();
   const { loadBatches, batches } = useBatches()
   const { loadSemesters, semesters } = useSemesters()
-  const { loadSubjects, subjects } = useSubjects()
+  const { loadSemesterSubjects, semesterSubjects } = useSemesterSubjects()
   const { loadExams, exams } = useExams()
+  const { loadCourses, courses } = useCourses()
+  const { loadExamTypes, examTypes } = useExamTypes()
 
   const { examResults, listStatus, pagination, loadExamResults, removeExamResult } =
     useExamResults();
@@ -49,9 +54,12 @@ export default function ExamResultsPage() {
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
   const examId = searchParams.get('examId');
+  const courseId = searchParams.get('courseId');
   const batchId = searchParams.get('batchId');
   const semesterId = searchParams.get('semesterId');
   const subjectId = searchParams.get('subjectId');
+  const examTypeId = searchParams.get('examTypeId');
+
 
   const loadWithParams = (
     searchParams: URLSearchParams,
@@ -61,17 +69,29 @@ export default function ExamResultsPage() {
     const params = Object.fromEntries(searchParams.entries());
     delete params.skip;
     delete params.limit;
+    delete params.courseId;
     delete params.batchId;
     delete params.semesterId;
     delete params.subjectId;
+    delete params.examTypeId;
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
     loadExamResults({ page, limit: limitNum, ...params, examId });
   };
 
   useEffect(() => {
-    loadBatches({ page: 1, limit: 99 })
-  }, [loadBatches])
+    loadCourses({ page: 1, limit: 99 })
+  }, [loadCourses])
+
+  useEffect(() => {
+    loadExamTypes({ page: 1, limit: 99 })
+  }, [loadExamTypes])
+
+  useEffect(() => {
+    if(courseId){
+      loadBatches({ page: 1, limit: 99, courseId })
+    }
+  }, [loadBatches, courseId])
 
   useEffect(() => {
     if (batchId) {
@@ -81,15 +101,15 @@ export default function ExamResultsPage() {
 
   useEffect(() => {
     if (semesterId) {
-      loadSubjects({ page: 1, limit: 99, semesterId })
+      loadSemesterSubjects({ page: 1, limit: 99, semesterId })
     }
-  }, [semesterId, loadSubjects])
+  }, [semesterId, loadSemesterSubjects])
 
   useEffect(() => {
     if (subjectId) {
-      loadExams({ page: 1, limit: 99, subjectId })
+      loadExams({ page: 1, limit: 99, courseId,  subjectId, semesterId, batchId, examTypeId })
     }
-  }, [subjectId, loadExams])
+  }, [subjectId, loadExams, courseId, semesterId, batchId, examTypeId])
 
 
   useEffect(() => {
@@ -151,6 +171,14 @@ export default function ExamResultsPage() {
         ],
       },
       {
+        key: 'courseId',
+        label: t(LOCALE_KEYS.COURSE),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+        ],
+      },
+      {
         key: 'batchId',
         label: t(LOCALE_KEYS.BATCH),
         options: [
@@ -171,7 +199,15 @@ export default function ExamResultsPage() {
         label: t(LOCALE_KEYS.SUBJECT),
         options: [
           { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-          ...subjects.map((s) => ({ label: s.name, value: String(s.id) })),
+          ...semesterSubjects.map((s) => ({ label: s.subject.name, value: String(s.subject.id) })),
+        ],
+      },
+      {
+        key: 'examTypeId',
+        label: t(LOCALE_KEYS.EXAM_TYPE),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...examTypes.map((s) => ({ label: s.name, value: String(s.id) })),
         ],
       },
       {
