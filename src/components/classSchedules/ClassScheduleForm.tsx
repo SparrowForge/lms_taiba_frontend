@@ -25,6 +25,7 @@ import { IFacultyWithSubjectRole } from '@/types/faculty';
 
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import { useSections } from '@/hooks/useSections';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -56,6 +57,7 @@ const ClassScheduleForm: React.FC<Props> = ({
     loadSemesterWithSubjectsAndFaculty,
     clearSemesters,
   } = useSemesters();
+  const {loadSections, sections} = useSections()
 
   const { weekDays, loadWeekDays } = useWeekDays();
   const { rooms, loadRooms } = useRooms();
@@ -87,6 +89,12 @@ const ClassScheduleForm: React.FC<Props> = ({
       loadSemesters({ page: 1, limit: 100, batchId: selectedBatchId });
     }
   }, [batches, selectedBatchId, loadSemesters]);
+
+  useEffect(() => {
+    if (selectedBatchId) {
+      loadSections({ page: 1, limit: 100, batchId: selectedBatchId });
+    }
+  }, [batches, selectedBatchId, loadSections]);
 
   useEffect(() => {
     if (selectedSemesterId) {
@@ -169,6 +177,24 @@ const ClassScheduleForm: React.FC<Props> = ({
           {batches.map((batch) => (
             <Select.Option key={batch.id} value={batch.id}>
               {batch.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name="sectionId"
+        label={t(LOCALE_KEYS.SECTION)}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.SECTION) }),
+          },
+        ]}
+      >
+        <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SECTION) })}>
+          {sections.map((sections) => (
+            <Select.Option key={sections.id} value={sections.id}>
+              {sections.name}
             </Select.Option>
           ))}
         </Select>

@@ -51,6 +51,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
   const { sections, loadSections } = useSections();
 
   const [selectedCourseId, setSelectedCourseId] = useState<number | undefined>(undefined);
+  const [selectedBatchId, setSelectedBatchId] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -73,6 +74,15 @@ const StudentForm: React.FC<StudentFormProps> = ({
       });
     }
   }, [courses, selectedCourseId, loadBatches, form]);
+  
+  useEffect(() => {
+    if (selectedBatchId) {
+      loadSections({ page: 1, limit: 100, batchId: selectedBatchId });
+      form.setFieldsValue({
+        sectionId: undefined,
+      });
+    }
+  }, [courses, selectedBatchId, form, loadSections]);
 
   const handleSubmit = async (values: any) => {
     try {
@@ -137,11 +147,11 @@ const StudentForm: React.FC<StudentFormProps> = ({
       initialValues={
         mode === 'edit'
           ? {
-              ...initialValues,
-              admissionDate: initialValues?.admissionDate
-                ? dayjs(initialValues.admissionDate)
-                : undefined,
-            }
+            ...initialValues,
+            admissionDate: initialValues?.admissionDate
+              ? dayjs(initialValues.admissionDate)
+              : undefined,
+          }
           : undefined
       }
       onFinish={handleSubmit}
@@ -271,6 +281,10 @@ const StudentForm: React.FC<StudentFormProps> = ({
         ]}
       >
         <Select
+          onChange={(value) => {
+            setSelectedBatchId(value);
+            form.setFieldsValue({ sectionId: undefined });
+          }}
           placeholder={t(LOCALE_KEYS.SELECT_BATCH, { defaultValue: 'Select Batch' })}
           options={batches.map((batch) => ({
             label: batch.name,

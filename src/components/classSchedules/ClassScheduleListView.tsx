@@ -1,28 +1,29 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+
 import ClassScheduleDetailsDrawer from '@/components/classSchedules/ClassScheduleDetailsDrawer';
 import ClassScheduleFormDrawer from '@/components/classSchedules/ClassScheduleFormDrawer';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
 import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
 import { useClassSchedules } from '@/hooks/useClassSchedules';
+import { useCourses } from '@/hooks/useCourses';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useSubjects } from '@/hooks/useSubjects';
 
 import { IClassSchedule } from '@/types/classSchedule';
-import { useCourses } from '@/hooks/useCourses';
-import { useSubjects } from '@/hooks/useSubjects';
-import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { useTranslations } from 'next-intl';
+import { useSections } from '@/hooks/useSections';
+import { useBatches } from '@/hooks/useBatches';
 
 export default function ClassScheduleListView() {
   const { t } = useLocalization();
@@ -37,13 +38,17 @@ export default function ClassScheduleListView() {
 
   const { classSchedules, listStatus, pagination, loadClassSchedules, removeClassSchedule } =
     useClassSchedules();
-  const {courses, loadCourses} = useCourses()
-  const {subjects, loadSubjects} = useSubjects()
-  
+  const { courses, loadCourses } = useCourses()
+  const { subjects, loadSubjects } = useSubjects()
+  const { batches, loadBatches } = useBatches()
+  const { sections, loadSections } = useSections()
+
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
-  const courseId = searchParams.get('courseId'); 
+  const courseId = searchParams.get('courseId');
+  const batchId = searchParams.get('batchId');
+  const sectionId = searchParams.get('sectionId');
 
   const loadWithParams = (
     searchParams: URLSearchParams,
@@ -53,6 +58,8 @@ export default function ClassScheduleListView() {
     const params = Object.fromEntries(searchParams.entries());
     delete params.skip;
     delete params.limit;
+    delete params.batchId;
+    delete params.sectionId;
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
     delete params.courseId
@@ -63,15 +70,27 @@ export default function ClassScheduleListView() {
     loadWithParams(searchParams, skip, limit);
   }, [searchParams, skip, limit, loadClassSchedules]);
 
-    useEffect(()=>{
-    loadCourses({page:1, limit:99})
-  },[loadCourses])
+  useEffect(() => {
+    loadCourses({ page: 1, limit: 99 })
+  }, [loadCourses])
 
-  useEffect(()=>{
-    if(courseId){
-      loadSubjects({page:1, limit:99, courseId:parseInt(courseId)})
+  useEffect(() => {
+    if (courseId) {
+      loadSubjects({ page: 1, limit: 99, courseId: parseInt(courseId) })
     }
-  },[loadSubjects, courseId])
+  }, [loadSubjects, courseId])
+
+  useEffect(() => {
+    if (courseId) {
+      loadBatches({ page: 1, limit: 99, courseId: parseInt(courseId) })
+    }
+  }, [loadBatches, courseId])
+
+  useEffect(() => {
+    if (batchId) {
+      loadSections({ page: 1, limit: 99, batchId: parseInt(batchId) })
+    }
+  }, [batchId, loadSections])
 
   const handleEditDrawer = (id: number) => {
     setSelectedId(id);
@@ -113,32 +132,48 @@ export default function ClassScheduleListView() {
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
-        filters: [
-          {
-            key: 'status',
-            label: t(LOCALE_KEYS.STATUS),
-            options: [
-              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
-            ],
-          },
-          {
-            key: 'courseId',
-            label: t(LOCALE_KEYS.COURSE),
-            options: [
-              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
-            ],
-          },
-          {
-            key: 'subjectId',
-            label: t(LOCALE_KEYS.BATCH),
-            options: [
-              { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
-              ...subjects.map((s) => ({ label: s.name, value: String(s.id) })),
-            ],
-          },
+    filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
         ],
+      },
+      {
+        key: 'courseId',
+        label: t(LOCALE_KEYS.COURSE),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+        ],
+      },
+      {
+        key: 'subjectId',
+        label: t(LOCALE_KEYS.SUBJECT),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...subjects.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+      {
+        key: 'batchId',
+        label: t(LOCALE_KEYS.BATCH),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...batches.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+      {
+        key: 'sectionId',
+        label: t(LOCALE_KEYS.SECTION),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...sections.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+    ],
     columns: [
       {
         title: t(LOCALE_KEYS.SUBJECT),

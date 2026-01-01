@@ -101,6 +101,7 @@ export default function SectionsPage() {
       delete params.limit;
       loadSections({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
+    onQuickAdd: handleCreateDrawer,
     items: sections,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
