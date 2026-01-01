@@ -201,6 +201,7 @@
   "none": "لا يوجد",
   "draft": "مسودة",
   "select_batch": "اختر الدفعة",
+  "select_section": "حدد القسم",
   "select_semester": "اختر الفصل الدراسي",
   "select_payment_type": "اختر نوع الدفع",
   "select_discount_type": "اختر نوع الخصم",

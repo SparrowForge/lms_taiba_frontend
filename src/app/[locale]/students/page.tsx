@@ -13,6 +13,7 @@ import {StudentStatus} from '@/enums/status';
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
 import {MainLayout} from '@/components/layout/MainLayout';
+import ApproveStudentDrawer from '@/components/students/ApproveStudentDrawer';
 import AssignFeeStructureDrawer from '@/components/students/AssignFeeStructureDrawer';
 import StudentDetailsDrawer from '@/components/students/StudentDetailsDrawer';
 import StudentFormDrawer from '@/components/students/StudentFormDrawer';
@@ -21,12 +22,11 @@ import {EntityConfig, EntityList} from '@/components/ui/EntityList';
 
 import {useBatches} from '@/hooks/useBatches';
 import {useCourses} from '@/hooks/useCourses';
-import {useFeeStructures} from '@/hooks/useFeeStructures';
 import {useLocalization} from '@/hooks/useLocalization';
 import {useStudents} from '@/hooks/useStudents';
 
 import {IStudent} from '@/types/student';
-import ApproveStudentDrawer from '@/components/students/ApproveStudentDrawer';
+import { useSections } from '@/hooks/useSections';
 
 export default function StudentsPage() {
   const { t } = useLocalization();
@@ -42,17 +42,20 @@ export default function StudentsPage() {
   const [selectedAssignStudentId, setSelectedAssignStudentId] = useState<number | undefined>();
   const [approveDrawerVisible, setApproveDrawerVisible] = useState(false);
   const [selectedApproveStudent, setSelectedApproveStudent] = useState<number>();
+   
 
   const { students, listStatus, pagination, loadStudents, removeStudent } =
     useStudents();
   const { batches, loadBatches, clearBatches } = useBatches();
   const { courses, loadCourses } = useCourses();
+  const {loadSections, sections} = useSections()
   const searchParams = useSearchParams();
 
   //get skip & limit from url
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
   const courseId = searchParams.get('courseId');
+  const batchId = searchParams.get('batchId');
 
   const loadWithParams = (
     searchParams: URLSearchParams,
@@ -62,6 +65,7 @@ export default function StudentsPage() {
     const params = Object.fromEntries(searchParams.entries());
     delete params.skip;
     delete params.limit;
+    delete params.batchId;
     const limitNum = parseInt(limit ?? '10');
     const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
     loadStudents({ page, limit: limitNum, ...params });
@@ -78,7 +82,14 @@ export default function StudentsPage() {
     } else {
       clearBatches();
     }
-  }, [loadBatches, courseId]);
+  }, [loadBatches, courseId, clearBatches]);
+
+  // Load batch options for filter
+  useEffect(() => {
+    if (batchId) {
+      loadSections({ page: 1, limit: 99, batchId: parseInt(batchId) });
+    } 
+  }, [loadSections, batchId]);
 
   useEffect(() => {
     loadCourses({ page: 1, limit: 99 });
@@ -174,6 +185,14 @@ export default function StudentsPage() {
         options: [
           { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
           ...batches.map((b) => ({ label: b.name, value: String(b.id) })),
+        ],
+      },
+      {
+        key: 'sectionId',
+        label: t(LOCALE_KEYS.SECTION),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...sections.map((b) => ({ label: b.name, value: String(b.id) })),
         ],
       },
     ],

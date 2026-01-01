@@ -272,6 +272,7 @@ export const LOCALE_KEYS = {
   NONE: 'none',
   DRAFT: 'draft',
   SELECT_BATCH: 'select_batch',
+  SELECT_SECTION: 'select_section',
   SELECT_SEMESTER: 'select_semester',
   SELECT_PAYMENT_TYPE: 'select_payment_type',
   SELECT_DISCOUNT_TYPE: 'select_discount_type',

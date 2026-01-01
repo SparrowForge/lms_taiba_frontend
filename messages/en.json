@@ -201,6 +201,7 @@
   "none": "None",
   "draft": "Draft",
   "select_batch": "Select batch",
+  "select_section": "Select Section",
   "select_semester": "Select semester",
   "select_payment_type": "Select payment type",
   "select_discount_type": "Select discount type",

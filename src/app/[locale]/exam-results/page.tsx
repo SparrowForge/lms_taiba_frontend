@@ -17,16 +17,18 @@ import EntityActions from '@/components/ui/EntityActions';
 import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
 import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
 import { useExamResults } from '@/hooks/useExamResults';
 import { useExams } from '@/hooks/useExams';
+import { useExamTypes } from '@/hooks/useExamTypes';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useSemesters } from '@/hooks/useSemesters';
-import { useSubjects } from '@/hooks/useSubjects';
 
 import { IExamResult } from '@/types/examResult';
+
+import { useSections } from '../../../hooks/useSections';
 import { useSemesterSubjects } from '../../../hooks/useSemesterSubjects';
-import { useCourses } from '@/hooks/useCourses';
-import { useExamTypes } from '@/hooks/useExamTypes';
+
 
 export default function ExamResultsPage() {
   const { t } = useLocalization();
@@ -46,6 +48,7 @@ export default function ExamResultsPage() {
   const { loadExams, exams } = useExams()
   const { loadCourses, courses } = useCourses()
   const { loadExamTypes, examTypes } = useExamTypes()
+  const {sections, loadSections} = useSections()
 
   const { examResults, listStatus, pagination, loadExamResults, removeExamResult } =
     useExamResults();
@@ -71,6 +74,7 @@ export default function ExamResultsPage() {
     delete params.limit;
     delete params.courseId;
     delete params.batchId;
+    delete params.sectionId;
     delete params.semesterId;
     delete params.subjectId;
     delete params.examTypeId;
@@ -100,6 +104,12 @@ export default function ExamResultsPage() {
   }, [batchId, loadSemesters])
 
   useEffect(() => {
+    if (batchId) {
+      loadSections({ page: 1, limit: 99, batchId })
+    }
+  }, [batchId, loadSections])
+
+  useEffect(() => {
     if (semesterId) {
       loadSemesterSubjects({ page: 1, limit: 99, semesterId })
     }
@@ -110,6 +120,8 @@ export default function ExamResultsPage() {
       loadExams({ page: 1, limit: 99, courseId,  subjectId, semesterId, batchId, examTypeId })
     }
   }, [subjectId, loadExams, courseId, semesterId, batchId, examTypeId])
+
+
 
 
   useEffect(() => {
@@ -192,6 +204,14 @@ export default function ExamResultsPage() {
         options: [
           { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
           ...semesters.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+      {
+        key: 'sectionId',
+        label: t(LOCALE_KEYS.SECTION),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...sections.map((s) => ({ label: s.name, value: String(s.id) })),
         ],
       },
       {
