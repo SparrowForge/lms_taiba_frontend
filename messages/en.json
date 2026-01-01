@@ -230,6 +230,8 @@
   "required_name": "{name} is required",
   "semester": "Semester",
   "semesters": "Semesters",
+  "section": "Section",
+  "sections": "Sections",
   "term_no": "Term No",
   "start_date": "Start Date",
   "end_date": "End Date",

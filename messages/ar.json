@@ -229,6 +229,8 @@
   "required_name": "{name} مطلوب",
   "semester": "فصل دراسي",
   "semesters": "فصول دراسية",
+  "section": "قسم",
+  "sections": "أقسام",
   "term_no": "رقم الفصل",
   "start_date": "تاريخ البدء",
   "end_date": "تاريخ الانتهاء",

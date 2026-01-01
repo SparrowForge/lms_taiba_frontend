@@ -298,6 +298,8 @@ export const LOCALE_KEYS = {
   REQUIRED_NAME: 'required_name',
   SEMESTER: 'semester',
   SEMESTERS: 'semesters',
+  SECTION: 'section',
+  SECTIONS: 'sections',
   TERM_NO: 'term_no',
   START_DATE: 'start_date',
   END_DATE: 'end_date',

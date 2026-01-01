@@ -1,6 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit';
 
 import {classScheduleApi} from './api/classScheduleApi';
+import {examApi} from './api/examApi';
 import {studentApi} from './api/studentApi';
 import addressReducer from './slices/addressSlice';
 import attendanceReducer from './slices/attendanceSlice';
@@ -40,6 +41,7 @@ import roleReducer from './slices/roleSlice';
 import roomReducer from './slices/roomSlice';
 import roomTypeReducer from './slices/roomTypeSlice';
 import scheduleTypeReducer from './slices/scheduleTypeSlice';
+import sectionReducer from './slices/sectionSlice';
 import semesterReducer from './slices/semesterSlice';
 import semesterSubjectReducer from './slices/semesterSubjectSlice';
 import settingsReducer from './slices/settingsSlice';
@@ -58,6 +60,7 @@ import weekDayReducer from './slices/weekDaySlice';
 // Root state type
 export interface RootState {
   [classScheduleApi.reducerPath]: ReturnType<typeof classScheduleApi.reducer>;
+  [examApi.reducerPath]: ReturnType<typeof examApi.reducer>;
   [studentApi.reducerPath]: ReturnType<typeof studentApi.reducer>;
   attendances: ReturnType<typeof attendanceReducer>;
   auth: ReturnType<typeof authReducer>;
@@ -99,6 +102,7 @@ export interface RootState {
   rooms: ReturnType<typeof roomReducer>;
   roomTypes: ReturnType<typeof roomTypeReducer>;
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
+  sections: ReturnType<typeof sectionReducer>;
   employmentTypes: ReturnType<typeof employmentTypeReducer>;
   institutes: ReturnType<typeof instituteReducer>;
   twofa: ReturnType<typeof twofaReducer>
@@ -116,6 +120,7 @@ export interface RootState {
 export const store = configureStore({
   reducer: {
     [classScheduleApi.reducerPath]: classScheduleApi.reducer,
+    [examApi.reducerPath]: examApi.reducer,
     [studentApi.reducerPath]: studentApi.reducer,
     attendances: attendanceReducer,
     auth: authReducer,
@@ -157,6 +162,7 @@ export const store = configureStore({
     rooms: roomReducer,
     roomTypes: roomTypeReducer,
     scheduleTypes: scheduleTypeReducer,
+    sections: sectionReducer,
     employmentTypes: employmentTypeReducer,
     institutes: instituteReducer,
     twofa:twofaReducer,
@@ -179,7 +185,7 @@ export const store = configureStore({
         // Ignore these paths in the state
         ignoredPaths: ['items.dates'],
       },
-    }).concat(classScheduleApi.middleware, studentApi.middleware),
+    }).concat(classScheduleApi.middleware, examApi.middleware, studentApi.middleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 
