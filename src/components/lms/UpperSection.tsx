@@ -52,7 +52,7 @@ const UpperSection = () => {
     if (user?.type === UserType.FACULTY) {
       loadCourseMaterials({ page: 1, limit: 99, facultyId: user?.faculty?.id })
     } else if (user?.type === UserType.STUDENT) {
-      loadCourseMaterials({ page: 1, limit: 99, courseId: user?.student?.courseId, subjectId: id, batchId: user?.student?.batchId })
+      loadCourseMaterials({ page: 1, limit: 99, courseId: user?.student?.courseId,  batchId: user?.student?.batchId })
     } else if (user?.type === UserType.ADMIN) {
       loadCourseMaterials({ page: 1, limit: 99 })
     }
