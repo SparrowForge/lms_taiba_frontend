@@ -14,7 +14,7 @@ const LMSMainComponent = () => {
 
   return (
     <div>
-      <UpperTab items={UpperTabDatalms} onTabChange={(key) => setActiveTab(key)} />
+      <UpperTab items={UpperTabDatalms} onTabChange={(key) => setActiveTab(key)} initial={null} />
       <UpperSection />
       <Row
         gutter={[24, 24]}

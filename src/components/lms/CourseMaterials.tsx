@@ -6,18 +6,19 @@ import {
   FilePdfOutlined,
   FileTextOutlined,
   FundProjectionScreenOutlined,
-  PlusOutlined,
   SnippetsOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Empty, Select, Spin, Tag } from 'antd';
+import {  Card, Empty, Select, Spin, Tag } from 'antd';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
+import { UserType } from '@/enums/user-type.enum';
 
+import { useAuth } from '@/hooks/useAuth';
 import { useCourseMaterials } from '@/hooks/useCourseMaterials';
 import { useLocalization } from '@/hooks/useLocalization';
 
@@ -25,7 +26,6 @@ import { ICourseMaterial } from '@/types/courseMaterial';
 
 import CourseMaterialDetailsDrawer from '../courseMaterials/CourseMaterialDetailsDrawer';
 import CourseMaterialFormDrawer from '../courseMaterials/CourseMaterialFormDrawer';
-import { useAuth } from '@/hooks/useAuth';
 
 const materialTypes = ['pdf', 'lecture', 'video', 'slide', 'assignment', 'material'];
 
@@ -52,8 +52,14 @@ const CourseMaterials = () => {
 
   // Fetch materials on mount
   useEffect(() => {
-    loadCourseMaterials({semesterId, subjectId:id, batchId:user?.student?.batchId});
-  }, [id, loadCourseMaterials, semesterId, user?.student?.batchId]);
+    if(user?.type === UserType.FACULTY){
+      loadCourseMaterials({page:1, limit:99, facultyId:user?.faculty?.id})
+    }else if(user?.type === UserType.STUDENT){
+      loadCourseMaterials({page:1, limit:99, courseId:user?.student?.courseId, subjectId:id, batchId:user?.student?.batchId})
+    }else if(user?.type === UserType.ADMIN){
+      loadCourseMaterials({page:1, limit:99})
+    }
+  }, [id, loadCourseMaterials, semesterId, user?.faculty?.id, user?.student?.batchId, user?.student?.courseId, user?.type]);
 
   // Filter materials based on selected type and course
   const filteredMaterials = courseMaterials.filter((m) => {
