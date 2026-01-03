@@ -2,9 +2,11 @@
 
 import { EditOutlined } from '@ant-design/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
 import AttendanceDetailsDrawer from '@/components/attendances/AttendanceDetailsDrawer';
@@ -17,12 +19,18 @@ import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
 import { useAttendances } from '@/hooks/useAttendances';
+import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useSections } from '@/hooks/useSections';
+import { useSubjects } from '@/hooks/useSubjects';
 
 import { IAttendance } from '@/types/attendance';
 
+
 export default function AttendancesPage() {
   const { t } = useLocalization();
+  const translate = useTranslations();
   const entityName = t(LOCALE_KEYS.ATTENDANCE, { defaultValue: 'Attendance' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -36,19 +44,59 @@ export default function AttendancesPage() {
   const { attendances, listStatus, pagination, loadAttendances, removeAttendance } =
     useAttendances();
 
-  //get skip & limit from url
+  const { courses, loadCourses } = useCourses()
+  const { subjects, loadSubjects } = useSubjects()
+  const { batches, loadBatches } = useBatches()
+  const { sections, loadSections } = useSections()
+
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const courseId = searchParams.get('courseId');
+  const batchId = searchParams.get('batchId');
+
+
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    delete params.batchId;
+    delete params.sectionId;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    delete params.courseId
+    loadAttendances({ page, limit: limitNum, ...params });
+  };
 
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadAttendances({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadAttendances({ page: 1, limit: 10 });
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadAttendances]);
+
+  useEffect(() => {
+    loadCourses({ page: 1, limit: 99 })
+  }, [loadCourses])
+
+  useEffect(() => {
+    if (courseId) {
+      loadSubjects({ page: 1, limit: 99, courseId: parseInt(courseId) })
     }
-  }, [skip, limit, loadAttendances]);
+  }, [loadSubjects, courseId])
+
+  useEffect(() => {
+    if (courseId) {
+      loadBatches({ page: 1, limit: 99, courseId: parseInt(courseId) })
+    }
+  }, [loadBatches, courseId])
+
+  useEffect(() => {
+    if (batchId) {
+      loadSections({ page: 1, limit: 99, batchId: parseInt(batchId) })
+    }
+  }, [batchId, loadSections])
 
   const handleEditDrawer = (attendanceId: number) => {
     setSelectedAttendanceId(attendanceId);
@@ -97,6 +145,49 @@ export default function AttendancesPage() {
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
+    filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...ENTITY_STATUS_OPTIONS.map((s) => ({ label: translate(s.labelKey), value: s.value })),
+        ],
+      },
+      {
+        key: 'courseId',
+        label: t(LOCALE_KEYS.COURSE),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+        ],
+      },
+      {
+        key: 'batchId',
+        label: t(LOCALE_KEYS.BATCH),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...batches.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+      {
+        key: 'subjectId',
+        label: t(LOCALE_KEYS.SUBJECT),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...subjects.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+
+      {
+        key: 'sectionId',
+        label: t(LOCALE_KEYS.SECTION),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...sections.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+    ],
     columns: [
       {
         title: t(LOCALE_KEYS.COURSE),

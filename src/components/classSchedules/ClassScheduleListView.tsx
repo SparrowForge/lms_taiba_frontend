@@ -16,14 +16,14 @@ import EntityActions from '@/components/ui/EntityActions';
 import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 import StatusTag from '@/components/ui/StatusTag';
 
+import { useBatches } from '@/hooks/useBatches';
 import { useClassSchedules } from '@/hooks/useClassSchedules';
 import { useCourses } from '@/hooks/useCourses';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useSections } from '@/hooks/useSections';
 import { useSubjects } from '@/hooks/useSubjects';
 
 import { IClassSchedule } from '@/types/classSchedule';
-import { useSections } from '@/hooks/useSections';
-import { useBatches } from '@/hooks/useBatches';
 
 export default function ClassScheduleListView() {
   const { t } = useLocalization();
