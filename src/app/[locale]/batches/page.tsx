@@ -101,7 +101,7 @@ export default function BatchesPage() {
       delete params.limit;
       loadBatches({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
-    // onQuickAdd: handleCreateDrawer,
+    onQuickAdd: handleCreateDrawer,
     items: batches,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
