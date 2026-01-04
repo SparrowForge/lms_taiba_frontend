@@ -1,6 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit';
 
 import {classScheduleApi} from './api/classScheduleApi';
+import {examApi} from './api/examApi';
 import {studentApi} from './api/studentApi';
 import addressReducer from './slices/addressSlice';
 import attendanceReducer from './slices/attendanceSlice';
@@ -31,13 +32,16 @@ import feeStructureReducer from './slices/feeStructureSlice';
 import gradeRuleReducer from './slices/gradeRuleSlice';
 import instituteReducer from './slices/instituteSlice';
 import markDistributionReducer from './slices/markDistributionSlice';
+import mcqQuestionReducer from './slices/mcqQuestionSlice';
 import menuReducer from './slices/menuSlice';
 import panelReducer from './slices/panelSlice';
+import questionSetReducer from './slices/questionSetSlice';
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice';
 import roleReducer from './slices/roleSlice';
 import roomReducer from './slices/roomSlice';
 import roomTypeReducer from './slices/roomTypeSlice';
 import scheduleTypeReducer from './slices/scheduleTypeSlice';
+import sectionReducer from './slices/sectionSlice';
 import semesterReducer from './slices/semesterSlice';
 import semesterSubjectReducer from './slices/semesterSubjectSlice';
 import settingsReducer from './slices/settingsSlice';
@@ -56,11 +60,13 @@ import weekDayReducer from './slices/weekDaySlice';
 // Root state type
 export interface RootState {
   [classScheduleApi.reducerPath]: ReturnType<typeof classScheduleApi.reducer>;
+  [examApi.reducerPath]: ReturnType<typeof examApi.reducer>;
   [studentApi.reducerPath]: ReturnType<typeof studentApi.reducer>;
   attendances: ReturnType<typeof attendanceReducer>;
   auth: ReturnType<typeof authReducer>;
   users: ReturnType<typeof userReducer>;
   panels: ReturnType<typeof panelReducer>;
+  questionSets: ReturnType<typeof questionSetReducer>;
   branches: ReturnType<typeof branchReducer>;
   departments: ReturnType<typeof departmentReducer>;
   roles: ReturnType<typeof roleReducer>;
@@ -82,6 +88,7 @@ export interface RootState {
   feeStructures: ReturnType<typeof feeStructureReducer>;
   gradeRules: ReturnType<typeof gradeRuleReducer>;
   markDistributions: ReturnType<typeof markDistributionReducer>;
+  mcqQuestions: ReturnType<typeof mcqQuestionReducer>;
   audits: ReturnType<typeof auditReducer>;
   userRoles: ReturnType<typeof userRoleReducer>;
   addresses: ReturnType<typeof addressReducer>;
@@ -95,6 +102,7 @@ export interface RootState {
   rooms: ReturnType<typeof roomReducer>;
   roomTypes: ReturnType<typeof roomTypeReducer>;
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
+  sections: ReturnType<typeof sectionReducer>;
   employmentTypes: ReturnType<typeof employmentTypeReducer>;
   institutes: ReturnType<typeof instituteReducer>;
   twofa: ReturnType<typeof twofaReducer>
@@ -112,11 +120,13 @@ export interface RootState {
 export const store = configureStore({
   reducer: {
     [classScheduleApi.reducerPath]: classScheduleApi.reducer,
+    [examApi.reducerPath]: examApi.reducer,
     [studentApi.reducerPath]: studentApi.reducer,
     attendances: attendanceReducer,
     auth: authReducer,
     users: userReducer,
     panels: panelReducer,
+    questionSets: questionSetReducer,
     branches: branchReducer,
     departments: departmentReducer,
     roles: roleReducer,
@@ -138,6 +148,7 @@ export const store = configureStore({
     feeStructures: feeStructureReducer,
     gradeRules: gradeRuleReducer,
     markDistributions: markDistributionReducer,
+    mcqQuestions: mcqQuestionReducer,
     audits: auditReducer,
     userRoles: userRoleReducer,
     addresses: addressReducer,
@@ -151,6 +162,7 @@ export const store = configureStore({
     rooms: roomReducer,
     roomTypes: roomTypeReducer,
     scheduleTypes: scheduleTypeReducer,
+    sections: sectionReducer,
     employmentTypes: employmentTypeReducer,
     institutes: instituteReducer,
     twofa:twofaReducer,
@@ -173,7 +185,7 @@ export const store = configureStore({
         // Ignore these paths in the state
         ignoredPaths: ['items.dates'],
       },
-    }).concat(classScheduleApi.middleware, studentApi.middleware),
+    }).concat(classScheduleApi.middleware, examApi.middleware, studentApi.middleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

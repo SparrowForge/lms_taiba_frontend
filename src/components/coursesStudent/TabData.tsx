@@ -1,6 +1,30 @@
 import { UpperTabItem } from "../lms/UpperTab";
 
-const TabData: UpperTabItem[] = [
+export const FacultyTabData: UpperTabItem[] = [
+  {
+    key: 'materials',
+    title: 'Materials',
+  },
+  {
+    key: 'assignments',
+    title: 'Assignments',
+  },
+  {
+    key: 'exam',
+    title: 'Exam',
+  },
+  {
+    key: 'grading',
+    title: 'Grading',
+  },
+  {
+    key: 'discussion',
+    title: 'Discussion',
+  },
+
+];
+
+export const StudentTabData: UpperTabItem[] = [
   {
     key: 'materials',
     title: 'Materials',
@@ -14,6 +38,14 @@ const TabData: UpperTabItem[] = [
     title: 'Submitted Assignments',
   },
   {
+    key: 'exam',
+    title: 'Exam',
+  },
+  {
+    key: 'result',
+    title: 'Result',
+  },
+  {
     key: 'grading',
     title: 'Grading',
   },
@@ -21,7 +53,41 @@ const TabData: UpperTabItem[] = [
     key: 'discussion',
     title: 'Discussion',
   },
-  
+
 ];
 
-export default TabData;
+
+export const StudentProfileTabData: UpperTabItem[] = [
+  {
+    key: 'profile',
+    title: 'Profile',
+  },
+  {
+    key: 'materials',
+    title: 'Materials',
+  },
+
+  {
+    key: 'assignments',
+    title: 'Assignments',
+  },
+  {
+    key: 'submittedAssignments',
+    title: 'Submitted Assignments',
+  },
+  {
+    key: 'exam',
+    title: 'Exam',
+  },
+  {
+    key: 'grading',
+    title: 'Grading',
+  },
+  {
+    key: 'discussion',
+    title: 'Discussion',
+  },
+
+];
+
+

@@ -23,6 +23,7 @@ import {
   setSelectedFaculty,
   updateFaculty,
 } from '@/store/slices/facultySlice';
+import { IExamFacultyAssignmentCreate } from '@/types/examFacultyAssignment';
 
 export const useFaculties = () => {
   const dispatch = useDispatch();
@@ -94,6 +95,29 @@ export const useFaculties = () => {
         const errorMessage =
           error instanceof AxiosError
             ? error?.response?.data?.message || error?.message || 'Failed to create faculty'
+            : 'Failed to create faculty';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+    // Create a new faculty
+  const createExamFacultyAssignment = useCallback(
+    async (data: IExamFacultyAssignmentCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IExamFacultyAssignmentCreate = await facultyService.createExamFacultyAssignment(data);
+        // dispatch(addFaculty(response));
+        console.log(response)
+        dispatch(
+          setActionStatus({ status: Status.SUCCESS, message: 'Exam Faculty Assignment created successfully' }),
+        );
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to create Exam faculty Assignment'
             : 'Failed to create faculty';
         dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;
@@ -228,6 +252,7 @@ export const useFaculties = () => {
     loadFacultiesWithoutUser,
     loadFaculty,
     createFaculty,
+    createExamFacultyAssignment,
     editFaculty,
     removeFaculty,
     getFacultyById,

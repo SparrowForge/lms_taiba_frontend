@@ -9,16 +9,40 @@ interface DateCardProps {
   color: string;
 }
 
-const DateCard: React.FC<DateCardProps> = ({ date, title, time, location, color }) => {
+const DateCard: React.FC<DateCardProps> = ({ dateTime, title , location, color }) => {
+
+
+
+const dateObj = new Date(dateTime);
+
+// Get readable date with month name
+const date = dateObj.toLocaleDateString("en-US", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+
+// Get exact time
+const time = dateObj.toLocaleTimeString("en-US", {
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false, // 24-hour format
+});
+
+console.log(date); // "November 10, 2025"
+console.log(time); // "07:00:37"
+
+
   return (
     <div className="flex items-center gap-3 p-3 rounded-lg " style={{ backgroundColor: color }}>
       {/* Date box */}
       <div
-        className="flex flex-col items-center justify-center w-14 h-14 rounded-md text-sm font-semibold p-4"
+        className="flex flex-col items-center justify-center w-34 h-14 rounded-md text-sm font-semibold p-4"
         style={{ backgroundColor: '#ffffff' }}
       >
-        <span>{date.split(' ')[0]}</span>
-        <span>{date.split(' ')[1]}</span>
+        <span>{date}</span>
+        {/* <span>{date}</span> */}
       </div>
 
       {/* Exam details */}

@@ -5,13 +5,14 @@ import {useState} from 'react';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
 
+import ClassScheduleCalendarView from '@/components/classSchedules/ClassScheduleCalendarView';
+
 import {useLocalization} from '@/hooks/useLocalization';
 
 import {IClassSchedule} from '@/types/classSchedule';
 
 import {useGetMySchedulesQuery} from '@/store/api/classScheduleApi';
 
-import MonthlyView from './MonthlyView';
 import ScheduleDetailsDrawer from './ScheduleDetailsDrawer';
 import TodayClasses from './TodayClasses';
 import WeeklyView from './WeeklyView';
@@ -88,10 +89,7 @@ const ScheduleView: React.FC = () => {
           />
         </>
       ) : (
-        <MonthlyView
-          monthSchedules={schedulesData?.month.schedules || []}
-          onScheduleClick={handleScheduleClick}
-        />
+        <ClassScheduleCalendarView/>
       )}
 
       {/* Schedule Details Drawer */}

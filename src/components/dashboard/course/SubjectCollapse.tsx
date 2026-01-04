@@ -71,6 +71,14 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
       router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&tab=assignments&batchId=${batchId}`)
   }
 
+  const handleAddExam =(subjectId:number, semesterId:number, batchId:number | null) =>{
+      router.push(`/exams/create?subjectId=${subjectId}&semesterId=${semesterId}&batchId=${batchId}`)
+  }
+
+    const handleSubjectDetails =(subjectId:number) =>{
+      router.push(`/dashboard/course/${subjectId}`)
+  }
+
   const items: CollapseProps["items"] = data.map((group, index) => {
   const batchName = group.subjects[0]?.batch?.name || "No Batch Assigned"
   const semesterName = group.subjects[0]?.semester.name || "Unknown Semester"
@@ -83,7 +91,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
       children: (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {group.subjects.map((item) => (
-            <Card key={item.id} size="small" className="h-full hover:shadow-md transition-shadow">
+            <Card onClick={()=>handleSubjectDetails(item.subject.id)} key={item.id} size="small" className="h-full hover:shadow-md transition-shadow cursor-pointer">
               <div className="space-y-3">
                 <div>
                   <h3 className="font-semibold text-sm leading-tight">{item.subject.name}</h3>
@@ -149,9 +157,9 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                     size="small"
                     className="flex-1"
                     icon={<BiDetail size={14} />}
-                    // onClick={() => handleAddAssignments(item.subject.id, item.subject.name)}
+                    onClick={() => handleAddExam(item.subject.id, item.semesterId, item.batchId)}
                   >
-                    Details
+                    Exam
                   </Button>
                 </div>
               </div>

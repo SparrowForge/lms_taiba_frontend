@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
 import { Alert, Avatar, Card, Col, Row, Spin, Typography } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
@@ -8,6 +8,16 @@ import { useAudit } from '@/hooks/useAudit';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import PageHeaderDetails from './PageHeaderDetails';
+import StudentProfileQr from '../students/StudentProfileQr';
+import { useAuth } from '@/hooks/useAuth';
+import StudentProfile from '../students/StudentProfile';
+import UpperTab from '../lms/UpperTab';
+import { StudentProfileTabData, StudentTabData } from '../coursesStudent/TabData';
+import CourseMaterials from '../lms/CourseMaterials';
+import Assignments from '../coursesStudent/Assignments';
+import SubmittedAssignment from '../coursesStudent/SubmittedAssignment';
+import StudentExamParticipate from '../exams/StudentExamParticipate';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 const { Title, Text } = Typography;
 
@@ -38,6 +48,14 @@ export const EntityDetailsContent = <T extends { id: number }>({
 }) => {
   const { t } = useLocalization();
   const { auditsByResource } = useAudit();
+  const [activeTab, setActiveTab] = useState('profile');
+  const { user } = useAuth()
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab");
+  const pathname = usePathname();
+
+  const isStudentPage = pathname.includes('students');
+
   if (config.loading) {
     return (
       <div style={{ padding: config.embedded ? '0' : '24px', textAlign: 'center' }}>
@@ -88,48 +106,63 @@ export const EntityDetailsContent = <T extends { id: number }>({
               <Text type="secondary">ID: {config.item.id}</Text>
             </div>
           </Card>
+          {
+            isStudentPage && <StudentProfileQr />
+          }
+
         </Col>
         {/* Details Table */}
         <Col xs={8} lg={config.embedded ? 24 : 16}>
-          <Card title={`${config.name} ${t(LOCALE_KEYS.INFORMATION)}`}>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <tbody>
-                  {config.fields.map((field, index) => (
-                    <tr
-                      key={field.key}
-                      style={{
-                        borderBottom:
-                          index < config.fields.length - 1 ? '1px solid #f0f0f0' : 'none',
-                      }}
-                    >
-                      <td
+          {
+            isStudentPage ? <>
+              <UpperTab items={StudentProfileTabData} initial={tab ?? 'materials'} onTabChange={(tab) => setActiveTab(tab)} />
+              {activeTab === 'profile' && <StudentProfile config={config} />}
+              {activeTab === 'materials' && <CourseMaterials />}
+              {activeTab === 'assignments' && <Assignments />}
+              {activeTab === 'submittedAssignments' && <SubmittedAssignment />}
+              {activeTab === 'exam' && <StudentExamParticipate />}
+              {activeTab === 'grading' && <div>Grading Content is empty</div>}
+              {activeTab === 'discussion' && <div>Discussion Content</div>}
+            </> : <Card title={`${config.name} ${t(LOCALE_KEYS.INFORMATION)}`}>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <tbody>
+                    {config.fields.map((field, index) => (
+                      <tr
+                        key={field.key}
                         style={{
-                          padding: '12px 16px',
-                          fontWeight: '600',
-                          // backgroundColor: '#fafafa',
-                          width: '30%',
-                          verticalAlign: 'top',
+                          borderBottom:
+                            index < config.fields.length - 1 ? '1px solid #f0f0f0' : 'none',
                         }}
                       >
-                        {field.label}
-                      </td>
-                      <td
-                        style={{
-                          padding: '12px 16px',
-                          verticalAlign: 'top',
-                        }}
-                      >
-                        {field.render
-                          ? field.render((config.item as any)[field.key], config.item!)
-                          : (config.item as any)[field.key]}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Card>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            fontWeight: '600',
+                            // backgroundColor: '#fafafa',
+                            width: '30%',
+                            verticalAlign: 'top',
+                          }}
+                        >
+                          {field.label}
+                        </td>
+                        <td
+                          style={{
+                            padding: '12px 16px',
+                            verticalAlign: 'top',
+                          }}
+                        >
+                          {field.render
+                            ? field.render((config.item as any)[field.key], config.item!)
+                            : (config.item as any)[field.key]}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          }
         </Col>
       </Row>
     </div>

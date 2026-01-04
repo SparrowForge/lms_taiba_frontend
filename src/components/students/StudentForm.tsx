@@ -21,6 +21,7 @@ import { IStudent, IStudentCreate, IStudentUpdate } from '@/types/student';
 
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import { useSections } from '@/hooks/useSections';
 
 interface StudentFormProps {
   mode: 'create' | 'edit';
@@ -47,8 +48,10 @@ const StudentForm: React.FC<StudentFormProps> = ({
   const { batches, loadBatches, clearBatches } = useBatches();
   const { branches, loadBranches } = useBranches();
   const { courses, loadCourses } = useCourses();
+  const { sections, loadSections } = useSections();
 
   const [selectedCourseId, setSelectedCourseId] = useState<number | undefined>(undefined);
+  const [selectedBatchId, setSelectedBatchId] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -59,8 +62,9 @@ const StudentForm: React.FC<StudentFormProps> = ({
   useEffect(() => {
     loadBranches({ page: 1, limit: 100 });
     loadCourses({ page: 1, limit: 100 });
+    loadSections({ page: 1, limit: 100 });
     clearBatches();
-  }, [loadBatches, loadBranches, loadCourses]);
+  }, [clearBatches, loadBatches, loadBranches, loadCourses, loadSections]);
 
   useEffect(() => {
     if (selectedCourseId) {
@@ -69,7 +73,16 @@ const StudentForm: React.FC<StudentFormProps> = ({
         batchId: undefined,
       });
     }
-  }, [courses, selectedCourseId, loadBatches]);
+  }, [courses, selectedCourseId, loadBatches, form]);
+  
+  useEffect(() => {
+    if (selectedBatchId) {
+      loadSections({ page: 1, limit: 100, batchId: selectedBatchId });
+      form.setFieldsValue({
+        sectionId: undefined,
+      });
+    }
+  }, [courses, selectedBatchId, form, loadSections]);
 
   const handleSubmit = async (values: any) => {
     try {
@@ -134,11 +147,11 @@ const StudentForm: React.FC<StudentFormProps> = ({
       initialValues={
         mode === 'edit'
           ? {
-              ...initialValues,
-              admissionDate: initialValues?.admissionDate
-                ? dayjs(initialValues.admissionDate)
-                : undefined,
-            }
+            ...initialValues,
+            admissionDate: initialValues?.admissionDate
+              ? dayjs(initialValues.admissionDate)
+              : undefined,
+          }
           : undefined
       }
       onFinish={handleSubmit}
@@ -268,10 +281,32 @@ const StudentForm: React.FC<StudentFormProps> = ({
         ]}
       >
         <Select
+          onChange={(value) => {
+            setSelectedBatchId(value);
+            form.setFieldsValue({ sectionId: undefined });
+          }}
           placeholder={t(LOCALE_KEYS.SELECT_BATCH, { defaultValue: 'Select Batch' })}
           options={batches.map((batch) => ({
             label: batch.name,
             value: batch.id,
+          }))}
+        />
+      </Form.Item>
+      <Form.Item
+        name="sectionId"
+        label={t(LOCALE_KEYS.SECTION, { defaultValue: 'Section' })}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SECTION) }),
+          },
+        ]}
+      >
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_SECTION, { defaultValue: 'Select Section' })}
+          options={sections.map((section) => ({
+            label: section.name,
+            value: section.id,
           }))}
         />
       </Form.Item>

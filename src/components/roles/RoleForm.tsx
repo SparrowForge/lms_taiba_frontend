@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Select, Space } from 'antd';
+import { Button, Form, Input, Select, Space, Checkbox } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -47,6 +47,11 @@ const RoleForm: React.FC<RoleFormProps> = ({
   useEffect(() => {
     if (mode === 'create') {
       form.resetFields();
+      form.setFieldsValue({
+        isHeadOfDepartment: false,
+        isHeadOfHR: false,
+        isHeadOfAccount: false,
+      });
     }
   }, [mode, form]);
 
@@ -59,19 +64,11 @@ const RoleForm: React.FC<RoleFormProps> = ({
       if (mode === 'create') {
         await createRole(values as IRoleCreate);
         toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          router.push('/roles');
-        }
+        onSuccess ? onSuccess() : router.push('/roles');
       } else if (mode === 'edit' && roleId) {
         await editRole(roleId, values as IRoleUpdate);
         toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          router.push(`/roles/${roleId}`);
-        }
+        onSuccess ? onSuccess() : router.push(`/roles/${roleId}`);
       }
     } catch (error: unknown) {
       let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
@@ -79,14 +76,12 @@ const RoleForm: React.FC<RoleFormProps> = ({
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
 
-      // Try to extract error message from API response
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
         if (apiError.response?.data?.message) {
           errorMessage = apiError.response.data.message;
         }
       } else {
-        // Use the helper function for other error types
         errorMessage = getErrorMessage(error);
       }
 
@@ -95,24 +90,20 @@ const RoleForm: React.FC<RoleFormProps> = ({
   };
 
   const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
-    } else {
-      router.back();
-    }
+    onCancel ? onCancel() : router.back();
   };
-
-  const getSubmitText = () =>
-    mode === 'create'
-      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
-      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   const formContent = (
     <Form
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
-      initialValues={mode === 'edit' ? initialValues : undefined}
+      initialValues={{
+        isHeadOfDepartment: false,
+        isHeadOfHR: false,
+        isHeadOfAccount: false,
+        ...(mode === 'edit' ? initialValues : {}),
+      }}
     >
       <Form.Item
         name="branchId"
@@ -129,7 +120,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
           loading={branches.length === 0}
           showSearch
           filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+            (option?.children as unknown as string)
+              ?.toLowerCase()
+              .includes(input.toLowerCase())
           }
         >
           {branches.map((branch) => (
@@ -143,34 +136,44 @@ const RoleForm: React.FC<RoleFormProps> = ({
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
-          },
-        ]}
+        rules={[{ required: true }]}
       >
-        <Input placeholder={t(LOCALE_KEYS.NAME)} />
+        <Input />
       </Form.Item>
 
       <Form.Item
         name="description"
         label={t(LOCALE_KEYS.DESCRIPTION)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }),
-          },
-        ]}
+        rules={[{ required: true }]}
       >
-        <Input.TextArea placeholder={t(LOCALE_KEYS.DESCRIPTION)} rows={4} />
+        <Input.TextArea rows={4} />
       </Form.Item>
+
+      {/* ✅ New Boolean Fields */}
+      <Form.Item name="isHeadOfDepartment" valuePropName="checked">
+        <Checkbox>Head of Department</Checkbox>
+      </Form.Item>
+
+      <Form.Item name="isHeadOfHR" valuePropName="checked">
+        <Checkbox>Head of HR</Checkbox>
+      </Form.Item>
+
+      <Form.Item name="isHeadOfAccount" valuePropName="checked">
+        <Checkbox>Head of Account</Checkbox>
+      </Form.Item>
+
       <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
       <Form.Item>
         <Space>
-          <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>
-            {getSubmitText()}
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={actionStatus.status === Status.LOADING}
+          >
+            {mode === 'create'
+              ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+              : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName })}
           </Button>
           <Button onClick={handleCancel}>{t(LOCALE_KEYS.CANCEL)}</Button>
         </Space>

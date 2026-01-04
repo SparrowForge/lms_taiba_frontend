@@ -24,6 +24,7 @@ import {IFacultyWithSubjectRole} from '@/types/faculty';
 
 import FormLayout from '../layout/FormLayout';
 import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { useSections } from '@/hooks/useSections';
 
 const { TextArea } = Input;
 
@@ -50,6 +51,8 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
   const [form] = Form.useForm();
   const { createAttendance, editAttendance, actionStatus } = useAttendances();
   const { courses, loadCourses } = useCourses();
+  const {sections, loadSections} = useSections()
+  
 
   const {
     semesters,
@@ -91,6 +94,12 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
       loadSemesters({ page: 1, limit: 100, batchId: selectedBatchId });
     }
   }, [batches, selectedBatchId, loadSemesters]);
+
+  useEffect(() => {
+    if (selectedBatchId) {
+      loadSections({ page: 1, limit: 100, batchId: selectedBatchId });
+    }
+  }, [batches, selectedBatchId, loadSections]);
 
   useEffect(() => {
     if (selectedSemesterId) {
@@ -235,6 +244,32 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
           {batches.map((batch) => (
             <Select.Option key={batch.id} value={batch.id}>
               {batch.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        name="sectionId"
+        label={t(LOCALE_KEYS.SECTION)}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.REQUIRED_FIELD, { field: t(LOCALE_KEYS.SECTION) }),
+          },
+        ]}
+      >
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SECTION) })}
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {sections.map((section) => (
+            <Select.Option key={section.id} value={section.id}>
+              {section.name}
             </Select.Option>
           ))}
         </Select>

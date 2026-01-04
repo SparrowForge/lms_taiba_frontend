@@ -2,6 +2,7 @@ import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
   IExamMCQQuestion,
   IExamMCQQuestionCreate,
+  IExamMCQQuestionMultipleCreate,
   IExamMCQQuestionUpdate,
 } from '@/types/examMCQQuestion';
 
@@ -25,6 +26,18 @@ export const examMCQQuestionService = {
     const response = await api.post<IExamMCQQuestion>('/exam-mcq-questions', data);
     return response.data;
   },
+
+    // Create multiple semester subjects with faculty assignments
+  createMultipleExamMCQQuestion: async (
+      data: IExamMCQQuestionMultipleCreate,
+    ): Promise<IExamMCQQuestionMultipleCreate[]> => {
+      const response = await api.post<IExamMCQQuestionMultipleCreate[]>(
+        '/exam-mcq-questions/bulk-exam-mcq',
+        data,
+      );
+      return response.data;
+    },
+  
 
   updateExamMCQQuestion: async (
     id: number,

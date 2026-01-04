@@ -2,6 +2,9 @@
 // This ensures we only use keys that exist in our localization files
 export const LOCALE_KEYS = {
   // Common
+  STUDENT_MARKS_ENTRY:"student_marks_entry",
+  STUDENT_QR_CODE:'student-qr-code',
+  ASSIGN_FACULTY:'assign-faculty',
   TIMELINE:'timeline',
   PANEL: 'panel',
   USER: 'user',
@@ -269,6 +272,7 @@ export const LOCALE_KEYS = {
   NONE: 'none',
   DRAFT: 'draft',
   SELECT_BATCH: 'select_batch',
+  SELECT_SECTION: 'select_section',
   SELECT_SEMESTER: 'select_semester',
   SELECT_PAYMENT_TYPE: 'select_payment_type',
   SELECT_DISCOUNT_TYPE: 'select_discount_type',
@@ -295,6 +299,8 @@ export const LOCALE_KEYS = {
   REQUIRED_NAME: 'required_name',
   SEMESTER: 'semester',
   SEMESTERS: 'semesters',
+  SECTION: 'section',
+  SECTIONS: 'sections',
   TERM_NO: 'term_no',
   START_DATE: 'start_date',
   END_DATE: 'end_date',
@@ -697,7 +703,9 @@ export const LOCALE_KEYS = {
   COMPLETED_UNITS:"Completed Units",
   AVERAGE_GRADE:"Average Grade",
   TIME_SPENT:"Time Spent",
-  NEXT_EXAM:"Next Exam"
+  NEXT_EXAM:"Next Exam",
+  QUESTION_SET:"question_set",
+  PARTICIPATE_EXAM:"participate_exam"
 } as const;
 
 // Type for the keys

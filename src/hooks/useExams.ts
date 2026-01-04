@@ -6,7 +6,7 @@ import { Status } from '@/enums';
 import { RootState } from '@/store';
 
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IExam, IExamCreate, IExamUpdate } from '@/types/exam';
+import { IExam, IExamCreate, IExamUpdate, IExamWithQuestionSetCreate } from '@/types/exam';
 
 import { examService } from '@/services/examService';
 
@@ -98,6 +98,25 @@ export const useExams = () => {
     [dispatch],
   );
 
+  const createExamWithQuestionSet = useCallback(
+    async (data: IExamWithQuestionSetCreate) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IExam> = await examService.createExamWithQuestionSet(data.examId, data.questionSetId,data);
+        dispatch(setActionStatus({ status: Status.SUCCESS }));
+        return response.data;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to create exam with question set'
+            : 'Failed to create exam with question set';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   const editExam = useCallback(
     async (id: number, data: IExamUpdate) => {
       try {
@@ -181,6 +200,7 @@ export const useExams = () => {
     loadExams,
     loadExam,
     createExam,
+    createExamWithQuestionSet,
     editExam,
     removeExam,
     getExamById,

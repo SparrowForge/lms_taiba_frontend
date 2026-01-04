@@ -8,6 +8,7 @@ import { IStudent } from './student';
 
 // User interface matching the API response
 export interface IUser {
+  role: any;
   id: number;
   email: string;
   name: string;
@@ -19,7 +20,7 @@ export interface IUser {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  roles: IRole[];
+  userRoles: IRole[];
   twoFaStatus:'active' | 'inactive'
 }
 

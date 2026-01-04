@@ -34,8 +34,8 @@ const AcademicDashboard = () => {
         <Col xs={24} lg={16} style={{ marginBottom: '40px' }}>
           {activeTab === 'courses_schedule' && <ScheduleView />}
           {activeTab === 'attendance' && <div>Attendence</div>}
-          {activeTab === 'exams' && <div>exams Content</div>}
-          {activeTab === 'grade_book' && <div>grade_book Content</div>}
+          {/* {activeTab === 'exams' && <div>exams Content</div>}
+          {activeTab === 'grade_book' && <div>grade_book Content</div>} */}
         </Col>
         <Col xs={24} lg={8}>
           <AttendenceSummary />

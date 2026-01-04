@@ -1,3 +1,4 @@
+import { ExamResultStatus } from '@/enums/exam-candidate.enum';
 import { EntityStatus } from '@/enums/status';
 
 import { IExam } from './exam';
@@ -10,7 +11,7 @@ export interface IExamResult {
   marksObtained: number;
   grade: string;
   remarks: string;
-  status: EntityStatus;
+  status: ExamResultStatus;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;

@@ -1,5 +1,5 @@
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IExam, IExamCreate, IExamUpdate } from '@/types/exam';
+import { IExam, IExamCreate, IExamUpdate, IExamWithQuestionSetCreate } from '@/types/exam';
 
 import { api } from '@/lib/axios';
 
@@ -21,6 +21,11 @@ export const examService = {
 
   updateExam: async (id: number, data: IExamUpdate): Promise<IBaseResponse<IExam>> => {
     const response = await api.put(`/exams/${id}`, data);
+    return response.data;
+  },
+
+  createExamWithQuestionSet: async (id: number,questionSetId:number, data: IExamWithQuestionSetCreate, ): Promise<IBaseResponse<IExam>> => {
+    const response = await api.patch(`/exams/${id}/select-question-set/${questionSetId}`, data);
     return response.data;
   },
 

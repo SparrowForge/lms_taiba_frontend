@@ -13,15 +13,21 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { useLocalization } from '@/hooks/useLocalization';
+import { UserType } from '@/enums/user-type.enum';
+
+import { useAuth } from '@/hooks/useAuth';
+import { useCourseMaterials } from '@/hooks/useCourseMaterials';
+
 
 import LeftBorderCard from '../dashboard/dashboardui/cards/LeftBorderCard';
+
 
 // 🔹 Sortable wrapper for each card
 const SortableCard = ({ id, children }: { id: string; children: React.ReactNode }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -37,14 +43,27 @@ const SortableCard = ({ id, children }: { id: string; children: React.ReactNode 
 };
 
 const UpperSection = () => {
-  const { t } = useLocalization();
+
+  const { courseMaterials, loadCourseMaterials } = useCourseMaterials()
+  const { user } = useAuth()
+
+  // Fetch materials on mount
+  useEffect(() => {
+    if (user?.type === UserType.FACULTY) {
+      loadCourseMaterials({ page: 1, limit: 99, facultyId: user?.faculty?.id })
+    } else if (user?.type === UserType.STUDENT) {
+      loadCourseMaterials({ page: 1, limit: 99, courseId: user?.student?.courseId,  batchId: user?.student?.batchId })
+    } else if (user?.type === UserType.ADMIN) {
+      loadCourseMaterials({ page: 1, limit: 99 })
+    }
+  }, [loadCourseMaterials, user?.faculty?.id, user?.student?.batchId, user?.student?.courseId, user?.type]);
 
   const studentInitial = [
     {
       id: '1',
       title: 'My Courses',
       localTitle: 'دوراتي',
-      number: '4',
+      number: '-',
       icon: <ReadOutlined />,
       color: '#1F4BCA',
       iconColor: '#1F4BCA',
@@ -53,30 +72,14 @@ const UpperSection = () => {
       id: '2',
       title: 'Course Materials',
       localTitle: 'المحتوى',
-      number: '4',
+      number: courseMaterials.length,
       icon: <FileTextOutlined />,
       color: '#d97706',
       iconColor: '#d97706',
     },
-    {
-      id: '3',
-      title: 'Pending Submissions',
-      localTitle: 'تسليمات معلقة',
-      number: '28',
-      icon: <ClockCircleOutlined />,
-      color: '#10b981',
-      iconColor: '#10b981',
-    },
-    {
-      id: '4',
-      title: 'Active Discussion',
-      localTitle: 'مناقشات نشطة',
-      number: '12',
-      icon: <CommentOutlined />,
-      color: '#7c3aed',
-      iconColor: '#7c3aed',
-    },
   ];
+
+
 
   // 🔹 State for cards
   const [dataTeacher, setDataTeacher] = useState(studentInitial);

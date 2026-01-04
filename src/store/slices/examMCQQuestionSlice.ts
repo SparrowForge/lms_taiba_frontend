@@ -3,13 +3,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status } from '@/enums';
 
 import { IPaginationMeta, IStatusState } from '@/types/common';
-import { IExamMCQQuestion } from '@/types/examMCQQuestion';
+import { IExamMCQMultipleQuestion, IExamMCQQuestion } from '@/types/examMCQQuestion';
 
 interface IExamMCQQuestionsState {
   listStatus: IStatusState;
   detailsStatus: IStatusState;
   actionStatus: IStatusState;
   examMCQQuestions: IExamMCQQuestion[];
+  examMCQMultipleQuestions:IExamMCQMultipleQuestion[];
   selectedExamMCQQuestion: IExamMCQQuestion | null;
   pagination: IPaginationMeta;
 }
@@ -19,6 +20,7 @@ const initialState: IExamMCQQuestionsState = {
   detailsStatus: { status: Status.INITIAL },
   actionStatus: { status: Status.INITIAL },
   examMCQQuestions: [],
+  examMCQMultipleQuestions: [],
   selectedExamMCQQuestion: null,
   pagination: {
     page: 1,
@@ -48,6 +50,9 @@ const examMCQQuestionSlice = createSlice({
     },
     addExamMCQQuestion: (state, action: PayloadAction<IExamMCQQuestion>) => {
       state.examMCQQuestions.unshift(action.payload);
+    },
+    addExamMCQMultipleQuestion: (state, action: PayloadAction<IExamMCQMultipleQuestion>) => {
+      state.examMCQMultipleQuestions.unshift(action.payload);
     },
     updateExamMCQQuestion: (state, action: PayloadAction<IExamMCQQuestion>) => {
       const index = state.examMCQQuestions.findIndex(
@@ -89,6 +94,7 @@ export const {
   setActionStatus,
   setExamMCQQuestions,
   addExamMCQQuestion,
+  addExamMCQMultipleQuestion,
   updateExamMCQQuestion,
   deleteExamMCQQuestion,
   setSelectedExamMCQQuestion,

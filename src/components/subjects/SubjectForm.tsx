@@ -18,6 +18,7 @@ import { ISubject, ISubjectCreate, ISubjectUpdate } from '@/types/subject';
 
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import LexicalEditor from '../ui/LexicalEditor';
 
 interface SubjectFormProps {
   mode: 'create' | 'edit';
@@ -224,7 +225,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
           },
         ]}
       >
-        <Input.TextArea placeholder={t(LOCALE_KEYS.ENTER_DESCRIPTION)} rows={4} />
+        <LexicalEditor  />
       </Form.Item>
 
       <Form.Item name="prerequisite" label={t(LOCALE_KEYS.PREREQUISITE)}>
