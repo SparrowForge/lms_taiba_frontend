@@ -11,14 +11,12 @@ import {
   Table,
   Tag,
   Space,
-  Statistic,
-  Row,
-  Col,
   Badge,
   Progress,
+  Tabs,
 } from "antd"
 import { useParams } from "next/navigation"
-import { useEffect,  } from "react"
+import { useEffect, useMemo } from "react"
 
 import { useBatches } from "@/hooks/useBatches"
 import { useCourses } from "@/hooks/useCourses"
@@ -26,33 +24,24 @@ import { useExamResults } from "@/hooks/useExamResults"
 
 import type { ColumnsType } from "antd/es/table"
 
-
 interface SubjectResult {
   key: string
   subject: string
   marks: number
   totalMarks: number
   grade: string
+  remarks: string
   status: "pass" | "fail"
 }
 
 export default function StudentResultSheet() {
-  const { loadExamResults, examResults } = useExamResults()
   const { id } = useParams()
 
+  const { loadExamResults, examResults } = useExamResults()
   const { loadCourse, selectedCourse } = useCourses()
   const { loadBatch, selectedBatch } = useBatches()
 
-  useEffect(() => {
-    if (examResults[0]?.student?.courseId) {
-      loadCourse(examResults[0]?.student?.courseId)
-    }
-  }, [examResults, loadCourse])
-  useEffect(() => {
-    if (examResults[0]?.student?.batchId) {
-      loadBatch(examResults[0]?.student?.batchId)
-    }
-  }, [examResults, loadBatch])
+  /* ---------------- LOAD DATA ---------------- */
 
   useEffect(() => {
     if (id) {
@@ -60,40 +49,48 @@ export default function StudentResultSheet() {
     }
   }, [loadExamResults, id])
 
-  /* ---------------- API DATA ONLY ---------------- */
+  useEffect(() => {
+    if (examResults[0]?.student?.courseId) {
+      loadCourse(examResults[0].student.courseId)
+    }
+  }, [examResults, loadCourse])
 
-  const results: SubjectResult[] = (Array.isArray(examResults) ? examResults : []).map(
-    (item: any) => ({
-      key: String(item.id),
-      subject: item.exam?.name,
-      marks: item.marksObtained,
-      totalMarks: item.exam?.marks,
-      grade: item.grade,
-      remarks: item.remarks,
-      status: item.status === "published" ? "pass" : "fail",
-    })
-  )
+  useEffect(() => {
+    if (examResults[0]?.student?.batchId) {
+      loadBatch(examResults[0].student.batchId)
+    }
+  }, [examResults, loadBatch])
 
+  /* ---------------- GROUP DATA (Semester → Subject) ---------------- */
 
+  const groupedResults = useMemo(() => {
+    return (Array.isArray(examResults) ? examResults : []).reduce(
+      (acc: any, item: any) => {
+        const semesterId = item.exam?.semesterId
+        const subjectId = item.exam?.subjectId
 
+        if (!semesterId || !subjectId) return acc
 
-  const totalMarks = results.reduce((sum, r) => sum + r.marks, 0)
-  const totalPossible = results.reduce((sum, r) => sum + r.totalMarks, 0)
-  const percentage =
-    totalPossible > 0 ? ((totalMarks / totalPossible) * 100).toFixed(2) : "0.00"
+        if (!acc[semesterId]) acc[semesterId] = {}
+        if (!acc[semesterId][subjectId]) acc[semesterId][subjectId] = []
 
-  const overallGrade =
-    +percentage >= 90
-      ? "A+"
-      : +percentage >= 80
-        ? "A"
-        : +percentage >= 70
-          ? "B+"
-          : +percentage >= 60
-            ? "B"
-            : "C"
+        acc[semesterId][subjectId].push({
+          key: String(item.id),
+          subject: item.exam?.name,
+          marks: item.marksObtained,
+          totalMarks: item.exam?.marks,
+          grade: item.grade,
+          remarks: item.remarks,
+          status: item.status === "published" ? "pass" : "fail",
+        })
 
+        return acc
+      },
+      {}
+    )
+  }, [examResults])
 
+  /* ---------------- TABLE COLUMNS ---------------- */
 
   const columns: ColumnsType<SubjectResult> = [
     {
@@ -118,7 +115,13 @@ export default function StudentResultSheet() {
         const percent = r.totalMarks
           ? (r.marks / r.totalMarks) * 100
           : 0
-        return <Progress type="circle" percent={+percent.toFixed(1)} width={60} />
+        return (
+          <Progress
+            type="circle"
+            percent={+percent.toFixed(1)}
+            width={60}
+          />
+        )
       },
     },
     {
@@ -131,7 +134,7 @@ export default function StudentResultSheet() {
       title: "Remarks",
       dataIndex: "remarks",
       align: "center",
-      render: (remarks) => <Tag color="blue">{remarks}</Tag>,
+      render: (remarks) => <Tag color="green">{remarks}</Tag>,
     },
     {
       title: "Status",
@@ -146,25 +149,31 @@ export default function StudentResultSheet() {
     },
   ]
 
-  return (
-    <div style={{ padding: 24 }}>
+  /* ---------------- RENDER ---------------- */
 
-      {/* Student Info (API ONLY) */}
+  return (
+    <div
+      style={{
+        padding: 24,
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
+      {/* ---------- TOP (STATIC INFO) ---------- */}
       <Card
         title={
           <Space>
             <UserOutlined /> Student Information
           </Space>
         }
-        style={{ marginBottom: 24 }}
+        style={{ marginBottom: 16 }}
       >
         <Descriptions bordered column={2}>
           <Descriptions.Item label="Name">
             {examResults[0]?.student
-              ? `${examResults[0]?.student.firstName ?? ""} ${examResults[0]?.student.middleName ?? ""} ${examResults[0]?.student.lastName ?? ""}`
+              ? `${examResults[0].student.firstName ?? ""} ${examResults[0].student.middleName ?? ""} ${examResults[0].student.lastName ?? ""}`
               : "N/A"}
           </Descriptions.Item>
-
           <Descriptions.Item label="Course">
             {selectedCourse?.name ?? "N/A"}
           </Descriptions.Item>
@@ -174,42 +183,61 @@ export default function StudentResultSheet() {
         </Descriptions>
       </Card>
 
-      {/* Summary */}
-      {/* <Card
+      {/* ---------- SCROLLABLE RESULTS ---------- */}
+      <Card
         title={
           <Space>
-            <TrophyOutlined /> Overall Performance
+            <TrophyOutlined /> Exam Results
           </Space>
         }
-        style={{ marginBottom: 24 }}
+        bodyStyle={{
+          padding: 0,
+        }}
+        style={{
+          height: "calc(100vh - 220px)", // dashboard-friendly
+        }}
       >
-        <Row gutter={16}>
-          <Col span={6}>
-            <Statistic title="Total Marks" value={totalMarks} suffix={`/ ${totalPossible}`} />
-          </Col>
-          <Col span={6}>
-            <Statistic title="Percentage" value={percentage} suffix="%" />
-          </Col>
-          <Col span={6}>
-            <Statistic title="Grade" value={overallGrade} />
-          </Col>
-          <Col span={6}>
-            <Statistic
-              title="Status"
-              value={results.every(r => r.status === "pass") ? "PASSED" : "FAILED"}
-            />
-          </Col>
-        </Row>
-      </Card> */}
-
-      {/* Results Table */}
-      <Card title="Results">
-        <Table
-          bordered
-          pagination={false}
-          columns={columns}
-          dataSource={results}
-        />
+        <div
+          style={{
+            height: "100%",
+            overflowY: "auto",
+            padding: 16,
+          }}
+        >
+          <Tabs
+            type="card"
+            items={Object.entries(groupedResults).map(
+              ([semesterId, subjects]: any) => ({
+                key: semesterId,
+                label: `Semester ${semesterId}`,
+                children: (
+                  <Space
+                    direction="vertical"
+                    size="large"
+                    style={{ width: "100%" }}
+                  >
+                    {Object.entries(subjects).map(
+                      ([subjectId, subjectResults]: any) => (
+                        <Card
+                          key={subjectId}
+                          title={`Subject ID: ${subjectId}`}
+                          bordered
+                        >
+                          <Table
+                            bordered
+                            pagination={false}
+                            columns={columns}
+                            dataSource={subjectResults}
+                          />
+                        </Card>
+                      )
+                    )}
+                  </Space>
+                ),
+              })
+            )}
+          />
+        </div>
       </Card>
     </div>
   )
