@@ -1,21 +1,23 @@
 "use client"
 
+import { useAuth } from "@/hooks/useAuth"
 import { LockOutlined, MailOutlined } from "@ant-design/icons"
 import { Button, Card, Form, Input, Space, Typography, message } from "antd"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { use, useState } from "react"
 
 const { Title, Text } = Typography
 
 export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const {handleForgotPassword} = useAuth()
 
   const onFinish = async (values: { email: string }) => {
     try {
       setLoading(true)
 
-      // 🔗 API CALL WILL GO HERE LATER
+      handleForgotPassword({ email: values.email })
       console.log("Forgot password email:", values.email)
 
       message.success(

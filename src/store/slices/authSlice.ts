@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { AuthState } from '@/types/auth';
 import type { IUser } from '@/types/user';
+import { IStatusState } from '@/types/common';
+import { Status } from '@/enums';
 
 // Helper function to get cookie value
 const getCookie = (name: string): string | null => {
@@ -20,6 +22,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isLoading: true, // Start with loading true to prevent flash redirects
   error: null,
+  actionStatus: { status: Status.INITIAL },
 };
 
 // Auth slice
@@ -132,6 +135,10 @@ const authSlice = createSlice({
         localStorage.removeItem('user');
       }
     },
+
+    setActionStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.actionStatus = action.payload;
+    },
   },
 });
 
@@ -147,6 +154,7 @@ export const {
   initializeAuth,
   updateUser,
   clearAuth,
+  setActionStatus
 } = authSlice.actions;
 
 // Export reducer

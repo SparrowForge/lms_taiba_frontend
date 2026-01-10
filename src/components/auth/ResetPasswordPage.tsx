@@ -1,5 +1,6 @@
 "use client"
 
+import { useAuth } from "@/hooks/useAuth"
 import {
   LockOutlined,
   CheckCircleOutlined,
@@ -24,6 +25,8 @@ export default function ResetPasswordPage() {
   const searchParams = useSearchParams()
 
   const token = searchParams.get("token")
+
+  const {handleResetPassword} = useAuth()
 
   const onFinish = async (values: {
     password: string

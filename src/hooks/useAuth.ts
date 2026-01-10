@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import type { LoginCredentials, RegisterCredentials } from '@/types/auth';
+import type { IForgotPasswordPayload, IResetPasswordPayload, LoginCredentials, RegisterCredentials } from '@/types/auth';
 import type { IUser } from '@/types/user';
 
 import { authService } from '@/services/authService';
@@ -22,9 +22,10 @@ import {
 
 import type { AppDispatch, RootState } from '@/store';
 import { TwofaStatus } from '@/types/twofa';
-import { useTwofa } from './useTwofa';
+
 import { twofaService } from '@/services/twofaService';
 import { toast } from 'react-toastify';
+import { Status } from '@/enums';
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,32 +39,33 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     error,
+    setActionStatus
   } = useSelector((state: RootState) => state.auth);
 
 
 
   // Login function
   const handleLogin = useCallback(
-    async (credentials: LoginCredentials, setVerifyTwofa:React.Dispatch<React.SetStateAction<boolean>>) => {
+    async (credentials: LoginCredentials, setVerifyTwofa: React.Dispatch<React.SetStateAction<boolean>>) => {
       try {
         dispatch(setLoading(true));
         const response = await authService.login(credentials);
-        const {email} = response.user
-        const {twoFaStatus} = response.user
-        if(twoFaStatus == TwofaStatus.ACTIVE){
-         if(response.user){
-           const res = await twofaService.sendCodeTwofa({email})
-           if(res.message){
+        const { email } = response.user
+        const { twoFaStatus } = response.user
+        if (twoFaStatus == TwofaStatus.ACTIVE) {
+          if (response.user) {
+            const res = await twofaService.sendCodeTwofa({ email })
+            if (res.message) {
               toast.success(res.message)
               setVerifyTwofa(true)
-           }
-         }
+            }
+          }
           dispatch(setUser(response.user));
           dispatch(setToken(response.access_token));
           dispatch(setRefreshToken(response.refresh_token));
           dispatch(setIsAuthenticated(true));
           dispatch(setLoading(false));
-        }else if(twoFaStatus == TwofaStatus.INACTIVE){
+        } else if (twoFaStatus == TwofaStatus.INACTIVE) {
           dispatch(setUser(response.user));
           dispatch(setToken(response.access_token));
           dispatch(setRefreshToken(response.refresh_token));
@@ -198,6 +200,81 @@ export const useAuth = () => {
     return user.name || user.email || 'Unknown User';
   }, [user]);
 
+  const forgotPassword = useCallback(
+    async (data: IForgotPasswordPayload) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+
+        const response = await authService.forgotPassword(data);
+
+        dispatch(
+          setActionStatus({
+            status: Status.SUCCESS,
+            message: response?.message || "Reset password email sent successfully",
+          }),
+        );
+
+        return response;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+            error?.message ||
+            "Failed to send reset password email"
+            : "Failed to send reset password email";
+
+        dispatch(
+          setActionStatus({
+            status: Status.FAILED,
+            message: errorMessage,
+          }),
+        );
+
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+
+
+    const resetPassword = useCallback(
+      async (data: IResetPasswordPayload) => {
+        try {
+          dispatch(setActionStatus({ status: Status.LOADING }));
+
+          const response = await authService.resetPassword(data);
+
+          dispatch(
+            setActionStatus({
+              status: Status.SUCCESS,
+              message: response?.message || "Password reset successfully",
+            }),
+          );
+
+          return response;
+        } catch (error: unknown) {
+          const errorMessage =
+            error instanceof AxiosError
+              ? error?.response?.data?.message ||
+              error?.message ||
+              "Failed to reset password"
+              : "Failed to reset password";
+
+          dispatch(
+            setActionStatus({
+              status: Status.FAILED,
+              message: errorMessage,
+            }),
+          );
+
+          throw error;
+        }
+      },
+      [dispatch],
+    );
+  
+
   // Get stored user from localStorage (useful for initial checks)
   const getStoredUser = useCallback(() => {
     return authService.getUser();
@@ -221,6 +298,8 @@ export const useAuth = () => {
     clearError: clearAuthError,
     updateUser: updateUserProfile,
     initializeAuth: initializeAuthState,
+    handleForgotPassword: forgotPassword,
+    handleResetPassword: resetPassword,
 
     // Utilities
     isUserActive,
