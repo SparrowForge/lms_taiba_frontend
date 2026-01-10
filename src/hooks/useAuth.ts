@@ -2,11 +2,16 @@ import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+
+import { Status } from '@/enums';
 
 import type { IForgotPasswordPayload, IResetPasswordPayload, LoginCredentials, RegisterCredentials } from '@/types/auth';
+import { TwofaStatus } from '@/types/twofa';
 import type { IUser } from '@/types/user';
 
 import { authService } from '@/services/authService';
+import { twofaService } from '@/services/twofaService';
 
 import {
   clearAuth,
@@ -21,11 +26,7 @@ import {
 } from '@/store/slices/authSlice';
 
 import type { AppDispatch, RootState } from '@/store';
-import { TwofaStatus } from '@/types/twofa';
 
-import { twofaService } from '@/services/twofaService';
-import { toast } from 'react-toastify';
-import { Status } from '@/enums';
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -39,7 +40,7 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     error,
-    setActionStatus
+
   } = useSelector((state: RootState) => state.auth);
 
 
@@ -203,16 +204,16 @@ export const useAuth = () => {
   const forgotPassword = useCallback(
     async (data: IForgotPasswordPayload) => {
       try {
-        dispatch(setActionStatus({ status: Status.LOADING }));
+        // dispatch(setActionStatus({ status: Status.LOADING }));
 
         const response = await authService.forgotPassword(data);
 
-        dispatch(
-          setActionStatus({
-            status: Status.SUCCESS,
-            message: response?.message || "Reset password email sent successfully",
-          }),
-        );
+        // dispatch(
+        //   setActionStatus({
+        //     status: Status.SUCCESS,
+        //     message: response?.message || "Reset password email sent successfully",
+        //   }),
+        // );
 
         return response;
       } catch (error: unknown) {
@@ -223,17 +224,18 @@ export const useAuth = () => {
             "Failed to send reset password email"
             : "Failed to send reset password email";
 
-        dispatch(
-          setActionStatus({
-            status: Status.FAILED,
-            message: errorMessage,
-          }),
-        );
+            console.log(errorMessage)
+        // dispatch(
+        //   setActionStatus({
+        //     status: Status.FAILED,
+        //     message: errorMessage,
+        //   }),
+        // );
 
         throw error;
       }
     },
-    [dispatch],
+    [ ],
   );
 
 
@@ -241,16 +243,16 @@ export const useAuth = () => {
     const resetPassword = useCallback(
       async (data: IResetPasswordPayload) => {
         try {
-          dispatch(setActionStatus({ status: Status.LOADING }));
+          // dispatch(setActionStatus({ status: Status.LOADING }));
 
           const response = await authService.resetPassword(data);
 
-          dispatch(
-            setActionStatus({
-              status: Status.SUCCESS,
-              message: response?.message || "Password reset successfully",
-            }),
-          );
+          // dispatch(
+          //   setActionStatus({
+          //     status: Status.SUCCESS,
+          //     message: response?.message || "Password reset successfully",
+          //   }),
+          // );
 
           return response;
         } catch (error: unknown) {
@@ -260,18 +262,18 @@ export const useAuth = () => {
               error?.message ||
               "Failed to reset password"
               : "Failed to reset password";
-
-          dispatch(
-            setActionStatus({
-              status: Status.FAILED,
-              message: errorMessage,
-            }),
-          );
+console.log(errorMessage)
+          // dispatch(
+          //   setActionStatus({
+          //     status: Status.FAILED,
+          //     message: errorMessage,
+          //   }),
+          // );
 
           throw error;
         }
       },
-      [dispatch],
+      [],
     );
   
 

@@ -14,23 +14,11 @@ export default function ForgotPasswordPage() {
   const {handleForgotPassword} = useAuth()
 
   const onFinish = async (values: { email: string }) => {
-    try {
-      setLoading(true)
-
-      handleForgotPassword({ email: values.email })
+    console.log(values)
+      await handleForgotPassword({ email: values.email })
       console.log("Forgot password email:", values.email)
 
-      message.success(
-        "If an account exists with this email, a password reset link has been sent."
-      )
 
-      // Optional redirect
-      // router.push("/login")
-    } catch (error) {
-      message.error("Something went wrong. Please try again.")
-    } finally {
-      setLoading(false)
-    }
   }
 
   return (
