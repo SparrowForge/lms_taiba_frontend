@@ -16,11 +16,13 @@ export default function ForgotPasswordPage() {
 
   const onFinish = async (values: { email: string }) => {
     console.log(values)
+    setLoading(true)
       const res = await handleForgotPassword( values )
       console.log("Forgot password email:", res)
 if(res.success){
   toast.success(res?.message)
   router.push("/reset-password")
+  setLoading(false)
 }
 
   }
