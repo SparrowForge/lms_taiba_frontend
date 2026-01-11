@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth"
 import {
   LockOutlined,
   CheckCircleOutlined,
+  CodeOutlined,
 } from "@ant-design/icons"
 import {
   Button,
@@ -16,42 +17,38 @@ import {
 } from "antd"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
+import { toast } from "react-toastify"
 
 const { Title, Text } = Typography
 
 export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const searchParams = useSearchParams()
 
-  const token = searchParams.get("token")
 
   const {handleResetPassword} = useAuth()
 
   const onFinish = async (values: {
+    code:string
     password: string
     confirmPassword: string
   }) => {
-    try {
+      if(values.password !== values.confirmPassword){
+        return toast.error("Password doesn't match")
+      }
+      const data = {
+        code:values.code,
+        newPassword:values.password
+      }
       setLoading(true)
+      const res = await handleResetPassword(data)
 
-      if (!token) {
-        message.error("Invalid or expired reset link.")
-        return
+      if (res.success) {
+        toast.success("Password reset successfully")
+        router.push("/login")
       }
 
-      // 🔗 API CALL GOES HERE
-      console.log("Reset token:", token)
-      console.log("New password:", values.password)
 
-      message.success("Password reset successfully. You can now login.")
-
-      router.push("/login")
-    } catch (error) {
-      message.error("Failed to reset password. Please try again.")
-    } finally {
-      setLoading(false)
-    }
   }
 
   return (
@@ -82,6 +79,22 @@ export default function ResetPasswordPage() {
 
           {/* Form */}
           <Form layout="vertical" onFinish={onFinish}>
+
+<Form.Item
+              label="Code"
+              name="code"
+              rules={[
+                { required: true, message: "Please enter your  code" },
+                { min: 6, message: "Code must be at least 6 digit" },
+              ]}
+            >
+              <Input
+                size="large"
+                prefix={<CodeOutlined />}
+                placeholder="Enter Code"
+              />
+            </Form.Item>
+
             <Form.Item
               label="New Password"
               name="password"

@@ -5,6 +5,7 @@ import { LockOutlined, MailOutlined } from "@ant-design/icons"
 import { Button, Card, Form, Input, Space, Typography, message } from "antd"
 import { useRouter } from "next/navigation"
 import { use, useState } from "react"
+import { toast } from "react-toastify"
 
 const { Title, Text } = Typography
 
@@ -15,9 +16,12 @@ export default function ForgotPasswordPage() {
 
   const onFinish = async (values: { email: string }) => {
     console.log(values)
-      await handleForgotPassword({ email: values.email })
-      console.log("Forgot password email:", values.email)
-
+      const res = await handleForgotPassword( values )
+      console.log("Forgot password email:", res)
+if(res.success){
+  toast.success(res?.message)
+  router.push("/reset-password")
+}
 
   }
 
@@ -74,7 +78,7 @@ export default function ForgotPasswordPage() {
                 loading={loading}
                 icon={<LockOutlined />}
               >
-                Send Reset Link
+                Send Reset Code
               </Button>
             </Form.Item>
           </Form>

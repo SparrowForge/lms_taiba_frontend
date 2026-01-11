@@ -38,6 +38,6 @@ export interface IForgotPasswordPayload{
 }
 
 export interface IResetPasswordPayload{
-  token: string;
+  code: string;
   newPassword: string;
 }

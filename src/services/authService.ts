@@ -159,7 +159,7 @@ class AuthService {
   }
 
   forgotPassword(data: IForgotPasswordPayload): Promise<IBaseResponse<null>> {
-    return apiService.post<null>('/auth/forgot-password', { data });
+    return apiService.post<null>('/auth/forgot-password', data );
   }
 
   resetPassword(data:IResetPasswordPayload): Promise<IBaseResponse<null>> {

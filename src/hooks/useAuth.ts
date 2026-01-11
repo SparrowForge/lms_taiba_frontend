@@ -205,7 +205,7 @@ export const useAuth = () => {
     async (data: IForgotPasswordPayload) => {
       try {
         // dispatch(setActionStatus({ status: Status.LOADING }));
-
+        console.log("forgotPassword",data)
         const response = await authService.forgotPassword(data);
 
         // dispatch(
