@@ -1,34 +1,30 @@
 "use client"
 
+import { useAuth } from "@/hooks/useAuth"
 import { LockOutlined, MailOutlined } from "@ant-design/icons"
 import { Button, Card, Form, Input, Space, Typography, message } from "antd"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { use, useState } from "react"
+import { toast } from "react-toastify"
 
 const { Title, Text } = Typography
 
 export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const {handleForgotPassword} = useAuth()
 
   const onFinish = async (values: { email: string }) => {
-    try {
-      setLoading(true)
+    console.log(values)
+    setLoading(true)
+      const res = await handleForgotPassword( values )
+      console.log("Forgot password email:", res)
+if(res.success){
+  toast.success(res?.message)
+  router.push("/reset-password")
+  setLoading(false)
+}
 
-      // 🔗 API CALL WILL GO HERE LATER
-      console.log("Forgot password email:", values.email)
-
-      message.success(
-        "If an account exists with this email, a password reset link has been sent."
-      )
-
-      // Optional redirect
-      // router.push("/login")
-    } catch (error) {
-      message.error("Something went wrong. Please try again.")
-    } finally {
-      setLoading(false)
-    }
   }
 
   return (
@@ -84,7 +80,7 @@ export default function ForgotPasswordPage() {
                 loading={loading}
                 icon={<LockOutlined />}
               >
-                Send Reset Link
+                Send Reset Code
               </Button>
             </Form.Item>
           </Form>

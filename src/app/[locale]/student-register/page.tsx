@@ -21,6 +21,7 @@ import { IBatch } from '@/types/batch';
 import { IStudentCreate, IStudentRegistrationCreate } from '@/types/student';
 import { IStudentEducationCreate } from '@/types/studentEducation';
 import { IStudentProfileCreate } from '@/types/studentProfile';
+import { useSections } from '@/hooks/useSections';
 
 const RegisterStudentPage: React.FC = () => {
   const { t } = useLocalization();
@@ -33,6 +34,10 @@ const RegisterStudentPage: React.FC = () => {
 
   const searchParams = useSearchParams();
 
+     const {loadSections, sections} = useSections()
+  
+
+
   useEffect(() => {
     const batchCode = searchParams.get('batchCode');
     console.log('batchCode from query params:', batchCode);
@@ -40,6 +45,12 @@ const RegisterStudentPage: React.FC = () => {
       loadBatchByCodePublic(batchCode).catch(() => void 0);
     }
   }, [searchParams, loadBatchByCodePublic]);
+
+         useEffect(() => {
+         if (selectedBatch?.id) {
+           loadSections({ page: 1, limit: 100, batchId: selectedBatch?.id });
+         }
+       }, [selectedBatch, loadSections]);
 
   const handleStepClick = (step: number) => {
     setCurrentStep(step);
@@ -271,7 +282,7 @@ const RegisterStudentPage: React.FC = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
-        return <StudentInformationStep form={form} />;
+        return <StudentInformationStep sections={sections} form={form} />;
       case 1:
         return <StudentProfileStep form={form} />;
       case 2:
@@ -329,7 +340,7 @@ const RegisterStudentPage: React.FC = () => {
           <Card className="" style={{ marginTop: '16px' }}>
             <Form form={form} layout="vertical" className="w-full">
               <div style={{ display: currentStep === 0 ? 'block' : 'none' }}>
-                <StudentInformationStep form={form} />
+                <StudentInformationStep sections={sections} form={form} />
               </div>
               <div style={{ display: currentStep === 1 ? 'block' : 'none' }}>
                 <StudentProfileStep form={form} />

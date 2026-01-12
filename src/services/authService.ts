@@ -1,4 +1,4 @@
-import type { IAuthResponse, LoginCredentials, RegisterCredentials } from '@/types/auth';
+import type { IAuthResponse, IForgotPasswordPayload, IResetPasswordPayload, LoginCredentials, RegisterCredentials } from '@/types/auth';
 import { IUser } from '@/types/user';
 import { IBaseResponse } from '@/types/common';
 
@@ -156,6 +156,14 @@ class AuthService {
       localStorage.removeItem('user');
       return null;
     }
+  }
+
+  forgotPassword(data: IForgotPasswordPayload): Promise<IBaseResponse<null>> {
+    return apiService.post<null>('/auth/forgot-password', data );
+  }
+
+  resetPassword(data:IResetPasswordPayload): Promise<IBaseResponse<null>> {
+    return apiService.post<null>('/auth/reset-password', data);
   }
 
   // Error handler

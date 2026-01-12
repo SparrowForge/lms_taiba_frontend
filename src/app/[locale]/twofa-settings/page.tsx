@@ -1,11 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Card, Button, Space, Typography, Spin, message } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-
-import { AppDispatch, RootState } from "@/store";
-import { useTwofa } from "@/hooks/useTwofa";
+import React from "react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -15,17 +10,10 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { LOCALE_KEYS } from "@/constants/localizationKeys";
 
-const { Title, Text } = Typography;
-
 export default function TwofaPage() {
   const t = useTranslations()
   const router = useRouter()
   const entityName = t(LOCALE_KEYS.TWO_FA, { defaultValue: 'TwoFa' });
-
-
-
-
-
 
   return (
 
@@ -36,8 +24,6 @@ export default function TwofaPage() {
           <MailSettings />
           <AuthSettings />
         </div>
-
-
       </MainLayout>
     </ProtectedRoute>
 

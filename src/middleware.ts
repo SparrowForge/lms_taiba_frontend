@@ -42,7 +42,7 @@ const protectedRoutes = [
 ];
 
 // Public routes that don't require authentication
-const publicRoutes = ['/login', '/register', '/forgot-password', '/register-student'];
+const publicRoutes = ['/login', '/register', '/forgot-password', '/register-student', '/verify-2fa'];
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -98,7 +98,8 @@ export default function middleware(request: NextRequest) {
   }
 
   // If accessing login page while authenticated, redirect to dashboard
-  if (isPublicRoute && isAuthenticated) {
+  // Exception: allow verify-2fa page even when authenticated (needed for 2FA verification flow)
+  if (isPublicRoute && isAuthenticated && pathWithoutLocale !== 'verify-2fa') {
     const dashboardUrl = new URL(`/${resolvedLocale}`, request.url);
     console.log('✅ Redirecting to dashboard:', dashboardUrl.toString());
     return NextResponse.redirect(dashboardUrl);

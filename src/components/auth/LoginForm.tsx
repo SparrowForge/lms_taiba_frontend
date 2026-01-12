@@ -15,7 +15,6 @@ import type { LoginCredentials } from '@/types/auth';
 import { getErrorMessage } from '@/types/errors';
 
 import SocialLogin from './SocialLogin';
-import VerifyModalTwofa from './VerifyMailTwofa';
 import Link from 'next/link';
 
 export const LoginForm = () => {
@@ -24,8 +23,6 @@ export const LoginForm = () => {
   const [form] = Form.useForm();
   const [showForm, setShowForm] = useState(false);
   const [showError, setShowError] = useState("")
-
-    const [verifyTwofa, setVerifyTwofa] = useState(false);
 
   // Simple solution: Show loading for 500ms, then show form
   useEffect(() => {
@@ -38,7 +35,7 @@ export const LoginForm = () => {
 
   const handleSubmit = async (values: LoginCredentials) => {
     try {
-      await login(values,setVerifyTwofa);
+      await login(values);
       //show toast message using nextjs toast
 
     } catch (error: unknown) {
@@ -67,10 +64,6 @@ export const LoginForm = () => {
 
   return (
     <>
-    <VerifyModalTwofa
-      twoFaState={verifyTwofa}
-      setVerifyTwofa={setVerifyTwofa}
-    />
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
       <Card style={{ width: 400, padding: '0px' }} className="shadow-lg rounded-lg">
         <div className="flex justify-center items-center pt-4 pb-2">

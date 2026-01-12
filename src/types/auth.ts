@@ -1,3 +1,4 @@
+import { Status } from '@/enums';
 import { IUser } from './user';
 
 // Authentication response interface
@@ -29,4 +30,15 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  actionStatus: { status: Status.INITIAL },
+  isTwoFaVerified: boolean; // Track if 2FA verification is complete
+}
+
+export interface IForgotPasswordPayload{
+  email: string;
+}
+
+export interface IResetPasswordPayload{
+  code: string;
+  newPassword: string;
 }
