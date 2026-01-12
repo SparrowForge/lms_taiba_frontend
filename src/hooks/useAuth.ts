@@ -11,13 +11,13 @@ import { TwofaStatus } from '@/types/twofa';
 import type { IUser } from '@/types/user';
 
 import { authService } from '@/services/authService';
-import { twofaService } from '@/services/twofaService';
 
 import {
   clearAuth,
   clearError,
   initializeAuth,
   setIsAuthenticated,
+  setIsTwoFaVerified,
   setLoading,
   setRefreshToken,
   setToken,
@@ -40,37 +40,33 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     error,
-
+    isTwoFaVerified,
   } = useSelector((state: RootState) => state.auth);
 
 
 
   // Login function
   const handleLogin = useCallback(
-    async (credentials: LoginCredentials, setVerifyTwofa: React.Dispatch<React.SetStateAction<boolean>>) => {
+    async (credentials: LoginCredentials) => {
       try {
         dispatch(setLoading(true));
         const response = await authService.login(credentials);
-        const { email } = response.user
         const { twoFaStatus } = response.user
-        if (twoFaStatus == TwofaStatus.ACTIVE) {
-          if (response.user) {
-            const res = await twofaService.sendCodeTwofa({ email })
-            if (res.message) {
-              toast.success(res.message)
-              setVerifyTwofa(true)
-            }
-          }
+        if (twoFaStatus === TwofaStatus.ACTIVE) {
           dispatch(setUser(response.user));
           dispatch(setToken(response.access_token));
           dispatch(setRefreshToken(response.refresh_token));
           dispatch(setIsAuthenticated(true));
+          dispatch(setIsTwoFaVerified(false)); // 2FA is enabled but not yet verified
           dispatch(setLoading(false));
-        } else if (twoFaStatus == TwofaStatus.INACTIVE) {
+          // Redirect to verify-2fa page (user will click button to send code)
+          router.push('/verify-2fa');
+        } else if (twoFaStatus === TwofaStatus.INACTIVE) {
           dispatch(setUser(response.user));
           dispatch(setToken(response.access_token));
           dispatch(setRefreshToken(response.refresh_token));
           dispatch(setIsAuthenticated(true));
+          dispatch(setIsTwoFaVerified(true)); // No 2FA enabled, so considered verified
           dispatch(setLoading(false));
           toast.success('Login successful!');
           router.push('/')
@@ -290,6 +286,7 @@ console.log(errorMessage)
     isAuthenticated,
     isLoading,
     error,
+    isTwoFaVerified,
 
     // Actions
     login: handleLogin,

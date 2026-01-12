@@ -13,6 +13,7 @@ import {
   setCodeStatus,
   setActionStatus,
 } from "@/store/slices/twofaSlice";
+import { setIsTwoFaVerified } from "@/store/slices/authSlice";
 import { useAuth } from "./useAuth";
 import { IActionResponse, ITwofa } from "@/types/twofa";
 import { toast } from "react-toastify";
@@ -93,7 +94,7 @@ export const useTwofa = () => {
     } catch (err: unknown) {
       const errorMessage =
         err instanceof AxiosError
-          ? err?.data?.message || err?.message || "Failed to activate Email TwoFA"
+          ? err?.response?.data?.message || err?.message || "Failed to activate Email TwoFA"
           : "Failed to activate Email TwoFA";
       dispatch(setError(errorMessage));
     } finally {
@@ -115,7 +116,7 @@ export const useTwofa = () => {
     } catch (err: unknown) {
       const errorMessage =
         err instanceof AxiosError
-          ? err?.data?.message || err?.message || "Failed to deactivate Email TwoFA"
+          ? err?.response?.data?.message || err?.message || "Failed to deactivate Email TwoFA"
           : "Failed to deactivate Email TwoFA";
       dispatch(setError(errorMessage));
     } finally {
@@ -130,14 +131,16 @@ export const useTwofa = () => {
       const response = await twofaService.verifyTwofa(data);
       if (response.message) {
         toast.success(response.message)
+        // Mark 2FA as verified
+        dispatch(setIsTwoFaVerified(true));
         router.push("/")
       }
       dispatch(setLoading(false))
     } catch (err: unknown) {
       const errorMessage =
         err instanceof AxiosError
-          ? err?.response?.data?.message || err?.message || "Failed to deactivate Email TwoFA"
-          : "Failed to deactivate Email TwoFA";
+          ? err?.response?.data?.message || err?.message || "Failed to verify Email TwoFA"
+          : "Failed to verify Email TwoFA";
       dispatch(setError(errorMessage));
     } finally {
       dispatch(setLoading(false));

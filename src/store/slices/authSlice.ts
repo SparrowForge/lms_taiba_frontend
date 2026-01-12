@@ -23,6 +23,7 @@ const initialState: AuthState = {
   isLoading: true, // Start with loading true to prevent flash redirects
   error: null,
   actionStatus: { status: Status.INITIAL },
+  isTwoFaVerified: false, // 2FA verification status
 };
 
 // Auth slice
@@ -52,6 +53,14 @@ const authSlice = createSlice({
     setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
     },
+    setIsTwoFaVerified: (state, action: PayloadAction<boolean>) => {
+      state.isTwoFaVerified = action.payload;
+      
+      // Store in localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('isTwoFaVerified', action.payload ? 'true' : 'false');
+      }
+    },
 
     // Loading and error actions
     setLoading: (state, action: PayloadAction<boolean>) => {
@@ -71,6 +80,7 @@ const authSlice = createSlice({
         const localStorageToken = localStorage.getItem('token');
         const localStorageRefreshToken = localStorage.getItem('refreshToken');
         const localStorageUser = localStorage.getItem('user');
+        const localStorageTwoFaVerified = localStorage.getItem('isTwoFaVerified');
 
         // Check cookies as fallback
         const cookieToken = getCookie('token');
@@ -93,6 +103,22 @@ const authSlice = createSlice({
               console.error('Failed to parse user from localStorage:', error);
               // If parsing fails, clear the invalid user data
               localStorage.removeItem('user');
+            }
+          }
+
+          // Restore 2FA verification status
+          if (localStorageTwoFaVerified === 'true') {
+            state.isTwoFaVerified = true;
+          } else if (localStorageTwoFaVerified === 'false') {
+            state.isTwoFaVerified = false;
+          } else {
+            // If verification status is not in localStorage, determine based on user's 2FA status
+            if (state.user?.twoFaStatus === 'active') {
+              // User has 2FA enabled but no verification status stored - assume not verified
+              state.isTwoFaVerified = false;
+            } else {
+              // No 2FA enabled, so considered "verified"
+              state.isTwoFaVerified = true;
             }
           }
 
@@ -129,10 +155,12 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.error = null;
       state.isLoading = false;
+      state.isTwoFaVerified = false;
 
-      // Clear user from localStorage
+      // Clear user and 2FA status from localStorage
       if (typeof window !== 'undefined') {
         localStorage.removeItem('user');
+        localStorage.removeItem('isTwoFaVerified');
       }
     },
 
@@ -148,6 +176,7 @@ export const {
   setToken,
   setRefreshToken,
   setIsAuthenticated,
+  setIsTwoFaVerified,
   setLoading,
   setError,
   clearError,

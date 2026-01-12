@@ -31,6 +31,7 @@ export interface AuthState {
   isLoading: boolean;
   error: string | null;
   actionStatus: { status: Status.INITIAL },
+  isTwoFaVerified: boolean; // Track if 2FA verification is complete
 }
 
 export interface IForgotPasswordPayload{
