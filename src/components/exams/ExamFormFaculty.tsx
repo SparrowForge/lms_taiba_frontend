@@ -447,8 +447,9 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
           fileCategory={FileCategory.ACADEMIC}
           entityType={EntityType.COURSE_ASSIGNMENT_SUBMISSION}
           entityId={examId}
-          accept=".pdf"
+          accept="*/*"
           maxSize={50}
+          allowAllFiles={true}
         />
       </Form.Item>
 

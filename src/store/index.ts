@@ -49,6 +49,8 @@ import studentEducationReducer from './slices/studentEducationSlice';
 import studentFamilyReducer from './slices/studentFamilySlice';
 import studentProfileReducer from './slices/studentProfileSlice';
 import studentReducer from './slices/studentSlice';
+import subjectDiscussionReducer from './slices/subjectDiscussionSlice';
+import subjectDiscussionReplyReducer from './slices/subjectDiscussionReplySlice';
 import subjectReducer from './slices/subjectSlice';
 import timeSlotReducer from './slices/timeSlotSlice';
 import twofaReducer from './slices/twofaSlice';
@@ -77,6 +79,8 @@ export interface RootState {
   courseAssignmentSubmissions: ReturnType<typeof courseAssignmentSubmissionReducer>;
   courseMaterials: ReturnType<typeof courseMaterialReducer>;
   subjects: ReturnType<typeof subjectReducer>;
+  subjectDiscussions: ReturnType<typeof subjectDiscussionReducer>;
+  subjectDiscussionReplies: ReturnType<typeof subjectDiscussionReplyReducer>;
   batches: ReturnType<typeof batchReducer>;
   semesters: ReturnType<typeof semesterReducer>;
   semesterSubjects: ReturnType<typeof semesterSubjectReducer>;
@@ -137,6 +141,8 @@ export const store = configureStore({
     courseAssignmentSubmissions: courseAssignmentSubmissionReducer,
     courseMaterials: courseMaterialReducer,
     subjects: subjectReducer,
+    subjectDiscussions: subjectDiscussionReducer,
+    subjectDiscussionReplies: subjectDiscussionReplyReducer,
     batches: batchReducer,
     semesters: semesterReducer,
     semesterSubjects: semesterSubjectReducer,

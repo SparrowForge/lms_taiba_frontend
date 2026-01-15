@@ -216,8 +216,9 @@ const CourseMaterialFacultyForm: React.FC<CourseMaterialFormProps> = ({
                 fileCategory={FileCategory.ACADEMIC}
                 entityType={EntityType.COURSE_MATERIAL}
                 entityId={courseMaterialId}
-                accept="file/*"
+                accept="*/*"
                 maxSize={50}
+                allowAllFiles={true}
                 />
             </Form.Item>
 
