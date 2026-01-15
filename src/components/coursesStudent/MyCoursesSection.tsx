@@ -15,11 +15,12 @@ import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
 import StudentExamParticipate from '../exams/StudentExamParticipate';
 import ExamResultIndividualSubject from '../examResults/ExamResultIndividualSubject';
+import { DiscussionSection } from '../dashboard/discussion/DiscussionSection';
 
 
 
 const MyCoursesSection = () => {
-  const [activeTab, setActiveTab] = useState('materials');
+  const [activeTab, setActiveTab] = useState('discussion');
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab");
   const { user } = useAuth()
@@ -39,13 +40,14 @@ const MyCoursesSection = () => {
         <UpperTab items={StudentTabData} initial={tab ?? 'materials'} onTabChange={(tab) => setActiveTab(tab)} />
       }
       {activeTab === 'materials' && <CourseMaterials />}
+      
       {activeTab === 'assignments' && <Assignments />}
       {user?.type === UserType.STUDENT && activeTab === 'submittedAssignments' && <SubmittedAssignment />}
       {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement/>}
       {user?.type === UserType.STUDENT && activeTab === 'exam' && <StudentExamParticipate/>}
       {user?.type === UserType.STUDENT && activeTab === 'result' && <ExamResultIndividualSubject/>}
       {activeTab === 'grading' && <div>Grading Content is empty</div>}
-      {activeTab === 'discussion' && <div>Discussion Content</div>}
+      {activeTab === 'discussion' && <DiscussionSection/>}
     </div>
   );
 };
