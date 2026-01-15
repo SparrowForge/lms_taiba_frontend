@@ -20,6 +20,7 @@ interface FileUploadProps {
   accept?: string;
   maxSize?: number; // in MB
   disabled?: boolean;
+  allowAllFiles?: boolean; // If true, allows all file types; if false, restricts to PDF only
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({
@@ -32,6 +33,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   accept = '*/*',
   maxSize = 10, // 10MB default
   disabled = false,
+  allowAllFiles = false, // Default to PDF-only for backward compatibility
 }) => {
   const { uploadFile, isUploading, uploadedFile, resetUpload } = useFiles();
   const [fileList, setFileList] = useState<any[]>([]);
@@ -52,16 +54,17 @@ const FileUpload: React.FC<FileUploadProps> = ({
   }, [uploadedFile, onChange]);
 
   const handleUpload = async (file: File) => {
+    // Only check for PDF if allowAllFiles is false
+    if (!allowAllFiles) {
+      const isPDF =
+        file.type === "application/pdf" ||
+        file.name.toLowerCase().endsWith(".pdf");
 
-  const isPDF =
-    file.type === "application/pdf" ||
-    file.name.toLowerCase().endsWith(".pdf");
-
-  if (!isPDF) {
-    toast.error("Only PDF files are allowed!");
-    return Upload.LIST_IGNORE; // <— IMPORTANT! Block the file
-  }
-
+      if (!isPDF) {
+        toast.error("Only PDF files are allowed!");
+        return Upload.LIST_IGNORE; // <— IMPORTANT! Block the file
+      }
+    }
 
     // Check file size
     if (file.size > maxSize * 1024 * 1024) {

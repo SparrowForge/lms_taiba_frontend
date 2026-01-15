@@ -372,8 +372,9 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
           fileCategory={FileCategory.ACADEMIC}
           entityType={EntityType.COURSE_ASSIGNMENT_SUBMISSION}
           entityId={courseAssignmentId}
-          accept="file/*"
+          accept="*/*"
           maxSize={50}
+          allowAllFiles={true}
         />
       </Form.Item>
 
