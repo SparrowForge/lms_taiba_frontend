@@ -1,65 +1,84 @@
 "use client"
 
+
+import { SendOutlined } from "@ant-design/icons"
+import { Button, Form, Input } from "antd"
+import { useParams } from "next/navigation"
+import { useState } from "react"
+
+
+import { LOCALE_KEYS } from "@/constants/localizationKeys"
+import { Status } from "@/enums"
+
+import LexicalEditor from "@/components/ui/LexicalEditor"
+
+import { useLocalization } from "@/hooks/useLocalization"
+import { useSubjectDiscussions } from "@/hooks/useSubjectDiscussions"
+
 import type React from "react"
 
-import { useState } from "react"
-import { Button, Input } from "antd"
-import { SendOutlined } from "@ant-design/icons"
 
-interface MessageFormProps {
-  onSubmit: (message: string) => void
-  placeholder?: string
-  isReply?: boolean
-}
+export function MessageForm() {
+  const { t } = useLocalization()
+  const [form] = Form.useForm();
+  const { id } = useParams()
+  const { createSubjectDiscussion, actionStatus } = useSubjectDiscussions()
+  const [mode, setMode] = useState("create")
+  const entityName = t(LOCALE_KEYS.DISCUSSION, { defaultValue: 'Discussion' });
 
-export function MessageForm({ onSubmit, placeholder = "Share your thoughts...", isReply = false }: MessageFormProps) {
-  const [message, setMessage] = useState("")
-  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async () => {
-    if (!message.trim()) return
-
-    setLoading(true)
-    // Simulate a small delay for better UX
-    await new Promise((resolve) => setTimeout(resolve, 300))
-
-    onSubmit(message)
-    setMessage("")
-    setLoading(false)
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && e.ctrlKey) {
-      handleSubmit()
+  const handleSubmit = async (values) => {
+    console.log("object", values)
+    const data = {
+      subjectId: Number(id),
+      fileIds: [],
+      title: values.title,
+      content: values.content,
+      status: "active",
+      isPinned: false,
+      isLocked: false
     }
+    await createSubjectDiscussion(data)
   }
+
+  const getSubmitText = () =>
+    mode === 'create'
+      ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
+      : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
   return (
-    <div className="space-y-3">
-      <Input.TextArea
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        rows={isReply ? 2 : 3}
-        maxLength={500}
-        showCount
-        className="resize-none"
-        style={{
-          fontSize: "14px",
-        }}
-      />
-      <div className="flex justify-end gap-2 mt-4">
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      initialValues={mode === 'edit' ? initialValues : undefined}
+    >
+      <Form.Item name="title">
+        <Input placeholder={t(LOCALE_KEYS.TITLE)} />
+      </Form.Item>
+      <Form.Item
+        name="content"
+        label={t(LOCALE_KEYS.DESCRIPTION)}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }),
+          },
+        ]}
+      >
+        <LexicalEditor />
+      </Form.Item>
+
+      <Form.Item>
         <Button
+          htmlType="submit"
           type="primary"
           icon={<SendOutlined />}
-          onClick={handleSubmit}
-          loading={loading}
-          disabled={!message.trim()}
+          loading={actionStatus.status === Status.LOADING}
         >
-          {isReply ? "Reply" : "Post"}
+          {getSubmitText()}
         </Button>
-      </div>
-    </div>
+      </Form.Item>
+    </Form>
   )
 }

@@ -6,7 +6,6 @@ import { Status } from '@/enums';
 import { RootState } from '@/store';
 
 import {
-  ISubjectDiscussionReply,
   ISubjectDiscussionReplyCreate,
   ISubjectDiscussionReplyUpdate,
 } from '@/types/subjectDiscussionReply';

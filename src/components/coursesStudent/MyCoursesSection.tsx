@@ -10,17 +10,17 @@ import { useAuth } from '@/hooks/useAuth';
 import Assignments from './Assignments';
 import SubmittedAssignment from './SubmittedAssignment';
 import  { FacultyTabData, StudentTabData } from './TabData';
+import { DiscussionSection } from '../dashboard/discussion/DiscussionSection';
+import ExamResultIndividualSubject from '../examResults/ExamResultIndividualSubject';
 import FacultyExamsManagement from '../exams/FacultyExamsManagement';
+import StudentExamParticipate from '../exams/StudentExamParticipate';
 import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
-import StudentExamParticipate from '../exams/StudentExamParticipate';
-import ExamResultIndividualSubject from '../examResults/ExamResultIndividualSubject';
-import { DiscussionSection } from '../dashboard/discussion/DiscussionSection';
 
 
 
 const MyCoursesSection = () => {
-  const [activeTab, setActiveTab] = useState('discussion');
+  const [activeTab, setActiveTab] = useState('materials');
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab");
   const { user } = useAuth()

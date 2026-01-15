@@ -2,6 +2,7 @@
 // This ensures we only use keys that exist in our localization files
 export const LOCALE_KEYS = {
   // Common
+  DISCUSSION:"discussion",
   STUDENT_MARKS_ENTRY:"student_marks_entry",
   STUDENT_QR_CODE:'student-qr-code',
   ASSIGN_FACULTY:'assign-faculty',
