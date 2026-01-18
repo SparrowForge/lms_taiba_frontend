@@ -1,60 +1,112 @@
 "use client"
 
-import { useState } from "react"
-import { Button, Empty, Space, Tooltip, Badge } from "antd"
 import { CheckOutlined, DeleteOutlined } from "@ant-design/icons"
+import { Button, Empty, Space, Tooltip, Badge } from "antd"
+import { useEffect,  } from "react"
+import { toast } from "react-toastify"
+
+import { LOCALE_KEYS } from "@/constants/localizationKeys"
+
+import { useLocalization } from "@/hooks/useLocalization"
+import { useNotifications } from "@/hooks/useNotifications"
+
+import { getErrorMessage } from "@/types/errors"
 import { INotification } from "@/types/notification"
 
-export const mockNotifications: INotification[] = [
-  {
-    id: "1",
-    title: "New Message",
-    message: "You have received a new message from John Doe",
-    read: false,
-    createdAt: new Date(Date.now() - 5 * 60000).toISOString(),
-  },
-  {
-    id: "2",
-    title: "Payment Successful",
-    message: "Your payment of $99.99 has been processed successfully",
-    read: false,
-    createdAt: new Date(Date.now() - 15 * 60000).toISOString(),
-  },
-  {
-    id: "3",
-    title: "System Update",
-    message: "A new system update is available. Please restart your application",
-    read: true,
-    createdAt: new Date(Date.now() - 2 * 3600000).toISOString(),
-  },
-  {
-    id: "4",
-    title: "Promotion",
-    message: "Special 20% discount on premium plans this week",
-    read: false,
-    createdAt: new Date(Date.now() - 6 * 3600000).toISOString(),
-  },
-]
+
+
+
 
 export default function NotificationsPage() {
-  const [notifications, setNotifications] =
-    useState<INotification[]>(mockNotifications)
 
-  const unreadCount = notifications.filter((n) => !n.read).length
+    const {loadNotifications, notifications, markNotificationAsRead, markAllNotificationsAsRead, actionStatus, removeNotification} = useNotifications()
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.NOTIFICATION, { defaultValue: 'Notification' });
 
-  const handleMarkAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    )
+    useEffect(()=>{
+      loadNotifications({page:1, limit:99})
+    },[loadNotifications, actionStatus])
+
+
+  const unreadCount = notifications.filter((n) => !n.readAt).length
+
+  const handleMarkAsRead = async(id: number) => {
+    try {
+      await markNotificationAsRead(Number(id))
+      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+    } catch (error) {
+       let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+          name: entityName,
+          defaultValue: `Failed to read ${entityName.toLowerCase()}`,
+        });
+  
+        // Try to extract error message from API response
+        if (error && typeof error === 'object' && 'response' in error) {
+          const apiError = error as { response?: { data?: { message?: string } } };
+          if (apiError.response?.data?.message) {
+            errorMessage = apiError.response.data.message;
+          }
+        } else {
+          // Use the helper function for other error types
+          errorMessage = getErrorMessage(error);
+        }
+  
+        toast.error(errorMessage);
+      }
+    }
+  
+
+  const handleMarkAllAsRead = async() => {
+    try {
+      await markAllNotificationsAsRead()
+      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+    } catch (error) {
+       let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+          name: entityName,
+          defaultValue: `Failed to read all ${entityName.toLowerCase()}`,
+        });
+  
+        // Try to extract error message from API response
+        if (error && typeof error === 'object' && 'response' in error) {
+          const apiError = error as { response?: { data?: { message?: string } } };
+          if (apiError.response?.data?.message) {
+            errorMessage = apiError.response.data.message;
+          }
+        } else {
+          // Use the helper function for other error types
+          errorMessage = getErrorMessage(error);
+        }
+  
+        toast.error(errorMessage);
+      }
   }
 
-  const handleMarkAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+  const handleDelete = async (id: number) => {
+    try {
+      await removeNotification(Number(id))
+      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+    } catch (error) {
+       let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+          name: entityName,
+          defaultValue: `Failed to remove ${entityName.toLowerCase()}`,
+        });
+  
+        // Try to extract error message from API response
+        if (error && typeof error === 'object' && 'response' in error) {
+          const apiError = error as { response?: { data?: { message?: string } } };
+          if (apiError.response?.data?.message) {
+            errorMessage = apiError.response.data.message;
+          }
+        } else {
+          // Use the helper function for other error types
+          errorMessage = getErrorMessage(error);
+        }
+  
+        toast.error(errorMessage);
+      }
   }
 
-  const handleDelete = (id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id))
-  }
+
 
   const formatTime = (createdAt: string) => {
     const diff = Date.now() - new Date(createdAt).getTime()
@@ -107,8 +159,8 @@ export default function NotificationsPage() {
         {notifications.length === 0 ? (
           <Empty description="No notifications" />
         ) : (
-          notifications.map((notification) => {
-            const isUnread = !notification.read
+          notifications.map((notification:INotification) => {
+            const isUnread = !notification.readAt
 
             return (
               <div
