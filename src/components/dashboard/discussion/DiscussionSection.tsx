@@ -25,6 +25,7 @@ export function DiscussionSection() {
 
   // store message id that is being replied to
   const [replyingToId, setReplyingToId] = useState<number | null>(null)
+   const [flag,setFlag] = useState(false)
 
   useEffect(() => {
     loadSubjectDiscussions({ page: 1, limit: 99 })
@@ -53,7 +54,7 @@ export function DiscussionSection() {
     if (discussionReplyId) {
       loadSubjectDiscussion(discussionReplyId)
     }
-  }, [discussionReplyId, loadSubjectDiscussion, replyContent])
+  }, [discussionReplyId, loadSubjectDiscussion, replyContent, flag])
 
   const handleSubjectDiscussionReplySubmit = async () => {
     const data = {
@@ -105,7 +106,7 @@ export function DiscussionSection() {
           </Card>
         ) : (
           <div className="">
-            {subjectDiscussions.map((message: ISubjectDiscussion) => (
+            {subjectDiscussions?.map((message: ISubjectDiscussion) => (
               <MessageThread
                 onReplySubmit={handleSubjectDiscussionReplySubmit}
                 key={message.id}
@@ -117,6 +118,8 @@ export function DiscussionSection() {
                 setDiscussionReplyId={setDiscussionReplyId}
                 selectedSubjectDiscussion={selectedSubjectDiscussion}
                 onEditDrawer={handleEditDrawer}
+                setFlag={setFlag}
+                flag={flag}
               />
             ))}
           </div>

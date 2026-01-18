@@ -9,11 +9,16 @@ import { Avatar, Card, Button, Tooltip, Input, Collapse } from "antd"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
+import { LOCALE_KEYS } from "@/constants/localizationKeys"
 import { Status } from "@/enums"
 
 import { useAuth } from "@/hooks/useAuth"
+import { useLocalization } from "@/hooks/useLocalization"
 import { useSubjectDiscussionReplies } from "@/hooks/useSubjectDiscussionReplies"
 import { useSubjectDiscussions } from "@/hooks/useSubjectDiscussions"
+
+import { getErrorMessage } from "@/types/errors"
+
 
 import { DiscussionReplies } from "./DiscussionReplies"
 
@@ -27,37 +32,78 @@ export function MessageThread({
   onReplySubmit,
   setDiscussionReplyId,
   selectedSubjectDiscussion,
-  onEditDrawer
-
+  onEditDrawer,
+  flag,
+  setFlag
+  
 }: any) {
   const { content } = message
-  const { actionStatus, createSubjectDiscussionReply, loadSubjectDiscussionReply, selectedSubjectDiscussionReply } = useSubjectDiscussionReplies()
-  const {removeSubjectDiscussion, actionStatus : subjectDiscussionActionStatus} = useSubjectDiscussions()
+  const { actionStatus, createSubjectDiscussionReply, loadSubjectDiscussionReply, editSubjectDiscussionReply } = useSubjectDiscussionReplies()
+  const { removeSubjectDiscussion, } = useSubjectDiscussions()
   const [replyId, setReplyId] = useState("")
   const { user } = useAuth()
+
+  const [mode, setMode] = useState<'create' | 'edit'>('create')
+  const { t } = useLocalization()
+  const entityName = t(LOCALE_KEYS.DISCUSSION, { defaultValue: 'Discussion' });
+ 
 
   useEffect(() => {
     if (replyId) {
       loadSubjectDiscussionReply(Number(replyId))
     }
-  }, [loadSubjectDiscussionReply, replyId])
+  }, [loadSubjectDiscussionReply, replyId, flag ])
 
-  const handleSubjectDiscussionReplySubmit = async (
-    parentReplyId: number,
-    content: string
-  ) => {
-    const data = {
-      discussionId: Number(message.id),
-      parentReplyId,
-      content,
-      fileIds: [],
-      status: "active",
+
+  const handleSubmit = async (parentReplyId: number,
+    content: string) => {
+
+    try {
+      if (mode === 'create') {
+        const data = {
+          discussionId: Number(message.id),
+          parentReplyId,
+          content,
+          fileIds: [],
+          status: "active",
+        }
+        await createSubjectDiscussionReply(data);
+        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+        setFlag(!flag)
+      } else if (mode === 'edit' && parentReplyId) {
+        const data = {
+          discussionId: Number(message.id),
+          parentReplyId: null,
+          content,
+          status: "active",
+        }
+        console.log(data)
+        await editSubjectDiscussionReply(parentReplyId, data);
+        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
+        setFlag(!flag)
+      }
+    } catch (error: unknown) {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+        name: entityName,
+        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+      });
+
+      // Try to extract error message from API response
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { data?: { message?: string } } };
+        if (apiError.response?.data?.message) {
+          errorMessage = apiError.response.data.message;
+        }
+      } else {
+        // Use the helper function for other error types
+        errorMessage = getErrorMessage(error);
+      }
+
+      toast.error(errorMessage);
     }
+  };
 
-    await createSubjectDiscussionReply(data)
-  }
-
-  const handleRemoveDisuccsion = async(id:number) =>{
+  const handleRemoveDisuccsion = async (id: number) => {
     await removeSubjectDiscussion(id)
     toast.success("Deleted Successfully!")
   }
@@ -79,9 +125,7 @@ export function MessageThread({
                   }}
                 />
               </div>
-              {/* <span className="text-xs text-gray-500">
-                {message.replies?.length || 0} replies
-              </span> */}
+
             </div>
           }
         >
@@ -91,23 +135,27 @@ export function MessageThread({
             <DiscussionReplies
               replies={selectedSubjectDiscussion.replies}
               actionStatus={actionStatus}
-              onReplySubmit={handleSubjectDiscussionReplySubmit}
+              onReplySubmit={handleSubmit}
               setReplyId={setReplyId}
-              selectedSubjectDiscussionReply={selectedSubjectDiscussionReply}
+            
+              setMode={setMode}
+              flag={flag}
             />
           )}
 
-          <div className="mt-3 flex justify-end gap-4">
-            <Tooltip title="Reply">
-              <Button
-                type="text"
-                size="small"
-                icon={<MessageOutlined />}
-                onClick={onReplyClick}
-              >
-                Reply
-              </Button>
-            </Tooltip>
+          <div className="mt-3 flex justify-start border-t-1 border-gray-400 gap-4 py-2">
+            {
+              (message.isLocked === true) ? <p className="text-red-400">Author locked this message. You can&apos;t reply anymore</p> : <Tooltip title="Reply">
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<MessageOutlined />}
+                  onClick={onReplyClick}
+                >
+                  Reply
+                </Button>
+              </Tooltip>
+            }
 
             {
               user?.id === message.author.id && <>
@@ -116,7 +164,7 @@ export function MessageThread({
                     type="text"
                     size="small"
                     icon={<EditOutlined />}
-                    onClick={()=>onEditDrawer(message.id)}
+                    onClick={() => onEditDrawer(message.id)}
                   >Edit</Button>
                 </Tooltip>
 
@@ -126,7 +174,7 @@ export function MessageThread({
                     size="small"
                     danger
                     icon={<DeleteOutlined />}
-                    onClick={()=>handleRemoveDisuccsion(message.id)}
+                    onClick={() => handleRemoveDisuccsion(message.id)}
                   >Delete</Button>
                 </Tooltip>
               </>

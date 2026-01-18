@@ -20,7 +20,7 @@ import UpperTab from '../lms/UpperTab';
 
 
 const MyCoursesSection = () => {
-  const [activeTab, setActiveTab] = useState('materials');
+  const [activeTab, setActiveTab] = useState('discussion');
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab");
   const { user } = useAuth()
@@ -34,10 +34,10 @@ const MyCoursesSection = () => {
   return (
     <div className="md:my-6">
       {user?.type === UserType.FACULTY &&
-        <UpperTab items={FacultyTabData} initial={tab ?? 'materials'} onTabChange={(tab) => setActiveTab(tab)} />
+        <UpperTab items={FacultyTabData} initial={tab ?? 'discussion'} onTabChange={(tab) => setActiveTab(tab)} />
       }
       {user?.type === UserType.STUDENT &&
-        <UpperTab items={StudentTabData} initial={tab ?? 'materials'} onTabChange={(tab) => setActiveTab(tab)} />
+        <UpperTab items={StudentTabData} initial={tab ?? 'discussion'} onTabChange={(tab) => setActiveTab(tab)} />
       }
       {activeTab === 'materials' && <CourseMaterials />}
       

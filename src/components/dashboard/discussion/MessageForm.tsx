@@ -28,7 +28,7 @@ interface DiscussionFormProps {
 
 }
 
-const MessageFormDrawer: React.FC<DiscussionFormProps> = ({
+const MessageForm: React.FC<DiscussionFormProps> = ({
   mode,
   discussionId,
   initialValues,
@@ -136,4 +136,4 @@ const MessageFormDrawer: React.FC<DiscussionFormProps> = ({
     </Form>
   )
 }
-export default MessageFormDrawer;
+export default MessageForm;
