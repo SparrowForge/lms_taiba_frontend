@@ -20,6 +20,7 @@ export const LOCALE_KEYS = {
   DETAILS_NAME: 'details_name',
   NOT_FOUND_NAME: 'not_found_name',
   BACK_TO_LIST_NAME: 'back_to_list_name',
+  READ_NAME:"read_name",
   CREATED_NAME: 'created_name',
   UPDATED_NAME: 'updated_name',
   DELETED_NAME: 'deleted_name',

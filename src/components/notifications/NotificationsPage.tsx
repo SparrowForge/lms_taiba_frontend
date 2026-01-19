@@ -1,112 +1,76 @@
 "use client"
 
 import { CheckOutlined, DeleteOutlined } from "@ant-design/icons"
-import { Button, Empty, Space, Tooltip, Badge } from "antd"
-import { useEffect,  } from "react"
+import {
+  Badge,
+  Button,
+  Empty,
+  Pagination,
+  Space,
+  Tooltip,
+} from "antd"
+import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
 import { LOCALE_KEYS } from "@/constants/localizationKeys"
-
 import { useLocalization } from "@/hooks/useLocalization"
 import { useNotifications } from "@/hooks/useNotifications"
-
 import { getErrorMessage } from "@/types/errors"
 import { INotification } from "@/types/notification"
 
-
-
-
-
 export default function NotificationsPage() {
+  const {
+    loadNotifications,
+    notifications,
+    markNotificationAsRead,
+    markAllNotificationsAsRead,
+    removeNotification,
+    pagination,
+    actionStatus,
+  } = useNotifications()
 
-    const {loadNotifications, notifications, markNotificationAsRead, markAllNotificationsAsRead, actionStatus, removeNotification} = useNotifications()
-  const { t } = useLocalization();
-  const entityName = t(LOCALE_KEYS.NOTIFICATION, { defaultValue: 'Notification' });
+  const { t } = useLocalization()
+  const entityName = t(LOCALE_KEYS.NOTIFICATION, {
+    defaultValue: "Notification",
+  })
 
-    useEffect(()=>{
-      loadNotifications({page:1, limit:99})
-    },[loadNotifications, actionStatus])
+  /** Pagination state */
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
 
+  /** Load notifications */
+  useEffect(() => {
+    loadNotifications({ page, limit })
+  }, [page, limit, loadNotifications, actionStatus])
 
-  const unreadCount = notifications.filter((n) => !n.readAt).length
+  const unreadCount = notifications.filter(n => !n.readAt).length
 
-  const handleMarkAsRead = async(id: number) => {
+  const handleMarkAsRead = async (id: number) => {
     try {
-      await markNotificationAsRead(Number(id))
-      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+      await markNotificationAsRead(id)
+      toast.success(t(LOCALE_KEYS.READ_NAME, { name: entityName }))
     } catch (error) {
-       let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
-          name: entityName,
-          defaultValue: `Failed to read ${entityName.toLowerCase()}`,
-        });
-  
-        // Try to extract error message from API response
-        if (error && typeof error === 'object' && 'response' in error) {
-          const apiError = error as { response?: { data?: { message?: string } } };
-          if (apiError.response?.data?.message) {
-            errorMessage = apiError.response.data.message;
-          }
-        } else {
-          // Use the helper function for other error types
-          errorMessage = getErrorMessage(error);
-        }
-  
-        toast.error(errorMessage);
-      }
+      toast.error(getErrorMessage(error))
     }
-  
+  }
 
-  const handleMarkAllAsRead = async() => {
+  const handleMarkAllAsRead = async () => {
     try {
       await markAllNotificationsAsRead()
-      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+      toast.success(t(LOCALE_KEYS.READ_NAME, { name: entityName }))
     } catch (error) {
-       let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
-          name: entityName,
-          defaultValue: `Failed to read all ${entityName.toLowerCase()}`,
-        });
-  
-        // Try to extract error message from API response
-        if (error && typeof error === 'object' && 'response' in error) {
-          const apiError = error as { response?: { data?: { message?: string } } };
-          if (apiError.response?.data?.message) {
-            errorMessage = apiError.response.data.message;
-          }
-        } else {
-          // Use the helper function for other error types
-          errorMessage = getErrorMessage(error);
-        }
-  
-        toast.error(errorMessage);
-      }
+      toast.error(getErrorMessage(error))
+    }
   }
 
   const handleDelete = async (id: number) => {
     try {
-      await removeNotification(Number(id))
-      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+      await removeNotification(id)
+      toast.success(t(LOCALE_KEYS.READ_NAME, { name: entityName }))
     } catch (error) {
-       let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
-          name: entityName,
-          defaultValue: `Failed to remove ${entityName.toLowerCase()}`,
-        });
-  
-        // Try to extract error message from API response
-        if (error && typeof error === 'object' && 'response' in error) {
-          const apiError = error as { response?: { data?: { message?: string } } };
-          if (apiError.response?.data?.message) {
-            errorMessage = apiError.response.data.message;
-          }
-        } else {
-          // Use the helper function for other error types
-          errorMessage = getErrorMessage(error);
-        }
-  
-        toast.error(errorMessage);
-      }
+      toast.error(getErrorMessage(error))
+    }
   }
-
-
 
   const formatTime = (createdAt: string) => {
     const diff = Date.now() - new Date(createdAt).getTime()
@@ -121,12 +85,21 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div  style={{ height: "100%", maxWidth: 800, margin: "0 auto", padding: "24px" }}>
+    <div
+      style={{
+        height: "100%",
+        maxWidth: 800,
+        margin: "0 auto",
+        padding: "24px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Header */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
           marginBottom: 16,
         }}
       >
@@ -151,15 +124,15 @@ export default function NotificationsPage() {
       {/* Scrollable List */}
       <div
         style={{
-          maxHeight: "calc(100vh - 220px)", // admin panel safe height
+          flex: 1,
           overflowY: "auto",
-          paddingRight: 8,
+          paddingBottom: 80, // space for sticky pagination
         }}
       >
         {notifications.length === 0 ? (
           <Empty description="No notifications" />
         ) : (
-          notifications.map((notification:INotification) => {
+          notifications.map((notification: INotification) => {
             const isUnread = !notification.readAt
 
             return (
@@ -167,7 +140,9 @@ export default function NotificationsPage() {
                 key={notification.id}
                 style={{
                   backgroundColor: isUnread ? "#e6f7ff" : "#fafafa",
-                  border: `1px solid ${isUnread ? "#91d5ff" : "#d9d9d9"}`,
+                  border: `1px solid ${
+                    isUnread ? "#91d5ff" : "#d9d9d9"
+                  }`,
                   borderRadius: 8,
                   padding: 16,
                   marginBottom: 12,
@@ -233,7 +208,9 @@ export default function NotificationsPage() {
                         size="small"
                         danger
                         icon={<DeleteOutlined />}
-                        onClick={() => handleDelete(notification.id)}
+                        onClick={() =>
+                          handleDelete(notification.id)
+                        }
                       />
                     </Tooltip>
                   </Space>
@@ -243,6 +220,43 @@ export default function NotificationsPage() {
           })
         )}
       </div>
+
+      {/* Fixed Bottom Pagination */}
+      {pagination?.total > limit && (
+        <div
+          style={{
+            position: "sticky",
+            bottom: 0,
+            zIndex: 10,
+            backgroundColor: "#fff",
+            paddingTop: "12px",
+            paddingBottom: "12px",
+            borderTop: "1px solid #f0f0f0",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Pagination
+            current={pagination.page}
+            total={pagination.total}
+            pageSize={pagination.limit}
+            showSizeChanger
+            showQuickJumper
+            showTotal={(total, range) =>
+              `${range[0]}-${range[1]} ${t(
+                LOCALE_KEYS.OF
+              )} ${total} ${entityName}s`
+            }
+            onChange={(newPage, newPageSize) => {
+              setPage(newPage)
+              if (newPageSize !== limit) {
+                setLimit(newPageSize)
+                setPage(1)
+              }
+            }}
+          />
+        </div>
+      )}
     </div>
   )
 }

@@ -17,6 +17,7 @@
   "not_found_name": "{name} not found",
   "back_to_list_name": "Back to {name}s",
   "created_name": "{name} created successfully!",
+  "read_name": "{name} read successfully!",
   "updated_name": "{name} updated successfully!",
   "deleted_name": "{name} deleted successfully!",
   "please_enter_name": "Please enter {name}",
