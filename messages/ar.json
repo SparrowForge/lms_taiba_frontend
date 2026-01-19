@@ -1,4 +1,5 @@
 {
+  "discussion":"مناقشة",
   "student_marks_entry":"إدخال علامات الطالب",
   "student-qr-code":"رمز الاستجابة السريعة للطالب",
   "assign-faculty":"تعيين الكلية",
@@ -16,6 +17,7 @@
   "not_found_name": "{name} غير موجود",
   "back_to_list_name": "العودة إلى {name}",
   "created_name": "تم إنشاء {name} بنجاح!",
+  "read_name": "تم إنشاء {name} بنجاح!",
   "updated_name": "تم تحديث {name} بنجاح!",
   "deleted_name": "تم حذف {name} بنجاح!",
   "please_enter_name": "يرجى إدخال {name}",

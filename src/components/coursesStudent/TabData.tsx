@@ -1,6 +1,10 @@
 import { UpperTabItem } from "../lms/UpperTab";
 
 export const FacultyTabData: UpperTabItem[] = [
+    {
+    key: 'discussion',
+    title: 'Discussion',
+  },
   {
     key: 'materials',
     title: 'Materials',
@@ -17,14 +21,15 @@ export const FacultyTabData: UpperTabItem[] = [
     key: 'grading',
     title: 'Grading',
   },
-  {
-    key: 'discussion',
-    title: 'Discussion',
-  },
+
 
 ];
 
 export const StudentTabData: UpperTabItem[] = [
+    {
+    key: 'discussion',
+    title: 'Discussion',
+  },
   {
     key: 'materials',
     title: 'Materials',
@@ -49,15 +54,16 @@ export const StudentTabData: UpperTabItem[] = [
     key: 'grading',
     title: 'Grading',
   },
-  {
-    key: 'discussion',
-    title: 'Discussion',
-  },
+
 
 ];
 
 
 export const StudentProfileTabData: UpperTabItem[] = [
+    {
+    key: 'discussion',
+    title: 'Discussion',
+  },
   {
     key: 'profile',
     title: 'Profile',
@@ -83,10 +89,7 @@ export const StudentProfileTabData: UpperTabItem[] = [
     key: 'grading',
     title: 'Grading',
   },
-  {
-    key: 'discussion',
-    title: 'Discussion',
-  },
+
 
 ];
 

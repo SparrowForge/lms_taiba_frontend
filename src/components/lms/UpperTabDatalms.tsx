@@ -15,6 +15,7 @@ const UpperTabDatalms = [
     localeTitle: 'التسليمات',
   },
 
+
 ];
 
 export default UpperTabDatalms;

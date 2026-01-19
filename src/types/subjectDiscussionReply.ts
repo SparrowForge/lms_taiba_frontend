@@ -15,6 +15,7 @@ export interface ISubjectDiscussionReply {
   discussion: ISubjectDiscussion;
   author: IUser;
   attachments: IFile[];
+  replies:ISubjectDiscussionReply[]
 }
 
 export interface ISubjectDiscussionReplyCreate {

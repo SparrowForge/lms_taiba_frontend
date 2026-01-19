@@ -101,7 +101,6 @@ interface LexicalEditorProps {
 
 export default function LexicalEditor({
     onChange,
-    placeholder = "Write here...",
     readOnly = false,
     height = 220,
 }: LexicalEditorProps) {

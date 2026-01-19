@@ -133,12 +133,12 @@ export default function CoursesPage() {
       {
         title: t(LOCALE_KEYS.COURSE_TYPE),
         key: 'courseType',
-        render: (course: ICourse) => <span>{course.courseType.name}</span>,
+        render: (course: ICourse) => <span>{course?.courseType?.name}</span>,
       },
       {
         title: t(LOCALE_KEYS.SCHEDULE_TYPE),
         key: 'scheduleType',
-        render: (course: ICourse) => <span>{course.scheduleType.name}</span>,
+        render: (course: ICourse) => <span>{course?.scheduleType?.name}</span>,
       },
       {
         title: t(LOCALE_KEYS.DURATION_IN_SEMESTERS),
