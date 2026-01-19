@@ -1,6 +1,6 @@
 "use client"
 
-import { OpenAIOutlined } from "@ant-design/icons"
+import { OpenAIOutlined, PlusOutlined } from "@ant-design/icons"
 import { Button, Card, Empty } from "antd"
 import { useEffect, useState } from "react"
 
@@ -11,12 +11,14 @@ import { ISubjectDiscussion } from "@/types/subjectDiscussion"
 
 import DiscussionFormDrawer from "./DiscussionFormDrawer"
 import { MessageThread } from "./MessageThread"
+import { Status } from "@/enums"
+import { BiLoader } from "react-icons/bi"
 
 export function DiscussionSection() {
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedDiscussionId, setSelectedDiscussionId] = useState<number | undefined>()
-  const { loadSubjectDiscussions, subjectDiscussions, loadSubjectDiscussion, selectedSubjectDiscussion } = useSubjectDiscussions()
+  const { loadSubjectDiscussions, subjectDiscussions, loadSubjectDiscussion, selectedSubjectDiscussion, actionStatus } = useSubjectDiscussions()
 
   const { createSubjectDiscussionReply, } = useSubjectDiscussionReplies()
   const [discussionId, setDiscussionId] = useState(0)
@@ -73,19 +75,26 @@ export function DiscussionSection() {
     setDrawerVisible(false);
   };
 
+  if (actionStatus.status === Status.LOADING) {
+    return <BiLoader />
+  }
+
   return (
     <>
-      <div className="flex justify-end m-4">
+      <div className="flex justify-between m-4">
+        <h1 className="text-2xl font-bold">
+          Course Discussion | مناقشة الدورة
+        </h1>
         <Button
           htmlType="submit"
           type="primary"
-          icon={<OpenAIOutlined />}
+          icon={<PlusOutlined />}
           onClick={() => handleCreateDrawer()}
         >
-          Open Discussion
+          New Post
         </Button>
       </div>
-      <div className="mx-auto max-w-2xl space-y-6 p-4 md:p-6">
+      <div className="">
 
 
         <DiscussionFormDrawer
@@ -98,7 +107,7 @@ export function DiscussionSection() {
 
 
         {subjectDiscussions.length === 0 ? (
-          <Card className="border-0 shadow-sm mt-4">
+          <Card className="border-0 shadow-sm ">
             <Empty
               description="No discussion yet, open your first discussion"
               style={{ marginTop: 48, marginBottom: 48 }}

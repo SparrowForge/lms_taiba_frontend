@@ -17,6 +17,7 @@ import { useLocalization } from "@/hooks/useLocalization"
 import { useNotifications } from "@/hooks/useNotifications"
 import { getErrorMessage } from "@/types/errors"
 import { INotification } from "@/types/notification"
+import { formatTime } from "@/utils/timeFormatUtils"
 
 export default function NotificationsPage() {
   const {
@@ -72,17 +73,7 @@ export default function NotificationsPage() {
     }
   }
 
-  const formatTime = (createdAt: string) => {
-    const diff = Date.now() - new Date(createdAt).getTime()
-    const mins = Math.floor(diff / 60000)
-    const hours = Math.floor(diff / 3600000)
-    const days = Math.floor(diff / 86400000)
 
-    if (mins < 1) return "just now"
-    if (mins < 60) return `${mins}m ago`
-    if (hours < 24) return `${hours}h ago`
-    return `${days}d ago`
-  }
 
   return (
     <div

@@ -27,7 +27,7 @@ interface Props {
     actionStatus: any
     onReplySubmit: (parentReplyId: number, content: string) => void,
     setReplyId: any,
-
+    setFlag:any,
     setMode: any,
     flag:boolean
 }
@@ -39,7 +39,7 @@ export function DiscussionReplies({
     actionStatus,
     onReplySubmit,
     setReplyId,
-
+    setFlag,
     setMode,
     flag
 }: Props) {
@@ -61,6 +61,7 @@ export function DiscussionReplies({
         try {
             if (id) {
                 await removeSubjectDiscussionReply(id)
+                setFlag(!flag);
             }
         } catch (error: unknown) {
             let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
@@ -116,7 +117,7 @@ export function DiscussionReplies({
                                 <p className="text-sm font-semibold">
                                     {reply.author.name}
                                 </p>
-                                <p className="text-xs text-gray-500 truncate max-w-[400px]">
+                                <p className="text-xs text-gray-500 ">
                                     {reply.content}
                                 </p>
                             </div>
@@ -165,10 +166,10 @@ export function DiscussionReplies({
 
 
                     {reply.replies?.length > 0 && (
-                        <div className="mt-3 space-y-2 border-l-1 border-[#4096FF] pl-4">
+                        <div className="mt-3 space-y-2  pl-8">
                             {reply.replies.map((childReply: ISubjectDiscussionReply) => (
                                 <div key={childReply.id} className="flex gap-2">
-                                    {/* <Avatar size={28} /> */}
+                                    <Avatar size={28} />
                                     <div>
                                         <p className="text-xs font-semibold">
                                             {childReply.author.name}
@@ -185,7 +186,7 @@ export function DiscussionReplies({
 
                     {activeReplyId === reply.id && (
                         <div className="mt-3 space-y-2">
-                            <Input
+                            <Input.TextArea
                                 placeholder="Write a reply..."
                                 onChange={(e) => setReplyText(e.target.value)}
                             />
@@ -206,7 +207,7 @@ export function DiscussionReplies({
                     )}
                     {editReplyId === reply.id && (
                         <div className="mt-3 space-y-2">
-                            <Input
+                            <Input.TextArea
                                 placeholder="Write a reply..."
                                 onChange={(e) => setReplyText(e.target.value)}
                                 value={selectedSubjectDiscussionReply ? selectedSubjectDiscussionReply.content : ''}

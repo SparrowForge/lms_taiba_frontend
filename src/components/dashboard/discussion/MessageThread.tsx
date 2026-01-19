@@ -21,6 +21,7 @@ import { getErrorMessage } from "@/types/errors"
 
 
 import { DiscussionReplies } from "./DiscussionReplies"
+import { formatTime } from "@/utils/timeFormatUtils"
 
 const { Panel } = Collapse
 export function MessageThread({
@@ -35,7 +36,7 @@ export function MessageThread({
   onEditDrawer,
   flag,
   setFlag
-  
+
 }: any) {
   const { content } = message
   const { actionStatus, createSubjectDiscussionReply, loadSubjectDiscussionReply, editSubjectDiscussionReply } = useSubjectDiscussionReplies()
@@ -46,13 +47,13 @@ export function MessageThread({
   const [mode, setMode] = useState<'create' | 'edit'>('create')
   const { t } = useLocalization()
   const entityName = t(LOCALE_KEYS.DISCUSSION, { defaultValue: 'Discussion' });
- 
+
 
   useEffect(() => {
     if (replyId) {
       loadSubjectDiscussionReply(Number(replyId))
     }
-  }, [loadSubjectDiscussionReply, replyId, flag ])
+  }, [loadSubjectDiscussionReply, replyId, flag])
 
 
   const handleSubmit = async (parentReplyId: number,
@@ -116,14 +117,22 @@ export function MessageThread({
         <Panel
           key={message.id}
           header={
-            <div className="flex items-center justify-between w-full">
-              <div>
-                <p className="font-semibold">{message.author.name}</p>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: content,
-                  }}
-                />
+            <div className="flex  justify-between w-full">
+              <div className="flex items-start gap-4">
+                <Avatar
+                  src={message.author.avatarUrl}
+                  alt={message.author.name} 
+                  size={24}
+                  shape="circle" />
+                <div>
+                  <p className=""><span className="font-semibold">{message.author.name}</span> 
+                  <span className="text-gray-400 font-normal text-xs ml-1 mb-1">  ({message.author.type.toUpperCase()}) Posted {formatTime(message.createdAt)}</span></p>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: content,
+                    }}
+                  />
+                </div>
               </div>
 
             </div>
@@ -137,7 +146,7 @@ export function MessageThread({
               actionStatus={actionStatus}
               onReplySubmit={handleSubmit}
               setReplyId={setReplyId}
-            
+              setFlag={setFlag}
               setMode={setMode}
               flag={flag}
             />
@@ -183,7 +192,7 @@ export function MessageThread({
 
           {isReplyOpen && (
             <div className="mt-3 space-y-2">
-              <Input
+              <Input.TextArea
                 placeholder="Write a reply..."
                 onChange={(e) => onReply(message.id, e.target.value)}
               />
