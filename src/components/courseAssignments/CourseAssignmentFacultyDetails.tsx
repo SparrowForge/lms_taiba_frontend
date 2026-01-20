@@ -7,11 +7,15 @@ import { ICourse } from "@/types/course";
 import { IFaculty } from "@/types/faculty";
 import { ISemester } from "@/types/semester";
 import { ISubject } from "@/types/subject";
+import { useAuth } from "@/hooks/useAuth";
 
-const CourseAssignmentsFacultyDetails = ({semester,batch, course, faculty,subject, classNo}: {semester: ISemester | null, batch: IBatch | null, course: ICourse | null, faculty: IFaculty | null, subject: ISubject | null, classNo: number}) => {
+const CourseAssignmentsFacultyDetails = ({semester,batch, course, faculty,subject, classNo}: 
+  {semester: ISemester | null, batch: IBatch | null, course: ICourse | null, faculty: IFaculty | null, subject: ISubject | null, classNo: number}) => {
   const { t } = useLocalization();
+  const {user} = useAuth()
+
   return (
-    <Card title="Assignment Details" bordered className="shadow-sm" style={{marginBottom:"10px"}}>
+    <Card title="Course Material Details" bordered className="shadow-sm" style={{marginBottom:"10px"}}>
       <Row gutter={[16, 16]}>
         <Col span={12}>
           <strong>Course:</strong>

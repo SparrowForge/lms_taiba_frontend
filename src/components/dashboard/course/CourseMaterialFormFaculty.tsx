@@ -164,7 +164,7 @@ const CourseMaterialFacultyForm: React.FC<CourseMaterialFormProps> = ({
                     semester={selectedSemester} 
                     batch={selectedBatch} 
                     course={selectedCourse} 
-                    faculty={user} 
+                    faculty={user?.faculty} 
                     subject={selectedSubject}
                     classNo={classNo}
                 />
