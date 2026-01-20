@@ -12,7 +12,7 @@ import {
   Spin,
   Typography,
 } from 'antd';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -26,37 +26,38 @@ import { useStudents } from '@/hooks/useStudents';
 
 import { IExam } from '@/types/exam';
 import { ICreateExamCandidateBulk } from '@/types/examCandidate';
+import { toast } from 'react-toastify';
 
 interface ExamCandidateFormProps {
-  response:IExam
+  response: IExam
 }
 
-function ExamCandidateFacultyBulkForm({response}: ExamCandidateFormProps) {
-    const { t } = useLocalization();
-    const [studentStatuses, setStudentStatuses] = useState<Record<number, string>>({});
-    const [selectAllStatus, setSelectAllStatus] = useState<string>('allowed');
+function ExamCandidateFacultyBulkForm({ response }: ExamCandidateFormProps) {
+  const { t } = useLocalization();
+  const [studentStatuses, setStudentStatuses] = useState<Record<number, string>>({});
+  const [selectAllStatus, setSelectAllStatus] = useState<string>('allowed');
+  const router = useRouter()
+  const { selectedCourse, loadCourse } = useCourses();
+  const { selectedBatch, loadBatch } = useBatches();
+  const { students, loadStudents, listStatus } = useStudents();
+  const { actionStatus, createExamCandidateBulk } = useExamCandidates();
 
-    const { selectedCourse, loadCourse} = useCourses();
-    const { selectedBatch, loadBatch } = useBatches();
-    const { students, loadStudents, listStatus } = useStudents();
-    const { actionStatus, createExamCandidateBulk } = useExamCandidates();
-
-    const searchParams = useSearchParams()
-    const batchId = searchParams.get("batchId")
+  const searchParams = useSearchParams()
+  const batchId = searchParams.get("batchId")
 
 
 
   useEffect(() => {
-      if(batchId){
-        loadBatch(Number(batchId))
-      };
+    if (batchId) {
+      loadBatch(Number(batchId))
+    };
   }, [loadBatch, batchId]);
 
-    useEffect(() => {
-    if(selectedBatch){
-        loadCourse(Number(selectedBatch?.course.id));
+  useEffect(() => {
+    if (selectedBatch) {
+      loadCourse(Number(selectedBatch?.course.id));
     }
-    
+
   }, [loadCourse, selectedBatch]);
 
 
@@ -113,12 +114,17 @@ function ExamCandidateFacultyBulkForm({response}: ExamCandidateFormProps) {
 
       // Call the hook method instead of service directly
       await createExamCandidateBulk(submitData);
+      toast.success('Successfully created exam candidates.');
 
-      // Reset form after successful submission
       setStudentStatuses({});
       setSelectAllStatus('allowed');
+      return router.push('/dashboard/course')
+
+
+
     } catch (error) {
       console.error('Error creating exam candidates:', error);
+      // toast.error('Failed to create exam candidates. Please try again.');
     }
   };
 
@@ -126,20 +132,20 @@ function ExamCandidateFacultyBulkForm({response}: ExamCandidateFormProps) {
     <div>
       <Card style={{ margin: '8px' }}>
         <Row gutter={[16, 16]}>
- 
-            <Col xs={24} sm={8}>
-                <p className="font-semibold text-lg">Course: {selectedCourse?.name}</p>
-            </Col>
+
+          <Col xs={24} sm={8}>
+            <p className="font-semibold text-lg">Course: {selectedCourse?.name}</p>
+          </Col>
 
 
-            <Col xs={24} sm={8}>
-                <p className="font-semibold text-lg">Batch: {selectedBatch?.name}</p>
-            </Col>
+          <Col xs={24} sm={8}>
+            <p className="font-semibold text-lg">Batch: {selectedBatch?.name}</p>
+          </Col>
 
-            <Col xs={24} sm={8}>
-                <p className="font-semibold text-lg">Exam: {response?.name}</p>
-            </Col>
-          
+          <Col xs={24} sm={8}>
+            <p className="font-semibold text-lg">Exam: {response?.name}</p>
+          </Col>
+
         </Row>
       </Card>
 

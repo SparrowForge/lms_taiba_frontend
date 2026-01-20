@@ -1,13 +1,14 @@
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify';
 
+import { useExams } from '@/hooks/useExams';
 import { useMcqQuestions } from '@/hooks/useMcqQuestions';
+import { useQuestionSets } from '@/hooks/useQuestionSets';
 
 import QuestionSetForm from './QuestionSetForm'
 import QuestionsTable from './QuestionsTable'
-import { useSearchParams } from 'next/navigation';
-import { useExams } from '@/hooks/useExams';
-import { useQuestionSets } from '@/hooks/useQuestionSets';
-import { toast } from 'react-toastify';
+
 
 export interface FormState {
   name: string;
@@ -22,6 +23,7 @@ const QuestionSet = () => {
   const [selectedQuestion, setSelectedQuestion] = useState<number[]>([])
   const { mcqQuestions, loadMcqQuestions } = useMcqQuestions()
   const {createQuestionSetWithQuestions, actionStatus} = useQuestionSets()
+  const router = useRouter()
 
   const [questionSetformData, setQuestionSetFormData] = useState<FormState>({
     name: "",
@@ -58,6 +60,7 @@ const QuestionSet = () => {
 
     await createQuestionSetWithQuestions(data)
     toast.success(actionStatus.message)
+    router.push(`/dashboard/course`)
   }
 
 

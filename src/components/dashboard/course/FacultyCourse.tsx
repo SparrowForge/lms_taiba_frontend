@@ -5,8 +5,9 @@ import React, { useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useFacultySubjects } from '@/hooks/useFacultySubjects'
 
-import { SubjectCollapse } from './SubjectCollapse'
 import { IFacultySubject } from '@/types/facultySubject'
+
+import { SubjectCollapse } from './SubjectCollapse'
 
 
 const FacultyCourse = () => {

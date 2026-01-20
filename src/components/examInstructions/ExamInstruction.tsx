@@ -1,10 +1,11 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
-import { Button, Card, Divider, Space, Typography, Alert, Row, Col } from "antd"
 import { CheckCircleOutlined } from "@ant-design/icons"
-import { useExams } from "../../hooks/useExams"
+import { Button, Card, Divider, Space, Typography, Alert, Row, Col } from "antd"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
+
+import { useExams } from "../../hooks/useExams"
 
 const { Title, Text } = Typography
 
@@ -142,7 +143,7 @@ export default function ExamInstruction() {
                 type="primary"
                 size="large"
                 style={{ paddingInline: 32, height: 48 }}
-                // disabled={!canStartExam}
+                disabled={!canStartExam}
                 onClick={() => router.push(`/participate-exam?subjectId=${subjectId}&examId=${examId}`)}
               >
                 Start Exam

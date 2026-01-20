@@ -28,6 +28,7 @@ export default function CreateExamMCQQuestionPage() {
       setSubmittingQuestions(true)
       await createBulkMcqQuestions(payload)
       toast.success(actionStatus.message)
+      router.push(`/dashboard/course`)
   
     } finally {
       setSubmittingQuestions(false)

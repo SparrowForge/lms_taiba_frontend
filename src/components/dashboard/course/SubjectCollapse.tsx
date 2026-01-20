@@ -1,10 +1,11 @@
 "use client"
 
 import { Collapse, Card, Button } from "antd"
-import type { CollapseProps } from "antd"
 import { useRouter } from "next/navigation"
 import { BiBookOpen, BiDetail } from "react-icons/bi"
 import { FaClipboardList } from "react-icons/fa"
+
+import type { CollapseProps } from "antd"
 
 interface Subject {
   id: number
@@ -100,7 +101,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                       size="small"
                       type="primary"
                       icon={<BiDetail size={14} />}
-                      onClick={() => handleSubjectDetails(item.subject.id, item.semesterId, item?.batchId)}
+                      onClick={() => handleSubjectDetails(item.subject.id, item.semesterId, item?.batch?.id)}
                     >
                       See Details
                     </Button>
@@ -131,7 +132,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                   <p className="text-xs text-gray-600 mb-1">
                     <span className="font-medium">Description:</span>
                   </p>
-                  <p className="text-xs text-gray-700 line-clamp-2">{item.subject.description}</p>
+                  <div dangerouslySetInnerHTML={{ __html: item.subject.description }} />
                   <p className="text-xs text-gray-600">Role: {item.role}</p>
                 </div>
 

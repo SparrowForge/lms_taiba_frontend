@@ -167,8 +167,9 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
             style={{ margin: "16px 0" }}
             type="primary"
             onClick={() => onSubmit()}
+            loading={actionStatus.status === Status.LOADING}
           >
-            {actionStatus.status === Status.LOADING ? <Spin /> : 'Submit'}
+            Submit
           </Button>
         </div>
       </div>

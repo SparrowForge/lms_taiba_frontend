@@ -7,14 +7,13 @@ import React, { useState } from 'react';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import ExamCandidateBulkForm from '@/components/examCandidates/ExamCandidateBulkForm';
+import ExamCandidateFacultyBulkForm from '@/components/examCandidates/ExamCandidateFacultyBulkForm';
 import ExamFormFaculty from '@/components/exams/ExamFormFaculty';
 import ExamScheduleFacultyForm from '@/components/examSchedules/ExamScheduleFacultyForm';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 import { useLocalization } from '@/hooks/useLocalization';
-import ExamCandidateFacultyBulkForm from '@/components/examCandidates/ExamCandidateFacultyBulkForm';
 
 export default function CreateExamPage() {
   const { t } = useLocalization();

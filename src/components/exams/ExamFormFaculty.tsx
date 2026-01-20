@@ -127,18 +127,19 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
         batchId:Number(batchId)
        };
 
-      // Convert dayjs object back to ISO string for API
+
       if (payload.examDatetime && dayjs.isDayjs(payload.examDatetime)) {
         payload.examDatetime = payload.examDatetime.toISOString();
       }
 
-      // Convert duration dayjs object to HH:mm:ss string
+
       if (payload.duration && dayjs.isDayjs(payload.duration)) {
         payload.duration = payload.duration.format('HH:mm:ss');
       }
 
       if (mode === 'create') {
         const res = await createExam(payload as IExamCreate);
+        console.log("createExam", res)
         setResponse(res)
         toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {

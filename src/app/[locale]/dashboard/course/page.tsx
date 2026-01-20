@@ -1,11 +1,13 @@
 'use client';
-import { useAuth } from '@/hooks/useAuth'; 
 
 import { UserType } from '@/enums/user-type.enum';
-import {MainLayout} from '@/components/layout/MainLayout';
+
 import {ProtectedRoute} from '@/components/auth/ProtectedRoute';
-import StudentCourse from '@/components/dashboard/course/StudentCourse';
 import FacultyCourse from '@/components/dashboard/course/FacultyCourse';
+import StudentCourse from '@/components/dashboard/course/StudentCourse';
+import {MainLayout} from '@/components/layout/MainLayout';
+
+import { useAuth } from '@/hooks/useAuth'; 
 
 
 
