@@ -1,9 +1,10 @@
 "use client"
 
-import { Button, Card, Col, Radio, Row, Space, Typography } from "antd"
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons"
-import { useState, useMemo, useEffect, useRef } from "react"
+import { Button, Card, Col, Radio, Row, Space, Typography } from "antd"
 import { useSearchParams } from "next/navigation"
+import { useState, useMemo, useEffect, useRef } from "react"
+
 import { useExams } from "@/hooks/useExams"
 import { useQuestionSets } from "@/hooks/useQuestionSets"
 
@@ -35,21 +36,23 @@ export default function Quiz({
   const { selectedExam, loadExam } = useExams()
   const { selectedQuestionSet, loadQuestionSet } = useQuestionSets()
 
-  /* ---------------- Load Exam ---------------- */
+
   useEffect(() => {
     if (examId) {
       loadExam(Number(examId))
     }
   }, [examId, loadExam])
 
-  /* ---------------- Load Question Set ---------------- */
+
   useEffect(() => {
     if (selectedExam?.selectedQuestionSetId) {
       loadQuestionSet(Number(selectedExam.selectedQuestionSetId))
     }
   }, [selectedExam?.selectedQuestionSetId, loadQuestionSet])
 
-  /* ---------------- Exam Timer Logic ---------------- */
+  console.log("selectedExam",selectedExam)
+
+
   useEffect(() => {
     if (!selectedExam) return
 

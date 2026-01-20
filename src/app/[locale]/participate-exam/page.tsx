@@ -10,7 +10,7 @@ import Quiz from '@/components/participateExam/Quiz';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 import { useLocalization } from '@/hooks/useLocalization';
-import { useExams } from '@/hooks/useExams';
+
 
 
 
@@ -22,7 +22,6 @@ export default function ParticipateExamMCQ() {
 
     const handleQuizSubmit = async (answers: Record<number, string>) => {
         console.log("Quiz submitted with answers:", answers)
-
     }
 
     return (
