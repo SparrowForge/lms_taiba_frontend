@@ -1,6 +1,7 @@
 "use client"
 
 import { Button, Card, Timeline } from "antd"
+import { useParams, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import CourseMaterialFormDrawer from "@/components/courseMaterials/CourseMaterialFormDrawer"
@@ -36,9 +37,17 @@ export default function CourseTimeline() {
   const [selectedCourseMaterialId, setSelectedCourseMaterialId] = useState<number | undefined>();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [classNo, setClassNo] = useState<number | undefined>()
+  const params = useParams()
+  const searchParams = useSearchParams()
+  const subjectId = params.id as string
+  const semesterId = searchParams.get('semesterId') as string
+  const batchId = searchParams.get('batchId') as string
+
   useEffect(()=>{
-    loadAttendances({page:1, limit:99, semesterId:1, subjectId:1})
-  },[loadAttendances, drawerVisible])
+    if(subjectId && semesterId){
+        loadAttendances({page:1, limit:99, subjectId: Number(subjectId), semesterId: Number(semesterId), batchId: batchId ? Number(batchId) : undefined})
+    }
+  },[loadAttendances, drawerVisible, semesterId, subjectId, batchId])
 
   const timelineData = attendances as unknown as TimelineItem[]
 

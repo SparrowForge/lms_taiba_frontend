@@ -64,25 +64,25 @@ interface SubjectCollapseProps {
 
 export function SubjectCollapse({ data }: SubjectCollapseProps) {
   const router = useRouter()
-  const handleAddMaterials =(subjectId:number, semesterId:number, batchId:number | null | undefined) =>{
-      router.push(`/dashboard/course/${subjectId}/timeline?semesterId=${semesterId}&batchId=${batchId}`)
+  const handleAddMaterials = (subjectId: number, semesterId: number, batchId: number | null | undefined) => {
+    router.push(`/dashboard/course/${subjectId}/timeline?semesterId=${semesterId}&batchId=${batchId}`)
   }
-  const handleAddAssignments =(subjectId:number, semesterId:number, batchId:number | null) =>{
-      router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&tab=assignments&batchId=${batchId}`)
-  }
-
-  const handleAddExam =(subjectId:number, semesterId:number, batchId:number | null) =>{
-      router.push(`/exams/create?subjectId=${subjectId}&semesterId=${semesterId}&batchId=${batchId}`)
+  const handleAddAssignments = (subjectId: number, semesterId: number, batchId: number | null) => {
+    router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&batchId=${batchId}&tab=assignments`)
   }
 
-    const handleSubjectDetails =(subjectId:number) =>{
-      router.push(`/dashboard/course/${subjectId}`)
+  const handleAddExam = (subjectId: number, semesterId: number, batchId: number | null) => {
+    router.push(`/exams/create?subjectId=${subjectId}&semesterId=${semesterId}&batchId=${batchId}`)
+  }
+
+  const handleSubjectDetails = (subjectId: number, semesterId: number, batchId: number ) => {
+    router.push(`/dashboard/course/${subjectId}?semesterId=${semesterId}&batchId=${batchId}`)
   }
 
   const items: CollapseProps["items"] = data.map((group, index) => {
-  const batchName = group.subjects[0]?.batch?.name || "No Batch Assigned"
-  const semesterName = group.subjects[0]?.semester.name || "Unknown Semester"
-  const headerTitle = `${batchName} - ${semesterName}`
+    const batchName = group.subjects[0]?.batch?.name || "No Batch Assigned"
+    const semesterName = group.subjects[0]?.semester.name || "Unknown Semester"
+    const headerTitle = `${batchName} - ${semesterName}`
 
 
     return {
@@ -91,10 +91,20 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
       children: (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {group.subjects.map((item) => (
-            <Card onClick={()=>handleSubjectDetails(item.subject.id)} key={item.id} size="small" className="h-full hover:shadow-md transition-shadow cursor-pointer">
+            <Card key={item.id} size="small" className="h-full hover:shadow-md transition-shadow cursor-pointer">
               <div className="space-y-3">
                 <div>
-                  <h3 className="font-semibold text-sm leading-tight">{item.subject.name}</h3>
+                  <div className="flex justify-between">
+                    <h3 className="font-semibold text-sm leading-tight">{item.subject.name}</h3>
+                    <Button
+                      size="small"
+                      type="primary"
+                      icon={<BiDetail size={14} />}
+                      onClick={() => handleSubjectDetails(item.subject.id, item.semesterId, item?.batchId)}
+                    >
+                      See Details
+                    </Button>
+                  </div>
                   <p className="text-xs text-gray-500 mt-1">{item.subject.code}</p>
                 </div>
 
@@ -135,7 +145,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
 
 
 
-                 <div className="border-t pt-3 flex gap-2">
+                <div className="border-t pt-3 flex gap-2">
                   <Button
                     type="primary"
                     size="small"
@@ -161,6 +171,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                   >
                     Exam
                   </Button>
+
                 </div>
               </div>
             </Card>

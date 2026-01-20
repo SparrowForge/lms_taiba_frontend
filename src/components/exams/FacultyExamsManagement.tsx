@@ -2,6 +2,7 @@
 
 
 import {  Card, Empty, Spin,  } from 'antd';
+import { useParams, useSearchParams } from 'next/navigation';
 import React, { useEffect,  } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -20,10 +21,18 @@ import FacultyExamList from './FacultyExamLists';
 const FacultyExamsManagement: React.FC = () => {
   const { t } = useLocalization();
     const {exams, loadExams, listStatus} = useExams()
+    const params = useParams()
+    const searchParams = useSearchParams()
+    const subjectId = params.id as string
+    const semesterId = searchParams.get('semesterId') as string
+    const batchId = searchParams.get('batchId') as string
+
 
     useEffect(()=>{
-        loadExams({page:1, limit:99})
-    },[loadExams])
+        if(subjectId && semesterId){
+            loadExams({page:1, limit:99, subjectId: Number(subjectId), semesterId: Number(semesterId), batchId: batchId ? Number(batchId) : undefined})
+        }
+    },[batchId, loadExams, semesterId, subjectId])
   return (
     <Card className="rounded-xl shadow-sm mb-6">
       {/* Header */}
@@ -38,18 +47,16 @@ const FacultyExamsManagement: React.FC = () => {
         </div>
       )}
 
-      {listStatus.status === Status.SUCCESS && exams?.length === 0 && (
-        <Empty description="NO_ASSIGNMENT" />
-      )}
+
 
       {/* Assignment Cards */}
-      {listStatus.status === Status.SUCCESS && exams?.length > 0 && (
+      {listStatus.status === Status.SUCCESS && exams?.length > 0 ? (
         <div className="flex flex-col gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
           {exams?.map((item) => (
             <FacultyExamList key={item.id} data={item}/>
           ))}
         </div>
-      )}
+      ):  <Empty description="NO_EXAMS" />}
 
       
 
