@@ -1,22 +1,29 @@
 import { Button, Card, Progress } from 'antd';
 import { useLocale } from 'next-intl';
+import { useEffect } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
+import { useAuth } from '@/hooks/useAuth';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useSubjects } from '@/hooks/useSubjects';
 
-const subjects = [
-  { name: 'Mathematics', local_name: 'الرياضيات', percent: 86 },
-  { name: 'Physics', local_name: 'الفيزياء', percent: 92 },
-  { name: 'Computer Science', local_name: 'علوم الحاسوب', percent: 78 },
-  { name: 'English', local_name: 'اللغة الإنجليزية', percent: 95 },
-  { name: 'History', local_name: 'التاريخ', percent: 81 },
-  { name: 'Biology', local_name: 'الأحياء', percent: 88 },
-];
+
 
 const AcademicProgress = () => {
   const { t } = useLocalization();
   const locale = useLocale();
+  const {loadSubjects, subjects
+  } = useSubjects()
+  const {user} = useAuth();
+
+  
+
+  useEffect(() => {
+    if(user?.student?.courseId){
+      loadSubjects(user.student.courseId);
+    }
+  }, [loadSubjects, user.student?.courseId]);
 
   return (
     <Card className="rounded-2xl shadow-sm min-h-full">
