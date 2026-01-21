@@ -3,6 +3,7 @@ import React from 'react'
 import { UserType } from '@/enums/user-type.enum'
 
 import { useAuth } from '@/hooks/useAuth'
+
 import ExamResultByStudent from './ExamResultByStudent'
 
 const ExamResultIndividualSubject = () => {

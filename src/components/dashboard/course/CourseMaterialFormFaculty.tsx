@@ -70,10 +70,10 @@ const CourseMaterialFacultyForm: React.FC<CourseMaterialFormProps> = ({
     }, [loadSubject, id])
 
     useEffect(() => {
-        loadCourse(selectedSubject?.course.id)
+        loadCourse(selectedSubject?.course?.id)
         loadBatch(Number(batchId))
         loadSemester(Number(semesterId))
-    }, [batchId, loadBatch, loadCourse, loadSemester, selectedSubject?.course.id, selectedSubject.courseId, semesterId])
+    }, [batchId, loadBatch, loadCourse, loadSemester, selectedSubject?.course?.id, semesterId])
 
 
     useEffect(() => {
@@ -88,10 +88,10 @@ const CourseMaterialFacultyForm: React.FC<CourseMaterialFormProps> = ({
         const mValues = {
             ...values,
             courseId: selectedSubject?.courseId,
-            subjectId: id,
-            semesterId: semesterId,
-            batchId: batchId,
-            facultyId: user?.faculty.id,
+            subjectId: Number(id),
+            semesterId: Number(semesterId),
+            batchId: Number(batchId),
+            facultyId: user?.faculty?.id,
             classNo
         }
         try {
@@ -164,7 +164,6 @@ const CourseMaterialFacultyForm: React.FC<CourseMaterialFormProps> = ({
                         semester={selectedSemester}
                         batch={selectedBatch}
                         course={selectedCourse}
-                        faculty={user?.faculty}
                         subject={selectedSubject}
                         classNo={classNo}
                     />

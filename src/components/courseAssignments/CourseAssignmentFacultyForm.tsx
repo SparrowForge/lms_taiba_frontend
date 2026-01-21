@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { EntityType, FileCategory, FileType, Status } from '@/enums';
+import { ASSIGNMENT_TYPE_OPTIONS, EntityType, FileCategory, FileType, Status } from '@/enums';
 
 import { useAuth } from '@/hooks/useAuth';
 import { useBatches } from '@/hooks/useBatches';
@@ -64,13 +64,14 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
   const router = useRouter();
   const [form] = Form.useForm();
-  const { createCourseAssignment, editCourseAssignment, actionStatus,loadCourseAssignments } = useCourseAssignments();
+  const { createCourseAssignment, editCourseAssignment, actionStatus, loadCourseAssignments } = useCourseAssignments();
   const { loadSubject, selectedSubject } = useSubjects()
   const { loadCourse, selectedCourse } = useCourses()
   const { loadBatch, selectedBatch } = useBatches()
   const { loadSemester, selectedSemester } = useSemesters()
   const { user } = useAuth()
   const finalSubjectId = (id ?? subjectId) as string;
+
 
   useEffect(() => {
 
@@ -79,7 +80,7 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
 
   useEffect(() => {
     loadCourseAssignments({ finalSemesterId, subjectId: finalSubjectId });
-  }, [finalSubjectId, loadCourseAssignments, finalSemesterId]);
+  }, [finalSubjectId, loadCourseAssignments, finalSemesterId,]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -145,6 +146,7 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
       toast.error(errorMessage);
     }
   };
+  
 
   const handleCancel = () => {
     if (onCancel) {
@@ -224,12 +226,21 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
           },
         ]}
       >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}>
-          <Select.Option value="Homework">Homework</Select.Option>
-          <Select.Option value="Project">Project</Select.Option>
-          <Select.Option value="Quiz">Quiz</Select.Option>
-          <Select.Option value="Exam">Exam</Select.Option>
-          <Select.Option value="Presentation">Presentation</Select.Option>
+
+
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {ASSIGNMENT_TYPE_OPTIONS.map((item) => (
+            <Select.Option key={item.key} value={item.value}>
+              {item.value}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 

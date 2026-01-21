@@ -9,13 +9,14 @@ import { useAuth } from '@/hooks/useAuth';
 
 import Assignments from './Assignments';
 import SubmittedAssignment from './SubmittedAssignment';
-import  { FacultyTabData, StudentTabData } from './TabData';
+import { FacultyTabData, StudentTabData } from './TabData';
 import { DiscussionSection } from '../dashboard/discussion/DiscussionSection';
 import ExamResultIndividualSubject from '../examResults/ExamResultIndividualSubject';
 import FacultyExamsManagement from '../exams/FacultyExamsManagement';
 import StudentExamParticipate from '../exams/StudentExamParticipate';
 import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
+import { Card, Empty } from 'antd';
 
 
 
@@ -40,14 +41,18 @@ const MyCoursesSection = () => {
         <UpperTab items={StudentTabData} initial={tab ?? 'discussion'} onTabChange={(tab) => setActiveTab(tab)} />
       }
       {activeTab === 'materials' && <CourseMaterials />}
-      
+
       {activeTab === 'assignments' && <Assignments />}
       {user?.type === UserType.STUDENT && activeTab === 'submittedAssignments' && <SubmittedAssignment />}
-      {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement/>}
-      {user?.type === UserType.STUDENT && activeTab === 'exam' && <StudentExamParticipate/>}
-      {user?.type === UserType.STUDENT && activeTab === 'result' && <ExamResultIndividualSubject/>}
-      {activeTab === 'grading' && <div>Grading Content is empty</div>}
-      {activeTab === 'discussion' && <DiscussionSection/>}
+      {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement />}
+      {user?.type === UserType.STUDENT && activeTab === 'exam' && <StudentExamParticipate />}
+      {user?.type === UserType.STUDENT && activeTab === 'result' && <ExamResultIndividualSubject />}
+      {activeTab === 'grading' && <Card className="rounded-xl shadow-sm mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">No Grading</h2>
+        </div>
+        <Empty description="NO_GRADING" /></Card>}
+      {activeTab === 'discussion' && <DiscussionSection />}
     </div>
   );
 };

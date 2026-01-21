@@ -86,7 +86,7 @@ const AssignmentSubmissionCardByStudent = ({ data }: { data: ICourseAssignmentSu
         <strong>Marks Obtained:</strong>{" "}
         {marksObtained !== null ? marksObtained : "Not Graded"}
       </p>
-
+{/* 
       <Button
           type="primary"
           size="small"
@@ -95,7 +95,7 @@ const AssignmentSubmissionCardByStudent = ({ data }: { data: ICourseAssignmentSu
           onClick={() => handleEditDrawer(data.id)}
       >
           Edit
-      </Button>
+      </Button> */}
 
       <CourseAssignmentSubmissionFormDrawer
         mode={assignmentSubmissiondrawerMode}

@@ -157,7 +157,7 @@ export default function Quiz({
     }
   }
 
-  /* ---------------- UI ---------------- */
+  
   if (!currentQuestion) return null
 
   return (
