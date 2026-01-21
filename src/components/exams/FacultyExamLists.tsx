@@ -128,8 +128,7 @@ const FacultyExamList = ({ data }: ExamListProps) => {
           <span className="font-medium">Room:</span>{" "}
           {data.room?.name}
         </p>
-        {
-          !isHead && <>
+   
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -147,8 +146,6 @@ const FacultyExamList = ({ data }: ExamListProps) => {
             >
               Add Question Set
             </Button>
-          </>
-        }
         {
           isHead && <>
             <Button
