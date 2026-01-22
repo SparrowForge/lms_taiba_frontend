@@ -3,13 +3,13 @@
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons"
 import { Button, Card, Col, Radio, Row, Space, Typography } from "antd"
 import { useSearchParams } from "next/navigation"
-import { useState, useMemo, useEffect, useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 import { useExams } from "@/hooks/useExams"
 import { useQuestionSets } from "@/hooks/useQuestionSets"
 
 interface QuizParticipantProps {
-  onSubmit?: (answers: Record<number, string>) => Promise<void>
+  onSubmit?: (payload: any) => Promise<void>
   onCancel?: () => void
   title?: string
 }
@@ -36,29 +36,28 @@ export default function Quiz({
   const { selectedExam, loadExam } = useExams()
   const { selectedQuestionSet, loadQuestionSet } = useQuestionSets()
 
-
+  /* ---------------- Load exam ---------------- */
   useEffect(() => {
     if (examId) {
       loadExam(Number(examId))
     }
   }, [examId, loadExam])
 
-
+  /* ---------------- Load question set ---------------- */
   useEffect(() => {
     if (selectedExam?.selectedQuestionSetId) {
       loadQuestionSet(Number(selectedExam.selectedQuestionSetId))
     }
   }, [selectedExam?.selectedQuestionSetId, loadQuestionSet])
 
-  console.log("selectedExam",selectedExam)
-
-
+  /* ---------------- Exam timer ---------------- */
   useEffect(() => {
-    if (!selectedExam) return
+    if (!selectedExam?.examDatetime || !selectedExam?.duration) return
 
     const examStart = new Date(selectedExam.examDatetime).getTime()
-    const examEnd =
-      examStart + selectedExam.duration.hours * 60 * 60 * 1000
+    const durationHours =
+      selectedExam.duration?.hours ?? selectedExam.duration ?? 0
+    const examEnd = examStart + durationHours * 60 * 60 * 1000
 
     const interval = setInterval(() => {
       const now = Date.now()
@@ -96,19 +95,11 @@ export default function Quiz({
   const optionLabels = ["a", "b", "c", "d"]
   const optionLetters = ["A", "B", "C", "D"]
 
-  const progressPercentage = useMemo(() => {
-    if (!selectedQuestionSet?.items?.length) return 0
-    return Math.round(
-      ((currentQuestionIndex + 1) / selectedQuestionSet.items.length) * 100
-    )
-  }, [currentQuestionIndex, selectedQuestionSet?.items?.length])
-
   const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000)
     const h = Math.floor(totalSeconds / 3600)
     const m = Math.floor((totalSeconds % 3600) / 60)
     const s = totalSeconds % 60
-
     return `${h.toString().padStart(2, "0")}:${m
       .toString()
       .padStart(2, "0")}:${s.toString().padStart(2, "0")}`
@@ -136,7 +127,10 @@ export default function Quiz({
   }
 
   const handleNext = () => {
-    if (currentQuestionIndex < selectedQuestionSet.items.length - 1) {
+    if (
+      currentQuestionIndex <
+      selectedQuestionSet.items.length - 1
+    ) {
       setCurrentQuestionIndex((p) => p + 1)
     }
   }
@@ -147,19 +141,53 @@ export default function Quiz({
     }
   }
 
+  /* ---------------- Build submit payload ---------------- */
+  const buildSubmitPayload = () => {
+    if (!selectedExam || !selectedQuestionSet) return null
+
+    return {
+      examId: selectedExam.id,
+      questionSetId: selectedQuestionSet.id,
+      courseId: selectedQuestionSet.courseId,
+      subjectId: selectedQuestionSet.subjectId,
+      semesterId: selectedQuestionSet.semesterId,
+      batchId: selectedQuestionSet.batchId,
+      startedAt: selectedExam.examDatetime,
+      submittedAt: new Date().toISOString(),
+      durationInSeconds:
+        (selectedExam.duration?.hours ?? 0) * 60 * 60,
+      answers: Object.entries(answers).map(
+        ([index, selectedOption]) => {
+          const item =
+            selectedQuestionSet.items[Number(index)]
+
+          return {
+            questionId: item.questionId,
+            selectedOption,
+          }
+        }
+      ),
+    }
+  }
+
+  /* ---------------- Submit ---------------- */
   const handleSubmit = async () => {
     if (submitting) return
+
+    const payload = buildSubmitPayload()
+    if (!payload) return
+
     try {
       setSubmitting(true)
-      await onSubmit?.(answers)
+      await onSubmit?.(payload)
     } finally {
       setSubmitting(false)
     }
   }
 
-  
   if (!currentQuestion) return null
 
+  /* ---------------- UI ---------------- */
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
@@ -199,17 +227,13 @@ export default function Quiz({
                   )
                 })}
               </Space>
-
-              {/* <div style={{ marginTop: 16 }}>
-                <Text type="secondary">Progress: {progressPercentage}%</Text>
-              </div> */}
             </Card>
           </Col>
 
           {/* Right Panel */}
           <Col xs={24} sm={16} md={18}>
             <Card
-              title={`Question ${currentQuestionIndex + 1} of ${selectedQuestionSet.items.length}`}
+              title={`Question ${currentQuestionIndex + 1} of ${selectedQuestionSet?.items.length}`}
               extra={
                 <Space>
                   <Text strong type={remainingTime < 300000 ? "danger" : undefined}>
@@ -262,7 +286,7 @@ export default function Quiz({
                 </Button>
 
                 {currentQuestionIndex ===
-                selectedQuestionSet.items.length - 1 ? (
+                selectedQuestionSet?.items.length - 1 ? (
                   <Button
                     type="primary"
                     onClick={handleSubmit}
