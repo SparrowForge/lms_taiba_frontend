@@ -93,9 +93,7 @@ export default function ExamCompletionPage() {
                                 </div>
 
                                 <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                                    <p className="text-sm text-gray-600">
-                                        <strong>Reference ID:</strong> EXM-{Math.random().toString(36).substr(2, 9).toUpperCase()}
-                                    </p>
+                                   
                                     <p className="text-sm text-gray-600">
                                         <strong>Status:</strong> Awaiting Review
                                     </p>
@@ -109,26 +107,12 @@ export default function ExamCompletionPage() {
                                 type="primary"
                                 size="large"
                                 icon={<HomeOutlined />}
-                                onClick={() => (window.location.href = '/')}
-                                style={{
-                                    height: '48px',
-                                    backgroundColor: '#10b981',
-                                    borderColor: '#10b981',
-                                    fontSize: '16px',
-                                }}
+                                onClick={() => (window.location.href = '/dashboard')}
+                                style={{marginTop:"16px"}}
                             >
                                 Go to Home
                             </Button>
-                            <Button
-                                size="large"
-                                icon={<FilePdfOutlined />}
-                                style={{
-                                    height: '48px',
-                                    fontSize: '16px',
-                                }}
-                            >
-                                Download Receipt
-                            </Button>
+                          
                         </div>
 
                         {/* Additional Info */}
