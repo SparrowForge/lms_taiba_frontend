@@ -12,13 +12,25 @@ import {
   Space,
   Typography,
 } from "antd"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import React, { useEffect, useMemo, useState } from "react"
+import { toast } from "react-toastify"
+
+import { LOCALE_KEYS } from "@/constants/localizationKeys"
 
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
 import { MainLayout } from "@/components/layout/MainLayout"
 import { PageHeader } from "@/components/ui/PageHeader"
+
 import { useExamSubmissions } from "@/hooks/useExamSubmissions"
+import { useLocalization } from "@/hooks/useLocalization"
+
+import { getErrorMessage } from "@/types/errors"
+import { IExamSubmissionReviewItem } from "@/types/examSubmission"
+import { Status } from "@/enums"
+
+
+
 
 const { Title, Text } = Typography
 const { TextArea } = Input
@@ -29,6 +41,7 @@ type ReviewState = {
     feedback?: string
   }
 }
+
 // const mockExamSubmission = {
 //   id: 1,
 //   examId: 45,
@@ -71,11 +84,16 @@ type ReviewState = {
 
 
 const ExamSubmissionReviewPage = () => {
-  const { loadExamSubmission, selectedExamSubmission } = useExamSubmissions()
+  const { loadExamSubmission, selectedExamSubmission, reviewExamSubmission, actionStatus } = useExamSubmissions()
+
   const searchParams = useSearchParams()
   const submissionId = searchParams.get("submissionId")
 
   const [reviews, setReviews] = useState<ReviewState>({})
+  const [submitted, setSubmitted] = useState(false)
+  const router = useRouter()
+  const  {t}  = useLocalization()
+  const entityName = t(LOCALE_KEYS.EXAM_SUBMISSION);
 
   useEffect(() => {
     if (submissionId) {
@@ -84,12 +102,14 @@ const ExamSubmissionReviewPage = () => {
   }, [loadExamSubmission, submissionId])
 
   const answersNeedingReview = useMemo(() => {
-    return selectedExamSubmission?.answers?.filter(
-      (ans: any) => ans.answerText !== null
-    ) || []
+    return (
+      selectedExamSubmission?.answers?.filter(
+        (ans: any) => ans.answerText !== null
+      ) || []
+    )
   }, [selectedExamSubmission])
 
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async() => {
     const payload = {
       reviews: Object.entries(reviews).map(([questionId, value]) => ({
         questionId: Number(questionId),
@@ -98,11 +118,37 @@ const ExamSubmissionReviewPage = () => {
       })),
     }
 
-    console.log("SUBMIT REVIEW PAYLOAD:", payload)
+    try {
+      await reviewExamSubmission(Number(submissionId), payload as { reviews: IExamSubmissionReviewItem[] });
+      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+      router.push('/exam-submissions');
+    } catch (error: unknown) {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+        name: entityName,
+        defaultValue: `Failed to update ${entityName.toLowerCase()}`,
+      });
 
-    // 👉 TODO: call submit review API
-    // submitExamReview(payload)
+      // Try to extract error message from API response
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { data?: { message?: string } } };
+        if (apiError.response?.data?.message) {
+          errorMessage = apiError.response.data.message;
+        }
+      } else {
+        // Use the helper function for other error types
+        errorMessage = getErrorMessage(error);
+      }
+
+      toast.error(errorMessage);
+    }
+
+    // console.log("SUBMIT REVIEW PAYLOAD:", payload)
+
+
+
+    setSubmitted(true)
   }
+
 
   return (
     <ProtectedRoute>
@@ -139,7 +185,7 @@ const ExamSubmissionReviewPage = () => {
                 <Empty description="No descriptive answers to review" />
               ) : (
                 answersNeedingReview.map((answer: any, index: number) => {
-                  const review = reviews[answer.questionId]
+                  const review = reviews[answer.questionId] || {}
 
                   return (
                     <Card
@@ -158,16 +204,16 @@ const ExamSubmissionReviewPage = () => {
                         </Card>
 
                         {/* Review Section */}
-                        {review?.pointsObtained !== undefined ? (
+                        {submitted ? (
                           <Card type="inner" title="Review">
                             <Text>
                               <strong>Points:</strong>{" "}
-                              {review.pointsObtained}
+                              {review.pointsObtained ?? 0}
                             </Text>
                             <br />
                             <Text>
                               <strong>Feedback:</strong>{" "}
-                              {review.feedback}
+                              {review.feedback || "-"}
                             </Text>
                           </Card>
                         ) : (
@@ -177,12 +223,14 @@ const ExamSubmissionReviewPage = () => {
                                 min={0}
                                 placeholder="Points"
                                 style={{ width: "100%" }}
+                                value={review.pointsObtained}
                                 onChange={(value) =>
                                   setReviews((prev) => ({
                                     ...prev,
                                     [answer.questionId]: {
                                       ...prev[answer.questionId],
-                                      pointsObtained: value ?? 0,
+                                      pointsObtained:
+                                        value === null ? undefined : value,
                                     },
                                   }))
                                 }
@@ -193,6 +241,7 @@ const ExamSubmissionReviewPage = () => {
                               <TextArea
                                 rows={2}
                                 placeholder="Feedback"
+                                value={review.feedback}
                                 onChange={(e) =>
                                   setReviews((prev) => ({
                                     ...prev,
@@ -214,7 +263,7 @@ const ExamSubmissionReviewPage = () => {
             </div>
 
             {/* 🔹 Sticky Submit Button */}
-            {answersNeedingReview.length > 0 && (
+
               <div
                 style={{
                   position: "sticky",
@@ -225,11 +274,11 @@ const ExamSubmissionReviewPage = () => {
                   textAlign: "right",
                 }}
               >
-                <Button type="primary" onClick={handleSubmitReview}>
+                <Button type="primary" onClick={handleSubmitReview} loading={actionStatus.status === Status.LOADING}>
                   Submit Review
                 </Button>
               </div>
-            )}
+
           </>
         )}
       </MainLayout>
