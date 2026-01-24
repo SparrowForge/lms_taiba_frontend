@@ -8,6 +8,7 @@ import { RootState } from '@/store';
 import {
   IExamSubmission,
   IExamSubmissionCreate,
+  IExamSubmissionReviewRequest,
   IExamSubmissionUpdate,
 } from '@/types/examSubmission';
 
@@ -123,6 +124,28 @@ export const useExamSubmissions = () => {
     [dispatch],
   );
 
+  const reviewExamSubmission = useCallback(
+    async (id: number, data: IExamSubmissionReviewRequest) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response = await examSubmissionService.reviewExamSubmission(id, data);
+        dispatch(updateExamSubmission(response));
+        dispatch(setActionStatus({ status: Status.SUCCESS }));
+        return response;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to review exam submission'
+            : 'Failed to review exam submission';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   const removeExamSubmission = useCallback(
     async (id: number) => {
       try {
@@ -175,6 +198,7 @@ export const useExamSubmissions = () => {
     loadExamSubmission,
     createExamSubmission,
     editExamSubmission,
+    reviewExamSubmission,
     removeExamSubmission,
     getExamSubmissionById,
     clearStatuses,

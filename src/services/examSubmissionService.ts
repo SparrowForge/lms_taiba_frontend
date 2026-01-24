@@ -2,6 +2,7 @@ import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
   IExamSubmission,
   IExamSubmissionCreate,
+  IExamSubmissionReviewRequest,
   IExamSubmissionUpdate,
 } from '@/types/examSubmission';
 
@@ -35,5 +36,16 @@ export const examSubmissionService = {
 
   deleteExamSubmission: async (id: number): Promise<void> => {
     await api.delete(`/exam-submissions/${id}`);
+  },
+
+  reviewExamSubmission: async (
+    id: number,
+    data: IExamSubmissionReviewRequest,
+  ): Promise<IExamSubmission> => {
+    const response = await api.post<IBaseResponse<IExamSubmission>>(
+      `/exam-submissions/${id}/review`,
+      data,
+    );
+    return response.data.data;
   },
 };

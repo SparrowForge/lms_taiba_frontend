@@ -5,6 +5,8 @@ export interface IExamSubmissionAnswer {
   questionId: number;
   selectedOption?: number;
   answerText?: string;
+  pointsObtained: number;
+  feedback: string;
 }
 
 export interface IExamSubmission {
@@ -40,4 +42,14 @@ export interface IExamSubmissionUpdate {
   subjectId?: number;
   answers?: IExamSubmissionAnswer[];
   status?: string;
+}
+
+export interface IExamSubmissionReviewItem {
+  questionId: number;
+  pointsObtained: number;
+  feedback: string;
+}
+
+export interface IExamSubmissionReviewRequest {
+  reviews: IExamSubmissionReviewItem[];
 }
