@@ -2,6 +2,8 @@
 // This ensures we only use keys that exist in our localization files
 export const LOCALE_KEYS = {
   // Common
+  PARTICIPATE_EXAM:"participate_exam",
+  EXAM_SUBMISSION:"exam_submission",
   DISCUSSION:"discussion",
   STUDENT_MARKS_ENTRY:"student_marks_entry",
   STUDENT_QR_CODE:'student-qr-code',

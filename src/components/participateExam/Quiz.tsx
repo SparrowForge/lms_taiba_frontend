@@ -1,16 +1,27 @@
 "use client"
 
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons"
-import { Button, Card, Col, Radio, Row, Space, Typography } from "antd"
+import {
+  Button,
+  Card,
+  Col,
+  Radio,
+  Row,
+  Space,
+  Typography,
+  Form,
+} from "antd"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { useExams } from "@/hooks/useExams"
 import { useQuestionSets } from "@/hooks/useQuestionSets"
+import LexicalEditor from "../ui/LexicalEditor"
+import { useAuth } from "@/hooks/useAuth"
+
 
 interface QuizParticipantProps {
   onSubmit?: (payload: any) => Promise<void>
-  onCancel?: () => void
   title?: string
 }
 
@@ -18,17 +29,18 @@ const { Title, Text } = Typography
 
 export default function Quiz({
   onSubmit,
-  onCancel,
   title = "Quiz",
 }: QuizParticipantProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<number, string>>({})
   const [submitting, setSubmitting] = useState(false)
+  const { user } = useAuth()
 
   const [remainingTime, setRemainingTime] = useState(0)
   const [isExamActive, setIsExamActive] = useState(false)
-
   const autoSubmittedRef = useRef(false)
+
+  const [form] = Form.useForm()
 
   const searchParams = useSearchParams()
   const examId = searchParams.get("examId")
@@ -38,9 +50,7 @@ export default function Quiz({
 
   /* ---------------- Load exam ---------------- */
   useEffect(() => {
-    if (examId) {
-      loadExam(Number(examId))
-    }
+    if (examId) loadExam(Number(examId))
   }, [examId, loadExam])
 
   /* ---------------- Load question set ---------------- */
@@ -50,14 +60,13 @@ export default function Quiz({
     }
   }, [selectedExam?.selectedQuestionSetId, loadQuestionSet])
 
-  /* ---------------- Exam timer ---------------- */
+  /* ---------------- Exam timer (FIXED) ---------------- */
   useEffect(() => {
-    if (!selectedExam?.examDatetime || !selectedExam?.duration) return
+    if (!selectedExam?.examDatetime || !selectedExam?.duration?.minutes) return
 
     const examStart = new Date(selectedExam.examDatetime).getTime()
-    const durationHours =
-      selectedExam.duration?.hours ?? selectedExam.duration ?? 0
-    const examEnd = examStart + durationHours * 60 * 60 * 1000
+    const durationMs = selectedExam.duration.minutes * 60 * 1000
+    const examEnd = examStart + durationMs
 
     const interval = setInterval(() => {
       const now = Date.now()
@@ -92,33 +101,22 @@ export default function Quiz({
   const currentItem = selectedQuestionSet?.items?.[currentQuestionIndex]
   const currentQuestion = currentItem?.question
 
+  const isDescriptiveQuestion =
+    !currentQuestion?.options || currentQuestion.options.length === 0
+
   const optionLabels = ["a", "b", "c", "d"]
   const optionLetters = ["A", "B", "C", "D"]
 
   const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000)
-    const h = Math.floor(totalSeconds / 3600)
-    const m = Math.floor((totalSeconds % 3600) / 60)
+    const m = Math.floor(totalSeconds / 60)
     const s = totalSeconds % 60
-    return `${h.toString().padStart(2, "0")}:${m
+    return `${m.toString().padStart(2, "0")}:${s
       .toString()
-      .padStart(2, "0")}:${s.toString().padStart(2, "0")}`
+      .padStart(2, "0")}`
   }
 
-  const getDifficultyColor = (level: string) => {
-    switch (level) {
-      case "easy":
-        return "#52c41a"
-      case "medium":
-        return "#faad14"
-      case "hard":
-        return "#ff4d4f"
-      default:
-        return "#1677ff"
-    }
-  }
-
-  /* ---------------- Handlers ---------------- */
+  /* ---------------- MCQ handler ---------------- */
   const handleOptionChange = (value: string) => {
     setAnswers((prev) => ({
       ...prev,
@@ -127,10 +125,7 @@ export default function Quiz({
   }
 
   const handleNext = () => {
-    if (
-      currentQuestionIndex <
-      selectedQuestionSet.items.length - 1
-    ) {
+    if (currentQuestionIndex < selectedQuestionSet?.items.length - 1) {
       setCurrentQuestionIndex((p) => p + 1)
     }
   }
@@ -141,41 +136,28 @@ export default function Quiz({
     }
   }
 
-  /* ---------------- Build submit payload ---------------- */
-  const buildSubmitPayload = () => {
-    if (!selectedExam || !selectedQuestionSet) return null
-
-    return {
-      examId: selectedExam.id,
-      questionSetId: selectedQuestionSet.id,
-      courseId: selectedQuestionSet.courseId,
-      subjectId: selectedQuestionSet.subjectId,
-      semesterId: selectedQuestionSet.semesterId,
-      batchId: selectedQuestionSet.batchId,
-      startedAt: selectedExam.examDatetime,
-      submittedAt: new Date().toISOString(),
-      durationInSeconds:
-        (selectedExam.duration?.hours ?? 0) * 60 * 60,
-      answers: Object.entries(answers).map(
-        ([index, selectedOption]) => {
-          const item =
-            selectedQuestionSet.items[Number(index)]
-
-          return {
-            questionId: item.questionId,
-            selectedOption,
-          }
-        }
-      ),
-    }
-  }
-
   /* ---------------- Submit ---------------- */
   const handleSubmit = async () => {
     if (submitting) return
 
-    const payload = buildSubmitPayload()
-    if (!payload) return
+    const formValues = form.getFieldsValue(true)
+
+    const payload = {
+      examId: selectedExam?.id,
+      studentId: user?.student?.id,
+      courseId: selectedQuestionSet?.courseId,
+      subjectId: selectedQuestionSet?.subjectId,
+      answers: selectedQuestionSet?.items.map((item, index) => ({
+        questionId: item.questionId,
+        selectedOption: item.question.options?.length
+          ? optionLabels.indexOf(answers[index]) + 1 || null
+          : null,
+        answerText: item.question.options?.length
+          ? null
+          : formValues[`answer_${index}`] ?? "",
+      })),
+      status: "draft",
+    }
 
     try {
       setSubmitting(true)
@@ -187,128 +169,102 @@ export default function Quiz({
 
   if (!currentQuestion) return null
 
-  /* ---------------- UI ---------------- */
-  return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
-        <Row gutter={24}>
-          {/* Left Sidebar */}
-          <Col xs={24} sm={8} md={6}>
-            <Card
-              title={title}
-              size="small"
-              className="sticky top-6"
-              style={{ maxHeight: "calc(100vh - 48px)", overflowY: "auto" }}
-            >
-              <Space direction="vertical" style={{ width: "100%" }} size={8}>
-                {selectedQuestionSet?.items?.map((_, idx) => {
-                  const isAnswered = idx in answers
-                  const isCurrent = idx === currentQuestionIndex
 
-                  return (
+  return (
+    <Form form={form} layout="vertical">
+      <div className="min-h-screen p-6">
+        <div className="max-w-7xl mx-auto">
+          <Row gutter={24}>
+            {/* Left Sidebar */}
+            <Col xs={24} sm={8} md={6}>
+              <Card title={title} size="small" className="sticky top-6">
+                <Space direction="vertical" style={{ width: "100%" }} size={8}>
+                  {selectedQuestionSet?.items?.map((_, idx) => (
                     <Card
                       key={idx}
                       size="small"
                       hoverable
                       onClick={() => setCurrentQuestionIndex(idx)}
-                      style={{
-                        border: isCurrent
-                          ? "2px solid #1677ff"
-                          : "1px solid #d9d9d9",
-                        backgroundColor: isCurrent
-                          ? "#e6f7ff"
-                          : isAnswered
-                          ? "#f6ffed"
-                          : "transparent",
-                      }}
                     >
                       <Text strong>Q{idx + 1}</Text>
                     </Card>
-                  )
-                })}
-              </Space>
-            </Card>
-          </Col>
-
-          {/* Right Panel */}
-          <Col xs={24} sm={16} md={18}>
-            <Card
-              title={`Question ${currentQuestionIndex + 1} of ${selectedQuestionSet?.items.length}`}
-              extra={
-                <Space>
-                  <Text strong type={remainingTime < 300000 ? "danger" : undefined}>
-                    ⏱ {formatTime(remainingTime)}
-                  </Text>
-                  <Text
-                    style={{
-                      color: getDifficultyColor(
-                        currentQuestion.difficultyLevel
-                      ),
-                      fontWeight: "bold",
-                      textTransform: "capitalize",
-                    }}
-                  >
-                    {currentQuestion.difficultyLevel}
-                  </Text>
+                  ))}
                 </Space>
-              }
-            >
-              <Title level={4}>{currentQuestion.questionText}</Title>
+              </Card>
+            </Col>
 
-              <Radio.Group
-                disabled={!isExamActive}
-                value={answers[currentQuestionIndex]}
-                onChange={(e) => handleOptionChange(e.target.value)}
-                style={{ display: "flex", flexDirection: "column", gap: 12 }}
+            {/* Right Panel */}
+            <Col xs={24} sm={16} md={18}>
+              <Card
+                title={`Question ${currentQuestionIndex + 1} of ${selectedQuestionSet?.items.length}`}
+                extra={<Text strong>⏱ {formatTime(remainingTime)}</Text>}
               >
-                {currentQuestion.options.map((opt, idx) => (
-                  <Card key={idx} hoverable>
-                    <Radio value={optionLabels[idx]}>
-                      <strong>{optionLetters[idx]}.</strong> {opt}
-                    </Radio>
-                  </Card>
-                ))}
-              </Radio.Group>
+                <Title level={4}>{currentQuestion.questionText}</Title>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: 24,
-                }}
-              >
-                <Button
-                  icon={<ArrowLeftOutlined />}
-                  disabled={currentQuestionIndex === 0}
-                  onClick={handlePrev}
-                >
-                  Previous
-                </Button>
-
-                {currentQuestionIndex ===
-                selectedQuestionSet?.items.length - 1 ? (
-                  <Button
-                    type="primary"
-                    onClick={handleSubmit}
-                    loading={submitting}
-                    disabled={!isExamActive}
+                {isDescriptiveQuestion ? (
+                  <Form.Item
+                    name={`answer_${currentQuestionIndex}`}
+                    rules={[{ required: true, message: "Answer is required" }]}
                   >
-                    Submit Quiz
-                  </Button>
+                    <LexicalEditor />
+                  </Form.Item>
                 ) : (
-                  <Button
-                    type="primary"
-                    icon={<ArrowRightOutlined />}
-                    onClick={handleNext}
+                  <Radio.Group
+                    // disabled={!isExamActive}
+                    value={answers[currentQuestionIndex]}
+                    onChange={(e) => handleOptionChange(e.target.value)}
+                    style={{ display: "flex", flexDirection: "column", gap: 12 }}
                   >
-                    Next
-                  </Button>
+                    {currentQuestion.options.map((opt, idx) => (
+                      <Card key={idx} hoverable>
+                        <Radio value={optionLabels[idx]}>
+                          <strong>{optionLetters[idx]}.</strong> {opt}
+                        </Radio>
+                      </Card>
+                    ))}
+                  </Radio.Group>
                 )}
-              </div>
-            </Card>
-          </Col>
-        </Row>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: 24,
+                  }}
+                >
+                  <Button
+                    icon={<ArrowLeftOutlined />}
+                    disabled={currentQuestionIndex === 0}
+                    onClick={handlePrev}
+                  >
+                    Previous
+                  </Button>
+
+                  {currentQuestionIndex ===
+                    selectedQuestionSet?.items.length - 1 ? (
+                    <Button
+                      type="primary"
+                      onClick={handleSubmit}
+                      loading={submitting}
+                      disabled={!isExamActive}
+                    >
+                      Submit Quiz
+                    </Button>
+                  ) : (
+                    <Button
+                      type="primary"
+                      icon={<ArrowRightOutlined />}
+                      onClick={handleNext}
+                    >
+                      Next
+                    </Button>
+                  )}
+                </div>
+              </Card>
+            </Col>
+          </Row>
+        </div>
       </div>
-    </div>
+    </Form>
   )
 }

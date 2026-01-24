@@ -1,5 +1,5 @@
-import { IStudent } from './student';
 import { IExam } from './exam';
+import { IStudent } from './student';
 
 export interface IExamSubmissionAnswer {
   questionId: number;
