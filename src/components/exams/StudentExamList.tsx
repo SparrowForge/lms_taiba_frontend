@@ -34,66 +34,72 @@ interface ExamListProps {
 
 const StudentExamList = ({ data }: ExamListProps) => {
   const router = useRouter()
-  const handlePrepareExam =(subjectId:number, examId:number) =>{
+  const handlePrepareExam = (subjectId: number, examId: number) => {
     return router.push(`/exam-instructions?subjectId=${subjectId}&examId=${examId}`)
   }
 
+  function isExamButtonDisabled(examDatetime) {
+    return new Date(examDatetime).toDateString() !== new Date().toDateString();
+  }
+
+
 
   return (
-    
-        <Card
-          key={data.id}
-          className="shadow-md rounded-xl border"
-          title={
-            <div className="flex justify-between items-center">
-              <span className="font-semibold">{data.name}</span>
-              <Tag color="blue">{data.examType?.name}</Tag>
-            </div>
-          }
+
+    <Card
+      key={data.id}
+      className="shadow-md rounded-xl border"
+      title={
+        <div className="flex justify-between items-center">
+          <span className="font-semibold">{data.name}</span>
+          <Tag color="blue">{data.examType?.name}</Tag>
+        </div>
+      }
+    >
+      <div className="space-y-2 text-sm">
+        <p>
+          <span className="font-medium">Subject:</span>{" "}
+          {data.subject?.name}
+        </p>
+
+        <p>
+          <span className="font-medium">Marks:</span> {data.marks}
+        </p>
+
+        <p>
+          <span className="font-medium">Date:</span>{" "}
+          {formatDate(data.examDatetime)}
+        </p>
+
+        <p>
+          <span className="font-medium">Time:</span>{" "}
+          {formatTime(data.examDatetime)}
+        </p>
+
+        <p>
+          <span className="font-medium">Duration:</span>{" "}
+          {data.duration?.hours
+            ? `${data.duration.hours} hr${data.duration.hours > 1 ? "s" : ""}`
+            : ""}
+          {data.duration?.minutes
+            ? ` ${data.duration.minutes} min`
+            : ""}
+        </p>
+
+        <p>
+          <span className="font-medium">Room:</span>{" "}
+          {data.room?.name}
+        </p>
+        <Button
+          type="primary"
+          onClick={() => handlePrepareExam(data.subjectId, data.id)}
+          disabled={isExamButtonDisabled(data?.examDatetime)}
         >
-          <div className="space-y-2 text-sm">
-            <p>
-              <span className="font-medium">Subject:</span>{" "}
-              {data.subject?.name}
-            </p>
+          Start Exam
+        </Button>
 
-            <p>
-              <span className="font-medium">Marks:</span> {data.marks}
-            </p>
-
-            <p>
-              <span className="font-medium">Date:</span>{" "}
-              {formatDate(data.examDatetime)}
-            </p>
-
-            <p>
-              <span className="font-medium">Time:</span>{" "}
-              {formatTime(data.examDatetime)}
-            </p>
-
-            <p>
-              <span className="font-medium">Duration:</span>{" "}
-              {data.duration?.hours
-                ? `${data.duration.hours} hr${data.duration.hours > 1 ? "s" : ""}`
-                : ""}
-              {data.duration?.minutes
-                ? ` ${data.duration.minutes} min`
-                : ""}
-            </p>
-
-            <p>
-              <span className="font-medium">Room:</span>{" "}
-              {data.room?.name}
-            </p>
-            <Button
-              type="primary"
-              onClick={()=>handlePrepareExam(data.subjectId, data.id)}
-            >
-              Start Exam
-            </Button>
-            
-          </div>
-        </Card>
+      </div>
+    </Card>
 
   );
 };

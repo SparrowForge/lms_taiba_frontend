@@ -107,7 +107,7 @@ export default function ExamCompletionPage() {
                                 type="primary"
                                 size="large"
                                 icon={<HomeOutlined />}
-                                onClick={() => (window.location.href = '/dashboard')}
+                                onClick={() => (window.location.href = '/')}
                                 style={{marginTop:"16px"}}
                             >
                                 Go to Home
