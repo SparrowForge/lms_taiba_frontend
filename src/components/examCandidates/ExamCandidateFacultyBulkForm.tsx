@@ -27,6 +27,7 @@ import { useStudents } from '@/hooks/useStudents';
 import { IExam } from '@/types/exam';
 import { ICreateExamCandidateBulk } from '@/types/examCandidate';
 import { toast } from 'react-toastify';
+import { getErrorMessage } from '@/types/errors';
 
 interface ExamCandidateFormProps {
   response: IExam
@@ -34,6 +35,7 @@ interface ExamCandidateFormProps {
 
 function ExamCandidateFacultyBulkForm({ response }: ExamCandidateFormProps) {
   const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.EXAM, { defaultValue: 'Exam' });
   const [studentStatuses, setStudentStatuses] = useState<Record<number, string>>({});
   const [selectAllStatus, setSelectAllStatus] = useState<string>('allowed');
   const router = useRouter()
@@ -110,23 +112,37 @@ function ExamCandidateFacultyBulkForm({ response }: ExamCandidateFormProps) {
         candidates: candidates,
       };
 
-      console.log('Submit Data:', JSON.stringify(submitData, null, 2));
 
-      // Call the hook method instead of service directly
       await createExamCandidateBulk(submitData);
       toast.success('Successfully created exam candidates.');
+      router.push('/dashboard/course')
 
       setStudentStatuses({});
       setSelectAllStatus('allowed');
-      return router.push('/dashboard/course')
 
+    } catch (error: unknown) {
+      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+        name: entityName,
+        defaultValue: `Failed to create ${entityName.toLowerCase()}`,
+      });
 
+      // Try to extract error message from API response
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { data?: { message?: string } } };
+        if (apiError.response?.data?.message) {
+          errorMessage = apiError.response.data.message;
+        }
+      } else {
+        // Use the helper function for other error types
+        errorMessage = getErrorMessage(error);
+      }
 
-    } catch (error) {
-      console.error('Error creating exam candidates:', error);
-      // toast.error('Failed to create exam candidates. Please try again.');
+      toast.error(errorMessage);
     }
   };
+
+
+
 
   return (
     <div>

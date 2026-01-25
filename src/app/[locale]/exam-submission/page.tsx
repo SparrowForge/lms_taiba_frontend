@@ -20,6 +20,7 @@ import { useLocalization } from '@/hooks/useLocalization';
 
 import { IExamSubmission } from '@/types/examSubmission';
 import { MdRateReview } from 'react-icons/md';
+import { IExam } from '../../../types/exam';
 
 export default function ExamSubmissionPage() {
   const { t } = useLocalization();
@@ -90,10 +91,13 @@ export default function ExamSubmissionPage() {
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
     columns: [
       {
-        title: t(LOCALE_KEYS.NAME),
-        dataIndex: 'name',
+        title: t(LOCALE_KEYS.NAME, { defaultValue: 'Name' }),
         key: 'name',
-        render: (text: string) => <span>{text}</span>,
+        render: (data: IExam) => (
+          <span>
+            {data.name}
+          </span>
+        ),
       },
       {
         title: t(LOCALE_KEYS.STATE),
@@ -123,9 +127,9 @@ export default function ExamSubmissionPage() {
             id={examSubmission.id}
             extraActions={[
               {
-                key: 'assignFeeStructure',
+                key: 'assignReview',
                 icon: <MdRateReview />,
-                label: t(LOCALE_KEYS.ASSIGN_FEE_STRUCTURE),
+                label: t(LOCALE_KEYS.REVIEW),
                 onClick: () => handleReviewExamSubmission(examSubmission.id),
               }
 
