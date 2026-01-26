@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { EXAM_CANDIDATE_STATUS_OPTIONS } from '@/constants/statusOptions';
@@ -24,10 +25,9 @@ import { useExamCandidates } from '@/hooks/useExamCandidates';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useStudents } from '@/hooks/useStudents';
 
+import { getErrorMessage } from '@/types/errors';
 import { IExam } from '@/types/exam';
 import { ICreateExamCandidateBulk } from '@/types/examCandidate';
-import { toast } from 'react-toastify';
-import { getErrorMessage } from '@/types/errors';
 
 interface ExamCandidateFormProps {
   response: IExam
@@ -64,7 +64,6 @@ function ExamCandidateFacultyBulkForm({ response }: ExamCandidateFormProps) {
 
 
   useEffect(() => {
-    // Load students when batch is selected
     if (selectedBatch?.id) {
       loadStudents({ page: 1, limit: 100, batchId: selectedBatch?.id });
     }
@@ -103,7 +102,6 @@ function ExamCandidateFacultyBulkForm({ response }: ExamCandidateFormProps) {
     try {
       const candidates = students.map((student) => ({
         studentId: student.id,
-        rollNo: student.registrationNo,
         status: (studentStatuses[student.id] || 'allowed') as any,
       }));
 
@@ -115,29 +113,13 @@ function ExamCandidateFacultyBulkForm({ response }: ExamCandidateFormProps) {
 
       await createExamCandidateBulk(submitData);
       toast.success('Successfully created exam candidates.');
-      router.push('/dashboard/course')
+      // router.push('/dashboard/course')
 
       setStudentStatuses({});
       setSelectAllStatus('allowed');
 
     } catch (error: unknown) {
-      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
-        name: entityName,
-        defaultValue: `Failed to create ${entityName.toLowerCase()}`,
-      });
-
-      // Try to extract error message from API response
-      if (error && typeof error === 'object' && 'response' in error) {
-        const apiError = error as { response?: { data?: { message?: string } } };
-        if (apiError.response?.data?.message) {
-          errorMessage = apiError.response.data.message;
-        }
-      } else {
-        // Use the helper function for other error types
-        errorMessage = getErrorMessage(error);
-      }
-
-      toast.error(errorMessage);
+      
     }
   };
 

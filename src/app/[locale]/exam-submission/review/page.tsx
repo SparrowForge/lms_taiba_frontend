@@ -17,6 +17,7 @@ import React, { useEffect, useMemo, useState } from "react"
 import { toast } from "react-toastify"
 
 import { LOCALE_KEYS } from "@/constants/localizationKeys"
+import { Status } from "@/enums"
 
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
 import { MainLayout } from "@/components/layout/MainLayout"
@@ -27,7 +28,6 @@ import { useLocalization } from "@/hooks/useLocalization"
 
 import { getErrorMessage } from "@/types/errors"
 import { IExamSubmissionReviewItem } from "@/types/examSubmission"
-import { Status } from "@/enums"
 
 
 
@@ -42,45 +42,6 @@ type ReviewState = {
   }
 }
 
-// const mockExamSubmission = {
-//   id: 1,
-//   examId: 45,
-//   studentId: 19,
-//   status: "submitted",
-//   answers: [
-//     {
-//       questionId: 101,
-//       answerText: "Machine learning is a subset of AI that enables systems to learn from data.",
-//       selectedOption: null,
-//     },
-//     {
-//       questionId: 102,
-//       answerText: "Supervised learning uses labeled data, while unsupervised learning does not.",
-//       selectedOption: null,
-//     },
-//     {
-//       questionId: 103,
-//       answerText: null,
-//       selectedOption: "B",
-//     },
-//     {
-//       questionId: 104,
-//       answerText:
-//         "Overfitting occurs when a model learns noise instead of patterns, reducing generalization.",
-//       selectedOption: null,
-//     },
-//   ],
-//   exam: {
-//     id: 45,
-//     name: "Machine Learning – Quiz 1",
-//     marks: 20,
-//   },
-//   student: {
-//     id: 19,
-//     firstName: "Ahnaf",
-//     lastName: "Nabil",
-//   },
-// }
 
 
 const ExamSubmissionReviewPage = () => {
@@ -92,7 +53,7 @@ const ExamSubmissionReviewPage = () => {
   const [reviews, setReviews] = useState<ReviewState>({})
   const [submitted, setSubmitted] = useState(false)
   const router = useRouter()
-  const  {t}  = useLocalization()
+  const { t } = useLocalization()
   const entityName = t(LOCALE_KEYS.EXAM_SUBMISSION);
 
   useEffect(() => {
@@ -101,15 +62,8 @@ const ExamSubmissionReviewPage = () => {
     }
   }, [loadExamSubmission, submissionId])
 
-  const answersNeedingReview = useMemo(() => {
-    return (
-      selectedExamSubmission?.answers?.filter(
-        (ans: any) => ans.answerText !== null
-      ) || []
-    )
-  }, [selectedExamSubmission])
 
-  const handleSubmitReview = async() => {
+  const handleSubmitReview = async () => {
     const payload = {
       reviews: Object.entries(reviews).map(([questionId, value]) => ({
         questionId: Number(questionId),
@@ -141,10 +95,6 @@ const ExamSubmissionReviewPage = () => {
 
       toast.error(errorMessage);
     }
-
-    // console.log("SUBMIT REVIEW PAYLOAD:", payload)
-
-
 
     setSubmitted(true)
   }
@@ -181,10 +131,8 @@ const ExamSubmissionReviewPage = () => {
                 paddingRight: 8,
               }}
             >
-              {answersNeedingReview.length === 0 ? (
-                <Empty description="No descriptive answers to review" />
-              ) : (
-                answersNeedingReview.map((answer: any, index: number) => {
+              {
+                selectedExamSubmission?.answers?.map((answer: any, index: number) => {
                   const review = reviews[answer.questionId] || {}
 
                   return (
@@ -198,86 +146,82 @@ const ExamSubmissionReviewPage = () => {
                           Question ID: {answer.questionId}
                         </Text>
 
-                        {/* Student Answer */}
-                        <Card type="inner" title="Student Answer">
-                          <Text>{answer.answerText}</Text>
-                        </Card>
+                        {
+                          answer.answerText !== null ? (
+                            <>
+                              {/* Student Answer */}
+                              <Card type="inner" title="Student Answer">
+                                {/* <Text>{answer.answerText}</Text> */}
+                                <div dangerouslySetInnerHTML={{ __html: answer.answerText || "" }} />
+                              </Card>
+                              <Row gutter={16}>
+                                <Col span={6}>
+                                  <InputNumber
+                                    min={0}
+                                    placeholder="Points"
+                                    style={{ width: "100%" }}
+                                    value={review.pointsObtained}
+                                    onChange={(value) =>
+                                      setReviews((prev) => ({
+                                        ...prev,
+                                        [answer.questionId]: {
+                                          ...prev[answer.questionId],
+                                          pointsObtained:
+                                            value === null ? undefined : value,
+                                        },
+                                      }))
+                                    }
+                                  />
+                                </Col>
 
-                        {/* Review Section */}
-                        {submitted ? (
-                          <Card type="inner" title="Review">
-                            <Text>
-                              <strong>Points:</strong>{" "}
-                              {review.pointsObtained ?? 0}
-                            </Text>
-                            <br />
-                            <Text>
-                              <strong>Feedback:</strong>{" "}
-                              {review.feedback || "-"}
-                            </Text>
-                          </Card>
-                        ) : (
-                          <Row gutter={16}>
-                            <Col span={6}>
-                              <InputNumber
-                                min={0}
-                                placeholder="Points"
-                                style={{ width: "100%" }}
-                                value={review.pointsObtained}
-                                onChange={(value) =>
-                                  setReviews((prev) => ({
-                                    ...prev,
-                                    [answer.questionId]: {
-                                      ...prev[answer.questionId],
-                                      pointsObtained:
-                                        value === null ? undefined : value,
-                                    },
-                                  }))
-                                }
-                              />
-                            </Col>
+                                <Col span={18}>
+                                  <TextArea
+                                    rows={2}
+                                    placeholder="Feedback"
+                                    value={review.feedback}
+                                    onChange={(e) =>
+                                      setReviews((prev) => ({
+                                        ...prev,
+                                        [answer.questionId]: {
+                                          ...prev[answer.questionId],
+                                          feedback: e.target.value,
+                                        },
+                                      }))
+                                    }
+                                  />
+                                </Col>
+                              </Row>
 
-                            <Col span={18}>
-                              <TextArea
-                                rows={2}
-                                placeholder="Feedback"
-                                value={review.feedback}
-                                onChange={(e) =>
-                                  setReviews((prev) => ({
-                                    ...prev,
-                                    [answer.questionId]: {
-                                      ...prev[answer.questionId],
-                                      feedback: e.target.value,
-                                    },
-                                  }))
-                                }
-                              />
-                            </Col>
-                          </Row>
-                        )}
+                            </>)
+                            : <Card type="inner" title="Student Answer">
+                              <Text>
+                                <strong>Selected Option:</strong>{" "}
+                                {answer.selectedOption ?? "-"}
+                              </Text>
+                            </Card>
+                        }
                       </Space>
                     </Card>
                   )
-                })
-              )}
+                }
+                )}
             </div>
 
-            {/* 🔹 Sticky Submit Button */}
 
-              <div
-                style={{
-                  position: "sticky",
-                  bottom: 0,
-                  background: "#fff",
-                  padding: "12px 0",
-                  borderTop: "1px solid #f0f0f0",
-                  textAlign: "right",
-                }}
-              >
-                <Button type="primary" onClick={handleSubmitReview} loading={actionStatus.status === Status.LOADING}>
-                  Submit Review
-                </Button>
-              </div>
+            <div
+              style={{
+                position: "sticky",
+                bottom: 0,
+                background: "#fff",
+                padding: "12px 0",
+                borderTop: "1px solid #f0f0f0",
+                textAlign: "right",
+              }}
+            >
+              <Button type="primary" onClick={handleSubmitReview} loading={actionStatus.status === Status.LOADING}>
+                Submit Review
+              </Button>
+            </div>
 
           </>
         )}

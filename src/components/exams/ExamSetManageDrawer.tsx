@@ -9,6 +9,7 @@ import { Status } from '@/enums';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useQuestionSets } from '@/hooks/useQuestionSets';
 import { useExams } from '@/hooks/useExams';
+import { toast } from 'react-toastify';
 
 interface StudentFormDrawerProps {
     mode: 'create' | 'edit';
@@ -23,7 +24,7 @@ const ExamSetManageDrawer: React.FC<StudentFormDrawerProps> = ({
     examId,
     visible,
     onCancel,
-
+    onSuccess
 }) => {
 
     const [selectedQuestionSet, setSelectedQuestionSet] = useState<number | undefined>()
@@ -68,6 +69,8 @@ const ExamSetManageDrawer: React.FC<StudentFormDrawerProps> = ({
         }
         console.log(data)
         await createExamWithQuestionSet(data)
+        toast.success(t(LOCALE_KEYS.SUCCESS_OPERATION))
+        onSuccess()
     }
 
     return (

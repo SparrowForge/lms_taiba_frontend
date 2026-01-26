@@ -2,6 +2,7 @@
 // This ensures we only use keys that exist in our localization files
 export const LOCALE_KEYS = {
   // Common
+  SUCCESS_OPERATION: 'success_operation',
   REVIEW:"review",
   PARTICIPATE_EXAM:"participate_exam",
   DISCUSSION:"discussion",

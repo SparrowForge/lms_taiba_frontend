@@ -246,7 +246,7 @@ export default function Quiz({
                       type="primary"
                       onClick={handleSubmit}
                       loading={submitting}
-                      disabled={!isExamActive}
+                      // disabled={!isExamActive}
                     >
                       Submit Quiz
                     </Button>

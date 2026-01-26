@@ -2,7 +2,7 @@
 
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Tag } from "antd";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { hasAnyHeadRole } from "@/utils/roleUtils";
@@ -15,6 +15,7 @@ import { IExam } from "@/types/exam";
 
 import ExamSetManageDrawer from "./ExamSetManageDrawer";
 import ExamFacultyAssignDrawer from "../faculties/ExamFacultyAssignmentDrawer";
+import { useExams } from "@/hooks/useExams";
 
 
 
@@ -44,7 +45,13 @@ const FacultyExamList = ({ data }: ExamListProps) => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [facultyDrawerVisible, setFacultyDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [facultyDrawerMode, setFacultyDrawerMode] = useState<'create' | 'edit'>('create');
+  const { loadExams } = useExams()
+  const params = useParams()
+  const searchParams = useSearchParams()
+  const subjectId = params.id as string
+  const semesterId = searchParams.get('semesterId') as string
+  const batchId = searchParams.get('batchId') as string
+
   const router = useRouter()
   const handleAddQuestion = (subjectId: number) => {
     return router.push(`/exam-mcq-questions/create?subjectId=${subjectId}`)
@@ -60,14 +67,14 @@ const FacultyExamList = ({ data }: ExamListProps) => {
   };
 
   const handleCreateFacultyAddDrawer = () => {
-    setFacultyDrawerMode('create');
     setFacultyDrawerVisible(true);
   };
 
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
-
+    loadExams({ page: 1, limit: 99, subjectId: Number(subjectId), semesterId: Number(semesterId), batchId: batchId ? Number(batchId) : undefined })
   };
+
 
 
   const handleAddResult = (examId: number) => {
@@ -128,28 +135,29 @@ const FacultyExamList = ({ data }: ExamListProps) => {
           <span className="font-medium">Room:</span>{" "}
           {data.room?.name}
         </p>
-   
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
 
-              onClick={() => handleAddQuestion(data.subjectId)}
-            >
-              Add Question
-            </Button>
-            <Button
-              color="primary"
-              variant="filled"
-              icon={<PlusOutlined />}
-              style={{ marginLeft: 16 }}
-              onClick={() => handleAddQuestionSet(data.id)}
-            >
-              Add Question Set
-            </Button>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+
+          onClick={() => handleAddQuestion(data.subjectId)}
+        >
+          Add Question
+        </Button>
+        <Button
+          color="primary"
+          variant="filled"
+          icon={<PlusOutlined />}
+          style={{ marginLeft: 16 }}
+          onClick={() => handleAddQuestionSet(data.id)}
+        >
+          Add Question Set
+        </Button>
         {
           isHead && <>
             <Button
-              type="primary"
+              color="primary"
+              variant="filled"
               icon={<PlusOutlined />}
               style={{ marginLeft: 16 }}
               onClick={() => handleCreateFacultyAddDrawer()}
@@ -198,7 +206,6 @@ const FacultyExamList = ({ data }: ExamListProps) => {
       />
 
       <ExamFacultyAssignDrawer
-        mode={facultyDrawerMode}
         examId={data.id}
         visible={facultyDrawerVisible}
         onCancel={() => setFacultyDrawerVisible(false)}

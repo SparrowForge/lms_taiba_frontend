@@ -2,9 +2,11 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { MdRateReview } from 'react-icons/md';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
+import { EXAM_SUBMISSION_STATUS_OPTIONS } from '@/enums/exam-submission.enum';
 
 import AddressDetailsDrawer from '@/components/addresses/AddressDetailsDrawer';
 import AddressFormDrawer from '@/components/addresses/AddressFormDrawer';
@@ -15,12 +17,18 @@ import EntityActions from '@/components/ui/EntityActions';
 import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
 
+
+import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
 import { useExamSubmissions } from '@/hooks/useExamSubmissions';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSubjects } from '@/hooks/useSubjects';
 
 import { IExamSubmission } from '@/types/examSubmission';
-import { MdRateReview } from 'react-icons/md';
-import { IExam } from '../../../types/exam';
+import { useStudents } from '@/hooks/useStudents';
+import { useExams } from '@/hooks/useExams';
+
 
 export default function ExamSubmissionPage() {
   const { t } = useLocalization();
@@ -33,19 +41,39 @@ export default function ExamSubmissionPage() {
   const [selectedDetailsAddressId, setSelectedDetailsAddressId] = useState<number | undefined>();
 
   const { listStatus, pagination, loadExamSubmissions, examSubmissions, removeExamSubmission } = useExamSubmissions();
+  const { courses, loadCourses } = useCourses()
+  const { subjects, loadSubjects } = useSubjects()
+  const { batches, loadBatches } = useBatches()
+  const { students, loadStudents } = useStudents()
+  const { exams, loadExams } = useExams()
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
   const limit = searchParams.get('limit');
+  const courseId = searchParams.get('courseId');
+  const batchId = searchParams.get('batchId');
+  const examId = searchParams.get('examId');
+  const subjectId = searchParams.get('subjectId');
+
+
+
+  const loadWithParams = (
+    searchParams: URLSearchParams,
+    skip: string | null,
+    limit: string | null,
+  ) => {
+    const params = Object.fromEntries(searchParams.entries());
+    delete params.skip;
+    delete params.limit;
+    delete params.batchId;
+    const limitNum = parseInt(limit ?? '10');
+    const page = skip && limit ? parseInt(skip) / limitNum + 1 : 1;
+    loadExamSubmissions({ page, limit: limitNum, ...params });
+  };
 
   useEffect(() => {
-    if (skip && limit) {
-      const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadExamSubmissions({ page, limit: parseInt(limit ?? '10') });
-    } else {
-      loadExamSubmissions({ page: 1, limit: 10 });
-    }
-  }, [skip, limit, loadExamSubmissions]);
+    loadWithParams(searchParams, skip, limit);
+  }, [searchParams, skip, limit, loadExamSubmissions]);
 
   const handleEditDrawer = (addressId: number) => {
     setSelectedAddressId(addressId);
@@ -53,7 +81,31 @@ export default function ExamSubmissionPage() {
     setDrawerVisible(true);
   };
 
+  useEffect(() => {
+    loadCourses({ page: 1, limit: 99 })
+  }, [loadCourses])
 
+  useEffect(() => {
+    if(courseId){
+      loadBatches({ page: 1, limit: 99, courseId: parseInt(courseId) })
+    }
+  }, [loadBatches,courseId])
+
+  useEffect(() => {
+    if(batchId){
+      loadStudents({ page: 1, limit: 99, batchId: parseInt(batchId) })
+    }
+  }, [loadStudents,batchId])
+
+  useEffect(() => {
+    if(courseId || batchId || subjectId){
+      loadExams({ page: 1, limit: 99, batchId: parseInt(batchId), courseId: parseInt(courseId), subjectId: parseInt(subjectId) })
+    }
+  }, [loadExams, batchId, courseId, subjectId])
+
+  useEffect(() => {
+    loadSubjects({ page: 1, limit: 99 })
+  }, [loadSubjects])
 
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
@@ -93,9 +145,9 @@ export default function ExamSubmissionPage() {
       {
         title: t(LOCALE_KEYS.NAME, { defaultValue: 'Name' }),
         key: 'name',
-        render: (data: IExam) => (
+        render: (data: IExamSubmission) => (
           <span>
-            {data.name}
+            {data.exam.name}
           </span>
         ),
       },
@@ -136,6 +188,58 @@ export default function ExamSubmissionPage() {
             ]}
           />
         ),
+      },
+    ],
+    filters: [
+      {
+        key: 'status',
+        label: t(LOCALE_KEYS.STATUS),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...EXAM_SUBMISSION_STATUS_OPTIONS.map((s) => ({ label: t(s.value), value: s.value })),
+        ],
+      },
+
+
+      {
+        key: 'courseId',
+        label: t(LOCALE_KEYS.COURSE),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...courses.map((c) => ({ label: c.name, value: String(c.id) })),
+        ],
+      },
+      {
+        key: 'batchId',
+        label: t(LOCALE_KEYS.BATCH),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...batches.map((b) => ({ label: b.name, value: String(b.id) })),
+        ],
+      },
+      {
+        key: 'subjectId',
+        label: t(LOCALE_KEYS.SUBJECT),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...subjects.map((b) => ({ label: b.name, value: String(b.id) })),
+        ],
+      },
+      {
+        key: 'examId',
+        label: t(LOCALE_KEYS.EXAM),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...exams.map((b) => ({ label: b.name, value: String(b.id) })),
+        ],
+      },
+      {
+        key: 'studentId',
+        label: t(LOCALE_KEYS.STUDENT),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...students.map((s) => ({ label: (s.firstName + ' ' + s.lastName), value: String(s.id) })),
+        ],
       },
     ],
   };

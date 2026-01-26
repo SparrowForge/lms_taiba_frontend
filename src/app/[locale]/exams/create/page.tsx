@@ -20,7 +20,6 @@ export default function CreateExamPage() {
   const router = useRouter();
   const entityName = t(LOCALE_KEYS.EXAM, { defaultValue: 'Exam' });
   const [response, setResponse] = useState({})
-
   const [current, setCurrent] = useState(0);
 
   const steps = [
