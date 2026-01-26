@@ -1,5 +1,7 @@
 import {
   IAttendance,
+  IAttendanceBulkGenerateRequest,
+  IAttendanceBulkGenerateResponse,
   IAttendanceCreate,
   IAttendanceStudent,
   IAttendanceUpdate,
@@ -51,5 +53,15 @@ export const attendanceService = {
   getAttendanceStudent: async (studentId: number): Promise<IAttendanceStudent> => {
     const response = await api.get<IBaseResponse<IAttendanceStudent>>(`/attendance/student/${studentId}`);
     return response.data.data;
+  },
+
+  bulkGenerateAttendance: async (
+    data: IAttendanceBulkGenerateRequest,
+  ): Promise<IAttendanceBulkGenerateResponse> => {
+    const response = await api.post<IAttendanceBulkGenerateResponse>(
+      '/attendance/student/bulk-generate',
+      data,
+    );
+    return response.data;
   },
 };

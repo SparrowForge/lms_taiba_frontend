@@ -84,3 +84,17 @@ export interface IAttendanceStudent {
   faculty: IFaculty;
   attendances: IAttendance[];
 }
+
+export interface IAttendanceBulkGenerateRequest {
+  courseId: number;
+  batchId: number;
+  facultyId: number;
+  subjectId: number;
+  semesterId: number;
+}
+
+export interface IAttendanceBulkGenerateResponse {
+  created: number;
+  skipped: number;
+  errors: string[];
+}
