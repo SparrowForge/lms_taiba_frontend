@@ -1,5 +1,13 @@
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IExamResult, IExamResultCreate, IExamResultUpdate } from '@/types/examResult';
+import {
+  IExamResult,
+  IExamResultCreate,
+  IExamResultUpdate,
+  ISemesterResult,
+  ISemesterResultsPublishRequest,
+  ISubjectResult,
+  ISubjectResultsPublishRequest,
+} from '@/types/examResult';
 
 import { api } from '@/lib/axios';
 
@@ -34,5 +42,27 @@ export const examResultService = {
   deleteExamResult: async (id: number): Promise<void> => {
     const response = await api.delete(`/exam-results/${id}`);
     return response.data;
+  },
+
+  getSemesterResults: async (params = {}): Promise<IBasePaginatedResponse<ISemesterResult>> => {
+    const response = await api.get<IBasePaginatedResponse<ISemesterResult>>('/semester-results', {
+      params,
+    });
+    return response.data;
+  },
+
+  getSubjectResults: async (params = {}): Promise<IBasePaginatedResponse<ISubjectResult>> => {
+    const response = await api.get<IBasePaginatedResponse<ISubjectResult>>('/subject-results', {
+      params,
+    });
+    return response.data;
+  },
+
+  publishSemesterResults: async (data: ISemesterResultsPublishRequest): Promise<void> => {
+    await api.post('/semester-results/publish', data);
+  },
+
+  publishSubjectResults: async (data: ISubjectResultsPublishRequest): Promise<void> => {
+    await api.post('/subject-results/publish', data);
   },
 };

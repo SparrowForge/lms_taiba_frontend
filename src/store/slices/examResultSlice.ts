@@ -3,13 +3,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status } from '@/enums';
 
 import { IPaginationMeta, IStatusState } from '@/types/common';
-import { IExamResult } from '@/types/examResult';
+import { IExamResult, ISemesterResult, ISubjectResult } from '@/types/examResult';
 
 interface IExamResultsState {
   listStatus: IStatusState;
   detailsStatus: IStatusState;
   actionStatus: IStatusState;
   examResults: IExamResult[];
+  semesterResults: ISemesterResult[];
+  subjectResults: ISubjectResult[];
   selectedExamResult: IExamResult | null;
   pagination: IPaginationMeta;
 }
@@ -19,6 +21,8 @@ const initialState: IExamResultsState = {
   detailsStatus: { status: Status.INITIAL },
   actionStatus: { status: Status.INITIAL },
   examResults: [],
+  semesterResults: [],
+  subjectResults: [],
   selectedExamResult: null,
   pagination: {
     page: 1,
@@ -45,6 +49,12 @@ const examResultSlice = createSlice({
     },
     setExamResults: (state, action: PayloadAction<IExamResult[]>) => {
       state.examResults = action.payload;
+    },
+    setSemesterResults: (state, action: PayloadAction<ISemesterResult[]>) => {
+      state.semesterResults = action.payload;
+    },
+    setSubjectResults: (state, action: PayloadAction<ISubjectResult[]>) => {
+      state.subjectResults = action.payload;
     },
     addExamResult: (state, action: PayloadAction<IExamResult>) => {
       state.examResults.unshift(action.payload);
@@ -88,6 +98,8 @@ export const {
   setDetailsStatus,
   setActionStatus,
   setExamResults,
+  setSemesterResults,
+  setSubjectResults,
   addExamResult,
   updateExamResult,
   deleteExamResult,

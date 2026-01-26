@@ -5,7 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Status } from '@/enums';
 import { RootState } from '@/store';
 
-import { IAttendance, IAttendanceCreate, IAttendanceUpdate } from '@/types/attendance';
+import {
+  IAttendance,
+  IAttendanceCreate,
+  IAttendanceStudent,
+  IAttendanceUpdate,
+} from '@/types/attendance';
 import { IBasePaginatedResponse } from '@/types/common';
 
 import { attendanceService } from '@/services/attendanceService';
@@ -17,17 +22,27 @@ import {
   deleteAttendance,
   setActionStatus,
   setAttendances,
+  setAttendanceStudents,
   setDetailsStatus,
   setListStatus,
   setPagination,
   setSelectedAttendance,
+  setSelectedAttendanceStudent,
   updateAttendance,
 } from '@/store/slices/attendanceSlice';
 
 export const useAttendances = () => {
   const dispatch = useDispatch();
-  const { attendances, selectedAttendance, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.attendances);
+  const {
+    attendances,
+    attendanceStudents,
+    selectedAttendance,
+    selectedAttendanceStudent,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+  } = useSelector((state: RootState) => state.attendances);
 
   // Load attendances with pagination and search
   const loadAttendances = useCallback(
@@ -179,9 +194,58 @@ export const useAttendances = () => {
     [attendances, selectedAttendance, dispatch, setSelectedAttendance, loadAttendance],
   );
 
+  // Load attendance students (list)
+  const loadAttendanceStudents = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response = await attendanceService.getAttendanceStudents(params);
+        dispatch(setAttendanceStudents(response?.data?.items ?? []));
+        dispatch(setPagination(response?.data?.meta ?? {}));
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+        return response;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load attendance students'
+            : 'Failed to load attendance students';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  // Load attendance for a specific student
+  const loadAttendanceStudent = useCallback(
+    async (studentId: number) => {
+      try {
+        dispatch(setDetailsStatus({ status: Status.LOADING }));
+        const response = await attendanceService.getAttendanceStudent(studentId);
+        dispatch(setSelectedAttendanceStudent(response));
+        dispatch(setDetailsStatus({ status: Status.SUCCESS }));
+        return response;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to load attendance student'
+            : 'Failed to load attendance student';
+        dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   return {
     attendances,
+    attendanceStudents,
     selectedAttendance,
+    selectedAttendanceStudent,
     listStatus,
     detailsStatus,
     actionStatus,
@@ -192,6 +256,8 @@ export const useAttendances = () => {
     editAttendance,
     removeAttendance,
     getAttendanceById,
+    loadAttendanceStudents,
+    loadAttendanceStudent,
     clearAction,
     clearDetails,
     setSelected,
