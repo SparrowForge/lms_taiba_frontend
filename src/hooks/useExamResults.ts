@@ -6,7 +6,15 @@ import { Status } from '@/enums';
 import { RootState } from '@/store';
 
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IExamResult, IExamResultCreate, IExamResultUpdate } from '@/types/examResult';
+import {
+  IExamResult,
+  IExamResultCreate,
+  IExamResultUpdate,
+  ISemesterResult,
+  ISemesterResultsPublishRequest,
+  ISubjectResult,
+  ISubjectResultsPublishRequest,
+} from '@/types/examResult';
 
 import { examResultService } from '@/services/examResultService';
 
@@ -20,14 +28,24 @@ import {
   setExamResults,
   setListStatus,
   setPagination,
+  setSemesterResults,
   setSelectedExamResult,
+  setSubjectResults,
   updateExamResult,
 } from '@/store/slices/examResultSlice';
 
 export const useExamResults = () => {
   const dispatch = useDispatch();
-  const { examResults, selectedExamResult, listStatus, detailsStatus, actionStatus, pagination } =
-    useSelector((state: RootState) => state.examResults);
+  const {
+    examResults,
+    semesterResults,
+    subjectResults,
+    selectedExamResult,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+  } = useSelector((state: RootState) => state.examResults);
 
   const loadExamResults = useCallback(
     async (params = {}) => {
@@ -193,8 +211,120 @@ export const useExamResults = () => {
     [dispatch],
   );
 
+  const loadSemesterResults = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response: IBasePaginatedResponse<ISemesterResult> =
+          await examResultService.getSemesterResults(params);
+        dispatch(setSemesterResults(response?.data?.items ?? []));
+        dispatch(
+          setPagination(
+            response?.data?.meta ?? {
+              page: 1,
+              limit: 10,
+              total: 0,
+              totalPages: 0,
+              hasNextPage: false,
+              hasPreviousPage: false,
+            },
+          ),
+        );
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+        return response;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load semester results'
+            : 'Failed to load semester results';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const loadSubjectResults = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response: IBasePaginatedResponse<ISubjectResult> =
+          await examResultService.getSubjectResults(params);
+        dispatch(setSubjectResults(response?.data?.items ?? []));
+        dispatch(
+          setPagination(
+            response?.data?.meta ?? {
+              page: 1,
+              limit: 10,
+              total: 0,
+              totalPages: 0,
+              hasNextPage: false,
+              hasPreviousPage: false,
+            },
+          ),
+        );
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+        return response;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load subject results'
+            : 'Failed to load subject results';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const publishSemesterResults = useCallback(
+    async (data: ISemesterResultsPublishRequest) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        await examResultService.publishSemesterResults(data);
+        dispatch(
+          setActionStatus({ status: Status.SUCCESS, message: 'Semester results published successfully' }),
+        );
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to publish semester results'
+            : 'Failed to publish semester results';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
+  const publishSubjectResults = useCallback(
+    async (data: ISubjectResultsPublishRequest) => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        await examResultService.publishSubjectResults(data);
+        dispatch(
+          setActionStatus({ status: Status.SUCCESS, message: 'Subject results published successfully' }),
+        );
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message ||
+              error?.message ||
+              'Failed to publish subject results'
+            : 'Failed to publish subject results';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   return {
     examResults,
+    semesterResults,
+    subjectResults,
     selectedExamResult,
     listStatus,
     detailsStatus,
@@ -208,6 +338,10 @@ export const useExamResults = () => {
     editExamResult,
     removeExamResult,
     getExamResultById,
+    loadSemesterResults,
+    loadSubjectResults,
+    publishSemesterResults,
+    publishSubjectResults,
     clearAction,
     clearDetails,
     setSelected,

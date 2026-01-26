@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Status } from '@/enums';
 
-import { IAttendance } from '@/types/attendance';
+import { IAttendance, IAttendanceStudent } from '@/types/attendance';
 import { IPaginationMeta, IStatusState } from '@/types/common';
 
 // State interface
@@ -11,7 +11,9 @@ interface IAttendancesState {
   detailsStatus: IStatusState;
   actionStatus: IStatusState;
   attendances: IAttendance[];
+  attendanceStudents: IAttendanceStudent[];
   selectedAttendance: IAttendance | null;
+  selectedAttendanceStudent: IAttendanceStudent | null;
   pagination: IPaginationMeta;
 }
 
@@ -21,7 +23,9 @@ const initialState: IAttendancesState = {
   detailsStatus: { status: Status.INITIAL },
   actionStatus: { status: Status.INITIAL },
   attendances: [],
+  attendanceStudents: [],
   selectedAttendance: null,
+  selectedAttendanceStudent: null,
   pagination: {
     page: 1,
     limit: 10,
@@ -48,6 +52,12 @@ const attendanceSlice = createSlice({
     },
     setAttendances: (state, action: PayloadAction<IAttendance[]>) => {
       state.attendances = action.payload;
+    },
+    setAttendanceStudents: (state, action: PayloadAction<IAttendanceStudent[]>) => {
+      state.attendanceStudents = action.payload;
+    },
+    setSelectedAttendanceStudent: (state, action: PayloadAction<IAttendanceStudent | null>) => {
+      state.selectedAttendanceStudent = action.payload;
     },
     addAttendance: (state, action: PayloadAction<IAttendance>) => {
       state.attendances.unshift(action.payload);
@@ -91,10 +101,12 @@ export const {
   setDetailsStatus,
   setActionStatus,
   setAttendances,
+  setAttendanceStudents,
   addAttendance,
   updateAttendance,
   deleteAttendance,
   setSelectedAttendance,
+  setSelectedAttendanceStudent,
   setPagination,
   clearActionStatus,
   clearDetailsStatus,
