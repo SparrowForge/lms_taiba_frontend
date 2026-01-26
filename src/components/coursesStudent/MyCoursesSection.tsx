@@ -1,5 +1,6 @@
 'use client';
 
+import { Card, Empty } from 'antd';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -16,7 +17,7 @@ import FacultyExamsManagement from '../exams/FacultyExamsManagement';
 import StudentExamParticipate from '../exams/StudentExamParticipate';
 import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
-import { Card, Empty } from 'antd';
+
 
 
 
@@ -42,6 +43,7 @@ const MyCoursesSection = () => {
       }
       {activeTab === 'materials' && <CourseMaterials />}
 
+
       {activeTab === 'assignments' && <Assignments />}
       {user?.type === UserType.STUDENT && activeTab === 'submittedAssignments' && <SubmittedAssignment />}
       {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement />}
@@ -53,6 +55,11 @@ const MyCoursesSection = () => {
         </div>
         <Empty description="NO_GRADING" /></Card>}
       {activeTab === 'discussion' && <DiscussionSection />}
+      {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement/>}
+      {user?.type === UserType.STUDENT && activeTab === 'exam' && <StudentExamParticipate/>}
+      {user?.type === UserType.STUDENT && activeTab === 'result' && <ExamResultIndividualSubject/>}
+      {activeTab === 'grading' && <div>Grading Content is empty</div>}
+      {activeTab === 'discussion' && <DiscussionSection/>}
     </div>
   );
 };
