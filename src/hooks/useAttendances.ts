@@ -7,6 +7,8 @@ import { RootState } from '@/store';
 
 import {
   IAttendance,
+  IAttendanceBulkGenerateRequest,
+  IAttendanceBulkGenerateResponse,
   IAttendanceCreate,
   IAttendanceStudent,
   IAttendanceUpdate,
@@ -241,6 +243,26 @@ export const useAttendances = () => {
     [dispatch],
   );
 
+  // Bulk generate attendance records
+  const bulkGenerateAttendance = useCallback(
+    async (data: IAttendanceBulkGenerateRequest): Promise<IAttendanceBulkGenerateResponse> => {
+      try {
+        dispatch(setActionStatus({ status: Status.LOADING }));
+        const response = await attendanceService.bulkGenerateAttendance(data);
+        dispatch(setActionStatus({ status: Status.SUCCESS, message: 'Attendance records generated successfully' }));
+        return response;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to bulk generate attendance'
+            : 'Failed to bulk generate attendance';
+        dispatch(setActionStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   return {
     attendances,
     attendanceStudents,
@@ -258,6 +280,7 @@ export const useAttendances = () => {
     getAttendanceById,
     loadAttendanceStudents,
     loadAttendanceStudent,
+    bulkGenerateAttendance,
     clearAction,
     clearDetails,
     setSelected,

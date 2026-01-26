@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -44,6 +44,7 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
     detailsStatus,
     loadAttendance,
     loadAttendanceStudents,
+    bulkGenerateAttendance,
   } = useAttendances();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ATTENDANCE, { defaultValue: 'Attendance' });
@@ -55,6 +56,7 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [studentsWithAttendance, setStudentsWithAttendance] = useState<IAttendanceStudent[] | null>(null);
   const [studentsLoading, setStudentsLoading] = useState(false);
+  const [isBulkGenerating, setIsBulkGenerating] = useState(false);
 
   useEffect(() => {
     loadAttendance(attendanceId);
@@ -261,6 +263,68 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
       newMap.set(row.student.id, { status: AttendanceStatus.ABSENT, captureMethod: CaptureMethod.MANUAL });
     });
     setStudentAttendanceData(newMap);
+  };
+
+  // Handle bulk generate attendance
+  const handleBulkGenerate = async () => {
+    if (!selectedAttendance) return;
+
+    setIsBulkGenerating(true);
+    try {
+      const bulkGenerateData = {
+        courseId: selectedAttendance.courseId,
+        batchId: selectedAttendance.batchId,
+        facultyId: selectedAttendance.facultyId,
+        subjectId: selectedAttendance.subjectId,
+        semesterId: selectedAttendance.semesterId,
+      };
+
+      const result = await bulkGenerateAttendance(bulkGenerateData);
+      toast.success(
+        `Attendance records generated: ${result.created} created, ${result.skipped} skipped`,
+      );
+
+      // Reload attendance students after bulk generate
+      if (selectedAttendance?.batchId && selectedAttendance?.courseId) {
+        const recordParams: {
+          page?: number;
+          limit?: number;
+          courseId?: number;
+          batchId?: number;
+          facultyId?: number;
+          sectionId?: number;
+          subjectId?: number;
+          semesterId?: number;
+        } = {
+          page: 1,
+          limit: 99,
+          courseId: selectedAttendance.courseId,
+          batchId: selectedAttendance.batchId,
+          facultyId: selectedAttendance.facultyId,
+        };
+        if (selectedAttendance.sectionId != null) recordParams.sectionId = selectedAttendance.sectionId;
+        if (selectedAttendance.subjectId != null) recordParams.subjectId = selectedAttendance.subjectId;
+        if (selectedAttendance.semesterId != null) recordParams.semesterId = selectedAttendance.semesterId;
+
+        await loadAttendanceStudents(recordParams)
+          .then((response) => {
+            const items = response?.data?.items ?? [];
+            setStudentsWithAttendance(items);
+          })
+          .catch((err) => {
+            const msg = err instanceof AxiosError ? err?.response?.data?.message : null;
+            toast.error(msg || 'Failed to reload students');
+          });
+      }
+    } catch (error) {
+      const message =
+        error instanceof AxiosError
+          ? error?.response?.data?.message || error?.message
+          : null;
+      toast.error(message || 'Failed to bulk generate attendance');
+    } finally {
+      setIsBulkGenerating(false);
+    }
   };
 
   // Submit attendance for all students in the batch
@@ -527,25 +591,55 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
 
               {/* Scrollable Table Section – same pattern as EntityList: fixed height + scroll.y for pinned header */}
 
-              <Table
-                dataSource={filteredTableRows}
-                columns={generateAttendanceColumns(selectedAttendance.classNo)}
-                scroll={{
-
-                  y: 'calc(100vh - 540px)',
-                }}
-                pagination={false}
-                size="small"
-                rowKey={(row) => row.student.id}
-                loading={studentsLoading}
-                locale={{
-                  emptyText: searchText
-                    ? 'No students found matching your search'
-                    : studentsLoading
-                      ? 'Loading students…'
-                      : 'No students found',
-                }}
-              />
+              {!studentsLoading &&
+              !searchText &&
+              allStudentsWithAttendance.length === 0 ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '48px 24px',
+                    minHeight: '300px',
+                  }}
+                >
+                  <Text type="secondary" style={{ marginBottom: 16, fontSize: 16 }}>
+                    No attendance records found for students in this batch.
+                  </Text>
+                  <Text type="secondary" style={{ marginBottom: 24, fontSize: 14 }}>
+                    Click the button below to generate attendance records for all students.
+                  </Text>
+                  <Button
+                    type="primary"
+                    size="large"
+                    icon={<PlusOutlined />}
+                    onClick={handleBulkGenerate}
+                    loading={isBulkGenerating}
+                  >
+                    Generate Attendance Records
+                  </Button>
+                </div>
+              ) : (
+                <Table
+                  dataSource={filteredTableRows}
+                  columns={generateAttendanceColumns(selectedAttendance.classNo)}
+                  scroll={{
+                    y: 'calc(100vh - 540px)',
+                  }}
+                  pagination={false}
+                  size="small"
+                  rowKey={(row) => row.student.id}
+                  loading={studentsLoading}
+                  locale={{
+                    emptyText: searchText
+                      ? 'No students found matching your search'
+                      : studentsLoading
+                        ? 'Loading students…'
+                        : 'No students found',
+                  }}
+                />
+              )}
 
             </div>
           </Card>

@@ -1,5 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit';
 
+import {adminStatsApi} from './api/adminStatsApi';
 import {classScheduleApi} from './api/classScheduleApi';
 import {examApi} from './api/examApi';
 import {studentApi} from './api/studentApi';
@@ -63,6 +64,7 @@ import weekDayReducer from './slices/weekDaySlice';
 
 // Root state type
 export interface RootState {
+  [adminStatsApi.reducerPath]: ReturnType<typeof adminStatsApi.reducer>;
   [classScheduleApi.reducerPath]: ReturnType<typeof classScheduleApi.reducer>;
   [examApi.reducerPath]: ReturnType<typeof examApi.reducer>;
   [studentApi.reducerPath]: ReturnType<typeof studentApi.reducer>;
@@ -127,6 +129,7 @@ export interface RootState {
 // Create store
 export const store = configureStore({
   reducer: {
+    [adminStatsApi.reducerPath]: adminStatsApi.reducer,
     [classScheduleApi.reducerPath]: classScheduleApi.reducer,
     [examApi.reducerPath]: examApi.reducer,
     [studentApi.reducerPath]: studentApi.reducer,
@@ -197,7 +200,7 @@ export const store = configureStore({
         // Ignore these paths in the state
         ignoredPaths: ['items.dates'],
       },
-    }).concat(classScheduleApi.middleware, examApi.middleware, studentApi.middleware),
+    }).concat(adminStatsApi.middleware, classScheduleApi.middleware, examApi.middleware, studentApi.middleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 
