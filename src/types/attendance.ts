@@ -13,6 +13,7 @@ export interface IAttendance {
   subjectId: number;
   semesterId: number;
   batchId: number;
+  sectionId?: number | null;
   facultyId: number;
   scheduleId: number;
   classNo: number;

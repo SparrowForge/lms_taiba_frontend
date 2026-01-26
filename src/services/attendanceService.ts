@@ -27,4 +27,41 @@ export const attendanceService = {
   deleteAttendance: async (id: number): Promise<void> => {
     await api.delete(`/attendance/${id}`);
   },
+
+  markAttendance: async (data: {
+    attendanceId: number;
+    classNo: number;
+    students: { studentId: number; status: string; captureMethod: string }[];
+  }): Promise<void> => {
+    await api.post('/attendance/mark', data);
+  },
+
+  getStudentAttendanceRecords: async (params: {
+    courseId?: number;
+    batchId?: number;
+    sectionId?: number;
+    subjectId?: number;
+    semesterId?: number;
+    facultyId?: number;
+    page?: number;
+    limit?: number;
+  } = {}): Promise<
+    Array<{
+      studentId: number;
+      student: { id: number; firstName?: string; middleName?: string; lastName?: string; applicationNo?: string; registrationNo?: string; batchId?: number; [key: string]: unknown };
+      attendancePattern: string;
+      captureMethodPattern: string;
+    }>
+  > => {
+    const response = await api.get<{ data?: { items?: unknown[] } }>('/attendance/student', {
+      params: { ...params, limit: params.limit ?? 99 },
+    });
+    const body = response.data as { data?: { items?: unknown[] } };
+    return (body?.data?.items ?? []) as Array<{
+      studentId: number;
+      student: { id: number; firstName?: string; middleName?: string; lastName?: string; applicationNo?: string; registrationNo?: string; batchId?: number; [key: string]: unknown };
+      attendancePattern: string;
+      captureMethodPattern: string;
+    }>;
+  },
 };
