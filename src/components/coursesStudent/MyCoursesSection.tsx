@@ -17,6 +17,7 @@ import FacultyExamsManagement from '../exams/FacultyExamsManagement';
 import StudentExamParticipate from '../exams/StudentExamParticipate';
 import CourseMaterials from '../lms/CourseMaterials';
 import UpperTab from '../lms/UpperTab';
+import StudentGrading from '../result/StudentGrading';
 
 
 
@@ -49,11 +50,7 @@ const MyCoursesSection = () => {
       {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement />}
       {user?.type === UserType.STUDENT && activeTab === 'exam' && <StudentExamParticipate />}
       {user?.type === UserType.STUDENT && activeTab === 'result' && <ExamResultIndividualSubject />}
-      {activeTab === 'grading' && <Card className="rounded-xl shadow-sm mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">No Grading</h2>
-        </div>
-        <Empty description="NO_GRADING" /></Card>}
+      {activeTab === 'grading' && <StudentGrading/>}
       {activeTab === 'discussion' && <DiscussionSection />}
 
 
