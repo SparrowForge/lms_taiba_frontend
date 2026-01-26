@@ -157,7 +157,7 @@ export default function StudentGrading() {
   /* ---------------- RENDER ---------------- */
 
   return (
-    <div style={{ padding: 24, height: "100vh", overflow: "hidden" }}>
+    <div style={{height: "100vh", overflow: "hidden" }}>
      
 
       {/* ---------- RESULTS ---------- */}

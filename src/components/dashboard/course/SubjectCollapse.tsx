@@ -6,6 +6,7 @@ import { BiBookOpen, BiDetail } from "react-icons/bi"
 import { FaClipboardList } from "react-icons/fa"
 
 import type { CollapseProps } from "antd"
+import { InfoOutlined, RestOutlined } from "@ant-design/icons"
 
 interface Subject {
   id: number
@@ -85,14 +86,18 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
     const semesterName = group.subjects[0]?.semester.name || "Unknown Semester"
     const headerTitle = `${batchName} - ${semesterName}`
 
+    const handlePublishSemesterResult = (subjectId: number, semesterId: number) => {
+      console.log(subjectId, semesterId)
+    }
+
 
     return {
       key: `group-${index}`,
       label: headerTitle,
       children: (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {group.subjects.map((item) => (
-            <Card key={item.id} size="small" className="h-full hover:shadow-md transition-shadow cursor-pointer">
+            <Card key={item.id} size="" className="h-full hover:shadow-md transition-shadow cursor-pointer">
               <div className="space-y-3">
                 <div>
                   <div className="flex justify-between">
@@ -171,6 +176,14 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                     onClick={() => handleAddExam(item.subject.id, item.semesterId, item.batchId)}
                   >
                     Exam
+                  </Button>
+                  <Button
+                    size="small"
+                    className="flex-1"
+                    icon={<BiDetail size={14} />}
+                    onClick={() => handlePublishSemesterResult(item.subject.id, item.semesterId)}
+                  >
+                    Publish Result
                   </Button>
 
                 </div>

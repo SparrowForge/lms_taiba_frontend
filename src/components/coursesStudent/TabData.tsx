@@ -46,10 +46,7 @@ export const StudentTabData: UpperTabItem[] = [
     key: 'exam',
     title: 'Exam',
   },
-  {
-    key: 'result',
-    title: 'Result',
-  },
+
   {
     key: 'grading',
     title: 'Grading',
