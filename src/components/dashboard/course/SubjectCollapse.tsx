@@ -6,7 +6,7 @@ import { BiBookOpen, BiDetail } from "react-icons/bi"
 import { FaClipboardList } from "react-icons/fa"
 
 import type { CollapseProps } from "antd"
-import { InfoOutlined, RestOutlined } from "@ant-design/icons"
+
 
 interface Subject {
   id: number

@@ -22,8 +22,8 @@ import examCandidateReducer from './slices/examCandidateSlice';
 import examMCQQuestionReducer from './slices/examMCQQuestionSlice';
 import examResultReducer from './slices/examResultSlice';
 import examScheduleReducer from './slices/examScheduleSlice';
-import examSubmissionReducer from './slices/examSubmissionSlice';
 import examReducer from './slices/examSlice';
+import examSubmissionReducer from './slices/examSubmissionSlice';
 import examTypeReducer from './slices/examTypeSlice';
 import facultyReducer from './slices/facultySlice';
 import facultySubjectReducer from './slices/facultySubjectSlice';
@@ -52,8 +52,9 @@ import studentEducationReducer from './slices/studentEducationSlice';
 import studentFamilyReducer from './slices/studentFamilySlice';
 import studentProfileReducer from './slices/studentProfileSlice';
 import studentReducer from './slices/studentSlice';
-import subjectDiscussionReducer from './slices/subjectDiscussionSlice';
 import subjectDiscussionReplyReducer from './slices/subjectDiscussionReplySlice';
+import subjectDiscussionReducer from './slices/subjectDiscussionSlice';
+import subjectResultReducer from './slices/subjectResultSlice';
 import subjectReducer from './slices/subjectSlice';
 import timeSlotReducer from './slices/timeSlotSlice';
 import twofaReducer from './slices/twofaSlice';
@@ -124,6 +125,7 @@ export interface RootState {
   weekDays: ReturnType<typeof weekDayReducer>;
   classSchedules: ReturnType<typeof classScheduleReducer>;
   settings: ReturnType<typeof settingsReducer>;
+  subjectResults: ReturnType<typeof subjectResultReducer>;
 }
 
 // Create store
@@ -189,6 +191,7 @@ export const store = configureStore({
     weekDays: weekDayReducer,
     classSchedules: classScheduleReducer,
     settings: settingsReducer,
+    subjectResults:subjectResultReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
