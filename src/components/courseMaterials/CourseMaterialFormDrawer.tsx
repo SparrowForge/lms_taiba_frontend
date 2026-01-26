@@ -5,15 +5,15 @@ import React, { useEffect } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
+import { UserType } from '@/enums/user-type.enum';
 
+import { useAuth } from '@/hooks/useAuth';
 import { useCourseMaterials } from '@/hooks/useCourseMaterials';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { ICourseMaterial } from '@/types/courseMaterial';
 
 import CourseMaterialForm from './CourseMaterialForm';
-import { useAuth } from '@/hooks/useAuth';
-import { UserType } from '@/enums/user-type.enum';
 import CourseMaterialFacultyForm from '../dashboard/course/CourseMaterialFormFaculty';
 
 interface CourseMaterialFormDrawerProps {
@@ -22,7 +22,7 @@ interface CourseMaterialFormDrawerProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess?: () => void;
-  classNo?:number
+  classNo?: number
 }
 
 const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
@@ -33,9 +33,9 @@ const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
   onSuccess,
   classNo
 }) => {
-  const {user} = useAuth()
+  const { user } = useAuth()
   const { t } = useLocalization();
-  const { selectedCourseMaterial, getCourseMaterialById, loadCourseMaterial, detailsStatus } =
+  const { selectedCourseMaterial, loadCourseMaterial, detailsStatus } =
     useCourseMaterials();
   const entityName = t(LOCALE_KEYS.COURSE_MATERIAL, { defaultValue: 'Course Material' });
 
@@ -78,21 +78,21 @@ const CourseMaterialFormDrawer: React.FC<CourseMaterialFormDrawerProps> = ({
     >
       {
         user?.type === UserType.FACULTY ? <CourseMaterialFacultyForm
-        mode={mode}
-        courseMaterialId={courseMaterialId}
-        initialValues={convertToFormValues(selectedCourseMaterial)}
-        onSuccess={onSuccess}
-        onCancel={onCancel}
-        embedded={true}
-        classNo={classNo}
-      /> :<CourseMaterialForm
-        mode={mode}
-        courseMaterialId={courseMaterialId}
-        initialValues={convertToFormValues(selectedCourseMaterial)}
-        onSuccess={onSuccess}
-        onCancel={onCancel}
-        embedded={true}
-      />
+          mode={mode}
+          courseMaterialId={courseMaterialId}
+          initialValues={convertToFormValues(selectedCourseMaterial)}
+          onSuccess={onSuccess}
+          onCancel={onCancel}
+          embedded={true}
+          classNo={classNo}
+        /> : <CourseMaterialForm
+          mode={mode}
+          courseMaterialId={courseMaterialId}
+          initialValues={convertToFormValues(selectedCourseMaterial)}
+          onSuccess={onSuccess}
+          onCancel={onCancel}
+          embedded={true}
+        />
       }
     </Drawer>
   );

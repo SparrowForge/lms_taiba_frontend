@@ -14,6 +14,7 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 import { useFaculties } from '@/hooks/useFaculties';
 import { useLocalization } from '@/hooks/useLocalization';
+import { toast } from 'react-toastify';
 
 interface FacultyAssignment {
   facultyId?: number;
@@ -26,6 +27,7 @@ interface ExamFacultyAssignDrawerProps {
   examId?: number;
   loading?: boolean;
   onCancel: () => void;
+  onSuccess?: () => void;
 }
 
 const ExamFacultyAssignDrawer: React.FC<ExamFacultyAssignDrawerProps> = ({
@@ -33,6 +35,7 @@ const ExamFacultyAssignDrawer: React.FC<ExamFacultyAssignDrawerProps> = ({
   examId,
   loading = false,
   onCancel,
+  onSuccess
 }) => {
   const { t } = useLocalization();
   const { loadFaculties, faculties, createExamFacultyAssignment } =
@@ -112,6 +115,8 @@ const ExamFacultyAssignDrawer: React.FC<ExamFacultyAssignDrawerProps> = ({
     };
 
     await createExamFacultyAssignment(data);
+    toast.success(t(LOCALE_KEYS.SUCCESS_OPERATION));
+    onSuccess()
   };
 
   const isAddDisabled =

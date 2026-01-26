@@ -119,7 +119,7 @@ const UpcomingAssignments = () => {
         <Button
           type="text"
           style={{ padding: 0 }}
-          onClick={() => router.push('/course-assignments')}
+          onClick={() => router.push('/dashboard/course')}
         >
           <span className="text-blue-600 cursor-pointer">{t(LOCALE_KEYS.ALL_TASKS)}</span>
         </Button>

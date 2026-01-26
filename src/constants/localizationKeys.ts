@@ -2,6 +2,9 @@
 // This ensures we only use keys that exist in our localization files
 export const LOCALE_KEYS = {
   // Common
+  SUCCESS_OPERATION: 'success_operation',
+  REVIEW:"review",
+  PARTICIPATE_EXAM:"participate_exam",
   DISCUSSION:"discussion",
   STUDENT_MARKS_ENTRY:"student_marks_entry",
   STUDENT_QR_CODE:'student-qr-code',
@@ -87,6 +90,8 @@ export const LOCALE_KEYS = {
   EXAM_MCQ_QUESTIONS: 'exam_mcq_questions',
   EXAM_RESULT: 'exam_result',
   EXAM_RESULTS: 'exam_results',
+  EXAM_SUBMISSION: 'exam_submission',
+  EXAM_SUBMISSIONS: 'exam_submissions',
   EXAM_ID: 'exam_id',
   STUDENT_ID: 'student_id',
   ROLL_NO: 'roll_no',
@@ -707,7 +712,6 @@ export const LOCALE_KEYS = {
   TIME_SPENT:"Time Spent",
   NEXT_EXAM:"Next Exam",
   QUESTION_SET:"question_set",
-  PARTICIPATE_EXAM:"participate_exam"
 } as const;
 
 // Type for the keys

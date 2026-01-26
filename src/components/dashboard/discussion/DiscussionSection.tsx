@@ -13,12 +13,14 @@ import DiscussionFormDrawer from "./DiscussionFormDrawer"
 import { MessageThread } from "./MessageThread"
 import { Status } from "@/enums"
 import { BiLoader } from "react-icons/bi"
+import { useParams } from "next/navigation"
 
 export function DiscussionSection() {
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedDiscussionId, setSelectedDiscussionId] = useState<number | undefined>()
   const { loadSubjectDiscussions, subjectDiscussions, loadSubjectDiscussion, selectedSubjectDiscussion, actionStatus } = useSubjectDiscussions()
+  const params = useParams()
 
   const { createSubjectDiscussionReply, } = useSubjectDiscussionReplies()
   const [discussionId, setDiscussionId] = useState(0)
@@ -30,8 +32,10 @@ export function DiscussionSection() {
    const [flag,setFlag] = useState(false)
 
   useEffect(() => {
-    loadSubjectDiscussions({ page: 1, limit: 99 })
-  }, [loadSubjectDiscussions])
+    if(params.id){
+      loadSubjectDiscussions({ page: 1, limit: 99, subjectId: Number(params.id) })
+    }
+  }, [loadSubjectDiscussions, params.id])
 
 
 

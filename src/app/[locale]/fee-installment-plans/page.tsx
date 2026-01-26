@@ -136,7 +136,7 @@ export default function FeeInstallmentPlansPage() {
       delete params.limit;
       loadFeeInstallmentPlans({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
-    onQuickAdd: handleCreateDrawer,
+    // onQuickAdd: handleCreateDrawer,
     items: feeInstallmentPlans,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
@@ -188,7 +188,7 @@ export default function FeeInstallmentPlansPage() {
         title: t(LOCALE_KEYS.FEE_STRUCTURE, { defaultValue: 'Fee Structure' }),
         key: 'feeStructure',
         render: (feeInstallmentPlan: IFeeInstallmentPlan) => (
-          <span>{feeInstallmentPlan.feeStructure.templateName}</span>
+          <span>{feeInstallmentPlan?.feeStructure?.templateName}</span>
         ),
       },
       {

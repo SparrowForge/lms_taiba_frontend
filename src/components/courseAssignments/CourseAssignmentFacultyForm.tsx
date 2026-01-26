@@ -8,12 +8,12 @@ import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { EntityType, FileCategory, FileType, Status } from '@/enums';
+import { ASSIGNMENT_TYPE_OPTIONS, EntityType, FileCategory, FileType, Status } from '@/enums';
 
+import { useAuth } from '@/hooks/useAuth';
 import { useBatches } from '@/hooks/useBatches';
 import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useCourses } from '@/hooks/useCourses';
-import { useFaculties } from '@/hooks/useFaculties';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useSemesters } from '@/hooks/useSemesters';
 import { useSubjects } from '@/hooks/useSubjects';
@@ -25,11 +25,10 @@ import {
 } from '@/types/courseAssignment';
 import { getErrorMessage } from '@/types/errors';
 
-import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
 import CourseAssignmentsFacultyDetails from './CourseAssignmentFacultyDetails';
-import { useAuth } from '@/hooks/useAuth';
+import FormLayout from '../layout/FormLayout';
 import FileUpload from '../ui/FileUpload';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 const { TextArea } = Input;
 
@@ -65,14 +64,14 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });
   const router = useRouter();
   const [form] = Form.useForm();
-  const { createCourseAssignment, editCourseAssignment, actionStatus } = useCourseAssignments();
-  const { loadCourseAssignments, courseAssignments } = useCourseAssignments()
+  const { createCourseAssignment, editCourseAssignment, actionStatus, loadCourseAssignments } = useCourseAssignments();
   const { loadSubject, selectedSubject } = useSubjects()
   const { loadCourse, selectedCourse } = useCourses()
   const { loadBatch, selectedBatch } = useBatches()
   const { loadSemester, selectedSemester } = useSemesters()
   const { user } = useAuth()
   const finalSubjectId = (id ?? subjectId) as string;
+
 
   useEffect(() => {
 
@@ -81,7 +80,7 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
 
   useEffect(() => {
     loadCourseAssignments({ finalSemesterId, subjectId: finalSubjectId });
-  }, [finalSubjectId, loadCourseAssignments, finalSemesterId]);
+  }, [finalSubjectId, loadCourseAssignments, finalSemesterId,]);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -130,6 +129,9 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
         defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
       });
 
+      console.log("createCourseAssignment", errorMessage)
+
+
       // Try to extract error message from API response
       if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as { response?: { data?: { message?: string } } };
@@ -140,9 +142,11 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
         errorMessage = getErrorMessage(error);
       }
 
+
       toast.error(errorMessage);
     }
   };
+  
 
   const handleCancel = () => {
     if (onCancel) {
@@ -222,12 +226,21 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
           },
         ]}
       >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}>
-          <Select.Option value="Homework">Homework</Select.Option>
-          <Select.Option value="Project">Project</Select.Option>
-          <Select.Option value="Quiz">Quiz</Select.Option>
-          <Select.Option value="Exam">Exam</Select.Option>
-          <Select.Option value="Presentation">Presentation</Select.Option>
+
+
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.TYPE) })}
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+        >
+          {ASSIGNMENT_TYPE_OPTIONS.map((item) => (
+            <Select.Option key={item.key} value={item.value}>
+              {item.value}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 

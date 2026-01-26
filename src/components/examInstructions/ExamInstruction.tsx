@@ -1,10 +1,11 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
-import { Button, Card, Divider, Space, Typography, Alert, Row, Col } from "antd"
 import { CheckCircleOutlined } from "@ant-design/icons"
-import { useExams } from "../../hooks/useExams"
+import { Button, Card, Divider, Space, Typography, Alert, Row, Col } from "antd"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
+
+import { useExams } from "../../hooks/useExams"
 
 const { Title, Text } = Typography
 
@@ -14,24 +15,25 @@ export default function ExamInstruction() {
   const subjectId = searchParams.get("subjectId")
   const examId = searchParams.get("examId")
 
-  const {selectedExam, loadExam} = useExams()
+  const { selectedExam, loadExam } = useExams()
 
-  useEffect(()=>{
-    if(examId){
+  useEffect(() => {
+    if (examId) {
       loadExam(Number(examId))
     }
-  },[examId, loadExam])
+  }, [examId, loadExam])
 
   const now = new Date().getTime();
   const examStart = new Date(selectedExam?.examDatetime).getTime();
-  const examEnd =
-  examStart + selectedExam?.duration?.hours * 60 * 60 * 1000;
+  const examDuration = selectedExam?.duration?.minutes ? selectedExam?.duration?.minutes * 60 * 60 * 1000 : selectedExam?.duration?.hours * 60 * 60 * 1000
+  const examEnd = examStart + examDuration;
+
 
   const canStartExam = now >= examStart && now < examEnd;
 
 
   return (
-    <div style={{marginTop:16}}>
+    <div style={{ marginTop: 16 }}>
       <div style={{ maxWidth: 850, margin: "0 auto" }}>
         <Card bordered={false} style={{ marginBottom: 50 }}>
           <Space direction="vertical" size="large" style={{ width: "100%" }}>
@@ -59,67 +61,67 @@ export default function ExamInstruction() {
             {/* Sections */}
             <Space direction="vertical" size="large" style={{ width: "100%" }}>
               <Row gutter={[16, 16]}>
-                
-                  {[
-                    {
-                      title: "General Rules",
-                      items: [
-                        "Do not refresh the page",
-                        "Do not navigate away",
-                        "Submit before time runs out",
-                        "Your progress is auto-saved",
-                      ],
-                    },
-                    {
-                      title: "Exam Format",
-                      items: [
-                        "Total Questions: 50",
-                        "Duration: 2 hours",
-                        "Multiple Choice + Short Answer",
-                        "Negative Marking: -0.25",
-                      ],
-                    },
-                    {
-                      title: "Requirements",
-                      items: [
-                        "Use desktop/tablet",
-                        "Stable internet required",
-                        "Chrome / Firefox / Safari recommended",
-                        "Close background apps",
-                      ],
-                    },
-                    {
-                      title: "During the Exam",
-                      items: [
-                        "Read carefully",
-                        "Mark questions for review",
-                        "Review answers before submission",
-                        "Submit when finished",
-                      ],
-                    },
-                  ].map((section, idx) => (
-                    <Col xs={24} sm={6} key={idx}>
-                      <Title
-                        level={5}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          marginBottom: 8,
-                        }}
-                      >
-                        <CheckCircleOutlined style={{ color: "green" }} />
-                        {section.title}
-                      </Title>
 
-                      <ul style={{  lineHeight: "1.4" }}>
-                        {section.items.map((i, x) => (
-                          <li key={x}>{i}</li>
-                        ))}
-                      </ul>
-                    </Col> 
-                  ))}
-               
+                {[
+                  {
+                    title: "General Rules",
+                    items: [
+                      "Do not refresh the page",
+                      "Do not navigate away",
+                      "Submit before time runs out",
+                      "Your progress is auto-saved",
+                    ],
+                  },
+                  {
+                    title: "Exam Format",
+                    items: [
+                      "Total Questions: 50",
+                      "Duration: 2 hours",
+                      "Multiple Choice + Short Answer",
+                      "Negative Marking: -0.25",
+                    ],
+                  },
+                  {
+                    title: "Requirements",
+                    items: [
+                      "Use desktop/tablet",
+                      "Stable internet required",
+                      "Chrome / Firefox / Safari recommended",
+                      "Close background apps",
+                    ],
+                  },
+                  {
+                    title: "During the Exam",
+                    items: [
+                      "Read carefully",
+                      "Mark questions for review",
+                      "Review answers before submission",
+                      "Submit when finished",
+                    ],
+                  },
+                ].map((section, idx) => (
+                  <Col xs={24} sm={6} key={idx}>
+                    <Title
+                      level={5}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        marginBottom: 8,
+                      }}
+                    >
+                      <CheckCircleOutlined style={{ color: "green" }} />
+                      {section.title}
+                    </Title>
+
+                    <ul style={{ lineHeight: "1.4" }}>
+                      {section.items.map((i, x) => (
+                        <li key={x}>{i}</li>
+                      ))}
+                    </ul>
+                  </Col>
+                ))}
+
               </Row>
             </Space>
 

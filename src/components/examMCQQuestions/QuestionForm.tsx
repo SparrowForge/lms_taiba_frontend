@@ -87,9 +87,9 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
           ],
           correctOptionNumber: "a",
           difficultyLevel: "easy",
-          courseId: selectedCourse?.id,
-          subjectId: selectedSubject?.id,
-          facultyId: user?.faculty?.id,
+          courseId: Number(selectedCourse?.id),
+          subjectId: Number(selectedSubject?.id),
+          facultyId: Number(user?.faculty?.id),
         },
       ]);
       setSelectedQuestionIndex(0);
@@ -127,7 +127,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       questions.every(
         (q) =>
           q.questionText &&
-          q.options.every((o) => o.text)
+          q?.options.every((o) => o.text)
       )
     );
   }, [questions, hasErrors]);
@@ -153,9 +153,9 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       ],
       correctOptionNumber: "a",
       difficultyLevel: "easy",
-      courseId: selectedCourse?.id,
-      subjectId: selectedSubject?.id,
-      facultyId: user?.faculty?.id,
+      courseId: Number(selectedCourse?.id),
+      subjectId: Number(selectedSubject?.id),
+      facultyId: Number(user?.faculty?.id),
     };
 
     setQuestions((prev) => [...prev, newQ]);
@@ -387,7 +387,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
               <Button
                 type="primary"
                 onClick={handleSubmit}
-                loading={submitting || isLoading}
+                loading={submitting || actionStatus.status === Status.LOADING}
                 // disabled={!canMcqSubmit}
                 style={{
                   width: "100%",
@@ -441,7 +441,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
                 <Button
                   type="primary"
                   onClick={handleSubmit}
-                  loading={submitting || isLoading}
+                  loading={submitting || actionStatus.status === Status.LOADING}
                   // disabled={!canWrittenSubmit}
                   style={{
                     width: "100%",

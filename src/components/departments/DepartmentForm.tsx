@@ -171,12 +171,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       <Form.Item
         name="headId"
         label={t(LOCALE_KEYS.HEAD)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.HEAD) }),
-          },
-        ]}
+        
       >
         <Select
           showSearch

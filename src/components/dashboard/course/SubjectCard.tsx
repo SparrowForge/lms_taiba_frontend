@@ -1,5 +1,5 @@
 import {BookOutlined, ClockCircleOutlined, ExperimentOutlined, FileTextOutlined,} from '@ant-design/icons';
-import {Card, Divider, Progress, Tag, Typography} from 'antd';
+import {Card, Divider, Tag, Typography} from 'antd';
 
 import {ISubject} from '@/types/subject';
 
@@ -51,13 +51,12 @@ const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick, semesterId 
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full">
+        {/* <div className="w-full">
           <Progress percent={50} status="active" />
-        </div>
+        </div> */}
 
         <Divider className="my-2" />
 
-        {/* Hours Information */}
         <div className="grid grid-cols-3 gap-2">
           {/* Credit Hours */}
           <div className="text-center p-2 bg-blue-50 rounded-lg">
@@ -93,16 +92,12 @@ const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick, semesterId 
           </div>
         </div>
 
-        {/* Description */}
+
         {subject.description && (
           <>
             <Divider className="my-2" />
-            <Typography.Paragraph
-              ellipsis={{ rows: 2, expandable: false }}
-              className="text-sm text-gray-600 mb-0"
-            >
-              {subject.description}
-            </Typography.Paragraph>
+          
+            <div dangerouslySetInnerHTML={{ __html: subject.description }} />
           </>
         )}
       </div>

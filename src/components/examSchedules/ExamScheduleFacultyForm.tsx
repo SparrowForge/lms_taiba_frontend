@@ -72,7 +72,7 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
 
   useEffect(() => {
     if(response){
-      loadExam(response.examTypeId);
+      loadExam(response.id);
       loadRoom(response.roomId);
     }
    
@@ -136,6 +136,8 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
     mode === 'create'
       ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
+
+
 
   const formContent = (
     <Form

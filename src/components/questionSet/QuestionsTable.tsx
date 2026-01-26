@@ -92,17 +92,7 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
       ellipsis: true,
       render: (text: string) => <span >{text}</span>,
     },
-    {
-      title: "Correct Option",
-      dataIndex: "correctOptionNumber",
-      key: "correctOptionNumber",
-      width: 130,
-      render: (number: number, record: Question) => (
-        <span className="font-medium text-primary">
-          Option {number}: {record.options[number - 1]}
-        </span>
-      ),
-    },
+   
     {
       title: "Status",
       dataIndex: "status",
@@ -167,8 +157,9 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
             style={{ margin: "16px 0" }}
             type="primary"
             onClick={() => onSubmit()}
+            loading={actionStatus.status === Status.LOADING}
           >
-            {actionStatus.status === Status.LOADING ? <Spin /> : 'Submit'}
+            Submit
           </Button>
         </div>
       </div>

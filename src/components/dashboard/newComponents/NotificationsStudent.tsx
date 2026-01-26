@@ -1,64 +1,221 @@
-import { BellOutlined, CommentOutlined, DollarOutlined } from '@ant-design/icons';
-import { Card } from 'antd';
+"use client"
 
-import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { CheckOutlined, DeleteOutlined } from "@ant-design/icons"
+import {
+  Badge,
+  Button,
+  Card,
+  Empty,
+  Pagination,
+  Space,
+  Tooltip,
+} from "antd"
+import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 
-import { useLocalization } from '@/hooks/useLocalization';
+import { LOCALE_KEYS } from "@/constants/localizationKeys"
+import { formatTime } from "@/utils/timeFormatUtils"
 
-import IconBgColoredCard from '../dashboardui/cards/IconBgColoredCard';
+import { useLocalization } from "@/hooks/useLocalization"
+import { useNotifications } from "@/hooks/useNotifications"
 
-const notifications = [
-  {
-    text: 'New grade posted for Mathematics Quiz',
-    time: 'Today, 10:23 AM',
-    color: '#5190f7',
-    bgColor: '#eff6ff',
-    bgColorIcon: '#dbeafe',
-    icon: <BellOutlined style={{ color: '#5190f7', fontSize: 18 }} />,
-  },
-  {
-    text: 'Teacher comment on your English essay',
-    time: 'Yesterday, 02:15 PM',
-    color: '#10b981',
-    bgColor: '#ecfdf5',
-    bgColorIcon: '#d1fae5',
-    icon: <CommentOutlined style={{ color: '#10b981', fontSize: 18 }} />,
-  },
-  {
-    text: 'Payment due for September tuition',
-    time: 'Yesterday, 09:30 AM',
-    color: '#ef4444',
-    bgColor: '#fef2f2',
-    bgColorIcon: '#fee2e2',
-    icon: <DollarOutlined style={{ color: 'red', fontSize: 18 }} />,
-  },
-];
+import { getErrorMessage } from "@/types/errors"
+import { INotification } from "@/types/notification"
 
-const NotificationsStudent = () => {
-  const { t } = useLocalization();
+export default function NotificationsPage() {
+  const {
+    loadNotifications,
+    notifications,
+    markNotificationAsRead,
+    markAllNotificationsAsRead,
+    removeNotification,
+    pagination,
+    actionStatus,
+  } = useNotifications()
+
+  const { t } = useLocalization()
+  const entityName = t(LOCALE_KEYS.NOTIFICATION, {
+    defaultValue: "Notification",
+  })
+
+  /** Pagination state */
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(4)
+
+  /** Load notifications */
+  useEffect(() => {
+    loadNotifications({ page, limit })
+  }, [page, limit, loadNotifications, actionStatus])
+
+  const unreadCount = notifications.filter(n => !n.readAt).length
+
+  const handleMarkAsRead = async (id: number) => {
+    try {
+      await markNotificationAsRead(id)
+      toast.success(t(LOCALE_KEYS.READ_NAME, { name: entityName }))
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    }
+  }
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllNotificationsAsRead()
+      toast.success(t(LOCALE_KEYS.READ_NAME, { name: entityName }))
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    try {
+      await removeNotification(id)
+      toast.success(t(LOCALE_KEYS.READ_NAME, { name: entityName }))
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    }
+  }
+
+
+
   return (
-    <Card className="rounded-2xl shadow-sm" style={{ marginTop: '14px', padding: '0px' }}>
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-base font-semibold">{t(LOCALE_KEYS.NOTIFICATION)}</h2>
-        <span className="text-blue-600 cursor-pointer">{t(LOCALE_KEYS.MARK_ALL_READ)}</span>
-      </div>
-      <div className="flex flex-col gap-2">
-        {notifications.map((n, i) => (
-          <IconBgColoredCard
-            key={i}
-            text={n.text}
-            time={n.time}
-            color={n.color}
-            icon={n.icon}
-            bgColor={n.bgColor}
-            bgColorIcon={n.bgColorIcon}
-            rounded="full"
-            textSize="12px"
-          />
-        ))}
-      </div>
-    </Card>
-  );
-};
+    <div
+      style={{
+        height: "100%",
+        maxWidth: 800,
+        margin: "0 auto",
+        padding: "24px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+      >
+        <h2 style={{ margin: 0 }}>
+          Notifications
+          {unreadCount > 0 && (
+            <Badge count={unreadCount} style={{ marginLeft: 12 }} />
+          )}
+        </h2>
 
-export default NotificationsStudent;
+        {unreadCount > 0 && (
+          <Button
+            type="primary"
+            icon={<CheckOutlined />}
+            onClick={handleMarkAllAsRead}
+          >
+            Read All
+          </Button>
+        )}
+      </div>
+
+      {/* Scrollable List */}
+      <div
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          paddingBottom: 80, // space for sticky pagination
+        }}
+      >
+        {notifications.length === 0 ? (
+          <Card className="rounded-2xl shadow-sm"><Empty description="No notifications" /></Card>
+        ) : (
+          notifications.map((notification: INotification) => {
+            const isUnread = !notification.readAt
+
+            return (
+              <div
+                key={notification.id}
+                style={{
+                  backgroundColor: isUnread ? "#e6f7ff" : "#fafafa",
+                  border: `1px solid ${
+                    isUnread ? "#91d5ff" : "#d9d9d9"
+                  }`,
+                  borderRadius: 8,
+                  padding: 16,
+                  marginBottom: 12,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <div style={{ flex: 1, marginRight: 12 }}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <h4
+                        style={{
+                          margin: 0,
+                          marginRight: 8,
+                          fontWeight: isUnread ? 600 : 400,
+                        }}
+                      >
+                        {notification.title}
+                      </h4>
+
+                      {isUnread && (
+                        <span
+                          style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: "50%",
+                            backgroundColor: "#1890ff",
+                          }}
+                        />
+                      )}
+                    </div>
+
+                    <p style={{ margin: "8px 0", color: "#666" }}>
+                      {notification.message}
+                    </p>
+
+                    <span style={{ fontSize: 12, color: "#999" }}>
+                      {formatTime(notification.createdAt)}
+                    </span>
+                  </div>
+
+                  <Space size="small">
+                    {isUnread && (
+                      <Tooltip title="Mark as read">
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={<CheckOutlined />}
+                          onClick={() =>
+                            handleMarkAsRead(notification.id)
+                          }
+                        />
+                      </Tooltip>
+                    )}
+
+                    <Tooltip title="Delete">
+                      <Button
+                        type="text"
+                        size="small"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() =>
+                          handleDelete(notification.id)
+                        }
+                      />
+                    </Tooltip>
+                  </Space>
+                </div>
+              </div>
+            )
+          })
+        )}
+      </div>
+
+
+    </div>
+  )
+}

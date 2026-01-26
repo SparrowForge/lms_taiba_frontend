@@ -145,7 +145,7 @@ const Assignments: React.FC = () => {
   };
 
   const checkAlreadySubmitted = (assignmentId:number) =>{
-    return  courseAssignmentSubmissions.find(item=>item.assignment.id === assignmentId)
+    return  courseAssignmentSubmissions?.find(item=>item?.assignment?.id === assignmentId)
   }
 
   const handleViewAll = (assignmentId: number, courseId: number, subjectId: number) =>{
