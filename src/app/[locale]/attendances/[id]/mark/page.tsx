@@ -29,20 +29,22 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { useAttendances } from '@/hooks/useAttendances';
 import { useLocalization } from '@/hooks/useLocalization';
 import { attendanceService } from '@/services/attendanceService';
+import { IAttendanceStudent } from '@/types/attendance';
 
 const { Text } = Typography;
-
-type StudentWithAttendance = {
-  student: { id: number; firstName?: string; middleName?: string; lastName?: string; applicationNo?: string; registrationNo?: string; batchId?: number; [key: string]: unknown };
-  attendanceRecord: { attendancePattern: string; captureMethodPattern: string } | null;
-};
 
 const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
   const resolvedParams = React.use(params);
   const attendanceId = parseInt(resolvedParams.id);
 
   const router = useRouter();
-  const { selectedAttendance, detailsStatus, loadAttendance } = useAttendances();
+  const {
+    selectedAttendance,
+    attendanceStudents,
+    detailsStatus,
+    loadAttendance,
+    loadAttendanceStudents,
+  } = useAttendances();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.ATTENDANCE, { defaultValue: 'Attendance' });
 
@@ -51,7 +53,7 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
     Map<number, { status: AttendanceStatus; captureMethod: CaptureMethod }>
   >(new Map());
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [studentsWithAttendance, setStudentsWithAttendance] = useState<StudentWithAttendance[] | null>(null);
+  const [studentsWithAttendance, setStudentsWithAttendance] = useState<IAttendanceStudent[] | null>(null);
   const [studentsLoading, setStudentsLoading] = useState(false);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
     setStudentAttendanceData(new Map());
   }, [attendanceId]);
 
-  // Load: GET /attendance/student (page 1, limit 99)
+  // Load: GET /attendance/student using hook
   useEffect(() => {
     if (!selectedAttendance?.batchId || !selectedAttendance?.courseId) return;
 
@@ -70,11 +72,11 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
     setStudentsLoading(true);
 
     const recordParams: {
-      page: number;
-      limit: number;
-      courseId: number;
-      batchId: number;
-      facultyId: number;
+      page?: number;
+      limit?: number;
+      courseId?: number;
+      batchId?: number;
+      facultyId?: number;
       sectionId?: number;
       subjectId?: number;
       semesterId?: number;
@@ -89,14 +91,10 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
     if (selectedAttendance.subjectId != null) recordParams.subjectId = selectedAttendance.subjectId;
     if (selectedAttendance.semesterId != null) recordParams.semesterId = selectedAttendance.semesterId;
 
-    attendanceService
-      .getStudentAttendanceRecords(recordParams)
-      .then((records) => {
-        const merged: StudentWithAttendance[] = records.map((r) => ({
-          student: r.student,
-          attendanceRecord: { attendancePattern: r.attendancePattern, captureMethodPattern: r.captureMethodPattern },
-        }));
-        setStudentsWithAttendance(merged);
+    loadAttendanceStudents(recordParams)
+      .then((response) => {
+        const items = response?.data?.items ?? [];
+        setStudentsWithAttendance(items);
       })
       .catch((err) => {
         const msg = err instanceof AxiosError ? err?.response?.data?.message : null;
@@ -112,9 +110,10 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
     selectedAttendance?.subjectId,
     selectedAttendance?.facultyId,
     selectedAttendance?.semesterId,
+    loadAttendanceStudents,
   ]);
 
-  const allStudentsWithAttendance: StudentWithAttendance[] = studentsWithAttendance ?? [];
+  const allStudentsWithAttendance: IAttendanceStudent[] = studentsWithAttendance ?? [];
 
   const relevantStudents = allStudentsWithAttendance.map((x) => x.student);
 
@@ -128,10 +127,9 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
     const methodChars = ['q', 'r', 'b', 'm', 'a'] as const;
 
     for (const item of studentsWithAttendance) {
-      const rec = item.attendanceRecord;
-      if (!rec || rec.attendancePattern.length <= patternIndex) continue;
-      const s = rec.attendancePattern[patternIndex];
-      const m = rec.captureMethodPattern?.[patternIndex] ?? 'm';
+      if (!item.attendancePattern || item.attendancePattern.length <= patternIndex) continue;
+      const s = item.attendancePattern[patternIndex];
+      const m = item.captureMethodPattern?.[patternIndex] ?? 'm';
       initial.set(item.student.id, {
         status: (statusChars.includes(s as (typeof statusChars)[number]) ? s : 'p') as AttendanceStatus,
         captureMethod: (methodChars.includes(m as (typeof methodChars)[number]) ? m : 'm') as CaptureMethod,
@@ -291,6 +289,8 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
       toast.success(
         `Attendance marked successfully for ${relevantStudents.length} student${relevantStudents.length === 1 ? '' : 's'}!`,
       );
+      // Reload the page after successful submission
+      window.location.reload();
     } catch (error) {
       const message =
         error instanceof AxiosError
@@ -311,7 +311,7 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
         key: 'name',
         fixed: 'left' as const,
         width: 180,
-        render: (_: any, row: StudentWithAttendance) => (
+        render: (_: any, row: IAttendanceStudent) => (
           <div>
             <div style={{ fontWeight: 'bold' }}>
               {[row.student.firstName, row.student.middleName, row.student.lastName].filter(Boolean).join(' ')}
@@ -328,15 +328,14 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
         title: 'All Attendances',
         key: 'all_attendances',
         width: 220,
-        render: (_: any, row: StudentWithAttendance) => {
-          const rec = row.attendanceRecord;
-          const pattern = rec?.attendancePattern ?? '';
-          const methodPattern = rec?.captureMethodPattern ?? '';
+        render: (_: any, row: IAttendanceStudent) => {
+          const pattern = row.attendancePattern ?? '';
+          const methodPattern = row.captureMethodPattern ?? '';
           if (!pattern)
             return <span style={{ color: '#999' }}>—</span>;
           return (
             <span style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {pattern.split('').map((char, i) => {
+              {pattern.split('').map((char: string, i: number) => {
                 const status = ['p', 'a', 'l', 'x'].includes(char) ? char : '-';
                 const label = getStatusLabel(status);
                 const fullLabel = getStatusFullLabel(char);
@@ -358,7 +357,7 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
         title: `Set Attendance (Class ${currentClassNo})`,
         key: 'set_attendance',
         width: 200,
-        render: (_: any, row: StudentWithAttendance) => (
+        render: (_: any, row: IAttendanceStudent) => (
           <Radio.Group
             value={getStudentStatus(row.student.id)}
             onChange={(e) => updateStudentStatus(row.student.id, e.target.value as AttendanceStatus)}
@@ -376,7 +375,7 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
         title: `Set Method (Class ${currentClassNo})`,
         key: 'set_method',
         width: 200,
-        render: (_: any, row: StudentWithAttendance) => (
+        render: (_: any, row: IAttendanceStudent) => (
           <Radio.Group
             value={getStudentMethod(row.student.id)}
             onChange={(e) => updateStudentMethod(row.student.id, e.target.value as CaptureMethod)}
