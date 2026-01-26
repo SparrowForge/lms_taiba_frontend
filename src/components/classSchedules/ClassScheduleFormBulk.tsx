@@ -222,10 +222,12 @@ const ClassScheduleFormBulk: React.FC<Props> = ({ onSuccess, onCancel, embedded 
 
       toast.success(
         t(LOCALE_KEYS.CREATED_NAME, {
-          name: `${createdSchedules.length} ${entityName}${createdSchedules.length > 1 ? 's' : ''}`,
-          defaultValue: `${createdSchedules.length} ${entityName}${createdSchedules.length > 1 ? 's' : ''} created successfully`,
+          name: ` ${entityName}${createdSchedules.length > 1 ? 's' : ''}`,
+          defaultValue: `${entityName}${createdSchedules.length > 1 ? 's' : ''} created successfully`,
         }),
       );
+      // {createdSchedules.length}
+
 
       if (onSuccess) {
         onSuccess();

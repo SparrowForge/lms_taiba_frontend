@@ -55,11 +55,8 @@ const MyCoursesSection = () => {
         </div>
         <Empty description="NO_GRADING" /></Card>}
       {activeTab === 'discussion' && <DiscussionSection />}
-      {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement/>}
-      {user?.type === UserType.STUDENT && activeTab === 'exam' && <StudentExamParticipate/>}
-      {user?.type === UserType.STUDENT && activeTab === 'result' && <ExamResultIndividualSubject/>}
-      {activeTab === 'grading' && <div>Grading Content is empty</div>}
-      {activeTab === 'discussion' && <DiscussionSection/>}
+
+
     </div>
   );
 };
