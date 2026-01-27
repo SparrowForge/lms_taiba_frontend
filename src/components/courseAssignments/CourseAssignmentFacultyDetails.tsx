@@ -1,7 +1,7 @@
 import { Card, Row, Col } from "antd";
 
 import { useAuth } from "@/hooks/useAuth";
-import { useLocalization } from "@/hooks/useLocalization";
+
 
 import { IBatch } from "@/types/batch";
 import { ICourse } from "@/types/course";
@@ -10,7 +10,7 @@ import { ISubject } from "@/types/subject";
 
 const CourseAssignmentsFacultyDetails = ({semester,batch, course,subject, classNo}: 
   {semester: ISemester | null, batch: IBatch | null, course: ICourse | null,  subject: ISubject | null, classNo: number}) => {
-  const { t } = useLocalization();
+
   const {user} = useAuth()
 
   return (

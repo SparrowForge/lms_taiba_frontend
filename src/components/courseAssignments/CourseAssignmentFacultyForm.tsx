@@ -79,7 +79,7 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
   }, [loadSubject, finalSubjectId])
 
   useEffect(() => {
-    loadCourseAssignments({ finalSemesterId, subjectId: finalSubjectId });
+    loadCourseAssignments({ semesterId:finalSemesterId, subjectId: finalSubjectId });
   }, [finalSubjectId, loadCourseAssignments, finalSemesterId,]);
 
   useEffect(() => {
@@ -185,7 +185,6 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
         semester={selectedSemester}
         batch={selectedBatch}
         course={selectedCourse}
-        faculty={user?.faculty ?? null}
         subject={selectedSubject}
         classNo={0}
       />
