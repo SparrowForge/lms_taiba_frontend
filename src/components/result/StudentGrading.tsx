@@ -3,7 +3,7 @@
 import {
   TrophyOutlined,
   BookOutlined,
-  UserOutlined,
+
 } from "@ant-design/icons"
 import {
   Card,
@@ -19,12 +19,12 @@ import {
 import { useParams } from "next/navigation"
 import { useEffect, useMemo } from "react"
 
+import { useAuth } from "@/hooks/useAuth"
 import { useBatches } from "@/hooks/useBatches"
 import { useCourses } from "@/hooks/useCourses"
 import { useExamResults } from "@/hooks/useExamResults"
 
 import type { ColumnsType } from "antd/es/table"
-import { useAuth } from "@/hooks/useAuth"
 
 const { Text } = Typography
 
@@ -40,7 +40,7 @@ interface ExamRow {
 
 export default function StudentGrading() {
 
-  const {user} = useAuth()
+  const { user } = useAuth()
 
   const { loadExamResults, examResults } = useExamResults()
   const { loadCourse, selectedCourse } = useCourses()
@@ -157,16 +157,11 @@ export default function StudentGrading() {
   /* ---------------- RENDER ---------------- */
 
   return (
-    <div style={{height: "100vh", overflow: "hidden" }}>
-     
+    <div style={{ height: "100vh", overflow: "hidden" }}>
+
 
       {/* ---------- RESULTS ---------- */}
       <Card
-        title={
-          <Space>
-            <TrophyOutlined /> Exam Results
-          </Space>
-        }
         style={{ height: "calc(100vh - 220px)" }}
         bodyStyle={{ padding: 0 }}
       >

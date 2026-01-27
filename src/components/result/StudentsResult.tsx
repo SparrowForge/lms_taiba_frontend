@@ -1,10 +1,10 @@
+import { Tabs } from 'antd'
 import React from 'react'
 
 import StudentGrading from './StudentGrading'
+import StudentSemesterGrading from './StudentSemesterGrading'
 import StudentSubjectGrading from './StudentSubjectGrading'
 import { ProtectedRoute } from '../auth/ProtectedRoute'
-import StudentSemesterGrading from './StudentSemesterGrading'
-import { Tabs } from 'antd'
 
 const StudentsResult = () => {
   return (

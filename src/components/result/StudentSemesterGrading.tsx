@@ -1,187 +1,230 @@
-'use client';
+"use client"
 
-import { UserOutlined, BookOutlined, CalendarOutlined } from '@ant-design/icons';
-import { Card, Row, Col, Statistic, Tag, Descriptions, Badge, Space } from 'antd';
-import { useEffect } from 'react';
+import {TrophyOutlined} from "@ant-design/icons"
+import {
+  Card,
+  Tag,
+  Space,
+  Badge,
+  Progress,
+  Typography,
+  Empty,
+} from "antd"
+import { useEffect, useMemo } from "react"
 
-import { useAuth } from '@/hooks/useAuth';
-
-import { useExamResults } from '../../hooks/useExamResults';
-
-import type React from 'react';
+import { useAuth } from "@/hooks/useAuth"
+import { useExamResults } from "@/hooks/useExamResults"
 
 
 
+const { Text } = Typography
 
 
 
-const StudentSemesterGrading = () => {
-  const {loadSemesterResults, semesterResults} = useExamResults()
-  const {user} = useAuth()
-  const getGradeColor = (grade: string) => {
-    const colors: Record<string, string> = {
-      A: '#52c41a',
-      B: '#1890ff',
-      C: '#faad14',
-      D: '#ff7a45',
-      F: '#f5222d',
-    };
-    return colors[grade] || '#8c8c8c';
-  };
 
-  const getStatusColor = (status: string) => {
-    return status === 'published' ? 'success' : 'processing';
-  };
 
-useEffect(()=>{
-  if(user?.student?.id){
-    loadSemesterResults({studentId:user?.student?.id})
+export default function StudentResultsDisplay() {
+  const { loadSemesterResults, semesterResults } = useExamResults()
+  const { user } = useAuth()
+  useEffect(() => {
+    if (user?.student?.id) {
+      loadSemesterResults({ studentId: user?.student?.id })
+    }
+  }, [loadSemesterResults, user?.student?.id])
+  /* ---------------- NORMALIZE DATA ---------------- */
+
+  const gradeRecord = useMemo(() => {
+    const record = Array.isArray(semesterResults) ? semesterResults[0] : semesterResults
+    return record || null
+  }, [semesterResults])
+
+  const groupedResults = useMemo(() => {
+    if (!Array.isArray(semesterResults) || semesterResults.length === 0) {
+      return {}
+    }
+
+    return semesterResults.reduce((acc, grade) => {
+      const { semester, course } = grade
+      const semesterName = semester.name
+      const subjectName = course.name
+
+      if (!acc[semesterName]) {
+        acc[semesterName] = {}
+      }
+
+      if (!acc[semesterName][subjectName]) {
+        acc[semesterName][subjectName] = []
+      }
+
+      acc[semesterName][subjectName].push({
+        examName: grade.course.code,
+        marks: grade.totalPercentage,
+        totalMarks: 100,
+        grade: grade.grade,
+        remarks: grade.remarks,
+        status: grade.status,
+      })
+
+      return acc
+    }, {})
+  }, [semesterResults])
+
+  if (!gradeRecord) {
+    return <Empty description="No grading semesterResults available" />
   }
-},[loadSemesterResults, user?.student?.id])
+
+  const studentName = `${gradeRecord.student.firstName} ${gradeRecord.student.lastName}`
+  const gradeColor = gradeRecord.grade === "A" ? "gold" : gradeRecord.grade === "B" ? "blue" : gradeRecord.grade === "C" ? "orange" : "red"
+
+  /* ---------------- RENDER ---------------- */
 
   return (
-    <>
-      {
-        semesterResults.map(data=>(
-          <div key={data?.id}>
+    <div style={{ minHeight: "100vh", padding: 24 }}>
+      {/* ---------- STUDENT INFO HEADER ---------- */}
       <Card
-        style={{
-          marginBottom: '24px',
-          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02)',
-        }}
+        style={{ marginBottom: 24 }}
+        bordered
       >
-        <Row gutter={[24, 24]}>
-          <Col xs={24} sm={12} md={8}>
-            <Statistic
-              title="GPA"
-              value={data?.gpa}
-              precision={2}
-              valueStyle={{ color: '#1890ff', fontSize: '32px' }}
-              prefix={<BookOutlined />}
-            />
-          </Col>
-          <Col xs={24} sm={12} md={8}>
-            <Statistic
-              title="Percentage"
-              value={data?.totalPercentage}
-              suffix="%"
-              valueStyle={{ color: '#52c41a', fontSize: '32px' }}
-            />
-          </Col>
-          <Col xs={24} sm={12} md={8}>
-            <div>
-              <span style={{ color: '#8c8c8c', fontSize: '14px' }}>Grade</span>
-              <div
-                style={{
-                  fontSize: '32px',
-                  fontWeight: 'bold',
-                  color: getGradeColor(data?.grade),
-                  marginTop: '8px',
-                }}
-              >
-                {data?.grade}
+        <Space direction="vertical" size="large" style={{ width: "100%" }}>
+          <div>
+            <Text strong style={{ fontSize: 18 }}>
+              {studentName}
+            </Text>
+            <div style={{ fontSize: 12, color: "#666", marginTop: 8 }}>
+              <div>
+                <strong>Registration No:</strong> {gradeRecord.student.registrationNo}
+              </div>
+              <div>
+                <strong>Application No:</strong> {gradeRecord.student.applicationNo}
+              </div>
+              <div>
+                <strong>Card No:</strong> {gradeRecord.student.cardNo}
               </div>
             </div>
-          </Col>
-        </Row>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 16 }}>
+            <div>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Course
+              </Text>
+              <div style={{ fontSize: 14, fontWeight: 600, marginTop: 4 }}>
+                {gradeRecord.course.name}
+              </div>
+              <div style={{ fontSize: 12, color: "#999" }}>
+                {gradeRecord.course.code}
+              </div>
+            </div>
+
+            <div>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Semester
+              </Text>
+              <div style={{ fontSize: 14, fontWeight: 600, marginTop: 4 }}>
+                {gradeRecord.semester.name}
+              </div>
+              <div style={{ fontSize: 12, color: "#999" }}>
+                Term {gradeRecord.semester.termNo}
+              </div>
+            </div>
+
+            <div>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Batch
+              </Text>
+              <div style={{ fontSize: 14, fontWeight: 600, marginTop: 4 }}>
+                {gradeRecord.batch.name}
+              </div>
+              <div style={{ fontSize: 12, color: "#999" }}>
+                {gradeRecord.batch.session}
+              </div>
+            </div>
+
+            <div>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Section
+              </Text>
+              <div style={{ fontSize: 14, fontWeight: 600, marginTop: 4 }}>
+                {gradeRecord.section.name}
+              </div>
+              <div style={{ fontSize: 12, color: "#999" }}>
+                {gradeRecord.section.code}
+              </div>
+            </div>
+          </div>
+        </Space>
       </Card>
 
-      <Row gutter={[24, 24]}>
-        <Col xs={24} md={12}>
-          <Card title="Student Information" size="small">
-            <Descriptions size="small" column={1}>
-              <Descriptions.Item label="Name">
-                <Space>
-                  <UserOutlined />
-                  {data.student.firstName} {data.student.lastName} 
-                </Space>
-              </Descriptions.Item>
-              <Descriptions.Item label="Registration No">
-                {data?.student.registrationNo}
-              </Descriptions.Item>
-              <Descriptions.Item label="Application No">
-                {data?.student.applicationNo}
-              </Descriptions.Item>
-              <Descriptions.Item label="Card No">
-                {data?.student.cardNo}
-              </Descriptions.Item>
-              <Descriptions.Item label="Admission Date">
-                <Space>
-                  <CalendarOutlined />
-                  {new Date(data?.student.admissionDate).toLocaleDateString()}
-                </Space>
-              </Descriptions.Item>
-              <Descriptions.Item label="Status">
-                <Badge
-                  status={data?.student.status === 'active' ? 'success' : 'default'}
-                  text={data?.student.status}
-                />
-              </Descriptions.Item>
-            </Descriptions>
-          </Card>
-        </Col>
+      {/* ---------- RESULTS CARD ---------- */}
+      <Card
+        title={
+          <Space>
+            <TrophyOutlined /> Overall Results
+          </Space>
+        }
+        bordered
+      >
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 }}>
+          <div style={{ textAlign: "center" }}>
+            <Text type="secondary" style={{ fontSize: 12, display: "block", marginBottom: 8 }}>
+              Overall Percentage
+            </Text>
+            <Progress
+              type="circle"
+              percent={gradeRecord.totalPercentage}
+              width={80}
+            />
+            <div style={{ marginTop: 8, fontSize: 14, fontWeight: 600 }}>
+              {gradeRecord.totalPercentage}%
+            </div>
+          </div>
 
-        <Col xs={24} md={12}>
-          <Card title="Academic Information" size="small">
-            <Descriptions size="small" column={1}>
-              <Descriptions.Item label="Course">
-                {data?.course.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="Course Code">
-                {data?.course.code}
-              </Descriptions.Item>
-              <Descriptions.Item label="Semester">
-                {data?.semester.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="Semester Term">
-                Term {data?.semester.termNo}
-              </Descriptions.Item>
-              <Descriptions.Item label="Batch">
-                {data?.batch.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="Section">
-                {data?.section.name}
-              </Descriptions.Item>
-            </Descriptions>
-          </Card>
-        </Col>
-      </Row>
+          <div style={{ textAlign: "center" }}>
+            <Text type="secondary" style={{ fontSize: 12, display: "block", marginBottom: 8 }}>
+              GPA
+            </Text>
+            <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
+              {gradeRecord.gpa.toFixed(2)}
+            </div>
+            <div style={{ fontSize: 12, color: "#999" }}>Out of 4.0</div>
+          </div>
 
-      <Card style={{ marginTop: '24px' }} title="Grade Status" size="small">
-        <Row gutter={[16, 16]}>
-          <Col xs={24} sm={12} md={6}>
-            <div>
-              <span style={{ color: '#8c8c8c', fontSize: '12px' }}>Status</span>
-              <div style={{ marginTop: '8px' }}>
-                <Tag color={getStatusColor(data?.status)}>
-                  {data?.status.charAt(0).toUpperCase() + data?.status.slice(1)}
-                </Tag>
-              </div>
+          <div style={{ textAlign: "center" }}>
+            <Text type="secondary" style={{ fontSize: 12, display: "block", marginBottom: 8 }}>
+              Grade
+            </Text>
+            <Tag color={gradeColor} style={{ padding: "6px 12px", fontSize: 16 }}>
+              {gradeRecord.grade}
+            </Tag>
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <Text type="secondary" style={{ fontSize: 12, display: "block", marginBottom: 8 }}>
+              Status
+            </Text>
+            <Badge
+              status={gradeRecord.status === "published" ? "success" : "processing"}
+              text={
+                <Text strong>
+                  {gradeRecord.status === "published" ? "Published" : "Pending"}
+                </Text>
+              }
+            />
+            <div style={{ fontSize: 12, color: "#999", marginTop: 8 }}>
+              Published: {new Date(gradeRecord.publishedAt).toLocaleDateString()}
             </div>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <div>
-              <span style={{ color: '#8c8c8c', fontSize: '12px' }}>Published Date</span>
-              <div style={{ marginTop: '8px', fontSize: '14px' }}>
-                {new Date(data?.publishedAt).toLocaleDateString()}
-              </div>
-            </div>
-          </Col>
-          <Col xs={24} sm={12} md={12}>
-            <div>
-              <span style={{ color: '#8c8c8c', fontSize: '12px' }}>Remarks</span>
-              <div style={{ marginTop: '8px', fontSize: '14px' }}>
-                {data?.remarks || 'No remarks'}
-              </div>
-            </div>
-          </Col>
-        </Row>
+          </div>
+        </div>
+
+        {gradeRecord.remarks && (
+          <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid #f0f0f0" }}>
+            <Text strong style={{ display: "block", marginBottom: 8 }}>
+              Remarks
+            </Text>
+            <Text type="secondary">{gradeRecord.remarks}</Text>
+          </div>
+        )}
       </Card>
     </div>
-        ))
-      }
-    </>
-  );
-};
-
-export default StudentSemesterGrading;
+  )
+}
