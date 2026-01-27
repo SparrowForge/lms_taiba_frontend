@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Card, Timeline } from "antd"
+import { Button, Card, Empty, Timeline } from "antd"
 import { useParams, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -49,7 +49,8 @@ export default function CourseTimeline() {
     }
   },[loadAttendances, drawerVisible, semesterId, subjectId, batchId])
 
-  const timelineData = attendances as unknown as TimelineItem[]
+  const timelineData = [...(attendances as unknown as TimelineItem[])].reverse()
+
 
   const handleCreateDrawer = (classnumber:number) => {
     setClassNo(classnumber)
@@ -72,7 +73,7 @@ export default function CourseTimeline() {
 
 
   const items = timelineData?.map((item) => ({
-    label: <div className="font-bold text-slate-900">Class {item.classNo + 1}</div>,
+    label: <div className="font-bold text-slate-900">Class {item.classNo }</div>,
     children: (
       <div className="space-y-3">
         <div className="text-sm text-slate-600 mt-3 flex justify-between">
@@ -134,6 +135,13 @@ export default function CourseTimeline() {
     <div className="bg-white rounded-lg border border-slate-200 p-6">
       <div className="max-h-[800px] overflow-y-auto overflow-x-hidden pr-2">
           <Timeline items={items} mode="left" />
+          {
+            timelineData.length === 0 && (
+              <div className="text-center text-sm text-slate-500 italic mt-4 min-h-100 flex items-center justify-center">
+                <Empty/>
+              </div>
+            )
+          }
       </div>
     </div>
    </>
