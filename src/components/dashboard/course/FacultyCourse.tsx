@@ -16,6 +16,7 @@ const FacultyCourse = () => {
     useEffect(()=>{
         loadFacultySubjects({page:1, limit:99, facultyId: user?.faculty?.id })
     },[loadFacultySubjects, user])
+    console.log(user)
 
   const groupBySemesterAndBatch = (data:IFacultySubject[]) => {
     const grouped = {};

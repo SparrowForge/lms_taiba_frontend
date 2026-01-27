@@ -5,9 +5,9 @@ import { useEffect } from "react"
 import { BiBookOpen } from "react-icons/bi"
 
 import { useAuth } from "@/hooks/useAuth"
-import { useSubjectResults } from "@/hooks/useSubjectResults"
 
 import { ISubjectExamResult } from "@/types/subjectResult"
+import { useExamResults } from "@/hooks/useExamResults"
 
 
 
@@ -21,7 +21,7 @@ const gradeColors: Record<string, string> = {
 }
 
 export default function StudentSubjectGrading() {
-  const { loadSubjectResults, subjectResults } = useSubjectResults()
+  const { loadSubjectResults, subjectResults } = useExamResults()
   const { user } = useAuth()
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function StudentSubjectGrading() {
   }
 
   const firstResult = subjectResults[0]
-  const student = firstResult.student
+
   const groupedBySemester = subjectResults.reduce(
     (acc: Record<string, ISubjectExamResult[]>, result) => {
       const semesterName = result.semester.name
@@ -65,44 +65,13 @@ export default function StudentSubjectGrading() {
   }
 
   return (
-    <div className="">
+    <>
+      {
+        subjectResults.length < 0 ? <Empty /> :(
+          <div className="">
 
-      {/* <Card className="border-0 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
-        <div className="flex items-start justify-between">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <UserOutlined className="h-6 w-6 text-blue-600" />
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">
-                  {student.firstName} {student.lastName}
-                </h2>
-                <p className="text-sm text-gray-600">{student.applicationNo}</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-6 pt-2">
-              <div>
-                <p className="text-xs text-gray-600">Course</p>
-                <p className="font-semibold text-gray-800">
-                  {firstResult.course.name}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-600">Batch</p>
-                <p className="font-semibold text-gray-800">{firstResult.batch.name}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-600">Section</p>
-                <p className="font-semibold text-gray-800">{firstResult.section.name}</p>
-              </div>
-            </div>
-          </div>
-          <div className="text-right">
-            <BiAward className="mb-2 h-8 w-8 text-yellow-500" />
-          </div>
-        </div>
-      </Card>  */}
 
-      {/* Overall Performance Card */}
+     
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <Card className="p-6">
           <p className="text-sm text-gray-600">Overall GPA</p>
@@ -124,7 +93,7 @@ export default function StudentSubjectGrading() {
         </Card>
       </div> *
 
-      {/* Semester Tabs */}
+
       <div className="space-y-4">
         {Object.entries(groupedBySemester).map(([semesterName, semesterResults]) => (
           <Card key={semesterName} className="overflow-hidden">
@@ -180,5 +149,7 @@ export default function StudentSubjectGrading() {
         ))}
       </div>
     </div>
+        ) }
+    </>
   )
 }
