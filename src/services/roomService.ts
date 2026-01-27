@@ -1,5 +1,5 @@
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IRoom, IRoomCreate, IRoomUpdate } from '@/types/room';
+import { IAvailableRoomsParams, IRoom, IRoomCreate, IRoomUpdate } from '@/types/room';
 
 import { api } from '@/lib/axios';
 
@@ -28,6 +28,11 @@ export const roomService = {
 
   deleteRoom: async (id: number): Promise<void> => {
     const response = await api.delete(`/rooms/${id}`);
+    return response.data;
+  },
+
+  getAvailableRooms: async (params: IAvailableRoomsParams): Promise<IRoom[]> => {
+    const response = await api.get<IRoom[]>('/rooms/available', { params });
     return response.data;
   },
 };

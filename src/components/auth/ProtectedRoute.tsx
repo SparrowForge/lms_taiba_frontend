@@ -1,10 +1,14 @@
 'use client';
 
+import { Spin } from 'antd';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 import { useAuth } from '@/hooks/useAuth';
+import { useRouteAccess } from '@/hooks/useRouteAccess';
 import { TwofaStatus } from '@/types/twofa';
+
+import { AccessDenied } from './AccessDenied';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,12 +17,13 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children, redirectTo = '/login' }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading, user, isTwoFaVerified } = useAuth();
+  const { isAccessible, isLoading: isRouteLoading } = useRouteAccess();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     // Don't redirect while loading
-    if (isLoading) {
+    if (isLoading || isRouteLoading) {
       return;
     }
 
@@ -38,21 +43,36 @@ export const ProtectedRoute = ({ children, redirectTo = '/login' }: ProtectedRou
       }
       return;
     }
-  }, [isAuthenticated, isLoading, user, isTwoFaVerified, router, redirectTo, pathname]);
+  }, [
+    isAuthenticated,
+    isLoading,
+    isRouteLoading,
+    isAccessible,
+    user,
+    isTwoFaVerified,
+    router,
+    redirectTo,
+    pathname,
+  ]);
 
-  // Show loading while checking authentication
-  // if (isLoading) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center">
-  //       <Spin size="large" />
-  //     </div>
-  //   )
-  // }
+  // Show loading while checking authentication or route access
+  if (isLoading || isRouteLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
-  // // Don't render children if not authenticated
-  // if (!isAuthenticated) {
-  //   return null
-  // }
+  // Don't render children if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  // Show Access Denied page if route is not accessible
+  if (!isAccessible) {
+    return <AccessDenied />;
+  }
 
   return <>{children}</>;
 };

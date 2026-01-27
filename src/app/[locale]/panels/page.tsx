@@ -31,7 +31,7 @@ export default function PanelsPage() {
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsPanelId, setSelectedDetailsPanelId] = useState<number | undefined>();
   const { t } = useLocalization();
-  const entityName = t(LOCALE_KEYS.PANEL, { defaultValue: 'Panel' });
+  const entityName = t(LOCALE_KEYS.MODULE, { defaultValue: 'Module' });
 
   const { panels, listStatus, pagination, loadPanels, removePanel } = usePanels();
 

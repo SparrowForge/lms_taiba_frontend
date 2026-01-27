@@ -1,4 +1,12 @@
+'use client';
+
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+
 export default function NotFound() {
+  const params = useParams();
+  const locale = params?.locale || 'en';
+
   return (
     <div
       style={{
@@ -87,8 +95,8 @@ export default function NotFound() {
             marginBottom: '3rem',
           }}
         >
-          {/* <Link
-            href="/"
+          <Link
+            href={`/${locale}`}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -115,43 +123,8 @@ export default function NotFound() {
               e.currentTarget.style.backgroundColor = '#3b82f6';
             }}
           >
-            🏠 Go to Dashboard
-          </Link> */}
-
-          {/* <button
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              padding: '0.75rem 2rem',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-              fontWeight: '500',
-              textDecoration: 'none',
-              transition: 'all 0.2s',
-              backgroundColor: 'white',
-              color: '#374151',
-              border: '1px solid #d1d5db',
-              height: '3rem',
-              minHeight: '3rem',
-              cursor: 'pointer',
-              boxSizing: 'border-box',
-            }}
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.history.back();
-              }
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#f9fafb';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'white';
-            }}
-          >
-            ← Go Back
-          </button> */}
+            🏠 Go to Home
+          </Link>
         </div>
 
         {/* Additional Info */}

@@ -1,6 +1,7 @@
 // Type-safe localization keys
 // This ensures we only use keys that exist in our localization files
 export const LOCALE_KEYS = {
+  MODULE: 'module',
   // Common
   SUCCESS_OPERATION: 'success_operation',
   REVIEW:"review",
