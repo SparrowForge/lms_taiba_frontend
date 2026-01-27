@@ -29,7 +29,7 @@ export default function ExamInstruction() {
   const examEnd = examStart + examDuration;
 
 
-  const canStartExam = now >= examStart && now < examEnd;
+  const canStartExam = now == examStart && now < examEnd;
 
 
   return (
