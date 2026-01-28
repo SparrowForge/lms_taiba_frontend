@@ -37,7 +37,7 @@ const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({
   semesterId,
   batchId
 }) => {
-  const { getCourseAssignmentById, selectedCourseAssignment, loadCourseAssignment, detailsStatus } =
+  const { selectedCourseAssignment, loadCourseAssignment, detailsStatus } =
     useCourseAssignments();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.COURSE_ASSIGNMENT, { defaultValue: 'Course Assignment' });

@@ -29,7 +29,7 @@ export default function ExamInstruction() {
   const examEnd = examStart + examDuration;
 
 
-  const canStartExam = now >= examStart && now < examEnd;
+  const canStartExam = now == examStart && now < examEnd;
 
 
   return (
@@ -72,15 +72,7 @@ export default function ExamInstruction() {
                       "Your progress is auto-saved",
                     ],
                   },
-                  {
-                    title: "Exam Format",
-                    items: [
-                      "Total Questions: 50",
-                      "Duration: 2 hours",
-                      "Multiple Choice + Short Answer",
-                      "Negative Marking: -0.25",
-                    ],
-                  },
+                 
                   {
                     title: "Requirements",
                     items: [
@@ -144,7 +136,7 @@ export default function ExamInstruction() {
                 type="primary"
                 size="large"
                 style={{ paddingInline: 32, height: 48 }}
-                // disabled={!canStartExam}
+                disabled={!canStartExam}
                 onClick={() => router.push(`/participate-exam?subjectId=${subjectId}&examId=${examId}`)}
               >
                 Start Exam

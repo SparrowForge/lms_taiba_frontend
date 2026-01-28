@@ -26,6 +26,7 @@ import { useSections } from '@/hooks/useSections';
 import { useSubjects } from '@/hooks/useSubjects';
 
 import { IAttendance } from '@/types/attendance';
+import { useFaculties } from '@/hooks/useFaculties';
 
 
 export default function AttendancesPage() {
@@ -43,6 +44,7 @@ export default function AttendancesPage() {
 
   const { attendances, listStatus, pagination, loadAttendances, removeAttendance } =
     useAttendances();
+  const { faculties, loadFaculties } = useFaculties()
 
   const { courses, loadCourses } = useCourses()
   const { subjects, loadSubjects } = useSubjects()
@@ -79,6 +81,10 @@ export default function AttendancesPage() {
   useEffect(() => {
     loadCourses({ page: 1, limit: 99 })
   }, [loadCourses])
+
+  useEffect(() => {
+    loadFaculties({ page: 1, limit: 99 })
+  }, [loadFaculties])
 
   useEffect(() => {
     if (courseId) {
@@ -185,6 +191,14 @@ export default function AttendancesPage() {
         options: [
           { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
           ...sections.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+      {
+        key: 'facultyId',
+        label: t(LOCALE_KEYS.FACULTY),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...faculties.map((f) => ({ label: f.fullName, value: String(f.id) })),
         ],
       },
     ],

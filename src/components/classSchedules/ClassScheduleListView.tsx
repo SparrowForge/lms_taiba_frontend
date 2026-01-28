@@ -24,6 +24,7 @@ import { useSections } from '@/hooks/useSections';
 import { useSubjects } from '@/hooks/useSubjects';
 
 import { IClassSchedule } from '@/types/classSchedule';
+import { useFaculties } from '@/hooks/useFaculties';
 
 export default function ClassScheduleListView() {
   const { t } = useLocalization();
@@ -42,6 +43,7 @@ export default function ClassScheduleListView() {
   const { subjects, loadSubjects } = useSubjects()
   const { batches, loadBatches } = useBatches()
   const { sections, loadSections } = useSections()
+  const { faculties, loadFaculties } = useFaculties();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -91,6 +93,10 @@ export default function ClassScheduleListView() {
       loadSections({ page: 1, limit: 99, batchId: parseInt(batchId) })
     }
   }, [batchId, loadSections])
+
+  useEffect(()=>{
+    loadFaculties({ page: 1, limit: 99 })
+  },[loadFaculties])
 
   const handleEditDrawer = (id: number) => {
     setSelectedId(id);
@@ -171,6 +177,14 @@ export default function ClassScheduleListView() {
         options: [
           { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
           ...sections.map((s) => ({ label: s.name, value: String(s.id) })),
+        ],
+      },
+      {
+        key: 'facultyId',
+        label: t(LOCALE_KEYS.FACULTY),
+        options: [
+          { label: t(LOCALE_KEYS.ALL, { defaultValue: 'All' }), value: '' },
+          ...faculties.map((f) => ({ label: f.fullName, value: String(f.id) })),
         ],
       },
     ],

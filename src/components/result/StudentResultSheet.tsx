@@ -14,6 +14,7 @@ import {
   Badge,
   Progress,
   Tabs,
+  Typography,
 } from "antd"
 import { useParams } from "next/navigation"
 import { useEffect, useMemo } from "react"
@@ -24,9 +25,11 @@ import { useExamResults } from "@/hooks/useExamResults"
 
 import type { ColumnsType } from "antd/es/table"
 
-interface SubjectResult {
+const { Text } = Typography
+
+interface ExamRow {
   key: string
-  subject: string
+  examName: string
   marks: number
   totalMarks: number
   grade: string
@@ -47,55 +50,54 @@ export default function StudentResultSheet() {
     if (id) {
       loadExamResults({ page: 1, limit: 99, studentId: id })
     }
-  }, [loadExamResults, id])
+  }, [id, loadExamResults])
 
   useEffect(() => {
-    if (examResults[0]?.student?.courseId) {
+    if (examResults?.[0]?.student?.courseId) {
       loadCourse(examResults[0].student.courseId)
     }
   }, [examResults, loadCourse])
 
   useEffect(() => {
-    if (examResults[0]?.student?.batchId) {
+    if (examResults?.[0]?.student?.batchId) {
       loadBatch(examResults[0].student.batchId)
     }
   }, [examResults, loadBatch])
 
-  /* ---------------- GROUP DATA (Semester → Subject) ---------------- */
+  /* ---------------- GROUP: Semester → Subject ---------------- */
 
   const groupedResults = useMemo(() => {
-    return (Array.isArray(examResults) ? examResults : []).reduce(
-      (acc: any, item: any) => {
-        const semesterId = item.exam?.semesterId
-        const subjectId = item.exam?.subjectId
+    const results = Array.isArray(examResults) ? examResults : []
 
-        if (!semesterId || !subjectId) return acc
+    return results.reduce((acc: any, item: any) => {
+      if (!item.exam) return acc // ignore invalid exam rows
 
-        if (!acc[semesterId]) acc[semesterId] = {}
-        if (!acc[semesterId][subjectId]) acc[semesterId][subjectId] = []
+      const semesterName = item.exam.semester?.name ?? "Unknown Semester"
+      const subjectName = item.exam.subject?.name ?? "Unknown Subject"
 
-        acc[semesterId][subjectId].push({
-          key: String(item.id),
-          subject: item.exam?.name,
-          marks: item.marksObtained,
-          totalMarks: item.exam?.marks,
-          grade: item.grade,
-          remarks: item.remarks,
-          status: item.status === "published" ? "pass" : "fail",
-        })
+      if (!acc[semesterName]) acc[semesterName] = {}
+      if (!acc[semesterName][subjectName]) acc[semesterName][subjectName] = []
 
-        return acc
-      },
-      {}
-    )
+      acc[semesterName][subjectName].push({
+        key: String(item.id),
+        examName: item.exam.name,
+        marks: item.marksObtained,
+        totalMarks: item.exam.marks,
+        grade: item.grade,
+        remarks: item.remarks,
+        status: item.status === "published" ? "pass" : "fail",
+      })
+
+      return acc
+    }, {})
   }, [examResults])
 
   /* ---------------- TABLE COLUMNS ---------------- */
 
-  const columns: ColumnsType<SubjectResult> = [
+  const columns: ColumnsType<ExamRow> = [
     {
       title: "Exam",
-      dataIndex: "subject",
+      dataIndex: "examName",
       render: (text) => (
         <Space>
           <BookOutlined />
@@ -115,6 +117,7 @@ export default function StudentResultSheet() {
         const percent = r.totalMarks
           ? (r.marks / r.totalMarks) * 100
           : 0
+
         return (
           <Progress
             type="circle"
@@ -159,7 +162,7 @@ export default function StudentResultSheet() {
       >
         <Descriptions bordered column={2}>
           <Descriptions.Item label="Name">
-            {examResults[0]?.student
+            {examResults?.[0]?.student
               ? `${examResults[0].student.firstName ?? ""} ${examResults[0].student.middleName ?? ""} ${examResults[0].student.lastName ?? ""}`
               : "N/A"}
           </Descriptions.Item>
@@ -179,26 +182,16 @@ export default function StudentResultSheet() {
             <TrophyOutlined /> Exam Results
           </Space>
         }
-        bodyStyle={{
-          padding: 0,
-        }}
-        style={{
-          height: "calc(100vh - 220px)", // dashboard-friendly
-        }}
+        style={{ height: "calc(100vh - 220px)" }}
+        bodyStyle={{ padding: 0 }}
       >
-        <div
-          style={{
-            height: "100%",
-            overflowY: "auto",
-            padding: 16,
-          }}
-        >
+        <div style={{ height: "100%", overflowY: "auto", padding: 16 }}>
           <Tabs
             type="card"
             items={Object.entries(groupedResults).map(
-              ([semesterId, subjects]: any) => ({
-                key: semesterId,
-                label: `Semester ${semesterId}`,
+              ([semesterName, subjects]: any) => ({
+                key: semesterName,
+                label: semesterName,
                 children: (
                   <Space
                     direction="vertical"
@@ -206,17 +199,20 @@ export default function StudentResultSheet() {
                     style={{ width: "100%" }}
                   >
                     {Object.entries(subjects).map(
-                      ([subjectId, subjectResults]: any) => (
+                      ([subjectName, exams]: any) => (
                         <Card
-                          key={subjectId}
-                          title={`Subject ID: ${subjectId}`}
-                          bordered
+                          key={subjectName}
+                          title={
+                            <Text strong>
+                              Subject: {subjectName}
+                            </Text>
+                          }
                         >
                           <Table
                             bordered
                             pagination={false}
                             columns={columns}
-                            dataSource={subjectResults}
+                            dataSource={exams}
                           />
                         </Card>
                       )

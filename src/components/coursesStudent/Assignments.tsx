@@ -11,20 +11,22 @@ import { Button, Card, Empty, Spin, Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { BiDetail, BiEditAlt } from 'react-icons/bi';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
+import { UserType } from '@/enums/user-type.enum';
 
 import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
 
-import { useCourseAssignments } from '@/hooks/useCourseAssignments';
-import { useLocalization } from '@/hooks/useLocalization';
 import { useAuth } from '@/hooks/useAuth';
-import CourseAssignmentFormDrawer from '../courseAssignments/CourseAssignmentFormDrawer';
-import { UserType } from '@/enums/user-type.enum';
-import CourseAssignmentSubmissionFormDrawer from '../courseAssignmentSubmissions/CourseAssignmentSubmissionFormDrawer';
-import { BiDetail, BiEditAlt } from 'react-icons/bi';
+import { useCourseAssignments } from '@/hooks/useCourseAssignments';
 import { useCourseAssignmentSubmissions } from '@/hooks/useCourseAssignmentSubmissions';
+import { useLocalization } from '@/hooks/useLocalization';
+
+import CourseAssignmentFormDrawer from '../courseAssignments/CourseAssignmentFormDrawer';
+import CourseAssignmentSubmissionFormDrawer from '../courseAssignmentSubmissions/CourseAssignmentSubmissionFormDrawer';
+
 
 // 🔹 Icon map for assignment types
 const getIcon = (type: string) => {
@@ -136,7 +138,7 @@ const Assignments: React.FC = () => {
 
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
-    // loadCourseAssignments({ page: 1, limit: 10 });
+    loadCourseAssignments({ page: 1, limit: 99, subjectId:id, semesterId, batchId:user?.student?.batchId });
   };
 
   const handleAssignmentSubmissionDrawerSuccess = () => {

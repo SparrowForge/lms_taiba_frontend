@@ -1,13 +1,17 @@
 'use client';
 
+import { useRouter } from 'next/navigation'
+import React from 'react'
+
+import { LOCALE_KEYS } from '@/constants/localizationKeys'
+
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import CourseTimeline from '@/components/dashboard/course/CourseTimeline';
 import { MainLayout } from '@/components/layout/MainLayout'
 import { PageHeader } from '@/components/ui/PageHeader'
-import { LOCALE_KEYS } from '@/constants/localizationKeys'
+
 import { useLocalization } from '@/hooks/useLocalization';
-import { useRouter } from 'next/navigation'
-import React from 'react'
+
 
 const Timeline = () => {
     const { t } = useLocalization();

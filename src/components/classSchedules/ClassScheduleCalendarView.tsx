@@ -43,13 +43,18 @@ function ClassScheduleCalendarView() {
   /* ------------------ Load Class Schedules ------------------ */
 
   useEffect(() => {
-    loadClassSchedules({
-      page: 1,
-      limit: 100,
-      year: currentMonth.year(),
-      month: currentMonth.month() + 1,
-    });
-  }, [currentMonth, loadClassSchedules]);
+    if (!user?.faculty?.id) return;
+
+    if (user.role === 'FACULTY') {
+      loadClassSchedules({
+        page: 1,
+        limit: 100,
+        facultyId: user?.faculty?.id,
+        month: currentMonth.month() + 1,
+        year: currentMonth.year(),
+      });
+    }
+  }, [currentMonth, loadClassSchedules, user?.faculty?.id, user.role]);
 
   /* ------------------ Load Exams ------------------ */
 

@@ -1,4 +1,5 @@
 import { Button, Card, Progress } from 'antd';
+import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { useEffect } from 'react';
 
@@ -7,7 +8,6 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useSubjects } from '@/hooks/useSubjects';
-import { useRouter } from 'next/navigation';
 
 
 
@@ -43,7 +43,7 @@ const AcademicProgress = () => {
       {subjects.map((sub, index) => (
         <div key={index} className="mb-3">
           <div className="flex justify-between items-center text-sm font-medium">
-            <h1>{locale === 'ar' ? sub.local_name : sub.name}</h1>
+            <h1>{locale === 'ar' ? sub.name : sub.name}</h1>
             {/* <p>{sub.percent}%</p> */}
           </div>
           <Progress percent={sub.percent} showInfo={false} strokeColor="#1F4BCA" />
