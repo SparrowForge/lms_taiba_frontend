@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Select, Space } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -19,6 +19,8 @@ import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import BranchFormDrawer from '../branches/BranchFormDrawer';
 
 interface DepartmentFormProps {
   mode: 'create' | 'edit';
@@ -126,20 +128,42 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           },
         ]}
       >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
-          loading={branches.length === 0}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {branches.map((branch) => (
-            <Select.Option key={branch.id} value={branch.id}>
-              {branch.name} ({branch.code})
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item name="branchId" noStyle>
+              <Select
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
+                loading={branches.length === 0}
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {branches.map((branch) => (
+                  <Select.Option key={branch.id} value={branch.id}>
+                    {branch.name} ({branch.code})
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={BranchFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadBranches()
+                if (data?.id) {
+                  form.setFieldsValue({ branchId: data.id })
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+
+        </Row>
+
       </Form.Item>
 
       <Form.Item
@@ -171,7 +195,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       <Form.Item
         name="headId"
         label={t(LOCALE_KEYS.HEAD)}
-        
+
       >
         <Select
           showSearch
