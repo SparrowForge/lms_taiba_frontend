@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Select, Space } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -20,6 +20,9 @@ import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import InstituteFormDrawer from '../institutes/InstituteFormDrawer';
+import AddressFormDrawer from '../addresses/AddressFormDrawer';
 
 interface BranchFormProps {
   mode: 'create' | 'edit';
@@ -161,47 +164,85 @@ const BranchForm: React.FC<BranchFormProps> = ({
           },
         ]}
       >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.INSTITUTE) })}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {institutes.map((inst) => (
-            <Select.Option key={inst.id} value={inst.id}>
-              {inst.name}
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item name="instituteId" noStyle>
+              <Select
+                showSearch
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.INSTITUTE) })}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {institutes.map((inst) => (
+                  <Select.Option key={inst.id} value={inst.id}>
+                    {inst.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={InstituteFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadInstitutes()
+                if (data?.id) {
+                  form.setFieldsValue({ instituteId: data.id })
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+        </Row>
+        
       </Form.Item>
 
       <Form.Item
-        name="addressId"
-        label={t(LOCALE_KEYS.ADDRESS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
-          },
-        ]}
-      >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ADDRESS) })}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {addresses.map((address) => (
-            <Select.Option key={address.id} value={address.id}>
-              {address.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      name="addressId"
+      label={t(LOCALE_KEYS.ADDRESS)}
+      rules={[
+        {
+          required: true,
+          message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
+        },
+      ]}
+    >
+      <Row gutter={8}>
+          <Col flex="1">
+          <Form.Item name="addressId" noStyle>
+            <Select
+              options={addresses.map((addr) => ({
+                label: addr.name,
+                value: addr.id,
+              }))}
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, {
+                name: t(LOCALE_KEYS.ADDRESS),
+              })}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+
+        <Col>
+          <QuickAddDrawerButton
+            drawerComponent={AddressFormDrawer}
+            drawerProps={{ mode: 'create' }}
+            onComplete={(data) => {
+              loadAddresses()
+              if (data?.id) {
+                form.setFieldsValue({ addressId: data.id })
+              }
+            }}
+            iconOnly
+            buttonType="dashed"
+          />
+        </Col>
+      </Row>
+    </Form.Item>
 
       <Form.Item
         name="externalInstituteIdNo"

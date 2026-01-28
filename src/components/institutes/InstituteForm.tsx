@@ -149,24 +149,29 @@ const InstituteForm: React.FC<Props> = ({
         ]}
       >
         <Row gutter={8}>
-          <Col flex="1">
-            <Select
-              options={addresses.map((addr) => ({ label: addr.name, value: addr.id }))}
-              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ADDRESS) })}
-              style={{ width: '100%' }}
-            />
+           <Col flex="1">
+            <Form.Item name="addressId" noStyle>
+              <Select
+                options={addresses.map((addr) => ({
+                  label: addr.name,
+                  value: addr.id,
+                }))}
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, {
+                  name: t(LOCALE_KEYS.ADDRESS),
+                })}
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
           </Col>
+
           <Col>
             <QuickAddDrawerButton
               drawerComponent={AddressFormDrawer}
               drawerProps={{ mode: 'create' }}
               onComplete={(data) => {
-                // Reload addresses to include the newly created one
-                loadAddresses();
-                
-                // Optionally set the form field value if data contains the new address
+                loadAddresses()
                 if (data?.id) {
-                  form.setFieldsValue({ addressId: data.id });
+                  form.setFieldsValue({ addressId: data.id })
                 }
               }}
               iconOnly
