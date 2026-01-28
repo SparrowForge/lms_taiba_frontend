@@ -117,7 +117,8 @@ export default function SemestersPage() {
       delete params.limit;
       loadSemesters({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
-    onQuickAdd: handleCreateDrawer,
+    // onQuickAdd: handleCreateDrawer,
+    disableAddNew: true,
     items: semesters,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,

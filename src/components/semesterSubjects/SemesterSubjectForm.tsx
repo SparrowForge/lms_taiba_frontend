@@ -6,7 +6,8 @@ import {useRouter} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {LOCALE_KEYS, LocaleKey} from '@/constants/localizationKeys';
+import {SUBJECT_ROLE_OPTIONS} from '@/constants/subjectRoleOptions';
 import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
@@ -20,7 +21,7 @@ import {getErrorMessage} from '@/types/errors';
 import {
     IFacultyAssignment,
     ISemesterSubjectCreate,
-    ISemesterSubjectMultipleCreate,
+    ISemesterSubjectBulkCreate,
     ISemesterSubjectUpdate,
 } from '@/types/semesterSubject';
 
@@ -352,8 +353,9 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
         }
       } else {
         // Page mode - multiple semester subjects with faculty assignments
-        if (mode === 'create' && subjectAssignments.length > 0) {
-          const payload: ISemesterSubjectMultipleCreate = {
+        if (mode === 'create' && selectedBatchId && selectedSemesterId && subjectAssignments.length > 0) {
+          const payload: ISemesterSubjectBulkCreate = {
+            batchId: selectedBatchId,
             semesterId: selectedSemesterId!,
             subjects: subjectAssignments.map((assignment) => ({
               subjectId: assignment.subjectId,
@@ -908,17 +910,14 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
                                 facultyIndex,
                               )
                             }
-                            placeholder="Select role"
+                            placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}
                             style={{ width: '100%' }}
                           >
-                            <Select.Option value="Primary Instructor">
-                              Primary Instructor
-                            </Select.Option>
-                            <Select.Option value="Lab Instructor">Lab Instructor</Select.Option>
-                            <Select.Option value="Tutorial Assistant">
-                              Tutorial Assistant
-                            </Select.Option>
-                            <Select.Option value="Co-Instructor">Co-Instructor</Select.Option>
+                            {SUBJECT_ROLE_OPTIONS.map((option) => (
+                              <Select.Option key={option.value} value={option.value}>
+                                {t(option.labelKey as LocaleKey)}
+                              </Select.Option>
+                            ))}
                           </Select>
                         </Form.Item>
                       </Col>

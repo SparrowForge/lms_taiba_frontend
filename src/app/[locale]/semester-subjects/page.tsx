@@ -119,7 +119,7 @@ export default function SemesterSubjectsPage() {
       delete params.limit;
       loadSemesterSubjects({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
-    onQuickAdd: handleCreateDrawer,
+    // onQuickAdd: handleCreateDrawer,
     items: semesterSubjects,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
@@ -167,9 +167,9 @@ export default function SemesterSubjectsPage() {
             editText={t(LOCALE_KEYS.EDIT)}
             deleteText={t(LOCALE_KEYS.DELETE)}
             viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
-            onEdit={() => router.push(`/semester-subjects/${semesterSubject.id}/edit`)}
-            onEditModal={handleEditDrawer}
-            editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
+            // onEdit={() => router.push(`/semester-subjects/${semesterSubject.id}/edit`)}
+            // onEditModal={handleEditDrawer}
+            // editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeSemesterSubject(semesterSubject.id)}
             id={semesterSubject.id}
           />

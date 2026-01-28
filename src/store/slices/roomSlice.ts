@@ -12,6 +12,8 @@ interface IRoomsState {
   rooms: IRoom[];
   selectedRoom: IRoom | null;
   pagination: IPaginationMeta;
+  availableRooms: IRoom[];
+  availableRoomsStatus: IStatusState;
 }
 
 const initialState: IRoomsState = {
@@ -28,6 +30,8 @@ const initialState: IRoomsState = {
     hasNextPage: false,
     hasPreviousPage: false,
   },
+  availableRooms: [],
+  availableRoomsStatus: { status: Status.INITIAL },
 };
 
 const roomSlice = createSlice({
@@ -70,6 +74,12 @@ const roomSlice = createSlice({
     clearDetailsStatus: (state) => {
       state.detailsStatus = { status: Status.INITIAL };
     },
+    setAvailableRooms: (state, action: PayloadAction<IRoom[]>) => {
+      state.availableRooms = action.payload;
+    },
+    setAvailableRoomsStatus: (state, action: PayloadAction<IStatusState>) => {
+      state.availableRoomsStatus = action.payload;
+    },
   },
 });
 
@@ -85,6 +95,8 @@ export const {
   setPagination,
   clearActionStatus,
   clearDetailsStatus,
+  setAvailableRooms,
+  setAvailableRoomsStatus,
 } = roomSlice.actions;
 
 export default roomSlice.reducer;

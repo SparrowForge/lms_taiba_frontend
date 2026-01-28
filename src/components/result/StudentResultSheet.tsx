@@ -139,24 +139,19 @@ export default function StudentResultSheet() {
       align: "center",
       render: (remarks) => <Tag color="green">{remarks}</Tag>,
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      align: "center",
-      render: (status) => (
-        <Badge
-          status={status === "pass" ? "success" : "error"}
-          text={status === "pass" ? "Passed" : "Failed"}
-        />
-      ),
-    },
   ]
 
-  /* ---------------- RENDER ---------------- */
+
 
   return (
-    <div style={{ padding: 24, height: "100vh", overflow: "hidden" }}>
-      {/* ---------- STUDENT INFO ---------- */}
+    <div
+      style={{
+        padding: 24,
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
+
       <Card
         title={
           <Space>
@@ -180,7 +175,7 @@ export default function StudentResultSheet() {
         </Descriptions>
       </Card>
 
-      {/* ---------- RESULTS ---------- */}
+
       <Card
         title={
           <Space>

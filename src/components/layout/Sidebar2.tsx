@@ -8,7 +8,6 @@ import {
   LogoutOutlined,
   RightOutlined,
   SettingOutlined,
-  SignatureOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Button, Layout, Menu, MenuProps, Select, Spin, Typography } from 'antd';
@@ -368,22 +367,10 @@ export const Sidebar2 = React.memo(
         type: 'divider',
       },
       {
-        key: 'upgrade',
-        icon: <SignatureOutlined />,
-        label: t(LOCALE_KEYS.UPGRADE_PLAN),
-        onClick: () => router.push('/upgrade'),
-      },
-      {
         key: 'settings',
         icon: <SettingOutlined />,
         label: t(LOCALE_KEYS.SETTINGS),
         onClick: () => router.push('/settings'),
-      },
-      {
-        key: 'signout',
-        icon: <LogoutOutlined />,
-        label: t(LOCALE_KEYS.LOGOUT),
-        onClick: handleLogout,
       },
     ];
 

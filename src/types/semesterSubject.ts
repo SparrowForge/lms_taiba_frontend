@@ -34,7 +34,8 @@ export interface ISemesterSubjectWithFaculty {
   faculty: IFacultyAssignment[];
 }
 
-export interface ISemesterSubjectMultipleCreate {
+export interface ISemesterSubjectBulkCreate {
   semesterId: number;
+  batchId: number;
   subjects: ISemesterSubjectWithFaculty[];
 }

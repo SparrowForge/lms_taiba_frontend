@@ -52,14 +52,14 @@ const StudentExamList = ({ data }: ExamListProps) => {
       title={
         <div className="flex justify-between items-center">
           <span className="font-semibold">{data.name}</span>
-          <Tag color="blue">{data.examType?.name}</Tag>
+          <Tag color="blue">{data?.examType?.name}</Tag>
         </div>
       }
     >
       <div className="space-y-2 text-sm">
         <p>
           <span className="font-medium">Subject:</span>{" "}
-          {data.subject?.name}
+          {data?.subject?.name}
         </p>
 
         <p>

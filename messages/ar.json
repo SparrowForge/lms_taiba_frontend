@@ -733,5 +733,6 @@
   "next_exam":"الامتحان القادم",
   "add_assignment":"إضافة مهمة",
   "submitted-assignment":"المهام المقدمة",
-  "question_set":"مجموعة الأسئلة"
+  "question_set":"مجموعة الأسئلة",
+  "module":"الوحدة"
 }

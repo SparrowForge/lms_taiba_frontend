@@ -6,6 +6,7 @@ import React, {useEffect} from 'react';
 import {toast} from 'react-toastify';
 
 import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import {SUBJECT_ROLE_OPTIONS} from '@/constants/subjectRoleOptions';
 import {Status} from '@/enums';
 
 import {useBatches} from '@/hooks/useBatches';
@@ -295,10 +296,11 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
         ]}
       >
         <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}>
-          <Select.Option value="instructor">{t(LOCALE_KEYS.INSTRUCTOR)}</Select.Option>
-          <Select.Option value="assistant">{t(LOCALE_KEYS.ASSISTANT)}</Select.Option>
-          <Select.Option value="coordinator">{t(LOCALE_KEYS.COORDINATOR)}</Select.Option>
-          <Select.Option value="lecturer">{t(LOCALE_KEYS.LECTURER)}</Select.Option>
+          {SUBJECT_ROLE_OPTIONS.map((option) => (
+            <Select.Option key={option.value} value={option.value}>
+              {t(option.labelKey)}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
       <Form.Item>

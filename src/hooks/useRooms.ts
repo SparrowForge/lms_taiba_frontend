@@ -6,7 +6,7 @@ import { Status } from '@/enums';
 import { RootState } from '@/store';
 
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
-import { IRoom, IRoomCreate, IRoomUpdate } from '@/types/room';
+import { IAvailableRoomsParams, IRoom, IRoomCreate, IRoomUpdate } from '@/types/room';
 
 import { roomService } from '@/services/roomService';
 
@@ -16,6 +16,8 @@ import {
   clearDetailsStatus,
   deleteRoom,
   setActionStatus,
+  setAvailableRooms,
+  setAvailableRoomsStatus,
   setDetailsStatus,
   setListStatus,
   setPagination,
@@ -26,9 +28,16 @@ import {
 
 export const useRooms = () => {
   const dispatch = useDispatch();
-  const { rooms, selectedRoom, listStatus, detailsStatus, actionStatus, pagination } = useSelector(
-    (state: RootState) => state.rooms,
-  );
+  const {
+    rooms,
+    selectedRoom,
+    listStatus,
+    detailsStatus,
+    actionStatus,
+    pagination,
+    availableRooms,
+    availableRoomsStatus,
+  } = useSelector((state: RootState) => state.rooms);
 
   const loadRooms = useCallback(
     async (params = {}) => {
@@ -180,6 +189,27 @@ export const useRooms = () => {
     [dispatch],
   );
 
+  // Load available rooms
+  const loadAvailableRooms = useCallback(
+    async (params: IAvailableRoomsParams): Promise<IRoom[]> => {
+      try {
+        dispatch(setAvailableRoomsStatus({ status: Status.LOADING }));
+        const response = await roomService.getAvailableRooms(params);
+        dispatch(setAvailableRooms(response));
+        dispatch(setAvailableRoomsStatus({ status: Status.SUCCESS }));
+        return response;
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load available rooms'
+            : 'Failed to load available rooms';
+        dispatch(setAvailableRoomsStatus({ status: Status.FAILED, message: errorMessage }));
+        throw error;
+      }
+    },
+    [dispatch],
+  );
+
   return {
     rooms,
     selectedRoom,
@@ -187,12 +217,15 @@ export const useRooms = () => {
     detailsStatus,
     actionStatus,
     pagination,
+    availableRooms,
+    availableRoomsStatus,
     loadRooms,
     loadRoom,
     createRoom,
     editRoom,
     removeRoom,
     getRoomById,
+    loadAvailableRooms,
     clearAction,
     clearDetails,
     setSelected,

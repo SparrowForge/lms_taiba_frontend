@@ -31,3 +31,11 @@ export interface IRoomUpdate {
   examCapacity?: number;
   status?: string;
 }
+
+export interface IAvailableRoomsParams {
+  timeSlotId: number;
+  date: string; // Format: YYYY-MM-DD
+  excludeRoomId?: string; // Comma-separated IDs like "1,2,3"
+  minSittingCapacity?: number;
+  minExamCapacity?: number;
+}

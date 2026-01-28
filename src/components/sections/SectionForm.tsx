@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Select, Space } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -17,6 +17,7 @@ import { ISection, ISectionCreate, ISectionUpdate } from '@/types/section';
 import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
+import QuickAddRouteButton from '../ui/QuickAddRouteButton';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 const { TextArea } = Input;
@@ -126,20 +127,32 @@ const SectionForm: React.FC<SectionFormProps> = ({
           },
         ]}
       >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
-          loading={batches.length === 0}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {batches.map((batch) => (
-            <Select.Option key={batch.id} value={batch.id}>
-              {batch.name} ({batch.code})
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
+              loading={batches.length === 0}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {batches.map((batch) => (
+                <Select.Option key={batch.id} value={batch.id}>
+                  {batch.name} ({batch.code})
+                </Select.Option>
+              ))}
+            </Select>
+          </Col>
+          <Col>
+            <QuickAddRouteButton
+              route="/batches/create"
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+        </Row>
       </Form.Item>
 
       <Form.Item

@@ -734,5 +734,6 @@
   "next_exam":"Next Exam",
   "add_assignment":"Add Assignment",
   "submitted-assignment":"Submitted Assignment",
-  "question_set":"Question Set"
+  "question_set":"Question Set",
+  "module":"Module"
 }
