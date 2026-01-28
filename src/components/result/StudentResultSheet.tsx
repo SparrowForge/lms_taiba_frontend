@@ -136,20 +136,9 @@ export default function StudentResultSheet() {
       align: "center",
       render: (remarks) => <Tag color="green">{remarks}</Tag>,
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      align: "center",
-      render: (status) => (
-        <Badge
-          status={status === "pass" ? "success" : "error"}
-          text={status === "pass" ? "Passed" : "Failed"}
-        />
-      ),
-    },
   ]
 
-  /* ---------------- RENDER ---------------- */
+
 
   return (
     <div
@@ -159,7 +148,7 @@ export default function StudentResultSheet() {
         overflow: "hidden",
       }}
     >
-      {/* ---------- TOP (STATIC INFO) ---------- */}
+
       <Card
         title={
           <Space>
@@ -183,7 +172,7 @@ export default function StudentResultSheet() {
         </Descriptions>
       </Card>
 
-      {/* ---------- SCROLLABLE RESULTS ---------- */}
+
       <Card
         title={
           <Space>

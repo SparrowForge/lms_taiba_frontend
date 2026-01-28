@@ -1,13 +1,11 @@
-import { Button, Card, Col, Empty, Row, Spin, Tag } from 'antd'
-import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import {  Card, Col, Empty, Row, Spin,  } from 'antd'
+import React, { useEffect, } from 'react'
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys'
 import { Status } from '@/enums'
 
 import { useAuth } from '@/hooks/useAuth'
 import { useExamResults } from '@/hooks/useExamResults'
-
 import { useLocalization } from '@/hooks/useLocalization'
 
 const ExamResultByStudent = () => {
@@ -44,36 +42,36 @@ const ExamResultByStudent = () => {
             {listStatus.status === Status.SUCCESS && examResults?.length > 0 && (
                 <Row className="gap-4" style={{ maxHeight: '420px' }}>
                     {examResults?.map((item) => (
-                        <Col key={item.id}>
+                        <Col key={item?.id}>
                             <Card
                                 className="shadow-md rounded-xl border"
                                 title={
                                     <div className="flex justify-between items-center">
-                                        <span className="font-semibold">{item.exam.name}</span>
-                                        
+                                        <span className="font-semibold">{item?.exam?.name}</span>
+  
                                     </div>
                                 }
                             >
                                 <div className="space-y-2 text-sm">
                                     {/* <p>
                                         <span className="font-medium">Subject:</span>{" "}
-                                        {item.subject?.name}
+                                        {item?.subject?.name}
                                     </p> */}
                                     <p>
-                                        <span className="font-medium">Exam Type:</span> {item.exam.questionType}
+                                        <span className="font-medium">Exam Type:</span> {item?.exam?.questionType}
                                     </p>
                                     <p>
-                                        <span className="font-medium">Marks:</span> {item.exam.marks}
+                                        <span className="font-medium">Marks:</span> {item?.exam?.marks}
                                     </p>
                                     
                                     <p>
                                         <span className="font-medium">Obtained:</span>{" "}
-                                        {item.marksObtained}
+                                        {item?.marksObtained}
                                     </p>
                                     {
                                         examResults && <p>
                                         <span className="font-medium">Room:</span>{" "}
-                                        {examResults.length}
+                                        {examResults?.length}
                                     </p>
                                     }
                                     
