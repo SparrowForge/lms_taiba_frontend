@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Select, Space } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -17,7 +17,9 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { getErrorMessage } from '@/types/errors';
 import { IInstitute, IInstituteCreate, IInstituteUpdate } from '@/types/institute';
 
+import AddressFormDrawer from '../addresses/AddressFormDrawer';
 import FormLayout from '../layout/FormLayout';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface Props {
@@ -146,10 +148,32 @@ const InstituteForm: React.FC<Props> = ({
           },
         ]}
       >
-        <Select
-          options={addresses.map((addr) => ({ label: addr.name, value: addr.id }))}
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ADDRESS) })}
-        />
+        <Row gutter={8}>
+          <Col flex="1">
+            <Select
+              options={addresses.map((addr) => ({ label: addr.name, value: addr.id }))}
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ADDRESS) })}
+              style={{ width: '100%' }}
+            />
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={AddressFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                // Reload addresses to include the newly created one
+                loadAddresses();
+                
+                // Optionally set the form field value if data contains the new address
+                if (data?.id) {
+                  form.setFieldsValue({ addressId: data.id });
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+        </Row>
       </Form.Item>
 
       <Form.Item
