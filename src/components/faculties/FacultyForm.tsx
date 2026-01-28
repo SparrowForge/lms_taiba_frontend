@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, DatePicker, Form, Input, Select, Space, Switch } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Row, Select, Space, Switch } from 'antd';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -21,6 +21,10 @@ import FormLayout from '../layout/FormLayout';
 import { StatusSelect } from '../ui/StatusSelect';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { useEmploymentTypes } from '@/hooks/useEmploymentTypes';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import DepartmentFormDrawer from '../departments/DepartmentFormDrawer';
+import BranchFormDrawer from '../branches/BranchFormDrawer';
+import EmploymentTypeFormDrawer from '../employmentTypes/EmploymentTypeFormDrawer';
 
 interface FacultyFormProps {
   mode: 'create' | 'edit';
@@ -46,7 +50,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
   const { createFaculty, editFaculty, actionStatus } = useFaculties();
   const { branches, loadBranches } = useBranches();
   const { departments, loadDepartments } = useDepartments();
-  const {loadEmploymentTypes, employmentTypes} = useEmploymentTypes()
+  const { loadEmploymentTypes, employmentTypes } = useEmploymentTypes()
 
   useEffect(() => {
     loadBranches({ page: 1, limit: 100 });
@@ -131,20 +135,42 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
           },
         ]}
       >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {branches.map((branch) => (
-            <Select.Option key={branch.id} value={branch.id}>
-              {branch.name} ({branch.code})
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item name="branchId" noStyle>
+              <Select
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
+                loading={branches.length === 0}
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {branches.map((branch) => (
+                  <Select.Option key={branch.id} value={branch.id}>
+                    {branch.name} ({branch.code})
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={BranchFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadBranches()
+                if (data?.id) {
+                  form.setFieldsValue({ branchId: data.id })
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+
+        </Row>
+
       </Form.Item>
       <Form.Item
         name="departmentId"
@@ -156,20 +182,41 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
           },
         ]}
       >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) })}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {departments.map((department) => (
-            <Select.Option key={department.id} value={department.id}>
-              {department.name}
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item name="departmentId" noStyle>
+              <Select
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) })}
+                loading={departments.length === 0}
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {departments.map((department) => (
+                  <Select.Option key={department.id} value={department.id}>
+                    {department.name} ({department.code})
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={DepartmentFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadDepartments()
+                if (data?.id) {
+                  form.setFieldsValue({ departmentId: data.id })
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+        </Row>
+
       </Form.Item>
       <Form.Item
         name="fullName"
@@ -208,6 +255,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       >
         <Input />
       </Form.Item>
+
       <Form.Item
         name="employmentTypeId"
         label={t(LOCALE_KEYS.EMPLOYMENT_TYPE)}
@@ -218,20 +266,40 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
           },
         ]}
       >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) })}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {employmentTypes.map((employeeType) => (
-            <Select.Option key={employeeType.id} value={employeeType.id}>
-              {employeeType.name}
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item name="employmentTypeId" noStyle>
+              <Select
+                showSearch
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) })}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {employmentTypes.map((employeeType) => (
+                  <Select.Option key={employeeType.id} value={employeeType.id}>
+                    {employeeType.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={EmploymentTypeFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadEmploymentTypes()
+                if (data?.id) {
+                  form.setFieldsValue({ employmentTypeId: Number(data.id) })
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+        </Row>
       </Form.Item>
 
       <Form.Item
