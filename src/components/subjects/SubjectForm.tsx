@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -19,6 +19,8 @@ import { ISubject, ISubjectCreate, ISubjectUpdate } from '@/types/subject';
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
 import LexicalEditor from '../ui/LexicalEditor';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import CourseFormDrawer from '../courses/CourseFormDrawer';
 
 interface SubjectFormProps {
   mode: 'create' | 'edit';
@@ -124,20 +126,41 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
           },
         ]}
       >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
-          loading={courses.length === 0}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {courses.map((course) => (
-            <Select.Option key={course.id} value={course.id}>
-              {course.name} ({course.code})
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item name="courseId" noStyle>
+              <Select
+                placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
+                loading={courses.length === 0}
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {courses.map((course) => (
+                  <Select.Option key={course.id} value={course.id}>
+                    {course.name} ({course.code})
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={CourseFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadCourses()
+                if (data?.id) {
+                  form.setFieldsValue({ courseId: data.id })
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+        </Row>
+
       </Form.Item>
 
       <Form.Item
@@ -225,7 +248,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
           },
         ]}
       >
-        <LexicalEditor  />
+        <LexicalEditor />
       </Form.Item>
 
       <Form.Item name="prerequisite" label={t(LOCALE_KEYS.PREREQUISITE)}>
