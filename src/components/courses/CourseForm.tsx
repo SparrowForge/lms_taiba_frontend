@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -20,6 +20,10 @@ import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import DepartmentFormDrawer from '../departments/DepartmentFormDrawer';
+import CourseTypeFormDrawer from '../courseTypes/CourseTypeFormDrawer';
+import ScheduleTypeFormDrawer from '../scheduleTypes/ScheduleTypeFormDrawer';
 
 interface CourseFormProps {
   mode: 'create' | 'edit';
@@ -129,20 +133,41 @@ const CourseForm: React.FC<CourseFormProps> = ({
           },
         ]}
       >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) })}
-          loading={departments.length === 0}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {departments.map((department) => (
-            <Select.Option key={department.id} value={department.id}>
-              {department.name} ({department.code})
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item name="departmentId" noStyle>
+              <Select
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) })}
+                loading={departments.length === 0}
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {departments.map((department) => (
+                  <Select.Option key={department.id} value={department.id}>
+                    {department.name} ({department.code})
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={DepartmentFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadDepartments()
+                if (data?.id) {
+                  form.setFieldsValue({ departmentId: data.id })
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+        </Row>
+
       </Form.Item>
 
       <Form.Item
@@ -176,20 +201,41 @@ const CourseForm: React.FC<CourseFormProps> = ({
           },
         ]}
       >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE_TYPE) })}
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {courseTypes.map((ct) => (
-            <Select.Option key={ct.id} value={ct.id}>
-              {ct.name}
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item name="courseTypeId" noStyle>
+              <Select
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE_TYPE) })}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {courseTypes.map((ct) => (
+                  <Select.Option key={ct.id} value={ct.id}>
+                    {ct.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={CourseTypeFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadCourseTypes()
+                if (data?.id) {
+                  form.setFieldsValue({ courseTypeId: data.id })
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+        </Row>
+
       </Form.Item>
 
       <Form.Item
@@ -202,20 +248,41 @@ const CourseForm: React.FC<CourseFormProps> = ({
           },
         ]}
       >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SCHEDULE_TYPE) })}
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {scheduleTypes.map((st) => (
-            <Select.Option key={st.id} value={st.id}>
-              {st.name}
-            </Select.Option>
-          ))}
-        </Select>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item name="scheduleTypeId" noStyle>
+              <Select
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SCHEDULE_TYPE) })}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {scheduleTypes.map((st) => (
+                  <Select.Option key={st.id} value={st.id}>
+                    {st.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <QuickAddDrawerButton
+              drawerComponent={ScheduleTypeFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadScheduleTypes()
+                if (data?.id) {
+                  form.setFieldsValue({ scheduleTypeId: data.id })
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Col>
+        </Row>
+
       </Form.Item>
 
       <Form.Item
