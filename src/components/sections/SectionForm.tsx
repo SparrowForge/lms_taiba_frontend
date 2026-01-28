@@ -13,8 +13,8 @@ import { useBatches } from '@/hooks/useBatches';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useSections } from '@/hooks/useSections';
 
-import { ISection, ISectionCreate, ISectionUpdate } from '@/types/section';
 import { getErrorMessage } from '@/types/errors';
+import { ISection, ISectionCreate, ISectionUpdate } from '@/types/section';
 
 import FormLayout from '../layout/FormLayout';
 import QuickAddRouteButton from '../ui/QuickAddRouteButton';
@@ -127,23 +127,25 @@ const SectionForm: React.FC<SectionFormProps> = ({
           },
         ]}
       >
-        <Row gutter={8}>
+        <Row>
           <Col flex="1">
-            <Select
-              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
-              loading={batches.length === 0}
-              showSearch
-              filterOption={(input, option) =>
-                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-              }
-              style={{ width: '100%' }}
-            >
-              {batches.map((batch) => (
-                <Select.Option key={batch.id} value={batch.id}>
-                  {batch.name} ({batch.code})
-                </Select.Option>
-              ))}
-            </Select>
+            <Form.Item name="batchId" noStyle>
+              <Select
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
+                loading={batches.length === 0}
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                }
+                style={{ width: '100%' }}
+              >
+                {batches.map((batch) => (
+                  <Select.Option key={batch.id} value={batch.id}>
+                    {batch.name} ({batch.code})
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
           </Col>
           <Col>
             <QuickAddRouteButton
