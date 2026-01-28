@@ -1,6 +1,7 @@
 import { Button } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
+import { signIn } from "next-auth/react";
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
@@ -8,6 +9,12 @@ import { useLocalization } from '@/hooks/useLocalization';
 
 const SocialLogin = () => {
   const { t } = useLocalization();
+
+  const handleMicrosoftLogin = async () => {
+    const response =await signIn("azure-ad")
+    console.log("handleMicrosoftLogin response:",response);
+    // window.location.href = '/api/auth/signin/azure-ad';
+  }
 
   return (
     <div className="flex flex-col items-center">
@@ -24,6 +31,7 @@ const SocialLogin = () => {
         size="small"
         className="flex items-center justify-center gap-2 border border-gray-300 rounded-md shadow-sm"
         style={{ height: '36px' }}
+         onClick={() => handleMicrosoftLogin()}
       >
         <Image src="/microsoft.png" alt="Microsoft" width={16} height={16} />
         <span className="text-sm font-medium">{t(LOCALE_KEYS.SIGN_IN_MICROSOFT)}</span>
