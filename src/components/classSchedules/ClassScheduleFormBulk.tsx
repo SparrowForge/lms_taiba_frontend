@@ -1,24 +1,26 @@
 'use client';
 
-import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Card, Checkbox, DatePicker, Divider, Form, InputNumber, Select, Space, Typography,} from 'antd';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Checkbox, Col, DatePicker, Divider, Form, InputNumber, Row, Select, Space, Typography, } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import React, {useEffect, useMemo, useState} from 'react';
-import {toast} from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useClassSchedules} from '@/hooks/useClassSchedules';
-import {useLocalization} from '@/hooks/useLocalization';
-import {useRooms} from '@/hooks/useRooms';
-import {useScheduleTypes} from '@/hooks/useScheduleTypes';
-import {useSemesters} from '@/hooks/useSemesters';
-import {useTimeSlots} from '@/hooks/useTimeSlots';
-import {useWeekDays} from '@/hooks/useWeekDays';
+import { useBatches } from '@/hooks/useBatches';
+import { useClassSchedules } from '@/hooks/useClassSchedules';
+import { useLocalization } from '@/hooks/useLocalization';
+import { useRooms } from '@/hooks/useRooms';
+import { useScheduleTypes } from '@/hooks/useScheduleTypes';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useTimeSlots } from '@/hooks/useTimeSlots';
+import { useWeekDays } from '@/hooks/useWeekDays';
 
-import {IFacultyWithSubjectRole} from '@/types/faculty';
+import { IFacultyWithSubjectRole } from '@/types/faculty';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import RoomFormDrawer from '../rooms/RoomFormDrawer';
 
 const { Title } = Typography;
 
@@ -566,29 +568,49 @@ const ClassScheduleFormBulk: React.FC<Props> = ({ onSuccess, onCancel, embedded 
                           },
                         ]}
                       >
-                        <Select
-                          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROOM) })}
-                          showSearch
-                          filterOption={(input, option) =>
-                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                          }
-                          onChange={(roomId) => {
-                            // Find the selected room and set its sitting capacity as max capacity
-                            const selectedRoom = rooms.find((r) => r.id === roomId);
-                            if (selectedRoom) {
-                              const schedules = form.getFieldValue('schedules') || [];
-                              schedules[field.name] = {
-                                ...schedules[field.name],
-                                maxCapacity: selectedRoom.sittingCapacity,
-                              };
-                              form.setFieldsValue({ schedules });
-                            }
-                          }}
-                          options={rooms.map((room) => ({
-                            value: room.id,
-                            label: `${room.name} (Capacity: ${room.sittingCapacity})`,
-                          }))}
-                        />
+                        <Row gutter={8}>
+                          <Col flex="1">
+                            <Form.Item name={[field.name, 'roomId']} noStyle>
+                              <Select
+                                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROOM) })}
+                                showSearch
+                                filterOption={(input, option) =>
+                                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                }
+                                onChange={(roomId) => {
+                                  // Find the selected room and set its sitting capacity as max capacity
+                                  const selectedRoom = rooms.find((r) => r.id === roomId);
+                                  if (selectedRoom) {
+                                    const schedules = form.getFieldValue('schedules') || [];
+                                    schedules[field.name] = {
+                                      ...schedules[field.name],
+                                      maxCapacity: selectedRoom.sittingCapacity,
+                                    };
+                                    form.setFieldsValue({ schedules });
+                                  }
+                                }}
+                                options={rooms.map((room) => ({
+                                  value: room.id,
+                                  label: `${room.name} (Capacity: ${room.sittingCapacity})`,
+                                }))}
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col>
+                            <QuickAddDrawerButton
+                              drawerComponent={RoomFormDrawer}
+                              drawerProps={{ mode: 'create' }}
+                              onComplete={(data) => {
+                                loadRooms()
+                                if (data?.id) {
+                                  form.setFieldsValue({ roomId: data.id })
+                                }
+                              }}
+                              iconOnly
+                              buttonType="dashed"
+                            />
+                          </Col>
+                        </Row>
                       </Form.Item>
 
                       {/* Start Date - Editable with semester date range restrictions */}
