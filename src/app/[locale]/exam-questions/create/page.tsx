@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React from 'react';
 import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -11,8 +11,9 @@ import QuestionForm from '@/components/examQuestions/QuestionForm';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageHeader } from '@/components/ui/PageHeader';
 
+import { useExamQuestions } from '@/hooks/useExamQuestions';
 import { useLocalization } from '@/hooks/useLocalization';
-import { useMcqQuestions } from '@/hooks/useMcqQuestions';
+
 
 import { getErrorMessage } from '@/types/errors';
 import { IMCQQuestionBulkCreate } from '@/types/mcqQuestion';
@@ -22,11 +23,11 @@ export default function CreateExamQuestionPage() {
   const router = useRouter();
   const entityName = t(LOCALE_KEYS.EXAM_QUESTION, { defaultValue: 'Exam Question' });
 
-  const { createBulkMcqQuestions } = useMcqQuestions();
+  const { createMultipleExamQuestion } = useExamQuestions();
 
   const handleSubmitQuestions = async (payload: IMCQQuestionBulkCreate) => {
     try {
-      await createBulkMcqQuestions(payload);
+      await createMultipleExamQuestion(payload);
       toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
       return router.back();
     } catch (error: unknown) {
