@@ -30,7 +30,8 @@ export const ALLOWED_ROUTES = [
  */
 export const STUDENT_ALLOWED_ROUTES: string[] = [
   '/exam-instructions',
-  '/participate-exam'
+  '/participate-exam',
+  '/exam-complete'
 ];
 
 /**
