@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Select, Space, Checkbox } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space, Checkbox } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -9,6 +9,9 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
+import BranchFormDrawer from '@/components/branches/BranchFormDrawer';
+import FormLayout from '@/components/layout/FormLayout';
+import QuickAddDrawerButton from '@/components/ui/QuickAddDrawerButton';
 import { StatusSelectFormItem } from '@/components/ui/StatusSelect';
 
 import { useBranches } from '@/hooks/useBranches';
@@ -17,8 +20,6 @@ import { useRoles } from '@/hooks/useRoles';
 
 import { getErrorMessage } from '@/types/errors';
 import { IRole, IRoleCreate, IRoleUpdate } from '@/types/role';
-
-import FormLayout from '../layout/FormLayout';
 
 interface RoleFormProps {
   mode: 'create' | 'edit';
@@ -105,33 +106,52 @@ const RoleForm: React.FC<RoleFormProps> = ({
         ...(mode === 'edit' ? initialValues : {}),
       }}
     >
-      <Form.Item
-        name="branchId"
-        label={t(LOCALE_KEYS.BRANCH)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
-          loading={branches.length === 0}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)
-              ?.toLowerCase()
-              .includes(input.toLowerCase())
-          }
-        >
-          {branches.map((branch) => (
-            <Select.Option key={branch.id} value={branch.id}>
-              {branch.name} ({branch.code})
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="branchId"
+            label={t(LOCALE_KEYS.BRANCH)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
+              loading={branches.length === 0}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)
+                  ?.toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {branches.map((branch) => (
+                <Select.Option key={branch.id} value={branch.id}>
+                  {branch.name} ({branch.code})
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={BranchFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadBranches({ page: 1, limit: 100 });
+                if (data?.id) form.setFieldsValue({ branchId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="name"

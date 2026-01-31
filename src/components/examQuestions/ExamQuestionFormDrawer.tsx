@@ -6,34 +6,35 @@ import React, { useEffect } from 'react';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
 
-import { useExamMCQQuestions } from '@/hooks/useExamMCQQuestions';
+import { useExamQuestions } from '@/hooks/useExamQuestions';
 import { useLocalization } from '@/hooks/useLocalization';
 
-import ExamMCQQuestionForm from './ExamMCQQuestionForm';
+import ExamQuestionForm from './ExamQuestionForm';
 
-interface ExamMCQQuestionFormDrawerProps {
+interface ExamQuestionFormDrawerProps {
   mode: 'create' | 'edit';
-  examMCQQuestionId?: number;
+  examQuestionId?: number;
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
 }
 
-const ExamMCQQuestionFormDrawer: React.FC<ExamMCQQuestionFormDrawerProps> = ({
+const ExamQuestionFormDrawer: React.FC<ExamQuestionFormDrawerProps> = ({
   mode,
-  examMCQQuestionId,
+  examQuestionId,
   visible,
   onCancel,
   onSuccess,
 }) => {
-  const { selectedExamMCQQuestion, loadExamMCQQuestion, detailsStatus } = useExamMCQQuestions();
+  const { selectedExamQuestion, loadExamQuestion, detailsStatus } = useExamQuestions();
   const { t } = useLocalization();
-  const entityName = t(LOCALE_KEYS.EXAM_MCQ_QUESTION, { defaultValue: 'Exam MCQ Question' });
+  const entityName = t(LOCALE_KEYS.EXAM_QUESTION, { defaultValue: 'Exam Question' });
+
   useEffect(() => {
-    if (visible && mode === 'edit' && examMCQQuestionId) {
-      loadExamMCQQuestion(examMCQQuestionId);
+    if (visible && mode === 'edit' && examQuestionId) {
+      loadExamQuestion(examQuestionId);
     }
-  }, [visible, mode, examMCQQuestionId, loadExamMCQQuestion]);
+  }, [visible, mode, examQuestionId, loadExamQuestion]);
 
   const handleSuccess = () => {
     onSuccess();
@@ -49,7 +50,7 @@ const ExamMCQQuestionFormDrawer: React.FC<ExamMCQQuestionFormDrawerProps> = ({
 
   return (
     <Drawer
-      key={examMCQQuestionId} // Force remount when examMCQQuestionId changes
+      key={examQuestionId}
       title={
         mode === 'create'
           ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
@@ -60,10 +61,10 @@ const ExamMCQQuestionFormDrawer: React.FC<ExamMCQQuestionFormDrawerProps> = ({
       onClose={handleCancel}
       destroyOnHidden={true}
     >
-      <ExamMCQQuestionForm
+      <ExamQuestionForm
         mode={mode}
-        examMCQQuestionId={examMCQQuestionId}
-        initialValues={selectedExamMCQQuestion || undefined}
+        examQuestionId={examQuestionId}
+        initialValues={selectedExamQuestion || undefined}
         onSuccess={handleSuccess}
         onCancel={handleCancel}
         embedded={true}
@@ -72,4 +73,4 @@ const ExamMCQQuestionFormDrawer: React.FC<ExamMCQQuestionFormDrawerProps> = ({
   );
 };
 
-export default ExamMCQQuestionFormDrawer;
+export default ExamQuestionFormDrawer;

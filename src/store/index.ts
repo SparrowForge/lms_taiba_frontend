@@ -19,7 +19,7 @@ import courseTypeReducer from './slices/courseTypeSlice';
 import departmentReducer from './slices/departmentSlice';
 import employmentTypeReducer from './slices/employmentTypeSlice';
 import examCandidateReducer from './slices/examCandidateSlice';
-import examMCQQuestionReducer from './slices/examMCQQuestionSlice';
+import examQuestionReducer from './slices/examQuestionSlice';
 import examResultReducer from './slices/examResultSlice';
 import examScheduleReducer from './slices/examScheduleSlice';
 import examReducer from './slices/examSlice';
@@ -105,7 +105,7 @@ export interface RootState {
   courseTypes: ReturnType<typeof courseTypeReducer>;
   exams: ReturnType<typeof examReducer>;
   examCandidates: ReturnType<typeof examCandidateReducer>;
-  examMCQQuestions: ReturnType<typeof examMCQQuestionReducer>;
+  examQuestions: ReturnType<typeof examQuestionReducer>;
   examResults: ReturnType<typeof examResultReducer>;
   examSchedules: ReturnType<typeof examScheduleReducer>;
   examSubmissions: ReturnType<typeof examSubmissionReducer>;
@@ -171,7 +171,7 @@ export const store = configureStore({
     courseTypes: courseTypeReducer,
     exams: examReducer,
     examCandidates: examCandidateReducer,
-    examMCQQuestions: examMCQQuestionReducer,
+    examQuestions: examQuestionReducer,
     examResults: examResultReducer,
     examSchedules: examScheduleReducer,
     examSubmissions: examSubmissionReducer,

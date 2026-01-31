@@ -7,34 +7,34 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import ExamMCQQuestionForm from '@/components/examMCQQuestions/ExamMCQQuestionForm';
+import ExamQuestionForm from '@/components/examQuestions/ExamQuestionForm';
 import { MainLayout } from '@/components/layout/MainLayout';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
 import { PageHeader } from '@/components/ui/PageHeader';
 
-import { useExamMCQQuestions } from '@/hooks/useExamMCQQuestions';
+import { useExamQuestions } from '@/hooks/useExamQuestions';
 import { useLocalization } from '@/hooks/useLocalization';
 
-export default function EditExamMCQQuestionPage({ params }: { params: Promise<{ id: string }> }) {
+export default function EditExamQuestionPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const { selectedExamMCQQuestion, loadExamMCQQuestion, detailsStatus } = useExamMCQQuestions();
+  const { selectedExamQuestion, loadExamQuestion, detailsStatus } = useExamQuestions();
   const { t } = useLocalization();
-  const entityName = t(LOCALE_KEYS.EXAM_MCQ_QUESTION, { defaultValue: 'Exam MCQ Question' });
+  const entityName = t(LOCALE_KEYS.EXAM_QUESTION, { defaultValue: 'Exam Question' });
 
   const resolvedParams = React.use(params);
-  const examMCQQuestionId = parseInt(resolvedParams.id);
+  const examQuestionId = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    loadExamMCQQuestion(examMCQQuestionId);
-  }, [examMCQQuestionId, loadExamMCQQuestion]);
+    loadExamQuestion(examQuestionId);
+  }, [examQuestionId, loadExamQuestion]);
 
   if (detailsStatus.status === Status.LOADING) {
     return <EntityEditLoadingView entityName={entityName} />;
   }
 
-  if (!selectedExamMCQQuestion || selectedExamMCQQuestion.id !== examMCQQuestionId) {
-    return <EntityEditNotFoundView entityName={entityName} backRoute="/exam-mcq-questions" />;
+  if (!selectedExamQuestion || selectedExamQuestion.id !== examQuestionId) {
+    return <EntityEditNotFoundView entityName={entityName} backRoute="/exam-questions" />;
   }
 
   return (
@@ -44,10 +44,10 @@ export default function EditExamMCQQuestionPage({ params }: { params: Promise<{ 
           title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
           onBack={() => router.back()}
         />
-        <ExamMCQQuestionForm
+        <ExamQuestionForm
           mode="edit"
-          examMCQQuestionId={examMCQQuestionId}
-          initialValues={selectedExamMCQQuestion}
+          examQuestionId={examQuestionId}
+          initialValues={selectedExamQuestion}
         />
       </MainLayout>
     </ProtectedRoute>

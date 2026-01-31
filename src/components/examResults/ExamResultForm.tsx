@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -9,6 +9,7 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
 
 import FormLayout from '@/components/layout/FormLayout';
+import QuickAddRouteButton from '@/components/ui/QuickAddRouteButton';
 import { StatusSelect } from '@/components/ui/StatusSelect';
 
 import { useExamResults } from '@/hooks/useExamResults';
@@ -132,33 +133,75 @@ const ExamResultForm: React.FC<ExamResultFormProps> = ({
       onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
-      <Form.Item
-        name="examId"
-        label={t(LOCALE_KEYS.EXAM)}
-        rules={[{ required: true }]}
-      >
-        <Select
-          showSearch
-          options={exams.map((exam) => ({
-            value: exam.id,
-            label: exam.name,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="examId"
+            label={t(LOCALE_KEYS.EXAM)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.EXAM) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EXAM) })}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '')
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={exams.map((exam) => ({
+                value: exam.id,
+                label: exam.name,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddRouteButton route="/exams/create" iconOnly buttonType="dashed" />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item
-        name="studentId"
-        label={t(LOCALE_KEYS.STUDENT)}
-        rules={[{ required: true }]}
-      >
-        <Select
-          showSearch
-          options={students.map((student) => ({
-            value: student.id,
-            label: `${student.firstName} ${student.lastName} (${student.registrationNo})`,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="studentId"
+            label={t(LOCALE_KEYS.STUDENT)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.STUDENT) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.STUDENT) })}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '')
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={students.map((student) => ({
+                value: student.id,
+                label: `${student.firstName} ${student.lastName} (${student.registrationNo})`,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddRouteButton route="/students" iconOnly buttonType="dashed" />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="marksObtained"

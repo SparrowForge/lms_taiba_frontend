@@ -117,45 +117,45 @@ const SectionForm: React.FC<SectionFormProps> = ({
       onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
-      <Form.Item
-        name="batchId"
-        label={t(LOCALE_KEYS.BATCH)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) }),
-          },
-        ]}
-      >
-        <Row>
-          <Col flex="1">
-            <Form.Item name="batchId" noStyle>
-              <Select
-                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
-                loading={batches.length === 0}
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-                }
-                style={{ width: '100%' }}
-              >
-                {batches.map((batch) => (
-                  <Select.Option key={batch.id} value={batch.id}>
-                    {batch.name} ({batch.code})
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="batchId"
+            label={t(LOCALE_KEYS.BATCH)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
+              loading={batches.length === 0}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {batches.map((batch) => (
+                <Select.Option key={batch.id} value={batch.id}>
+                  {batch.name} ({batch.code})
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddRouteButton
               route="/batches/create"
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-        </Row>
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="name"

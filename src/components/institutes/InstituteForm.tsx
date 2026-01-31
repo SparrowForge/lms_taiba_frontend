@@ -138,48 +138,47 @@ const InstituteForm: React.FC<Props> = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="addressId"
-        label={t(LOCALE_KEYS.ADDRESS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
-          },
-        ]}
-      >
-        <Row gutter={8}>
-           <Col flex="1">
-            <Form.Item name="addressId" noStyle>
-              <Select
-                options={addresses.map((addr) => ({
-                  label: addr.name,
-                  value: addr.id,
-                }))}
-                placeholder={t(LOCALE_KEYS.SELECT_NAME, {
-                  name: t(LOCALE_KEYS.ADDRESS),
-                })}
-                style={{ width: '100%' }}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="addressId"
+            label={t(LOCALE_KEYS.ADDRESS)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
+              },
+            ]}
+          >
+            <Select
+              options={addresses.map((addr) => ({
+                label: addr.name,
+                value: addr.id,
+              }))}
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, {
+                name: t(LOCALE_KEYS.ADDRESS),
+              })}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddDrawerButton
               drawerComponent={AddressFormDrawer}
               drawerProps={{ mode: 'create' }}
-              onComplete={(data) => {
-                loadAddresses()
+              onComplete={async (data) => {
+                await loadAddresses();
                 if (data?.id) {
-                  form.setFieldsValue({ addressId: data.id })
+                  form.setFieldsValue({ addressId: data.id });
                 }
               }}
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-        </Row>
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="website"

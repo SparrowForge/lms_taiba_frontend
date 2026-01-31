@@ -19,8 +19,13 @@ import { useStudents } from '@/hooks/useStudents';
 import { getErrorMessage } from '@/types/errors';
 import { IStudent, IStudentCreate, IStudentUpdate } from '@/types/student';
 
-import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
+import BatchFormDrawer from '@/components/batches/BatchFormDrawer';
+import BranchFormDrawer from '@/components/branches/BranchFormDrawer';
+import CourseFormDrawer from '@/components/courses/CourseFormDrawer';
+import SectionFormDrawer from '@/components/sections/SectionFormDrawer';
+import FormLayout from '@/components/layout/FormLayout';
+import QuickAddDrawerButton from '@/components/ui/QuickAddDrawerButton';
+import { StatusSelectFormItem } from '@/components/ui/StatusSelect';
 import { useSections } from '@/hooks/useSections';
 
 interface StudentFormProps {
@@ -247,88 +252,185 @@ const StudentForm: React.FC<StudentFormProps> = ({
         <DatePicker style={{ width: '100%' }} />
       </Form.Item>
 
-      <Form.Item
-        name="courseId"
-        label={t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' })}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
-          },
-        ]}
-      >
-        <Select
-          onChange={(value) => {
-            setSelectedCourseId(value);
-            form.setFieldsValue({ batchId: undefined });
-          }}
-          placeholder={t('select_course', { defaultValue: 'Select Course' })}
-          options={courses.map((course) => ({
-            label: course.name,
-            value: course.id,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="courseId"
+            label={t(LOCALE_KEYS.COURSE, { defaultValue: 'Course' })}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
+              },
+            ]}
+          >
+            <Select
+              onChange={(value) => {
+                setSelectedCourseId(value);
+                form.setFieldsValue({ batchId: undefined });
+              }}
+              placeholder={t('select_course', { defaultValue: 'Select Course' })}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={courses.map((course) => ({
+                label: course.name,
+                value: course.id,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={CourseFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadCourses({ page: 1, limit: 100 });
+                if (data?.id) form.setFieldsValue({ courseId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item
-        name="batchId"
-        label={t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' })}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
-          },
-        ]}
-      >
-        <Select
-          onChange={(value) => {
-            setSelectedBatchId(value);
-            form.setFieldsValue({ sectionId: undefined });
-          }}
-          placeholder={t(LOCALE_KEYS.SELECT_BATCH, { defaultValue: 'Select Batch' })}
-          options={batches.map((batch) => ({
-            label: batch.name,
-            value: batch.id,
-          }))}
-        />
-      </Form.Item>
-      <Form.Item
-        name="sectionId"
-        label={t(LOCALE_KEYS.SECTION, { defaultValue: 'Section' })}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SECTION) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_SECTION, { defaultValue: 'Select Section' })}
-          options={sections.map((section) => ({
-            label: section.name,
-            value: section.id,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="batchId"
+            label={t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' })}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+              },
+            ]}
+          >
+            <Select
+              onChange={(value) => {
+                setSelectedBatchId(value);
+                form.setFieldsValue({ sectionId: undefined });
+              }}
+              placeholder={t(LOCALE_KEYS.SELECT_BATCH, { defaultValue: 'Select Batch' })}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={batches.map((batch) => ({
+                label: batch.name,
+                value: batch.id,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={BatchFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                if (form.getFieldValue('courseId')) {
+                  loadBatches({ page: 1, limit: 100, courseId: form.getFieldValue('courseId') });
+                }
+                if (data?.id) form.setFieldsValue({ batchId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item
-        name="branchId"
-        label={t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' })}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_BRANCH, { defaultValue: 'Select Branch' })}
-          options={branches.map((branch) => ({
-            label: branch.name,
-            value: branch.id,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="sectionId"
+            label={t(LOCALE_KEYS.SECTION, { defaultValue: 'Section' })}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SECTION) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_SECTION, { defaultValue: 'Select Section' })}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={sections.map((section) => ({
+                label: section.name,
+                value: section.id,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={SectionFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                if (form.getFieldValue('batchId')) {
+                  loadSections({ page: 1, limit: 100, batchId: form.getFieldValue('batchId') });
+                }
+                if (data?.id) form.setFieldsValue({ sectionId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="branchId"
+            label={t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branch' })}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_BRANCH, { defaultValue: 'Select Branch' })}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={branches.map((branch) => ({
+                label: branch.name,
+                value: branch.id,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={BranchFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadBranches({ page: 1, limit: 100 });
+                if (data?.id) form.setFieldsValue({ branchId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="referenceNo"

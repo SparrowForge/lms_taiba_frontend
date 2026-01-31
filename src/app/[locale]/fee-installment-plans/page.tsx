@@ -136,6 +136,7 @@ export default function FeeInstallmentPlansPage() {
       delete params.limit;
       loadFeeInstallmentPlans({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
+    disableAddNew: true,
     // onQuickAdd: handleCreateDrawer,
     items: feeInstallmentPlans,
     itemsCount: pagination?.total ?? 0,

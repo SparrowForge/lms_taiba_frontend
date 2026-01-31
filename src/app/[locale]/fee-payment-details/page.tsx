@@ -83,7 +83,8 @@ export default function FeePaymentDetailsPage() {
     onSearch: (searchText: string) => {
       loadFeePaymentDetails({ page: 1, limit: 10, search: searchText });
     },
-    onQuickAdd: handleCreateDrawer,
+    disableAddNew: true,
+    // onQuickAdd: handleCreateDrawer,
     items: feePaymentDetails,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,

@@ -1,6 +1,6 @@
 'use client';
 
-import {Button, Form, Input, Select, Space} from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space } from 'antd';
 import {useRouter} from 'next/navigation';
 import React, {useEffect, useMemo, useState} from 'react';
 import {toast} from 'react-toastify';
@@ -19,7 +19,9 @@ import {getErrorMessage} from '@/types/errors';
 import {IDomainInfo, IUserCreate, IUserUpdate} from '@/types/user';
 
 import FormLayout from '../layout/FormLayout';
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
+import RoleFormDrawer from '@/components/roles/RoleFormDrawer';
 import { useRoles } from '@/hooks/useRoles';
 
 interface UserFormProps {
@@ -312,29 +314,48 @@ const computedInitialValues = useMemo(() => {
           />
         </Form.Item>
 
-        
-        <Form.Item
-          name="roleId"
-          label={t(LOCALE_KEYS.ROLE)}
-          rules={[
-            {
-              required: true,
-              message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROLE) }),
-            },
-          ]}
-        >
-          <Select
-            placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}
-            aria-label={t(LOCALE_KEYS.ROLE)}
-            aria-required="true"
-            aria-describedby="role-help"
-            // onChange={handleTypeChange}
-          >
-             {
-              roles.map(role=><Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>)
-            }
-          </Select>
-        </Form.Item>
+        <Row gutter={8}>
+          <Col flex="1">
+            <Form.Item
+              name="roleId"
+              label={t(LOCALE_KEYS.ROLE)}
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROLE) }),
+                },
+              ]}
+            >
+              <Select
+                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}
+                aria-label={t(LOCALE_KEYS.ROLE)}
+                aria-required="true"
+                aria-describedby="role-help"
+                style={{ width: '100%' }}
+              >
+                {roles.map((role) => (
+                  <Select.Option key={role.id} value={role.id}>
+                    {role.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label=" " colon={false}>
+              <QuickAddDrawerButton
+                drawerComponent={RoleFormDrawer}
+                drawerProps={{ mode: 'create' }}
+                onComplete={(data) => {
+                  loadRoles({ page: 1, limit: 99 });
+                  if (data?.id) form.setFieldsValue({ roleId: data.id });
+                }}
+                iconOnly
+                buttonType="dashed"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Form.Item
           name="domain"

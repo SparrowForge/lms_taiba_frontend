@@ -21,9 +21,10 @@ import { getErrorMessage } from '@/types/errors';
 import { IExamSchedule, IExamScheduleCreate, IExamScheduleUpdate } from '@/types/examSchedule';
 
 import FormLayout from '../layout/FormLayout';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import TimeSlotFormDrawer from '../timeSlots/TimeSlotFormDrawer';
 import { IExam } from '@/types/exam';
-
 
 const { Option } = Select;
 
@@ -35,10 +36,11 @@ interface ExamScheduleFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
+  fullWidth?: boolean;
   response:IExam;
   setResponse:React.Dispatch<React.SetStateAction<IExamSchedule>>
   setCurrent:React.Dispatch<React.SetStateAction<number>>
-    current:number
+  current:number
 }
 
 const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
@@ -48,6 +50,7 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
   onSuccess,
   onCancel,
   embedded = false,
+  fullWidth = false,
   response,
   setCurrent,
   current
@@ -168,40 +171,36 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
       </Row>
     </Card>
 
-      <Row gutter={16}>
-        
-        <Col span={12}>
-          <Form.Item
-            name="weekDayId"
-            label={t(LOCALE_KEYS.WEEK_DAY)}
-            rules={[
-              {
-                required: true,
-                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.WEEK_DAY) }),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.WEEK_DAY) })}
-              showSearch
-              filterOption={(input, option) =>
-                String(option?.children || '')
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-            >
-              {weekDays.map((weekDay) => (
-                <Option key={weekDay.id} value={weekDay.id}>
-                  {weekDay.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Col>
-      </Row>
+      <Form.Item
+        name="weekDayId"
+        label={t(LOCALE_KEYS.WEEK_DAY)}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.WEEK_DAY) }),
+          },
+        ]}
+      >
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.WEEK_DAY) })}
+          showSearch
+          filterOption={(input, option) =>
+            String(option?.children || '')
+              .toLowerCase()
+              .includes(input.toLowerCase())
+          }
+          style={{ width: '100%' }}
+        >
+          {weekDays.map((weekDay) => (
+            <Option key={weekDay.id} value={weekDay.id}>
+              {weekDay.name}
+            </Option>
+          ))}
+        </Select>
+      </Form.Item>
 
-      <Row gutter={16}>
-        <Col span={12}>
+      <Row gutter={8}>
+        <Col flex="1">
           <Form.Item
             name="timeSlotId"
             label={t(LOCALE_KEYS.TIME_SLOT)}
@@ -220,6 +219,7 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
+              style={{ width: '100%' }}
             >
               {timeSlots.map((timeSlot) => (
                 <Option key={timeSlot.id} value={timeSlot.id}>
@@ -229,12 +229,25 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
-          <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
-            <Input />
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={TimeSlotFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadTimeSlots();
+                if (data?.id) form.setFieldsValue({ timeSlotId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
           </Form.Item>
         </Col>
       </Row>
+
+      <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
+        <Input />
+      </Form.Item>
 
       <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
@@ -251,7 +264,7 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
     </Form>
   );
 
-  return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
+  return embedded ? formContent : <FormLayout fullWidth={fullWidth}>{formContent}</FormLayout>;
 };
 
 export default ExamScheduleFacultyForm;

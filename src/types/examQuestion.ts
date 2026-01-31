@@ -1,12 +1,13 @@
 import { EntityStatus } from '@/enums/status';
 
 import { IExam } from './exam';
+
 export interface IDifficultyOption {
   label: string;
-  value: "easy" | "medium" | "hard";
+  value: 'easy' | 'medium' | 'hard';
 }
 
-export interface IExamMCQQuestion {
+export interface IExamQuestion {
   id: number;
   examId: number;
   questionOrder: number;
@@ -20,7 +21,7 @@ export interface IExamMCQQuestion {
   exam: IExam;
 }
 
-export interface IExamMCQMultipleQuestion {
+export interface IExamQuestionMultiple {
   id: number;
   examId: number;
   questionOrder: number;
@@ -32,12 +33,12 @@ export interface IExamMCQMultipleQuestion {
   updatedAt: string;
   deletedAt: string | null;
   exam: IExam;
-  courseId:number,
-  subjectId:number,
-  difficultyLevel:IDifficultyOption
+  courseId: number;
+  subjectId: number;
+  difficultyLevel: IDifficultyOption;
 }
 
-export interface IExamMCQQuestionCreate {
+export interface IExamQuestionCreate {
   examId: number;
   questionOrder: number;
   questionText: string;
@@ -46,7 +47,7 @@ export interface IExamMCQQuestionCreate {
   status: EntityStatus;
 }
 
-export interface IExamMCQQuestionUpdate {
+export interface IExamQuestionUpdate {
   examId?: number;
   questionOrder?: number;
   questionText?: string;
@@ -55,12 +56,12 @@ export interface IExamMCQQuestionUpdate {
   status?: EntityStatus;
 }
 
-export interface IExamMCQQuestionMultipleCreate {
-  courseId:number;
-  subjectId:number;
+export interface IExamQuestionMultipleCreate {
+  courseId: number;
+  subjectId: number;
   questionText: string;
   correctOptionNumber: number;
   options: string[];
   status: EntityStatus;
-  difficultyLevel:IDifficultyOption
+  difficultyLevel: IDifficultyOption;
 }

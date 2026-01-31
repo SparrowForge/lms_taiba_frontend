@@ -13,6 +13,8 @@ import {
   Spin,
   Typography,
 } from "antd";
+
+const { Option } = Select;
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";

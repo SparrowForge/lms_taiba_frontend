@@ -19,10 +19,11 @@ import { IBranch, IBranchCreate, IBranchUpdate } from '@/types/branch';
 import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
 import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
-import InstituteFormDrawer from '../institutes/InstituteFormDrawer';
+import QuickAddRouteButton from '../ui/QuickAddRouteButton';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 import AddressFormDrawer from '../addresses/AddressFormDrawer';
+import InstituteFormDrawer from '../institutes/InstituteFormDrawer';
 
 interface BranchFormProps {
   mode: 'create' | 'edit';
@@ -154,66 +155,65 @@ const BranchForm: React.FC<BranchFormProps> = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="instituteId"
-        label={t(LOCALE_KEYS.INSTITUTE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INSTITUTE) }),
-          },
-        ]}
-      >
-        <Row gutter={8}>
-          <Col flex="1">
-            <Form.Item name="instituteId" noStyle>
-              <Select
-                showSearch
-                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.INSTITUTE) })}
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-                }
-              >
-                {institutes.map((inst) => (
-                  <Select.Option key={inst.id} value={inst.id}>
-                    {inst.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="instituteId"
+            label={t(LOCALE_KEYS.INSTITUTE)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.INSTITUTE) }),
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.INSTITUTE) })}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {institutes.map((inst) => (
+                <Select.Option key={inst.id} value={inst.id}>
+                  {inst.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddDrawerButton
               drawerComponent={InstituteFormDrawer}
               drawerProps={{ mode: 'create' }}
               onComplete={(data) => {
-                loadInstitutes()
+                loadInstitutes();
                 if (data?.id) {
-                  form.setFieldsValue({ instituteId: data.id })
+                  form.setFieldsValue({ instituteId: data.id });
                 }
               }}
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-        </Row>
-        
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item
-      name="addressId"
-      label={t(LOCALE_KEYS.ADDRESS)}
-      rules={[
-        {
-          required: true,
-          message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
-        },
-      ]}
-    >
       <Row gutter={8}>
-          <Col flex="1">
-          <Form.Item name="addressId" noStyle>
+        <Col flex="1">
+          <Form.Item
+            name="addressId"
+            label={t(LOCALE_KEYS.ADDRESS)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
+              },
+            ]}
+          >
             <Select
               options={addresses.map((addr) => ({
                 label: addr.name,
@@ -226,23 +226,23 @@ const BranchForm: React.FC<BranchFormProps> = ({
             />
           </Form.Item>
         </Col>
-
         <Col>
-          <QuickAddDrawerButton
-            drawerComponent={AddressFormDrawer}
-            drawerProps={{ mode: 'create' }}
-            onComplete={(data) => {
-              loadAddresses()
-              if (data?.id) {
-                form.setFieldsValue({ addressId: data.id })
-              }
-            }}
-            iconOnly
-            buttonType="dashed"
-          />
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={AddressFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadAddresses();
+                if (data?.id) {
+                  form.setFieldsValue({ addressId: data.id });
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
         </Col>
       </Row>
-    </Form.Item>
 
       <Form.Item
         name="externalInstituteIdNo"
@@ -259,33 +259,48 @@ const BranchForm: React.FC<BranchFormProps> = ({
         <Input />
       </Form.Item>
 
-      <Form.Item
-        name="campusDirectorUserId"
-        label={t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
-              name: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID),
-            }),
-          },
-        ]}
-      >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.USER) })}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {users.map((user) => (
-            <Select.Option key={user.id} value={user.id}>
-              {user.name || user.email}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="campusDirectorUserId"
+            label={t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+                  name: t(LOCALE_KEYS.CAMPUS_DIRECTOR_USER_ID),
+                }),
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.USER) })}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {users.map((user) => (
+                <Select.Option key={user.id} value={user.id}>
+                  {user.name || user.email}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddRouteButton
+              route="/users"
+              iconOnly
+              buttonType="dashed"
+              buttonText={t(LOCALE_KEYS.USER)}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 
