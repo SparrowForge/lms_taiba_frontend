@@ -37,7 +37,14 @@ import { getErrorMessage } from '@/types/errors';
 import { IExamCreate, IExamUpdate } from '@/types/exam';
 
 import FormLayout from '../layout/FormLayout';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import QuickAddRouteButton from '../ui/QuickAddRouteButton';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import CourseFormDrawer from '../courses/CourseFormDrawer';
+import ExamTypeFormDrawer from '../examTypes/ExamTypeFormDrawer';
+import RoomFormDrawer from '../rooms/RoomFormDrawer';
+import SemesterFormDrawer from '../semesters/SemesterFormDrawer';
+import SubjectFormDrawer from '../subjects/SubjectFormDrawer';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -281,8 +288,8 @@ const ExamForm: React.FC<ExamFormProps> = ({
         <Input />
       </Form.Item>
 
-      <Row gutter={16}>
-        <Col span={12}>
+      <Row gutter={8}>
+        <Col flex="1">
           <Form.Item
             name="courseId"
             label={t(LOCALE_KEYS.COURSE)}
@@ -302,6 +309,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
                   .includes(input.toLowerCase())
               }
               onChange={handleCourseChange}
+              style={{ width: '100%' }}
             >
               {courses.map((course) => (
                 <Option key={course.id} value={course.id}>
@@ -311,7 +319,23 @@ const ExamForm: React.FC<ExamFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={CourseFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadCourses();
+                if (data?.id) form.setFieldsValue({ courseId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={8}>
+        <Col flex="1">
           <Form.Item
             name="subjectId"
             label={t(LOCALE_KEYS.SUBJECT)}
@@ -331,6 +355,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
                   .includes(input.toLowerCase())
               }
               disabled={!selectedCourseId}
+              style={{ width: '100%' }}
             >
               {getFilteredSubjects().map((subject) => (
                 <Option key={subject.id} value={subject.id}>
@@ -340,10 +365,24 @@ const ExamForm: React.FC<ExamFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={SubjectFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadSubjects({ page: 1, limit: 100, courseId: selectedCourseId ?? undefined });
+                if (data?.id) form.setFieldsValue({ subjectId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
       </Row>
 
-      <Row gutter={16}>
-        <Col span={12}>
+      <Row gutter={8}>
+        <Col flex="1">
           <Form.Item
             name="batchId"
             label={t(LOCALE_KEYS.BATCH)}
@@ -364,6 +403,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
               }
               disabled={!selectedCourseId}
               onChange={handleBatchChange}
+              style={{ width: '100%' }}
             >
               {getFilteredBatches().map((batch) => (
                 <Option key={batch.id} value={batch.id}>
@@ -373,7 +413,14 @@ const ExamForm: React.FC<ExamFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddRouteButton route="/batches/create" iconOnly buttonType="dashed" />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={8}>
+        <Col flex="1">
           <Form.Item
             name="semesterId"
             label={t(LOCALE_KEYS.SEMESTER)}
@@ -393,6 +440,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
                   .includes(input.toLowerCase())
               }
               disabled={!selectedCourseId}
+              style={{ width: '100%' }}
             >
               {getFilteredSemesters().map((semester) => (
                 <Option key={semester.id} value={semester.id}>
@@ -402,10 +450,24 @@ const ExamForm: React.FC<ExamFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={SemesterFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                if (selectedBatchId) loadSemesters({ page: 1, limit: 100, batchId: selectedBatchId });
+                if (data?.id) form.setFieldsValue({ semesterId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
       </Row>
 
-      <Row gutter={16}>
-        <Col span={12}>
+      <Row gutter={8}>
+        <Col flex="1">
           <Form.Item
             name="examTypeId"
             label={t(LOCALE_KEYS.EXAM_TYPE)}
@@ -424,6 +486,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
+              style={{ width: '100%' }}
             >
               {examTypes.map((examType) => (
                 <Option key={examType.id} value={examType.id}>
@@ -433,7 +496,23 @@ const ExamForm: React.FC<ExamFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={ExamTypeFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadExamTypes();
+                if (data?.id) form.setFieldsValue({ examTypeId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={8}>
+        <Col flex="1">
           <Form.Item
             name="roomId"
             label={t(LOCALE_KEYS.ROOM)}
@@ -452,6 +531,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
+              style={{ width: '100%' }}
             >
               {rooms.map((room) => (
                 <Option key={room.id} value={room.id}>
@@ -459,6 +539,20 @@ const ExamForm: React.FC<ExamFormProps> = ({
                 </Option>
               ))}
             </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={RoomFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadRooms();
+                if (data?.id) form.setFieldsValue({ roomId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
           </Form.Item>
         </Col>
       </Row>

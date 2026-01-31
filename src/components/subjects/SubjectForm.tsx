@@ -116,52 +116,52 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
       onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
-      <Form.Item
-        name="courseId"
-        label={t(LOCALE_KEYS.COURSE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
-          },
-        ]}
-      >
-        <Row gutter={8}>
-          <Col flex="1">
-            <Form.Item name="courseId" noStyle>
-              <Select
-                placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
-                loading={courses.length === 0}
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-                }
-              >
-                {courses.map((course) => (
-                  <Select.Option key={course.id} value={course.id}>
-                    {course.name} ({course.code})
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="courseId"
+            label={t(LOCALE_KEYS.COURSE)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
+              loading={courses.length === 0}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {courses.map((course) => (
+                <Select.Option key={course.id} value={course.id}>
+                  {course.name} ({course.code})
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddDrawerButton
               drawerComponent={CourseFormDrawer}
               drawerProps={{ mode: 'create' }}
               onComplete={(data) => {
-                loadCourses()
+                loadCourses();
                 if (data?.id) {
-                  form.setFieldsValue({ courseId: data.id })
+                  form.setFieldsValue({ courseId: data.id });
                 }
               }}
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-        </Row>
-
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="name"

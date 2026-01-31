@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -9,7 +9,9 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
+import CourseFormDrawer from '@/components/courses/CourseFormDrawer';
 import FormLayout from '@/components/layout/FormLayout';
+import QuickAddDrawerButton from '@/components/ui/QuickAddDrawerButton';
 import { StatusSelect } from '@/components/ui/StatusSelect';
 
 import { useCourses } from '@/hooks/useCourses';
@@ -121,30 +123,49 @@ const GradeRuleForm: React.FC<GradeRuleFormProps> = ({
         <Input placeholder={t(LOCALE_KEYS.GRADE)} />
       </Form.Item>
 
-      <Form.Item
-        name="courseId"
-        label={t(LOCALE_KEYS.COURSE)}
-        rules={[
-          {
-            required: false,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
-          allowClear
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={courses.map((course) => ({
-            value: course.id,
-            label: course.name,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="courseId"
+            label={t(LOCALE_KEYS.COURSE)}
+            rules={[
+              {
+                required: false,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
+              allowClear
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={courses.map((course) => ({
+                value: course.id,
+                label: course.name,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={CourseFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadCourses({ page: 1, limit: 100 });
+                if (data?.id) form.setFieldsValue({ courseId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="minMarks"

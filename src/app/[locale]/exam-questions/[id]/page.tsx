@@ -6,30 +6,30 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { useCreateExamMCQQuestionDetailsConfig } from '@/components/examMCQQuestions/examMCQQuestionConfig';
+import { useCreateExamQuestionDetailsConfig } from '@/components/examQuestions/examQuestionConfig';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { EntityDetails } from '@/components/ui/EntityDetails';
 import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
-import { useExamMCQQuestions } from '@/hooks/useExamMCQQuestions';
+import { useExamQuestions } from '@/hooks/useExamQuestions';
 import { useLocalization } from '@/hooks/useLocalization';
 
-import { IExamMCQQuestion } from '@/types/examMCQQuestion';
+import { IExamQuestion } from '@/types/examQuestion';
 
-export default function ExamMCQQuestionDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ExamQuestionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { t } = useLocalization();
-  const entityName = t(LOCALE_KEYS.EXAM_MCQ_QUESTION, { defaultValue: 'Exam MCQ Question' });
-  const { selectedExamMCQQuestion, loadExamMCQQuestion, detailsStatus } = useExamMCQQuestions();
+  const entityName = t(LOCALE_KEYS.EXAM_QUESTION, { defaultValue: 'Exam Question' });
+  const { selectedExamQuestion, loadExamQuestion, detailsStatus } = useExamQuestions();
 
   const resolvedParams = React.use(params);
-  const examMCQQuestionId = parseInt(resolvedParams.id);
+  const examQuestionId = parseInt(resolvedParams.id);
 
   useEffect(() => {
-    loadExamMCQQuestion(examMCQQuestionId);
-  }, [examMCQQuestionId, loadExamMCQQuestion]);
+    loadExamQuestion(examQuestionId);
+  }, [examQuestionId, loadExamQuestion]);
 
-  const config = useCreateExamMCQQuestionDetailsConfig(
-    selectedExamMCQQuestion,
+  const config = useCreateExamQuestionDetailsConfig(
+    selectedExamQuestion,
     detailsStatus.status === Status.LOADING,
     detailsStatus.status === Status.FAILED
       ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
@@ -39,7 +39,7 @@ export default function ExamMCQQuestionDetailPage({ params }: { params: Promise<
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IExamMCQQuestion>} />
+        <EntityDetails config={config as EntityDetailsConfig<IExamQuestion>} />
       </MainLayout>
     </ProtectedRoute>
   );

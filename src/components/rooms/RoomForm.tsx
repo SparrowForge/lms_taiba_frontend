@@ -128,53 +128,54 @@ const RoomForm: React.FC<Props> = ({
         <Input placeholder={t(LOCALE_KEYS.NAME)} />
       </Form.Item>
 
-      <Form.Item
-        name="roomTypeId"
-        label={t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' })}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
-              name: t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' }),
-            }),
-          },
-        ]}
-      >
-        <Row gutter={8}>
-          <Col flex="1">
-            <Form.Item name="roomTypeId" noStyle>
-              <Select
-                placeholder={t(LOCALE_KEYS.SELECT_ROOM_TYPE, { defaultValue: 'Select Room Type' })}
-                loading={roomTypes.length === 0}
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-                }
-              >
-                {roomTypes.map((roomType) => (
-                  <Select.Option key={roomType.id} value={roomType.id}>
-                    {roomType.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="roomTypeId"
+            label={t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' })}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
+                  name: t(LOCALE_KEYS.ROOM_TYPE, { defaultValue: 'Room Type' }),
+                }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_ROOM_TYPE, { defaultValue: 'Select Room Type' })}
+              loading={roomTypes.length === 0}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {roomTypes.map((roomType) => (
+                <Select.Option key={roomType.id} value={roomType.id}>
+                  {roomType.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddDrawerButton
               drawerComponent={RoomTypeFormDrawer}
               drawerProps={{ mode: 'create' }}
               onComplete={(data) => {
-                loadRoomTypes()
+                loadRoomTypes();
                 if (data?.id) {
-                  form.setFieldsValue({ roomTypeId: data.id })
+                  form.setFieldsValue({ roomTypeId: data.id });
                 }
               }}
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-        </Row>
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="levelFloor"

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, DatePicker, Form, Input, Select, Space, Switch } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Row, Select, Space, Switch } from 'antd';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -18,6 +18,7 @@ import { getErrorMessage } from '@/types/errors';
 import { IStudentProfileCreate, IStudentProfileUpdate } from '@/types/studentProfile';
 
 import FormLayout from '../layout/FormLayout';
+import QuickAddRouteButton from '../ui/QuickAddRouteButton';
 
 interface StudentProfileFormProps {
   mode: 'create' | 'edit';
@@ -124,24 +125,38 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
-      <Form.Item
-        name="studentId"
-        label={t(LOCALE_KEYS.STUDENT)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STUDENT) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_STUDENT, { defaultValue: 'Select Student' })}
-          options={students.map((student) => ({
-            label: student.name,
-            value: student.id,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="studentId"
+            label={t(LOCALE_KEYS.STUDENT)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STUDENT) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_STUDENT, { defaultValue: 'Select Student' })}
+              showSearch
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={students.map((student) => ({
+                label: student.firstName + ' ' + student.lastName,
+                value: student.id,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddRouteButton route="/students" iconOnly buttonType="dashed" />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="dob"

@@ -92,7 +92,8 @@ export default function WeekDaysPage() {
       delete params.limit;
       loadWeekDays({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
-    onQuickAdd: handleCreateDrawer,
+    // onQuickAdd: handleCreateDrawer,
+    disableAddNew: true,
     items: weekDays,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,

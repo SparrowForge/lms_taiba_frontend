@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, InputNumber, Select, Space } from 'antd';
+import { Button, Col, Form, InputNumber, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -9,7 +9,11 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
+import CourseFormDrawer from '@/components/courses/CourseFormDrawer';
+import ExamTypeFormDrawer from '@/components/examTypes/ExamTypeFormDrawer';
 import FormLayout from '@/components/layout/FormLayout';
+import SubjectFormDrawer from '@/components/subjects/SubjectFormDrawer';
+import QuickAddDrawerButton from '@/components/ui/QuickAddDrawerButton';
 import { StatusSelect } from '@/components/ui/StatusSelect';
 
 import { useCourses } from '@/hooks/useCourses';
@@ -135,83 +139,141 @@ const MarkDistributionForm: React.FC<MarkDistributionFormProps> = ({
       onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
-      <Form.Item
-        name="courseId"
-        label={t(LOCALE_KEYS.COURSE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={courses.map((course) => ({
-            value: course.id,
-            label: course.name,
-          }))}
-          onChange={handleCourseChange}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="courseId"
+            label={t(LOCALE_KEYS.COURSE)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_COURSE)}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={courses.map((course) => ({
+                value: course.id,
+                label: course.name,
+              }))}
+              onChange={handleCourseChange}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={CourseFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadCourses({ page: 1, limit: 100 });
+                if (data?.id) form.setFieldsValue({ courseId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item
-        name="subjectId"
-        label={t(LOCALE_KEYS.SUBJECT)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={
-            form.getFieldValue('courseId')
-              ? t(LOCALE_KEYS.SELECT_SUBJECT)
-              : t(LOCALE_KEYS.PLEASE_SELECT_COURSE_FIRST)
-          }
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={subjects.map((subject) => ({
-            value: subject.id,
-            label: subject.name,
-          }))}
-          disabled={!form.getFieldValue('courseId')}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="subjectId"
+            label={t(LOCALE_KEYS.SUBJECT)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.SUBJECT) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={
+                form.getFieldValue('courseId')
+                  ? t(LOCALE_KEYS.SELECT_SUBJECT)
+                  : t(LOCALE_KEYS.PLEASE_SELECT_COURSE_FIRST)
+              }
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={subjects.map((subject) => ({
+                value: subject.id,
+                label: subject.name,
+              }))}
+              disabled={!form.getFieldValue('courseId')}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={SubjectFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                const courseId = form.getFieldValue('courseId');
+                if (courseId) loadSubjects({ page: 1, limit: 100, courseId });
+                if (data?.id) form.setFieldsValue({ subjectId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item
-        name="examTypeId"
-        label={t(LOCALE_KEYS.EXAM_TYPE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.EXAM_TYPE) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_EXAM_TYPE)}
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={examTypes.map((examType) => ({
-            value: examType.id,
-            label: examType.name,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="examTypeId"
+            label={t(LOCALE_KEYS.EXAM_TYPE)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.EXAM_TYPE) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_EXAM_TYPE)}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={examTypes.map((examType) => ({
+                value: examType.id,
+                label: examType.name,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={ExamTypeFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadExamTypes({ page: 1, limit: 100 });
+                if (data?.id) form.setFieldsValue({ examTypeId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="weightage"

@@ -31,7 +31,7 @@ const protectedRoutes = [
   '/mark-distributions',
   '/exams',
   '/exam-candidates',
-  '/exam-mcq-questions',
+  '/exam-questions',
   '/exam-results',
   '/exam-schedules',
   '/exam-types',

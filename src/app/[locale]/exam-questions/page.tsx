@@ -8,31 +8,31 @@ import { Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import AsyncErrorBoundary from '@/components/error/AsyncErrorBoundary';
-import ExamMCQQuestionDetailsDrawer from '@/components/examMCQQuestions/ExamMCQQuestionDetailsDrawer';
-import ExamMCQQuestionFormDrawer from '@/components/examMCQQuestions/ExamMCQQuestionFormDrawer';
+import ExamQuestionDetailsDrawer from '@/components/examQuestions/ExamQuestionDetailsDrawer';
+import ExamQuestionFormDrawer from '@/components/examQuestions/ExamQuestionFormDrawer';
 import { MainLayout } from '@/components/layout/MainLayout';
 import EntityActions from '@/components/ui/EntityActions';
 import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
-import { useExamMCQQuestions } from '@/hooks/useExamMCQQuestions';
+import { useExamQuestions } from '@/hooks/useExamQuestions';
 import { useLocalization } from '@/hooks/useLocalization';
 
-import { IExamMCQQuestion } from '@/types/examMCQQuestion';
+import { IExamQuestion } from '@/types/examQuestion';
 
-export default function ExamMCQQuestionsPage() {
+export default function ExamQuestionsPage() {
   const { t } = useLocalization();
-  const entityName = t(LOCALE_KEYS.EXAM_MCQ_QUESTION, { defaultValue: 'Exam MCQ Question' });
+  const entityName = t(LOCALE_KEYS.EXAM_QUESTION, { defaultValue: 'Exam Question' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedExamMCQQuestionId, setSelectedExamMCQQuestionId] = useState<number | undefined>();
+  const [selectedExamQuestionId, setSelectedExamQuestionId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
-  const [selectedDetailsExamMCQQuestionId, setSelectedDetailsExamMCQQuestionId] = useState<
+  const [selectedDetailsExamQuestionId, setSelectedDetailsExamQuestionId] = useState<
     number | undefined
   >();
 
-  const { examMCQQuestions, listStatus, pagination, loadExamMCQQuestions, removeExamMCQQuestion } =
-    useExamMCQQuestions();
+  const { examQuestions, listStatus, pagination, loadExamQuestions, removeExamQuestion } =
+    useExamQuestions();
 
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -41,51 +41,51 @@ export default function ExamMCQQuestionsPage() {
   useEffect(() => {
     if (skip && limit) {
       const page = parseInt(skip) / parseInt(limit ?? '10') + 1;
-      loadExamMCQQuestions({ page, limit: parseInt(limit ?? '10') });
+      loadExamQuestions({ page, limit: parseInt(limit ?? '10') });
     } else {
-      loadExamMCQQuestions({ page: 1, limit: 10 });
+      loadExamQuestions({ page: 1, limit: 10 });
     }
-  }, [skip, limit, loadExamMCQQuestions]);
+  }, [skip, limit, loadExamQuestions]);
 
-  const handleEditDrawer = (examMCQQuestionId: number) => {
-    setSelectedExamMCQQuestionId(examMCQQuestionId);
+  const handleEditDrawer = (examQuestionId: number) => {
+    setSelectedExamQuestionId(examQuestionId);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
 
   const handleCreateDrawer = () => {
-    setSelectedExamMCQQuestionId(undefined);
+    setSelectedExamQuestionId(undefined);
     setDrawerMode('create');
     setDrawerVisible(true);
   };
 
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
-    loadExamMCQQuestions({ page: 1, limit: 10 });
+    loadExamQuestions({ page: 1, limit: 10 });
   };
 
-  const handleViewDetails = (examMCQQuestionId: number) => {
-    setSelectedDetailsExamMCQQuestionId(examMCQQuestionId);
+  const handleViewDetails = (examQuestionId: number) => {
+    setSelectedDetailsExamQuestionId(examQuestionId);
     setDetailsDrawerVisible(true);
   };
 
-  const handleDetailsEdit = (examMCQQuestionId: number) => {
+  const handleDetailsEdit = (examQuestionId: number) => {
     setDetailsDrawerVisible(false);
-    setSelectedExamMCQQuestionId(examMCQQuestionId);
+    setSelectedExamQuestionId(examQuestionId);
     setDrawerMode('edit');
     setDrawerVisible(true);
   };
 
-  const config: EntityConfig<IExamMCQQuestion> = {
+  const config: EntityConfig<IExamQuestion> = {
     name: entityName,
     title: t(LOCALE_KEYS.MANAGEMENT_NAME, { name: entityName }),
-    route: '/exam-mcq-questions',
-    searchFields: ['questionText'] as (keyof IExamMCQQuestion)[],
+    route: '/exam-questions',
+    searchFields: ['questionText'] as (keyof IExamQuestion)[],
     onSearch: (searchText: string) => {
-      loadExamMCQQuestions({ page: 1, limit: 10, search: searchText });
+      loadExamQuestions({ page: 1, limit: 10, search: searchText });
     },
     onQuickAdd: handleCreateDrawer,
-    items: examMCQQuestions,
+    items: examQuestions,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
     error: listStatus.status === Status.FAILED ? listStatus.message : null,
@@ -136,16 +136,16 @@ export default function ExamMCQQuestionsPage() {
         title: t(LOCALE_KEYS.ACTIONS),
         key: 'actions',
         width: 100,
-        render: (examMCQQuestion: IExamMCQQuestion) => (
+        render: (examQuestion: IExamQuestion) => (
           <EntityActions
-            onView={() => router.push(`/exam-mcq-questions/${examMCQQuestion.id}`)}
+            onView={() => router.push(`/exam-questions/${examQuestion.id}`)}
             onViewModal={handleViewDetails}
             viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
-            onEdit={() => router.push(`/exam-mcq-questions/${examMCQQuestion.id}/edit`)}
+            onEdit={() => router.push(`/exam-questions/${examQuestion.id}/edit`)}
             onEditModal={handleEditDrawer}
             editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
-            onDelete={() => removeExamMCQQuestion(examMCQQuestion.id)}
-            id={examMCQQuestion.id}
+            onDelete={() => removeExamQuestion(examQuestion.id)}
+            id={examQuestion.id}
           />
         ),
       },
@@ -161,21 +161,21 @@ export default function ExamMCQQuestionsPage() {
               ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
               : null
           }
-          onRetry={() => loadExamMCQQuestions({ page: 1, limit: 10 })}
+          onRetry={() => loadExamQuestions({ page: 1, limit: 10 })}
         >
-          <EntityList config={config as EntityConfig<IExamMCQQuestion>} />
+          <EntityList config={config as EntityConfig<IExamQuestion>} />
         </AsyncErrorBoundary>
 
-        <ExamMCQQuestionFormDrawer
+        <ExamQuestionFormDrawer
           mode={drawerMode}
-          examMCQQuestionId={selectedExamMCQQuestionId}
+          examQuestionId={selectedExamQuestionId}
           visible={drawerVisible}
           onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}
         />
 
-        <ExamMCQQuestionDetailsDrawer
-          examMCQQuestionId={selectedDetailsExamMCQQuestionId}
+        <ExamQuestionDetailsDrawer
+          examQuestionId={selectedDetailsExamQuestionId}
           visible={detailsDrawerVisible}
           onClose={() => setDetailsDrawerVisible(false)}
           onEdit={handleDetailsEdit}

@@ -1,13 +1,15 @@
 'use client';
 
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
-import { Alert, Button, Form, Modal, Select, Space } from 'antd';
+import { Alert, Button, Col, Form, Modal, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
+
+import QuickAddRouteButton from '@/components/ui/QuickAddRouteButton';
 
 import { useLocalization } from '@/hooks/useLocalization';
 import { useRoleMenuPermissions } from '@/hooks/useRoleMenuPermissions';
@@ -177,16 +179,9 @@ function UserRoleFormMultiple({
       initialValues={{ userId: undefined }}
       disabled={actionStatus.status === Status.LOADING}
     >
-      {/* User Selection and Submit Button - Same Row */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '16px',
-          alignItems: 'flex-end',
-          marginBottom: '24px',
-        }}
-      >
-        <div style={{ flex: '1' }}>
+      {/* User Selection, Quick-add, and Submit Button - Same Row */}
+      <Row gutter={8} align="bottom" style={{ marginBottom: '24px' }}>
+        <Col flex="1">
           <Form.Item
             name="userId"
             label={t(LOCALE_KEYS.USER)}
@@ -200,9 +195,7 @@ function UserRoleFormMultiple({
                 (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
               }
               onChange={(value) => {
-                console.log('User selected:', value);
                 setSelectedUserId(value);
-                // Reset selected roles when user changes
                 setLocalSelectedRoles([]);
               }}
               style={{ width: '100%' }}
@@ -214,24 +207,30 @@ function UserRoleFormMultiple({
               ))}
             </Select>
           </Form.Item>
-        </div>
-
-        <Form.Item>
-          <Space>
-            <Button
-              type="primary"
-              onClick={handleMultipleSubmit}
-              loading={actionStatus.status === Status.LOADING}
-              size="large"
-            >
-              {getSubmitText()}
-            </Button>
-            <Button onClick={handleCancel} size="large">
-              {t(LOCALE_KEYS.CANCEL)}
-            </Button>
-          </Space>
-        </Form.Item>
-      </div>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddRouteButton route="/users" iconOnly buttonType="dashed" />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item>
+            <Space>
+              <Button
+                type="primary"
+                onClick={handleMultipleSubmit}
+                loading={actionStatus.status === Status.LOADING}
+                size="large"
+              >
+                {getSubmitText()}
+              </Button>
+              <Button onClick={handleCancel} size="large">
+                {t(LOCALE_KEYS.CANCEL)}
+              </Button>
+            </Space>
+          </Form.Item>
+        </Col>
+      </Row>
 
       {/* Update Warning Alert */}
       {selectedUserId && userRoles.filter((ur) => ur.userId === selectedUserId).length > 0 && (

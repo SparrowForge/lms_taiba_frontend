@@ -54,7 +54,7 @@ const FacultyExamList = ({ data }: ExamListProps) => {
 
   const router = useRouter()
   const handleAddQuestion = (subjectId: number) => {
-    return router.push(`/exam-mcq-questions/create?subjectId=${subjectId}`)
+    return router.push(`/exam-questions/create?subjectId=${subjectId}`)
   }
 
   const handleAddQuestionSet = (examId: number) => {

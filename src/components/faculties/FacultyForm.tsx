@@ -125,99 +125,98 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
-      <Form.Item
-        name="branchId"
-        label={t(LOCALE_KEYS.BRANCH)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }),
-          },
-        ]}
-      >
-        <Row gutter={8}>
-          <Col flex="1">
-            <Form.Item name="branchId" noStyle>
-              <Select
-                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
-                loading={branches.length === 0}
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-                }
-              >
-                {branches.map((branch) => (
-                  <Select.Option key={branch.id} value={branch.id}>
-                    {branch.name} ({branch.code})
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="branchId"
+            label={t(LOCALE_KEYS.BRANCH)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
+              loading={branches.length === 0}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {branches.map((branch) => (
+                <Select.Option key={branch.id} value={branch.id}>
+                  {branch.name} ({branch.code})
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddDrawerButton
               drawerComponent={BranchFormDrawer}
               drawerProps={{ mode: 'create' }}
               onComplete={(data) => {
-                loadBranches()
+                loadBranches();
                 if (data?.id) {
-                  form.setFieldsValue({ branchId: data.id })
+                  form.setFieldsValue({ branchId: data.id });
                 }
               }}
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-
-        </Row>
-
-      </Form.Item>
-      <Form.Item
-        name="departmentId"
-        label={t(LOCALE_KEYS.DEPARTMENT)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) }),
-          },
-        ]}
-      >
-        <Row gutter={8}>
-          <Col flex="1">
-            <Form.Item name="departmentId" noStyle>
-              <Select
-                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) })}
-                loading={departments.length === 0}
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-                }
-              >
-                {departments.map((department) => (
-                  <Select.Option key={department.id} value={department.id}>
-                    {department.name} ({department.code})
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="departmentId"
+            label={t(LOCALE_KEYS.DEPARTMENT)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.DEPARTMENT) })}
+              loading={departments.length === 0}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {departments.map((department) => (
+                <Select.Option key={department.id} value={department.id}>
+                  {department.name} ({department.code})
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddDrawerButton
               drawerComponent={DepartmentFormDrawer}
               drawerProps={{ mode: 'create' }}
               onComplete={(data) => {
-                loadDepartments()
+                loadDepartments();
                 if (data?.id) {
-                  form.setFieldsValue({ departmentId: data.id })
+                  form.setFieldsValue({ departmentId: data.id });
                 }
               }}
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-        </Row>
-
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
       <Form.Item
         name="fullName"
         label={t(LOCALE_KEYS.FULL_NAME)}
@@ -256,51 +255,52 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
         <Input />
       </Form.Item>
 
-      <Form.Item
-        name="employmentTypeId"
-        label={t(LOCALE_KEYS.EMPLOYMENT_TYPE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) }),
-          },
-        ]}
-      >
-        <Row gutter={8}>
-          <Col flex="1">
-            <Form.Item name="employmentTypeId" noStyle>
-              <Select
-                showSearch
-                placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) })}
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-                }
-              >
-                {employmentTypes.map((employeeType) => (
-                  <Select.Option key={employeeType.id} value={employeeType.id}>
-                    {employeeType.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="employmentTypeId"
+            label={t(LOCALE_KEYS.EMPLOYMENT_TYPE)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) }),
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EMPLOYMENT_TYPE) })}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {employmentTypes.map((employeeType) => (
+                <Select.Option key={employeeType.id} value={employeeType.id}>
+                  {employeeType.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddDrawerButton
               drawerComponent={EmploymentTypeFormDrawer}
               drawerProps={{ mode: 'create' }}
               onComplete={(data) => {
-                loadEmploymentTypes()
+                loadEmploymentTypes();
                 if (data?.id) {
-                  form.setFieldsValue({ employmentTypeId: Number(data.id) })
+                  form.setFieldsValue({ employmentTypeId: Number(data.id) });
                 }
               }}
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-        </Row>
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="joinedDate"
