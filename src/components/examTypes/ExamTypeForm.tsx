@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, InputNumber, Space } from 'antd';
+import { Button, Form, Input, InputNumber, Space, TimePicker } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -47,42 +47,52 @@ const ExamTypeForm: React.FC<ExamTypeFormProps> = ({
     }
   }, [mode, form]);
 
-  const handleSubmit = async (values: Partial<IExamType>) => {
-    try {
-      const payload = { ...values };
-      if (mode === 'create') {
-        await createExamType(payload as IExamTypeCreate);
-        toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          router.push('/exam-types');
-        }
-      } else if (mode === 'edit' && examTypeId) {
-        await editExamType(examTypeId, payload as IExamTypeUpdate);
-        toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          router.push(`/exam-types/${examTypeId}`);
-        }
-      }
-    } catch (error: unknown) {
-      let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
-        name: entityName,
-        defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
-      });
-      if (error && typeof error === 'object' && 'response' in error) {
-        const apiError = error as { response?: { data?: { message?: string } } };
-        if (apiError.response?.data?.message) {
-          errorMessage = apiError.response.data.message;
-        }
+  const handleSubmit = async (formValues: Partial<IExamType>) => {
+  try {
+    const values = await form.validateFields();
+
+    // If duration is a dayjs object (TimePicker), format it
+    const durationString =
+      values.duration?.format?.("HH:mm:ss") || values.duration;
+
+    const payload = { ...values, duration: durationString };
+
+    if (mode === "create") {
+      await createExamType(payload as IExamTypeCreate);
+      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+      if (onSuccess) {
+        onSuccess();
       } else {
-        errorMessage = getErrorMessage(error);
+        router.push("/exam-types");
       }
-      toast.error(errorMessage);
+    } else if (mode === "edit" && examTypeId) {
+      await editExamType(examTypeId, payload as IExamTypeUpdate);
+      toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push(`/exam-types/${examTypeId}`);
+      }
     }
-  };
+  } catch (error: unknown) {
+    let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
+      name: entityName,
+      defaultValue: `Failed to ${mode} ${entityName.toLowerCase()}`,
+    });
+
+    if (error && typeof error === "object" && "response" in error) {
+      const apiError = error as { response?: { data?: { message?: string } } };
+      if (apiError.response?.data?.message) {
+        errorMessage = apiError.response.data.message;
+      }
+    } else {
+      errorMessage = getErrorMessage(error);
+    }
+
+    toast.error(errorMessage);
+  }
+};
+
 
   const handleCancel = () => {
     if (onCancel) {
@@ -149,6 +159,21 @@ const ExamTypeForm: React.FC<ExamTypeFormProps> = ({
       </Form.Item>
 
       <Form.Item
+        name="duration"
+        label="Duration"
+        rules={[
+          { required: true, message: "Please enter the duration" },
+        ]}
+      >
+        <TimePicker
+          format="HH:mm:ss"
+          placeholder="HH:MM:SS"
+          style={{ width: "100%" }}
+        />
+      </Form.Item>
+
+
+      <Form.Item
         name="contribution"
         label={t(LOCALE_KEYS.CONTRIBUTION)}
         rules={[
@@ -158,7 +183,7 @@ const ExamTypeForm: React.FC<ExamTypeFormProps> = ({
           },
         ]}
       >
-        <Input placeholder={t(LOCALE_KEYS.CONTRIBUTION)} />
+        <InputNumber  style={{ width: "100%" }} placeholder={t(LOCALE_KEYS.CONTRIBUTION)} />
       </Form.Item>
 
       <Form.Item
