@@ -12,7 +12,7 @@ interface StudentInformationStepProps {
   form: any; // FormInstance from antd
 }
 
-const StudentInformationStep: React.FC<StudentInformationStepProps> = ({ form, sections }) => {
+const StudentInformationStep: React.FC<StudentInformationStepProps> = ({ form }) => {
   const { t } = useLocalization();
 
 
@@ -131,26 +131,7 @@ const StudentInformationStep: React.FC<StudentInformationStepProps> = ({ form, s
           </Form.Item>
           
         </Col>
-         <Col xs={24} md={8}>
-            <Form.Item
-        name="sectionId"
-        label={t(LOCALE_KEYS.SECTION)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.SECTION) }),
-          },
-        ]}
-      >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SECTION) })}>
-          {sections.map((sections) => (
-            <Select.Option key={sections.id} value={sections.id}>
-              {sections.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-         </Col>
+        
       </Row>
     </div>
   );
