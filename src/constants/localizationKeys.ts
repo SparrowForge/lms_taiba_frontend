@@ -3,6 +3,7 @@
 export const LOCALE_KEYS = {
   MODULE: 'module',
   // Common
+  NO_UPCOMING_ASSIGNMENTS: 'no_upcoming_assignments',
   PUBLISH_NAME: 'publish_name',
   SUCCESS_OPERATION: 'success_operation',
   REVIEW:"review",

@@ -7,7 +7,7 @@ import {
   ExperimentOutlined,
   FileTextOutlined,
 } from '@ant-design/icons';
-import { Button, Card } from 'antd';
+import { Button, Card, Empty } from 'antd';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -113,7 +113,7 @@ const UpcomingAssignments = () => {
   };
 
   return (
-    <Card className="rounded-2xl shadow-sm min-h-full mb-6">
+    <Card className="rounded-2xl shadow-sm  mb-6">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-base font-semibold">{t(LOCALE_KEYS.UPCOMING_ASSIGNMENT)}</h2>
         <Button
@@ -125,34 +125,39 @@ const UpcomingAssignments = () => {
         </Button>
       </div>
 
-      <div className="flex flex-col gap-3 overflow-y-auto h-[500px]">
-        {sortedAssignments.map((a: any, i: number) => {
-          const style = getAssignmentStyle(a);
-          const tag = getAssignmentTag(a);
-          const isUrgent = tag === 'Urgent';
+      <div className="flex flex-col gap-3 overflow-y-auto ">
+        {
+          sortedAssignments.length === 0 ? (
+            <Empty description={t(LOCALE_KEYS.NO_UPCOMING_ASSIGNMENTS)} />
+          ) : (
+             sortedAssignments?.map((a: any, i: number) => {
+              const style = getAssignmentStyle(a);
+              const tag = getAssignmentTag(a);
+              const isUrgent = tag === 'Urgent';
 
-          return (
-            <IconBgColoredCard
-              key={i}
-              text={a.title}
-              due={dayjs(a.dueDate).format('MMM D, YYYY')}
-              tag={tag}
-              color={isUrgent ? '#ef4444' : style.color}
-              bgColor={isUrgent ? '#fef2f2' : style.bgColor}
-              bgColorIcon={isUrgent ? '#fee2e2' : style.bgColorIcon}
-              icon={isUrgent ? <ExceptionOutlined style={{ color: '#ef4444' }} /> : style.icon}
-              rounded="md"
-              onClick={() => handleViewDetails(a.id)}
-            />
-          );
-        })}
+              return (
+                <IconBgColoredCard
+                  key={i}
+                  text={a.title}
+                  due={dayjs(a.dueDate).format('MMM D, YYYY')}
+                  tag={tag}
+                  color={isUrgent ? '#ef4444' : style.color}
+                  bgColor={isUrgent ? '#fef2f2' : style.bgColor}
+                  bgColorIcon={isUrgent ? '#fee2e2' : style.bgColorIcon}
+                  icon={isUrgent ? <ExceptionOutlined style={{ color: '#ef4444' }} /> : style.icon}
+                  rounded="md"
+                  onClick={() => handleViewDetails(a.id)}
+                />
+              );
+            })
+          )}
       </div>
 
       <CourseAssignmentDetailsDrawer
         courseAssignmentId={selectedDetailsCourseAssignmentId}
         visible={detailsDrawerVisible}
         onClose={() => setDetailsDrawerVisible(false)}
-        onEdit={() => {}}
+        onEdit={() => { }}
       />
     </Card>
   );
