@@ -90,17 +90,12 @@ export const Sidebar2 = React.memo(
       return null;
     }, []);
 
+    // Load menus once when user is available (hook: from localStorage first, then API once in background)
     useEffect(() => {
-      // Only load if menus are not already loaded and not currently loading
-      // Also reload if user changes (e.g., after login) and menus are empty
-      if (
-        user && // Only load if user is authenticated
-        myMenusStatus.status !== Status.LOADING &&
-        (!myMenus || myMenus.length === 0)
-      ) {
+      if (user?.id) {
         loadMyMenus();
       }
-    }, [user?.id, myMenus, myMenusStatus.status, loadMyMenus]);
+    }, [user?.id, loadMyMenus]);
 
     // ✅ Load branches once (or when empty)
     useEffect(() => {

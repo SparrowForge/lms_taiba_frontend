@@ -12,6 +12,8 @@ import type { IUser } from '@/types/user';
 
 import { authService } from '@/services/authService';
 
+import { clearMyMenusStorage } from '@/hooks/useMenus';
+
 import {
   clearAuth,
   clearError,
@@ -24,6 +26,7 @@ import {
   setUser,
   updateUser,
 } from '@/store/slices/authSlice';
+import { clearMyMenus } from '@/store/slices/menuSlice';
 
 import type { AppDispatch, RootState } from '@/store';
 
@@ -113,17 +116,22 @@ export const useAuth = () => {
 
   // Logout function
   const handleLogout = useCallback(async () => {
+    const uid = user?.id;
     try {
       await authService.logout();
+      clearMyMenusStorage(uid);
+      dispatch(clearMyMenus());
       dispatch(clearAuth());
       router.push('/login'); // Redirect to login after logout
     } catch (error) {
       console.error('Logout error:', error);
       // Even if logout fails, clear auth state and redirect to login
+      clearMyMenusStorage(uid);
+      dispatch(clearMyMenus());
       dispatch(clearAuth());
       router.push('/login');
     }
-  }, [dispatch, router]);
+  }, [dispatch, router, user?.id]);
 
   // Get current user function
   const fetchCurrentUser = useCallback(async () => {
