@@ -54,6 +54,9 @@ const examQuestionSlice = createSlice({
     addExamQuestionMultiple: (state, action: PayloadAction<IExamQuestionMultiple>) => {
       state.examQuestionMultiples.unshift(action.payload);
     },
+    addExamQuestionsBulk: (state, action: PayloadAction<IExamQuestion[]>) => {
+      state.examQuestions.unshift(...action.payload);
+    },
     updateExamQuestion: (state, action: PayloadAction<IExamQuestion>) => {
       const index = state.examQuestions.findIndex(
         (q) => q.id === action.payload.id,
@@ -95,6 +98,7 @@ export const {
   setExamQuestions,
   addExamQuestion,
   addExamQuestionMultiple,
+  addExamQuestionsBulk,
   updateExamQuestion,
   deleteExamQuestion,
   setSelectedExamQuestion,

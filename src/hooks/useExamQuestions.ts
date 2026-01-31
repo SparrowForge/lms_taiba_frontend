@@ -8,6 +8,7 @@ import { RootState } from '@/store';
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
   IExamQuestion,
+  IExamQuestionBulkCreate,
   IExamQuestionCreate,
   IExamQuestionMultipleCreate,
   IExamQuestionUpdate,
@@ -18,6 +19,7 @@ import { examQuestionService } from '@/services/examQuestionService';
 import {
   addExamQuestion,
   addExamQuestionMultiple,
+  addExamQuestionsBulk,
   clearActionStatus,
   clearDetailsStatus,
   deleteExamQuestion,
@@ -121,11 +123,11 @@ export const useExamQuestions = () => {
   );
 
   const createMultipleExamQuestion = useCallback(
-    async (data: IExamQuestionMultipleCreate) => {
+    async (data: IExamQuestionBulkCreate) => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
         const response = await examQuestionService.createMultipleExamQuestion(data);
-        dispatch(addExamQuestionMultiple(response));
+        dispatch(addExamQuestionsBulk(response));
         dispatch(
           setActionStatus({
             status: Status.SUCCESS,

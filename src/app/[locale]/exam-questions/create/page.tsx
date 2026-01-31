@@ -16,7 +16,7 @@ import { useLocalization } from '@/hooks/useLocalization';
 
 
 import { getErrorMessage } from '@/types/errors';
-import { IMCQQuestionBulkCreate } from '@/types/mcqQuestion';
+import { IExamQuestionBulkCreate } from '@/types/examQuestion';
 
 export default function CreateExamQuestionPage() {
   const { t } = useLocalization();
@@ -25,7 +25,7 @@ export default function CreateExamQuestionPage() {
 
   const { createMultipleExamQuestion } = useExamQuestions();
 
-  const handleSubmitQuestions = async (payload: IMCQQuestionBulkCreate) => {
+  const handleSubmitQuestions = async (payload: IExamQuestionBulkCreate) => {
     try {
       await createMultipleExamQuestion(payload);
       toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));

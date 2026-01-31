@@ -1,6 +1,7 @@
 import { IBasePaginatedResponse, IBaseResponse } from '@/types/common';
 import {
   IExamQuestion,
+  IExamQuestionBulkCreate,
   IExamQuestionCreate,
   IExamQuestionMultipleCreate,
   IExamQuestionUpdate,
@@ -28,9 +29,9 @@ export const examQuestionService = {
   },
 
   createMultipleExamQuestion: async (
-    data: IExamQuestionMultipleCreate,
-  ): Promise<IExamQuestionMultipleCreate[]> => {
-    const response = await api.post<IExamQuestionMultipleCreate[]>(
+    data: IExamQuestionBulkCreate,
+  ): Promise<IExamQuestion[]> => {
+    const response = await api.post<IExamQuestion[]>(
       '/exam-questions/bulk',
       data,
     );

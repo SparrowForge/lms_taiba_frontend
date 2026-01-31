@@ -34,7 +34,6 @@ import feeStructureReducer from './slices/feeStructureSlice';
 import gradeRuleReducer from './slices/gradeRuleSlice';
 import instituteReducer from './slices/instituteSlice';
 import markDistributionReducer from './slices/markDistributionSlice';
-import mcqQuestionReducer from './slices/mcqQuestionSlice';
 import menuReducer from './slices/menuSlice';
 import notificationReducer from './slices/notificationSlice';
 import panelReducer from './slices/panelSlice';
@@ -97,7 +96,6 @@ export interface RootState {
   feeStructures: ReturnType<typeof feeStructureReducer>;
   gradeRules: ReturnType<typeof gradeRuleReducer>;
   markDistributions: ReturnType<typeof markDistributionReducer>;
-  mcqQuestions: ReturnType<typeof mcqQuestionReducer>;
   notifications: ReturnType<typeof notificationReducer>;
   audits: ReturnType<typeof auditReducer>;
   userRoles: ReturnType<typeof userRoleReducer>;
@@ -163,7 +161,6 @@ export const store = configureStore({
     feeStructures: feeStructureReducer,
     gradeRules: gradeRuleReducer,
     markDistributions: markDistributionReducer,
-    mcqQuestions: mcqQuestionReducer,
     notifications: notificationReducer,
     audits: auditReducer,
     userRoles: userRoleReducer,

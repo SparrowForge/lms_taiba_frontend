@@ -65,3 +65,7 @@ export interface IExamQuestionMultipleCreate {
   status: EntityStatus;
   difficultyLevel: IDifficultyOption;
 }
+
+export interface IExamQuestionBulkCreate {
+  questions: IExamQuestionMultipleCreate[];
+}
