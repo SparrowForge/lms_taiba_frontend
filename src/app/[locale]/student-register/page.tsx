@@ -340,7 +340,7 @@ const RegisterStudentPage: React.FC = () => {
           <Card className="" style={{ marginTop: '16px' }}>
             <Form form={form} layout="vertical" className="w-full">
               <div style={{ display: currentStep === 0 ? 'block' : 'none' }}>
-                <StudentInformationStep sections={sections} form={form} />
+                <StudentInformationStep  form={form} />
               </div>
               <div style={{ display: currentStep === 1 ? 'block' : 'none' }}>
                 <StudentProfileStep form={form} />

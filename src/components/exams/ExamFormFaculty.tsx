@@ -42,6 +42,8 @@ import ExamFacultyDetails from './ExamFacultyDetails';
 import { useAuth } from '@/hooks/useAuth';
 import FileUpload from '../ui/FileUpload';
 import { current } from '@reduxjs/toolkit';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import ExamTypeFormDrawer from '../examTypes/ExamTypeFormDrawer';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -53,9 +55,9 @@ interface ExamFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
-  setResponse:React.Dispatch<React.SetStateAction<IExam>>
-  setCurrent:React.Dispatch<React.SetStateAction<number>>
-  current:number
+  setResponse: React.Dispatch<React.SetStateAction<IExam>>
+  setCurrent: React.Dispatch<React.SetStateAction<number>>
+  current: number
 }
 
 const ExamFormFaculty: React.FC<ExamFormProps> = ({
@@ -71,42 +73,42 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
 }) => {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EXAM, { defaultValue: 'Exam' });
-    const router = useRouter();
-    const [form] = Form.useForm();
-    const [isApproved, setIsApproved] = useState(false);
-    const { createExam, editExam, actionStatus } = useExams();
-    const { selectedCourse, loadCourse } = useCourses();
-    const { selectedSubject, loadSubject } = useSubjects();
-    const { selectedSemester, loadSemester } = useSemesters();
-    const { selectedBatch, loadBatch } = useBatches();
-    const { examTypes, loadExamTypes } = useExamTypes();
-    const { rooms, loadRooms } = useRooms();
-    const {user} = useAuth()
-    const searchParams = useSearchParams();
-    const semesterId =  searchParams.get("semesterId");
-    const batchId =  searchParams.get("batchId");
-    const subjectId =  searchParams.get("subjectId");
+  const router = useRouter();
+  const [form] = Form.useForm();
+  const [isApproved, setIsApproved] = useState(false);
+  const { createExam, editExam, actionStatus } = useExams();
+  const { selectedCourse, loadCourse } = useCourses();
+  const { selectedSubject, loadSubject } = useSubjects();
+  const { selectedSemester, loadSemester } = useSemesters();
+  const { selectedBatch, loadBatch } = useBatches();
+  const { examTypes, loadExamTypes } = useExamTypes();
+  const { rooms, loadRooms } = useRooms();
+  const { user } = useAuth()
+  const searchParams = useSearchParams();
+  const semesterId = searchParams.get("semesterId");
+  const batchId = searchParams.get("batchId");
+  const subjectId = searchParams.get("subjectId");
 
-    useEffect(() => {
-        loadSubject(Number(subjectId))
-    }, [loadSubject, subjectId])
+  useEffect(() => {
+    loadSubject(Number(subjectId))
+  }, [loadSubject, subjectId])
 
-    useEffect(() => {
-        if (mode === 'create') {
-        form.resetFields();
-        }
-    }, [mode, form]);
+  useEffect(() => {
+    if (mode === 'create') {
+      form.resetFields();
+    }
+  }, [mode, form]);
 
-    useEffect(() => {
-        loadExamTypes();
-        loadRooms();
-    }, [ loadExamTypes, loadRooms]);
+  useEffect(() => {
+    loadExamTypes();
+    loadRooms();
+  }, [loadExamTypes, loadRooms]);
 
-      useEffect(() => {
-        loadCourse(selectedSubject?.courseId ?? 0)
-        loadBatch(Number(batchId))
-        loadSemester(Number(semesterId))
-      }, [batchId, loadBatch, loadCourse, loadSemester, selectedSubject?.courseId, semesterId])
+  useEffect(() => {
+    loadCourse(selectedSubject?.courseId ?? 0)
+    loadBatch(Number(batchId))
+    loadSemester(Number(semesterId))
+  }, [batchId, loadBatch, loadCourse, loadSemester, selectedSubject?.courseId, semesterId])
 
 
 
@@ -119,13 +121,13 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
 
   const handleSubmit = async (values: Partial<IExamCreate | IExamUpdate>) => {
     try {
-      const payload: any = { 
-        ...values, 
+      const payload: any = {
+        ...values,
         courseId: selectedSubject?.courseId ?? 0,
-        subjectId:Number(subjectId),
-        semesterId:Number(semesterId),
-        batchId:Number(batchId)
-       };
+        subjectId: Number(subjectId),
+        semesterId: Number(semesterId),
+        batchId: Number(batchId)
+      };
 
 
       if (payload.examDatetime && dayjs.isDayjs(payload.examDatetime)) {
@@ -145,7 +147,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
         if (onSuccess) {
           onSuccess();
         } else {
-          setCurrent(current+1)
+          setCurrent(current + 1)
         }
       } else if (mode === 'edit' && examId) {
         await editExam(examId, payload as IExamUpdate);
@@ -193,21 +195,21 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
       initialValues={
         mode === 'edit'
           ? {
-              ...initialValues,
-              examDatetime: initialValues?.examDatetime
-                ? dayjs(initialValues.examDatetime)
+            ...initialValues,
+            examDatetime: initialValues?.examDatetime
+              ? dayjs(initialValues.examDatetime)
+              : undefined,
+            duration:
+              initialValues?.duration && typeof initialValues.duration === 'string'
+                ? dayjs(initialValues.duration, 'HH:mm:ss')
                 : undefined,
-              duration:
-                initialValues?.duration && typeof initialValues.duration === 'string'
-                  ? dayjs(initialValues.duration, 'HH:mm:ss')
-                  : undefined,
-            }
+          }
           : undefined
       }
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
-      
+
 
       <ExamFacultyDetails
         semester={selectedSemester}
@@ -242,23 +244,45 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
               },
             ]}
           >
-            <Select
-              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EXAM_TYPE) })}
-              showSearch
-              filterOption={(input, option) =>
-                String(option?.children || '')
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-            >
-              {examTypes.map((examType) => (
-                <Option key={examType.id} value={examType.id}>
-                  {examType.name} ({examType.code})
-                </Option>
-              ))}
-            </Select>
+            <Row gutter={8} align="middle">
+              <Col flex="1">
+                <Form.Item name="examTypeId" noStyle>
+                  <Select
+                    placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.EXAM_TYPE) })}
+                    showSearch
+                    filterOption={(input, option) =>
+                      String(option?.children || '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                  >
+                    {examTypes.map((examType) => (
+                      <Option key={examType.id} value={examType.id}>
+                        {examType.name} ({examType.code})
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col>
+                <QuickAddDrawerButton
+                  drawerComponent={ExamTypeFormDrawer}
+                  drawerProps={{ mode: 'create' }}
+                  onComplete={async (data) => {
+                    await loadExamTypes();
+                    if (data?.id) {
+                      form.setFieldsValue({ examTypeId: data.id });
+                    }
+                  }}
+                  iconOnly
+                  buttonType="dashed"
+                />
+              </Col>
+            </Row>
           </Form.Item>
         </Col>
+
         <Col span={12}>
           <Form.Item
             name="roomId"
@@ -288,6 +312,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
           </Form.Item>
         </Col>
       </Row>
+
 
       <Row gutter={16}>
         <Col span={12}>

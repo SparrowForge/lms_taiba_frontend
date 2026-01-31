@@ -13,21 +13,23 @@ import {
   Spin,
   Typography,
 } from "antd";
+
+const { Option } = Select;
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { Status } from "@/enums";
+import { EntityStatus } from "@/enums/status";
 import { DIFFICULTY_LEVEL_OPTIONS } from "@/enums/difficulty-level.enum";
 import { IQuestion } from "@/enums/question";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useCourses } from "@/hooks/useCourses";
-import { useMcqQuestions } from "@/hooks/useMcqQuestions";
+import { useExamQuestions } from "@/hooks/useExamQuestions";
 import { useSubjects } from "@/hooks/useSubjects";
 
-
-import { IMCQQuestionBulkCreate } from "@/types/mcqQuestion";
+import { IExamQuestionBulkCreate } from "@/types/examQuestion";
 
 const { Text } = Typography;
 
@@ -36,7 +38,7 @@ interface QuestionFormProps {
   initialQuestions?: IQuestion[];
   onSuccess?: () => void;
   onCancel?: () => void;
-  onSubmit?: (payload: IMCQQuestionBulkCreate) => Promise<void>;
+  onSubmit?: (payload: IExamQuestionBulkCreate) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -51,7 +53,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   const { user } = useAuth();
   const { selectedCourse, loadCourse } = useCourses();
   const { selectedSubject, loadSubject } = useSubjects();
-  const { actionStatus } = useMcqQuestions()
+  const { actionStatus } = useExamQuestions();
 
   const [questions, setQuestions] = useState<IQuestion[]>(initialQuestions);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
@@ -89,7 +91,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
           difficultyLevel: "easy",
           courseId: Number(selectedCourse?.id),
           subjectId: Number(selectedSubject?.id),
-          facultyId: Number(user?.faculty?.id),
         },
       ]);
       setSelectedQuestionIndex(0);
@@ -110,7 +111,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
     questions.forEach((q, idx) => {
       const err: string[] = [];
       if (!q.questionText) err.push("Question text is required");
-      if (q.options.some((opt) => !opt.text)) err.push("All options must have text");
+      if ((q.options ?? []).some((opt) => !opt.text)) err.push("All options must have text");
 
       if (err.length) errors[idx] = err;
     });
@@ -127,7 +128,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       questions.every(
         (q) =>
           q.questionText &&
-          q?.options.every((o) => o.text)
+          (q.options ?? []).every((o) => o.text)
       )
     );
   }, [questions, hasErrors]);
@@ -155,7 +156,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       difficultyLevel: "easy",
       courseId: Number(selectedCourse?.id),
       subjectId: Number(selectedSubject?.id),
-      facultyId: Number(user?.faculty?.id),
     };
 
     setQuestions((prev) => [...prev, newQ]);
@@ -187,7 +187,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   // UPDATE OPTION TEXT
   const updateOptionText = (index: number, value: string) => {
     const updated = [...questions];
-    updated[selectedQuestionIndex].options[index].text = value;
+    const q = updated[selectedQuestionIndex];
+    if (q?.options?.[index]) q.options[index].text = value;
     setQuestions(updated);
   };
 
@@ -205,28 +206,35 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
       setSubmitting(true);
 
+      const correctOptionToNumber = (c: "a" | "b" | "c" | "d") =>
+        ({ a: 0, b: 1, c: 2, d: 3 }[c] ?? 0);
+      const toDifficultyOption = (d: string) => ({
+        value: d as "easy" | "medium" | "hard",
+        label: d.charAt(0).toUpperCase() + d.slice(1),
+      });
+
       const formattedMcqQuestions = questions.map((q) => ({
         questionText: q.questionText,
-        options: q.options.map((o) => o.text),
-        correctOptionNumber: q.correctOptionNumber,
-        courseId: selectedCourse?.id,
-        subjectId: selectedSubject?.id,
-        facultyId: user?.faculty?.id,
-        difficultyLevel: q.difficultyLevel,
-        status: "active",
+        options: (q.options ?? []).map((o) => o.text),
+        correctOptionNumber: correctOptionToNumber(q.correctOptionNumber),
+        courseId: selectedCourse?.id ?? 0,
+        subjectId: selectedSubject?.id ?? 0,
+        difficultyLevel: toDifficultyOption(q.difficultyLevel),
+        status: EntityStatus.ACTIVE,
       }));
 
       const formattedWrittenQuestions = questions.map((q) => ({
         questionText: q.questionText,
-        courseId: selectedCourse?.id,
-        subjectId: selectedSubject?.id,
-        facultyId: user?.faculty?.id,
-        difficultyLevel: q.difficultyLevel,
-        status: "active",
+        options: [] as string[],
+        correctOptionNumber: 0,
+        courseId: selectedCourse?.id ?? 0,
+        subjectId: selectedSubject?.id ?? 0,
+        difficultyLevel: toDifficultyOption(q.difficultyLevel),
+        status: EntityStatus.ACTIVE,
       }));
 
-      const finalPayload: IMCQQuestionBulkCreate = {
-        questions: questionType === 'mcq' ? formattedMcqQuestions : formattedWrittenQuestions
+      const finalPayload: IExamQuestionBulkCreate = {
+        questions: questionType === "mcq" ? formattedMcqQuestions : formattedWrittenQuestions,
       };
 
       if (onSubmit) await onSubmit(finalPayload);
@@ -329,7 +337,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
               <br />
               <br />
 
-              {q?.options.map((opt, idx) => {
+              {(q?.options ?? []).map((opt, idx) => {
                 const labels = ["A", "B", "C", "D"];
                 const key = ["a", "b", "c", "d"][idx] as "a" | "b" | "c" | "d";
                 const isCorrect = q.correctOptionNumber === key;

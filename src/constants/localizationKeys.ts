@@ -3,6 +3,7 @@
 export const LOCALE_KEYS = {
   MODULE: 'module',
   // Common
+  NO_UPCOMING_ASSIGNMENTS: 'no_upcoming_assignments',
   PUBLISH_NAME: 'publish_name',
   SUCCESS_OPERATION: 'success_operation',
   REVIEW:"review",
@@ -88,8 +89,8 @@ export const LOCALE_KEYS = {
   EXAM_CANDIDATE_ABSENT: 'exam_candidate_absent',
   EXAM_CANDIDATE_APPEARED: 'exam_candidate_appeared',
   EXAM_CANDIDATE_BARRED: 'exam_candidate_barred',
-  EXAM_MCQ_QUESTION: 'exam_mcq_question',
-  EXAM_MCQ_QUESTIONS: 'exam_mcq_questions',
+  EXAM_QUESTION: 'exam_question',
+  EXAM_QUESTIONS: 'exam_questions',
   EXAM_RESULT: 'exam_result',
   EXAM_RESULTS: 'exam_results',
   EXAM_SUBMISSION: 'exam_submission',
@@ -107,7 +108,6 @@ export const LOCALE_KEYS = {
   SELECT_EXAM: 'select_exam',
   SELECT_STUDENT: 'select_student',
   EXAM_DATETIME: 'exam_datetime',
-  EXAM_QUESTION: 'exam_question',
   EXAM_DETAILS: 'exam_details',
   MARKS: 'marks',
   CONTRIBUTION: 'contribution',

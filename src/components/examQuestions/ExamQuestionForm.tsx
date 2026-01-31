@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -10,43 +10,44 @@ import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
 import FormLayout from '@/components/layout/FormLayout';
+import QuickAddRouteButton from '@/components/ui/QuickAddRouteButton';
 import { StatusSelect } from '@/components/ui/StatusSelect';
 
-import { useExamMCQQuestions } from '@/hooks/useExamMCQQuestions';
+import { useExamQuestions } from '@/hooks/useExamQuestions';
 import { useExams } from '@/hooks/useExams';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { getErrorMessage } from '@/types/errors';
 import {
-  IExamMCQQuestion,
-  IExamMCQQuestionCreate,
-  IExamMCQQuestionUpdate,
-} from '@/types/examMCQQuestion';
+  IExamQuestion,
+  IExamQuestionCreate,
+  IExamQuestionUpdate,
+} from '@/types/examQuestion';
 
-interface ExamMCQQuestionFormProps {
+interface ExamQuestionFormProps {
   mode: 'create' | 'edit';
-  examMCQQuestionId?: number;
-  initialValues?: Partial<IExamMCQQuestionCreate | IExamMCQQuestionUpdate>;
+  examQuestionId?: number;
+  initialValues?: Partial<IExamQuestionCreate | IExamQuestionUpdate>;
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
 }
 
-const ExamMCQQuestionForm: React.FC<ExamMCQQuestionFormProps> = ({
+const ExamQuestionForm: React.FC<ExamQuestionFormProps> = ({
   mode,
-  examMCQQuestionId,
+  examQuestionId,
   initialValues,
   onSuccess,
   onCancel,
   embedded = false,
 }) => {
   const { t } = useLocalization();
-  const entityName = t(LOCALE_KEYS.EXAM_MCQ_QUESTION, { defaultValue: 'Exam MCQ Question' });
+  const entityName = t(LOCALE_KEYS.EXAM_QUESTION, { defaultValue: 'Exam Question' });
   const router = useRouter();
   const [form] = Form.useForm();
-  const { createExamMCQQuestion, editExamMCQQuestion, actionStatus } = useExamMCQQuestions();
+  const { createExamQuestion, editExamQuestion, actionStatus } = useExamQuestions();
   const { exams, loadExams } = useExams();
-  const [options, setOptions] = useState<string[]>(['', '', '', '']); // Default 4 options
+  const [options, setOptions] = useState<string[]>(['', '', '', '']);
 
   useEffect(() => {
     if (mode === 'create') {
@@ -55,31 +56,30 @@ const ExamMCQQuestionForm: React.FC<ExamMCQQuestionFormProps> = ({
     } else if (mode === 'edit' && initialValues?.options) {
       setOptions(initialValues.options);
     }
-    // Load data for dropdowns
     loadExams({ page: 1, limit: 100 });
   }, [mode, form, loadExams, initialValues]);
 
-  const handleSubmit = async (values: Partial<IExamMCQQuestion>) => {
+  const handleSubmit = async (values: Partial<IExamQuestion>) => {
     try {
       const payload = {
         ...values,
-        options: options.filter((option) => option.trim() !== ''), // Remove empty options
+        options: options.filter((option) => option.trim() !== ''),
       };
       if (mode === 'create') {
-        await createExamMCQQuestion(payload as IExamMCQQuestionCreate);
+        await createExamQuestion(payload as IExamQuestionCreate);
         toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
-          router.push('/exam-mcq-questions');
+          router.push('/exam-questions');
         }
-      } else if (mode === 'edit' && examMCQQuestionId) {
-        await editExamMCQQuestion(examMCQQuestionId, payload as IExamMCQQuestionUpdate);
+      } else if (mode === 'edit' && examQuestionId) {
+        await editExamQuestion(examQuestionId, payload as IExamQuestionUpdate);
         toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
           onSuccess();
         } else {
-          router.push(`/exam-mcq-questions/${examMCQQuestionId}`);
+          router.push(`/exam-questions/${examQuestionId}`);
         }
       }
     } catch (error: unknown) {
@@ -124,7 +124,6 @@ const ExamMCQQuestionForm: React.FC<ExamMCQQuestionFormProps> = ({
 
   const removeOption = (index: number) => {
     if (options.length > 2) {
-      // Keep at least 2 options
       const newOptions = options.filter((_, i) => i !== index);
       setOptions(newOptions);
     }
@@ -137,29 +136,39 @@ const ExamMCQQuestionForm: React.FC<ExamMCQQuestionFormProps> = ({
       onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
-      <Form.Item
-        name="examId"
-        label={t(LOCALE_KEYS.EXAM)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.EXAM) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_EXAM)}
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={exams.map((exam) => ({
-            value: exam.id,
-            label: exam.name,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="examId"
+            label={t(LOCALE_KEYS.EXAM)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.EXAM) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_EXAM)}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={exams.map((exam) => ({
+                value: exam.id,
+                label: exam.name,
+              }))}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddRouteButton route="/exams/create" iconOnly buttonType="dashed" />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="questionOrder"
@@ -272,4 +281,4 @@ const ExamMCQQuestionForm: React.FC<ExamMCQQuestionFormProps> = ({
   return embedded ? formContent : <FormLayout>{formContent}</FormLayout>;
 };
 
-export default ExamMCQQuestionForm;
+export default ExamQuestionForm;

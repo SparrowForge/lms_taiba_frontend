@@ -8,28 +8,14 @@ import { DIFFICULTY_LEVEL_OPTIONS } from "@/enums/difficulty-level.enum"
 import { useFaculties } from "@/hooks/useFaculties"
 import { useLocalization } from "@/hooks/useLocalization"
 
-import { IMCQQuestion } from "@/types/mcqQuestion"
+import { IExamQuestion } from "@/types/examQuestion";
 
-import QuestionSetDrawer from "./QuestionSetDrawer"
-import { IQuestionSetCreate } from "@/types/questionSet"
-import { useQuestionSets } from "@/hooks/useQuestionSets"
-import { Status } from "@/enums"
-
-interface Question {
-  id: number
-  examId: number
-  questionOrder: number
-  questionText: string
-  correctOptionNumber: number
-  options: string[]
-  status: "active" | "inactive"
-  createdAt: string
-  updatedAt: string
-  deletedAt: null | string
-}
+import QuestionSetDrawer from "./QuestionSetDrawer";
+import { useQuestionSets } from "@/hooks/useQuestionSets";
+import { Status } from "@/enums";
 
 interface QuestionsTableProps {
-  questions: IMCQQuestion[]
+  questions: IExamQuestion[]
   selectedQuestions: number[]
   setSelectedQuestion: (ids: number[]) => void,
   onSubmit?: () => void
@@ -81,7 +67,7 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
       title: <Checkbox indeterminate={isIndeterminate} checked={isAllSelected} onChange={handleSelectAll} />,
       key: "checkbox",
       width: 60,
-      render: (_: any, record: Question) => (
+      render: (_: any, record: IExamQuestion) => (
         <Checkbox checked={selectedQuestions.includes(record.id)} onChange={() => handleCheckboxChange(record.id)} />
       ),
     },

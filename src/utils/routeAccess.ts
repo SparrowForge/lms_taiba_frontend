@@ -1,3 +1,4 @@
+import { UserType } from '@/enums/user-type.enum';
 import { IMenu } from '@/types/menu';
 
 /**
@@ -20,6 +21,26 @@ export const ALLOWED_ROUTES = [
   '/settings',
   '/settings/profile',
   '/notifications',
+  
+];
+
+/**
+ * Root access allow routes for user type: student.
+ * Paths listed here are allowed for students (add paths as needed).
+ */
+export const STUDENT_ALLOWED_ROUTES: string[] = [
+  '/exam-instructions',
+  '/participate-exam',
+  '/exam-complete'
+];
+
+/**
+ * Root access allow routes for user type: faculty.
+ * Paths listed here are allowed for faculty (add paths as needed).
+ */
+export const FACULTY_ALLOWED_ROUTES: string[] = [
+  '/question-set',
+  '/result'
 ];
 
 /**
@@ -112,16 +133,32 @@ export const getAllMenuRoutes = (menus: IMenu[]): string[] => {
 };
 
 /**
- * Checks if a route is accessible based on myMenus
+ * Checks if a route is in an allow list (exact, prefix, or wildcard pattern)
+ */
+const isRouteInAllowList = (routeWithoutLocale: string, allowList: string[]): boolean => {
+  return allowList.some((allowedRoute) => {
+    if (allowedRoute.includes('*')) {
+      return matchesPattern(routeWithoutLocale, allowedRoute);
+    }
+    return (
+      routeWithoutLocale === allowedRoute || routeWithoutLocale.startsWith(allowedRoute + '/')
+    );
+  });
+};
+
+/**
+ * Checks if a route is accessible based on myMenus and optional user type allow lists
  * @param pathname - Current pathname
  * @param myMenus - Array of user's menus
  * @param locales - Supported locales
+ * @param userType - Optional user type (student/faculty) to apply STUDENT_ALLOWED_ROUTES / FACULTY_ALLOWED_ROUTES
  * @returns True if route is accessible
  */
 export const isRouteAccessible = (
   pathname: string,
   myMenus: IMenu[],
   locales: string[] = ['en', 'ar'],
+  userType?: UserType | null,
 ): boolean => {
   // Remove locale prefix
   const routeWithoutLocale = removeLocalePrefix(pathname, locales);
@@ -150,6 +187,18 @@ export const isRouteAccessible = (
 
   if (isAllowed) {
     return true;
+  }
+
+  // Check user-type-specific allow routes (student / faculty)
+  if (userType === UserType.STUDENT && STUDENT_ALLOWED_ROUTES.length > 0) {
+    if (isRouteInAllowList(routeWithoutLocale, STUDENT_ALLOWED_ROUTES)) {
+      return true;
+    }
+  }
+  if (userType === UserType.FACULTY && FACULTY_ALLOWED_ROUTES.length > 0) {
+    if (isRouteInAllowList(routeWithoutLocale, FACULTY_ALLOWED_ROUTES)) {
+      return true;
+    }
   }
 
   // If no menus, deny access (except public and allowed routes)

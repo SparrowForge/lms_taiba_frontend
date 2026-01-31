@@ -21,7 +21,7 @@ import { IExamSubmissionCreate } from '@/types/examSubmission';
 
 
 
-export default function ParticipateExamMCQ() {
+export default function ParticipateExamPage() {
     const { t } = useLocalization();
     const router = useRouter();
     const entityName = t(LOCALE_KEYS.EXAM_SUBMISSION, { defaultValue: 'Exam Submission' });

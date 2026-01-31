@@ -4,37 +4,37 @@ import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 import { useLocalization } from '@/hooks/useLocalization';
 
-import { IExamMCQQuestion } from '@/types/examMCQQuestion';
+import { IExamQuestion } from '@/types/examQuestion';
 
-export const getExamMCQQuestionDisplayName = (examMCQQuestion: IExamMCQQuestion) => {
+export const getExamQuestionDisplayName = (examQuestion: IExamQuestion) => {
   return (
-    `Q${examMCQQuestion.questionOrder}: ${examMCQQuestion.questionText?.slice(0, 50)}...` ||
-    `MCQ Question #${examMCQQuestion.id}`
+    `Q${examQuestion.questionOrder}: ${examQuestion.questionText?.slice(0, 50)}...` ||
+    `Question #${examQuestion.id}`
   );
 };
 
-export const getExamMCQQuestionInitials = (examMCQQuestion: IExamMCQQuestion) => {
-  return `Q${examMCQQuestion.questionOrder}` || 'MCQ';
+export const getExamQuestionInitials = (examQuestion: IExamQuestion) => {
+  return `Q${examQuestion.questionOrder}` || 'Q';
 };
 
-export const useCreateExamMCQQuestionDetailsConfig = (
-  examMCQQuestion: IExamMCQQuestion | null,
+export const useCreateExamQuestionDetailsConfig = (
+  examQuestion: IExamQuestion | null,
   loading: boolean,
   error: string | null,
   options: {
     embedded?: boolean;
-    onEdit?: (examMCQQuestion: IExamMCQQuestion) => void;
+    onEdit?: (examQuestion: IExamQuestion) => void;
     onBack?: () => void;
   } = {},
-): EntityDetailsConfig<IExamMCQQuestion> => {
+): EntityDetailsConfig<IExamQuestion> => {
   const { embedded = false, onEdit, onBack } = options;
   const { t } = useLocalization();
   return {
-    name: t(LOCALE_KEYS.EXAM_MCQ_QUESTION),
-    route: '/exam-mcq-questions',
-    getDisplayName: getExamMCQQuestionDisplayName,
-    getInitials: getExamMCQQuestionInitials,
-    item: examMCQQuestion,
+    name: t(LOCALE_KEYS.EXAM_QUESTION),
+    route: '/exam-questions',
+    getDisplayName: getExamQuestionDisplayName,
+    getInitials: getExamQuestionInitials,
+    item: examQuestion,
     loading,
     error,
     embedded,

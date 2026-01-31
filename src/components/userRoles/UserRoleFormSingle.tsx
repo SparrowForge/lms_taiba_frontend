@@ -1,12 +1,16 @@
 'use client';
 
-import { Button, Form, Select, Space } from 'antd';
+import { Button, Col, Form, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
+
+import QuickAddDrawerButton from '@/components/ui/QuickAddDrawerButton';
+import QuickAddRouteButton from '@/components/ui/QuickAddRouteButton';
+import RoleFormDrawer from '@/components/roles/RoleFormDrawer';
 
 import { useLocalization } from '@/hooks/useLocalization';
 import { useRoles } from '@/hooks/useRoles';
@@ -108,46 +112,75 @@ function UserRoleFormSingle({
       onFinish={handleSingleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
-      <Form.Item
-        name="userId"
-        label={t(LOCALE_KEYS.USER)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_USER) }]}
-      >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_USER)}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {users.map((user) => (
-            <Select.Option key={user.id} value={user.id}>
-              {`${user.name || user.email} (${user.email})`}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="roleId"
-        label={t(LOCALE_KEYS.ROLE)}
-        rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_ROLE) }]}
-      >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_ROLE)}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {roles.map((role) => (
-            <Select.Option key={role.id} value={role.id}>
-              {`${role.name} - ${role.description}`}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="userId"
+            label={t(LOCALE_KEYS.USER)}
+            rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_USER) }]}
+          >
+            <Select
+              showSearch
+              placeholder={t(LOCALE_KEYS.SELECT_USER)}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {users.map((user) => (
+                <Select.Option key={user.id} value={user.id}>
+                  {`${user.name || user.email} (${user.email})`}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddRouteButton route="/users" iconOnly buttonType="dashed" />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="roleId"
+            label={t(LOCALE_KEYS.ROLE)}
+            rules={[{ required: true, message: t(LOCALE_KEYS.PLEASE_SELECT_ROLE) }]}
+          >
+            <Select
+              showSearch
+              placeholder={t(LOCALE_KEYS.SELECT_ROLE)}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {roles.map((role) => (
+                <Select.Option key={role.id} value={role.id}>
+                  {`${role.name} - ${role.description}`}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={RoleFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadRoles({ page: 1, limit: 100 });
+                if (data?.id) singleForm.setFieldsValue({ roleId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={actionStatus.status === Status.LOADING}>

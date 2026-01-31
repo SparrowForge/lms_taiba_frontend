@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, InputNumber, Select, Space } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -9,6 +9,11 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
+import FormLayout from '@/components/layout/FormLayout';
+import PanelFormDrawer from '@/components/panels/PanelFormDrawer';
+import QuickAddDrawerButton from '@/components/ui/QuickAddDrawerButton';
+import { StatusSelectFormItem } from '@/components/ui/StatusSelect';
+
 import { useLocalization } from '@/hooks/useLocalization';
 import { useMenus } from '@/hooks/useMenus';
 import { usePanels } from '@/hooks/usePanels';
@@ -16,8 +21,7 @@ import { usePanels } from '@/hooks/usePanels';
 import { getErrorMessage } from '@/types/errors';
 import { IMenu, IMenuCreate, IMenuUpdate } from '@/types/menu';
 
-import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
+import MenuFormDrawer from './MenuFormDrawer';
 
 interface MenuFormProps {
   mode: 'create' | 'edit';
@@ -40,7 +44,7 @@ const MenuForm: React.FC<MenuFormProps> = ({
   const entityName = t(LOCALE_KEYS.MENU, { defaultValue: 'Menu' });
   const router = useRouter();
   const [form] = Form.useForm();
-  const { createMenu, editMenu, actionStatus, menus } = useMenus();
+  const { createMenu, editMenu, actionStatus, menus, loadMenus } = useMenus();
   const { panels, loadPanels } = usePanels();
 
   useEffect(() => {
@@ -50,10 +54,9 @@ const MenuForm: React.FC<MenuFormProps> = ({
   }, [mode, form]);
 
   useEffect(() => {
-    if (panels.length === 0) {
-      loadPanels({ page: 1, limit: 100 });
-    }
-  }, [panels.length, loadPanels]);
+    loadPanels({ page: 1, limit: 100 });
+    loadMenus({ page: 1, limit: 100 });
+  }, [loadPanels, loadMenus]);
 
   const handleSubmit = async (values: Partial<IMenu>) => {
     try {
@@ -115,48 +118,86 @@ const MenuForm: React.FC<MenuFormProps> = ({
       onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
-      <Form.Item
-        name="panelId"
-        label={t(LOCALE_KEYS.PANEL)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PANEL) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.PANEL) })}
-          loading={panels.length === 0}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {panels.map((panel) => (
-            <Select.Option key={panel.id} value={panel.id}>
-              {panel.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="panelId"
+            label={t(LOCALE_KEYS.PANEL)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PANEL) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.PANEL) })}
+              loading={panels.length === 0}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {panels.map((panel) => (
+                <Select.Option key={panel.id} value={panel.id}>
+                  {panel.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={PanelFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadPanels({ page: 1, limit: 100 });
+                if (data?.id) form.setFieldsValue({ panelId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item name="parentId" label={t(LOCALE_KEYS.PARENT)}>
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.PARENT) })}
-          allowClear
-          showSearch
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {menus.map((menu) => (
-            <Select.Option key={menu.id} value={menu.id}>
-              {menu.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item name="parentId" label={t(LOCALE_KEYS.PARENT)}>
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.PARENT) })}
+              allowClear
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {menus.map((menu) => (
+                <Select.Option key={menu.id} value={menu.id}>
+                  {menu.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={MenuFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadMenus({ page: 1, limit: 100 });
+                if (data?.id) form.setFieldsValue({ parentId: data.id });
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="name"

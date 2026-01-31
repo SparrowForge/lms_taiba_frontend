@@ -10,9 +10,11 @@ import {
     EnvironmentOutlined,
     FileTextOutlined,
     ReloadOutlined,
+    StarOutlined,
     TeamOutlined,
     UploadOutlined,
     UserOutlined,
+    ZoomInOutlined,
 } from '@ant-design/icons';
 import {Button, Descriptions, Divider, Drawer, Tag} from 'antd';
 import dayjs from 'dayjs';
@@ -119,6 +121,10 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
     // loadCourseAssignments({ page: 1, limit: 10 });
   };
 
+  const handleStartClass = () => {
+    console.log("Start Class", schedule.zoomSession?.startUrl)
+  }
+
   return (
     <Drawer
       title={
@@ -175,6 +181,16 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
             className="h-10"
           >
             View Submissions
+          </Button>
+          <Button
+            icon={<ZoomInOutlined />}
+            onClick={handleStartClass}
+            block
+            className="h-10"
+            target='_blank'
+            href={schedule.zoomSession?.startUrl && schedule.zoomSession?.startUrl || undefined}
+          >
+            Start Class
           </Button>
         </div>
       </div>

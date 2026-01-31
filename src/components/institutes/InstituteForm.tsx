@@ -138,33 +138,37 @@ const InstituteForm: React.FC<Props> = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="addressId"
-        label={t(LOCALE_KEYS.ADDRESS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
-          },
-        ]}
-      >
-        <Row gutter={8}>
-          <Col flex="1">
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="addressId"
+            label={t(LOCALE_KEYS.ADDRESS)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
+              },
+            ]}
+          >
             <Select
-              options={addresses.map((addr) => ({ label: addr.name, value: addr.id }))}
-              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ADDRESS) })}
+              options={addresses.map((addr) => ({
+                label: addr.name,
+                value: addr.id,
+              }))}
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, {
+                name: t(LOCALE_KEYS.ADDRESS),
+              })}
               style={{ width: '100%' }}
             />
-          </Col>
-          <Col>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddDrawerButton
               drawerComponent={AddressFormDrawer}
               drawerProps={{ mode: 'create' }}
-              onComplete={(data) => {
-                // Reload addresses to include the newly created one
-                loadAddresses();
-                
-                // Optionally set the form field value if data contains the new address
+              onComplete={async (data) => {
+                await loadAddresses();
                 if (data?.id) {
                   form.setFieldsValue({ addressId: data.id });
                 }
@@ -172,9 +176,9 @@ const InstituteForm: React.FC<Props> = ({
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-        </Row>
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="website"

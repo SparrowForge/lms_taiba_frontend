@@ -14,10 +14,11 @@ import {
 import { useSearchParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 
+import { useAuth } from "@/hooks/useAuth"
 import { useExams } from "@/hooks/useExams"
 import { useQuestionSets } from "@/hooks/useQuestionSets"
+
 import LexicalEditor from "../ui/LexicalEditor"
-import { useAuth } from "@/hooks/useAuth"
 
 
 interface QuizParticipantProps {
@@ -210,7 +211,7 @@ export default function Quiz({
                   </Form.Item>
                 ) : (
                   <Radio.Group
-                    // disabled={!isExamActive}
+                    disabled={!isExamActive}
                     value={answers[currentQuestionIndex]}
                     onChange={(e) => handleOptionChange(e.target.value)}
                     style={{ display: "flex", flexDirection: "column", gap: 12 }}

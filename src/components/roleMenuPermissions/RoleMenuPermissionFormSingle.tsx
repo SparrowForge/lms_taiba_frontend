@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Select, Space } from 'antd';
+import { Button, Checkbox, Col, Form, Row, Select, Space } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import router from 'next/router';
 import React, { useEffect } from 'react';
@@ -7,6 +7,10 @@ import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
+
+import MenuFormDrawer from '@/components/menus/MenuFormDrawer';
+import QuickAddDrawerButton from '@/components/ui/QuickAddDrawerButton';
+import RoleFormDrawer from '@/components/roles/RoleFormDrawer';
 
 import { useLocalization } from '@/hooks/useLocalization';
 import { useMenus } from '@/hooks/useMenus';
@@ -105,57 +109,95 @@ function RoleMenuPermissionFormSingle({
     >
       {mode === 'create' && (
         <>
-          <Form.Item
-            name="roleId"
-            label={t(LOCALE_KEYS.ROLE)}
-            rules={[
-              {
-                required: true,
-                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROLE) }),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}
-              loading={roles.length === 0}
-              showSearch
-              filterOption={(input, option) =>
-                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-              }
-            >
-              {roles.map((role) => (
-                <Select.Option key={role.id} value={role.id}>
-                  {role.name} ({role.branch?.name})
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+          <Row gutter={8}>
+            <Col flex="1">
+              <Form.Item
+                name="roleId"
+                label={t(LOCALE_KEYS.ROLE)}
+                rules={[
+                  {
+                    required: true,
+                    message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ROLE) }),
+                  },
+                ]}
+              >
+                <Select
+                  placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ROLE) })}
+                  loading={roles.length === 0}
+                  showSearch
+                  filterOption={(input, option) =>
+                    (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                  }
+                  style={{ width: '100%' }}
+                >
+                  {roles.map((role) => (
+                    <Select.Option key={role.id} value={role.id}>
+                      {role.name} ({role.branch?.name})
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item label=" " colon={false}>
+                <QuickAddDrawerButton
+                  drawerComponent={RoleFormDrawer}
+                  drawerProps={{ mode: 'create' }}
+                  onComplete={(data) => {
+                    loadRoles({ page: 1, limit: 100 });
+                    if (data?.id) form.setFieldsValue({ roleId: data.id });
+                  }}
+                  iconOnly
+                  buttonType="dashed"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-          <Form.Item
-            name="menuId"
-            label={t(LOCALE_KEYS.MENU)}
-            rules={[
-              {
-                required: true,
-                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MENU) }),
-              },
-            ]}
-          >
-            <Select
-              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.MENU) })}
-              loading={menus.length === 0}
-              showSearch
-              filterOption={(input, option) =>
-                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-              }
-            >
-              {menus.map((menu: IMenu) => (
-                <Select.Option key={menu.id} value={menu.id}>
-                  {menu.name} ({menu.panel?.name})
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+          <Row gutter={8}>
+            <Col flex="1">
+              <Form.Item
+                name="menuId"
+                label={t(LOCALE_KEYS.MENU)}
+                rules={[
+                  {
+                    required: true,
+                    message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.MENU) }),
+                  },
+                ]}
+              >
+                <Select
+                  placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.MENU) })}
+                  loading={menus.length === 0}
+                  showSearch
+                  filterOption={(input, option) =>
+                    (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                  }
+                  style={{ width: '100%' }}
+                >
+                  {menus.map((menu: IMenu) => (
+                    <Select.Option key={menu.id} value={menu.id}>
+                      {menu.name} ({menu.panel?.name})
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item label=" " colon={false}>
+                <QuickAddDrawerButton
+                  drawerComponent={MenuFormDrawer}
+                  drawerProps={{ mode: 'create' }}
+                  onComplete={(data) => {
+                    loadMenus({ page: 1, limit: 100 });
+                    if (data?.id) form.setFieldsValue({ menuId: data.id });
+                  }}
+                  iconOnly
+                  buttonType="dashed"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
         </>
       )}
 

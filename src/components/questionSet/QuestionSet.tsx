@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 
 import { useExams } from '@/hooks/useExams';
-import { useMcqQuestions } from '@/hooks/useMcqQuestions';
+import { useExamQuestions } from '@/hooks/useExamQuestions';
 import { useQuestionSets } from '@/hooks/useQuestionSets';
 
 import QuestionSetForm from './QuestionSetForm'
@@ -21,7 +21,7 @@ const QuestionSet = () => {
   const examId = searchParams.get("examId")
   const { loadExam, selectedExam } = useExams()
   const [selectedQuestion, setSelectedQuestion] = useState<number[]>([])
-  const { mcqQuestions, loadMcqQuestions } = useMcqQuestions()
+  const { examQuestions, loadExamQuestions } = useExamQuestions();
   const {createQuestionSetWithQuestions, actionStatus} = useQuestionSets()
   const router = useRouter()
 
@@ -41,8 +41,13 @@ const QuestionSet = () => {
   }, [loadExam, examId])
 
   useEffect(() => {
-    loadMcqQuestions()
-  }, [loadMcqQuestions])
+    loadExamQuestions({
+      page: 1,
+      limit: 100,
+      ...(selectedExam?.courseId && { courseId: selectedExam.courseId }),
+      ...(selectedExam?.subjectId && { subjectId: selectedExam.subjectId }),
+    });
+  }, [loadExamQuestions, selectedExam?.courseId, selectedExam?.subjectId]);
 
   const handleQuestionsetSubmit = async() => {
     const questionSet = {
@@ -69,7 +74,7 @@ const QuestionSet = () => {
     <div>
       <QuestionSetForm formData={questionSetformData} setFormData={setQuestionSetFormData} changeHandler={handleChange} />
       <QuestionsTable
-        questions={mcqQuestions}
+        questions={examQuestions}
         selectedQuestions={selectedQuestion}
         setSelectedQuestion={setSelectedQuestion}
         onSubmit={handleQuestionsetSubmit}

@@ -13,8 +13,8 @@ import { useBatches } from '@/hooks/useBatches';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useSections } from '@/hooks/useSections';
 
-import { ISection, ISectionCreate, ISectionUpdate } from '@/types/section';
 import { getErrorMessage } from '@/types/errors';
+import { ISection, ISectionCreate, ISectionUpdate } from '@/types/section';
 
 import FormLayout from '../layout/FormLayout';
 import QuickAddRouteButton from '../ui/QuickAddRouteButton';
@@ -117,18 +117,18 @@ const SectionForm: React.FC<SectionFormProps> = ({
       onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
-      <Form.Item
-        name="batchId"
-        label={t(LOCALE_KEYS.BATCH)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) }),
-          },
-        ]}
-      >
-        <Row gutter={8}>
-          <Col flex="1">
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="batchId"
+            label={t(LOCALE_KEYS.BATCH)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+              },
+            ]}
+          >
             <Select
               placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
               loading={batches.length === 0}
@@ -144,16 +144,18 @@ const SectionForm: React.FC<SectionFormProps> = ({
                 </Select.Option>
               ))}
             </Select>
-          </Col>
-          <Col>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
             <QuickAddRouteButton
               route="/batches/create"
               iconOnly
               buttonType="dashed"
             />
-          </Col>
-        </Row>
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="name"

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, Input, Select, Space } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -18,7 +18,10 @@ import { IDepartment, IDepartmentCreate, IDepartmentUpdate } from '@/types/depar
 import { getErrorMessage } from '@/types/errors';
 
 import FormLayout from '../layout/FormLayout';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import QuickAddRouteButton from '../ui/QuickAddRouteButton';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import BranchFormDrawer from '../branches/BranchFormDrawer';
 
 interface DepartmentFormProps {
   mode: 'create' | 'edit';
@@ -116,31 +119,52 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       onFinish={handleSubmit}
       initialValues={mode === 'edit' ? initialValues : undefined}
     >
-      <Form.Item
-        name="branchId"
-        label={t(LOCALE_KEYS.BRANCH)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
-          loading={branches.length === 0}
-          showSearch
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {branches.map((branch) => (
-            <Select.Option key={branch.id} value={branch.id}>
-              {branch.name} ({branch.code})
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="branchId"
+            label={t(LOCALE_KEYS.BRANCH)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BRANCH) }),
+              },
+            ]}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
+              loading={branches.length === 0}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {branches.map((branch) => (
+                <Select.Option key={branch.id} value={branch.id}>
+                  {branch.name} ({branch.code})
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={BranchFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={(data) => {
+                loadBranches();
+                if (data?.id) {
+                  form.setFieldsValue({ branchId: data.id });
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="name"
@@ -168,26 +192,32 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
         <Input placeholder={t(LOCALE_KEYS.CODE)} />
       </Form.Item>
 
-      <Form.Item
-        name="headId"
-        label={t(LOCALE_KEYS.HEAD)}
-        
-      >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.HEAD) })}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {faculties.map((f) => (
-            <Select.Option key={f.id} value={f.id}>
-              {f.fullName} ({f.employeeCode})
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item name="headId" label={t(LOCALE_KEYS.HEAD)}>
+            <Select
+              showSearch
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.HEAD) })}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              style={{ width: '100%' }}
+            >
+              {faculties.map((f) => (
+                <Select.Option key={f.id} value={f.id}>
+                  {f.fullName} ({f.employeeCode})
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddRouteButton route="/faculties" iconOnly buttonType="dashed" />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="email"

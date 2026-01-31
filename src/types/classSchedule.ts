@@ -10,6 +10,22 @@ import {ISubject} from './subject';
 import {ITimeSlot} from './timeSlot';
 import {IWeekDay} from './weekDay';
 
+export interface IZoomSession {
+  id: number;
+  classScheduleId: number;
+  zoomMeetingId: string;
+
+  joinUrl: string;
+  startUrl: string;
+
+  startTime: string; // ISO date string
+  durationMinutes: number;
+  timezone: string;
+
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+}
+
 export interface IClassSchedule {
   id: number;
   batchId: number;
@@ -38,6 +54,7 @@ export interface IClassSchedule {
   timeSlot: ITimeSlot;
   color: string;
   attendances: IAttendance[];
+  zoomSession: IZoomSession | null;
 }
 
 export interface IClassScheduleCreate {

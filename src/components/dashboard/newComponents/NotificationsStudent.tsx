@@ -79,16 +79,7 @@ export default function NotificationsPage() {
 
 
   return (
-    <div
-      style={{
-        height: "100%",
-        maxWidth: 800,
-        margin: "0 auto",
-        padding: "24px",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div>
       {/* Header */}
       <div
         style={{
@@ -97,12 +88,7 @@ export default function NotificationsPage() {
           marginBottom: 16,
         }}
       >
-        <h2 style={{ margin: 0 }}>
-          Notifications
-          {unreadCount > 0 && (
-            <Badge count={unreadCount} style={{ marginLeft: 12 }} />
-          )}
-        </h2>
+        
 
         {unreadCount > 0 && (
           <Button
@@ -124,8 +110,9 @@ export default function NotificationsPage() {
         }}
       >
         {notifications.length === 0 ? (
-          <Card className="rounded-2xl shadow-sm"><Empty description="No notifications" /></Card>
+          <Card className="rounded-2xl shadow-sm "><Empty description="No notifications" /></Card>
         ) : (
+          
           notifications.map((notification: INotification) => {
             const isUnread = !notification.readAt
 

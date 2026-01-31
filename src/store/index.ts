@@ -19,7 +19,7 @@ import courseTypeReducer from './slices/courseTypeSlice';
 import departmentReducer from './slices/departmentSlice';
 import employmentTypeReducer from './slices/employmentTypeSlice';
 import examCandidateReducer from './slices/examCandidateSlice';
-import examMCQQuestionReducer from './slices/examMCQQuestionSlice';
+import examQuestionReducer from './slices/examQuestionSlice';
 import examResultReducer from './slices/examResultSlice';
 import examScheduleReducer from './slices/examScheduleSlice';
 import examReducer from './slices/examSlice';
@@ -34,7 +34,6 @@ import feeStructureReducer from './slices/feeStructureSlice';
 import gradeRuleReducer from './slices/gradeRuleSlice';
 import instituteReducer from './slices/instituteSlice';
 import markDistributionReducer from './slices/markDistributionSlice';
-import mcqQuestionReducer from './slices/mcqQuestionSlice';
 import menuReducer from './slices/menuSlice';
 import notificationReducer from './slices/notificationSlice';
 import panelReducer from './slices/panelSlice';
@@ -97,7 +96,6 @@ export interface RootState {
   feeStructures: ReturnType<typeof feeStructureReducer>;
   gradeRules: ReturnType<typeof gradeRuleReducer>;
   markDistributions: ReturnType<typeof markDistributionReducer>;
-  mcqQuestions: ReturnType<typeof mcqQuestionReducer>;
   notifications: ReturnType<typeof notificationReducer>;
   audits: ReturnType<typeof auditReducer>;
   userRoles: ReturnType<typeof userRoleReducer>;
@@ -105,7 +103,7 @@ export interface RootState {
   courseTypes: ReturnType<typeof courseTypeReducer>;
   exams: ReturnType<typeof examReducer>;
   examCandidates: ReturnType<typeof examCandidateReducer>;
-  examMCQQuestions: ReturnType<typeof examMCQQuestionReducer>;
+  examQuestions: ReturnType<typeof examQuestionReducer>;
   examResults: ReturnType<typeof examResultReducer>;
   examSchedules: ReturnType<typeof examScheduleReducer>;
   examSubmissions: ReturnType<typeof examSubmissionReducer>;
@@ -163,7 +161,6 @@ export const store = configureStore({
     feeStructures: feeStructureReducer,
     gradeRules: gradeRuleReducer,
     markDistributions: markDistributionReducer,
-    mcqQuestions: mcqQuestionReducer,
     notifications: notificationReducer,
     audits: auditReducer,
     userRoles: userRoleReducer,
@@ -171,7 +168,7 @@ export const store = configureStore({
     courseTypes: courseTypeReducer,
     exams: examReducer,
     examCandidates: examCandidateReducer,
-    examMCQQuestions: examMCQQuestionReducer,
+    examQuestions: examQuestionReducer,
     examResults: examResultReducer,
     examSchedules: examScheduleReducer,
     examSubmissions: examSubmissionReducer,

@@ -44,9 +44,9 @@ export const useRouteAccess = () => {
       return false;
     }
 
-    // Check route access
-    return isRouteAccessible(pathname || '', myMenus || []);
-  }, [pathname, myMenus, myMenusStatus.status, isAuthenticated]);
+    // Check route access (pass user type for student/faculty allow lists)
+    return isRouteAccessible(pathname || '', myMenus || [], undefined, user?.type);
+  }, [pathname, myMenus, myMenusStatus.status, isAuthenticated, user?.type]);
 
   return {
     isAccessible,

@@ -37,7 +37,7 @@ const UpcomingExam = () => {
     if (user?.type === UserType.STUDENT) {
       return router.push(`/exam-instructions?subjectId=${exam.subjectId}&examId=${exam.id}`)
     }else if (user?.type === UserType.FACULTY) {
-      return router.push(`/exam-mcq-questions/create?subjectId=${exam.subjectId}`)
+      return router.push(`/exam-questions/create?subjectId=${exam.subjectId}`)
     }
   }
 
