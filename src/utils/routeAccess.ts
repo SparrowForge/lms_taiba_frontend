@@ -21,19 +21,26 @@ export const ALLOWED_ROUTES = [
   '/settings',
   '/settings/profile',
   '/notifications',
+  
 ];
 
 /**
  * Root access allow routes for user type: student.
  * Paths listed here are allowed for students (add paths as needed).
  */
-export const STUDENT_ALLOWED_ROUTES: string[] = [];
+export const STUDENT_ALLOWED_ROUTES: string[] = [
+  '/exam-instructions',
+  '/participate-exam'
+];
 
 /**
  * Root access allow routes for user type: faculty.
  * Paths listed here are allowed for faculty (add paths as needed).
  */
-export const FACULTY_ALLOWED_ROUTES: string[] = [];
+export const FACULTY_ALLOWED_ROUTES: string[] = [
+  '/question-set',
+  '/result'
+];
 
 /**
  * Removes locale prefix from pathname

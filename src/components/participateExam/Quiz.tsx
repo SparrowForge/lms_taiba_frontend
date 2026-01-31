@@ -210,7 +210,7 @@ export default function Quiz({
                   </Form.Item>
                 ) : (
                   <Radio.Group
-                    // disabled={!isExamActive}
+                    disabled={!isExamActive}
                     value={answers[currentQuestionIndex]}
                     onChange={(e) => handleOptionChange(e.target.value)}
                     style={{ display: "flex", flexDirection: "column", gap: 12 }}
