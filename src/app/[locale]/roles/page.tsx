@@ -144,7 +144,7 @@ export default function RolesPage() {
         title: t(LOCALE_KEYS.BRANCH),
         dataIndex: 'branch',
         key: 'branch',
-        render: (branch: IBranch) => <span>{branch?.name || 'N/A'} ({branch.code || 'N/A'})</span>,
+        render: (branch: IBranch) => <span>{branch?.name || 'N/A'} ({branch?.code || 'N/A'})</span>,
       },
       {
         title: t(LOCALE_KEYS.STATUS),
