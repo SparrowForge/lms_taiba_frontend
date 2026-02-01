@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Status } from '@/enums';
@@ -29,8 +29,51 @@ import {
   updateMenu,
 } from '@/store/slices/menuSlice';
 
+const MY_MENUS_STORAGE_KEY_PREFIX = 'lms_myMenus_';
+
+function getCachedMyMenus(userId: number): IMenu[] | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(`${MY_MENUS_STORAGE_KEY_PREFIX}${userId}`);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function setCachedMyMenus(userId: number, data: IMenu[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(`${MY_MENUS_STORAGE_KEY_PREFIX}${userId}`, JSON.stringify(data));
+  } catch {
+    // ignore
+  }
+}
+
+/** Clear my-menus from localStorage (call on logout). Pass userId to clear one user, or omit to clear all. */
+export function clearMyMenusStorage(userId?: number): void {
+  if (typeof window === 'undefined') return;
+  try {
+    if (userId != null) {
+      localStorage.removeItem(`${MY_MENUS_STORAGE_KEY_PREFIX}${userId}`);
+    } else {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key?.startsWith(MY_MENUS_STORAGE_KEY_PREFIX)) keysToRemove.push(key);
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+    }
+  } catch {
+    // ignore
+  }
+}
+
 export const useMenus = () => {
   const dispatch = useDispatch();
+  const userId = useSelector((state: RootState) => state.auth.user?.id);
   const {
     menus,
     selectedMenu,
@@ -43,14 +86,52 @@ export const useMenus = () => {
     panelsWithMenus,
     panelsWithMenusStatus,
   } = useSelector((state: RootState) => state.menus);
-  // my menu
+
+  // Only call my-menus API once per user per session
+  const fetchedMyMenusForUserIdRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (userId == null) {
+      fetchedMyMenusForUserIdRef.current = null;
+    }
+  }, [userId]);
+
+  // My menus: load from localStorage first, then refresh from API once in background
   const loadMyMenus = useCallback(
     async (params = {}) => {
+      const uid = userId ?? undefined;
+      if (uid == null) return;
+
+      const cached = uid != null ? getCachedMyMenus(uid) : null;
+      const alreadyFetchedThisSession = fetchedMyMenusForUserIdRef.current === uid;
+
+      if (cached != null) {
+        dispatch(setMyMenus(cached));
+        dispatch(setMyMenusStatus({ status: Status.SUCCESS }));
+        if (!alreadyFetchedThisSession) {
+          fetchedMyMenusForUserIdRef.current = uid;
+          try {
+            const response: IBaseResponse<IMenu[]> = await menuService.getMyMenus(params);
+            const data = response?.data ?? [];
+            dispatch(setMyMenus(data));
+            setCachedMyMenus(uid, data);
+          } catch {
+            // Keep cached data; no status change
+          }
+        }
+        return;
+      }
+
+      if (alreadyFetchedThisSession) return;
+
+      fetchedMyMenusForUserIdRef.current = uid;
       try {
         dispatch(setMyMenusStatus({ status: Status.LOADING }));
         const response: IBaseResponse<IMenu[]> = await menuService.getMyMenus(params);
-        dispatch(setMyMenus(response?.data ?? []));
+        const data = response?.data ?? [];
+        dispatch(setMyMenus(data));
         dispatch(setMyMenusStatus({ status: Status.SUCCESS }));
+        setCachedMyMenus(uid, data);
       } catch (error: unknown) {
         const errorMessage =
           error instanceof AxiosError
@@ -59,7 +140,7 @@ export const useMenus = () => {
         dispatch(setMyMenusStatus({ status: Status.FAILED, message: errorMessage }));
       }
     },
-    [dispatch],
+    [dispatch, userId],
   );
 
   // Load panels with menus

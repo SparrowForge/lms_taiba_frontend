@@ -95,6 +95,10 @@ const menuSlice = createSlice({
     setMyMenus: (state, action: PayloadAction<IMenu[]>) => {
       state.myMenus = action.payload;
     },
+    clearMyMenus: (state) => {
+      state.myMenus = [];
+      state.myMenusStatus = { status: Status.INITIAL };
+    },
     setPanelsWithMenusStatus: (state, action: PayloadAction<IStatusState>) => {
       state.panelsWithMenusStatus = action.payload;
     },
@@ -118,6 +122,7 @@ export const {
   clearDetailsStatus,
   setMyMenusStatus,
   setMyMenus,
+  clearMyMenus,
   setPanelsWithMenusStatus,
   setPanelsWithMenus,
 } = menuSlice.actions;
