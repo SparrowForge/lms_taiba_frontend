@@ -1,31 +1,22 @@
 'use client';
 
-import {
-  BookOutlined,
-  CalculatorOutlined,
-  ExperimentOutlined,
-  FileTextOutlined,
-  SnippetsOutlined,
-} from '@ant-design/icons';
-import { Button, Card, Empty, Spin, Tag } from 'antd';
-import dayjs from 'dayjs';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+
+import { Card, Empty, Spin, } from 'antd';
+import React, { useEffect, } from 'react';
+
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
 
-import CourseAssignmentDetailsDrawer from '@/components/courseAssignments/CourseAssignmentDetailsDrawer';
 
-import { useCourseAssignments } from '@/hooks/useCourseAssignments';
-import { useLocalization } from '@/hooks/useLocalization';
 import { useAuth } from '@/hooks/useAuth';
-import CourseAssignmentFormDrawer from '../courseAssignments/CourseAssignmentFormDrawer';
-import { UserType } from '@/enums/user-type.enum';
-import CourseAssignmentSubmissionFormDrawer from '../courseAssignmentSubmissions/CourseAssignmentSubmissionFormDrawer';
-import { BiDetail, BiEditAlt } from 'react-icons/bi';
 import { useCourseAssignmentSubmissions } from '@/hooks/useCourseAssignmentSubmissions';
+import { useLocalization } from '@/hooks/useLocalization';
+
 import AssignmentSubmissionCardByStudent from './AssignmentSumissionCardByStudent';
+
+
+
 
 
 
@@ -34,7 +25,7 @@ const SubmittedAssignment: React.FC = () => {
   const { t } = useLocalization();
   const { user } = useAuth()
 
-  const {courseAssignmentSubmissions, loadCourseAssignmentSubmissions, listStatus } = useCourseAssignmentSubmissions()
+  const { courseAssignmentSubmissions, loadCourseAssignmentSubmissions, listStatus } = useCourseAssignmentSubmissions()
 
 
   useEffect(() => {
@@ -67,13 +58,13 @@ const SubmittedAssignment: React.FC = () => {
       {/* Assignment Cards */}
       {listStatus.status === Status.SUCCESS && courseAssignmentSubmissions.length > 0 && (
         <div className="flex flex-col gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
-          {courseAssignmentSubmissions.map((item) => (
-            <AssignmentSubmissionCardByStudent data={item} />
+          {courseAssignmentSubmissions.map((item:any) => (
+            <AssignmentSubmissionCardByStudent key={item.id} data={item} />
           ))}
         </div>
       )}
 
-      
+
 
     </Card>
   );

@@ -18,6 +18,7 @@ import Assignments from '../coursesStudent/Assignments';
 import SubmittedAssignment from '../coursesStudent/SubmittedAssignment';
 import StudentExamParticipate from '../exams/StudentExamParticipate';
 import { usePathname, useSearchParams } from 'next/navigation';
+import StudentsResult from '../result/StudentsResult';
 
 const { Title, Text } = Typography;
 
@@ -115,14 +116,14 @@ export const EntityDetailsContent = <T extends { id: number }>({
         <Col xs={8} lg={config.embedded ? 24 : 16}>
           {
             isStudentPage ? <>
-              <UpperTab items={StudentProfileTabData} initial={tab ?? 'materials'} onTabChange={(tab) => setActiveTab(tab)} />
+              <UpperTab items={StudentProfileTabData} initial={tab ?? 'profile'} onTabChange={(tab) => setActiveTab(tab)} />
               {activeTab === 'profile' && <StudentProfile config={config} />}
               {activeTab === 'materials' && <CourseMaterials />}
               {activeTab === 'assignments' && <Assignments />}
               {activeTab === 'submittedAssignments' && <SubmittedAssignment />}
               {activeTab === 'exam' && <StudentExamParticipate />}
-              {activeTab === 'grading' && <div>Grading Content is empty</div>}
-              {activeTab === 'discussion' && <div>Discussion Content</div>}
+              {activeTab === 'grading' && <StudentsResult/>}
+              
             </> : <Card title={`${config.name} ${t(LOCALE_KEYS.INFORMATION)}`}>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>

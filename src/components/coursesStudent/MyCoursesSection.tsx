@@ -51,7 +51,7 @@ const MyCoursesSection = () => {
       {user?.type === UserType.FACULTY && activeTab === 'exam' && <FacultyExamsManagement />}
       {user?.type === UserType.STUDENT && activeTab === 'exam' && <StudentExamParticipate />}
       {/* {user?.type === UserType.STUDENT && activeTab === 'result' && <ExamResultIndividualSubject />} */}
-      {activeTab === 'grading' && <StudentsResult/>}
+      {user?.type === UserType.STUDENT && activeTab === 'grading' && <StudentsResult/>}
       {activeTab === 'discussion' && <DiscussionSection />}
 
 
