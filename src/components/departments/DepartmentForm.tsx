@@ -206,7 +206,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
             >
               {faculties.map((f) => (
                 <Select.Option key={f.id} value={f.id}>
-                  {f.fullName} ({f.employeeCode})
+                  {f.fullName}
                 </Select.Option>
               ))}
             </Select>
