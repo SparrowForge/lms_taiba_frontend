@@ -157,7 +157,7 @@ const CourseAssignmentSubmissionForm: React.FC<CourseAssignmentSubmissionFormPro
         >
           {courseAssignments.map((assignment) => (
             <Select.Option key={assignment.id} value={assignment.id}>
-              {assignment.title} ({assignment.type})
+              {assignment.title} 
             </Select.Option>
           ))}
         </Select>
@@ -178,7 +178,7 @@ const CourseAssignmentSubmissionForm: React.FC<CourseAssignmentSubmissionFormPro
         >
           {students.map((student) => (
             <Select.Option key={student.id} value={student.id}>
-              {student.firstName} {student.lastName} ({student.applicationNo})
+              {student.firstName}
             </Select.Option>
           ))}
         </Select>
@@ -247,7 +247,7 @@ const CourseAssignmentSubmissionForm: React.FC<CourseAssignmentSubmissionFormPro
         >
           {faculties.map((faculty) => (
             <Select.Option key={faculty.id} value={faculty.id}>
-              {faculty.fullName} ({faculty.employeeCode})
+              {faculty.fullName} 
             </Select.Option>
           ))}
         </Select>
