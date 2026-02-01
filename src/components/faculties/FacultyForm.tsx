@@ -7,24 +7,25 @@ import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { Status } from '@/enums';
 
 import { useBranches } from '@/hooks/useBranches';
 import { useDepartments } from '@/hooks/useDepartments';
+import { useEmploymentTypes } from '@/hooks/useEmploymentTypes';
 import { useFaculties } from '@/hooks/useFaculties';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { getErrorMessage } from '@/types/errors';
 import { IFaculty, IFacultyCreate, IFacultyUpdate } from '@/types/faculty';
 
-import FormLayout from '../layout/FormLayout';
-import { StatusSelect } from '../ui/StatusSelect';
-import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { useEmploymentTypes } from '@/hooks/useEmploymentTypes';
-import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
-import DepartmentFormDrawer from '../departments/DepartmentFormDrawer';
 import BranchFormDrawer from '../branches/BranchFormDrawer';
+import DepartmentFormDrawer from '../departments/DepartmentFormDrawer';
 import EmploymentTypeFormDrawer from '../employmentTypes/EmploymentTypeFormDrawer';
+import FormLayout from '../layout/FormLayout';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import { StatusSelect } from '../ui/StatusSelect';
+
 
 interface FacultyFormProps {
   mode: 'create' | 'edit';
@@ -148,7 +149,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
             >
               {branches.map((branch) => (
                 <Select.Option key={branch.id} value={branch.id}>
-                  {branch.name} ({branch.code})
+                  {branch.name} 
                 </Select.Option>
               ))}
             </Select>
@@ -194,7 +195,7 @@ const FacultyForm: React.FC<FacultyFormProps> = ({
             >
               {departments.map((department) => (
                 <Select.Option key={department.id} value={department.id}>
-                  {department.name} ({department.code})
+                  {department.name} 
                 </Select.Option>
               ))}
             </Select>

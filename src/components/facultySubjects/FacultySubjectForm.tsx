@@ -238,7 +238,7 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
         >
           {faculties.map((faculty) => (
             <Select.Option key={faculty.id} value={faculty.id}>
-              {faculty.fullName} ({faculty.employeeCode})
+              {faculty.fullName} 
             </Select.Option>
           ))}
         </Select>
@@ -268,7 +268,7 @@ const FacultySubjectForm: React.FC<FacultySubjectFormProps> = ({
         >
           {subjects.map((subject) => (
             <Select.Option key={subject.id} value={subject.id}>
-              {subject.name} ({subject.code})
+              {subject.name} 
             </Select.Option>
           ))}
         </Select>
