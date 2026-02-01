@@ -139,7 +139,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
             >
               {courses.map((course) => (
                 <Select.Option key={course.id} value={course.id}>
-                  {course.name} ({course.code})
+                  {course.name}
                 </Select.Option>
               ))}
             </Select>
