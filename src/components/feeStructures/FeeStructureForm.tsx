@@ -281,7 +281,14 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
           },
         ]}
       >
-        <Select placeholder={t(LOCALE_KEYS.SELECT_CURRENCY)}>
+        <Select
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+          placeholder={t(LOCALE_KEYS.SELECT_CURRENCY)}
+        >
           {CURRENCIES.map((currency) => (
             <Select.Option key={currency.code} value={currency.code}>
               {currency.code} - {currency.name} ({currency.symbol})

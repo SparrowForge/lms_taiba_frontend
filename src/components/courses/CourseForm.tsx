@@ -146,7 +146,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
             >
               {departments.map((department) => (
                 <Select.Option key={department.id} value={department.id}>
-                  {department.name} ({department.code})
+                  {department.name}
                 </Select.Option>
               ))}
             </Select>

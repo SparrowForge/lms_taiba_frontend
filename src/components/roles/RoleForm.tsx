@@ -131,7 +131,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
             >
               {branches.map((branch) => (
                 <Select.Option key={branch.id} value={branch.id}>
-                  {branch.name} ({branch.code})
+                  {branch.name}
                 </Select.Option>
               ))}
             </Select>

@@ -556,7 +556,7 @@ function RoleMenuPermissionFormMultiple({
               >
                 {roles.map((role) => (
                   <Select.Option key={role.id} value={role.id}>
-                    {role.name} ({role.branch?.name})
+                    {role.name}
                   </Select.Option>
                 ))}
               </Select>

@@ -202,47 +202,54 @@ const BranchForm: React.FC<BranchFormProps> = ({
         </Col>
       </Row>
 
-      <Row gutter={8}>
-        <Col flex="1">
-          <Form.Item
-            name="addressId"
-            label={t(LOCALE_KEYS.ADDRESS)}
-            rules={[
-              {
-                required: true,
-                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
-              },
-            ]}
-          >
-            <Select
-              options={addresses.map((addr) => ({
-                label: addr.name,
-                value: addr.id,
-              }))}
-              placeholder={t(LOCALE_KEYS.SELECT_NAME, {
-                name: t(LOCALE_KEYS.ADDRESS),
-              })}
-              style={{ width: '100%' }}
-            />
-          </Form.Item>
-        </Col>
-        <Col>
-          <Form.Item label=" " colon={false}>
-            <QuickAddDrawerButton
-              drawerComponent={AddressFormDrawer}
-              drawerProps={{ mode: 'create' }}
-              onComplete={(data) => {
-                loadAddresses();
-                if (data?.id) {
-                  form.setFieldsValue({ addressId: data.id });
-                }
-              }}
-              iconOnly
-              buttonType="dashed"
-            />
-          </Form.Item>
-        </Col>
-      </Row>
+     <Row gutter={8}>
+             <Col flex="1">
+               <Form.Item
+                 name="addressId"
+                 label={t(LOCALE_KEYS.ADDRESS)}
+                 rules={[
+                   {
+                     required: true,
+                     message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.ADDRESS) }),
+                   },
+                 ]}
+               >
+                 <Select
+                 showSearch
+                   optionFilterProp="children"
+                   filterOption={(input, option) =>
+                     (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                   }
+                   placeholder={t(LOCALE_KEYS.SELECT_NAME, {
+                     name: t(LOCALE_KEYS.ADDRESS),
+                   })}
+                   style={{ width: '100%' }}
+                 >
+                   {addresses.map((addr) => (
+                     <Select.Option key={addr.id} value={addr.id}>
+                       {addr?.name}
+                     </Select.Option>
+                   ))}
+                 </Select>
+               </Form.Item>
+             </Col>
+             <Col>
+               <Form.Item label=" " colon={false}>
+                 <QuickAddDrawerButton
+                   drawerComponent={AddressFormDrawer}
+                   drawerProps={{ mode: 'create' }}
+                   onComplete={async (data) => {
+                     await loadAddresses();
+                     if (data?.id) {
+                       form.setFieldsValue({ addressId: data.id });
+                     }
+                   }}
+                   iconOnly
+                   buttonType="dashed"
+                 />
+               </Form.Item>
+             </Col>
+           </Row>
 
       <Form.Item
         name="externalInstituteIdNo"

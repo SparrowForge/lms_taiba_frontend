@@ -19,6 +19,8 @@ import { IStudentProfileCreate, IStudentProfileUpdate } from '@/types/studentPro
 
 import FormLayout from '../layout/FormLayout';
 import QuickAddRouteButton from '../ui/QuickAddRouteButton';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import AddressFormDrawer from '../addresses/AddressFormDrawer';
 
 interface StudentProfileFormProps {
   mode: 'create' | 'edit';
@@ -117,9 +119,9 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
       initialValues={
         mode === 'edit'
           ? {
-              ...initialValues,
-              dob: initialValues?.dob ? dayjs(initialValues.dob) : undefined,
-            }
+            ...initialValues,
+            dob: initialValues?.dob ? dayjs(initialValues.dob) : undefined,
+          }
           : undefined
       }
       onFinish={handleSubmit}
@@ -219,47 +221,101 @@ const StudentProfileForm: React.FC<StudentProfileFormProps> = ({
         />
       </Form.Item>
 
-      <Form.Item
-        name="presentAddressId"
-        label={t(LOCALE_KEYS.PRESENT_ADDRESS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PRESENT_ADDRESS) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_PRESENT_ADDRESS, {
-            defaultValue: 'Select present address',
-          })}
-          options={addresses.map((address) => ({
-            label: address.name,
-            value: address.id,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="presentAddressId"
+            label={t(LOCALE_KEYS.PRESENT_ADDRESS)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PRESENT_ADDRESS) }),
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder={t(LOCALE_KEYS.SELECT_PRESENT_ADDRESS, {
+                defaultValue: 'Select present address',
+              })}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {addresses.map((address) => (
+                <Select.Option key={address.id} value={address.id}>
+                  {address.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={AddressFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={async (data) => {
+                await loadAddresses();
+                if (data?.id) {
+                  form.setFieldsValue({ addressId: data.id });
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
-      <Form.Item
-        name="permanentAddressId"
-        label={t(LOCALE_KEYS.PERMANENT_ADDRESS)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PERMANENT_ADDRESS) }),
-          },
-        ]}
-      >
-        <Select
-          placeholder={t(LOCALE_KEYS.SELECT_PERMANENT_ADDRESS, {
-            defaultValue: 'Select permanent address',
-          })}
-          options={addresses.map((address) => ({
-            label: address.name,
-            value: address.id,
-          }))}
-        />
-      </Form.Item>
+      <Row gutter={8}>
+        <Col flex="1">
+          <Form.Item
+            name="permanentAddressId"
+            label={t(LOCALE_KEYS.PERMANENT_ADDRESS)}
+            rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.PERMANENT_ADDRESS) }),
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder={t(LOCALE_KEYS.SELECT_PERMANENT_ADDRESS, {
+                defaultValue: 'Select permanent address',
+              })}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {addresses.map((address) => (
+                <Select.Option key={address.id} value={address.id}>
+                  {address.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={AddressFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={async (data) => {
+                await loadAddresses();
+                if (data?.id) {
+                  form.setFieldsValue({ addressId: data.id });
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="phone"

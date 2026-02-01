@@ -16,11 +16,11 @@ import { useSubjects } from '@/hooks/useSubjects';
 import { getErrorMessage } from '@/types/errors';
 import { ISubject, ISubjectCreate, ISubjectUpdate } from '@/types/subject';
 
+import CourseFormDrawer from '../courses/CourseFormDrawer';
 import FormLayout from '../layout/FormLayout';
-import { StatusSelectFormItem } from '../ui/StatusSelect';
 import LexicalEditor from '../ui/LexicalEditor';
 import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
-import CourseFormDrawer from '../courses/CourseFormDrawer';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
 
 interface SubjectFormProps {
   mode: 'create' | 'edit';
@@ -139,7 +139,7 @@ const SubjectForm: React.FC<SubjectFormProps> = ({
             >
               {courses.map((course) => (
                 <Select.Option key={course.id} value={course.id}>
-                  {course.name} ({course.code})
+                  {course.name}
                 </Select.Option>
               ))}
             </Select>

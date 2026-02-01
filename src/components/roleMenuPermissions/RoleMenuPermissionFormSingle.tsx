@@ -132,7 +132,7 @@ function RoleMenuPermissionFormSingle({
                 >
                   {roles.map((role) => (
                     <Select.Option key={role.id} value={role.id}>
-                      {role.name} ({role.branch?.name})
+                      {role.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -177,7 +177,7 @@ function RoleMenuPermissionFormSingle({
                 >
                   {menus.map((menu: IMenu) => (
                     <Select.Option key={menu.id} value={menu.id}>
-                      {menu.name} ({menu.panel?.name})
+                      {menu.name}
                     </Select.Option>
                   ))}
                 </Select>

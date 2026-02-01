@@ -21,6 +21,7 @@ import AddressFormDrawer from '../addresses/AddressFormDrawer';
 import FormLayout from '../layout/FormLayout';
 import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import { IAddress } from '@/types/address';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -151,15 +152,22 @@ const InstituteForm: React.FC<Props> = ({
             ]}
           >
             <Select
-              options={addresses.map((addr) => ({
-                label: addr.name,
-                value: addr.id,
-              }))}
+            showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
               placeholder={t(LOCALE_KEYS.SELECT_NAME, {
                 name: t(LOCALE_KEYS.ADDRESS),
               })}
               style={{ width: '100%' }}
-            />
+            >
+              {addresses.map((addr:IAddress) => (
+                <Select.Option key={addr.id} value={addr.id}>
+                  {addr?.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
         </Col>
         <Col>

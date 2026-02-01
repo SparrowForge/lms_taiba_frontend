@@ -141,7 +141,7 @@ export default function CourseAssignmentsPage() {
       delete params.limit;
       loadCourseAssignments({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
-    onQuickAdd: handleCreateDrawer,
+    // onQuickAdd: handleCreateDrawer,
     items: courseAssignments,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
@@ -216,7 +216,7 @@ export default function CourseAssignmentsPage() {
         key: 'course',
         render: (courseAssignment: ICourseAssignment) => (
           <span>
-            {courseAssignment.course.name} ({courseAssignment.course.code})
+            {courseAssignment?.course?.name} ({courseAssignment?.course?.code})
           </span>
         ),
       },
@@ -225,7 +225,7 @@ export default function CourseAssignmentsPage() {
         key: 'subject',
         render: (courseAssignment: ICourseAssignment) => (
           <span>
-            {courseAssignment.subject.name} ({courseAssignment.subject.code})
+            {courseAssignment?.subject?.name} ({courseAssignment?.subject?.code})
           </span>
         ),
       },
