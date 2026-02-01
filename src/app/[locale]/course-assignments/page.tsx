@@ -216,7 +216,7 @@ export default function CourseAssignmentsPage() {
         key: 'course',
         render: (courseAssignment: ICourseAssignment) => (
           <span>
-            {courseAssignment.course.name} ({courseAssignment.course.code})
+            {courseAssignment?.course?.name} ({courseAssignment?.course?.code})
           </span>
         ),
       },
@@ -225,7 +225,7 @@ export default function CourseAssignmentsPage() {
         key: 'subject',
         render: (courseAssignment: ICourseAssignment) => (
           <span>
-            {courseAssignment.subject.name} ({courseAssignment.subject.code})
+            {courseAssignment?.subject?.name} ({courseAssignment?.subject?.code})
           </span>
         ),
       },

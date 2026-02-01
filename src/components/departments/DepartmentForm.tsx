@@ -133,8 +133,8 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           >
             <Select
               placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BRANCH) })}
-              loading={branches.length === 0}
               showSearch
+              optionFilterProp="children"
               filterOption={(input, option) =>
                 (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
               }
@@ -142,7 +142,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
             >
               {branches.map((branch) => (
                 <Select.Option key={branch.id} value={branch.id}>
-                  {branch.name} ({branch.code})
+                  {branch?.name}
                 </Select.Option>
               ))}
             </Select>

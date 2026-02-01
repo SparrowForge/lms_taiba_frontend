@@ -151,15 +151,22 @@ const InstituteForm: React.FC<Props> = ({
             ]}
           >
             <Select
-              options={addresses.map((addr) => ({
-                label: addr.name,
-                value: addr.id,
-              }))}
+            showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
               placeholder={t(LOCALE_KEYS.SELECT_NAME, {
                 name: t(LOCALE_KEYS.ADDRESS),
               })}
               style={{ width: '100%' }}
-            />
+            >
+              {addresses.map((addr) => (
+                <Select.Option key={addr.id} value={addr.id}>
+                  {addr?.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
         </Col>
         <Col>
