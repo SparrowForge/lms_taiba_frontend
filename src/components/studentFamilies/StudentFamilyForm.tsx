@@ -133,7 +133,7 @@ const StudentFamilyForm: React.FC<StudentFamilyFormProps> = ({
                 String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
               }
               options={students.map((student) => ({
-                label: student.name,
+                label: student.firstName + ' ' + student.lastName,
                 value: student.id,
               }))}
               style={{ width: '100%' }}
@@ -291,7 +291,7 @@ const StudentFamilyForm: React.FC<StudentFamilyFormProps> = ({
           mode="multiple"
           placeholder={t(LOCALE_KEYS.SELECT_SIBLINGS, { defaultValue: 'Select siblings' })}
           options={students.map((student) => ({
-            label: student.name,
+            label: student.firstName + ' ' + student.lastName,
             value: student.id,
           }))}
         />

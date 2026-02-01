@@ -21,6 +21,7 @@ import AddressFormDrawer from '../addresses/AddressFormDrawer';
 import FormLayout from '../layout/FormLayout';
 import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
+import { IAddress } from '@/types/address';
 
 interface Props {
   mode: 'create' | 'edit';
@@ -161,7 +162,7 @@ const InstituteForm: React.FC<Props> = ({
               })}
               style={{ width: '100%' }}
             >
-              {addresses.map((addr) => (
+              {addresses.map((addr:IAddress) => (
                 <Select.Option key={addr.id} value={addr.id}>
                   {addr?.name}
                 </Select.Option>
