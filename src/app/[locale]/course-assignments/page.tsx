@@ -141,7 +141,7 @@ export default function CourseAssignmentsPage() {
       delete params.limit;
       loadCourseAssignments({ page: 1, limit: parseInt(limit ?? '10'), ...params, search: searchText });
     },
-    onQuickAdd: handleCreateDrawer,
+    // onQuickAdd: handleCreateDrawer,
     items: courseAssignments,
     itemsCount: pagination?.total ?? 0,
     loading: listStatus.status === Status.LOADING,
