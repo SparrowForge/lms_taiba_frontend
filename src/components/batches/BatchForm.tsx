@@ -1,39 +1,41 @@
 'use client';
 
 import {
-    Button,
-    Card,
-    Col,
-    DatePicker,
-    Divider,
-    Form,
-    Input,
-    InputNumber,
-    Row,
-    Select,
-    Space,
-    Switch,
-    Typography,
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+  Switch,
+  Typography,
 } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
-import {ENTITY_STATUS_OPTIONS} from '@/constants/statusOptions';
-import {SemesterStatus, Status} from '@/enums';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import { SemesterStatus, Status } from '@/enums';
 
-import {useBatches} from '@/hooks/useBatches';
-import {useCourses} from '@/hooks/useCourses';
-import {useLocalization} from '@/hooks/useLocalization';
+import { useBatches } from '@/hooks/useBatches';
+import { useCourses } from '@/hooks/useCourses';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate} from '@/types/batch';
-import {ICourse} from '@/types/course';
-import {getErrorMessage} from '@/types/errors';
-import {ISemesterCreate} from '@/types/semester';
+import { IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate } from '@/types/batch';
+import { ICourse } from '@/types/course';
+import { getErrorMessage } from '@/types/errors';
+import { ISemesterCreate } from '@/types/semester';
 
-import {StatusSelectFormItem} from '../ui/StatusSelect';
+import { StatusSelectFormItem } from '../ui/StatusSelect';
+import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
+import CourseFormDrawer from '../courses/CourseFormDrawer';
 
 // Local interface for semester form with duration (not submitted to backend)
 interface ISemesterFormData extends ISemesterCreate {
@@ -382,45 +384,65 @@ const BatchForm: React.FC<BatchFormProps> = ({
       initialValues={
         mode === 'edit'
           ? {
-              ...initialValues,
-              startDate: initialValues?.startDate ? dayjs(initialValues.startDate) : undefined,
-              endDate: initialValues?.endDate ? dayjs(initialValues.endDate) : undefined,
-              duration:
-                initialValues?.startDate && initialValues?.endDate
-                  ? dayjs(initialValues.endDate).diff(dayjs(initialValues.startDate), 'month')
-                  : undefined,
-            }
+            ...initialValues,
+            startDate: initialValues?.startDate ? dayjs(initialValues.startDate) : undefined,
+            endDate: initialValues?.endDate ? dayjs(initialValues.endDate) : undefined,
+            duration:
+              initialValues?.startDate && initialValues?.endDate
+                ? dayjs(initialValues.endDate).diff(dayjs(initialValues.startDate), 'month')
+                : undefined,
+          }
           : undefined
       }
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
-      <Form.Item
-        name="courseId"
-        label={t(LOCALE_KEYS.COURSE)}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
-          },
-        ]}
-      >
-        <Select
-          showSearch
-          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
-          }
-          onChange={handleCourseChange}
-        >
-          {courses.map((course) => (
-            <Select.Option key={course.id} value={course.id}>
-              {course.name} ({course.durationInSemesters} semesters)
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+
+      <Row gutter={8}>
+        <Col flex="auto">
+          <Form.Item name="courseId"
+            label={t(LOCALE_KEYS.COURSE)} rules={[
+              {
+                required: true,
+                message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
+              },
+            ]}>
+            <Select
+              showSearch
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              onChange={handleCourseChange}
+            >
+              {courses.map((course) => (
+                <Select.Option key={course.id} value={course.id}>
+                  {course.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label=" " colon={false}>
+            <QuickAddDrawerButton
+              drawerComponent={CourseFormDrawer}
+              drawerProps={{ mode: 'create' }}
+              onComplete={async (data) => {
+                await loadCourses();
+                if (data?.id) {
+                  form.setFieldsValue({ courseId: data.id });
+                }
+              }}
+              iconOnly
+              buttonType="dashed"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+
       <Form.Item
         name="name"
         label={t(LOCALE_KEYS.NAME)}

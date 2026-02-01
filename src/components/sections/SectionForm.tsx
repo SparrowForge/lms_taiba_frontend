@@ -140,7 +140,7 @@ const SectionForm: React.FC<SectionFormProps> = ({
             >
               {batches.map((batch) => (
                 <Select.Option key={batch.id} value={batch.id}>
-                  {batch.name} ({batch.code})
+                  {batch.name}
                 </Select.Option>
               ))}
             </Select>
