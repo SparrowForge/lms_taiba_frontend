@@ -167,7 +167,7 @@ const ExamCandidateForm: React.FC<ExamCandidateFormProps> = ({
               }
               options={students.map((student) => ({
                 value: student.id,
-                label: `${student.name} (${student.registrationNo})`,
+                label: `${student.firstName} (${student.registrationNo})`,
               }))}
               style={{ width: '100%' }}
             />
