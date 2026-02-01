@@ -204,8 +204,8 @@ export default function BatchesPage() {
             editText={t(LOCALE_KEYS.EDIT)}
             deleteText={t(LOCALE_KEYS.DELETE)}
             viewModalText={t(LOCALE_KEYS.QUICK_VIEW)}
-            onEdit={() => router.push(`/batches/${batch.id}/edit`)}
-            // onEditModal={handleEditDrawer}
+            // onEdit={() => router.push(`/batches/${batch.id}/edit`)}
+            onEditModal={handleEditDrawer}
             editModalText={t(LOCALE_KEYS.QUICK_EDIT)}
             onDelete={() => removeBatch(batch.id)}
             id={batch.id}
