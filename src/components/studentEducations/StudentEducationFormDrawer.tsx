@@ -10,6 +10,10 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { useStudentEducations } from '@/hooks/useStudentEducations';
 
 import StudentEducationForm from './StudentEducationForm';
+import { useParams } from 'next/navigation';
+import StudentEducationFormForStudent from './StudentEducationFormForStudent';
+import { useAuth } from '@/hooks/useAuth';
+import { UserType } from '@/enums/user-type.enum';
 
 interface StudentEducationFormDrawerProps {
   mode: 'create' | 'edit';
@@ -30,6 +34,8 @@ const StudentEducationFormDrawer: React.FC<StudentEducationFormDrawerProps> = ({
     useStudentEducations();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_EDUCATION, { defaultValue: 'Student Education' });
+  const { id } = useParams()
+  const { user } = useAuth()
 
   useEffect(() => {
     if (visible && mode === 'edit' && studentEducationId) {
@@ -63,14 +69,23 @@ const StudentEducationFormDrawer: React.FC<StudentEducationFormDrawerProps> = ({
       onClose={handleCancel}
       destroyOnHidden={true}
     >
-      <StudentEducationForm
-        mode={mode}
-        studentEducationId={studentEducationId}
-        initialValues={selectedStudentEducation || undefined}
-        onSuccess={handleSuccess}
-        onCancel={handleCancel}
-        embedded={true}
-      />
+      {
+        id || user?.type === UserType.STUDENT ? <StudentEducationFormForStudent
+          mode={mode}
+          studentEducationId={id || user?.student?.id}
+          initialValues={selectedStudentEducation || undefined}
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
+          embedded={true}
+        /> : <StudentEducationForm
+          mode={mode}
+          studentEducationId={studentEducationId}
+          initialValues={selectedStudentEducation || undefined}
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
+          embedded={true}
+        />
+      }
     </Drawer>
   );
 };
