@@ -109,12 +109,6 @@ export default function StudentAttendanceRecord() {
 
   return (
     <main style={{ marginBottom: '100px' }}>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Attendance Dashboard</h1>
-        <p className="text-gray-600 mt-1">
-          {data.student.firstName} {data.student.lastName} • {data.student.registrationNo}
-        </p>
-      </div>
 
       <AttendanceStats
         totalClasses={data.totalClasses}

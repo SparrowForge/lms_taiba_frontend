@@ -46,7 +46,7 @@ const StudentFamilyInfo = () => {
         setDrawerVisible(true);
     };
 
- 
+
     return (
         <>
             {
@@ -67,21 +67,34 @@ const StudentFamilyInfo = () => {
                 </Card> : <Card
                     className="rounded-lg"
                     title="Family Information"
-                     style={{marginBottom:"80px"}}
+                    style={{ marginBottom: "80px" }}
                 >
-                    {/* Father Info */}
-                    <div className="mb-6">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                            <UserOutlined />
-                            Father Information
-                        </h3>
 
-                        <Space direction="vertical" size="small">
-                            <span><strong>Name:</strong> {family.fatherName}</span>
-                            <span><HomeOutlined /> {family.fatherAddress}</span>
-                            <span><PhoneOutlined /> {family.fatherPhone}</span>
-                            <span><MailOutlined /> {family.fatherEmail}</span>
-                        </Space>
+                    {/* Father Info */}
+                    <div className='flex justify-between'>
+                        <div className="mb-6">
+                            <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                <UserOutlined />
+                                Father Information
+                            </h3>
+
+                            <Space direction="vertical" size="small">
+                                <span><strong>Name:</strong> {family.fatherName}</span>
+                                <span><HomeOutlined /> {family.fatherAddress}</span>
+                                <span><PhoneOutlined /> {family.fatherPhone}</span>
+                                <span><MailOutlined /> {family.fatherEmail}</span>
+                            </Space>
+                        </div>
+
+                        <Button
+                            type="primary"
+                            danger
+                            icon={<PlusOutlined />}
+                            onClick={handleCreateDrawer}
+                            className="flex items-center gap-2 justify-end"
+                        >
+                            Add Family Information
+                        </Button>
                     </div>
 
                     {/* Mother Info */}

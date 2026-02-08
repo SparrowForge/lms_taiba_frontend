@@ -106,7 +106,6 @@ const PaymentDetails = () => {
               strokeColor="#ff7a45"
               trailColor="#d9d9d9"
               showInfo={false}
-              size={['100%', 18]}
             />
             <div style={{ textAlign: 'right', marginTop: '8px', fontSize: '14px', fontWeight: 600 }}>
               {progressPercent}%

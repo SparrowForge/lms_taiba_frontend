@@ -2,7 +2,7 @@ import { Card, Progress, Empty } from 'antd';
 
 export function AttendanceBySubject({ subjects = [] }) {
   return (
-    <Card className="p-6 border-0">
+    <Card className="p-6 border-0 " >
       <h2 className="text-lg font-bold mb-4">Attendance by Subject</h2>
 
       {!subjects.length ? (

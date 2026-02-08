@@ -7,11 +7,15 @@ import { Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { MainLayout } from '@/components/layout/MainLayout';
+import StudentsResult from '@/components/result/StudentsResult';
+import { AcademicResultGrade } from '@/components/students/AcademicResultGrade';
 import BasicInformation from '@/components/students/BasicInformation';
 import ContactInformation from '@/components/students/ContactInformation';
 import EnrollmentInformation from '@/components/students/EnrollmentInformation';
+import PaymentDetails from '@/components/students/PaymentDetails';
 import PreviousAcademicHistory from '@/components/students/PreviousAcademicHistory';
 import ProfileTabs from '@/components/students/ProfileTabs';
+import StudentAttendanceRecord from '@/components/students/StudentAttendanceRecord';
 import { useCreateStudentDetailsConfig } from '@/components/students/studentConfig';
 import StudentFamilyInfo from '@/components/students/StudentFamilyInfo';
 import StudentHeader from '@/components/students/StudentHeader';
@@ -22,11 +26,11 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { useStudents } from '@/hooks/useStudents';
 
 import { IStudent } from '@/types/student';
-import StudentsResult from '@/components/result/StudentsResult';
+
 import { ActivityTimeline } from '../../../../components/students/ActivityTimeline';
-import { AcademicResultGrade } from '@/components/students/AcademicResultGrade';
-import PaymentDetails from '@/components/students/PaymentDetails';
-import StudentAttendanceRecord from '@/components/students/StudentAttendanceRecord';
+import StudentAcademicRecord from '@/components/students/StudentAcademicRecord';
+import StudentDocuments from '@/components/students/StudentDocuments';
+
 
 export default function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [activeTab, setActiveTab] = useState('personal')
@@ -63,21 +67,21 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
           <EnrollmentInformation student={selectedStudent} />
         </>)
       case 'guardian':
-        return (<>
-          <StudentFamilyInfo />
-        </>)
+        return <StudentFamilyInfo />
       case 'previous-data':
-        return (<>
-          <PreviousAcademicHistory />
-        </>)
-                  case 'grades':
-          return <AcademicResultGrade/>
-        case 'activity':
-          return <ActivityTimeline/>
-          case 'fees':
-          return <PaymentDetails/>
-                    case 'attendance':
-          return <StudentAttendanceRecord/>
+        return <PreviousAcademicHistory />
+      case 'documents':
+        return <StudentDocuments />
+      case 'academic':
+        return <StudentAcademicRecord />
+      case 'fees':
+        return <PaymentDetails />
+      case 'grades':
+        return <AcademicResultGrade />
+      case 'attendance':
+        return <StudentAttendanceRecord />
+      case 'activity':
+        return <ActivityTimeline />
 
 
     }

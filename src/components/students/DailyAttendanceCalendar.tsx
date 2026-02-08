@@ -20,7 +20,7 @@ export function DailyAttendanceCalendar({
   const offset = firstDay.day();
 
   return (
-    <Card className="p-6 border-0">
+    <Card className="p-6 border-0 " style={{marginTop:"32px"}}>
       <h2 className="text-lg font-bold mb-4">
         Daily Attendance – {month} {year}
       </h2>
