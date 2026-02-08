@@ -23,6 +23,10 @@ import { useStudents } from '@/hooks/useStudents';
 
 import { IStudent } from '@/types/student';
 import StudentsResult from '@/components/result/StudentsResult';
+import { ActivityTimeline } from '../../../../components/students/ActivityTimeline';
+import { AcademicResultGrade } from '@/components/students/AcademicResultGrade';
+import PaymentDetails from '@/components/students/PaymentDetails';
+import StudentAttendanceRecord from '@/components/students/StudentAttendanceRecord';
 
 export default function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [activeTab, setActiveTab] = useState('personal')
@@ -66,8 +70,15 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
         return (<>
           <PreviousAcademicHistory />
         </>)
-        case 'grades':
-          return <StudentsResult/>
+                  case 'grades':
+          return <AcademicResultGrade/>
+        case 'activity':
+          return <ActivityTimeline/>
+          case 'fees':
+          return <PaymentDetails/>
+                    case 'attendance':
+          return <StudentAttendanceRecord/>
+
 
     }
   }
