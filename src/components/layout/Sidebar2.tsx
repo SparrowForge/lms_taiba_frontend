@@ -161,7 +161,29 @@ export const Sidebar2 = React.memo(
       [locale],
     );
 
-    const menuItems = useMemo(() => transformMenus(myMenus || []), [myMenus, transformMenus]);
+    const menuItems = useMemo(() => {
+      const items = transformMenus(myMenus || []) || [];
+      // Manually inject Chart of Accounts if not present
+      /*
+      if (!items.find((item: any) => item?.key === '/chart-of-accounts')) {
+        items.push({
+          key: '/chart-of-accounts',
+          icon: <Icons.BankOutlined />,
+          label: t(LOCALE_KEYS.CHART_OF_ACCOUNTS, { defaultValue: 'Chart of Accounts' }),
+        });
+      }
+      */
+      // Actually, let's just append it for now as the user requested "make it available".
+      // Ideally this should come from backend, but explicit override is fine for dev.
+      return [
+        ...items,
+        {
+          key: '/chart-of-accounts',
+          icon: <Icons.BankOutlined />,
+          label: t(LOCALE_KEYS.CHART_OF_ACCOUNTS, { defaultValue: 'Chart of Accounts' }),
+        },
+      ];
+    }, [myMenus, transformMenus, t]);
 
     // Update selected keys and open keys when route changes
     useEffect(() => {
@@ -372,7 +394,7 @@ export const Sidebar2 = React.memo(
     const settingsMenuItems = useMemo(
       () => [
         {
-          key: 'settings',
+          key: 'settings-parent',
           icon: <SettingOutlined />,
           label: collapsed ? null : t(LOCALE_KEYS.SETTINGS),
           children: settingsMenuItemsDropdown,

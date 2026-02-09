@@ -21,8 +21,8 @@ export const ALLOWED_ROUTES = [
   '/settings',
   '/settings/profile',
   '/notifications',
-  '/attendances'
-  
+  '/attendances',
+  '/chart-of-accounts',
 ];
 
 /**
@@ -32,17 +32,14 @@ export const ALLOWED_ROUTES = [
 export const STUDENT_ALLOWED_ROUTES: string[] = [
   '/exam-instructions',
   '/participate-exam',
-  '/exam-complete'
+  '/exam-complete',
 ];
 
 /**
  * Root access allow routes for user type: faculty.
  * Paths listed here are allowed for faculty (add paths as needed).
  */
-export const FACULTY_ALLOWED_ROUTES: string[] = [
-  '/question-set',
-  '/result'
-];
+export const FACULTY_ALLOWED_ROUTES: string[] = ['/question-set', '/result'];
 
 /**
  * Removes locale prefix from pathname
@@ -79,9 +76,7 @@ export const matchesPattern = (route: string, pattern: string): boolean => {
   const normalizedPattern = normalizeRoute(pattern);
 
   // Convert pattern to regex (replace * with [^/]+)
-  const regexPattern = normalizedPattern
-    .replace(/\*/g, '[^/]+')
-    .replace(/\//g, '\\/');
+  const regexPattern = normalizedPattern.replace(/\*/g, '[^/]+').replace(/\//g, '\\/');
   const regex = new RegExp(`^${regexPattern}$`);
 
   return regex.test(normalizedRoute);
@@ -141,9 +136,7 @@ const isRouteInAllowList = (routeWithoutLocale: string, allowList: string[]): bo
     if (allowedRoute.includes('*')) {
       return matchesPattern(routeWithoutLocale, allowedRoute);
     }
-    return (
-      routeWithoutLocale === allowedRoute || routeWithoutLocale.startsWith(allowedRoute + '/')
-    );
+    return routeWithoutLocale === allowedRoute || routeWithoutLocale.startsWith(allowedRoute + '/');
   });
 };
 
@@ -181,9 +174,7 @@ export const isRouteAccessible = (
       return matchesPattern(routeWithoutLocale, allowedRoute);
     }
     // Exact match or prefix match
-    return (
-      routeWithoutLocale === allowedRoute || routeWithoutLocale.startsWith(allowedRoute + '/')
-    );
+    return routeWithoutLocale === allowedRoute || routeWithoutLocale.startsWith(allowedRoute + '/');
   });
 
   if (isAllowed) {
