@@ -22,6 +22,7 @@ export const ALLOWED_ROUTES = [
   '/settings/profile',
   '/notifications',
   '/event-types',
+  '/events',
   
 ];
 
