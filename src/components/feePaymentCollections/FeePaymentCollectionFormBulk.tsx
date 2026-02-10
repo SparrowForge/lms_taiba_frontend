@@ -22,8 +22,12 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
 import { PAYMENT_MODE_OPTIONS, PAYMENT_STATUS_OPTIONS } from '@/enums/payment.enum';
 
+import { useBatches } from '@/hooks/useBatches';
+import { useBranches } from '@/hooks/useBranches';
+import { useCourses } from '@/hooks/useCourses';
 import { useFeePaymentCollections } from '@/hooks/useFeePaymentCollections';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useSections } from '@/hooks/useSections';
 import { useStudents } from '@/hooks/useStudents';
 
 import { getErrorMessage } from '@/types/errors';
@@ -65,9 +69,20 @@ const FeePaymentCollectionFormBulk: React.FC<FeePaymentCollectionFormBulkProps> 
   });
   const router = useRouter();
   const searchParams = useSearchParams();
+  // ✅ CHANGED
+  const [studentFilter, setStudentFilter] = useState({
+    courseId: undefined as number | undefined,
+    batchId: undefined as number | undefined,
+    sectionId: undefined as number | undefined,
+  });
+
   const [form] = Form.useForm();
   const { actionStatus } = useFeePaymentCollections();
-  const { loadStudentWithFeeInfo, studentWithFeeInfo } = useStudents();
+  const { loadStudentWithFeeInfo, studentWithFeeInfo, students, loadStudents } = useStudents();
+  const { courses, loadCourses } = useCourses()
+  const { batches, loadBatches } = useBatches()
+  const { sections, loadSections } = useSections()
+
 
   // State for fee payment details rows
   const [feePaymentDetailsRows, setFeePaymentDetailsRows] = useState<FeePaymentDetailsRow[]>([]);
@@ -75,6 +90,39 @@ const FeePaymentCollectionFormBulk: React.FC<FeePaymentCollectionFormBulkProps> 
 
   // Get studentId from URL parameters
   const studentId = searchParams.get('studentId');
+
+  useEffect(() => {
+    loadCourses({ page: 1, limit: 99 })
+  }, [loadCourses])
+  useEffect(() => {
+    const { courseId } = studentFilter;
+    if (courseId) {
+      loadBatches({ page: 1, limit: 99, courseId })
+    }
+  }, [loadBatches, studentFilter])
+  useEffect(() => {
+    const { batchId } = studentFilter;
+    if (batchId) {
+      loadSections({ page: 1, limit: 99, batchId })
+    }
+  }, [loadSections, studentFilter])
+
+
+  useEffect(() => {
+    const { courseId, batchId, sectionId } = studentFilter;
+
+
+    if (courseId && batchId && sectionId ) {
+      loadStudents({
+        page: 1,
+        limit: 100,
+        courseId,
+        batchId,
+        sectionId,
+      });
+    }
+  }, [studentFilter, loadStudents]);
+
 
   // Load data on component mount
   useEffect(() => {
@@ -709,6 +757,122 @@ const FeePaymentCollectionFormBulk: React.FC<FeePaymentCollectionFormBulkProps> 
             <Form.Item name="feeStructureId" hidden>
               <Input value={studentFeeStructure?.id || 0} />
             </Form.Item>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item name="courseId"
+                  label={t(LOCALE_KEYS.COURSE)} rules={[
+                    {
+                      required: true,
+                      message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.COURSE) }),
+                    },
+                  ]}>
+                  <Select
+                    showSearch
+                    placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                    }
+                    onChange={(value) =>
+                      setStudentFilter((prev) => ({ ...prev, courseId: value })) // ✅ CHANGED
+                    }
+                  >
+                    {courses.map((course) => (
+                      <Select.Option key={course.id} value={course.id}>
+                        {course.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item name="batchId"
+                  label={t(LOCALE_KEYS.BATCH)} rules={[
+                    {
+                      required: true,
+                      message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.BATCH) }),
+                    },
+                  ]}>
+                  <Select
+                    showSearch
+                    placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                    }
+                    onChange={(value) =>
+                      setStudentFilter((prev) => ({ ...prev, batchId: value })) // ✅ CHANGED
+                    }
+                  >
+                    {batches.map((batch) => (
+                      <Select.Option key={batch.id} value={batch.id}>
+                        {batch.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item name="sectionId"
+                  label={t(LOCALE_KEYS.SECTION)} rules={[
+                    {
+                      required: true,
+                      message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.SECTION) }),
+                    },
+                  ]}>
+                  <Select
+                    showSearch
+                    placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SECTION) })}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                    }
+                    onChange={(value) =>
+                      setStudentFilter((prev) => ({ ...prev, sectionId: value })) // ✅ CHANGED
+                    }
+                  >
+                    {sections.map((section) => (
+                      <Select.Option key={section.id} value={section.id}>
+                        {section.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item name="studentId"
+                  label={t(LOCALE_KEYS.STUDENT)} rules={[
+                    {
+                      required: true,
+                      message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.STUDENT) }),
+                    },
+                  ]}>
+                  <Select
+                    showSearch
+                    placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.STUDENT) })}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+                    }
+                    onChange={(value) => {
+                      // ✅ CHANGED: update URL with studentId
+                      router.replace(`?studentId=${value}`);
+                    }}
+                  >
+                    {students.map((student) => (
+                      <Select.Option key={student.id} value={student.id}>
+                        {student.firstName}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+
+
 
             <Row gutter={16}>
               <Col span={12}>
