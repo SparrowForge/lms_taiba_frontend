@@ -2,6 +2,7 @@ import { EntityStatus } from '@/enums';
 
 import { ICourse } from './course';
 import { ISemester, ISemesterCreate, ISemesterUpdate } from './semester';
+import { ISectionCreate } from './section';
 
 export interface IBatch {
   id: number;
@@ -48,10 +49,11 @@ export interface IBatchUpdate {
   remarks?: string;
 }
 
-// New interface for creating batch with semesters
+// New interface for creating batch with semesters and optional sections
 export interface IBatchWithSemestersCreate {
   batch: IBatchCreate;
   semesters: Omit<ISemesterCreate, 'batchId'>[];
+  sections: Omit<ISectionCreate, 'batchId'>[];
 }
 
 // New interface for updating batch with semesters

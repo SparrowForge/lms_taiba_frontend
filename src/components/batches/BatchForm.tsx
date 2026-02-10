@@ -22,7 +22,7 @@ import { toast } from 'react-toastify';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { SemesterStatus, Status } from '@/enums';
+import { EntityStatus, SemesterStatus, Status } from '@/enums';
 
 import { useBatches } from '@/hooks/useBatches';
 import { useCourses } from '@/hooks/useCourses';
@@ -31,6 +31,7 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { IBatchCreate, IBatchUpdate, IBatchWithSemestersCreate } from '@/types/batch';
 import { ICourse } from '@/types/course';
 import { getErrorMessage } from '@/types/errors';
+import { ISectionCreate } from '@/types/section';
 import { ISemesterCreate } from '@/types/semester';
 
 import { StatusSelectFormItem } from '../ui/StatusSelect';
@@ -46,6 +47,9 @@ interface ISemesterFormData extends ISemesterCreate {
 interface IBatchFormData extends IBatchCreate {
   duration: number;
 }
+
+// Section form data for batch create (no batchId until batch is created)
+type ISectionFormData = Omit<ISectionCreate, 'batchId'>;
 
 const { Text } = Typography;
 
@@ -93,6 +97,8 @@ const BatchForm: React.FC<BatchFormProps> = ({
   const [selectedCourse, setSelectedCourse] = useState<ICourse | null>(null);
   const [semesters, setSemesters] = useState<ISemesterFormData[]>([]);
   const [showSemesterSection, setShowSemesterSection] = useState(false);
+  // Sections to create with batch (create mode only)
+  const [sections, setSections] = useState<ISectionFormData[]>([]);
 
   useEffect(() => {
     loadCourses({ page: 1, limit: 100 });
@@ -103,6 +109,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
       form.resetFields();
       setSelectedCourse(null);
       setSemesters([]);
+      setSections([]);
       setShowSemesterSection(false);
     }
   }, [mode, form]);
@@ -311,6 +318,30 @@ const BatchForm: React.FC<BatchFormProps> = ({
     }
   };
 
+  // Section helpers (create mode only)
+  const defaultSectionRow = (): ISectionFormData => ({
+    name: '',
+    code: '',
+    status: EntityStatus.ACTIVE,
+    remarks: '',
+  });
+
+  const addSection = () => {
+    setSections((prev) => [...prev, defaultSectionRow()]);
+  };
+
+  const removeSection = (index: number) => {
+    setSections((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateSection = (index: number, field: keyof ISectionFormData, value: string) => {
+    setSections((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  };
+
   // Recalculate semester dates when batch dates change
   const handleBatchDateChange = () => {
     // Only recalculate semesters in create mode
@@ -386,15 +417,29 @@ const BatchForm: React.FC<BatchFormProps> = ({
             creditHours: semester.creditHours,
           }));
 
-          // Create batch with semesters in single API call
+          // Prepare section data (only include sections with name and code)
+          const validSections = sections.filter((s) => (s.name ?? '').trim() && (s.code ?? '').trim());
+          const sectionData = validSections.map((s) => ({
+            name: s.name.trim(),
+            code: s.code.trim(),
+            status: s.status,
+            remarks: s.remarks ?? '',
+          }));
+
+          // Create batch with semesters (and optional sections) in single API call
           const batchWithSemestersData: IBatchWithSemestersCreate = {
             batch: payload as IBatchCreate,
             semesters: semesterData,
+            sections: sectionData,
           };
           await createBatchWithSemesters(batchWithSemestersData);
 
+          const sectionMsg =
+            sectionData.length > 0
+              ? ` and ${sectionData.length} section(s)`
+              : '';
           toast.success(
-            `${entityName} created successfully with ${validSemesters.length} semesters`,
+            `${entityName} created successfully with ${validSemesters.length} semesters${sectionMsg}`,
           );
         } else {
           // Create batch only (embedded mode or no semesters)
@@ -875,6 +920,82 @@ const BatchForm: React.FC<BatchFormProps> = ({
     </Card>
   );
 
+  const sectionSectionContent = (
+    <Card
+      title={`${t(LOCALE_KEYS.SECTIONS)} (${sections.length})`}
+      style={{ height: 'fit-content', marginTop: 24 }}
+      extra={
+        <Button type="dashed" size="small" onClick={addSection}>
+          + {t(LOCALE_KEYS.ADD_NAME, { name: t(LOCALE_KEYS.SECTION) })}
+        </Button>
+      }
+    >
+      <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
+        Add sections to create with this batch. Sections with name and code will be included.
+      </Text>
+      {sections.map((section, index) => (
+        <Card
+          key={index}
+          size="small"
+          style={{ marginBottom: 16 }}
+          title={`${t(LOCALE_KEYS.SECTION)} ${index + 1}`}
+          extra={
+            <Button
+              type="link"
+              danger
+              size="small"
+              onClick={() => removeSection(index)}
+            >
+              Remove
+            </Button>
+          }
+        >
+          <Row gutter={[16, 8]}>
+            <Col xs={24} sm={12}>
+              <Form.Item label={t(LOCALE_KEYS.NAME)} style={{ marginBottom: 8 }}>
+                <Input
+                  value={section.name}
+                  onChange={(e) => updateSection(index, 'name', e.target.value)}
+                  placeholder={t(LOCALE_KEYS.NAME)}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Form.Item label={t(LOCALE_KEYS.CODE)} style={{ marginBottom: 8 }}>
+                <Input
+                  value={section.code}
+                  onChange={(e) => updateSection(index, 'code', e.target.value)}
+                  placeholder={t(LOCALE_KEYS.CODE)}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Form.Item label={t(LOCALE_KEYS.STATUS)} style={{ marginBottom: 8 }}>
+                <Select
+                  value={section.status}
+                  onChange={(value) => updateSection(index, 'status', value)}
+                  style={{ width: '100%' }}
+                >
+                  <Select.Option value="active">Active</Select.Option>
+                  <Select.Option value="inactive">Inactive</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Form.Item label={t(LOCALE_KEYS.REMARKS)} style={{ marginBottom: 8 }}>
+                <Input
+                  value={section.remarks}
+                  onChange={(e) => updateSection(index, 'remarks', e.target.value)}
+                  placeholder={t(LOCALE_KEYS.REMARKS)}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Card>
+      ))}
+    </Card>
+  );
+
   // If embedded mode, return simple form
   if (embedded) {
     return batchFormContent;
@@ -895,6 +1016,8 @@ const BatchForm: React.FC<BatchFormProps> = ({
         <Col span={14}>
           {/* Semester section - only shown in create mode */}
           {showSemesterSection && semesterSectionContent}
+          {/* Sections card - only in create mode */}
+          {mode === 'create' && sectionSectionContent}
         </Col>
       </Row>
     </div>
