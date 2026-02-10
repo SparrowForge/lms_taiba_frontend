@@ -11,6 +11,7 @@ export const PUBLIC_ROUTES = [
   '/register-student',
   '/verify-2fa',
   '/reset-password',
+
 ];
 
 /**
@@ -21,6 +22,7 @@ export const ALLOWED_ROUTES = [
   '/settings',
   '/settings/profile',
   '/notifications',
+  '/dashboard'
   
 ];
 
