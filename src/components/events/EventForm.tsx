@@ -19,6 +19,10 @@ import EventTypeFormDrawer from '@/components/eventTypes/EventTypeFormDrawer';
 import { useEventTypes } from '@/hooks/useEventTypes';
 import { useEvents } from '@/hooks/useEvents';
 import { useLocalization } from '@/hooks/useLocalization';
+import { useCourses } from '@/hooks/useCourses';
+import { useBatches } from '@/hooks/useBatches';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSections } from '@/hooks/useSections';
 import { ACADEMIC_YEAR_OPTIONS } from '@/utils/academicYearOptions';
 
 import { getErrorMessage } from '@/types/errors';
@@ -47,6 +51,13 @@ const EventForm: React.FC<EventFormProps> = ({
   const [form] = Form.useForm();
   const { createEvent, editEvent, actionStatus } = useEvents();
   const { eventTypes, loadEventTypes } = useEventTypes();
+  const { courses, loadCourses } = useCourses();
+  const { batches, loadBatches } = useBatches();
+  const { semesters, loadSemesters } = useSemesters();
+  const { sections, loadSections } = useSections();
+
+  const selectedCourseId = Form.useWatch('courseId', form);
+  const selectedBatchId = Form.useWatch('batchId', form);
 
   useEffect(() => {
     loadEventTypes({ page: 1, limit: 100 });
@@ -57,6 +68,40 @@ const EventForm: React.FC<EventFormProps> = ({
       form.resetFields();
     }
   }, [mode, form]);
+
+  useEffect(() => {
+    loadCourses({ page: 1, limit: 100 });
+  }, [loadCourses]);
+
+  useEffect(() => {
+    if (selectedCourseId) {
+      loadBatches({ page: 1, limit: 100, courseId: selectedCourseId });
+    }
+  }, [selectedCourseId, loadBatches]);
+
+  useEffect(() => {
+    if (selectedBatchId) {
+      loadSemesters({ page: 1, limit: 100, batchId: selectedBatchId });
+      loadSections({ page: 1, limit: 100, batchId: selectedBatchId });
+    }
+  }, [selectedBatchId, loadSemesters, loadSections]);
+
+  const handleCourseChange = (courseId: number) => {
+    form.setFieldsValue({
+      courseId,
+      batchId: undefined,
+      semesterId: undefined,
+      sectionId: undefined,
+    });
+  };
+
+  const handleBatchChange = (batchId: number) => {
+    form.setFieldsValue({
+      batchId,
+      semesterId: undefined,
+      sectionId: undefined,
+    });
+  };
 
   const handleSubmit = async (values: Partial<IEvent>) => {
     try {
@@ -196,6 +241,102 @@ const EventForm: React.FC<EventFormProps> = ({
           options={ACADEMIC_YEAR_OPTIONS}
         />
       </Form.Item>
+
+      <Form.Item
+        name="courseId"
+        label={t(LOCALE_KEYS.COURSE)}
+      >
+        <Select
+          placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })}
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+          onChange={handleCourseChange}
+        >
+          {courses.map((course) => (
+            <Select.Option key={course.id} value={course.id}>
+              {course.name} {course.code ? `(${course.code})` : ''}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        name="batchId"
+        label={t(LOCALE_KEYS.BATCH)}
+      >
+        <Select
+          placeholder={
+            selectedCourseId
+              ? t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.BATCH) })
+              : 'Please select a course first'
+          }
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+          }
+          disabled={!selectedCourseId}
+          onChange={handleBatchChange}
+        >
+          {batches.map((batch) => (
+            <Select.Option key={batch.id} value={batch.id}>
+              {batch.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            name="semesterId"
+            label={t(LOCALE_KEYS.SEMESTER)}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SEMESTER) })}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)?.toLowerCase().includes(input.toLowerCase())
+              }
+              disabled={!selectedBatchId}
+            >
+              {semesters.map((semester) => (
+                <Select.Option key={semester.id} value={semester.id}>
+                  {semester.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            name="sectionId"
+            label={t(LOCALE_KEYS.SECTION)}
+          >
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SECTION) })}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)
+                  ?.toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              disabled={!selectedBatchId}
+            >
+              {sections.map((section) => (
+                <Select.Option key={section.id} value={section.id}>
+                  {section.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Row gutter={16}>
         <Col span={12}>

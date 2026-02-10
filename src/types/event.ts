@@ -14,8 +14,6 @@ export interface IEvent {
   startAt: string;
   endAt: string;
   isAllDay: boolean;
-  branchId?: number;
-  branch?: IBranch | null;
   courseId?: number;
   course?: ICourse | null;
   batchId?: number;
@@ -40,7 +38,6 @@ export interface IEventCreate {
   startAt: string;
   endAt: string;
   isAllDay: boolean;
-  branchId?: number;
   courseId?: number;
   batchId?: number;
   semesterId?: number;
@@ -58,7 +55,6 @@ export interface IEventUpdate {
   startAt?: string;
   endAt?: string;
   isAllDay?: boolean;
-  branchId?: number;
   courseId?: number;
   batchId?: number;
   semesterId?: number;
