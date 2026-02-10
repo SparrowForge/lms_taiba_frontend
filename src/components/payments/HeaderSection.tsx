@@ -1,3 +1,5 @@
+'use client';
+
 import { ExclamationOutlined } from '@ant-design/icons';
 import { Button, Card } from 'antd';
 import React from 'react';
@@ -6,8 +8,15 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
 import { useLocalization } from '@/hooks/useLocalization';
 
-const HeaderSection = () => {
+interface HeaderSectionProps {
+  title: string;
+  dueDate: string;
+  onPayNow?: () => void;
+}
+
+const HeaderSection: React.FC<HeaderSectionProps> = ({ title, dueDate, onPayNow }) => {
   const { t } = useLocalization();
+
   return (
     <Card
       style={{
@@ -26,12 +35,13 @@ const HeaderSection = () => {
           />
           <div className="ml-20">
             <h2 className="text-lg font-bold text-red-600">
-              {t(LOCALE_KEYS.PAYMENT_DUE)} : September Tuition
+              {t(LOCALE_KEYS.PAYMENT_DUE)} : {title}
             </h2>
-            <p className="text-sm text-gray-600">{t(LOCALE_KEYS.DUE_DATE)}: October 30, 2025</p>
+            <p className="text-sm text-gray-600">{t(LOCALE_KEYS.DUE_DATE)}: {dueDate}</p>
           </div>
         </div>
         <Button
+          onClick={onPayNow}
           style={{
             backgroundColor: '#fb2c36',
             color: '#ffffff',
