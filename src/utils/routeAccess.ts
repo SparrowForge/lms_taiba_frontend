@@ -22,8 +22,11 @@ export const ALLOWED_ROUTES = [
   '/settings',
   '/settings/profile',
   '/notifications',
-  '/dashboard'
-  
+  '/dashboard',
+  '/attendances',
+  '/event-types',
+  '/events',
+
 ];
 
 /**

@@ -85,14 +85,16 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
       }
     }
 
-    if (attendanceId) {
-      router.push(`/attendances/${attendanceId}/mark`);
-    } else {
-      // If no attendance exists, create new one with schedule and date info
-      const dateParam = clickedDate ? `&date=${dayjs(clickedDate).format('YYYY-MM-DD')}` : '';
-      router.push(`/attendances/create?scheduleId=${schedule.id}${dateParam}`);
-    }
-    onClose();
+    console.log("attendanceId", attendanceId)
+
+    // if (attendanceId) {
+    //   router.push(`/attendances/${attendanceId}/mark`);
+    // } else {
+    //   // If no attendance exists, create new one with schedule and date info
+    //   const dateParam = clickedDate ? `&date=${dayjs(clickedDate).format('YYYY-MM-DD')}` : '';
+    //   router.push(`/attendances/create?scheduleId=${schedule.id}${dateParam}`);
+    // }
+    // onClose();
   };
 
   // const handleCreateAssignment = () => {

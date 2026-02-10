@@ -41,6 +41,7 @@ export const useCreateSemesterDetailsConfig = (
       { key: 'id', label: 'ID' },
       { key: 'name', label: t(LOCALE_KEYS.NAME) },
       { key: 'termNo', label: t(LOCALE_KEYS.TERM_NO) },
+      { key: 'creditHours', label: t(LOCALE_KEYS.CREDIT_HOURS) },
       { key: 'startDate', label: t(LOCALE_KEYS.START_DATE) },
       { key: 'endDate', label: t(LOCALE_KEYS.END_DATE) },
       {

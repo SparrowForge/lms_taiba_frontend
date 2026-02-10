@@ -43,6 +43,18 @@ export const useCreateCourseDetailsConfig = (
         render: (value: string, item: ICourse) => item?.scheduleType?.name || 'N/A',
       },
       { key: 'durationInSemesters', label: t(LOCALE_KEYS.DURATION_IN_SEMESTERS) },
+      { key: 'durationInMonths', label: t(LOCALE_KEYS.DURATION_MONTHS) },
+      { key: 'totalCreditHours', label: t(LOCALE_KEYS.CREDIT_HOURS) },
+      {
+        key: 'summerTrainingRequired',
+        label: t(LOCALE_KEYS.SUMMER_TRAINING_REQUIRED),
+        render: (v: boolean) => (v == null ? '—' : v ? 'Yes' : 'No'),
+      },
+      {
+        key: 'summerAcceleration',
+        label: t(LOCALE_KEYS.SUMMER_ACCELERATION),
+        render: (v: boolean) => (v == null ? '—' : v ? 'Yes' : 'No'),
+      },
       { key: 'description', label: t(LOCALE_KEYS.DESCRIPTION) },
       { key: 'status', label: t(LOCALE_KEYS.STATUS) },
       { key: 'remarks', label: t(LOCALE_KEYS.REMARKS) },

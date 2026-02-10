@@ -24,6 +24,7 @@ import { useTranslations } from 'next-intl';
 import { useSemesters } from '@/hooks/useSemesters';
 import { useSubjects } from '@/hooks/useSubjects';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
+import SemesterSubjectManagement from '@/components/semesterSubjects/SemesterSubjectManagement';
 
 export default function SemesterSubjectsPage() {
   const { t } = useLocalization();
@@ -207,7 +208,7 @@ export default function SemesterSubjectsPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <AsyncErrorBoundary
+        {/* <AsyncErrorBoundary
           error={
             listStatus.status === Status.FAILED
               ? new Error(listStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName }))
@@ -216,7 +217,8 @@ export default function SemesterSubjectsPage() {
           onRetry={() => loadSemesterSubjects({ page: 1, limit: 10 })}
         >
           <EntityList config={config as EntityConfig<ISemesterSubject>} />
-        </AsyncErrorBoundary>
+        </AsyncErrorBoundary> */}
+        <SemesterSubjectManagement/>
 
         <SemesterSubjectFormDrawer
           mode={drawerMode}

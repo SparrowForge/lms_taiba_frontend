@@ -25,6 +25,8 @@ import examScheduleReducer from './slices/examScheduleSlice';
 import examReducer from './slices/examSlice';
 import examSubmissionReducer from './slices/examSubmissionSlice';
 import examTypeReducer from './slices/examTypeSlice';
+import eventReducer from './slices/eventSlice';
+import eventTypeReducer from './slices/eventTypeSlice';
 import facultyReducer from './slices/facultySlice';
 import facultySubjectReducer from './slices/facultySubjectSlice';
 import feeInstallmentPlanReducer from './slices/feeInstallmentPlanSlice';
@@ -108,6 +110,8 @@ export interface RootState {
   examSchedules: ReturnType<typeof examScheduleReducer>;
   examSubmissions: ReturnType<typeof examSubmissionReducer>;
   examTypes: ReturnType<typeof examTypeReducer>;
+  events: ReturnType<typeof eventReducer>;
+  eventTypes: ReturnType<typeof eventTypeReducer>;
   rooms: ReturnType<typeof roomReducer>;
   roomTypes: ReturnType<typeof roomTypeReducer>;
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
@@ -173,6 +177,8 @@ export const store = configureStore({
     examSchedules: examScheduleReducer,
     examSubmissions: examSubmissionReducer,
     examTypes: examTypeReducer,
+    events: eventReducer,
+    eventTypes: eventTypeReducer,
     rooms: roomReducer,
     roomTypes: roomTypeReducer,
     scheduleTypes: scheduleTypeReducer,

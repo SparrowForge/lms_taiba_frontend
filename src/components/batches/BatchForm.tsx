@@ -49,6 +49,22 @@ interface IBatchFormData extends IBatchCreate {
 
 const { Text } = Typography;
 
+import { ACADEMIC_YEAR_OPTIONS, getHijriYear, toArabicNumeral } from '@/utils/academicYearOptions';
+
+// Session two-year format; label: Gregorian (EN) | Hijri (AR)
+const SESSION_OPTIONS = (() => {
+  const startYear = new Date().getFullYear() - 1;
+  return Array.from({ length: 5 }, (_, i) => {
+    const y = startYear + i;
+    const en = `${y} - ${y + 1}`;
+    const hijri = `${getHijriYear(y)} - ${getHijriYear(y + 1)}`;
+    return {
+      value: en,
+      label: `${en}  |  ${toArabicNumeral(hijri)}`,
+    };
+  });
+})();
+
 interface BatchFormProps {
   mode: 'create' | 'edit';
   batchId?: number;
@@ -91,27 +107,68 @@ const BatchForm: React.FC<BatchFormProps> = ({
     }
   }, [mode, form]);
 
+  // Duration in months from selected course (read-only); fallback if durationInMonths not set
+  const getCourseDurationMonths = (course: ICourse) =>
+    course.durationInMonths ?? (course.durationInSemesters ?? 1) * 6;
+
   // Handle course selection and generate semesters
   const handleCourseChange = (courseId: number) => {
     const course = courses.find((c) => c.id === courseId);
     if (course) {
       setSelectedCourse(course);
-      // Only generate semesters in create mode
+      const durationMonths = getCourseDurationMonths(course);
+      form.setFieldsValue({ duration: durationMonths });
+      // Recalculate end date if start date is set
+      const startDate = form.getFieldValue('startDate');
+      if (startDate && durationMonths > 0) {
+        form.setFieldsValue({ endDate: dayjs(startDate).add(durationMonths, 'month') });
+        handleBatchDateChange();
+      }
+      // Only generate semesters in create mode; distribute course totalCreditHours if set
       if (mode === 'create') {
-        generateSemesters(course.durationInSemesters);
+        generateSemesters(
+          course.durationInSemesters,
+          course.totalCreditHours ?? undefined,
+        );
         setShowSemesterSection(true);
       }
     } else {
       setSelectedCourse(null);
       setSemesters([]);
       setShowSemesterSection(false);
+      form.setFieldsValue({ duration: undefined });
     }
   };
 
-  // Generate semester list based on course duration
-  const generateSemesters = (duration: number) => {
+  // In edit mode, set selectedCourse and duration from initial course when courses are loaded
+  useEffect(() => {
+    if (mode === 'edit' && initialValues?.courseId && courses.length > 0) {
+      const course = courses.find((c) => c.id === initialValues.courseId);
+      if (course) {
+        setSelectedCourse(course);
+        const durationMonths =
+          course.durationInMonths ?? (course.durationInSemesters ?? 1) * 6;
+        form.setFieldsValue({ duration: durationMonths });
+      }
+    }
+  }, [mode, initialValues?.courseId, courses, form]);
+
+  // Distribute total credit hours across count semesters (even split, remainder on first items)
+  const distributeCreditHours = (total: number, count: number): number[] => {
+    if (count <= 0 || total < 0) return [];
+    const base = Math.floor(total / count);
+    const remainder = total % count;
+    return Array.from({ length: count }, (_, i) => base + (i < remainder ? 1 : 0));
+  };
+
+  // Generate semester list based on course duration; distribute course totalCreditHours if set
+  const generateSemesters = (duration: number, totalCreditHours?: number) => {
     const newSemesters: ISemesterFormData[] = [];
     const batchStartDate = form.getFieldValue('startDate');
+    const creditPerSemester =
+      totalCreditHours != null && totalCreditHours > 0 && duration > 0
+        ? distributeCreditHours(totalCreditHours, duration)
+        : [];
 
     for (let i = 1; i <= duration; i++) {
       // Default duration for each semester (can be customized by user)
@@ -158,6 +215,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
         status: SemesterStatus.ACTIVE,
         remarks: '',
         isBreak: false,
+        creditHours: creditPerSemester[i - 1],
       });
     }
     setSemesters(newSemesters);
@@ -191,6 +249,24 @@ const BatchForm: React.FC<BatchFormProps> = ({
     return `Level ${termNo} ${startYear}`;
   };
 
+  // Redistribute credit hours when one semester changes: keep course total, spread rest
+  const redistributeCreditHours = (
+    list: ISemesterFormData[],
+    changedIndex: number,
+    newValue: number,
+  ) => {
+    const total = selectedCourse?.totalCreditHours;
+    if (total == null || total <= 0 || list.length <= 1) return;
+    const remaining = Math.max(0, total - newValue);
+    const otherIndices = list
+      .map((_, i) => i)
+      .filter((i) => i !== changedIndex);
+    const distributed = distributeCreditHours(remaining, otherIndices.length);
+    otherIndices.forEach((i, j) => {
+      list[i].creditHours = distributed[j];
+    });
+  };
+
   // Update semester data
   const updateSemester = (index: number, field: keyof ISemesterFormData, value: any) => {
     const updatedSemesters = [...semesters];
@@ -199,6 +275,11 @@ const BatchForm: React.FC<BatchFormProps> = ({
     // If duration is being updated, recalculate dates for this and subsequent semesters
     if (field === 'duration' && value > 0) {
       recalculateSemesterDates(updatedSemesters, index);
+    }
+
+    // If creditHours changed, redistribute remaining total across other semesters
+    if (field === 'creditHours' && typeof value === 'number') {
+      redistributeCreditHours(updatedSemesters, index, value);
     }
 
     setSemesters(updatedSemesters);
@@ -239,20 +320,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
     }
   };
 
-  // Handle duration change to calculate end date
-  const handleDurationChange = (duration: number | null) => {
-    if (duration && duration > 0) {
-      const startDate = form.getFieldValue('startDate');
-      if (startDate) {
-        const endDate = dayjs(startDate).add(duration, 'month');
-        form.setFieldValue('endDate', endDate);
-        // Trigger semester recalculation if needed
-        handleBatchDateChange();
-      }
-    }
-  };
-
-  // Handle start date change to recalculate end date if duration is set
+  // Handle start date change to recalculate end date if duration is set (from course)
   const handleStartDateChange = (date: any) => {
     const duration = form.getFieldValue('duration');
     if (duration && duration > 0) {
@@ -315,6 +383,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
             status: semester.status,
             remarks: semester.remarks,
             isBreak: semester.isBreak,
+            creditHours: semester.creditHours,
           }));
 
           // Create batch with semesters in single API call
@@ -479,7 +548,11 @@ const BatchForm: React.FC<BatchFormProps> = ({
               },
             ]}
           >
-            <InputNumber min={2000} max={2100} style={{ width: '100%' }} />
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.ACADEMIC_YEAR) })}
+              style={{ width: '100%' }}
+              options={ACADEMIC_YEAR_OPTIONS}
+            />
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -493,7 +566,11 @@ const BatchForm: React.FC<BatchFormProps> = ({
               },
             ]}
           >
-            <Input />
+            <Select
+              placeholder={t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.SESSION) })}
+              style={{ width: '100%' }}
+              options={SESSION_OPTIONS}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -508,16 +585,25 @@ const BatchForm: React.FC<BatchFormProps> = ({
                 required: true,
                 message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DURATION_MONTHS) }),
               },
-              { type: 'number', min: 1, message: 'Duration must be at least 1 month' },
-              { type: 'number', max: 120, message: 'Duration cannot exceed 120 months (10 years)' },
             ]}
+            extra={
+              !selectedCourse
+                ? t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) }) +
+                  ' to set duration (from course)'
+                : undefined
+            }
           >
             <InputNumber
               min={1}
               max={120}
               style={{ width: '100%' }}
-              placeholder="Enter duration in months"
-              onChange={handleDurationChange}
+              placeholder={
+                selectedCourse
+                  ? undefined
+                  : t(LOCALE_KEYS.SELECT_NAME, { name: t(LOCALE_KEYS.COURSE) })
+              }
+              disabled
+              readOnly
             />
           </Form.Item>
         </Col>
@@ -550,11 +636,12 @@ const BatchForm: React.FC<BatchFormProps> = ({
                 message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.END_DATE) }),
               },
             ]}
+            extra="Calculated from start date + course duration"
           >
             <DatePicker
               style={{ width: '100%' }}
               format="YYYY-MM-DD"
-              onChange={handleBatchDateChange}
+              disabled
             />
           </Form.Item>
         </Col>
@@ -649,11 +736,25 @@ const BatchForm: React.FC<BatchFormProps> = ({
         <div style={{ marginBottom: 16 }}>
           <Text strong>Course: {selectedCourse.name}</Text>
           <br />
-          <Text type="secondary">Duration: {selectedCourse.durationInSemesters} semesters</Text>
+          <Text type="secondary">
+            Duration: {getCourseDurationMonths(selectedCourse)} months
+            {selectedCourse.durationInSemesters != null && (
+              <> ({selectedCourse.durationInSemesters} semesters)</>
+            )}
+          </Text>
+          {selectedCourse.totalCreditHours != null && selectedCourse.totalCreditHours > 0 && (
+            <>
+              <br />
+              <Text type="secondary">
+                {t(LOCALE_KEYS.CREDIT_HOURS)} (total): {selectedCourse.totalCreditHours} —{' '}
+                distributed across semesters; change one to recalculate others.
+              </Text>
+            </>
+          )}
           <br />
           <Text type="secondary" style={{ fontSize: '12px' }}>
-            💡 Start and end dates are automatically calculated based on duration. Each semester
-            starts where the previous one ends.
+            💡 Start and end dates are automatically calculated based on course duration. Each
+            semester starts where the previous one ends.
           </Text>
         </div>
       )}
@@ -665,8 +766,9 @@ const BatchForm: React.FC<BatchFormProps> = ({
           style={{ marginBottom: 16 }}
           title={`Semester ${semester.termNo}`}
         >
-          <Row gutter={16}>
-            <Col span={8}>
+          {/* Line 1: Name, Term No, Duration (Months) */}
+          <Row gutter={[16, 8]}>
+            <Col xs={24} sm={12} md={10}>
               <Form.Item label={t(LOCALE_KEYS.NAME)} style={{ marginBottom: 8 }}>
                 <Input
                   value={semester.name}
@@ -675,7 +777,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
                 />
               </Form.Item>
             </Col>
-            <Col span={4}>
+            <Col xs={12} sm={6} md={4}>
               <Form.Item label={t(LOCALE_KEYS.TERM_NO)} style={{ marginBottom: 8 }}>
                 <InputNumber
                   value={semester.termNo}
@@ -686,7 +788,7 @@ const BatchForm: React.FC<BatchFormProps> = ({
                 />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={12} sm={6} md={10}>
               <Form.Item label={t(LOCALE_KEYS.DURATION_MONTHS)} style={{ marginBottom: 8 }}>
                 <InputNumber
                   value={semester.duration}
@@ -698,7 +800,22 @@ const BatchForm: React.FC<BatchFormProps> = ({
                 />
               </Form.Item>
             </Col>
-            <Col span={4}>
+          </Row>
+          {/* Line 2: Credit Hours, Is Break */}
+          <Row gutter={[16, 8]}>
+            <Col xs={12} sm={8} md={6}>
+              <Form.Item label={t(LOCALE_KEYS.CREDIT_HOURS)} style={{ marginBottom: 8 }}>
+                <InputNumber
+                  value={semester.creditHours}
+                  onChange={(value) => updateSemester(index, 'creditHours', value)}
+                  min={0}
+                  max={500}
+                  style={{ width: '100%', minWidth: 50 }}
+                  placeholder="—"
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={12} sm={8} md={4}>
               <Form.Item label={t(LOCALE_KEYS.IS_BREAK)} style={{ marginBottom: 8 }}>
                 <Switch
                   value={semester.isBreak}
