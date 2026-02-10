@@ -13,6 +13,7 @@ export interface ISemester {
   status: SemesterStatus;
   remarks: string;
   isBreak: boolean;
+  creditHours?: number;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -28,6 +29,7 @@ export interface ISemesterCreate {
   status: SemesterStatus;
   remarks: string;
   isBreak: boolean;
+  creditHours?: number;
 }
 
 export interface ISemesterUpdate {
@@ -39,6 +41,7 @@ export interface ISemesterUpdate {
   status?: SemesterStatus;
   remarks?: string;
   isBreak?: boolean;
+  creditHours?: number;
 }
 
 export interface ISemesterWithSubjectsAndFaculty extends ISemester {

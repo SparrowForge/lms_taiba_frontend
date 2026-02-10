@@ -12,6 +12,10 @@ export interface ICourse {
   courseTypeId: number;
   scheduleTypeId: number;
   durationInSemesters: number;
+  durationInMonths?: number;
+  totalCreditHours?: number;
+  summerTrainingRequired?: boolean;
+  summerAcceleration?: boolean;
   description: string;
   status: EntityStatus;
   remarks: string;
@@ -30,6 +34,10 @@ export interface ICourseCreate {
   courseTypeId: number;
   scheduleTypeId: number;
   durationInSemesters: number;
+  durationInMonths?: number;
+  totalCreditHours?: number;
+  summerTrainingRequired?: boolean;
+  summerAcceleration?: boolean;
   description: string;
   status: EntityStatus;
   remarks: string;
@@ -42,6 +50,10 @@ export interface ICourseUpdate {
   courseTypeId?: number;
   scheduleTypeId?: number;
   durationInSemesters?: number;
+  durationInMonths?: number;
+  totalCreditHours?: number;
+  summerTrainingRequired?: boolean;
+  summerAcceleration?: boolean;
   description?: string;
   status?: EntityStatus;
   remarks?: string;

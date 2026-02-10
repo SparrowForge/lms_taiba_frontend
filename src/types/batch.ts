@@ -1,7 +1,7 @@
 import { EntityStatus } from '@/enums';
 
 import { ICourse } from './course';
-import { ISemesterCreate, ISemesterUpdate } from './semester';
+import { ISemester, ISemesterCreate, ISemesterUpdate } from './semester';
 
 export interface IBatch {
   id: number;
@@ -19,6 +19,7 @@ export interface IBatch {
   updatedAt: string;
   deletedAt: string | null;
   course: ICourse;
+  semesters?: ISemester[];
 }
 
 export interface IBatchCreate {

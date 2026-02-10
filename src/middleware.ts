@@ -35,6 +35,7 @@ const protectedRoutes = [
   '/exam-results',
   '/exam-schedules',
   '/exam-types',
+  '/event-types',
   '/rooms',
   '/room-types',
   '/class-schedules',
