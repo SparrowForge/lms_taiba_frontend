@@ -13,32 +13,32 @@ import {
   Button,
   Space,
   Select,
-  Tag,
+
   Card,
-  Row,
-  Col,
+
 } from 'antd'
 import dayjs from 'dayjs'
+import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { ACADEMIC_YEAR_OPTIONS } from '@/utils/academicYearOptions'
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
-import ClassSchedulesSection from '@/components/dashboard/calendar/ClassSchedulesSection'
 import ListEventView from '@/components/dashboard/calendar/ListEventView'
 import MonthCalendarView from '@/components/dashboard/calendar/MonthCalendarView'
-import UpcomingEventsSection from '@/components/dashboard/calendar/UpcomingEventsSection'
 import WeekScheduleView from '@/components/dashboard/calendar/WeekScheduleView'
 import EventFormDrawer from '@/components/events/EventFormDrawer'
 import { MainLayout } from '@/components/layout/MainLayout'
 
 import { useBatches } from '@/hooks/useBatches'
+import { useClassSchedules } from '@/hooks/useClassSchedules'
 import { useCourses } from '@/hooks/useCourses'
 import { useEvents } from '@/hooks/useEvents'
 import { useEventTypes } from '@/hooks/useEventTypes'
-import { useClassSchedules } from '@/hooks/useClassSchedules'
 import { useExams } from '@/hooks/useExams'
-import { batch } from 'react-redux'
+
 
 
 
@@ -49,7 +49,8 @@ export default function Home() {
   const [currentDate, setCurrentDate] = useState(dayjs('2026-02-10'))
   const [selectedBatch, setSelectedBatch] = useState()
   const [selectedCourse, setSelectedCourse] = useState()
-  const [selectedYear, setSelectedYear] = useState('2025-2026')
+  const [selectedYear, setSelectedYear] = useState()
+  const [selectedEventType, setSelectedEventType] = useState<number | null>(null)
   const { events, loadEvents } = useEvents()
   const { courses, loadCourses } = useCourses()
   const { loadBatches, batches } = useBatches()
@@ -57,37 +58,74 @@ export default function Home() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedEventId, setSelectedEventId] = useState<number | undefined>();
   const { eventTypes, loadEventTypes } = useEventTypes()
-  const {classSchedules, loadClassSchedules} = useClassSchedules()
-  const {exams, loadExams} = useExams()
+  const { classSchedules, loadClassSchedules } = useClassSchedules()
+  const { exams, loadExams } = useExams()
+  const router = useRouter();
+  const pathname = usePathname()
 
-  useEffect(() => {
-    loadEvents({ page: 1, limit: 99 })
-  }, [loadEvents])
+
+
+  const searchParams = useSearchParams();
+  const skip = searchParams.get('skip');
+  const limit = searchParams.get('limit');
+
 
   useEffect(() => {
     loadCourses({ page: 1, limit: 99 })
   }, [loadCourses])
 
+
+
   useEffect(() => {
-    if (selectedCourse && selectedCourse) {
-      loadBatches({ page: 1, limit: 99, courseId: selectedCourse })
+    loadEventTypes({ page: 1, limit: 99, })
+  }, [loadEventTypes,])
+
+  useEffect(() => {
+    const params: any = {};
+
+
+    if (selectedYear) params.academicYear = selectedYear;
+    if (selectedEventType) params.eventTypeId = selectedEventType;
+
+    console.log(selectedEventType)
+    // Keep skip & limit if needed
+    if (skip) params.skip = skip;
+    if (limit) params.limit = limit;
+
+    // Update the URL without reloading the page
+    const searchParams = new URLSearchParams(params).toString();
+    router.replace(`?${searchParams}`);
+
+    // Load events and related data
+    loadEvents({ page: 1, limit: 10, ...params });
+    if (selectedBatch) {
+      loadClassSchedules({ page: 1, limit: 99, batchId: selectedBatch });
+      loadExams({ page: 1, limit: 99, batchId: selectedBatch });
     }
-  }, [loadBatches, selectedCourse])
+    if (selectedCourse) {
+      loadBatches({ page: 1, limit: 99, courseId: selectedCourse });
+    }
+  }, [selectedBatch, selectedCourse, selectedYear, selectedEventType, skip, limit, router, loadEvents, loadClassSchedules, loadExams, loadBatches]);
 
-  useEffect(() => {
-    loadEventTypes({ page: 1, limit: 99,  })
-  }, [loadEventTypes, ])
+  const hasFilters =
+    !!selectedYear ||
+    !!selectedCourse ||
+    !!selectedBatch ||
+    !!selectedEventType
 
-  useEffect(()=>{
-    loadClassSchedules({ page: 1, limit: 99, batchId: selectedBatch, })
-  },[loadClassSchedules, selectedBatch])
+  const handleClearFilters = () => {
+    // reset state
+    setSelectedYear(undefined)
+    setSelectedCourse(undefined)
+    setSelectedBatch(undefined)
+
+    // remove all query params
+    router.replace(pathname)
+    // reload base data
+    loadEvents({ page: 1, limit: 10 })
+  }
 
 
-  useEffect(()=>{
-    loadExams({ page: 1, limit: 99, batchId: selectedBatch })
-  },[loadExams, selectedBatch])
-
-  
 
   const handleCreateDrawer = () => {
     setSelectedEventId(undefined);
@@ -114,16 +152,19 @@ export default function Home() {
     setCurrentDate(dayjs())
   }
 
+
   const renderTabContent = () => {
     switch (viewType) {
       case 'week':
-        return <WeekScheduleView events={events} currentDate={currentDate} />
+        return <WeekScheduleView classSchedules={classSchedules} exams={exams} events={events} currentDate={currentDate} />
       case 'month':
-        return <MonthCalendarView events={events} currentDate={currentDate} />
+        return <MonthCalendarView classSchedules={classSchedules} exams={exams} events={events} currentDate={currentDate} />
       default:
-        return <ListEventView events={events} currentDate={currentDate} />
+        return <ListEventView classSchedules={classSchedules} exams={exams} events={events} currentDate={currentDate} />
     }
   }
+
+
 
   return (
     <ProtectedRoute>
@@ -202,6 +243,7 @@ export default function Home() {
                     value={selectedYear}
                     onChange={setSelectedYear}
                     style={{ width: 120 }}
+                    placeholder="Select Year"
                     options={ACADEMIC_YEAR_OPTIONS}
                   />
                   <Select
@@ -224,6 +266,15 @@ export default function Home() {
                       value: batch.id,
                     }))}
                   />
+                  {hasFilters && (
+                    <Button
+                      danger
+                      type="default"
+                      onClick={handleClearFilters}
+                    >
+                      Clear Filters
+                    </Button>
+                  )}
 
                 </div>
 
@@ -231,15 +282,22 @@ export default function Home() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-gray-700 font-medium">Event Types</span>
                   {eventTypes.map((type) => (
-                    <Button key={type.name}
+                    <Button
+                      key={type.name}
+                      onClick={() => setSelectedEventType(type.id)}
                       style={{
-                        color: type.color,
+                        color: selectedEventType === type.id ? '#fff' : type.color,
                         borderColor: type.color,
-                        backgroundColor: `${type.color}90`
+                        backgroundColor:
+                          selectedEventType === type.id
+                            ? type.color
+                            : `${type.color}20`, // light background when not selected
+                        fontWeight: selectedEventType === type.id ? 600 : 400,
                       }}
                     >
                       {type.name}
                     </Button>
+
                   ))}
                 </div>
               </div>
@@ -250,7 +308,7 @@ export default function Home() {
               {renderTabContent()}
             </Card>
 
-           
+
           </Content>
         </div>
         <EventFormDrawer

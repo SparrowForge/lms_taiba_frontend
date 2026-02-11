@@ -7,16 +7,20 @@ import { useEffect } from 'react'
 
 import { useEventTypes } from '@/hooks/useEventTypes'
 
+import { IClassSchedule } from '@/types/classSchedule'
 import { IEvent } from '@/types/event'
+import { IExam } from '@/types/exam'
 
 dayjs.extend(isBetween)
 
 interface ListEventViewProps {
   currentDate: any,
-  events: IEvent[]
+  events: IEvent[],
+  exams: IExam[],
+  classSchedules: IClassSchedule[]
 }
 
-export default function ListEventView({ currentDate, events }: ListEventViewProps) {
+export default function ListEventView({ currentDate, events, exams, classSchedules }: ListEventViewProps) {
   const { eventTypes, loadEventTypes } = useEventTypes()
 
   useEffect(() => {

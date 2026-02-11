@@ -8,7 +8,9 @@ import { useEffect, useMemo } from 'react'
 
 import { useEventTypes } from '@/hooks/useEventTypes'
 
+import { IClassSchedule } from '@/types/classSchedule'
 import { IEvent } from '@/types/event'
+import { IExam } from '@/types/exam'
 
 dayjs.extend(isBetween)
 dayjs.extend(utc)
@@ -16,11 +18,15 @@ dayjs.extend(utc)
 interface WeekScheduleViewProps {
   currentDate: Dayjs
   events: IEvent[]
+  exams: IExam[]
+  classSchedules: IClassSchedule[]
 }
 
 export default function WeekScheduleView({
   currentDate,
   events,
+  exams,
+  classSchedules
 }: WeekScheduleViewProps) {
   const { eventTypes, loadEventTypes } = useEventTypes()
 
@@ -51,13 +57,29 @@ export default function WeekScheduleView({
     [weekStart]
   )
 
-  // ✅ Correct multi-day + timezone-safe logic
+  // ✅ Correct multi-day + timezone-safe logic for events
   const getEventsForDay = (date: Dayjs) => {
     return events.filter((event) => {
       const start = dayjs.utc(event.startAt).local().startOf('day')
       const end = dayjs.utc(event.endAt).local().endOf('day')
 
       return date.isBetween(start, end, 'day', '[]')
+    })
+  }
+
+  // ✅ Filter class schedules for a specific day and time
+  const getClassSchedulesForDay = (date: Dayjs, time: string) => {
+    return classSchedules.filter((schedule) => {
+      const scheduleDayNumber = schedule.weekDay?.dayNumber
+      const dayNumber = date.day() === 0 ? 7 : date.day() // Sunday=0, adjust if your data uses 1-7
+
+      if (scheduleDayNumber !== dayNumber) return false
+
+      const slotTime = dayjs(schedule.timeSlot?.startTime, 'HH:mm:ss')
+      const cellTime = dayjs(time, ['hA']) // Convert table time to dayjs
+
+      // Check if hour matches (rough check)
+      return slotTime.hour() === cellTime.hour()
     })
   }
 
@@ -76,7 +98,6 @@ export default function WeekScheduleView({
         ),
       },
       ...days.map((day) => {
-        const dayEvents = getEventsForDay(day)
         const isToday = day.isSame(dayjs(), 'day')
 
         return {
@@ -97,14 +118,29 @@ export default function WeekScheduleView({
           dataIndex: `day-${day.format('YYYY-MM-DD')}`,
           key: `day-${day.format('YYYY-MM-DD')}`,
           align: 'center' as const,
-          render: () => (
-            <div
-              className={`min-h-20 border-r p-2 space-y-1 ${
-                isToday ? 'bg-orange-50' : ''
-              }`}
-            >
-              {dayEvents.length > 0 ? (
-                dayEvents.map((event) => {
+          render: (_: any, record: any) => {
+            const dayEvents = getEventsForDay(day)
+            const daySchedules = getClassSchedulesForDay(day, record.time)
+
+            return (
+              <div
+                className={`min-h-20 border-r p-2 space-y-1 ${
+                  isToday ? 'bg-orange-50' : ''
+                }`}
+              >
+                {/* Render class schedules */}
+                {daySchedules.map((schedule) => (
+                  <div
+                    key={`schedule-${schedule.id}`}
+                    className="text-xs px-2 py-1 rounded bg-blue-500 text-white truncate"
+                    title={`${schedule.subject?.name} - ${schedule.faculty?.fullName} (${schedule.timeSlot?.name})`}
+                  >
+                    {schedule.subject?.name} ({schedule.timeSlot?.name})
+                  </div>
+                ))}
+
+                {/* Render events */}
+                {dayEvents.map((event) => {
                   const typeInfo = eventTypes?.[event.eventTypeId] || {
                     label: 'Other',
                     color: '#808080',
@@ -112,7 +148,7 @@ export default function WeekScheduleView({
 
                   return (
                     <div
-                      key={`${event.id}-${day.format('YYYY-MM-DD')}`}
+                      key={`event-${event.id}`}
                       className="text-xs px-2 py-1 rounded text-white truncate"
                       style={{ backgroundColor: typeInfo.color }}
                       title={`${event.name} (${dayjs
@@ -126,16 +162,19 @@ export default function WeekScheduleView({
                       {event.name}
                     </div>
                   )
-                })
-              ) : (
-                <div className="text-xs text-gray-300">—</div>
-              )}
-            </div>
-          ),
+                })}
+
+                {/* Show placeholder if empty */}
+                {daySchedules.length === 0 && dayEvents.length === 0 && (
+                  <div className="text-xs text-gray-300">—</div>
+                )}
+              </div>
+            )
+          },
         }
       }),
     ]
-  }, [days, events, eventTypes])
+  }, [days, events, eventTypes, classSchedules])
 
   const data = times.map((time) => ({
     key: time,
