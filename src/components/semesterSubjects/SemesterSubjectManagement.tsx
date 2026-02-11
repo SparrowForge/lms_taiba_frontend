@@ -24,19 +24,27 @@ import {
 } from 'antd';
 import React, { useEffect } from 'react';
 
-export default function CurriculumManagement() {
-  const {courses, loadCourses} = useCourses()
-  const {batches, loadBatches} = useBatches()
+export default function CurriculumManagement({ handleCreateDrawer }) {
+  const { courses, loadCourses } = useCourses()
+  const { batches, loadBatches } = useBatches()
+  const [batchSelected, setBatchSelected] = React.useState(null)
+  const [courseSelected, setCourseSelected] = React.useState(null)
+  useEffect(() => {
+    loadCourses({ page: 1, limit: 100 })
+  }, [loadCourses])
 
-  useEffect(()=>{
-    loadCourses({page: 1, limit: 100})
-  },[loadCourses])
+  useEffect(() => {
+    if (courseSelected) {
+      loadBatches({ page: 1, limit: 100, courseId: courseSelected })
+    }
+  }, [courseSelected, loadBatches])
+
   return (
     <div
       style={{
-        height: '100vh',         
-        overflowY: 'auto',     
-        background: '#f5f5f5', 
+        height: '100vh',
+        overflowY: 'auto',
+        background: '#f5f5f5',
       }}
 
     >
@@ -62,10 +70,10 @@ export default function CurriculumManagement() {
             </div>
 
             <div style={{ display: 'flex', gap: '8px' }}>
-              <Button icon={<CopyOutlined />}>Duplicate</Button>
-              <Button icon={<DownloadOutlined />}>Export</Button>
-              <Button type="primary" icon={<PlusOutlined />}>
-                Add Subject
+              {/* <Button icon={<CopyOutlined />}>Duplicate</Button>
+              <Button icon={<DownloadOutlined />}>Export</Button> */}
+              <Button onClick={() => handleCreateDrawer()} type="primary" icon={<PlusOutlined />}>
+                Add Semester Subject
               </Button>
             </div>
           </div>
@@ -84,14 +92,24 @@ export default function CurriculumManagement() {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '12px' }}>
               Program
             </label>
-            <Select style={{ width: '100%' }} />
+            <Select
+              placeholder="Select Program"
+              value={courseSelected}
+              onChange={value => setCourseSelected(value)}
+              options={courses.map(course => ({ label: course.name, value: course.id }))}
+              style={{ width: '100%' }} />
           </div>
 
           <div style={{ flex: 1 }}>
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '12px' }}>
               Batch Context
             </label>
-            <Select style={{ width: '100%' }} />
+            <Select
+              placeholder="Select Batch Context"
+              value={batchSelected}
+              onChange={value => setBatchSelected(value)}
+              options={batches.map(batch => ({ label: batch.name, value: batch.id }))}
+              style={{ width: '100%' }} />
           </div>
 
           <div style={{ flex: 1 }}>

@@ -45,7 +45,8 @@ export const STUDENT_ALLOWED_ROUTES: string[] = [
  */
 export const FACULTY_ALLOWED_ROUTES: string[] = [
   '/question-set',
-  '/result'
+  '/result',
+  '/exams'
 ];
 
 /**

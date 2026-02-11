@@ -36,6 +36,9 @@ import { useBatches } from '@/hooks/useBatches'
 import { useCourses } from '@/hooks/useCourses'
 import { useEvents } from '@/hooks/useEvents'
 import { useEventTypes } from '@/hooks/useEventTypes'
+import { useClassSchedules } from '@/hooks/useClassSchedules'
+import { useExams } from '@/hooks/useExams'
+import { batch } from 'react-redux'
 
 
 
@@ -54,8 +57,8 @@ export default function Home() {
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedEventId, setSelectedEventId] = useState<number | undefined>();
   const { eventTypes, loadEventTypes } = useEventTypes()
-
-
+  const {classSchedules, loadClassSchedules} = useClassSchedules()
+  const {exams, loadExams} = useExams()
 
   useEffect(() => {
     loadEvents({ page: 1, limit: 99 })
@@ -72,10 +75,19 @@ export default function Home() {
   }, [loadBatches, selectedCourse])
 
   useEffect(() => {
-    loadEventTypes({ page: 1, limit: 99 })
-  }, [loadEventTypes])
+    loadEventTypes({ page: 1, limit: 99,  })
+  }, [loadEventTypes, ])
+
+  useEffect(()=>{
+    loadClassSchedules({ page: 1, limit: 99, batchId: selectedBatch, })
+  },[loadClassSchedules, selectedBatch])
 
 
+  useEffect(()=>{
+    loadExams({ page: 1, limit: 99, batchId: selectedBatch })
+  },[loadExams, selectedBatch])
+
+  
 
   const handleCreateDrawer = () => {
     setSelectedEventId(undefined);
