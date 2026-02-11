@@ -1,22 +1,22 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { useCreateBatchDetailsConfig } from '@/components/batches/batchConfig';
+import BatchDetailView from '@/components/batches/BatchDetailView';
+import { getBatchDisplayName } from '@/components/batches/batchConfig';
 import { MainLayout } from '@/components/layout/MainLayout';
-import { EntityDetails } from '@/components/ui/EntityDetails';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 import { useBatches } from '@/hooks/useBatches';
 import { useLocalization } from '@/hooks/useLocalization';
 
-import { IBatch } from '@/types/batch';
-
 export default function BatchDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const router = useRouter();
   const { selectedBatch, detailsStatus, loadBatch } = useBatches();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
@@ -24,24 +24,32 @@ export default function BatchDetailPage({ params }: { params: Promise<{ id: stri
   const resolvedParams = React.use(params);
   const batchId = parseInt(resolvedParams.id);
 
-  // Load batch if not already loaded
   useEffect(() => {
-    //getBatchById(batchId);
     loadBatch(batchId);
   }, [loadBatch, batchId]);
 
-  const config = useCreateBatchDetailsConfig(
-    selectedBatch,
-    detailsStatus.status === Status.LOADING,
+  const title = selectedBatch
+    ? getBatchDisplayName(selectedBatch)
+    : t(LOCALE_KEYS.DETAILS_NAME, { name: entityName });
+  const error =
     detailsStatus.status === Status.FAILED
       ? detailsStatus.message || t(LOCALE_KEYS.FAILED_NAME, { name: entityName })
-      : null,
-  );
+      : null;
 
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IBatch>} />
+        <PageHeader title={title} onBack={() => router.back()} />
+        <div style={{ margin: '8px', padding: '0 8px' }}>
+          <BatchDetailView
+            batch={selectedBatch}
+            loading={detailsStatus.status === Status.LOADING}
+            error={error}
+            entityName={entityName}
+            onBack={() => router.back()}
+            t={t}
+          />
+        </div>
       </MainLayout>
     </ProtectedRoute>
   );

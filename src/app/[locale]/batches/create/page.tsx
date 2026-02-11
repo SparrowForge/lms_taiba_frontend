@@ -25,7 +25,7 @@ const BatchCreatePage: React.FC = () => {
     <ProtectedRoute>
       <MainLayout>
         <PageHeader title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })} onBack={handleBack} />
-        <BatchForm mode="create" onCancel={handleBack} />
+        <BatchForm onCancel={handleBack} />
       </MainLayout>
     </ProtectedRoute>
   );
