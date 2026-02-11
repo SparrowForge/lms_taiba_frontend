@@ -4,13 +4,15 @@ import { Calendar } from 'antd'
 import dayjs, { Dayjs } from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import utc from 'dayjs/plugin/utc'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useEventTypes } from '@/hooks/useEventTypes'
 
 import { IClassSchedule } from '@/types/classSchedule'
 import { IEvent } from '@/types/event'
 import { IExam } from '@/types/exam'
+
+import { ScheduleDetailsDrawer } from '../schedule'
 
 dayjs.extend(isBetween)
 dayjs.extend(utc)
@@ -29,6 +31,21 @@ export default function MonthCalendarView({
   classSchedules
 }: MonthCalendarViewProps) {
   const { eventTypes, loadEventTypes } = useEventTypes()
+  const [selectedSchedule, setSelectedSchedule] = useState<IClassSchedule | null>(null);
+  const [clickedDate, setClickedDate] = useState<string | undefined>(undefined);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const handleScheduleClick = (schedule: IClassSchedule, date?: string) => {
+    setSelectedSchedule(schedule);
+    setClickedDate(date);
+    setDrawerVisible(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerVisible(false);
+    setSelectedSchedule(null);
+    setClickedDate(undefined);
+  };
 
   useEffect(() => {
     loadEventTypes({ page: 1, limit: 99 })
@@ -70,6 +87,7 @@ export default function MonthCalendarView({
         {/* Render class schedules first */}
         {dateSchedules.slice(0, 2).map((schedule) => (
           <div
+            onClick={() => handleScheduleClick(schedule)}
             key={`schedule-${schedule.id}-${date.format('YYYY-MM-DD')}`}
             className="text-xs px-1 py-0.5 rounded truncate text-white bg-blue-500"
             title={`${schedule.subject?.name} - ${schedule.faculty?.fullName} (${schedule.timeSlot?.name})`}
@@ -120,6 +138,12 @@ export default function MonthCalendarView({
         fullscreen
         value={currentDate}
         cellRender={(date) => renderCell(date)}
+      />
+      <ScheduleDetailsDrawer
+        schedule={selectedSchedule}
+        visible={drawerVisible}
+        onClose={handleCloseDrawer}
+        clickedDate={clickedDate}
       />
     </div>
   )

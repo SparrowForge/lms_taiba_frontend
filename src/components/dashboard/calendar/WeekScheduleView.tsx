@@ -4,13 +4,14 @@ import { Table } from 'antd'
 import dayjs, { Dayjs } from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import utc from 'dayjs/plugin/utc'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useEventTypes } from '@/hooks/useEventTypes'
 
 import { IClassSchedule } from '@/types/classSchedule'
 import { IEvent } from '@/types/event'
 import { IExam } from '@/types/exam'
+import { ScheduleDetailsDrawer } from '../schedule'
 
 dayjs.extend(isBetween)
 dayjs.extend(utc)
@@ -29,6 +30,21 @@ export default function WeekScheduleView({
   classSchedules
 }: WeekScheduleViewProps) {
   const { eventTypes, loadEventTypes } = useEventTypes()
+  const [selectedSchedule, setSelectedSchedule] = useState<IClassSchedule | null>(null);
+  const [clickedDate, setClickedDate] = useState<string | undefined>(undefined);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const handleScheduleClick = (schedule: IClassSchedule, date?: string) => {
+    setSelectedSchedule(schedule);
+    setClickedDate(date);
+    setDrawerVisible(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerVisible(false);
+    setSelectedSchedule(null);
+    setClickedDate(undefined);
+  };
 
   useEffect(() => {
     loadEventTypes({ page: 1, limit: 99 })
@@ -57,7 +73,7 @@ export default function WeekScheduleView({
     [weekStart]
   )
 
-  // ✅ Correct multi-day + timezone-safe logic for events
+
   const getEventsForDay = (date: Dayjs) => {
     return events.filter((event) => {
       const start = dayjs.utc(event.startAt).local().startOf('day')
@@ -67,7 +83,7 @@ export default function WeekScheduleView({
     })
   }
 
-  // ✅ Filter class schedules for a specific day and time
+
   const getClassSchedulesForDay = (date: Dayjs, time: string) => {
     return classSchedules.filter((schedule) => {
       const scheduleDayNumber = schedule.weekDay?.dayNumber
@@ -107,9 +123,8 @@ export default function WeekScheduleView({
                 {day.format('ddd')}
               </div>
               <div
-                className={`text-lg font-bold ${
-                  isToday ? 'text-orange-500' : 'text-gray-600'
-                }`}
+                className={`text-lg font-bold ${isToday ? 'text-orange-500' : 'text-gray-600'
+                  }`}
               >
                 {day.format('DD')}
               </div>
@@ -124,15 +139,15 @@ export default function WeekScheduleView({
 
             return (
               <div
-                className={`min-h-20 border-r p-2 space-y-1 ${
-                  isToday ? 'bg-orange-50' : ''
-                }`}
+                className={`min-h-20 border-r p-2 space-y-1 ${isToday ? 'bg-orange-50' : ''
+                  }`}
               >
                 {/* Render class schedules */}
                 {daySchedules.map((schedule) => (
                   <div
+                    onClick={() => handleScheduleClick(schedule)}
                     key={`schedule-${schedule.id}`}
-                    className="text-xs px-2 py-1 rounded bg-blue-500 text-white truncate"
+                    className="text-xs px-2 py-1 rounded bg-blue-500 text-white truncate cursor-pointer"
                     title={`${schedule.subject?.name} - ${schedule.faculty?.fullName} (${schedule.timeSlot?.name})`}
                   >
                     {schedule.subject?.name} ({schedule.timeSlot?.name})
@@ -155,16 +170,16 @@ export default function WeekScheduleView({
                         .utc(event.startAt)
                         .local()
                         .format('DD MMM')} - ${dayjs
-                        .utc(event.endAt)
-                        .local()
-                        .format('DD MMM')})`}
+                          .utc(event.endAt)
+                          .local()
+                          .format('DD MMM')})`}
                     >
                       {event.name}
                     </div>
                   )
                 })}
 
-                {/* Show placeholder if empty */}
+
                 {daySchedules.length === 0 && dayEvents.length === 0 && (
                   <div className="text-xs text-gray-300">—</div>
                 )}
@@ -191,6 +206,13 @@ export default function WeekScheduleView({
         bordered
         className="antd-week-schedule"
         scroll={{ x: 'max-content' }}
+      />
+
+      <ScheduleDetailsDrawer
+        schedule={selectedSchedule}
+        visible={drawerVisible}
+        onClose={handleCloseDrawer}
+        clickedDate={clickedDate}
       />
 
       <style jsx>{`

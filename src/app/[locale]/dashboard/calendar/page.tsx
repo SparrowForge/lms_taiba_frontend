@@ -125,8 +125,6 @@ export default function Home() {
     loadEvents({ page: 1, limit: 10 })
   }
 
-
-
   const handleCreateDrawer = () => {
     setSelectedEventId(undefined);
     setDrawerMode('create');
