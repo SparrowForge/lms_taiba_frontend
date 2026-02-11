@@ -1,7 +1,7 @@
 import { SemesterStatus } from '@/enums';
 
 import { IBatch } from './batch';
-import { ISubjectWithFaculty } from './subject';
+import { ISubject, ISubjectWithFaculty } from './subject';
 
 export interface ISemester {
   id: number;
@@ -18,6 +18,7 @@ export interface ISemester {
   updatedAt: string;
   deletedAt: string | null;
   batch: IBatch;
+  subjects: ISubject[];
 }
 
 export interface ISemesterCreate {
