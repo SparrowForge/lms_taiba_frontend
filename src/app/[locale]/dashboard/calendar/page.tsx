@@ -1,61 +1,94 @@
-"use client"
+'use client'
 
-import { BgColorsOutlined, CalendarOutlined, LeftOutlined, PlusOutlined, RightOutlined, UnorderedListOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Row, Select, Space, Tag } from 'antd';
-import { Content, Header } from 'antd/es/layout/layout';
-import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import {
+  CalendarOutlined,
+  UnorderedListOutlined,
+  BgColorsOutlined,
+  PlusOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from '@ant-design/icons'
+import {
+  Layout,
+  Button,
+  Space,
+  Select,
+  Tag,
+  Card,
+  Row,
+  Col,
+} from 'antd'
+import dayjs from 'dayjs'
+import { useEffect, useState } from 'react'
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import ClassScheduleCalendarView from '@/components/classSchedules/ClassScheduleCalendarView';
-import ClassSchedulesSection from '@/components/dashboard/calendar/ClassSchedulesSection';
-import ListEventView from '@/components/dashboard/calendar/ListEventView';
-import MonthCalendarView from '@/components/dashboard/calendar/MonthCalendarView';
-import UpcomingEventsSection from '@/components/dashboard/calendar/UpcomingEventsSection';
-import WeekScheduleView from '@/components/dashboard/calendar/WeekScheduleView';
-import { MainLayout } from '@/components/layout/MainLayout';
-import EventFormDrawer from '@/components/events/EventFormDrawer';
-import { useEvents } from '@/hooks/useEvents';
-import { ACADEMIC_YEAR_OPTIONS } from '@/utils/academicYearOptions';
-import { useCourses } from '@/hooks/useCourses';
-import { useBatches } from '@/hooks/useBatches';
+import { ACADEMIC_YEAR_OPTIONS } from '@/utils/academicYearOptions'
 
-const CalenderDashboard = () => {
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
+import ClassSchedulesSection from '@/components/dashboard/calendar/ClassSchedulesSection'
+import ListEventView from '@/components/dashboard/calendar/ListEventView'
+import MonthCalendarView from '@/components/dashboard/calendar/MonthCalendarView'
+import UpcomingEventsSection from '@/components/dashboard/calendar/UpcomingEventsSection'
+import WeekScheduleView from '@/components/dashboard/calendar/WeekScheduleView'
+import EventFormDrawer from '@/components/events/EventFormDrawer'
+import { MainLayout } from '@/components/layout/MainLayout'
+
+import { useBatches } from '@/hooks/useBatches'
+import { useCourses } from '@/hooks/useCourses'
+import { useEvents } from '@/hooks/useEvents'
+import { useEventTypes } from '@/hooks/useEventTypes'
+
+
+
+const { Content } = Layout
+
+export default function Home() {
+  const [viewType, setViewType] = useState('list')
+  const [currentDate, setCurrentDate] = useState(dayjs('2026-02-10'))
+  const [selectedBatch, setSelectedBatch] = useState()
+  const [selectedCourse, setSelectedCourse] = useState()
+  const [selectedYear, setSelectedYear] = useState('2025-2026')
+  const { events, loadEvents } = useEvents()
+  const { courses, loadCourses } = useCourses()
+  const { loadBatches, batches } = useBatches()
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
   const [selectedEventId, setSelectedEventId] = useState<number | undefined>();
-  const [viewType, setViewType] = useState('list')
-  const [currentDate, setCurrentDate] = useState(dayjs('2026-02-10'))
-  const [selectedCourse, setSelectedCourse] = useState('all')
-  const [selectedBatch, setSelectedBatch] = useState('all')
-  const [selectedYear, setSelectedYear] = useState()
-  const { events, listStatus, pagination, loadEvents, removeEvent } = useEvents();
-  const {courses, loadCourses} = useCourses()
-  const {batches, loadBatches} = useBatches()
+  const { eventTypes, loadEventTypes } = useEventTypes()
 
-  useEffect(()=>{
-    loadCourses({ page: 1, limit: 100 })
-  },[loadCourses])
 
-  useEffect(()=>{
-    if(selectedCourse !== 'all'){
-      const selectedCourseObj = courses.find(course => `course-${course.id}` === selectedCourse)
-      if(selectedCourseObj){
-        loadBatches({ page: 1, limit: 100, courseId: selectedCourseObj.id })
-      }
+
+  useEffect(() => {
+    loadEvents({ page: 1, limit: 99 })
+  }, [loadEvents])
+
+  useEffect(() => {
+    loadCourses({ page: 1, limit: 99 })
+  }, [loadCourses])
+
+  useEffect(() => {
+    if (selectedCourse && selectedCourse) {
+      loadBatches({ page: 1, limit: 99, courseId: selectedCourse })
     }
-  },[courses, loadBatches, selectedCourse])
+  }, [loadBatches, selectedCourse])
 
-  const eventTypes = [
-    { label: 'Holiday', color: '#52c41a' },
-    { label: 'Break', color: '#722ed1' },
-    { label: 'Registration', color: '#eb2f96' },
-    { label: 'Classes Start', color: '#da9917' },
-    { label: 'Midterm Exam', color: '#ff7a45' },
-    { label: 'Final Exam', color: '#da282b' },
-    { label: 'Grade Deadline', color: '#0f8585' },
-    { label: 'Withdrawal Deadline', color: '#a79210' },
-  ]
+  useEffect(() => {
+    loadEventTypes({ page: 1, limit: 99 })
+  }, [loadEventTypes])
+
+
+
+  const handleCreateDrawer = () => {
+    setSelectedEventId(undefined);
+    setDrawerMode('create');
+    setDrawerVisible(true);
+  };
+
+  const handleDrawerSuccess = () => {
+    setDrawerVisible(false);
+    loadEvents({ page: 1, limit: 10 });
+  };
+
+
 
   const handlePrevMonth = () => {
     setCurrentDate(currentDate.subtract(1, 'month'))
@@ -72,52 +105,41 @@ const CalenderDashboard = () => {
   const renderTabContent = () => {
     switch (viewType) {
       case 'week':
-        return <WeekScheduleView currentDate={currentDate} />
+        return <WeekScheduleView events={events} currentDate={currentDate} />
       case 'month':
-        return <MonthCalendarView currentDate={currentDate} />
+        return <MonthCalendarView events={events} currentDate={currentDate} />
       default:
-        return <ListEventView currentDate={currentDate} />
+        return <ListEventView events={events} currentDate={currentDate} />
     }
   }
 
-  const handleCreateDrawer = () => {
-    setSelectedEventId(undefined);
-    setDrawerMode('create');
-    setDrawerVisible(true);
-  };
-
-  const handleDrawerSuccess = () => {
-    setDrawerVisible(false);
-    loadEvents({ page: 1, limit: 10 });
-  };
   return (
     <ProtectedRoute>
       <MainLayout>
-        {/* <div className="h-[95vh] overflow-y-auto">
-          <ClassScheduleCalendarView />
-        </div> */}
-        <div className="h-[95vh] bg-white overflow-y-auto">
-          <div className="flex items-center justify-between px-8">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                Academic Calendar
-              </h1>
-              <p className="text-gray-600 text-sm">
-                View and manage all academic events, exams, holidays, and batch schedules
-              </p>
+        <div className="h-[95vh] overflow-y-auto bg-white">
+          <div className="bg-white border-b border-gray-200 px-8 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-1">
+                  Academic Calendar
+                </h1>
+                <p className="text-gray-600 text-sm">
+                  View and manage all academic events, exams, holidays, and batch schedules
+                </p>
+              </div>
+              <Space>
+                <Button type="primary" onClick={() => handleCreateDrawer()} icon={<PlusOutlined />}>
+                  Add Event
+                </Button>
+              </Space>
             </div>
-            <Space>
-              <Button onClick={() => handleCreateDrawer()} type="primary" icon={<PlusOutlined />}>
-                Add Event
-              </Button>
-            </Space>
           </div>
 
           <Content className="p-8">
-
+            {/* Navigation and Controls */}
             <Card className="mb-6 border-gray-200">
               <div className="flex flex-col gap-4">
-
+                {/* Date Navigation */}
                 <div className="flex items-center gap-4 flex-wrap">
                   <Space>
                     <Button
@@ -170,63 +192,55 @@ const CalenderDashboard = () => {
                     style={{ width: 120 }}
                     options={ACADEMIC_YEAR_OPTIONS}
                   />
-
                   <Select
                     value={selectedCourse}
                     onChange={setSelectedCourse}
                     style={{ width: 150 }}
-                    options={[
-                      { label: 'All Courses', value: 'all' },
-                      ...courses.map(course => ({ label: course.name, value: course.id }))
-                    ]}
+                    placeholder="Select Course"
+                    options={courses.map((course) => ({
+                      label: course.name,
+                      value: course.id,
+                    }))}
                   />
                   <Select
                     value={selectedBatch}
                     onChange={setSelectedBatch}
                     style={{ width: 150 }}
-                    options={batches.map(batch => ({ label: batch.name, value: batch.id }))}
+                    placeholder="Select Batch"
+                    options={batches.map((batch) => ({
+                      label: batch.name,
+                      value: batch.id,
+                    }))}
                   />
+
                 </div>
 
-
+                {/* Event Type Filter */}
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-gray-700 font-medium">Event Types:</span>
-
+                  <span className="text-gray-700 font-medium">Event Types</span>
                   {eventTypes.map((type) => (
-                    <Button
-                      key={type.label}
+                    <Button key={type.name}
                       style={{
-                        backgroundColor: type.color,
-                        color: '#fff',
+                        color: type.color,
                         borderColor: type.color,
+                        backgroundColor: `${type.color}90`
                       }}
-                      className="transition-all hover:opacity-80 hover:scale-105"
                     >
-                      {type.label}
+                      {type.name}
                     </Button>
                   ))}
                 </div>
-
               </div>
             </Card>
 
-
+            {/* Main Calendar View */}
             <Card className="mb-6 border-gray-200">
               {renderTabContent()}
             </Card>
 
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} lg={12}>
-                <ClassSchedulesSection />
-              </Col>
-              <Col xs={24} lg={12}>
-                <UpcomingEventsSection />
-              </Col>
-            </Row>
+           
           </Content>
         </div>
-
         <EventFormDrawer
           mode={drawerMode}
           eventId={selectedEventId}
@@ -236,7 +250,5 @@ const CalenderDashboard = () => {
         />
       </MainLayout>
     </ProtectedRoute>
-  );
-};
-
-export default CalenderDashboard;
+  )
+}

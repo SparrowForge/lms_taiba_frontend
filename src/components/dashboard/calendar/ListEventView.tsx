@@ -1,129 +1,115 @@
 'use client'
 
-import { Tag } from 'antd'
+import { Tag, Empty } from 'antd'
+import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
+import { useEffect } from 'react'
 
-interface Event {
-  id: string
-  title: string
-  type: string
-  dateRange: [string, string]
-  batch?: string
-  typeColor: string
-}
+import { useEventTypes } from '@/hooks/useEventTypes'
+
+import { IEvent } from '@/types/event'
+
+dayjs.extend(isBetween)
 
 interface ListEventViewProps {
-  currentDate: any
+  currentDate: any,
+  events: IEvent[]
 }
 
-export default function ListEventView({ currentDate }: ListEventViewProps) {
-  const mockEvents: Event[] = [
-    {
-      id: '1',
-      title: 'Registration Open - First Term',
-      type: 'Registration',
-      dateRange: ['Sep 1', 'Sep 7'],
-      typeColor: '#eb2f96',
-    },
-    {
-      id: '2',
-      title: 'Civil Engineering Batch 2025-A - Registration',
-      type: 'Registration',
-      dateRange: ['Sep 1', 'Sep 7'],
-      batch: 'Civil Engineering Batch 2025-A',
-      typeColor: '#eb2f96',
-    },
-    {
-      id: '3',
-      title: 'Electrical Engineering Batch 2025-B - Registration',
-      type: 'Registration',
-      dateRange: ['Sep 1', 'Sep 7'],
-      batch: 'Electrical Engineering Batch 2025-B',
-      typeColor: '#eb2f96',
-    },
-    {
-      id: '4',
-      title: 'National Day Holiday',
-      type: 'Holiday',
-      dateRange: ['Sep 23', 'Sep 23'],
-      typeColor: '#52c41a',
-    },
-    {
-      id: '5',
-      title: 'Midterm Examinations',
-      type: 'Midterm Exam',
-      dateRange: ['Oct 20', 'Oct 26'],
-      typeColor: '#ff7a45',
-    },
-  ]
+export default function ListEventView({ currentDate, events }: ListEventViewProps) {
+  const { eventTypes, loadEventTypes } = useEventTypes()
 
-  const groupedEvents = mockEvents.reduce(
+  useEffect(() => {
+    loadEventTypes({ page: 1, limit: 99 })
+  }, [loadEventTypes])
+
+  const groupedEvents = events.reduce(
     (acc, event) => {
-      const monthKey = 'September 2025'
+      const monthKey = dayjs(event.startAt).format('MMMM YYYY')
       if (!acc[monthKey]) {
         acc[monthKey] = []
       }
       acc[monthKey].push(event)
       return acc
     },
-    {} as Record<string, Event[]>
+    {} as Record<string, typeof events>
   )
+
+  if (events.length === 0) {
+    return <Empty description="No events found" />
+  }
 
   return (
     <div className="space-y-6">
-      {Object.entries(groupedEvents).map(([month, events]) => (
-        <div key={month}>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">{month}</h3>
-          <div className="space-y-3">
-            {events.map((event) => (
-              <div
-                key={event.id}
-                className="p-4 border-l-4 rounded-lg"
-                style={{ borderLeftColor: event.typeColor, backgroundColor: `${event.typeColor}15` }}
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-1">
-                      <h4 className="font-semibold text-gray-900">{event.title}</h4>
-                      <Tag color={event.typeColor} style={{ color: event.typeColor }}>
-                        {event.type}
-                      </Tag>
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      {event.dateRange[0]} - {event.dateRange[1]}
-                    </p>
-                    {event.batch && (
-                      <p className="text-xs text-gray-500 mt-2">{event.batch}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+      {Object.entries(groupedEvents)
+        .sort(([monthA], [monthB]) => {
+          return dayjs(monthA, 'MMMM YYYY').isBefore(
+            dayjs(monthB, 'MMMM YYYY')
+          )
+            ? -1
+            : 1
+        })
+        .map(([month, monthEvents]) => (
+          <div key={month}>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              {month}
+            </h3>
+            <div className="space-y-3">
+              {monthEvents.map((event) => {
+                const typeInfo = eventTypes[event.eventTypeId] || {
+                  label: 'Other',
+                  color: '#808080',
+                }
+                const startDate = dayjs(event.startAt).format('MMM D')
+                const endDate = dayjs(event.endAt).format('MMM D')
 
-      {/* October 2025 section */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">October 2025</h3>
-        <div className="space-y-3">
-          <div
-            className="p-4 border-l-4 rounded-lg"
-            style={{ borderLeftColor: '#ff7a45', backgroundColor: '#ff7a4515' }}
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-1">
-                  <h4 className="font-semibold text-gray-900">Midterm Examinations</h4>
-                  <Tag color="#ff7a45" style={{ color: '#ff7a45' }}>
-                    Midterm Exam
-                  </Tag>
-                </div>
-                <p className="text-sm text-gray-600">Oct 20 - Oct 26</p>
-              </div>
+                return (
+                  <div
+                    key={event.id}
+                    className="p-4 border-l-4 rounded-lg"
+                    style={{
+                      borderLeftColor: typeInfo.color,
+                      backgroundColor: `${typeInfo.color}15`,
+                    }}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-1 flex-wrap">
+                          <h4 className="font-semibold text-gray-900">
+                            {event.name}
+                          </h4>
+                          <Tag
+                            style={{
+                              color: typeInfo.color,
+                              borderColor: typeInfo.color,
+                              backgroundColor: `${typeInfo.color}80`
+                            }}
+                          >
+                            {typeInfo.name}
+                          </Tag>
+
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          {startDate} - {endDate}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <p className="text-xs text-gray-500">
+                            <span className="font-medium">Course:</span>{' '}
+                            {event.course?.name || 'N/A'}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            <span className="font-medium">Batch:</span>{' '}
+                            {event.batch?.name || 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
-        </div>
-      </div>
+        ))}
     </div>
   )
 }

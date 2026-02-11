@@ -1,91 +1,71 @@
 'use client'
 
-import { Calendar, } from 'antd'
-import dayjs from 'dayjs'
+import { Calendar } from 'antd'
+import dayjs, { Dayjs } from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
+import utc from 'dayjs/plugin/utc'
+import { useEffect } from 'react'
 
-import type { Dayjs } from 'dayjs'
+import { useEventTypes } from '@/hooks/useEventTypes'
 
-interface MonthEvent {
-  id: string
-  title: string
-  date: string
-  type: string
-  color: string
-}
+import { IEvent } from '@/types/event'
+
+dayjs.extend(isBetween)
+dayjs.extend(utc)
 
 interface MonthCalendarViewProps {
-  currentDate: any
+  currentDate: Dayjs
+  events: IEvent[]
 }
 
 export default function MonthCalendarView({
   currentDate,
+  events,
 }: MonthCalendarViewProps) {
-  const mockEvents: MonthEvent[] = [
-    {
-      id: '1',
-      title: 'Civil Engineering Batch 2025-A - Midterm E...',
-      date: '2026-02-24',
-      type: 'Midterm Exam',
-      color: '#ff7a45',
-    },
-    {
-      id: '2',
-      title: 'Civil Engineering Batch 2025-A - Midterm E...',
-      date: '2026-02-25',
-      type: 'Midterm Exam',
-      color: '#ff7a45',
-    },
-    {
-      id: '3',
-      title: 'Civil Engineering Batch 2025-A - Midterm E...',
-      date: '2026-02-26',
-      type: 'Midterm Exam',
-      color: '#ff7a45',
-    },
-    {
-      id: '4',
-      title: 'Civil Engineering Batch 2025-A - Midterm E...',
-      date: '2026-02-27',
-      type: 'Midterm Exam',
-      color: '#ff7a45',
-    },
-    {
-      id: '5',
-      title: 'Civil Engineering Batch 2025-A - Midterm E...',
-      date: '2026-02-28',
-      type: 'Midterm Exam',
-      color: '#ff7a45',
-    },
-  ]
+  const { eventTypes, loadEventTypes } = useEventTypes()
 
+  useEffect(() => {
+    loadEventTypes({ page: 1, limit: 99 })
+  }, [loadEventTypes])
+
+  // ✅ Safe + timezone correct
   const getDateEvents = (date: Dayjs) => {
-    return mockEvents.filter((event) =>
-      dayjs(event.date).isSame(date, 'day')
-    )
+    if (!date) return []
+
+    return events.filter((event) => {
+      const start = dayjs.utc(event.startAt).local().startOf('day')
+      const end = dayjs.utc(event.endAt).local().endOf('day')
+
+      return date.isBetween(start, end, 'day', '[]')
+    })
   }
 
-  const dateCellRender = (date: Dayjs) => {
-    const events = getDateEvents(date)
-
-    if (events.length === 0) {
-      return null
-    }
+  const renderCell = (date: Dayjs) => {
+    const dateEvents = getDateEvents(date)
 
     return (
-      <div className="space-y-1">
-        {events.slice(0, 2).map((event) => (
-          <div
-            key={event.id}
-            className="text-xs px-1 py-0.5 rounded truncate text-white"
-            style={{ backgroundColor: event.color }}
-            title={event.title}
-          >
-            {event.title}
-          </div>
-        ))}
-        {events.length > 2 && (
-          <div className="text-xs text-gray-600">
-            +{events.length - 2} more
+      <div className="space-y-1 min-h-[60px]">
+        {dateEvents.slice(0, 2).map((event) => {
+          const typeInfo = eventTypes?.[event.eventTypeId] || {
+            label: 'Other',
+            color: '#808080',
+          }
+
+          return (
+            <div
+              key={`${event.id}-${date.format('YYYY-MM-DD')}`}
+              className="text-xs px-1 py-0.5 rounded truncate text-white"
+              style={{ backgroundColor: typeInfo.color }}
+              title={event.name}
+            >
+              {event.name}
+            </div>
+          )
+        })}
+
+        {dateEvents.length > 2 && (
+          <div className="text-xs text-gray-600 font-medium">
+            +{dateEvents.length - 2} more
           </div>
         )}
       </div>
@@ -95,9 +75,9 @@ export default function MonthCalendarView({
   return (
     <div className="bg-white">
       <Calendar
-        fullscreen={true}
+        fullscreen
         value={currentDate}
-        dateCellRender={dateCellRender}
+        cellRender={(date) => renderCell(date)}  // ✅ FIXED
       />
     </div>
   )
