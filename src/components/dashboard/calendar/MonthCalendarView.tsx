@@ -31,27 +31,29 @@ export default function MonthCalendarView({
   classSchedules
 }: MonthCalendarViewProps) {
   const { eventTypes, loadEventTypes } = useEventTypes()
-  const [selectedSchedule, setSelectedSchedule] = useState<IClassSchedule | null>(null);
-  const [clickedDate, setClickedDate] = useState<string | undefined>(undefined);
-  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const [selectedSchedule, setSelectedSchedule] =
+    useState<IClassSchedule | null>(null)
+  const [clickedDate, setClickedDate] = useState<string | undefined>(undefined)
+  const [drawerVisible, setDrawerVisible] = useState(false)
 
   const handleScheduleClick = (schedule: IClassSchedule, date?: string) => {
-    setSelectedSchedule(schedule);
-    setClickedDate(date);
-    setDrawerVisible(true);
-  };
+    setSelectedSchedule(schedule)
+    setClickedDate(date)
+    setDrawerVisible(true)
+  }
 
   const handleCloseDrawer = () => {
-    setDrawerVisible(false);
-    setSelectedSchedule(null);
-    setClickedDate(undefined);
-  };
+    setDrawerVisible(false)
+    setSelectedSchedule(null)
+    setClickedDate(undefined)
+  }
 
   useEffect(() => {
     loadEventTypes({ page: 1, limit: 99 })
   }, [loadEventTypes])
 
-  // ✅ Safe + timezone correct
+  // ✅ Events (date range based)
   const getDateEvents = (date: Dayjs) => {
     if (!date) return []
 
@@ -63,11 +65,11 @@ export default function MonthCalendarView({
     })
   }
 
-  // ✅ Filter class schedules for a specific date
+  // ✅ Class schedules (weekly recurring)
   const getDateSchedules = (date: Dayjs) => {
     return classSchedules.filter((schedule) => {
       const scheduleDayNumber = schedule.weekDay?.dayNumber
-      const dayNumber = date.day() === 0 ? 7 : date.day() // Sunday=0 -> adjust to 7
+      const dayNumber = date.day() === 0 ? 7 : date.day() // Sunday fix
 
       if (scheduleDayNumber !== dayNumber) return false
 
@@ -78,36 +80,62 @@ export default function MonthCalendarView({
     })
   }
 
+  // ✅ Exams (single day + time)
+  const getDateExams = (date: Dayjs) => {
+    return exams.filter((exam) => {
+      const examDate = dayjs.utc(exam.examDatetime).local()
+      return examDate.isSame(date, 'day')
+    })
+  }
+
   const renderCell = (date: Dayjs) => {
-    const dateEvents = getDateEvents(date)
     const dateSchedules = getDateSchedules(date)
+    const dateExams = getDateExams(date)
+    const dateEvents = getDateEvents(date)
 
     return (
       <div className="space-y-1 min-h-[60px]">
-        {/* Render class schedules first */}
+
+        {/* 📘 Class Schedules */}
         {dateSchedules.slice(0, 2).map((schedule) => (
           <div
-            onClick={() => handleScheduleClick(schedule)}
             key={`schedule-${schedule.id}-${date.format('YYYY-MM-DD')}`}
-            className="text-xs px-1 py-0.5 rounded truncate text-white bg-blue-500"
-            title={`${schedule.subject?.name} - ${schedule.faculty?.fullName} (${schedule.timeSlot?.name})`}
+            onClick={() => handleScheduleClick(schedule, date.format('YYYY-MM-DD'))}
+            className="text-xs px-1 py-0.5 rounded truncate text-white bg-blue-500 cursor-pointer"
+            title={`${schedule.subject?.name} - ${schedule.timeSlot?.name}`}
           >
             {schedule.subject?.name} ({schedule.timeSlot?.name})
           </div>
         ))}
 
-        {/* If more than 2 schedules, show '+N more' */}
         {dateSchedules.length > 2 && (
           <div className="text-xs text-gray-600 font-medium">
             +{dateSchedules.length - 2} more
           </div>
         )}
 
-        {/* Render events */}
+        {/* 📝 Exams */}
+        {dateExams.slice(0, 2).map((exam) => (
+          <div
+            key={`exam-${exam.id}-${date.format('YYYY-MM-DD')}`}
+            className="text-xs px-1 py-0.5 rounded truncate text-white bg-red-500"
+            title={`${exam.name} • ${exam.subject?.name}`}
+          >
+            📝 {exam.examType?.name} - {exam.subject?.name}
+          </div>
+        ))}
+
+        {dateExams.length > 2 && (
+          <div className="text-xs text-gray-600 font-medium">
+            +{dateExams.length - 2} more
+          </div>
+        )}
+
+        {/* 📅 Events */}
         {dateEvents.slice(0, 2).map((event) => {
           const typeInfo = eventTypes?.[event.eventTypeId] || {
             label: 'Other',
-            color: '#808080',
+            color: '#808080'
           }
 
           return (
@@ -122,7 +150,6 @@ export default function MonthCalendarView({
           )
         })}
 
-        {/* If more than 2 events, show '+N more' */}
         {dateEvents.length > 2 && (
           <div className="text-xs text-gray-600 font-medium">
             +{dateEvents.length - 2} more
@@ -139,6 +166,7 @@ export default function MonthCalendarView({
         value={currentDate}
         cellRender={(date) => renderCell(date)}
       />
+
       <ScheduleDetailsDrawer
         schedule={selectedSchedule}
         visible={drawerVisible}

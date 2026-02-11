@@ -11,6 +11,7 @@ import { useEventTypes } from '@/hooks/useEventTypes'
 import { IClassSchedule } from '@/types/classSchedule'
 import { IEvent } from '@/types/event'
 import { IExam } from '@/types/exam'
+
 import { ScheduleDetailsDrawer } from '../schedule'
 
 dayjs.extend(isBetween)
@@ -30,39 +31,31 @@ export default function WeekScheduleView({
   classSchedules
 }: WeekScheduleViewProps) {
   const { eventTypes, loadEventTypes } = useEventTypes()
-  const [selectedSchedule, setSelectedSchedule] = useState<IClassSchedule | null>(null);
-  const [clickedDate, setClickedDate] = useState<string | undefined>(undefined);
-  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const [selectedSchedule, setSelectedSchedule] =
+    useState<IClassSchedule | null>(null)
+  const [clickedDate, setClickedDate] = useState<string | undefined>(undefined)
+  const [drawerVisible, setDrawerVisible] = useState(false)
 
   const handleScheduleClick = (schedule: IClassSchedule, date?: string) => {
-    setSelectedSchedule(schedule);
-    setClickedDate(date);
-    setDrawerVisible(true);
-  };
+    setSelectedSchedule(schedule)
+    setClickedDate(date)
+    setDrawerVisible(true)
+  }
 
   const handleCloseDrawer = () => {
-    setDrawerVisible(false);
-    setSelectedSchedule(null);
-    setClickedDate(undefined);
-  };
+    setDrawerVisible(false)
+    setSelectedSchedule(null)
+    setClickedDate(undefined)
+  }
 
   useEffect(() => {
     loadEventTypes({ page: 1, limit: 99 })
   }, [loadEventTypes])
 
   const times = [
-    '7AM',
-    '8AM',
-    '9AM',
-    '10AM',
-    '11AM',
-    '12PM',
-    '1PM',
-    '2PM',
-    '3PM',
-    '4PM',
-    '5PM',
-    '6PM',
+    '7AM', '8AM', '9AM', '10AM', '11AM', '12PM',
+    '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM', '8PM', '9PM', '10PM'
   ]
 
   // Start of week (Sunday)
@@ -73,29 +66,40 @@ export default function WeekScheduleView({
     [weekStart]
   )
 
-
+  // 📅 Events (date range based)
   const getEventsForDay = (date: Dayjs) => {
     return events.filter((event) => {
       const start = dayjs.utc(event.startAt).local().startOf('day')
       const end = dayjs.utc(event.endAt).local().endOf('day')
-
       return date.isBetween(start, end, 'day', '[]')
     })
   }
 
-
+  // 📘 Class schedules (weekly recurring)
   const getClassSchedulesForDay = (date: Dayjs, time: string) => {
     return classSchedules.filter((schedule) => {
       const scheduleDayNumber = schedule.weekDay?.dayNumber
-      const dayNumber = date.day() === 0 ? 7 : date.day() // Sunday=0, adjust if your data uses 1-7
+      const dayNumber = date.day() === 0 ? 7 : date.day()
 
       if (scheduleDayNumber !== dayNumber) return false
 
       const slotTime = dayjs(schedule.timeSlot?.startTime, 'HH:mm:ss')
-      const cellTime = dayjs(time, ['hA']) // Convert table time to dayjs
+      const cellTime = dayjs(time, ['hA'])
 
-      // Check if hour matches (rough check)
       return slotTime.hour() === cellTime.hour()
+    })
+  }
+
+  // 📝 Exams (exact date + hour)
+  const getExamsForDayAndTime = (date: Dayjs, time: string) => {
+    return exams.filter((exam) => {
+      const examDateTime = dayjs.utc(exam.examDatetime).local()
+      const cellTime = dayjs(time, ['hA'])
+
+      return (
+        examDateTime.isSame(date, 'day') &&
+        examDateTime.hour() === cellTime.hour()
+      )
     })
   }
 
@@ -123,8 +127,9 @@ export default function WeekScheduleView({
                 {day.format('ddd')}
               </div>
               <div
-                className={`text-lg font-bold ${isToday ? 'text-orange-500' : 'text-gray-600'
-                  }`}
+                className={`text-lg font-bold ${
+                  isToday ? 'text-orange-500' : 'text-gray-600'
+                }`}
               >
                 {day.format('DD')}
               </div>
@@ -136,25 +141,40 @@ export default function WeekScheduleView({
           render: (_: any, record: any) => {
             const dayEvents = getEventsForDay(day)
             const daySchedules = getClassSchedulesForDay(day, record.time)
+            const dayExams = getExamsForDayAndTime(day, record.time)
 
             return (
               <div
-                className={`min-h-20 border-r p-2 space-y-1 ${isToday ? 'bg-orange-50' : ''
-                  }`}
+                className={`min-h-20 border-r p-2 space-y-1 ${
+                  isToday ? 'bg-orange-50' : ''
+                }`}
               >
-                {/* Render class schedules */}
+                {/* 📘 Class schedules */}
                 {daySchedules.map((schedule) => (
                   <div
-                    onClick={() => handleScheduleClick(schedule)}
+                    onClick={() =>
+                      handleScheduleClick(schedule, day.format('YYYY-MM-DD'))
+                    }
                     key={`schedule-${schedule.id}`}
                     className="text-xs px-2 py-1 rounded bg-blue-500 text-white truncate cursor-pointer"
-                    title={`${schedule.subject?.name} - ${schedule.faculty?.fullName} (${schedule.timeSlot?.name})`}
+                    title={`${schedule.subject?.name} - ${schedule.timeSlot?.name}`}
                   >
                     {schedule.subject?.name} ({schedule.timeSlot?.name})
                   </div>
                 ))}
 
-                {/* Render events */}
+                {/* 📝 Exams */}
+                {dayExams.map((exam) => (
+                  <div
+                    key={`exam-${exam.id}`}
+                    className="text-xs px-2 py-1 rounded bg-red-500 text-white truncate"
+                    title={`${exam.examType?.name} • ${exam.subject?.name}`}
+                  >
+                    📝 {exam.examType?.name} - {exam.subject?.name}
+                  </div>
+                ))}
+
+                {/* 📅 Events */}
                 {dayEvents.map((event) => {
                   const typeInfo = eventTypes?.[event.eventTypeId] || {
                     label: 'Other',
@@ -166,30 +186,25 @@ export default function WeekScheduleView({
                       key={`event-${event.id}`}
                       className="text-xs px-2 py-1 rounded text-white truncate"
                       style={{ backgroundColor: typeInfo.color }}
-                      title={`${event.name} (${dayjs
-                        .utc(event.startAt)
-                        .local()
-                        .format('DD MMM')} - ${dayjs
-                          .utc(event.endAt)
-                          .local()
-                          .format('DD MMM')})`}
+                      title={event.name}
                     >
                       {event.name}
                     </div>
                   )
                 })}
 
-
-                {daySchedules.length === 0 && dayEvents.length === 0 && (
-                  <div className="text-xs text-gray-300">—</div>
-                )}
+                {daySchedules.length === 0 &&
+                  dayEvents.length === 0 &&
+                  dayExams.length === 0 && (
+                    <div className="text-xs text-gray-300">—</div>
+                  )}
               </div>
             )
           },
         }
       }),
     ]
-  }, [days, events, eventTypes, classSchedules])
+  }, [days, events, exams, eventTypes, classSchedules])
 
   const data = times.map((time) => ({
     key: time,
@@ -219,7 +234,6 @@ export default function WeekScheduleView({
         :global(.antd-week-schedule .ant-table) {
           border-collapse: collapse;
         }
-
         :global(.antd-week-schedule .ant-table-cell) {
           padding: 0 !important;
           text-align: center;
