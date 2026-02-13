@@ -182,6 +182,11 @@ export const Sidebar2 = React.memo(
           icon: <Icons.BankOutlined />,
           label: t(LOCALE_KEYS.CHART_OF_ACCOUNTS, { defaultValue: 'Chart of Accounts' }),
         },
+        {
+          key: '/cost-centers',
+          icon: <Icons.BankOutlined />,
+          label: t(LOCALE_KEYS.COST_CENTERS, { defaultValue: 'Cost Centers' }),
+        },
       ];
     }, [myMenus, transformMenus, t]);
 

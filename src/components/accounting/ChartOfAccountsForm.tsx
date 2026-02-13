@@ -245,7 +245,7 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
   };
 
   return (
-    <Card title="Chart of Account" bordered={false} className="w-full">
+    <Card title="Chart of Account" variant="outlined" className="w-full">
       <Form
         form={form}
         layout="vertical"

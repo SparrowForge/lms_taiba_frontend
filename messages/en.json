@@ -736,5 +736,6 @@
   "submitted-assignment": "Submitted Assignment",
   "question_set": "Question Set",
   "module": "Module",
-  "chart_of_accounts": "Chart of Accounts"
+  "chart_of_accounts": "Chart of Accounts",
+  "cost_centers": "Cost Centers"
 }

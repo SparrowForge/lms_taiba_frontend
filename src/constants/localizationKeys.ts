@@ -715,6 +715,7 @@ export const LOCALE_KEYS = {
   NEXT_EXAM: 'Next Exam',
   QUESTION_SET: 'question_set',
   CHART_OF_ACCOUNTS: 'chart_of_accounts',
+  COST_CENTERS: 'cost_centers',
 } as const;
 
 // Type for the keys

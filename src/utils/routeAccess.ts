@@ -23,6 +23,7 @@ export const ALLOWED_ROUTES = [
   '/notifications',
   '/attendances',
   '/chart-of-accounts',
+  '/cost-centers',
 ];
 
 /**
