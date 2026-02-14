@@ -38,6 +38,7 @@ import { useCourses } from '@/hooks/useCourses'
 import { useEvents } from '@/hooks/useEvents'
 import { useEventTypes } from '@/hooks/useEventTypes'
 import { useExams } from '@/hooks/useExams'
+import ExamDetailsDrawer from '@/components/exams/ExamDetailsDrawer'
 
 
 
@@ -45,6 +46,8 @@ import { useExams } from '@/hooks/useExams'
 const { Content } = Layout
 
 export default function Home() {
+  const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
+  const [selectedDetailsExamId, setSelectedDetailsExamId] = useState<number | undefined>();
   const [viewType, setViewType] = useState('list')
   const [currentDate, setCurrentDate] = useState(dayjs('2026-02-10'))
   const [selectedBatch, setSelectedBatch] = useState()
@@ -73,7 +76,6 @@ export default function Home() {
   useEffect(() => {
     loadCourses({ page: 1, limit: 99 })
   }, [loadCourses])
-
 
 
   useEffect(() => {
@@ -107,6 +109,25 @@ export default function Home() {
     }
   }, [selectedBatch, selectedCourse, selectedYear, selectedEventType, skip, limit, router, loadEvents, loadClassSchedules, loadExams, loadBatches]);
 
+  const handleExamShow = () => {
+    loadExams({ page: 1, limit: 99 })
+  }
+  const handleClassScheduleShow = () => {
+    loadClassSchedules({ page: 1, limit: 99 })
+  }
+
+  const handleViewDetails = (examId: number) => {
+    setSelectedDetailsExamId(examId);
+    setDetailsDrawerVisible(true);
+  };
+
+  const handleDetailsEdit = (examId: number) => {
+    setDetailsDrawerVisible(false);
+    setSelectedExamId(examId);
+    setDrawerMode('edit');
+    setDrawerVisible(true);
+  };
+
   const hasFilters =
     !!selectedYear ||
     !!selectedCourse ||
@@ -137,7 +158,6 @@ export default function Home() {
   };
 
 
-
   const handlePrevMonth = () => {
     setCurrentDate(currentDate.subtract(1, 'month'))
   }
@@ -154,9 +174,9 @@ export default function Home() {
   const renderTabContent = () => {
     switch (viewType) {
       case 'week':
-        return <WeekScheduleView classSchedules={classSchedules} exams={exams} events={events} currentDate={currentDate} />
+        return <WeekScheduleView handleViewDetails={handleViewDetails} classSchedules={classSchedules} exams={exams} events={events} currentDate={currentDate} />
       case 'month':
-        return <MonthCalendarView classSchedules={classSchedules} exams={exams} events={events} currentDate={currentDate} />
+        return <MonthCalendarView handleViewDetails={handleViewDetails} classSchedules={classSchedules} exams={exams} events={events} currentDate={currentDate} />
       default:
         return <ListEventView classSchedules={classSchedules} exams={exams} events={events} currentDate={currentDate} />
     }
@@ -297,6 +317,12 @@ export default function Home() {
                     </Button>
 
                   ))}
+                  <Button type="primary" onClick={() => handleClassScheduleShow()}>
+                    Class
+                  </Button>
+                  <Button type="primary" onClick={() => handleExamShow()}>
+                    Exam
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -315,6 +341,13 @@ export default function Home() {
           visible={drawerVisible}
           onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}
+        />
+
+        <ExamDetailsDrawer
+          examId={selectedDetailsExamId}
+          visible={detailsDrawerVisible}
+          onClose={() => setDetailsDrawerVisible(false)}
+          onEdit={handleDetailsEdit}
         />
       </MainLayout>
     </ProtectedRoute>

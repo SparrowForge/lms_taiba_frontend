@@ -22,13 +22,15 @@ interface WeekScheduleViewProps {
   events: IEvent[]
   exams: IExam[]
   classSchedules: IClassSchedule[]
+  handleViewDetails: any
 }
 
 export default function WeekScheduleView({
   currentDate,
   events,
   exams,
-  classSchedules
+  classSchedules,
+  handleViewDetails
 }: WeekScheduleViewProps) {
   const { eventTypes, loadEventTypes } = useEventTypes()
 
@@ -127,9 +129,8 @@ export default function WeekScheduleView({
                 {day.format('ddd')}
               </div>
               <div
-                className={`text-lg font-bold ${
-                  isToday ? 'text-orange-500' : 'text-gray-600'
-                }`}
+                className={`text-lg font-bold ${isToday ? 'text-orange-500' : 'text-gray-600'
+                  }`}
               >
                 {day.format('DD')}
               </div>
@@ -145,11 +146,10 @@ export default function WeekScheduleView({
 
             return (
               <div
-                className={`min-h-20 border-r p-2 space-y-1 ${
-                  isToday ? 'bg-orange-50' : ''
-                }`}
+                className={`min-h-20 border-r p-2 space-y-1 ${isToday ? 'bg-orange-50' : ''
+                  }`}
               >
-                {/* 📘 Class schedules */}
+
                 {daySchedules.map((schedule) => (
                   <div
                     onClick={() =>
@@ -163,18 +163,18 @@ export default function WeekScheduleView({
                   </div>
                 ))}
 
-                {/* 📝 Exams */}
                 {dayExams.map((exam) => (
                   <div
+                    onClick={() => handleViewDetails(exam.id)}
                     key={`exam-${exam.id}`}
-                    className="text-xs px-2 py-1 rounded bg-red-500 text-white truncate"
+                    className="text-xs px-2 py-1 rounded bg-red-500 text-white truncate cursor-pointer"
                     title={`${exam.examType?.name} • ${exam.subject?.name}`}
                   >
-                    📝 {exam.examType?.name} - {exam.subject?.name}
+                    {exam.examType?.name} - {exam.subject?.name}
                   </div>
                 ))}
 
-                {/* 📅 Events */}
+
                 {dayEvents.map((event) => {
                   const typeInfo = eventTypes?.[event.eventTypeId] || {
                     label: 'Other',
@@ -183,6 +183,7 @@ export default function WeekScheduleView({
 
                   return (
                     <div
+
                       key={`event-${event.id}`}
                       className="text-xs px-2 py-1 rounded text-white truncate"
                       style={{ backgroundColor: typeInfo.color }}

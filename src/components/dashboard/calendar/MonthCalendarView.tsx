@@ -21,14 +21,16 @@ interface MonthCalendarViewProps {
   currentDate: Dayjs
   events: IEvent[]
   exams: IExam[]
-  classSchedules: IClassSchedule[]
+  classSchedules: IClassSchedule[],
+  handleViewDetails: any
 }
 
 export default function MonthCalendarView({
   currentDate,
   events,
   exams,
-  classSchedules
+  classSchedules,
+  handleViewDetails
 }: MonthCalendarViewProps) {
   const { eventTypes, loadEventTypes } = useEventTypes()
 
@@ -53,7 +55,7 @@ export default function MonthCalendarView({
     loadEventTypes({ page: 1, limit: 99 })
   }, [loadEventTypes])
 
-  // ✅ Events (date range based)
+
   const getDateEvents = (date: Dayjs) => {
     if (!date) return []
 
@@ -65,7 +67,7 @@ export default function MonthCalendarView({
     })
   }
 
-  // ✅ Class schedules (weekly recurring)
+
   const getDateSchedules = (date: Dayjs) => {
     return classSchedules.filter((schedule) => {
       const scheduleDayNumber = schedule.weekDay?.dayNumber
@@ -80,7 +82,7 @@ export default function MonthCalendarView({
     })
   }
 
-  // ✅ Exams (single day + time)
+
   const getDateExams = (date: Dayjs) => {
     return exams.filter((exam) => {
       const examDate = dayjs.utc(exam.examDatetime).local()
@@ -96,7 +98,6 @@ export default function MonthCalendarView({
     return (
       <div className="space-y-1 min-h-[60px]">
 
-        {/* 📘 Class Schedules */}
         {dateSchedules.slice(0, 2).map((schedule) => (
           <div
             key={`schedule-${schedule.id}-${date.format('YYYY-MM-DD')}`}
@@ -114,14 +115,15 @@ export default function MonthCalendarView({
           </div>
         )}
 
-        {/* 📝 Exams */}
+
         {dateExams.slice(0, 2).map((exam) => (
           <div
+            onClick={() => handleViewDetails(exam.id)}
             key={`exam-${exam.id}-${date.format('YYYY-MM-DD')}`}
-            className="text-xs px-1 py-0.5 rounded truncate text-white bg-red-500"
+            className="text-xs px-1 py-0.5 rounded truncate text-white bg-red-500 cursor-pointer"
             title={`${exam.name} • ${exam.subject?.name}`}
           >
-            📝 {exam.examType?.name} - {exam.subject?.name}
+            {exam.examType?.name} - {exam.subject?.name}
           </div>
         ))}
 
