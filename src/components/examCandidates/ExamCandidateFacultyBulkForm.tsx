@@ -107,19 +107,17 @@ function ExamCandidateFacultyBulkForm({ response }: ExamCandidateFormProps) {
 
       const submitData: ICreateExamCandidateBulk = {
         examId: response.id,
-        candidates: candidates,
+        candidates
       };
-
-
       await createExamCandidateBulk(submitData);
       toast.success('Successfully created exam candidates.');
-      // router.push('/dashboard/course')
+      router.push('/dashboard/course')
 
       setStudentStatuses({});
       setSelectAllStatus('allowed');
 
     } catch (error: unknown) {
-      
+      console.log("error", error)
     }
   };
 

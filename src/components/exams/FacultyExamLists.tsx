@@ -88,6 +88,8 @@ const FacultyExamList = ({ data }: ExamListProps) => {
 
   const isHead = hasAnyHeadRole(user)
 
+  console.log("object, user", user)
+
 
   return (
 
@@ -102,71 +104,68 @@ const FacultyExamList = ({ data }: ExamListProps) => {
       }
     >
       <div className="space-y-2 text-sm">
-        <p>
-          <span className="font-medium">Subject:</span>{" "}
-          {data.subject?.name}
-        </p>
+        <div className="pb-5">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">Subject</span>
+              <span className="font-medium text-gray-900">
+                {data.subject?.name}
+              </span>
+            </div>
 
-        <p>
-          <span className="font-medium">Marks:</span> {data.marks}
-        </p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">Marks</span>
+              <span className="font-medium text-gray-900">
+                {data.marks}
+              </span>
+            </div>
 
-        <p>
-          <span className="font-medium">Date:</span>{" "}
-          {formatDate(data.examDatetime)}
-        </p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">Date</span>
+              <span className="font-medium text-gray-900">
+                {formatDate(data.examDatetime)}
+              </span>
+            </div>
 
-        <p>
-          <span className="font-medium">Time:</span>{" "}
-          {formatTime(data.examDatetime)}
-        </p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">Time</span>
+              <span className="font-medium text-gray-900">
+                {formatTime(data.examDatetime)}
+              </span>
+            </div>
 
-        <p>
-          <span className="font-medium">Duration:</span>{" "}
-          {data.duration?.hours
-            ? `${data.duration.hours} hr${data.duration.hours > 1 ? "s" : ""}`
-            : ""}
-          {data.duration?.minutes
-            ? ` ${data.duration.minutes} min`
-            : ""}
-        </p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">Duration</span>
+              <span className="font-medium text-gray-900">
+                {data.duration?.hours
+                  ? `${data.duration.hours} hr${data.duration.hours > 1 ? "s" : ""}`
+                  : ""}
+                {data.duration?.minutes ? ` ${data.duration.minutes} min` : ""}
+              </span>
+            </div>
 
-        <p>
-          <span className="font-medium">Room:</span>{" "}
-          {data.room?.name}
-        </p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">Room</span>
+              <span className="font-medium text-gray-900">
+                {data.room?.name}
+              </span>
+            </div>
+          </div>
+        </div>
 
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
 
-          onClick={() => handleAddQuestion(data.subjectId)}
-        >
-          Add Question
-        </Button>
-        <Button
-          color="primary"
-          variant="filled"
-          icon={<PlusOutlined />}
-          style={{ marginLeft: 16 }}
-          onClick={() => handleAddQuestionSet(data.id)}
-        >
-          Add Question Set
-        </Button>
         {
           isHead && <>
             <Button
-              color="primary"
-              variant="filled"
+              type="primary"
               icon={<PlusOutlined />}
-              style={{ marginLeft: 16 }}
+
               onClick={() => handleCreateFacultyAddDrawer()}
             >
               Add Faculty
             </Button>
             <Button
-              color="primary"
-              variant="filled"
+              type="primary"
               icon={<PlusOutlined />}
               style={{ marginLeft: 16 }}
               onClick={() => handleCreateDrawer()}
@@ -176,24 +175,45 @@ const FacultyExamList = ({ data }: ExamListProps) => {
 
           </>
         }
-        <Button
-          color="primary"
-          variant="outlined"
-          icon={<PlusOutlined />}
-          style={{ marginLeft: 16 }}
-          onClick={() => handleAddResult(data.id)}
-        >
-          Add Result
-        </Button>
 
-        <Button
-          color="primary"
-          variant="dashed"
-          style={{ marginLeft: 16 }}
-          onClick={() => handleShowResults(data.id)}
-        >
-          Show Result
-        </Button>
+        {
+          !isHead && <>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => handleAddQuestion(data.subjectId)}
+            >
+              Add Question
+            </Button>
+            <Button
+              color="primary"
+              variant="filled"
+              icon={<PlusOutlined />}
+              style={{ marginLeft: 16 }}
+              onClick={() => handleAddQuestionSet(data.id)}
+            >
+              Add Question Set
+            </Button>
+            <Button
+              color="primary"
+              variant="outlined"
+              icon={<PlusOutlined />}
+              style={{ marginLeft: 16 }}
+              onClick={() => handleAddResult(data.id)}
+            >
+              Add Result
+            </Button>
+
+            <Button
+              color="primary"
+              variant="dashed"
+              style={{ marginLeft: 16 }}
+              onClick={() => handleShowResults(data.id)}
+            >
+              Show Result
+            </Button>
+          </>
+        }
 
       </div>
 

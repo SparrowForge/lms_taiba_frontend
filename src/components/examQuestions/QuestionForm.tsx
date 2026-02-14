@@ -30,6 +30,7 @@ import { useExamQuestions } from "@/hooks/useExamQuestions";
 import { useSubjects } from "@/hooks/useSubjects";
 
 import { IExamQuestionBulkCreate } from "@/types/examQuestion";
+import { getErrorMessage } from "@/types/errors";
 
 const { Text } = Typography;
 
@@ -99,8 +100,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
 
   const handleTypeChange = (value: string) => {
-    console.log("Selected type:", value)
-    // example: setQuestionType(value)
     setQuestionType(value)
   }
 
@@ -152,7 +151,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
         { text: "", order: 2 },
         { text: "", order: 3 },
       ],
-      correctOptionNumber: "a",
+      correctOptionNumber: 1,
       difficultyLevel: "easy",
       courseId: Number(selectedCourse?.id),
       subjectId: Number(selectedSubject?.id),
@@ -206,8 +205,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
       setSubmitting(true);
 
-      const correctOptionToNumber = (c: "a" | "b" | "c" | "d") =>
-        ({ a: 0, b: 1, c: 2, d: 3 }[c] ?? 0);
       const toDifficultyOption = (d: string) => ({
         value: d as "easy" | "medium" | "hard",
         label: d.charAt(0).toUpperCase() + d.slice(1),
@@ -216,12 +213,14 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       const formattedMcqQuestions = questions.map((q) => ({
         questionText: q.questionText,
         options: (q.options ?? []).map((o) => o.text),
-        correctOptionNumber: correctOptionToNumber(q.correctOptionNumber),
+        correctOptionNumber: q.correctOptionNumber, 
         courseId: selectedCourse?.id ?? 0,
         subjectId: selectedSubject?.id ?? 0,
-        difficultyLevel: toDifficultyOption(q.difficultyLevel),
+        facultyId: user?.faculty?.id ?? 0,          
+        difficultyLevel: q.difficultyLevel,          
         status: EntityStatus.ACTIVE,
       }));
+
 
       const formattedWrittenQuestions = questions.map((q) => ({
         questionText: q.questionText,
@@ -239,13 +238,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
       if (onSubmit) await onSubmit(finalPayload);
 
-      // toast.success(`${mode === "create" ? "Created" : "Updated"} ${questions.length} question(s)`);
+      toast.success(`${mode === "create" ? "Created" : "Updated"} ${questions.length} question(s)`);
 
       setQuestions([])
       if (onSuccess) onSuccess();
     } catch (err: any) {
-      // toast.error(getErrorMessage(err));
-      console.log(err)
+      toast.error(getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }

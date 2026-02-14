@@ -20,7 +20,6 @@ const CoursesStudent = () => {
         <div className="h-[95vh] overflow-y-auto">
           {user?.type === UserType.STUDENT && <StudentCourse />}
           {user?.type === UserType.FACULTY && <FacultyCourse />}
-         
         </div>
       </MainLayout>
     </ProtectedRoute>
