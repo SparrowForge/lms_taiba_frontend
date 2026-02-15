@@ -138,7 +138,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
     }
   }
 
-    const handlePublishSemesterResult = async (
+  const handlePublishSemesterResult = async (
     semesterId: number
   ) => {
     try {
@@ -150,7 +150,13 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
     }
   }
 
-  /* ================= DATA GROUPING ================= */
+  const handleReviewExams = (
+    subjectId: number,
+  ) => {
+    router.push(
+      `/exam-submission/details?subjectId=${subjectId}`
+    )
+  }
 
   const groupedByBatch = data.reduce<any[]>((acc, group) => {
     const first = group.subjects[0]
@@ -180,11 +186,11 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
   }, [])
 
 
-const isSemesterEnded = (endDate: string) => {
-  const today = new Date()
-  const semesterEnd = new Date(endDate)
-  return today > semesterEnd
-}
+  const isSemesterEnded = (endDate: string) => {
+    const today = new Date()
+    const semesterEnd = new Date(endDate)
+    return today > semesterEnd
+  }
 
 
   const collapseItems: CollapseProps["items"] = groupedByBatch.map(
@@ -193,150 +199,162 @@ const isSemesterEnded = (endDate: string) => {
       label: batch.batchName,
       children: (
         <Tabs
-          
+
           items={batch.semesters.map(
             (semester: any): TabsProps["items"][number] => ({
               key: String(semester.semesterId),
-              
+
               label: semester.semesterName,
               children: (
                 <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                  {semester.subjects.map(
-                    (item: SubjectAssignmentDetail) => (
-                      <Card
-                        key={item.id}
-                        className="h-full hover:shadow-md transition-shadow"
-                      >
-                        <div className="space-y-3">
-                          <div className="flex justify-between">
-                            <h3 className="font-semibold text-sm">
-                              {item.subject.name}
-                            </h3>
-                            <Button
-                              size="small"
-                              type="primary"
-                              icon={<BiDetail />}
-                              onClick={() =>
-                                handleSubjectDetails(
-                                  item.subject.id,
-                                  item.semesterId,
-                                  item.batchId
-                                )
-                              }
-                            >
-                              Details
-                            </Button>
-                          </div>
-
-                          <p className="text-xs text-gray-500">
-                            {item.subject.code}
-                          </p>
-
-                          <div className="text-xs space-y-1">
-                            <div>Credit: {item.subject.creditHours}</div>
-                            <div>Theory: {item.subject.theoryHours}h</div>
-                            <div>
-                              Practical: {item.subject.practicalHours}h
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                    {semester.subjects.map(
+                      (item: SubjectAssignmentDetail) => (
+                        <Card
+                          key={item.id}
+                          className="h-full hover:shadow-md transition-shadow"
+                        >
+                          <div className="space-y-3">
+                            <div className="flex justify-between">
+                              <h3 className="font-semibold text-sm">
+                                {item.subject.name}
+                              </h3>
+                              <Button
+                                size="small"
+                                type="primary"
+                                icon={<BiDetail />}
+                                onClick={() =>
+                                  handleSubjectDetails(
+                                    item.subject.id,
+                                    item.semesterId,
+                                    item.batchId
+                                  )
+                                }
+                              >
+                                Details
+                              </Button>
                             </div>
-                            <div>Weekly: {item.hoursPerWeek}h</div>
+
+                            <p className="text-xs text-gray-500">
+                              {item.subject.code}
+                            </p>
+
+                            <div className="text-xs space-y-1">
+                              <div>Credit: {item.subject.creditHours}</div>
+                              <div>Theory: {item.subject.theoryHours}h</div>
+                              <div>
+                                Practical: {item.subject.practicalHours}h
+                              </div>
+                              <div>Weekly: {item.hoursPerWeek}h</div>
+                            </div>
+
+                            <div
+                              className="text-xs"
+                              dangerouslySetInnerHTML={{
+                                __html: item.subject.description,
+                              }}
+                            />
+
+                            <p className="text-xs text-gray-600">
+                              Role: {item.role}
+                            </p>
+
+                            <div className="flex gap-2 pt-2">
+                              <Button
+                                size="small"
+                                icon={<BiBookOpen />}
+                                onClick={() =>
+                                  handleAddMaterials(
+                                    item.subject.id,
+                                    item.semesterId,
+                                    item.batchId
+                                  )
+                                }
+                              >
+                                Materials
+                              </Button>
+
+                              <Button
+                                size="small"
+                                icon={<FaClipboardList />}
+                                onClick={() =>
+                                  handleAddAssignments(
+                                    item.subject.id,
+                                    item.semesterId,
+                                    item.batchId
+                                  )
+                                }
+                              >
+                                Assignments
+                              </Button>
+
+                              <Button
+                                size="small"
+                                icon={<BiDetail />}
+                                onClick={() =>
+                                  handleAddExam(
+                                    item.subject.id,
+                                    item.semesterId,
+                                    item.batchId
+                                  )
+                                }
+                              >
+                                Exam
+                              </Button>
+
+                              <Button
+                                size="small"
+                                icon={<BiDetail />}
+                                loading={actionStatus.status === Status.LOADING}
+                                onClick={() =>
+                                  handleReviewExams(
+                                    item.subject.id,
+                                  )
+                                }
+                              >
+                                Review Exam
+                              </Button>
+                              <Button
+                                size="small"
+                                icon={<BiDetail />}
+                                loading={actionStatus.status === Status.LOADING}
+                                onClick={() =>
+                                  handlePublishSubjectResult(
+                                    item.subject.id,
+                                    item.semesterId
+                                  )
+                                }
+                              >
+                                Publish Result
+                              </Button>
+                            </div>
                           </div>
+                        </Card>
+                      )
+                    )}
 
-                          <div
-                            className="text-xs"
-                            dangerouslySetInnerHTML={{
-                              __html: item.subject.description,
-                            }}
-                          />
 
-                          <p className="text-xs text-gray-600">
-                            Role: {item.role}
-                          </p>
+                  </div>
+                  <div className="flex justify-end">
+                    <Tooltip title={isSemesterEnded(semester.endDate) ? "" : "Semester not ended yet"}>
+                      <Button
 
-                          <div className="flex gap-2 pt-2">
-                            <Button
-                              size="small"
-                              icon={<BiBookOpen />}
-                              onClick={() =>
-                                handleAddMaterials(
-                                  item.subject.id,
-                                  item.semesterId,
-                                  item.batchId
-                                )
-                              }
-                            >
-                              Materials
-                            </Button>
-
-                            <Button
-                              size="small"
-                              icon={<FaClipboardList />}
-                              onClick={() =>
-                                handleAddAssignments(
-                                  item.subject.id,
-                                  item.semesterId,
-                                  item.batchId
-                                )
-                              }
-                            >
-                              Assignments
-                            </Button>
-
-                            <Button
-                              size="small"
-                              icon={<BiDetail />}
-                              onClick={() =>
-                                handleAddExam(
-                                  item.subject.id,
-                                  item.semesterId,
-                                  item.batchId
-                                )
-                              }
-                            >
-                              Exam
-                            </Button>
-
-                            <Button
-                              size="small"
-                              icon={<BiDetail />}
-                              loading={actionStatus.status === Status.LOADING}
-                              onClick={() =>
-                                handlePublishSubjectResult(
-                                  item.subject.id,
-                                  item.semesterId
-                                )
-                              }
-                            >
-                              Publish Result 
-                            </Button>
-                          </div>
-                        </div>
-                      </Card>
-                    )
-                  )}
-
-                  
-                </div>
-                <div className="flex justify-end">
-                  <Tooltip title={isSemesterEnded(semester.endDate) ? "" : "Semester not ended yet"}>
-<Button
-      
-                              type="primary"
-                              size="small"
-                              icon={<BiDetail />}
-                              loading={actionStatus.status === Status.LOADING}
-                              onClick={() =>
-                                handlePublishSemesterResult(
-                                 semester.id
-                                )
-                              }
-                              disabled={!isSemesterEnded(semester.endDate)}
-                              style={{marginTop: "16px"}}
-                            >
-                              Publish Semester Result {semester.id}
-                            </Button>
-                  </Tooltip>
-                </div>
+                        type="primary"
+                        size="small"
+                        icon={<BiDetail />}
+                        loading={actionStatus.status === Status.LOADING}
+                        onClick={() =>
+                          handlePublishSemesterResult(
+                            semester.id
+                          )
+                        }
+                        disabled={!isSemesterEnded(semester.endDate)}
+                        style={{ marginTop: "16px" }}
+                      >
+                        Publish Semester Result {semester.id}
+                      </Button>
+                    </Tooltip>
+                  </div>
                 </>
               ),
             })
