@@ -47,7 +47,6 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
     loadStudent(studentId);
   }, [loadStudent, studentId]);
 
-  console.log("Student", selectedStudent)
 
   const config = useCreateStudentDetailsConfig(
     selectedStudent,
