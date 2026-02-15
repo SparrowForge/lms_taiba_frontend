@@ -312,7 +312,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                                   )
                                 }
                               >
-                                Review Exam
+                                Exam Submission List
                               </Button>
                               <Button
                                 size="small"

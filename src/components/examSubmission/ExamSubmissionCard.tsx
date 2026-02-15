@@ -1,11 +1,10 @@
 'use client';
 
-import {  FileTextOutlined, UserOutlined } from '@ant-design/icons';
+import { FileTextOutlined, UserOutlined } from '@ant-design/icons';
 import { Card, Tag, Descriptions, Space, Button } from 'antd';
 import { useRouter } from 'next/navigation';
 
 import { IExamSubmission } from '@/types/examSubmission';
-
 
 interface SubmissionCardProps {
   submission: IExamSubmission;
@@ -32,7 +31,7 @@ export const ExamSubmissionCard = ({ submission }: SubmissionCardProps) => {
   };
 
   const handleReviewExams = (submissionId: number) => {
-    return router.push(`exam-submission/review?submissionId=${submissionId}`)
+    return router.push(`review?submissionId=${submissionId}`)
   }
 
   return (
@@ -75,9 +74,11 @@ export const ExamSubmissionCard = ({ submission }: SubmissionCardProps) => {
         </Descriptions.Item>
       </Descriptions>
       <Space style={{ marginTop: 16 }}>
-        <Button type="primary" size="small">
-          View Details
-        </Button>
+        {
+          submission.status === 'draft' && <Button type="primary" size="small">
+            Change Status
+          </Button>
+        }
         <Button onClick={() => handleReviewExams(submission.id)} size="small">Review Answers</Button>
       </Space>
     </Card>
