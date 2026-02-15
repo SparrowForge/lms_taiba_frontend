@@ -1,212 +1,148 @@
-'use client'
+import { Card, Typography } from 'antd';
+import { useEffect, useState } from 'react';
 
-import {
-  BookOutlined,
-  RiseOutlined,
-  StarOutlined,
-  CheckCircleOutlined,
-} from '@ant-design/icons'
-import { Row, Col, Card } from 'antd'
-import React from 'react'
+import { Status } from '@/enums';
 
-import StudentAcademicDegreeProgress from './StudentAcademicDegreeProgress'
-import StudentAcademicSemesters from './StudentAcademicSemesters'
-import StudentAcademicStatCard from './StudentAcademicStatCard'
+import { useAuth } from '@/hooks/useAuth';
+import { useSemesters } from '@/hooks/useSemesters';
+import { useSemesterSubjects } from '@/hooks/useSemesterSubjects';
 
-import type { ColProps } from 'antd'
+import { ICourse } from '@/types/course';
+import { IStudent } from '@/types/student';
 
-export const mockData = {
-  currentSemester: 1,
-  creditsEarned: 36,
-  cumulativeGPA: 3.42,
-  summerCompleted: 0,
-  degreeProgress: {
-    completed: 36,
-    total: 90,
-    percentage: 40,
-    inProgress: 1,
-    upcoming: 4,
-  },
-  semesters: [
-    {
-      id: 1,
-      number: 1,
-      name: 'First Semester',
-      status: 'In Progress',
-      gpa: 3.42,
-      courses: [
-        {
-          id: 1,
-          code: 'MTH101',
-          name: 'Engineering Mathematics I',
-          credits: 3,
-          grade: 'B+',
-          status: 'In Progress',
-        },
-        {
-          id: 2,
-          code: 'ENG102',
-          name: 'English Language I',
-          credits: 2,
-          grade: 'B',
-          status: 'In Progress',
-        },
-        {
-          id: 3,
-          code: 'PHY101',
-          name: 'Engineering Physics',
-          credits: 4,
-          grade: 'A-',
-          status: 'In Progress',
-        },
-        {
-          id: 4,
-          code: 'CMP101',
-          name: 'Computer Applications',
-          credits: 3,
-          grade: 'A-',
-          status: 'In Progress',
-        },
-        {
-          id: 5,
-          code: 'ENG101',
-          name: 'Technical Drawing',
-          credits: 3,
-          grade: 'A',
-          status: 'In Progress',
-        },
-        {
-          id: 6,
-          code: 'ISL101',
-          name: 'Islamic Studies',
-          credits: 3,
-          grade: 'B+',
-          status: 'In Progress',
-        },
-      ],
-    },
-    {
-      id: 2,
-      number: 2,
-      name: 'Second Semester',
-      status: 'Upcoming',
-      gpa: 3.55,
-      courses: [
-        {
-          id: 7,
-          code: 'MTH102',
-          name: 'Engineering Mathematics II',
-          credits: 3,
-          grade: 'A-',
-          status: 'Upcoming',
-        },
-        {
-          id: 8,
-          code: 'ENG203',
-          name: 'English Language II',
-          credits: 2,
-          grade: 'A',
-          status: 'Upcoming',
-        },
-        {
-          id: 9,
-          code: 'ENG201',
-          name: 'Statics & Dynamics',
-          credits: 4,
-          grade: 'B+',
-          status: 'Upcoming',
-        },
-        {
-          id: 10,
-          code: 'CMP102',
-          name: 'AutoCAD',
-          credits: 3,
-          grade: 'A',
-          status: 'Upcoming',
-        },
-        {
-          id: 11,
-          code: 'EN202',
-          name: 'Materials Science',
-          credits: 3,
-          grade: 'B',
-          status: 'Upcoming',
-        },
-        {
-          id: 12,
-          code: 'ARB101',
-          name: 'Arabic Language',
-          credits: 3,
-          grade: 'B+',
-          status: 'Upcoming',
-        },
-      ],
-    },
-    {
-      id: 3,
-      number: 3,
-      name: 'Third Semester',
-      status: 'Upcoming',
-      courses: [],
-    },
-  ],
-}
+import AcademicSubjectCard from './AcademicSubjectCard';
+import SemesterSelector from '../dashboard/course/SemesterSelector';
 
-export default function StudentAcademicRecord() {
-  const statColProps: ColProps = {
-    xs: 24,
-    sm: 12,
-    lg: 6,
-  }
+
+
+
+
+const StudentAcademicRecord = ({ studentInfo }: IStudent) => {
+
+  const { user } = useAuth()
+  const { semesters, loadSemesters } = useSemesters();
+
+  const [selectedSemesterId, setSelectedSemesterId] = useState<number | undefined>(undefined);
+
+  const { semesterSubjects, loadSemesterSubjects, actionStatus } = useSemesterSubjects()
+
+  useEffect(() => {
+    if (selectedSemesterId) {
+      loadSemesterSubjects({ page: 1, limit: 99, semesterId: selectedSemesterId })
+    }
+  }, [loadSemesterSubjects, selectedSemesterId])
+
+  useEffect(() => {
+    if (user?.id) {
+      loadSemesters({ page: 1, limit: 100, batchId: user?.batchId });
+    } else if (studentInfo) {
+      loadSemesters({ page: 1, limit: 100, batchId: studentInfo?.batchId });
+    }
+  }, [loadSemesters, studentInfo, user?.batchId, user?.id]);
+
+  // Auto-select current semester based on current date
+  useEffect(() => {
+    if (semesters.length > 0 && !selectedSemesterId) {
+      const currentDate = new Date();
+
+      // Find semester where current date is between start and end date
+      const currentSemester = semesters.find((semester) => {
+        const startDate = new Date(semester.startDate);
+        const endDate = new Date(semester.endDate);
+        return currentDate >= startDate && currentDate <= endDate;
+      });
+
+      if (currentSemester) {
+        setSelectedSemesterId(currentSemester.id);
+      } else {
+        // If no current semester found, select the first one
+        setSelectedSemesterId(semesters[0]?.id);
+      }
+    }
+  }, [semesters, selectedSemesterId]);
+
+
 
   return (
-    <div style={{ marginBottom: "100px" }}>
-      <div>
-        {/* Stats Cards */}
-        <Row gutter={[16, 16]} className="mb-8">
-          <Col {...statColProps}>
-            <StudentAcademicStatCard
-              icon={<BookOutlined />}
-              title="Current Semester"
-              value={mockData.currentSemester}
-            />
-          </Col>
-          <Col {...statColProps}>
-            <StudentAcademicStatCard
-              icon={<StarOutlined />}
-              title="Credits Earned"
-              value={mockData.creditsEarned}
-            />
-          </Col>
-          <Col {...statColProps}>
-            <StudentAcademicStatCard
-              icon={<RiseOutlined />}
-              title="Cumulative GPA"
-              value={mockData.cumulativeGPA}
-            />
-          </Col>
-          <Col {...statColProps}>
-            <StudentAcademicStatCard
-              icon={<CheckCircleOutlined />}
-              title="Summer Completed"
-              value={mockData.summerCompleted}
-            />
-          </Col>
-        </Row>
+    <div className="space-y-4 overflow-y-auto min-h-screen">
+      <StudentCourseHeader course={studentInfo.course || null} />
 
-        {/* Degree Progress */}
-        <div className="mb-8">
-          <StudentAcademicDegreeProgress {...mockData.degreeProgress} />
-        </div>
+      {/* Semester Selection */}
+      <SemesterSelector
+        semesters={semesters}
+        selectedSemesterId={selectedSemesterId}
+        onSemesterChange={setSelectedSemesterId}
+      />
 
-        {/* Semester Timeline */}
-        <div>
-          <Card><h2 className="text-xl font-bold text-gray-900 mb-6">Semester Timeline</h2></Card>
-          {mockData.semesters.map((semester, index) => (
-            <StudentAcademicSemesters key={semester.id} semester={semester} index={index} />
-          ))}
-        </div>
-      </div>
+      {/* Subjects Display */}
+      {selectedSemesterId && (
+        <Card className="rounded-2xl shadow-sm" style={{ margin: '12px 12px' }}>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Typography.Text strong className="text-lg">
+                Subjects
+              </Typography.Text>
+              {semesterSubjects.length > 1 && (
+                <Typography.Text type="secondary">
+                  {semesterSubjects.length} subjects
+                </Typography.Text>
+              )}
+            </div>
+
+            {actionStatus.status === Status.LOADING && (
+              <div className="text-center py-8">
+                <Typography.Text type="secondary">Loading subjects...</Typography.Text>
+              </div>
+            )}
+
+
+
+            {semesterSubjects && actionStatus.status !== Status.LOADING && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {semesterSubjects.map((subject) => (
+                  <AcademicSubjectCard
+                    key={subject.id}
+                    subject={subject}
+                    semesterId={selectedSemesterId}
+
+                  />
+                ))}
+              </div>
+            )}
+
+            {semesterSubjects && semesterSubjects.length === 0 && (
+              <div className="text-center py-8">
+                <Typography.Text type="secondary">
+                  No subjects found for this semester
+                </Typography.Text>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
     </div>
-  )
+  );
+};
+
+export default StudentAcademicRecord;
+
+function StudentCourseHeader({ course }: { course: ICourse | null }) {
+  return (
+    <Card className="p-4 rounded-2xl shadow-sm" style={{ margin: '12px 12px' }}>
+      <div className="flex flex-col">
+        <div className="flex flex-row gap-2 items-center">
+          <Typography.Title level={2} className="text-2xl font-bold">
+            {course?.name}
+          </Typography.Title>
+          <Typography.Text>{course?.code}</Typography.Text>
+        </div>
+        <div className="flex flex-row gap-2 items-center">
+          <Typography.Title level={5}>{course?.department?.name}</Typography.Title>
+          <Typography.Text>{course?.department?.code}</Typography.Text>
+        </div>
+        <Typography.Text>{course?.description}</Typography.Text>
+      </div>
+      <div className="flex flex-col gap-2"></div>
+    </Card>
+  );
 }

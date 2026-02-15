@@ -72,7 +72,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
       case 'documents':
         return <StudentDocuments />
       case 'academic':
-        return <StudentAcademicRecord />
+        return <StudentAcademicRecord studentInfo={selectedStudent}/>
       case 'fees':
         return <PaymentDetails />
       case 'grades':
