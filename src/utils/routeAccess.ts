@@ -47,7 +47,9 @@ export const FACULTY_ALLOWED_ROUTES: string[] = [
   '/question-set',
   '/result',
   '/exams',
-  '/exam-questions'
+  '/exam-questions',
+  '/exam-submission',
+  '/exam-results'
 ];
 
 /**

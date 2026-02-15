@@ -205,11 +205,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
       setSubmitting(true);
 
-      const toDifficultyOption = (d: string) => ({
-        value: d as "easy" | "medium" | "hard",
-        label: d.charAt(0).toUpperCase() + d.slice(1),
-      });
-
       const formattedMcqQuestions = questions.map((q) => ({
         questionText: q.questionText,
         options: (q.options ?? []).map((o) => o.text),
@@ -225,10 +220,11 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       const formattedWrittenQuestions = questions.map((q) => ({
         questionText: q.questionText,
         options: [] as string[],
-        correctOptionNumber: 0,
+        correctOptionNumber: '',
         courseId: selectedCourse?.id ?? 0,
         subjectId: selectedSubject?.id ?? 0,
-        difficultyLevel: toDifficultyOption(q.difficultyLevel),
+        facultyId: user?.faculty?.id ?? 0, 
+        difficultyLevel: q.difficultyLevel,   
         status: EntityStatus.ACTIVE,
       }));
 

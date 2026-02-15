@@ -58,7 +58,7 @@ const ExamSubmissionReviewPage = () => {
 
   useEffect(() => {
     if (submissionId) {
-      loadExamSubmission(Number(submissionId))
+      loadExamSubmission(Number(2))
     }
   }, [loadExamSubmission, submissionId])
 

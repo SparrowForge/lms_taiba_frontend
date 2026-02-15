@@ -9,8 +9,8 @@ const ResultCreatePage = () => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        {/* <StudentResultAssign /> */}
-        <FinalExamResultManagement/>
+        <StudentResultAssign />
+        {/* <FinalExamResultManagement/> */}
       </MainLayout>
     </ProtectedRoute>
   )

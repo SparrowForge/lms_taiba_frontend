@@ -172,6 +172,15 @@ const FacultyExamList = ({ data }: ExamListProps) => {
             >
               Manage Question Set
             </Button>
+            <Button
+              color="primary"
+              variant="filled"
+              icon={<PlusOutlined />}
+              style={{ marginLeft: 16 }}
+              onClick={() => handleAddQuestionSet(data.id)}
+            >
+              Add Question Set
+            </Button>
 
           </>
         }
@@ -185,15 +194,7 @@ const FacultyExamList = ({ data }: ExamListProps) => {
             >
               Add Question
             </Button>
-            <Button
-              color="primary"
-              variant="filled"
-              icon={<PlusOutlined />}
-              style={{ marginLeft: 16 }}
-              onClick={() => handleAddQuestionSet(data.id)}
-            >
-              Add Question Set
-            </Button>
+
             <Button
               color="primary"
               variant="outlined"
