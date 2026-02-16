@@ -10,13 +10,12 @@ import {
   Select,
   Input,
 } from "antd"
-import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
 import { LOCALE_KEYS } from "@/constants/localizationKeys"
-import {  EXAM_RESULT_STATUS_OPTIONS,  } from "@/constants/statusOptions"
-import {  Status, } from "@/enums"
+import { EXAM_RESULT_STATUS_OPTIONS, } from "@/constants/statusOptions"
+import { Status, } from "@/enums"
 import { ExamResultStatus } from "@/enums/exam-candidate.enum"
 import { calculateGrade } from "@/utils/calculateGradeUtils"
 
@@ -36,15 +35,15 @@ const { Title, Text } = Typography
 
 
 
-export default function StudentResultAssign() {
-  const searchParams = useSearchParams()
-  const examId = searchParams.get("examId")
+export default function StudentResultAssign({ examId }: number) {
+
+
   const { t } = useLocalization()
 
   const { loadStudents, students, listStatus } = useStudents()
   const { loadExam, selectedExam } = useExams()
   const { gradeRules, loadGradeRules } = useGradeRules()
-  const {createExamResultBulk, actionStatus} = useExamResults()
+  const { createExamResultBulk, actionStatus } = useExamResults()
 
 
   const [tableData, setTableData] = useState<IExamResult[]>([])
@@ -95,7 +94,7 @@ export default function StudentResultAssign() {
         s.id === id
           ? {
             ...s,
-           marksObtained: marks,
+            marksObtained: marks,
             grade: calculateGrade(marks, gradeRules),
           }
           : s,
@@ -103,7 +102,7 @@ export default function StudentResultAssign() {
     )
   }
 
-  console.log("handleMarksChange",tableData)
+  console.log("handleMarksChange", tableData)
 
   const handleRemarksChange = (id: number, remarks: string) => {
     setTableData((prev) =>
@@ -138,7 +137,7 @@ export default function StudentResultAssign() {
       status: s.status!,
     }))
     const finalPayload = {
-      results:payload
+      results: payload
     }
 
     console.log("SUBMIT PAYLOAD", finalPayload)
