@@ -36,8 +36,6 @@ const { Title, Text } = Typography
 
 
 export default function StudentResultAssign({ examId }: number) {
-
-
   const { t } = useLocalization()
 
   const { loadStudents, students, listStatus } = useStudents()
@@ -140,7 +138,7 @@ export default function StudentResultAssign({ examId }: number) {
       results: payload
     }
 
-    console.log("SUBMIT PAYLOAD", finalPayload)
+
     await createExamResultBulk(finalPayload)
   }
 
@@ -214,7 +212,6 @@ export default function StudentResultAssign({ examId }: number) {
         <Title level={3}>
           {t(LOCALE_KEYS.STUDENT_MARKS_ENTRY)}
         </Title>
-
         <Table
           columns={columns}
           dataSource={tableData}
