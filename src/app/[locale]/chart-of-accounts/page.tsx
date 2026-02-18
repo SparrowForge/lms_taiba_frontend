@@ -4,6 +4,7 @@ import ChartOfAccountsForm from '@/components/accounting/ChartOfAccountsForm';
 import ChartOfAccountsTree from '@/components/accounting/ChartOfAccountsTree';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useLocalization } from '@/hooks/useLocalization';
 import { IChartOfAccount } from '@/types/chartOfAccounts';
 import { Card, Col, Row } from 'antd';
@@ -41,7 +42,7 @@ export default function ChartOfAccountsPage() {
         <div className="p-4">
           <Row gutter={16}>
             <Col span={10}>
-              <Card title="COA" className="h-full">
+              <Card title={t(LOCALE_KEYS.COA, { defaultValue: 'COA' })} className="h-full">
                 <ChartOfAccountsTree
                   onSelect={handleSelectNode}
                   refreshTrigger={refreshTrigger}

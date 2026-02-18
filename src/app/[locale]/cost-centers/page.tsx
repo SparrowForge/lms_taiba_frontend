@@ -8,6 +8,7 @@ import CostCentersForm from '@/components/accounting/CostCentersForm';
 import CostCentersTree from '@/components/accounting/CostCentersTree';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useLocalization } from '@/hooks/useLocalization';
 import { ICostCenter } from '@/types/costCenters';
 
@@ -40,7 +41,10 @@ export default function CostCentersPage() {
         <div className="p-4">
           <Row gutter={16}>
             <Col span={10}>
-              <Card title="Cost Centers" className="h-full">
+              <Card
+                title={t(LOCALE_KEYS.COST_CENTERS, { defaultValue: 'Cost Centers' })}
+                className="h-full"
+              >
                 <CostCentersTree
                   onSelect={handleSelectNode}
                   refreshTrigger={refreshTrigger}

@@ -24,6 +24,8 @@ export const ALLOWED_ROUTES = [
   '/attendances',
   '/chart-of-accounts',
   '/cost-centers',
+  '/financial-years',
+  '/voucher-types',
 ];
 
 /**

@@ -1,3 +1,4 @@
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useBranches } from '@/hooks/useBranches';
 import { useLocalization } from '@/hooks/useLocalization';
 import { chartOfAccountsService } from '@/services/chartOfAccountsService';
@@ -151,7 +152,7 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
       parentHead: newParent ? newParent.accountName : 'Root',
       headLevel: newParent ? newParent.level + 1 : 1,
       isActive: true, // Default to active
-      isTransaction: true,
+      isTransaction: false,
     });
     setParentHead(newParent ? newParent.accountName : 'Root');
   };
@@ -193,7 +194,7 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
           );
         }
 
-        toast.success('Account created successfully');
+        toast.success(t(LOCALE_KEYS.ACCOUNT_CREATED_SUCCESSFULLY));
       } else if (mode === 'edit' && selectedNode) {
         await chartOfAccountsService.update(selectedNode.id, payload as IChartOfAccountUpdate);
 
@@ -219,55 +220,73 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
           );
         }
 
-        toast.success('Account updated successfully');
+        toast.success(t(LOCALE_KEYS.ACCOUNT_UPDATED_SUCCESSFULLY));
       }
       onSuccess();
     } catch (error) {
       console.error('Error saving account', error);
-      toast.error('Failed to save account');
+      toast.error(t(LOCALE_KEYS.FAILED_SAVE_ACCOUNT));
     }
   };
 
   const handleDelete = async () => {
     if (!selectedNode) return;
 
-    if (window.confirm('Are you sure you want to delete this account?')) {
+    if (window.confirm(t(LOCALE_KEYS.CONFIRM_DELETE_ACCOUNT))) {
       try {
         await chartOfAccountsService.delete(selectedNode.id);
-        toast.success('Account deleted successfully');
+        toast.success(t(LOCALE_KEYS.ACCOUNT_DELETED_SUCCESSFULLY));
         handleClear();
         onSuccess(); // Refresh tree
       } catch (error) {
         console.error('Error deleting account', error);
-        toast.error('Failed to delete account');
+        toast.error(t(LOCALE_KEYS.FAILED_DELETE_ACCOUNT));
       }
     }
   };
 
   return (
-    <Card title="Chart of Account" variant="outlined" className="w-full">
+    <Card
+      title={t(LOCALE_KEYS.CHART_OF_ACCOUNT, { defaultValue: 'Chart of Account' })}
+      variant="outlined"
+      className="w-full"
+    >
       <Form
         form={form}
         layout="vertical"
         onFinish={onFinish}
-        initialValues={{ isActive: true, isTransaction: true }}
+        initialValues={{ isActive: true, isTransaction: false }}
       >
         <Row gutter={16}>
           {/* Row 1: Head Code + Head Name */}
           <Col span={12}>
             <Form.Item
-              label="Head Code"
+              label={t(LOCALE_KEYS.HEAD_CODE, { defaultValue: 'Head Code' })}
               name="headCode"
-              rules={[{ required: true, message: 'Code is required' }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.REQUIRED_FIELD, {
+                    field: t(LOCALE_KEYS.HEAD_CODE, { defaultValue: 'Head Code' }),
+                  }),
+                },
+              ]}
             >
               <Input readOnly />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
-              label="Head Name"
+              label={t(LOCALE_KEYS.HEAD_NAME, { defaultValue: 'Head Name' })}
               name="headName"
-              rules={[{ required: true, message: 'Name is required' }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.REQUIRED_FIELD, {
+                    field: t(LOCALE_KEYS.HEAD_NAME, { defaultValue: 'Head Name' }),
+                  }),
+                },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -275,26 +294,66 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
 
           {/* Row 2: Parent Head + Head Type */}
           <Col span={12}>
-            <Form.Item label="Parent Head" name="parentHead">
+            <Form.Item
+              label={t(LOCALE_KEYS.PARENT_HEAD, { defaultValue: 'Parent Head' })}
+              name="parentHead"
+            >
               <Input readOnly />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Head Type" name="headType" rules={[{ required: true }]}>
-              <Select options={Object.values(AccountType).map((t) => ({ label: t, value: t }))} />
+            <Form.Item
+              label={t(LOCALE_KEYS.HEAD_TYPE, { defaultValue: 'Head Type' })}
+              name="headType"
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.REQUIRED_FIELD, {
+                    field: t(LOCALE_KEYS.HEAD_TYPE, { defaultValue: 'Head Type' }),
+                  }),
+                },
+              ]}
+            >
+              <Select
+                options={[
+                  {
+                    label: t(LOCALE_KEYS.ACCOUNT_TYPE_ASSET, { defaultValue: 'Asset' }),
+                    value: AccountType.ASSET,
+                  },
+                  {
+                    label: t(LOCALE_KEYS.ACCOUNT_TYPE_LIABILITY, { defaultValue: 'Liability' }),
+                    value: AccountType.LIABILITY,
+                  },
+                  {
+                    label: t(LOCALE_KEYS.ACCOUNT_TYPE_EQUITY, { defaultValue: 'Equity' }),
+                    value: AccountType.EQUITY,
+                  },
+                  {
+                    label: t(LOCALE_KEYS.ACCOUNT_TYPE_INCOME, { defaultValue: 'Income' }),
+                    value: AccountType.INCOME,
+                  },
+                  {
+                    label: t(LOCALE_KEYS.ACCOUNT_TYPE_EXPENSE, { defaultValue: 'Expense' }),
+                    value: AccountType.EXPENSE,
+                  },
+                ]}
+              />
             </Form.Item>
           </Col>
 
           {/* Head Level - hidden or removed, keeping for data */}
           <Col span={24} style={{ display: 'none' }}>
-            <Form.Item label="Head Level" name="headLevel">
+            <Form.Item
+              label={t(LOCALE_KEYS.HEAD_LEVEL, { defaultValue: 'Head Level' })}
+              name="headLevel"
+            >
               <InputNumber readOnly className="w-full" />
             </Form.Item>
           </Col>
 
           {/* Branches */}
           <Col span={24}>
-            <Form.Item label="Branches">
+            <Form.Item label={t(LOCALE_KEYS.BRANCH, { defaultValue: 'Branches' })}>
               <div>
                 <Checkbox
                   indeterminate={
@@ -312,7 +371,7 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
                   }}
                   checked={branches.length > 0 && selectedBranchIds.length === branches.length}
                 >
-                  Select All
+                  {t(LOCALE_KEYS.SELECT_ALL, { defaultValue: 'Select All' })}
                 </Checkbox>
                 <div className="mt-2 pl-4 max-h-32 overflow-y-auto border border-gray-200 rounded p-2">
                   <Checkbox.Group
@@ -334,24 +393,28 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
           {/* Row 3: IsTransaction + IsActive */}
           <Col span={12}>
             <Form.Item name="isTransaction" valuePropName="checked">
-              <Checkbox>IsTransaction</Checkbox>
+              <Checkbox>
+                {t(LOCALE_KEYS.IS_TRANSACTION, { defaultValue: 'Is Transaction' })}
+              </Checkbox>
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item name="isActive" valuePropName="checked">
-              <Checkbox>IsActive</Checkbox>
+              <Checkbox>{t(LOCALE_KEYS.IS_ACTIVE, { defaultValue: 'Active' })}</Checkbox>
             </Form.Item>
           </Col>
           <Form.Item name="isGL" valuePropName="checked" hidden>
-            <Checkbox>IsGL</Checkbox>
+            <Checkbox>{t(LOCALE_KEYS.IS_GL, { defaultValue: 'Is GL' })}</Checkbox>
           </Form.Item>
         </Row>
         <div className="flex gap-2 mt-4">
           <Button type="primary" onClick={handleNew}>
-            New
+            {t(LOCALE_KEYS.NEW, { defaultValue: 'New' })}
           </Button>
           <Button type="primary" htmlType="submit">
-            {mode === 'create' ? 'Save' : 'Update'}
+            {mode === 'create'
+              ? t(LOCALE_KEYS.SAVE, { defaultValue: 'Save' })
+              : t(LOCALE_KEYS.UPDATE, { defaultValue: 'Update' })}
           </Button>
           <Button
             danger
@@ -362,9 +425,9 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
               (selectedNode.children && selectedNode.children.length > 0)
             }
           >
-            Delete
+            {t(LOCALE_KEYS.DELETE, { defaultValue: 'Delete' })}
           </Button>
-          <Button onClick={handleClear}>Clear</Button>
+          <Button onClick={handleClear}>{t(LOCALE_KEYS.CLEAR, { defaultValue: 'Clear' })}</Button>
         </div>
       </Form>
     </Card>

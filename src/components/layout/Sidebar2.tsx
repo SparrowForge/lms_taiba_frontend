@@ -175,8 +175,22 @@ export const Sidebar2 = React.memo(
       */
       // Actually, let's just append it for now as the user requested "make it available".
       // Ideally this should come from backend, but explicit override is fine for dev.
-      return [
-        ...items,
+      const financialManagementLabel = t(LOCALE_KEYS.FINANCIAL_MANAGEMENT, {
+        defaultValue: 'Financial Management',
+      });
+
+      // Find existing Financial Management menu item
+      const financialManagementIndex = items.findIndex(
+        (item: any) =>
+          item?.label === financialManagementLabel || item?.label === 'Financial Management',
+      );
+
+      const newChildren = [
+        {
+          key: '/financial-years',
+          icon: <Icons.CalendarOutlined />,
+          label: t(LOCALE_KEYS.FINANCIAL_YEARS, { defaultValue: 'Financial Years' }),
+        },
         {
           key: '/chart-of-accounts',
           icon: <Icons.BankOutlined />,
@@ -184,10 +198,28 @@ export const Sidebar2 = React.memo(
         },
         {
           key: '/cost-centers',
-          icon: <Icons.BankOutlined />,
+          icon: <Icons.ApartmentOutlined />,
           label: t(LOCALE_KEYS.COST_CENTERS, { defaultValue: 'Cost Centers' }),
         },
+
+        {
+          key: '/voucher-types',
+          icon: <Icons.FileTextOutlined />,
+          label: t(LOCALE_KEYS.VOUCHER_TYPES, { defaultValue: 'Voucher Types' }),
+        },
       ];
+
+      if (financialManagementIndex > -1) {
+        // If exists, clone and append children
+        const newItems = [...items];
+        const existingItem = { ...newItems[financialManagementIndex] } as any;
+        existingItem.children = [...(existingItem.children || []), ...newChildren];
+        newItems[financialManagementIndex] = existingItem;
+        return newItems;
+      }
+
+      // If not exists, create new one
+      return [...items];
     }, [myMenus, transformMenus, t]);
 
     // Update selected keys and open keys when route changes

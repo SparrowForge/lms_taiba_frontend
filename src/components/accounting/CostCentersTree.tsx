@@ -57,8 +57,27 @@ const CostCentersTree: React.FC<CostCentersTreeProps> = ({
     loadTree();
   }, [refreshTrigger]);
 
-  const onExpand = (newExpandedKeys: React.Key[]) => {
-    setExpandedKeys(newExpandedKeys);
+  const onExpand = (newExpandedKeys: React.Key[], info: any) => {
+    if (!info.expanded) {
+      // Node being collapsed - recursively remove all children keys
+      const getDescendantKeys = (node: DataNode): React.Key[] => {
+        let keys: React.Key[] = [];
+        if (node.children) {
+          node.children.forEach((child) => {
+            keys.push(child.key);
+            keys = keys.concat(getDescendantKeys(child));
+          });
+        }
+        return keys;
+      };
+
+      // Use the node from the event info
+      const descendants = getDescendantKeys(info.node as DataNode);
+      const filteredKeys = newExpandedKeys.filter((k) => !descendants.includes(k));
+      setExpandedKeys(filteredKeys);
+    } else {
+      setExpandedKeys(newExpandedKeys);
+    }
   };
 
   const handleSelect = (selectedKeys: React.Key[], info: any) => {

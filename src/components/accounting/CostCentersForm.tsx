@@ -2,6 +2,7 @@ import { Button, Card, Checkbox, Col, Form, Input, Row } from 'antd';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useLocalization } from '@/hooks/useLocalization';
 import { costCentersService } from '@/services/costCentersService';
 import { ICostCenter, ICostCenterCreate, ICostCenterUpdate } from '@/types/costCenters';
@@ -76,77 +77,102 @@ const CostCentersForm: React.FC<CostCentersFormProps> = ({
 
       if (mode === 'create') {
         await costCentersService.create(payload);
-        toast.success('Cost center created successfully');
+        toast.success(t(LOCALE_KEYS.COST_CENTER_CREATED_SUCCESSFULLY));
       } else if (mode === 'edit' && selectedNode) {
         await costCentersService.update(selectedNode.id, payload as ICostCenterUpdate);
-        toast.success('Cost center updated successfully');
+        toast.success(t(LOCALE_KEYS.COST_CENTER_UPDATED_SUCCESSFULLY));
       }
       onSuccess();
     } catch (error) {
       console.error('Error saving cost center', error);
-      toast.error('Failed to save cost center');
+      toast.error(t(LOCALE_KEYS.FAILED_SAVE_COST_CENTER));
     }
   };
 
   const handleDelete = async () => {
     if (!selectedNode) return;
 
-    if (window.confirm('Are you sure you want to delete this cost center?')) {
+    if (window.confirm(t(LOCALE_KEYS.CONFIRM_DELETE_COST_CENTER))) {
       try {
         await costCentersService.delete(selectedNode.id);
-        toast.success('Cost center deleted successfully');
+        toast.success(t(LOCALE_KEYS.COST_CENTER_DELETED_SUCCESSFULLY));
         handleClear();
         onSuccess(); // Refresh tree
       } catch (error) {
         console.error('Error deleting cost center', error);
-        toast.error('Failed to delete cost center');
+        toast.error(t(LOCALE_KEYS.FAILED_DELETE_COST_CENTER));
       }
     }
   };
 
   return (
-    <Card title="Cost Center" variant="outlined" className="w-full">
+    <Card
+      title={t(LOCALE_KEYS.COST_CENTER, { defaultValue: 'Cost Center' })}
+      variant="outlined"
+      className="w-full"
+    >
       <Form form={form} layout="vertical" onFinish={onFinish} initialValues={{ isActive: true }}>
         <Row gutter={16}>
           {/* Name */}
           <Col span={24}>
             <Form.Item
-              label="Name"
+              label={t(LOCALE_KEYS.NAME, { defaultValue: 'Name' })}
               name="costName"
-              rules={[{ required: true, message: 'Name is required' }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(LOCALE_KEYS.REQUIRED_FIELD, {
+                    field: t(LOCALE_KEYS.NAME, { defaultValue: 'Name' }),
+                  }),
+                },
+              ]}
             >
-              <Input placeholder="Enter cost center name" />
+              <Input
+                placeholder={t(LOCALE_KEYS.ENTER_COST_CENTER_NAME, {
+                  defaultValue: 'Enter cost center name',
+                })}
+              />
             </Form.Item>
           </Col>
 
           {/* Parent (read-only) */}
           <Col span={24}>
-            <Form.Item label="Parent" name="parentName">
+            <Form.Item label={t(LOCALE_KEYS.PARENT, { defaultValue: 'Parent' })} name="parentName">
               <Input readOnly />
             </Form.Item>
           </Col>
 
           {/* Description */}
           <Col span={24}>
-            <Form.Item label="Desc." name="remarks">
-              <TextArea rows={4} placeholder="Enter description" />
+            <Form.Item
+              label={t(LOCALE_KEYS.DESCRIPTION, { defaultValue: 'Description' })}
+              name="remarks"
+            >
+              <TextArea
+                rows={4}
+                placeholder={t(LOCALE_KEYS.ENTER_DESCRIPTION, {
+                  defaultValue: 'Enter description',
+                })}
+              />
             </Form.Item>
           </Col>
 
           {/* Active Checkbox */}
           <Col span={24}>
             <Form.Item name="isActive" valuePropName="checked">
-              <Checkbox>Active ?</Checkbox>
+              <Checkbox>{t(LOCALE_KEYS.IS_ACTIVE, { defaultValue: 'Active' })}</Checkbox>
             </Form.Item>
           </Col>
         </Row>
 
         <div className="flex gap-2 mt-4">
           <Button type="primary" onClick={handleNew}>
-            New
+            {t(LOCALE_KEYS.NEW, { defaultValue: 'New' })}
           </Button>
           <Button type="primary" htmlType="submit">
-            {mode === 'create' ? 'Save' : 'Update'}
+            {mode === 'create'
+              ? t(LOCALE_KEYS.SAVE, { defaultValue: 'Save' })
+              : t(LOCALE_KEYS.UPDATE, { defaultValue: 'Update' })}
           </Button>
           <Button
             danger
@@ -157,9 +183,9 @@ const CostCentersForm: React.FC<CostCentersFormProps> = ({
               (selectedNode.children && selectedNode.children.length > 0)
             }
           >
-            Delete
+            {t(LOCALE_KEYS.DELETE, { defaultValue: 'Delete' })}
           </Button>
-          <Button onClick={handleClear}>Clear</Button>
+          <Button onClick={handleClear}>{t(LOCALE_KEYS.CLEAR, { defaultValue: 'Clear' })}</Button>
         </div>
       </Form>
     </Card>
