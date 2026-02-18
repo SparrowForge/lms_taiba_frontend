@@ -10,6 +10,7 @@ import {
   Space,
   Typography,
   Form,
+  Empty,
 } from "antd"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -156,7 +157,7 @@ export default function Quiz({
           ? null
           : formValues[`answer_${index}`] ?? "",
       })),
-      status: "draft",
+      status: "submitted",
     }
 
     try {
@@ -168,6 +169,10 @@ export default function Quiz({
   }
 
   if (!currentQuestion) return null
+
+  if (!isExamActive) {
+    <Empty description="No Content" />
+  }
 
 
   return (
@@ -246,7 +251,7 @@ export default function Quiz({
                       type="primary"
                       onClick={handleSubmit}
                       loading={submitting}
-                      // disabled={!isExamActive}
+                      disabled={!isExamActive}
                     >
                       Submit Quiz
                     </Button>

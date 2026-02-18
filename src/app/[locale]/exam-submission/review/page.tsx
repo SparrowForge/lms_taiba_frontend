@@ -58,7 +58,7 @@ const ExamSubmissionReviewPage = () => {
 
   useEffect(() => {
     if (submissionId) {
-      loadExamSubmission(Number(2))
+      loadExamSubmission(Number(submissionId))
     }
   }, [loadExamSubmission, submissionId])
 
@@ -109,8 +109,8 @@ const ExamSubmissionReviewPage = () => {
           <Empty description="Loading submission..." />
         ) : (
           <>
-           
-            <Card style={{display:"flex", justifyContent:"space-between"}}>
+
+            <Card style={{ display: "flex", justifyContent: "space-between" }}>
               <Title level={4}>{selectedExamSubmission.exam.name}</Title>
               <Text>
                 Student:{" "}
@@ -129,7 +129,7 @@ const ExamSubmissionReviewPage = () => {
                 height: "65vh",
                 overflowY: "auto",
                 paddingRight: 8,
-                margin:"0 24px"
+                margin: "0 24px"
               }}
             >
               {
