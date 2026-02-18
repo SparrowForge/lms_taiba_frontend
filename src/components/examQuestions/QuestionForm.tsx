@@ -208,7 +208,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       const formattedMcqQuestions = questions.map((q) => ({
         questionText: q.questionText,
         options: (q.options ?? []).map((o) => o.text),
-        correctOptionNumber: q.correctOptionNumber, 
+        correctOptionNumber: Number(q.correctOptionNumber), 
         courseId: selectedCourse?.id ?? 0,
         subjectId: selectedSubject?.id ?? 0,
         facultyId: user?.faculty?.id ?? 0,          
