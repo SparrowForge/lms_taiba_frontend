@@ -23,8 +23,6 @@ const GradeEntry = () => {
     const { examTypes, loadExamTypes } = useExamTypes()
     const { exams, loadExams } = useExams()
 
-
-
     useEffect(() => {
         loadBatches({ page: 1, limit: 99 })
     }, [loadBatches])
@@ -57,9 +55,9 @@ const GradeEntry = () => {
             case 1:
                 return <StudentResultAssign examId={selectedExam} />
             case 2:
-                return <GradingPage />
+                return <SemesterFinalResultManagement batch={selectedBatch} subject={selectedSemesterSubject} />
             case 3:
-                return <SemesterFinalResultManagement />
+                return <GradingPage />
             default:
                 return <Empty description="Select a batch to start grading" />
         }
@@ -135,10 +133,10 @@ const GradeEntry = () => {
                 {renderTabContent()}
             </div>
 
-            {
+            {/* {
                 (!selectedBatch) && <Card><Empty description="Select a batch to start grading" /></Card>
-            }
-            {
+            } */}
+            {/* {
                 (!selectedSemester && selectedBatch) && <Card><Empty description="Select a semester to start grading" /></Card>
             }
             {
@@ -149,8 +147,8 @@ const GradeEntry = () => {
             }
             {
                 (!selectedExam && selectedBatch && selectedSemester && selectedSemesterSubject && selectedGradeType) && <Card><Empty description="Select an exam to start grading" /></Card>
-            }
-
+            } */}
+            <SemesterFinalResultManagement batch={selectedBatch} subject={selectedSemesterSubject} />
         </div>
     )
 }

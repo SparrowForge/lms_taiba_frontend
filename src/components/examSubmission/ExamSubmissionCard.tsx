@@ -1,86 +1,79 @@
-'use client';
+'use client'
 
-import { FileTextOutlined, UserOutlined } from '@ant-design/icons';
-import { Card, Tag, Descriptions, Space, Button } from 'antd';
-import { useRouter } from 'next/navigation';
+import { FileTextOutlined, UserOutlined } from '@ant-design/icons'
+import { Card, Tag, Descriptions, Space, Button } from 'antd'
+import { useRouter } from 'next/navigation'
 
-import { IExamSubmission } from '@/types/examSubmission';
+import { IExamSubmission } from '@/types/examSubmission'
 
-interface SubmissionCardProps {
-  submission: IExamSubmission;
+interface Props {
+  submission: IExamSubmission
 }
 
-export const ExamSubmissionCard = ({ submission }: SubmissionCardProps) => {
+export const ExamSubmissionCard = ({ submission }: Props) => {
   const router = useRouter()
+
   const statusColor: Record<string, string> = {
     submitted: 'green',
     draft: 'orange',
-    pending: 'blue',
-    failed: 'red',
-  };
-
-  const getStudentName = () => {
-    const { firstName, middleName, lastName } = submission.student;
-    return [firstName, middleName, lastName].filter(Boolean).join(' ');
-  };
-
-  const getAnsweredQuestionsCount = () => {
-    return submission.answers.filter(
-      (ans) => ans.answerText !== null || ans.selectedOption !== null
-    ).length;
-  };
-
-  const handleReviewExams = (submissionId: number) => {
-    return router.push(`review?submissionId=${submissionId}`)
   }
+
+  const studentName = [
+    submission.student.firstName,
+    submission.student.middleName,
+    submission.student.lastName,
+  ].filter(Boolean).join(' ')
+
+  const answeredCount = submission.answers.filter(
+    a => a.answerText || a.selectedOption !== null
+  ).length
 
   return (
     <Card
       size="small"
-      className="mb-4"
       title={
-        <div className='flex justify-between'>
-          <div>
+        <div className="flex justify-between">
+          <Space>
             <FileTextOutlined />
-            <span className='ml-4'>{submission.exam.name}</span>
-          </div>
-          <Tag color={statusColor[submission.status] || 'default'}>
+            {submission.exam.name}
+          </Space>
+          <Tag color={statusColor[submission.status]}>
             {submission.status.toUpperCase()}
           </Tag>
         </div>
       }
     >
       <Descriptions size="small" column={1}>
-        <Descriptions.Item label="Student Name">
+        <Descriptions.Item label="Student">
           <Space>
             <UserOutlined />
-            {getStudentName()}
+            {studentName}
           </Space>
         </Descriptions.Item>
-        <Descriptions.Item label="Student ID">
+        <Descriptions.Item label="Application No">
           {submission.student.applicationNo}
         </Descriptions.Item>
         <Descriptions.Item label="Exam Type">
           {submission.exam.questionType.toUpperCase()}
         </Descriptions.Item>
-        <Descriptions.Item label="Total Marks">
-          {submission.exam.marks}
-        </Descriptions.Item>
-        <Descriptions.Item label="Questions Answered">
-          {getAnsweredQuestionsCount()} / {submission.answers.length}
+        <Descriptions.Item label="Answered">
+          {answeredCount} / {submission.answers.length}
         </Descriptions.Item>
         <Descriptions.Item label="Duration">
           {submission.exam.duration.minutes} minutes
         </Descriptions.Item>
       </Descriptions>
-      <Space style={{ marginTop: 16 }}>
-        {
-          submission.status === 'draft' && <Button type="primary" size="small">
-            Change Status
-          </Button>
-        }
-        <Button onClick={() => handleReviewExams(submission.id)} size="small">Review Answers</Button>
+
+      <Space style={{ marginTop: 12 }}>
+        <Button
+          size="small"
+          onClick={() =>
+            router.push(`review?submissionId=${submission.id}`)
+          }
+        >
+          Review Answers
+        </Button>
       </Space>
     </Card>
-  );
-};
+  )
+}
