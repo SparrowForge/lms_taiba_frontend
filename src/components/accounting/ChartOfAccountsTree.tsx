@@ -40,13 +40,13 @@ const ChartOfAccountsTree: React.FC<ChartOfAccountsTreeProps> = ({
   const loadTree = async () => {
     setLoading(true);
     try {
-      const data = await chartOfAccountsService.getTree();
-      setTreeData(formatTreeData(data));
+      const response = await chartOfAccountsService.getTree();
+      setTreeData(formatTreeData(response.data));
       if (onDataLoaded) {
-        onDataLoaded(data);
+        onDataLoaded(response.data);
       }
       // Optionally expand all initially or just first level
-      // setExpandedKeys(data.map(d => d.id));
+      // setExpandedKeys(response.data.map(d => d.id));
     } catch (error) {
       console.error('Failed to load chart of accounts tree', error);
     } finally {

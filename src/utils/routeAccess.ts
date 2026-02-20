@@ -26,6 +26,8 @@ export const ALLOWED_ROUTES = [
   '/cost-centers',
   '/financial-years',
   '/voucher-types',
+  '/exchange-rates',
+  '/currencies',
 ];
 
 /**

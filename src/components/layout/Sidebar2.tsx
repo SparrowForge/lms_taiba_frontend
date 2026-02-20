@@ -207,6 +207,16 @@ export const Sidebar2 = React.memo(
           icon: <Icons.FileTextOutlined />,
           label: t(LOCALE_KEYS.VOUCHER_TYPES, { defaultValue: 'Voucher Types' }),
         },
+        {
+          key: '/currencies',
+          icon: <Icons.DollarOutlined />,
+          label: t(LOCALE_KEYS.CURRENCY, { defaultValue: 'Currencies' }),
+        },
+        {
+          key: '/exchange-rates',
+          icon: <Icons.StockOutlined />,
+          label: t(LOCALE_KEYS.EXCHANGE_RATES, { defaultValue: 'Exchange Rates' }),
+        },
       ];
 
       if (financialManagementIndex > -1) {

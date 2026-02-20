@@ -41,10 +41,10 @@ const CostCentersTree: React.FC<CostCentersTreeProps> = ({
   const loadTree = async () => {
     setLoading(true);
     try {
-      const data = await costCentersService.getTree();
-      setTreeData(formatTreeData(data));
+      const response = await costCentersService.getTree();
+      setTreeData(formatTreeData(response.data));
       if (onDataLoaded) {
-        onDataLoaded(data);
+        onDataLoaded(response.data);
       }
     } catch (error) {
       console.error('Failed to load cost centers tree', error);

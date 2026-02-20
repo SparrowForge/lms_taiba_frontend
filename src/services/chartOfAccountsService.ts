@@ -4,40 +4,41 @@ import {
   IChartOfAccountCreate,
   IChartOfAccountUpdate,
 } from '@/types/chartOfAccounts';
-import { IBasePaginatedResponse } from '@/types/common';
+import { IBaseResponse } from '@/types/common';
 
 export const chartOfAccountsService = {
   // Get entire tree
-  getTree: async (): Promise<IChartOfAccount[]> => {
-    const response = await api.get<IChartOfAccount[]>('/chart-of-accounts');
+  getTree: async (): Promise<IBaseResponse<IChartOfAccount[]>> => {
+    const response = await api.get<IBaseResponse<IChartOfAccount[]>>('/chart-of-accounts');
     return response.data;
   },
 
   // Get flat list with pagination (if needed)
-  getList: async (params = {}): Promise<IBasePaginatedResponse<IChartOfAccount>> => {
-    const response = await api.get<IBasePaginatedResponse<IChartOfAccount>>(
-      '/chart-of-accounts/list',
-      { params },
-    );
-    return response.data;
+  getList: async (params = {}): Promise<IChartOfAccount[]> => {
+    const response = await api.get('/chart-of-accounts/list', { params });
+    // @ts-ignore
+    return response.data.data.items ? response.data.data.items : response.data.data;
   },
 
   // Get by ID
   getById: async (id: number): Promise<IChartOfAccount> => {
     const response = await api.get<IChartOfAccount>(`/chart-of-accounts/${id}`);
-    return response.data;
+    // @ts-ignore
+    return response.data.data;
   },
 
   // Create
   create: async (data: IChartOfAccountCreate): Promise<IChartOfAccount> => {
     const response = await api.post<IChartOfAccount>('/chart-of-accounts', data);
-    return response.data;
+    // @ts-ignore
+    return response.data.data;
   },
 
   // Update
   update: async (id: number, data: IChartOfAccountUpdate): Promise<IChartOfAccount> => {
     const response = await api.patch<IChartOfAccount>(`/chart-of-accounts/${id}`, data);
-    return response.data;
+    // @ts-ignore
+    return response.data.data;
   },
 
   // Delete

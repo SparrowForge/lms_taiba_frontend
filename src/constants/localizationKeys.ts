@@ -780,6 +780,25 @@ export const LOCALE_KEYS = {
   COST_CENTER_DELETED_SUCCESSFULLY: 'cost_center_deleted_successfully',
   FAILED_SAVE_COST_CENTER: 'failed_save_cost_center',
   FAILED_DELETE_COST_CENTER: 'failed_delete_cost_center',
+  // Currencies
+  CURRENCY_CODE: 'currency_code',
+  SYMBOL: 'symbol',
+  IS_DEFAULT: 'is_default',
+  DEFAULT_CURRENCY: 'default_currency',
+  EXCHANGE_RATE: 'exchange_rate',
+  EXCHANGE_RATES: 'exchange_rates',
+  ENTER_CURRENCY_CODE: 'enter_currency_code',
+  ENTER_SYMBOL: 'enter_symbol',
+  CONFIRM_DELETE_CURRENCY: 'confirm_delete_currency',
+  CURRENCY_CREATED_SUCCESSFULLY: 'currency_created_successfully',
+  CURRENCY_UPDATED_SUCCESSFULLY: 'currency_updated_successfully',
+  CURRENCY_DELETED_SUCCESSFULLY: 'currency_deleted_successfully',
+  FAILED_SAVE_CURRENCY: 'failed_save_currency',
+  FAILED_DELETE_CURRENCY: 'failed_delete_currency',
+  RATE: 'rate',
+  ENTER_RATE: 'enter_rate',
+  RATES_UPDATED_SUCCESSFULLY: 'rates_updated_successfully',
+  FAILED_SAVE_RATES: 'failed_save_rates',
 } as const;
 
 // Type for the keys

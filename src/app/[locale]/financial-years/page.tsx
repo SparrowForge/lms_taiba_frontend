@@ -26,7 +26,7 @@ export default function FinancialYearsPage() {
     setLoading(true);
     try {
       const result = await financialYearService.getAll();
-      setData(result);
+      setData(result.data.items);
     } catch (error) {
       console.error('Failed to load financial years', error);
       toast.error(t(LOCALE_KEYS.ERROR_LOADING_ENTITY, { entity: t(LOCALE_KEYS.FINANCIAL_YEARS) }));

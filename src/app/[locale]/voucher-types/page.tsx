@@ -26,7 +26,7 @@ export default function VoucherTypesPage() {
     setLoading(true);
     try {
       const result = await voucherTypeService.getAll();
-      setData(result);
+      setData(result.data.items);
     } catch (error) {
       console.error('Failed to load voucher types', error);
       toast.error('Failed to load voucher types');
