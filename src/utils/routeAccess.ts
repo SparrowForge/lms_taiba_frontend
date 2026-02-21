@@ -28,6 +28,7 @@ export const ALLOWED_ROUTES = [
   '/voucher-types',
   '/exchange-rates',
   '/currencies',
+  '/voucher-entry',
 ];
 
 /**

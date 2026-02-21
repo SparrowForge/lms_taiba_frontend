@@ -217,6 +217,11 @@ export const Sidebar2 = React.memo(
           icon: <Icons.StockOutlined />,
           label: t(LOCALE_KEYS.EXCHANGE_RATES, { defaultValue: 'Exchange Rates' }),
         },
+        {
+          key: '/voucher-entry',
+          icon: <Icons.FormOutlined />,
+          label: 'Voucher Entry',
+        },
       ];
 
       if (financialManagementIndex > -1) {
