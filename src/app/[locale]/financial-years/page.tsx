@@ -27,9 +27,13 @@ export default function FinancialYearsPage() {
     try {
       const result = await financialYearService.getAll();
       setData(result.data.items);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to load financial years', error);
-      toast.error(t(LOCALE_KEYS.ERROR_LOADING_ENTITY, { entity: t(LOCALE_KEYS.FINANCIAL_YEARS) }));
+      // toast.error(t(LOCALE_KEYS.ERROR_LOADING_ENTITY, { entity: t(LOCALE_KEYS.FINANCIAL_YEARS) }));
+      const errorMsg =
+        error?.response?.data?.message ||
+        t(LOCALE_KEYS.ERROR_LOADING_ENTITY, { entity: t(LOCALE_KEYS.FINANCIAL_YEARS) });
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -54,9 +58,12 @@ export default function FinancialYearsPage() {
       await financialYearService.delete(id);
       toast.success(t(LOCALE_KEYS.FINANCIAL_YEAR_DELETED_SUCCESSFULLY));
       loadData();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to delete', error);
-      toast.error(t(LOCALE_KEYS.FAILED_DELETE_FINANCIAL_YEAR));
+      // toast.error(t(LOCALE_KEYS.FAILED_DELETE_FINANCIAL_YEAR));
+      const errorMsg =
+        error?.response?.data?.message || t(LOCALE_KEYS.FAILED_DELETE_FINANCIAL_YEAR);
+      toast.error(errorMsg);
     }
   };
 
@@ -72,9 +79,11 @@ export default function FinancialYearsPage() {
       }
       setModalVisible(false);
       loadData();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to save', error);
-      toast.error(t(LOCALE_KEYS.FAILED_SAVE_FINANCIAL_YEAR));
+      // toast.error(t(LOCALE_KEYS.FAILED_SAVE_FINANCIAL_YEAR));
+      const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_SAVE_FINANCIAL_YEAR);
+      toast.error(errorMsg);
     } finally {
       setFormLoading(false);
     }

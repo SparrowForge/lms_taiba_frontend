@@ -11,7 +11,6 @@ import {
   Card,
   Form,
   Input,
-  message,
   Modal,
   Popconfirm,
   Space,
@@ -22,6 +21,7 @@ import {
 } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function CurrencyPage() {
   const t = useTranslations();
@@ -52,9 +52,12 @@ export default function CurrencyPage() {
         pageSize: response.data.meta.limit,
         total: response.data.meta.total,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      message.error(t(LOCALE_KEYS.FAILED_NAME, { name: t(LOCALE_KEYS.CURRENCY) }));
+      const errorMsg =
+        error?.response?.data?.message ||
+        t(LOCALE_KEYS.FAILED_NAME, { name: t(LOCALE_KEYS.CURRENCY) });
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -79,11 +82,12 @@ export default function CurrencyPage() {
   const handleDelete = async (id: number) => {
     try {
       await currencyService.deleteCurrency(id);
-      message.success(t(LOCALE_KEYS.CURRENCY_DELETED_SUCCESSFULLY));
+      toast.success(t(LOCALE_KEYS.CURRENCY_DELETED_SUCCESSFULLY));
       fetchCurrencies(pagination.current, pagination.pageSize);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      message.error(t(LOCALE_KEYS.FAILED_DELETE_CURRENCY));
+      const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_DELETE_CURRENCY);
+      toast.error(errorMsg);
     }
   };
 
@@ -94,17 +98,18 @@ export default function CurrencyPage() {
 
       if (editingId) {
         await currencyService.updateCurrency(editingId, values);
-        message.success(t(LOCALE_KEYS.CURRENCY_UPDATED_SUCCESSFULLY));
+        toast.success(t(LOCALE_KEYS.CURRENCY_UPDATED_SUCCESSFULLY));
       } else {
         await currencyService.createCurrency(values);
-        message.success(t(LOCALE_KEYS.CURRENCY_CREATED_SUCCESSFULLY));
+        toast.success(t(LOCALE_KEYS.CURRENCY_CREATED_SUCCESSFULLY));
       }
 
       setModalVisible(false);
       fetchCurrencies(pagination.current, pagination.pageSize);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      message.error(t(LOCALE_KEYS.FAILED_SAVE_CURRENCY));
+      const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_SAVE_CURRENCY);
+      toast.error(errorMsg);
     } finally {
       setSaving(false);
     }

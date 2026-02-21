@@ -223,9 +223,11 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
         toast.success(t(LOCALE_KEYS.ACCOUNT_UPDATED_SUCCESSFULLY));
       }
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving account', error);
-      toast.error(t(LOCALE_KEYS.FAILED_SAVE_ACCOUNT));
+      // toast.error(t(LOCALE_KEYS.FAILED_SAVE_ACCOUNT));
+      const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_SAVE_ACCOUNT);
+      toast.error(errorMsg);
     }
   };
 
@@ -238,9 +240,11 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
         toast.success(t(LOCALE_KEYS.ACCOUNT_DELETED_SUCCESSFULLY));
         handleClear();
         onSuccess(); // Refresh tree
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error deleting account', error);
-        toast.error(t(LOCALE_KEYS.FAILED_DELETE_ACCOUNT));
+        // toast.error(t(LOCALE_KEYS.FAILED_DELETE_ACCOUNT));
+        const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_DELETE_ACCOUNT);
+        toast.error(errorMsg);
       }
     }
   };

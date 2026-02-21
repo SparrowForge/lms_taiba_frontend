@@ -83,9 +83,10 @@ const CostCentersForm: React.FC<CostCentersFormProps> = ({
         toast.success(t(LOCALE_KEYS.COST_CENTER_UPDATED_SUCCESSFULLY));
       }
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving cost center', error);
-      toast.error(t(LOCALE_KEYS.FAILED_SAVE_COST_CENTER));
+      const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_SAVE_COST_CENTER);
+      toast.error(errorMsg);
     }
   };
 
@@ -98,9 +99,11 @@ const CostCentersForm: React.FC<CostCentersFormProps> = ({
         toast.success(t(LOCALE_KEYS.COST_CENTER_DELETED_SUCCESSFULLY));
         handleClear();
         onSuccess(); // Refresh tree
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error deleting cost center', error);
-        toast.error(t(LOCALE_KEYS.FAILED_DELETE_COST_CENTER));
+
+        const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_DELETE_COST_CENTER);
+        toast.error(errorMsg);
       }
     }
   };

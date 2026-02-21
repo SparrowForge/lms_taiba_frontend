@@ -54,9 +54,10 @@ export default function VoucherTypesPage() {
       await voucherTypeService.delete(id);
       toast.success(t(LOCALE_KEYS.VOUCHER_TYPE_DELETED_SUCCESSFULLY));
       loadData();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to delete', error);
-      toast.error(t(LOCALE_KEYS.FAILED_DELETE_VOUCHER_TYPE));
+      const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_DELETE_VOUCHER_TYPE);
+      toast.error(errorMsg);
     }
   };
 
@@ -72,9 +73,11 @@ export default function VoucherTypesPage() {
       }
       setModalVisible(false);
       loadData();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to save', error);
-      toast.error(t(LOCALE_KEYS.FAILED_SAVE_VOUCHER_TYPE));
+      // toast.error(t(LOCALE_KEYS.FAILED_SAVE_VOUCHER_TYPE));
+      const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_SAVE_VOUCHER_TYPE);
+      toast.error(errorMsg);
     } finally {
       setFormLoading(false);
     }

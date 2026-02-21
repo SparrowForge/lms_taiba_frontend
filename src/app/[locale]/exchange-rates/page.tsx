@@ -6,20 +6,11 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { currencyService } from '@/services/currencyService';
 import { ICurrency, IExchangeRateCreate } from '@/types/currency';
 import { SaveOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Card,
-  DatePicker,
-  InputNumber,
-  message,
-  Space,
-  Table,
-  Tag,
-  Typography,
-} from 'antd';
+import { Button, Card, DatePicker, InputNumber, Space, Table, Tag, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const { Text } = Typography;
 
@@ -73,9 +64,12 @@ export default function ExchangeRatePage() {
         ratesMap[r.currency.id] = r.rate;
       });
       setRates(ratesMap);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      message.error(t(LOCALE_KEYS.FAILED_NAME, { name: t(LOCALE_KEYS.EXCHANGE_RATES) }));
+      const errorMsg =
+        error?.response?.data?.message ||
+        t(LOCALE_KEYS.FAILED_NAME, { name: t(LOCALE_KEYS.EXCHANGE_RATES) });
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -104,11 +98,12 @@ export default function ExchangeRatePage() {
       );
 
       await currencyService.saveExchangeRates(ratesToSave);
-      message.success(t(LOCALE_KEYS.RATES_UPDATED_SUCCESSFULLY));
+      toast.success(t(LOCALE_KEYS.RATES_UPDATED_SUCCESSFULLY));
       fetchData(pagination.current, pagination.pageSize); // Refresh data
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      message.error(t(LOCALE_KEYS.FAILED_SAVE_RATES));
+      const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_SAVE_RATES);
+      toast.error(errorMsg);
     } finally {
       setSaving(false);
     }

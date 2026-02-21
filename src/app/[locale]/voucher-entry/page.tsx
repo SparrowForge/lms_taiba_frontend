@@ -28,7 +28,6 @@ import {
   Form,
   Input,
   InputNumber,
-  message,
   Modal,
   Row,
   Select,
@@ -40,6 +39,7 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 
 // Simple unique key generator (no uuid dependency needed)
 const useKeyGenerator = () => {
@@ -158,7 +158,7 @@ export default function VoucherEntryPage() {
       }
     } catch (error) {
       console.error(error);
-      message.error('Failed to load form data');
+      toast.error('Failed to load form data');
     } finally {
       setLoading(false);
     }
@@ -213,7 +213,7 @@ export default function VoucherEntryPage() {
       const res = await voucherService.getNextNumber(typeId);
       setVoucherNo(res.data.voucherNo);
     } catch {
-      message.error('Failed to generate voucher number');
+      toast.error('Failed to generate voucher number');
     }
   };
 
@@ -225,7 +225,7 @@ export default function VoucherEntryPage() {
         lineForm.setFieldsValue({ currRate: rate });
       } else {
         lineForm.setFieldsValue({ currRate: undefined });
-        message.warning(
+        toast.warning(
           'No exchange rate found for this currency. Please set it in the Exchange Rates module first.',
         );
       }
@@ -296,7 +296,9 @@ export default function VoucherEntryPage() {
       const values = await lineForm.validateFields();
       const existingChildren = lines.find((l) => l.key === editingLineKey)?.children || [];
       const updatedLine = buildLineFromForm(values, editingLineKey, existingChildren);
-      setLines((prev) => prev.map((l) => (l.key === editingLineKey ? updatedLine : l)));
+      setLines((prev) =>
+        prev.map((l: IVoucherLineFormState) => (l.key === editingLineKey ? updatedLine : l)),
+      );
       setEditingLineKey(null);
       resetLineForm();
     } catch {
@@ -336,7 +338,12 @@ export default function VoucherEntryPage() {
   const openChildModal = (lineKey: string) => {
     setChildLineKey(lineKey);
     const line = lines.find((l) => l.key === lineKey);
-    setChildEntries((line?.children || []).map((c) => ({ ...c, _key: generateKey() })));
+    setChildEntries(
+      (line?.children || []).map((c: IAccVoucherDetailChildCreate) => ({
+        ...c,
+        _key: generateKey(),
+      })),
+    );
     setChildModalVisible(true);
   };
 
@@ -361,7 +368,7 @@ export default function VoucherEntryPage() {
   const handleSaveChildren = () => {
     if (childLineKey) {
       setLines((prev) =>
-        prev.map((l) =>
+        prev.map((l: IVoucherLineFormState) =>
           l.key === childLineKey
             ? { ...l, children: childEntries.map(({ _key, ...rest }) => rest) }
             : l,
@@ -381,25 +388,25 @@ export default function VoucherEntryPage() {
   // ============ Save Voucher ============
   const handleSave = async () => {
     if (!selectedTypeId) {
-      message.error('Please select a voucher type');
+      toast.error('Please select a voucher type');
       return;
     }
     if (lines.length === 0) {
-      message.error('Please add at least one line');
+      toast.error('Please add at least one line');
       return;
     }
     if (!isBalanced) {
-      message.error(
+      toast.error(
         `Voucher is not balanced. DR: ${totalDebit.toFixed(2)}, CR: ${totalCredit.toFixed(2)}`,
       );
       return;
     }
     if (!financialYearId) {
-      message.error('Please select a financial year');
+      toast.error('Please select a financial year');
       return;
     }
     if (!branchId) {
-      message.error('Please select a branch');
+      toast.error('Please select a branch');
       return;
     }
 
@@ -417,7 +424,7 @@ export default function VoucherEntryPage() {
         financialYearId,
         branchId,
         departmentId: departmentId || undefined,
-        details: lines.map((l) =>
+        details: lines.map((l: IVoucherLineFormState) =>
           cleanObj({
             chartOfAccountId: l.chartOfAccountId,
             currencyId: l.currencyId,
@@ -446,12 +453,13 @@ export default function VoucherEntryPage() {
           }),
         ),
       } as any);
-      message.success('Voucher saved successfully');
+      toast.success('Voucher saved successfully');
       handleClear();
       handleTypeSelect(selectedTypeId);
     } catch (error: any) {
       console.error(error);
-      message.error(error?.response?.data?.message || 'Failed to save voucher');
+      const errorMsg = error?.response?.data?.message || 'Failed to save voucher';
+      toast.error(errorMsg);
     } finally {
       setSaving(false);
     }
@@ -962,7 +970,7 @@ export default function VoucherEntryPage() {
                           childForm.setFieldsValue({ rate });
                         } else {
                           childForm.setFieldsValue({ rate: undefined });
-                          message.warning(
+                          toast.warning(
                             'No exchange rate found for this currency. Please set it in the Exchange Rates module first.',
                           );
                         }
