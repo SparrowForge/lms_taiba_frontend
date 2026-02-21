@@ -2,6 +2,8 @@
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { useLocalization } from '@/hooks/useLocalization';
 import { branchService } from '@/services/branchService';
 import { chartOfAccountsService } from '@/services/chartOfAccountsService';
 import { costCentersService } from '@/services/costCentersService';
@@ -69,6 +71,7 @@ const { Text } = Typography;
 const { TextArea } = Input;
 
 export default function VoucherEntryPage() {
+  const { t } = useLocalization();
   // ============ Key Generator ============
   const generateKey = useKeyGenerator();
 
@@ -158,7 +161,7 @@ export default function VoucherEntryPage() {
       }
     } catch (error) {
       console.error(error);
-      toast.error('Failed to load form data');
+      toast.error(t(LOCALE_KEYS.FAILED_LOAD_DATA));
     } finally {
       setLoading(false);
     }
@@ -213,7 +216,7 @@ export default function VoucherEntryPage() {
       const res = await voucherService.getNextNumber(typeId);
       setVoucherNo(res.data.voucherNo);
     } catch {
-      toast.error('Failed to generate voucher number');
+      toast.error(t(LOCALE_KEYS.FAILED_GENERATE_VOUCHER_NO));
     }
   };
 
@@ -225,9 +228,7 @@ export default function VoucherEntryPage() {
         lineForm.setFieldsValue({ currRate: rate });
       } else {
         lineForm.setFieldsValue({ currRate: undefined });
-        toast.warning(
-          'No exchange rate found for this currency. Please set it in the Exchange Rates module first.',
-        );
+        toast.warning(t(LOCALE_KEYS.NO_EXCHANGE_RATE_FOUND));
       }
     } else {
       lineForm.setFieldsValue({ currRate: undefined });
@@ -388,25 +389,28 @@ export default function VoucherEntryPage() {
   // ============ Save Voucher ============
   const handleSave = async () => {
     if (!selectedTypeId) {
-      toast.error('Please select a voucher type');
+      toast.error(t(LOCALE_KEYS.PLEASE_SELECT_VOUCHER_TYPE));
       return;
     }
     if (lines.length === 0) {
-      toast.error('Please add at least one line');
+      toast.error(t(LOCALE_KEYS.PLEASE_ADD_LINE));
       return;
     }
     if (!isBalanced) {
       toast.error(
-        `Voucher is not balanced. DR: ${totalDebit.toFixed(2)}, CR: ${totalCredit.toFixed(2)}`,
+        t(LOCALE_KEYS.VOUCHER_NOT_BALANCED, {
+          dr: totalDebit.toFixed(2),
+          cr: totalCredit.toFixed(2),
+        }),
       );
       return;
     }
     if (!financialYearId) {
-      toast.error('Please select a financial year');
+      toast.error(t(LOCALE_KEYS.PLEASE_SELECT_FINANCIAL_YEAR));
       return;
     }
     if (!branchId) {
-      toast.error('Please select a branch');
+      toast.error(t(LOCALE_KEYS.PLEASE_SELECT_BRANCH));
       return;
     }
 
@@ -453,19 +457,19 @@ export default function VoucherEntryPage() {
           }),
         ),
       } as any);
-      toast.success('Voucher saved successfully');
-      handleClear();
+      toast.success(t(LOCALE_KEYS.VOUCHER_SAVED_SUCCESSFULLY));
+      handleClearAll();
       handleTypeSelect(selectedTypeId);
     } catch (error: any) {
       console.error(error);
-      const errorMsg = error?.response?.data?.message || 'Failed to save voucher';
+      const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_TO_SAVE_VOUCHER);
       toast.error(errorMsg);
     } finally {
       setSaving(false);
     }
   };
 
-  const handleClear = () => {
+  const handleClearAll = () => {
     setLines([]);
     setNarration('');
     setVoucherDate(dayjs());
@@ -476,20 +480,20 @@ export default function VoucherEntryPage() {
   // ============ Lines Table Columns ============
   const lineColumns = [
     {
-      title: 'TR',
+      title: t(LOCALE_KEYS.TR),
       dataIndex: 'trType',
       key: 'trType',
       width: 60,
       render: (tr: string) => <Tag color={tr === 'DR' ? 'blue' : 'green'}>{tr}</Tag>,
     },
     {
-      title: 'Ledger',
+      title: t(LOCALE_KEYS.LEDGER),
       dataIndex: 'chartOfAccountName',
       key: 'chartOfAccountName',
       ellipsis: true,
     },
     {
-      title: 'Debit',
+      title: t(LOCALE_KEYS.DEBIT),
       dataIndex: 'debitAmount',
       key: 'debitAmount',
       width: 120,
@@ -497,7 +501,7 @@ export default function VoucherEntryPage() {
       render: (v: number) => (v > 0 ? v.toFixed(2) : ''),
     },
     {
-      title: 'Credit',
+      title: t(LOCALE_KEYS.CREDIT),
       dataIndex: 'creditAmount',
       key: 'creditAmount',
       width: 120,
@@ -505,13 +509,13 @@ export default function VoucherEntryPage() {
       render: (v: number) => (v > 0 ? v.toFixed(2) : ''),
     },
     {
-      title: 'Currency',
+      title: t(LOCALE_KEYS.CURRENCY),
       dataIndex: 'currencyCode',
       key: 'currencyCode',
       width: 80,
     },
     {
-      title: 'Curr Amt',
+      title: t(LOCALE_KEYS.CURR_AMT),
       dataIndex: 'currAmount',
       key: 'currAmount',
       width: 100,
@@ -519,7 +523,7 @@ export default function VoucherEntryPage() {
       render: (v: number) => (v ? v.toFixed(2) : ''),
     },
     {
-      title: 'Rate',
+      title: t(LOCALE_KEYS.RATE),
       dataIndex: 'currRate',
       key: 'currRate',
       width: 80,
@@ -527,14 +531,14 @@ export default function VoucherEntryPage() {
       render: (v: number) => (v ? v.toFixed(4) : ''),
     },
     {
-      title: 'Cost Center',
+      title: t(LOCALE_KEYS.COST_CENTER),
       dataIndex: 'costCenterName',
       key: 'costCenterName',
       width: 120,
       ellipsis: true,
     },
     {
-      title: 'Remarks',
+      title: t(LOCALE_KEYS.REMARKS),
       dataIndex: 'lineNarration',
       key: 'lineNarration',
       width: 150,
@@ -546,7 +550,7 @@ export default function VoucherEntryPage() {
       width: 80,
       render: (_: any, record: IVoucherLineFormState) => (
         <Space size="small">
-          <Tooltip title="Sub-entries">
+          <Tooltip title={t(LOCALE_KEYS.SUB_ENTRIES)}>
             <Button
               type="text"
               size="small"
@@ -557,7 +561,7 @@ export default function VoucherEntryPage() {
               }}
             />
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title={t(LOCALE_KEYS.DELETE)}>
             <Button
               type="text"
               size="small"
@@ -581,7 +585,7 @@ export default function VoucherEntryPage() {
         <div className="p-6" style={{ display: 'flex', gap: 16 }}>
           {/* ===== Left Sidebar: Voucher Types ===== */}
           <Card
-            title="Voucher Type"
+            title={t(LOCALE_KEYS.VOUCHER_TYPE)}
             style={{ width: 200, flexShrink: 0 }}
             styles={{ body: { padding: 0 } }}
             loading={loading}
@@ -614,15 +618,16 @@ export default function VoucherEntryPage() {
               title={
                 <Space>
                   <Text strong style={{ fontSize: 18 }}>
-                    {voucherTypes.find((vt) => vt.id === selectedTypeId)?.name || 'Voucher Entry'}
+                    {voucherTypes.find((vt) => vt.id === selectedTypeId)?.name ||
+                      t(LOCALE_KEYS.VOUCHER_ENTRY)}
                   </Text>
                   <Tag color="blue">{voucherNo}</Tag>
                 </Space>
               }
               extra={
                 <Space>
-                  <Button icon={<ClearOutlined />} onClick={handleClear}>
-                    Clear
+                  <Button icon={<ClearOutlined />} onClick={handleClearAll}>
+                    {t(LOCALE_KEYS.CLEAR)}
                   </Button>
                   <Button
                     type="primary"
@@ -631,7 +636,7 @@ export default function VoucherEntryPage() {
                     loading={saving}
                     disabled={!isBalanced || lines.length === 0}
                   >
-                    Save
+                    {t(LOCALE_KEYS.SAVE)}
                   </Button>
                 </Space>
               }
@@ -639,11 +644,11 @@ export default function VoucherEntryPage() {
               {/* ===== Header Form ===== */}
               <Row gutter={16} style={{ marginBottom: 16 }}>
                 <Col span={4}>
-                  <label>Voucher No</label>
+                  <label>{t(LOCALE_KEYS.VOUCHER_NO)}</label>
                   <Input value={voucherNo} disabled />
                 </Col>
                 <Col span={4}>
-                  <label>Voucher Date</label>
+                  <label>{t(LOCALE_KEYS.VOUCHER_DATE)}</label>
                   <DatePicker
                     value={voucherDate}
                     onChange={(d) => d && setVoucherDate(d)}
@@ -652,12 +657,12 @@ export default function VoucherEntryPage() {
                   />
                 </Col>
                 <Col span={4}>
-                  <label>Financial Year</label>
+                  <label>{t(LOCALE_KEYS.FINANCIAL_YEAR)}</label>
                   <Select
                     value={financialYearId}
                     onChange={setFinancialYearId}
                     style={{ width: '100%' }}
-                    placeholder="Select"
+                    placeholder={t(LOCALE_KEYS.SELECT)}
                     options={financialYears.map((fy: any) => ({
                       label: fy.yearName,
                       value: fy.id,
@@ -665,7 +670,7 @@ export default function VoucherEntryPage() {
                   />
                 </Col>
                 <Col span={4}>
-                  <label>Branch</label>
+                  <label>{t(LOCALE_KEYS.BRANCH)}</label>
                   <Select
                     value={branchId}
                     onChange={(val) => {
@@ -673,7 +678,7 @@ export default function VoucherEntryPage() {
                       setDepartmentId(undefined); // reset department
                     }}
                     style={{ width: '100%' }}
-                    placeholder="Select"
+                    placeholder={t(LOCALE_KEYS.SELECT)}
                     options={branches.map((b: any) => ({
                       label: b.name,
                       value: b.id,
@@ -681,12 +686,14 @@ export default function VoucherEntryPage() {
                   />
                 </Col>
                 <Col span={4}>
-                  <label>Department</label>
+                  <label>{t(LOCALE_KEYS.DEPARTMENT)}</label>
                   <Select
                     value={departmentId}
                     onChange={setDepartmentId}
                     style={{ width: '100%' }}
-                    placeholder={branchId ? 'Select' : 'Select branch first'}
+                    placeholder={
+                      branchId ? t(LOCALE_KEYS.SELECT) : t(LOCALE_KEYS.SELECT_BRANCH_FIRST)
+                    }
                     disabled={!branchId}
                     allowClear
                     options={departments.map((d: any) => ({
@@ -706,22 +713,26 @@ export default function VoucherEntryPage() {
                 >
                   <Row gutter={8}>
                     <Col span={2}>
-                      <Form.Item name="trType" label="TR" rules={[{ required: true }]}>
+                      <Form.Item
+                        name="trType"
+                        label={t(LOCALE_KEYS.TR)}
+                        rules={[{ required: true }]}
+                      >
                         <Select suffixIcon={<DownOutlined />}>
-                          <Select.Option value="DR">DR</Select.Option>
-                          <Select.Option value="CR">CR</Select.Option>
+                          <Select.Option value="DR">{t(LOCALE_KEYS.DEBIT)}</Select.Option>
+                          <Select.Option value="CR">{t(LOCALE_KEYS.CREDIT)}</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
                     <Col span={6}>
                       <Form.Item
                         name="chartOfAccountId"
-                        label="Ledger"
-                        rules={[{ required: true, message: 'Required' }]}
+                        label={t(LOCALE_KEYS.LEDGER)}
+                        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
                       >
                         <Select
                           showSearch
-                          placeholder="Search account..."
+                          placeholder={t(LOCALE_KEYS.SEARCH_ACCOUNT)}
                           optionFilterProp="label"
                           options={ledgerAccounts.map((a: any) => ({
                             label: `${a.accountCode} - ${a.accountName}`,
@@ -731,9 +742,9 @@ export default function VoucherEntryPage() {
                       </Form.Item>
                     </Col>
                     <Col span={3}>
-                      <Form.Item name="currencyId" label="Currency">
+                      <Form.Item name="currencyId" label={t(LOCALE_KEYS.CURRENCY)}>
                         <Select
-                          placeholder="Currency"
+                          placeholder={t(LOCALE_KEYS.CURRENCY)}
                           allowClear
                           onChange={handleCurrencyChange}
                           options={currencies.map((c: any) => ({
@@ -746,8 +757,8 @@ export default function VoucherEntryPage() {
                     <Col span={3}>
                       <Form.Item
                         name="currAmount"
-                        label="Amount"
-                        rules={[{ required: true, message: 'Required' }]}
+                        label={t(LOCALE_KEYS.AMOUNT)}
+                        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
                       >
                         <InputNumber
                           style={{ width: '100%' }}
@@ -760,8 +771,8 @@ export default function VoucherEntryPage() {
                     <Col span={2}>
                       <Form.Item
                         name="currRate"
-                        label="Rate"
-                        rules={[{ required: true, message: 'Rate required' }]}
+                        label={t(LOCALE_KEYS.RATE)}
+                        rules={[{ required: true, message: t(LOCALE_KEYS.RATE_REQUIRED) }]}
                       >
                         <InputNumber
                           style={{ width: '100%' }}
@@ -773,10 +784,10 @@ export default function VoucherEntryPage() {
                       </Form.Item>
                     </Col>
                     <Col span={3}>
-                      <Form.Item name="costCenterId" label="Cost Center">
+                      <Form.Item name="costCenterId" label={t(LOCALE_KEYS.COST_CENTER)}>
                         <Select
                           showSearch
-                          placeholder="Select"
+                          placeholder={t(LOCALE_KEYS.SELECT)}
                           allowClear
                           optionFilterProp="label"
                           options={costCenters.map((c: any) => ({
@@ -787,8 +798,8 @@ export default function VoucherEntryPage() {
                       </Form.Item>
                     </Col>
                     <Col span={3}>
-                      <Form.Item name="lineNarration" label="Remarks">
-                        <Input placeholder="Remarks" />
+                      <Form.Item name="lineNarration" label={t(LOCALE_KEYS.REMARKS)}>
+                        <Input placeholder={t(LOCALE_KEYS.REMARKS)} />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -796,30 +807,30 @@ export default function VoucherEntryPage() {
                   {/* ===== Second Row: Cheque & Bank Details ===== */}
                   <Row gutter={8}>
                     <Col span={4}>
-                      <Form.Item name="chequeNo" label="Cheque No">
-                        <Input placeholder="Cheque No" />
+                      <Form.Item name="chequeNo" label={t(LOCALE_KEYS.CHEQUE_NO)}>
+                        <Input placeholder={t(LOCALE_KEYS.CHEQUE_NO)} />
                       </Form.Item>
                     </Col>
                     <Col span={4}>
-                      <Form.Item name="chequeDate" label="Cheque Date">
+                      <Form.Item name="chequeDate" label={t(LOCALE_KEYS.CHEQUE_DATE)}>
                         <DatePicker style={{ width: '100%' }} />
                       </Form.Item>
                     </Col>
                     <Col span={4}>
-                      <Form.Item name="bankName" label="Bank Name">
-                        <Input placeholder="Bank Name" />
+                      <Form.Item name="bankName" label={t(LOCALE_KEYS.BANK_NAME)}>
+                        <Input placeholder={t(LOCALE_KEYS.BANK_NAME)} />
                       </Form.Item>
                     </Col>
                     <Col span={4}>
-                      <Form.Item name="bankAccno" label="Bank Acc No">
-                        <Input placeholder="Account No" />
+                      <Form.Item name="bankAccno" label={t(LOCALE_KEYS.BANK_ACC_NO)}>
+                        <Input placeholder={t(LOCALE_KEYS.ACCOUNT_NO)} />
                       </Form.Item>
                     </Col>
                     <Col span={8} style={{ display: 'flex', alignItems: 'flex-end', gap: 4 }}>
                       <Form.Item>
                         <Space size="small">
                           <Button type="primary" icon={<PlusOutlined />} onClick={handleAddLine}>
-                            Add
+                            {t(LOCALE_KEYS.ADD)}
                           </Button>
                           {editingLineKey && (
                             <>
@@ -829,9 +840,9 @@ export default function VoucherEntryPage() {
                                 icon={<EditOutlined />}
                                 onClick={handleUpdateLine}
                               >
-                                Update
+                                {t(LOCALE_KEYS.UPDATE)}
                               </Button>
-                              <Button onClick={handleCancelEdit}>Cancel</Button>
+                              <Button onClick={handleCancelEdit}>{t(LOCALE_KEYS.CANCEL)}</Button>
                             </>
                           )}
                         </Space>
@@ -861,7 +872,7 @@ export default function VoucherEntryPage() {
                   <Table.Summary fixed>
                     <Table.Summary.Row>
                       <Table.Summary.Cell index={0} colSpan={2}>
-                        <Text strong>Total</Text>
+                        <Text strong>{t(LOCALE_KEYS.TOTAL)}</Text>
                       </Table.Summary.Cell>
                       <Table.Summary.Cell index={2} align="right">
                         <Text strong style={{ color: '#1890ff' }}>
@@ -875,10 +886,11 @@ export default function VoucherEntryPage() {
                       </Table.Summary.Cell>
                       <Table.Summary.Cell index={4} colSpan={6}>
                         {isBalanced ? (
-                          <Tag color="success">Balanced</Tag>
+                          <Tag color="success">{t(LOCALE_KEYS.BALANCED)}</Tag>
                         ) : (
                           <Tag color="error">
-                            Not Balanced (Diff: {Math.abs(totalDebit - totalCredit).toFixed(2)})
+                            {t(LOCALE_KEYS.NOT_BALANCED)} ({t(LOCALE_KEYS.DIFF)}:{' '}
+                            {Math.abs(totalDebit - totalCredit).toFixed(2)})
                           </Tag>
                         )}
                       </Table.Summary.Cell>
@@ -890,13 +902,13 @@ export default function VoucherEntryPage() {
               {/* ===== Narration ===== */}
               <div>
                 <label>
-                  <Text strong>Narration</Text>
+                  <Text strong>{t(LOCALE_KEYS.NARRATION)}</Text>
                 </label>
                 <TextArea
                   rows={2}
                   value={narration}
                   onChange={(e) => setNarration(e.target.value)}
-                  placeholder="Enter voucher narration..."
+                  placeholder={t(LOCALE_KEYS.ENTER_VOUCHER_NARRATION)}
                   style={{ marginTop: 4 }}
                 />
               </div>
@@ -906,38 +918,38 @@ export default function VoucherEntryPage() {
 
         {/* ===== Child Sub-Allocation Modal ===== */}
         <Modal
-          title="Sub-Allocations (Bill/Advance)"
+          title={t(LOCALE_KEYS.SUB_ALLOCATIONS_BILL_ADVANCE)}
           open={childModalVisible}
           onOk={handleSaveChildren}
           onCancel={() => setChildModalVisible(false)}
           width={900}
-          okText="Save"
+          okText={t(LOCALE_KEYS.SAVE)}
         >
           <Form form={childForm} layout="vertical" style={{ marginBottom: 16 }}>
             <Row gutter={8}>
               <Col span={4}>
-                <Form.Item name="refType" label="Type" rules={[{ required: true }]}>
+                <Form.Item name="refType" label={t(LOCALE_KEYS.TYPE)} rules={[{ required: true }]}>
                   <Select>
-                    <Select.Option value={1}>Bill</Select.Option>
-                    <Select.Option value={2}>Advance</Select.Option>
+                    <Select.Option value={1}>{t(LOCALE_KEYS.BILL)}</Select.Option>
+                    <Select.Option value={2}>{t(LOCALE_KEYS.ADVANCE)}</Select.Option>
                   </Select>
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item name="refId" label="Ref ID">
+                <Form.Item name="refId" label={t(LOCALE_KEYS.REF_ID)}>
                   <InputNumber style={{ width: '100%' }} min={0} controls={false} />
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item name="billNo" label="Bill No">
+                <Form.Item name="billNo" label={t(LOCALE_KEYS.BILL_NO)}>
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item name="costCenterId" label="Cost Center">
+                <Form.Item name="costCenterId" label={t(LOCALE_KEYS.COST_CENTER)}>
                   <Select
                     showSearch
-                    placeholder="Select"
+                    placeholder={t(LOCALE_KEYS.SELECT)}
                     allowClear
                     optionFilterProp="label"
                     options={costCenters.map((c: any) => ({
@@ -950,14 +962,14 @@ export default function VoucherEntryPage() {
             </Row>
             <Row gutter={8}>
               <Col span={3}>
-                <Form.Item label={`Base (${defaultCurrency?.code || 'N/A'})`}>
+                <Form.Item label={`${t(LOCALE_KEYS.BASE)} (${defaultCurrency?.code || 'N/A'})`}>
                   <Input value={defaultCurrency?.code || ''} disabled />
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item name="currencyId" label="Currency">
+                <Form.Item name="currencyId" label={t(LOCALE_KEYS.CURRENCY)}>
                   <Select
-                    placeholder="Currency"
+                    placeholder={t(LOCALE_KEYS.CURRENCY)}
                     allowClear
                     options={currencies.map((c: any) => ({
                       label: `${c.code} - ${c.name}`,
@@ -970,9 +982,7 @@ export default function VoucherEntryPage() {
                           childForm.setFieldsValue({ rate });
                         } else {
                           childForm.setFieldsValue({ rate: undefined });
-                          toast.warning(
-                            'No exchange rate found for this currency. Please set it in the Exchange Rates module first.',
-                          );
+                          toast.warning(t(LOCALE_KEYS.NO_EXCHANGE_RATE_FOUND));
                         }
                       } else {
                         childForm.setFieldsValue({ rate: undefined });
@@ -984,8 +994,8 @@ export default function VoucherEntryPage() {
               <Col span={3}>
                 <Form.Item
                   name="rate"
-                  label="Rate"
-                  rules={[{ required: true, message: 'Rate required' }]}
+                  label={t(LOCALE_KEYS.RATE)}
+                  rules={[{ required: true, message: t(LOCALE_KEYS.RATE_REQUIRED) }]}
                 >
                   <InputNumber
                     style={{ width: '100%' }}
@@ -998,12 +1008,12 @@ export default function VoucherEntryPage() {
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item name="amount" label="Amount" rules={[{ required: true }]}>
+                <Form.Item name="amount" label={t(LOCALE_KEYS.AMOUNT)} rules={[{ required: true }]}>
                   <InputNumber style={{ width: '100%' }} min={0} precision={2} controls={false} />
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item label="Base Amount">
+                <Form.Item label={t(LOCALE_KEYS.BASE_AMOUNT)}>
                   <InputNumber
                     style={{ width: '100%' }}
                     value={(() => {
@@ -1020,14 +1030,14 @@ export default function VoucherEntryPage() {
             </Row>
             <Row gutter={8}>
               <Col span={8}>
-                <Form.Item name="remarks" label="Remarks">
-                  <Input placeholder="Remarks" />
+                <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
+                  <Input placeholder={t(LOCALE_KEYS.REMARKS)} />
                 </Form.Item>
               </Col>
               <Col span={3} style={{ display: 'flex', alignItems: 'flex-end' }}>
                 <Form.Item>
                   <Button type="primary" icon={<PlusOutlined />} onClick={handleAddChild}>
-                    Add
+                    {t(LOCALE_KEYS.ADD)}
                   </Button>
                 </Form.Item>
               </Col>
@@ -1041,47 +1051,47 @@ export default function VoucherEntryPage() {
             pagination={false}
             columns={[
               {
-                title: 'Type',
+                title: t(LOCALE_KEYS.TYPE),
                 dataIndex: 'refType',
-                render: (v: number) => (v === 1 ? 'Bill' : 'Advance'),
+                render: (v: number) => (v === 1 ? t(LOCALE_KEYS.BILL) : t(LOCALE_KEYS.ADVANCE)),
                 width: 80,
               },
-              { title: 'Bill No', dataIndex: 'billNo', width: 80 },
+              { title: t(LOCALE_KEYS.BILL_NO), dataIndex: 'billNo', width: 80 },
               {
-                title: 'Amount',
+                title: t(LOCALE_KEYS.AMOUNT),
                 dataIndex: 'amount',
                 width: 100,
                 align: 'right' as const,
                 render: (v: number) => v?.toFixed(2),
               },
               {
-                title: 'Cost Center',
+                title: t(LOCALE_KEYS.COST_CENTER),
                 dataIndex: 'costCenterId',
                 width: 80,
                 render: (v: number) =>
                   costCenters.find((c: any) => c.id === v)?.costName || v || '',
               },
               {
-                title: 'Currency',
+                title: t(LOCALE_KEYS.CURRENCY),
                 dataIndex: 'currencyId',
                 width: 70,
                 render: (v: number) => currencies.find((c: any) => c.id === v)?.code || '',
               },
               {
-                title: 'Rate',
+                title: t(LOCALE_KEYS.RATE),
                 dataIndex: 'rate',
                 width: 70,
                 align: 'right' as const,
                 render: (v: number) => (v ? v.toFixed(4) : ''),
               },
               {
-                title: 'Base Amt',
+                title: t(LOCALE_KEYS.BASE_AMOUNT),
                 dataIndex: 'amountBase',
                 width: 90,
                 align: 'right' as const,
                 render: (v: number) => (v ? v.toFixed(2) : ''),
               },
-              { title: 'Remarks', dataIndex: 'remarks', ellipsis: true },
+              { title: t(LOCALE_KEYS.REMARKS), dataIndex: 'remarks', ellipsis: true },
               {
                 title: '',
                 width: 50,
