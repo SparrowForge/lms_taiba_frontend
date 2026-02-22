@@ -10,6 +10,8 @@ import {ISemester} from './semester';
 import {IStudentEducationCreate} from './studentEducation';
 import {IStudentProfile, IStudentProfileCreate} from './studentProfile';
 import {ISubjectWithFaculty} from './subject';
+import { IExamResult, ISubjectResult } from './examResult';
+import { IAttendance } from './attendance';
 
 export interface IStudent {
   id: number;
@@ -96,4 +98,12 @@ export interface IStudentDashboard {
 export interface IStudentSubjects {
   semester: ISemester;
   subjects: ISubjectWithFaculty[];
+}
+
+
+export interface IStudentSemesterResultFinalization {
+  student: IStudent
+  subjectResult: ISubjectResult | null
+  examResults: IExamResult[]
+  attendance: IAttendance[]
 }

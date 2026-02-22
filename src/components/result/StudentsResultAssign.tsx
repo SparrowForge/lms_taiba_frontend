@@ -41,7 +41,7 @@ export default function StudentResultAssign({ examId }: number) {
   const { loadStudents, students, listStatus } = useStudents()
   const { loadExam, selectedExam } = useExams()
   const { gradeRules, loadGradeRules } = useGradeRules()
-  const { createExamResultBulk, actionStatus } = useExamResults()
+  const { createExamResultBulk } = useExamResults()
 
 
   const [tableData, setTableData] = useState<IExamResult[]>([])

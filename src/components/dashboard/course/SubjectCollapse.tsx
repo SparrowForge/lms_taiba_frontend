@@ -127,15 +127,10 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
 
   const handlePublishSubjectResult = async (
     subjectId: number,
-    semesterId: number
+    semesterId: number,
+    batchId: number
   ) => {
-    try {
-      await publishSubjectResults({ subjectId, semesterId })
-      toast.success(t(LOCALE_KEYS.PUBLISH_NAME, { name: entityName }))
-    } catch (error) {
-      const errorMessage = getErrorMessage(error)
-      toast.error(errorMessage)
-    }
+    router.push(`/publish-result?batchId=${batchId}&&subjectId=${subjectId}&&semesterId=${semesterId}`)
   }
 
   const handlePublishSemesterResult = async (
@@ -217,7 +212,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                           <div className="space-y-3">
                             <div className="flex justify-between">
                               <h3 className="font-semibold text-sm">
-                                {item.subject.name}
+                                {item.subject?.name}
                               </h3>
                               <Button
                                 size="small"
@@ -236,14 +231,14 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                             </div>
 
                             <p className="text-xs text-gray-500">
-                              {item.subject.code}
+                              {item.subject?.code}
                             </p>
 
                             <div className="text-xs space-y-1">
-                              <div>Credit: {item.subject.creditHours}</div>
-                              <div>Theory: {item.subject.theoryHours}h</div>
+                              <div>Credit: {item.subject?.creditHours}</div>
+                              <div>Theory: {item.subject?.theoryHours}h</div>
                               <div>
-                                Practical: {item.subject.practicalHours}h
+                                Practical: {item.subject?.practicalHours}h
                               </div>
                               <div>Weekly: {item.hoursPerWeek}h</div>
                             </div>
@@ -251,7 +246,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                             <div
                               className="text-xs"
                               dangerouslySetInnerHTML={{
-                                __html: item.subject.description,
+                                __html: item.subject?.description,
                               }}
                             />
 
@@ -265,7 +260,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                                 icon={<BiBookOpen />}
                                 onClick={() =>
                                   handleAddMaterials(
-                                    item.subject.id,
+                                    item.subject?.id,
                                     item.semesterId,
                                     item.batchId
                                   )
@@ -279,7 +274,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                                 icon={<FaClipboardList />}
                                 onClick={() =>
                                   handleAddAssignments(
-                                    item.subject.id,
+                                    item.subject?.id,
                                     item.semesterId,
                                     item.batchId
                                   )
@@ -293,7 +288,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                                 icon={<BiDetail />}
                                 onClick={() =>
                                   handleAddExam(
-                                    item.subject.id,
+                                    item.subject?.id,
                                     item.semesterId,
                                     item.batchId
                                   )
@@ -308,7 +303,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                                 loading={actionStatus.status === Status.LOADING}
                                 onClick={() =>
                                   handleReviewExams(
-                                    item.subject.id,
+                                    item.subject?.id,
                                   )
                                 }
                               >
@@ -320,8 +315,9 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                                 loading={actionStatus.status === Status.LOADING}
                                 onClick={() =>
                                   handlePublishSubjectResult(
-                                    item.subject.id,
-                                    item.semesterId
+                                    item.batch?.id,
+                                    item.subject?.id,
+                                    item.semesterId,
                                   )
                                 }
                               >

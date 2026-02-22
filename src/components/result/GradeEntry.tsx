@@ -148,7 +148,8 @@ const GradeEntry = () => {
             {
                 (!selectedExam && selectedBatch && selectedSemester && selectedSemesterSubject && selectedGradeType) && <Card><Empty description="Select an exam to start grading" /></Card>
             } */}
-            <SemesterFinalResultManagement batch={selectedBatch} subject={selectedSemesterSubject} />
+            {/* <SemesterFinalResultManagement batch={selectedBatch} subject={selectedSemesterSubject} /> */}
+            <StudentResultAssign examId={selectedExam} />
         </div>
     )
 }

@@ -27,8 +27,9 @@ export default function CreateExamQuestionPage() {
 
   const handleSubmitQuestions = async (payload: IExamQuestionBulkCreate) => {
     try {
+      console.log(payload)
       await createMultipleExamQuestion(payload);
-      // toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
+      toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
       return router.push("/dashboard/course")
     } catch (error: unknown) {
       let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {

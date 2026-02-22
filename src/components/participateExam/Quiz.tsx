@@ -215,7 +215,7 @@ export default function Quiz({
                   </Form.Item>
                 ) : (
                   <Radio.Group
-                    disabled={!isExamActive}
+                    // disabled={!isExamActive}
                     value={answers[currentQuestionIndex]}
                     onChange={(e) => handleOptionChange(e.target.value)}
                     style={{ display: "flex", flexDirection: "column", gap: 12 }}
@@ -251,7 +251,7 @@ export default function Quiz({
                       type="primary"
                       onClick={handleSubmit}
                       loading={submitting}
-                      disabled={!isExamActive}
+                      // disabled={!isExamActive}
                     >
                       Submit Quiz
                     </Button>

@@ -138,7 +138,7 @@ export default function ExamInstruction() {
                 type="primary"
                 size="large"
                 style={{ paddingInline: 32, height: 48 }}
-                disabled={!canStartExam}
+                // disabled={!canStartExam}
                 onClick={() => router.push(`/participate-exam?subjectId=${subjectId}&examId=${examId}`)}
               >
                 Start Exam
