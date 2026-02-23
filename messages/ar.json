@@ -741,6 +741,7 @@
   "financial_year": "سنة مالية",
   "cost_centers": "مراكز التكاليف",
   "financial_years": "السنوات المالية",
+  "voucher": "سند",
   "voucher_type": "نوع السند",
   "voucher_types": "أنواع السندات",
   "delete_name": "حذف {name}",
@@ -855,5 +856,16 @@
   "diff": "الفرق",
   "sub_allocations_bill_advance": "التخصيصات الفرعية (فاتورة/دفعة مقدمة)",
   "failed_to_save_voucher": "فشل حفظ السند",
-  "sub_entries": "الإدخالات الفرعية"
+  "sub_entries": "الإدخالات الفرعية",
+  "voucher_list": "قائمة السندات",
+  "filters": "الفلاتر",
+  "search_by_voucher_no": "البحث برقم السند",
+  "from_date": "من تاريخ",
+  "to_date": "إلى تاريخ",
+  "posted": "مُرحّل",
+  "unposted": "غير مُرحّل",
+  "total_amount": "إجمالي المبلغ",
+  "are_you_sure": "هل أنت متأكد؟",
+  "deleted_successfully": "تم الحذف بنجاح",
+  "failed_to_delete": "فشل الحذف"
 }

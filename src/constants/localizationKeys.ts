@@ -720,6 +720,7 @@ export const LOCALE_KEYS = {
   FINANCIAL_MANAGEMENT: 'financial_management',
   FINANCIAL_YEAR: 'financial_year',
   FINANCIAL_YEARS: 'financial_years',
+  VOUCHER: 'voucher',
   VOUCHER_TYPE: 'voucher_type',
   VOUCHER_TYPES: 'voucher_types',
   DELETE_NAME: 'delete_name',
@@ -846,6 +847,17 @@ export const LOCALE_KEYS = {
   FAILED_TO_SAVE_VOUCHER: 'failed_to_save_voucher',
   SUB_ENTRIES: 'sub_entries',
   FAILED_SAVE_RATES: 'failed_save_rates',
+  VOUCHER_LIST: 'voucher_list',
+  FILTERS: 'filters',
+  SEARCH_BY_VOUCHER_NO: 'search_by_voucher_no',
+  FROM_DATE: 'from_date',
+  TO_DATE: 'to_date',
+  POSTED: 'posted',
+  UNPOSTED: 'unposted',
+  TOTAL_AMOUNT: 'total_amount',
+  ARE_YOU_SURE: 'are_you_sure',
+  DELETED_SUCCESSFULLY: 'deleted_successfully',
+  FAILED_TO_DELETE: 'failed_to_delete',
 } as const;
 
 // Type for the keys

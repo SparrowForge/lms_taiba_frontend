@@ -40,6 +40,7 @@ import {
   Typography,
 } from 'antd';
 import dayjs from 'dayjs';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -72,6 +73,7 @@ const { TextArea } = Input;
 
 export default function VoucherEntryPage() {
   const { t } = useLocalization();
+  const router = useRouter();
   // ============ Key Generator ============
   const generateKey = useKeyGenerator();
 
@@ -106,15 +108,28 @@ export default function VoucherEntryPage() {
   // Child modal
   const [childModalVisible, setChildModalVisible] = useState(false);
   const [childLineKey, setChildLineKey] = useState<string | null>(null);
+  const [headerForm] = Form.useForm();
   const [childForm] = Form.useForm();
   const [childEntries, setChildEntries] = useState<
     (IAccVoucherDetailChildCreate & { _key: string })[]
   >([]);
 
-  // ============ Load dropdown data ============
+  const searchParams = useSearchParams();
+  const voucherIdParam = searchParams.get('id');
+  const modeParam = searchParams.get('mode'); // 'view' or 'edit'
+  const isViewMode = modeParam === 'view';
+  const editingVoucherId = voucherIdParam ? Number(voucherIdParam) : null;
+
+  // ============ Load initial data & Existing Voucher ============
   useEffect(() => {
-    loadDropdownData();
-  }, []);
+    const init = async () => {
+      await loadDropdownData();
+      if (editingVoucherId) {
+        await loadExistingVoucher(editingVoucherId);
+      }
+    };
+    init();
+  }, [editingVoucherId]);
 
   const loadDropdownData = async () => {
     setLoading(true);
@@ -155,12 +170,75 @@ export default function VoucherEntryPage() {
       // Fetch exchange rates for today
       await loadExchangeRates(dayjs().format('YYYY-MM-DD'));
 
-      // Auto-select first voucher type
-      if (vtRes.data.items.length > 0) {
+      // Auto-select first voucher type ONLY if new voucher
+      if (!editingVoucherId && vtRes.data.items.length > 0) {
         handleTypeSelect(vtRes.data.items[0].id);
       }
     } catch (error) {
       console.error(error);
+      toast.error(t(LOCALE_KEYS.FAILED_LOAD_DATA));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadExistingVoucher = async (id: number) => {
+    setLoading(true);
+    try {
+      const res = await voucherService.getById(id);
+      const v = res.data;
+
+      setSelectedTypeId(v.voucherTypeId);
+      setVoucherNo(v.voucherNo);
+      setVoucherDate(dayjs(v.voucherDate));
+      setNarration(v.narration || '');
+      setBranchId(v.branchId);
+      setFinancialYearId(v.financialYearId);
+      setDepartmentId(v.departmentId);
+
+      headerForm.setFieldsValue({
+        voucherTypeId: v.voucherTypeId,
+        voucherDate: dayjs(v.voucherDate),
+        narration: v.narration,
+        branchId: v.branchId,
+        financialYearId: v.financialYearId,
+        departmentId: v.departmentId,
+      });
+
+      // Load departments for this branch
+      if (v.branchId) {
+        const depRes = await departmentService.getDepartments({
+          page: 1,
+          limit: 100,
+          branchId: v.branchId,
+        });
+        setDepartments(depRes.data.items);
+      }
+
+      // Map details to form state
+      const mappedLines = v.details.map((d) => ({
+        key: generateKey(),
+        trType: (d.debitAmount > 0 ? 'DR' : 'CR') as 'DR' | 'CR',
+        chartOfAccountId: d.chartOfAccountId,
+        chartOfAccountName: d.chartOfAccount?.accountName,
+        currencyId: d.currencyId,
+        currAmount: d.debitAmount > 0 ? d.debitAmount : d.creditAmount,
+        currRate: d.currencyExRate,
+        debitAmount: d.debitAmount,
+        creditAmount: d.creditAmount,
+        lineNarration: d.lineNarration,
+        costCenterId: d.costCenterId,
+        costCenterName: d.costCenter?.costName,
+        chequeNo: d.chequeNo,
+        chequeDate: d.chequeDate,
+        bankName: d.bankName,
+        bankAccno: d.bankAccno,
+        children: d.children.map((c: any) => ({ ...c, _key: generateKey() })), // Ensure keys for children too
+      }));
+
+      setLines(mappedLines);
+    } catch (error) {
+      console.error('Failed to load voucher', error);
       toast.error(t(LOCALE_KEYS.FAILED_LOAD_DATA));
     } finally {
       setLoading(false);
@@ -382,8 +460,8 @@ export default function VoucherEntryPage() {
   };
 
   // ============ Totals (rate * amount) ============
-  const totalDebit = lines.reduce((sum, l) => sum + l.debitAmount, 0);
-  const totalCredit = lines.reduce((sum, l) => sum + l.creditAmount, 0);
+  const totalDebit = lines.reduce((sum, l) => sum + Number(l.debitAmount || 0), 0);
+  const totalCredit = lines.reduce((sum, l) => sum + Number(l.creditAmount || 0), 0);
   const isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
 
   // ============ Save Voucher ============
@@ -413,6 +491,16 @@ export default function VoucherEntryPage() {
       toast.error(t(LOCALE_KEYS.PLEASE_SELECT_BRANCH));
       return;
     }
+    if (!departmentId) {
+      toast.error(t(LOCALE_KEYS.SELECT_DEPARTMENT));
+      return;
+    }
+
+    try {
+      await headerForm.validateFields();
+    } catch (error) {
+      return;
+    }
 
     setSaving(true);
     try {
@@ -420,7 +508,7 @@ export default function VoucherEntryPage() {
       const cleanObj = (obj: Record<string, any>) =>
         Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== null && v !== undefined));
 
-      await voucherService.create({
+      const payload = {
         voucherNo,
         voucherTypeId: selectedTypeId,
         voucherDate: voucherDate.format('YYYY-MM-DD'),
@@ -456,10 +544,16 @@ export default function VoucherEntryPage() {
             ),
           }),
         ),
-      } as any);
-      toast.success(t(LOCALE_KEYS.VOUCHER_SAVED_SUCCESSFULLY));
-      handleClearAll();
-      handleTypeSelect(selectedTypeId);
+      } as any;
+
+      if (editingVoucherId) {
+        await voucherService.update(editingVoucherId, payload);
+        toast.success(t(LOCALE_KEYS.VOUCHER_SAVED_SUCCESSFULLY));
+      } else {
+        await voucherService.create(payload);
+        toast.success(t(LOCALE_KEYS.VOUCHER_SAVED_SUCCESSFULLY));
+      }
+      router.push('/voucher-list');
     } catch (error: any) {
       console.error(error);
       const errorMsg = error?.response?.data?.message || t(LOCALE_KEYS.FAILED_TO_SAVE_VOUCHER);
@@ -473,6 +567,17 @@ export default function VoucherEntryPage() {
     setLines([]);
     setNarration('');
     setVoucherDate(dayjs());
+    setFinancialYearId(undefined);
+    setBranchId(undefined);
+    setDepartmentId(undefined);
+    headerForm.resetFields();
+    headerForm.setFieldsValue({
+      voucherDate: dayjs(),
+      financialYearId: undefined,
+      branchId: undefined,
+      departmentId: undefined,
+      narration: '',
+    });
     lineForm.resetFields();
     lineForm.setFieldsValue({ trType: 'DR', currRate: 1, currencyId: defaultCurrency?.id });
   };
@@ -498,7 +603,7 @@ export default function VoucherEntryPage() {
       key: 'debitAmount',
       width: 120,
       align: 'right' as const,
-      render: (v: number) => (v > 0 ? v.toFixed(2) : ''),
+      render: (v: number) => (v > 0 ? Number(v).toFixed(2) : ''),
     },
     {
       title: t(LOCALE_KEYS.CREDIT),
@@ -506,7 +611,7 @@ export default function VoucherEntryPage() {
       key: 'creditAmount',
       width: 120,
       align: 'right' as const,
-      render: (v: number) => (v > 0 ? v.toFixed(2) : ''),
+      render: (v: number) => (v > 0 ? Number(v).toFixed(2) : ''),
     },
     {
       title: t(LOCALE_KEYS.CURRENCY),
@@ -520,7 +625,7 @@ export default function VoucherEntryPage() {
       key: 'currAmount',
       width: 100,
       align: 'right' as const,
-      render: (v: number) => (v ? v.toFixed(2) : ''),
+      render: (v: number) => (v ? Number(v).toFixed(2) : ''),
     },
     {
       title: t(LOCALE_KEYS.RATE),
@@ -528,7 +633,7 @@ export default function VoucherEntryPage() {
       key: 'currRate',
       width: 80,
       align: 'right' as const,
-      render: (v: number) => (v ? v.toFixed(4) : ''),
+      render: (v: number) => (v ? Number(v).toFixed(4) : ''),
     },
     {
       title: t(LOCALE_KEYS.COST_CENTER),
@@ -626,7 +731,7 @@ export default function VoucherEntryPage() {
               }
               extra={
                 <Space>
-                  <Button icon={<ClearOutlined />} onClick={handleClearAll}>
+                  <Button icon={<ClearOutlined />} onClick={handleClearAll} disabled={isViewMode}>
                     {t(LOCALE_KEYS.CLEAR)}
                   </Button>
                   <Button
@@ -634,7 +739,7 @@ export default function VoucherEntryPage() {
                     icon={<SaveOutlined />}
                     onClick={handleSave}
                     loading={saving}
-                    disabled={!isBalanced || lines.length === 0}
+                    disabled={!isBalanced || lines.length === 0 || isViewMode}
                   >
                     {t(LOCALE_KEYS.SAVE)}
                   </Button>
@@ -642,276 +747,363 @@ export default function VoucherEntryPage() {
               }
             >
               {/* ===== Header Form ===== */}
-              <Row gutter={16} style={{ marginBottom: 16 }}>
-                <Col span={4}>
-                  <label>{t(LOCALE_KEYS.VOUCHER_NO)}</label>
-                  <Input value={voucherNo} disabled />
-                </Col>
-                <Col span={4}>
-                  <label>{t(LOCALE_KEYS.VOUCHER_DATE)}</label>
-                  <DatePicker
-                    value={voucherDate}
-                    onChange={(d) => d && setVoucherDate(d)}
-                    style={{ width: '100%' }}
-                    allowClear={false}
-                  />
-                </Col>
-                <Col span={4}>
-                  <label>{t(LOCALE_KEYS.FINANCIAL_YEAR)}</label>
-                  <Select
-                    value={financialYearId}
-                    onChange={setFinancialYearId}
-                    style={{ width: '100%' }}
-                    placeholder={t(LOCALE_KEYS.SELECT)}
-                    options={financialYears.map((fy: any) => ({
-                      label: fy.yearName,
-                      value: fy.id,
-                    }))}
-                  />
-                </Col>
-                <Col span={4}>
-                  <label>{t(LOCALE_KEYS.BRANCH)}</label>
-                  <Select
-                    value={branchId}
-                    onChange={(val) => {
-                      setBranchId(val);
-                      setDepartmentId(undefined); // reset department
-                    }}
-                    style={{ width: '100%' }}
-                    placeholder={t(LOCALE_KEYS.SELECT)}
-                    options={branches.map((b: any) => ({
-                      label: b.name,
-                      value: b.id,
-                    }))}
-                  />
-                </Col>
-                <Col span={4}>
-                  <label>{t(LOCALE_KEYS.DEPARTMENT)}</label>
-                  <Select
-                    value={departmentId}
-                    onChange={setDepartmentId}
-                    style={{ width: '100%' }}
-                    placeholder={
-                      branchId ? t(LOCALE_KEYS.SELECT) : t(LOCALE_KEYS.SELECT_BRANCH_FIRST)
-                    }
-                    disabled={!branchId}
-                    allowClear
-                    options={departments.map((d: any) => ({
-                      label: d.name,
-                      value: d.id,
-                    }))}
-                  />
-                </Col>
-              </Row>
+              <Form
+                form={headerForm}
+                layout="vertical"
+                onValuesChange={(changedValues) => {
+                  if ('voucherDate' in changedValues) setVoucherDate(changedValues.voucherDate);
+                  if ('financialYearId' in changedValues)
+                    setFinancialYearId(changedValues.financialYearId);
+                  if ('branchId' in changedValues) setBranchId(changedValues.branchId);
+                  if ('departmentId' in changedValues) setDepartmentId(changedValues.departmentId);
+                  if ('narration' in changedValues) setNarration(changedValues.narration);
+                }}
+              >
+                <Row gutter={16} style={{ marginBottom: 16 }}>
+                  <Col span={4}>
+                    <Form.Item label={t(LOCALE_KEYS.VOUCHER_NO)}>
+                      <Input value={voucherNo} disabled />
+                    </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    <Form.Item
+                      label={t(LOCALE_KEYS.VOUCHER_DATE)}
+                      name="voucherDate"
+                      initialValue={voucherDate}
+                      rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                    >
+                      <DatePicker
+                        disabled={isViewMode}
+                        onChange={(d) => d && setVoucherDate(d)}
+                        style={{ width: '100%' }}
+                        allowClear={false}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    <Form.Item
+                      label={t(LOCALE_KEYS.FINANCIAL_YEAR)}
+                      name="financialYearId"
+                      initialValue={financialYearId}
+                      rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                    >
+                      <Select
+                        disabled={isViewMode}
+                        onChange={setFinancialYearId}
+                        style={{ width: '100%' }}
+                        placeholder={t(LOCALE_KEYS.SELECT)}
+                        options={financialYears.map((fy: any) => ({
+                          label: fy.yearName,
+                          value: fy.id,
+                        }))}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    <Form.Item
+                      label={t(LOCALE_KEYS.BRANCH)}
+                      name="branchId"
+                      initialValue={branchId}
+                      rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                    >
+                      <Select
+                        disabled={isViewMode}
+                        onChange={(val) => {
+                          setBranchId(val);
+                          setDepartmentId(undefined); // reset department
+                          headerForm.setFieldsValue({ departmentId: undefined });
+                        }}
+                        style={{ width: '100%' }}
+                        placeholder={t(LOCALE_KEYS.SELECT)}
+                        options={branches.map((b: any) => ({
+                          label: b.name,
+                          value: b.id,
+                        }))}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    <Form.Item
+                      label={t(LOCALE_KEYS.DEPARTMENT)}
+                      name="departmentId"
+                      initialValue={departmentId}
+                      rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                    >
+                      <Select
+                        onChange={setDepartmentId}
+                        style={{ width: '100%' }}
+                        placeholder={
+                          branchId ? t(LOCALE_KEYS.SELECT) : t(LOCALE_KEYS.SELECT_BRANCH_FIRST)
+                        }
+                        disabled={!branchId || isViewMode}
+                        allowClear
+                        options={departments.map((d: any) => ({
+                          label: d.name,
+                          value: d.id,
+                        }))}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    {/* Placeholder for label alignment if needed, or just leave empty */}
+                  </Col>
+                </Row>
 
-              {/* ===== Line Entry Form ===== */}
-              <Card size="small" style={{ marginBottom: 16, background: '#fafafa' }}>
-                <Form
-                  form={lineForm}
-                  layout="vertical"
-                  initialValues={{ trType: 'DR', currencyId: defaultCurrency?.id }}
-                >
-                  <Row gutter={8}>
-                    <Col span={2}>
-                      <Form.Item
-                        name="trType"
-                        label={t(LOCALE_KEYS.TR)}
-                        rules={[{ required: true }]}
-                      >
-                        <Select suffixIcon={<DownOutlined />}>
-                          <Select.Option value="DR">{t(LOCALE_KEYS.DEBIT)}</Select.Option>
-                          <Select.Option value="CR">{t(LOCALE_KEYS.CREDIT)}</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                      <Form.Item
-                        name="chartOfAccountId"
-                        label={t(LOCALE_KEYS.LEDGER)}
-                        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
-                      >
-                        <Select
-                          showSearch
-                          placeholder={t(LOCALE_KEYS.SEARCH_ACCOUNT)}
-                          optionFilterProp="label"
-                          options={ledgerAccounts.map((a: any) => ({
-                            label: `${a.accountCode} - ${a.accountName}`,
-                            value: a.id,
-                          }))}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col span={3}>
-                      <Form.Item name="currencyId" label={t(LOCALE_KEYS.CURRENCY)}>
-                        <Select
-                          placeholder={t(LOCALE_KEYS.CURRENCY)}
-                          allowClear
-                          onChange={handleCurrencyChange}
-                          options={currencies.map((c: any) => ({
-                            label: `${c.code} - ${c.name}`,
-                            value: c.id,
-                          }))}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col span={3}>
-                      <Form.Item
-                        name="currAmount"
-                        label={t(LOCALE_KEYS.AMOUNT)}
-                        rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
-                      >
-                        <InputNumber
-                          style={{ width: '100%' }}
-                          min={0}
-                          precision={2}
-                          controls={false}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col span={2}>
-                      <Form.Item
-                        name="currRate"
-                        label={t(LOCALE_KEYS.RATE)}
-                        rules={[{ required: true, message: t(LOCALE_KEYS.RATE_REQUIRED) }]}
-                      >
-                        <InputNumber
-                          style={{ width: '100%' }}
-                          min={0}
-                          step={0.0001}
-                          precision={4}
-                          disabled
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col span={3}>
-                      <Form.Item name="costCenterId" label={t(LOCALE_KEYS.COST_CENTER)}>
-                        <Select
-                          showSearch
-                          placeholder={t(LOCALE_KEYS.SELECT)}
-                          allowClear
-                          optionFilterProp="label"
-                          options={costCenters.map((c: any) => ({
-                            label: c.costName || c.name,
-                            value: c.id,
-                          }))}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col span={3}>
-                      <Form.Item name="lineNarration" label={t(LOCALE_KEYS.REMARKS)}>
-                        <Input placeholder={t(LOCALE_KEYS.REMARKS)} />
-                      </Form.Item>
-                    </Col>
-                  </Row>
+                {/* ===== Line Entry Form ===== */}
+                {!isViewMode && (
+                  <Card size="small" style={{ marginBottom: 16, background: '#fafafa' }}>
+                    <Form
+                      form={lineForm}
+                      layout="vertical"
+                      initialValues={{ trType: 'DR', currencyId: defaultCurrency?.id }}
+                    >
+                      <Row gutter={8}>
+                        <Col span={2}>
+                          <Form.Item
+                            name="trType"
+                            label={t(LOCALE_KEYS.TR)}
+                            rules={[{ required: true }]}
+                          >
+                            <Select suffixIcon={<DownOutlined />}>
+                              <Select.Option value="DR">{t(LOCALE_KEYS.DEBIT)}</Select.Option>
+                              <Select.Option value="CR">{t(LOCALE_KEYS.CREDIT)}</Select.Option>
+                            </Select>
+                          </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                          <Form.Item
+                            name="chartOfAccountId"
+                            label={t(LOCALE_KEYS.LEDGER)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                          >
+                            <Select
+                              showSearch
+                              placeholder={t(LOCALE_KEYS.SEARCH_ACCOUNT)}
+                              optionFilterProp="label"
+                              options={ledgerAccounts.map((a: any) => ({
+                                label: `${a.accountCode} - ${a.accountName}`,
+                                value: a.id,
+                              }))}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={3}>
+                          <Form.Item
+                            name="currencyId"
+                            label={t(LOCALE_KEYS.CURRENCY)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                          >
+                            <Select
+                              placeholder={t(LOCALE_KEYS.CURRENCY)}
+                              allowClear
+                              onChange={handleCurrencyChange}
+                              options={currencies.map((c: any) => ({
+                                label: `${c.code} - ${c.name}`,
+                                value: c.id,
+                              }))}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={3}>
+                          <Form.Item
+                            name="currAmount"
+                            label={t(LOCALE_KEYS.AMOUNT)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                          >
+                            <InputNumber
+                              style={{ width: '100%' }}
+                              min={0}
+                              precision={2}
+                              controls={false}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={2}>
+                          <Form.Item
+                            name="currRate"
+                            label={t(LOCALE_KEYS.RATE)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.RATE_REQUIRED) }]}
+                          >
+                            <InputNumber
+                              style={{ width: '100%' }}
+                              min={0}
+                              step={0.0001}
+                              precision={4}
+                              disabled
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={3}>
+                          <Form.Item
+                            name="costCenterId"
+                            label={t(LOCALE_KEYS.COST_CENTER)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                          >
+                            <Select
+                              showSearch
+                              placeholder={t(LOCALE_KEYS.SELECT)}
+                              allowClear
+                              optionFilterProp="label"
+                              options={costCenters.map((c: any) => ({
+                                label: c.costName || c.name,
+                                value: c.id,
+                              }))}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={3}>
+                          <Form.Item
+                            name="lineNarration"
+                            label={t(LOCALE_KEYS.REMARKS)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                          >
+                            <Input placeholder={t(LOCALE_KEYS.REMARKS)} />
+                          </Form.Item>
+                        </Col>
+                      </Row>
 
-                  {/* ===== Second Row: Cheque & Bank Details ===== */}
-                  <Row gutter={8}>
-                    <Col span={4}>
-                      <Form.Item name="chequeNo" label={t(LOCALE_KEYS.CHEQUE_NO)}>
-                        <Input placeholder={t(LOCALE_KEYS.CHEQUE_NO)} />
-                      </Form.Item>
-                    </Col>
-                    <Col span={4}>
-                      <Form.Item name="chequeDate" label={t(LOCALE_KEYS.CHEQUE_DATE)}>
-                        <DatePicker style={{ width: '100%' }} />
-                      </Form.Item>
-                    </Col>
-                    <Col span={4}>
-                      <Form.Item name="bankName" label={t(LOCALE_KEYS.BANK_NAME)}>
-                        <Input placeholder={t(LOCALE_KEYS.BANK_NAME)} />
-                      </Form.Item>
-                    </Col>
-                    <Col span={4}>
-                      <Form.Item name="bankAccno" label={t(LOCALE_KEYS.BANK_ACC_NO)}>
-                        <Input placeholder={t(LOCALE_KEYS.ACCOUNT_NO)} />
-                      </Form.Item>
-                    </Col>
-                    <Col span={8} style={{ display: 'flex', alignItems: 'flex-end', gap: 4 }}>
-                      <Form.Item>
-                        <Space size="small">
-                          <Button type="primary" icon={<PlusOutlined />} onClick={handleAddLine}>
-                            {t(LOCALE_KEYS.ADD)}
-                          </Button>
-                          {editingLineKey && (
-                            <>
+                      {/* ===== Second Row: Cheque & Bank Details ===== */}
+                      <Row gutter={8}>
+                        <Col span={4}>
+                          <Form.Item
+                            name="chequeNo"
+                            label={t(LOCALE_KEYS.CHEQUE_NO)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                          >
+                            <Input placeholder={t(LOCALE_KEYS.CHEQUE_NO)} />
+                          </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                          <Form.Item
+                            name="chequeDate"
+                            label={t(LOCALE_KEYS.CHEQUE_DATE)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                          >
+                            <DatePicker style={{ width: '100%' }} />
+                          </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                          <Form.Item
+                            name="bankName"
+                            label={t(LOCALE_KEYS.BANK_NAME)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                          >
+                            <Input placeholder={t(LOCALE_KEYS.BANK_NAME)} />
+                          </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                          <Form.Item
+                            name="bankAccno"
+                            label={t(LOCALE_KEYS.BANK_ACC_NO)}
+                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                          >
+                            <Input placeholder={t(LOCALE_KEYS.ACCOUNT_NO)} />
+                          </Form.Item>
+                        </Col>
+                        <Col span={8} style={{ display: 'flex', alignItems: 'flex-end', gap: 4 }}>
+                          <Form.Item>
+                            <Space size="small">
                               <Button
                                 type="primary"
-                                style={{ background: '#52c41a', borderColor: '#52c41a' }}
-                                icon={<EditOutlined />}
-                                onClick={handleUpdateLine}
+                                icon={<PlusOutlined />}
+                                onClick={handleAddLine}
                               >
-                                {t(LOCALE_KEYS.UPDATE)}
+                                {t(LOCALE_KEYS.ADD)}
                               </Button>
-                              <Button onClick={handleCancelEdit}>{t(LOCALE_KEYS.CANCEL)}</Button>
-                            </>
-                          )}
-                        </Space>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </Card>
-
-              {/* ===== Lines Table ===== */}
-              <Table
-                columns={lineColumns}
-                dataSource={lines}
-                rowKey="key"
-                size="small"
-                pagination={false}
-                scroll={{ y: 300 }}
-                style={{ marginBottom: 16 }}
-                onRow={(record) => ({
-                  onClick: () => handleRowClick(record),
-                  style: {
-                    cursor: 'pointer',
-                    background: editingLineKey === record.key ? '#e6f7ff' : undefined,
-                  },
-                })}
-                summary={() => (
-                  <Table.Summary fixed>
-                    <Table.Summary.Row>
-                      <Table.Summary.Cell index={0} colSpan={2}>
-                        <Text strong>{t(LOCALE_KEYS.TOTAL)}</Text>
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell index={2} align="right">
-                        <Text strong style={{ color: '#1890ff' }}>
-                          {totalDebit.toFixed(2)}
-                        </Text>
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell index={3} align="right">
-                        <Text strong style={{ color: '#52c41a' }}>
-                          {totalCredit.toFixed(2)}
-                        </Text>
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell index={4} colSpan={6}>
-                        {isBalanced ? (
-                          <Tag color="success">{t(LOCALE_KEYS.BALANCED)}</Tag>
-                        ) : (
-                          <Tag color="error">
-                            {t(LOCALE_KEYS.NOT_BALANCED)} ({t(LOCALE_KEYS.DIFF)}:{' '}
-                            {Math.abs(totalDebit - totalCredit).toFixed(2)})
-                          </Tag>
-                        )}
-                      </Table.Summary.Cell>
-                    </Table.Summary.Row>
-                  </Table.Summary>
+                              {editingLineKey && (
+                                <>
+                                  <Button
+                                    type="primary"
+                                    style={{ background: '#52c41a', borderColor: '#52c41a' }}
+                                    icon={<EditOutlined />}
+                                    onClick={handleUpdateLine}
+                                  >
+                                    {t(LOCALE_KEYS.UPDATE)}
+                                  </Button>
+                                  <Button onClick={handleCancelEdit}>
+                                    {t(LOCALE_KEYS.CANCEL)}
+                                  </Button>
+                                </>
+                              )}
+                            </Space>
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Card>
                 )}
-              />
 
-              {/* ===== Narration ===== */}
-              <div>
-                <label>
-                  <Text strong>{t(LOCALE_KEYS.NARRATION)}</Text>
-                </label>
-                <TextArea
-                  rows={2}
-                  value={narration}
-                  onChange={(e) => setNarration(e.target.value)}
-                  placeholder={t(LOCALE_KEYS.ENTER_VOUCHER_NARRATION)}
-                  style={{ marginTop: 4 }}
+                {/* ===== Lines Table ===== */}
+                <Table
+                  columns={lineColumns}
+                  dataSource={lines}
+                  rowKey="key"
+                  size="small"
+                  pagination={false}
+                  scroll={{ y: 300 }}
+                  style={{ marginBottom: 16 }}
+                  onRow={(record) => ({
+                    onClick: () => handleRowClick(record),
+                    style: {
+                      cursor: 'pointer',
+                      background: editingLineKey === record.key ? '#e6f7ff' : undefined,
+                    },
+                  })}
+                  summary={() => (
+                    <Table.Summary fixed>
+                      <Table.Summary.Row>
+                        <Table.Summary.Cell index={0} colSpan={2}>
+                          <Text strong>{t(LOCALE_KEYS.TOTAL)}</Text>
+                        </Table.Summary.Cell>
+                        <Table.Summary.Cell index={2} align="right">
+                          <Text strong style={{ color: '#1890ff' }}>
+                            {totalDebit.toFixed(2)}
+                          </Text>
+                        </Table.Summary.Cell>
+                        <Table.Summary.Cell index={3} align="right">
+                          <Text strong style={{ color: '#52c41a' }}>
+                            {totalCredit.toFixed(2)}
+                          </Text>
+                        </Table.Summary.Cell>
+                        <Table.Summary.Cell index={4} colSpan={6}>
+                          {isBalanced ? (
+                            <Tag color="success">{t(LOCALE_KEYS.BALANCED)}</Tag>
+                          ) : (
+                            <Tag color="error">
+                              {t(LOCALE_KEYS.NOT_BALANCED)} ({t(LOCALE_KEYS.DIFF)}:{' '}
+                              {Math.abs(totalDebit - totalCredit).toFixed(2)})
+                            </Tag>
+                          )}
+                        </Table.Summary.Cell>
+                      </Table.Summary.Row>
+                    </Table.Summary>
+                  )}
                 />
-              </div>
+
+                {/* ===== Narration ===== */}
+                <Form.Item
+                  label={t(LOCALE_KEYS.NARRATION)}
+                  name="narration"
+                  initialValue={narration}
+                  rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                  style={{ marginTop: 16 }}
+                >
+                  <TextArea
+                    disabled={isViewMode}
+                    rows={2}
+                    placeholder={t(LOCALE_KEYS.ENTER_VOUCHER_NARRATION)}
+                  />
+                </Form.Item>
+              </Form>
+
+              {/* View mode footer button */}
+              {isViewMode && (
+                <div style={{ marginTop: 24, textAlign: 'end' }}>
+                  <Button type="primary" onClick={() => router.push('/voucher-list')}>
+                    {t(LOCALE_KEYS.BACK)}
+                  </Button>
+                </div>
+              )}
             </Card>
           </div>
         </div>
@@ -936,17 +1128,29 @@ export default function VoucherEntryPage() {
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item name="refId" label={t(LOCALE_KEYS.REF_ID)}>
+                <Form.Item
+                  name="refId"
+                  label={t(LOCALE_KEYS.REF_ID)}
+                  rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                >
                   <InputNumber style={{ width: '100%' }} min={0} controls={false} />
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item name="billNo" label={t(LOCALE_KEYS.BILL_NO)}>
+                <Form.Item
+                  name="billNo"
+                  label={t(LOCALE_KEYS.BILL_NO)}
+                  rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                >
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item name="costCenterId" label={t(LOCALE_KEYS.COST_CENTER)}>
+                <Form.Item
+                  name="costCenterId"
+                  label={t(LOCALE_KEYS.COST_CENTER)}
+                  rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                >
                   <Select
                     showSearch
                     placeholder={t(LOCALE_KEYS.SELECT)}
@@ -967,7 +1171,11 @@ export default function VoucherEntryPage() {
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item name="currencyId" label={t(LOCALE_KEYS.CURRENCY)}>
+                <Form.Item
+                  name="currencyId"
+                  label={t(LOCALE_KEYS.CURRENCY)}
+                  rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                >
                   <Select
                     placeholder={t(LOCALE_KEYS.CURRENCY)}
                     allowClear
@@ -1013,24 +1221,32 @@ export default function VoucherEntryPage() {
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item label={t(LOCALE_KEYS.BASE_AMOUNT)}>
-                  <InputNumber
-                    style={{ width: '100%' }}
-                    value={(() => {
-                      const amt = childForm.getFieldValue('amount') || 0;
-                      const r = childForm.getFieldValue('rate') || 0;
-                      return amt * r;
-                    })()}
-                    precision={4}
-                    controls={false}
-                    disabled
-                  />
+                <Form.Item dependencies={['amount', 'rate']} noStyle>
+                  {({ getFieldValue }) => {
+                    const amt = getFieldValue('amount') || 0;
+                    const r = getFieldValue('rate') || 0;
+                    return (
+                      <Form.Item label={t(LOCALE_KEYS.BASE_AMOUNT)}>
+                        <InputNumber
+                          style={{ width: '100%' }}
+                          value={amt * r}
+                          precision={4}
+                          controls={false}
+                          disabled
+                        />
+                      </Form.Item>
+                    );
+                  }}
                 </Form.Item>
               </Col>
             </Row>
             <Row gutter={8}>
               <Col span={8}>
-                <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
+                <Form.Item
+                  name="remarks"
+                  label={t(LOCALE_KEYS.REMARKS)}
+                  rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
+                >
                   <Input placeholder={t(LOCALE_KEYS.REMARKS)} />
                 </Form.Item>
               </Col>
@@ -1062,7 +1278,7 @@ export default function VoucherEntryPage() {
                 dataIndex: 'amount',
                 width: 100,
                 align: 'right' as const,
-                render: (v: number) => v?.toFixed(2),
+                render: (v: number) => (v ? Number(v).toFixed(2) : ''),
               },
               {
                 title: t(LOCALE_KEYS.COST_CENTER),
@@ -1082,14 +1298,14 @@ export default function VoucherEntryPage() {
                 dataIndex: 'rate',
                 width: 70,
                 align: 'right' as const,
-                render: (v: number) => (v ? v.toFixed(4) : ''),
+                render: (v: number) => (v ? Number(v).toFixed(4) : ''),
               },
               {
                 title: t(LOCALE_KEYS.BASE_AMOUNT),
                 dataIndex: 'amountBase',
                 width: 90,
                 align: 'right' as const,
-                render: (v: number) => (v ? v.toFixed(2) : ''),
+                render: (v: number) => (v ? Number(v).toFixed(2) : ''),
               },
               { title: t(LOCALE_KEYS.REMARKS), dataIndex: 'remarks', ellipsis: true },
               {

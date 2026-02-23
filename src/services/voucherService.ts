@@ -14,6 +14,11 @@ export const voucherService = {
       dateFrom?: string;
       dateTo?: string;
       financialYearId?: number;
+      branchId?: number;
+      departmentId?: number;
+      chartOfAccountId?: number;
+      costCenterId?: number;
+      voucherNo?: string;
     } = {},
   ): Promise<IBasePaginatedResponse<IAccVoucher>> => {
     const response = await api.get<IBasePaginatedResponse<IAccVoucher>>(BASE_URL, { params });

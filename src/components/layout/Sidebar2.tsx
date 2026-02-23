@@ -220,7 +220,12 @@ export const Sidebar2 = React.memo(
         {
           key: '/voucher-entry',
           icon: <Icons.FormOutlined />,
-          label: 'Voucher Entry',
+          label: t(LOCALE_KEYS.VOUCHER_ENTRY, { defaultValue: 'Voucher Entry' }),
+        },
+        {
+          key: '/voucher-list',
+          icon: <Icons.UnorderedListOutlined />,
+          label: t(LOCALE_KEYS.VOUCHER_LIST, { defaultValue: 'Voucher List' }),
         },
       ];
 

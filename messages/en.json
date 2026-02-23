@@ -742,6 +742,7 @@
   "financial_year": "Financial Year",
   "cost_centers": "Cost Centers",
   "financial_years": "Financial Years",
+  "voucher": "Voucher",
   "voucher_type": "Voucher Type",
   "delete_name": "Delete {name}",
   "year_name": "Year Name",
@@ -856,5 +857,16 @@
   "diff": "Diff",
   "sub_allocations_bill_advance": "Sub-Allocations (Bill/Advance)",
   "failed_to_save_voucher": "Failed to save voucher",
-  "sub_entries": "Sub-entries"
+  "sub_entries": "Sub-entries",
+  "voucher_list": "Voucher List",
+  "filters": "Filters",
+  "search_by_voucher_no": "Search by Voucher No",
+  "from_date": "From Date",
+  "to_date": "To Date",
+  "posted": "Posted",
+  "unposted": "Unposted",
+  "total_amount": "Total Amount",
+  "are_you_sure": "Are you sure?",
+  "deleted_successfully": "Deleted successfully",
+  "failed_to_delete": "Failed to delete"
 }
