@@ -209,14 +209,13 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       const formattedMcqQuestions = questions.map((q) => ({
         questionText: q.questionText,
         options: (q.options ?? []).map((o) => o.text),
-        correctOptionNumber: q.correctOptionNumber, 
+        correctOptionNumber: String(q.correctOptionNumber), 
         courseId: selectedCourse?.id ?? 0,
         subjectId: selectedSubject?.id ?? 0,
         facultyId: user?.faculty?.id ?? 0,          
         difficultyLevel: q.difficultyLevel,          
         status: EntityStatus.ACTIVE,
       }));
-      console.log(formattedMcqQuestions)
 
 
       const formattedWrittenQuestions = questions.map((q) => ({
@@ -236,9 +235,9 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
       if (onSubmit) await onSubmit(finalPayload);
 
-      toast.success(`${mode === "create" ? "Created" : "Updated"} ${questions.length} question(s)`);
+      // toast.success(`${mode === "create" ? "Created" : "Updated"} ${questions.length} question(s)`);
 
-      setQuestions([])
+      // setQuestions([])
       if (onSuccess) onSuccess();
     } catch (err: any) {
       toast.error(getErrorMessage(err));

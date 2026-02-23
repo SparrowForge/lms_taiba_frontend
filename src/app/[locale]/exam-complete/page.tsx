@@ -40,10 +40,10 @@ export default function ExamCompletionPage() {
     return (
         <ProtectedRoute>
             <MainLayout>
-                <PageHeader
+                {/* <PageHeader
                     title={t(LOCALE_KEYS.PARTICIPATE_EXAM, { name: entityName })}
                     onBack={() => router.back()}
-                />
+                /> */}
                 <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 p-4 md:p-8">
                     <div className="max-w-2xl mx-auto">
                         {/* Success Header */}

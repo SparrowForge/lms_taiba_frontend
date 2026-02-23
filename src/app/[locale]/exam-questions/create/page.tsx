@@ -26,6 +26,7 @@ export default function CreateExamQuestionPage() {
   const { createMultipleExamQuestion } = useExamQuestions();
 
   const handleSubmitQuestions = async (payload: IExamQuestionBulkCreate) => {
+    console.log(payload)
     try {
       console.log(payload)
       await createMultipleExamQuestion(payload);
