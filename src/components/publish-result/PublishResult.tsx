@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Table, Input, InputNumber, Card, Button, message } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { useStudents } from '@/hooks/useStudents';
+import { useSearchParams } from 'next/navigation';
 
 /* ===== TYPES ===== */
 interface ExamConfig {
@@ -40,14 +41,25 @@ const PublishResult: React.FC = () => {
     Record<number, Record<string, number>>
   >({});
 
+  const searchParams = useSearchParams()
+
+  const batchId = Number(searchParams.get('batchId'))
+  const subjectId = Number(searchParams.get('subjectId'))
+  const semesterId = Number(searchParams.get('semesterId'))
+
+
   /* ===== LOAD STUDENTS ===== */
   useEffect(() => {
-    loadStudentsWithSemesterResultFinalization({
-      batchId: 1,
-      semesterId: 1,
-      subjectId: 1,
-    });
-  }, [loadStudentsWithSemesterResultFinalization]);
+    if (batchId &&
+      semesterId &&
+      subjectId) {
+      loadStudentsWithSemesterResultFinalization({
+        batchId,
+        semesterId,
+        subjectId
+      });
+    }
+  }, [batchId, loadStudentsWithSemesterResultFinalization, semesterId, subjectId]);
 
   /* ===== INIT EXAMS + MARKS ===== */
   useEffect(() => {
@@ -209,21 +221,21 @@ const PublishResult: React.FC = () => {
       attendance: {
         percentage: tableData.length
           ? Number(
-              (
-                tableData.reduce(
-                  (acc, s) => acc + s.attendancePercentage,
-                  0
-                ) / tableData.length
-              ).toFixed(2)
-            )
+            (
+              tableData.reduce(
+                (acc, s) => acc + s.attendancePercentage,
+                0
+              ) / tableData.length
+            ).toFixed(2)
+          )
           : 0,
       },
       exams: exams.map((e) => ({
         id: e.id,
         percentage: e.percentage,
       })),
-      class: {}, 
-      assignment: [], 
+      class: {},
+      assignment: [],
     };
 
     console.log('Submit request:', requestData);
@@ -244,7 +256,7 @@ const PublishResult: React.FC = () => {
         columns={columns}
         dataSource={tableData}
         pagination={false}
-        scroll={{ x: 'max-content' }}
+        
       />
     </Card>
   );

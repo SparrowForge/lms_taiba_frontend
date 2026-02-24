@@ -126,9 +126,10 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
   }
 
   const handlePublishSubjectResult = async (
+    batchId: number,
     subjectId: number,
     semesterId: number,
-    batchId: number
+
   ) => {
     router.push(`/publish-result?batchId=${batchId}&&subjectId=${subjectId}&&semesterId=${semesterId}`)
   }
