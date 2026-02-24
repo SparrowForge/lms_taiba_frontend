@@ -10,8 +10,8 @@ import { useStudents } from '@/hooks/useStudents';
 
 
 export default function PaymentsDashboard() {
-  const { user } = useAuth()
-  const { loadStudentWithFeeInfo, studentWithFeeInfo } = useStudents()
+  const { user } = useAuth();
+  const { loadStudentWithFeeInfo, studentWithFeeInfo } = useStudents();
   const [selectedInstallment, setSelectedInstallment] = useState<number | null>(null);
 
   useEffect(() => {
@@ -23,15 +23,25 @@ export default function PaymentsDashboard() {
 
 
   const calculatedData = useMemo(() => {
-    const totalPaid = studentWithFeeInfo?.paymentCollections.reduce(
+    if (!studentWithFeeInfo) {
+      return {
+        totalPaid: 0,
+        totalDue: 0,
+        totalFees: 0,
+        installmentStatus: {} as Record<string, string>,
+      };
+    }
+
+    const totalPaid = studentWithFeeInfo.paymentCollections.reduce(
       (sum, payment) => sum + payment.amountPaid,
-      0
+      0,
     );
-    const totalDue = studentWithFeeInfo?.feeStructure.totalFees - totalPaid;
+    const totalFees = studentWithFeeInfo.feeStructure?.totalFees ?? 0;
+    const totalDue = Math.max(0, totalFees - totalPaid);
 
     // Find which installments are paid/unpaid
     const installmentStatus: Record<string, string> = {};
-    studentWithFeeInfo?.paymentCollections.forEach((payment) => {
+    studentWithFeeInfo.paymentCollections.forEach((payment) => {
       payment.paymentDetails.forEach((detail) => {
         if (detail.balanceAmount === 0) {
           installmentStatus[detail.feeTitle] = 'paid';
@@ -43,12 +53,15 @@ export default function PaymentsDashboard() {
       });
     });
 
-    return { totalPaid, totalDue, installmentStatus };
-  }, []);
+    return { totalPaid, totalDue, totalFees, installmentStatus };
+  }, [studentWithFeeInfo]);
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
-  const formatCurrency = (amount: number) =>
-    `${studentWithFeeInfo?.feeStructure.currency} ${amount?.toLocaleString()}`;
+  const formatCurrency = (amount?: number) => {
+    const currency = studentWithFeeInfo?.feeStructure.currency ?? '';
+    const safeAmount = amount ?? 0;
+    return `${currency} ${safeAmount.toLocaleString()}`;
+  };
 
   return (
     <div className="min-h-screen  p-4 md:p-8">
@@ -59,7 +72,9 @@ export default function PaymentsDashboard() {
             Course Fees Payment
           </h1>
           <p className="text-lg  ">
-            {studentWithFeeInfo?.student.firstName} {studentWithFeeInfo?.student.lastName} • {studentWithFeeInfo?.student.course.name}
+            {studentWithFeeInfo?.student.firstName}{' '}
+            {studentWithFeeInfo?.student.lastName} •{' '}
+            {studentWithFeeInfo?.student.course?.name ?? ''}
           </p>
         </div>
 
@@ -93,8 +108,12 @@ export default function PaymentsDashboard() {
               {formatCurrency(calculatedData.totalPaid)}
             </p>
             <p className="text-sm  dark:text-slate-400">
-              {((calculatedData.totalPaid / studentWithFeeInfo?.feeStructure.totalFees) * 100).toFixed(1)}%
-              of total fees
+              {(() => {
+                const { totalPaid, totalFees } = calculatedData;
+                if (!totalFees) return '0.0% of total fees';
+                const percent = ((totalPaid / totalFees) * 100).toFixed(1);
+                return `${percent}% of total fees`;
+              })()}
             </p>
           </div>
 
@@ -178,15 +197,9 @@ export default function PaymentsDashboard() {
                         <div className="mt-4 pt-4 border-t border-current">
                           <div className="grid grid-cols-2 gap-2 text-sm">
                             <div>
-                              <p className="">Original Amount</p>
+                              <p className="">Amount</p>
                               <p className="font-semibold ">
                                 {formatCurrency(plan.amount)}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="">Discount</p>
-                              <p className="font-semibold ">
-                                {formatCurrency(plan.discountAmount)}
                               </p>
                             </div>
                           </div>

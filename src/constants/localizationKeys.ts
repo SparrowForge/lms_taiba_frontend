@@ -217,6 +217,8 @@ export const LOCALE_KEYS = {
   FEE_PAYMENT_COLLECTIONS: 'fee_payment_collections',
   FEE_PAYMENT_DETAILS: 'fee_payment_details',
   FEE_PAYMENT_DETAILS_PLURAL: 'fee_payment_details_plural',
+  DISCOUNT_TEMPLATE: 'discount_template',
+  DISCOUNT_TEMPLATES: 'discount_templates',
   TEMPLATE_NAME: 'template_name',
   ACADEMIC_YEAR: 'academic_year',
   PAYMENT_TYPE: 'payment_type',

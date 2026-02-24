@@ -100,16 +100,6 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item name="discountAmount" label={t(LOCALE_KEYS.DISCOUNT_AMOUNT)}>
-              <InputNumber
-                placeholder={t(LOCALE_KEYS.ENTER_AMOUNT)}
-                style={{ width: '100%' }}
-                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                min={0}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
             <Form.Item
               name="paymentType"
               label={t(LOCALE_KEYS.PAYMENT_TYPE)}

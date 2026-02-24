@@ -143,6 +143,8 @@
   "fee_payment_collections": "Fee Payment Collections",
   "fee_payment_details": "Fee Payment Details",
   "fee_payment_details_plural": "Fee Payment Details",
+  "discount_template": "Discount Template",
+  "discount_templates": "Discount Templates",
   "template_name": "Template Name",
   "academic_year": "Academic Year",
   "payment_type": "Payment Type",

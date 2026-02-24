@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, Col, Form, Row, Space, Spin } from 'antd';
+import { Button, Card, Col, Drawer, Form, Row, Space, Spin } from 'antd';
 import dayjs from 'dayjs';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -27,6 +27,7 @@ import AllFeesPaidView from './AllFeesPaidView';
 import FeePaymentCollectionCard from './FeePaymentCollectionCard';
 import FeePaymentDetailsCard from './FeePaymentDetailsCard';
 import StudentSelectorCard from './StudentSelectorCard';
+import FeeStructureInvoice from '@/components/feeStructures/FeeStructureInvoice';
 
 export interface FeePaymentCollectionFormBulkProps {
   onSuccess?: () => void;
@@ -75,6 +76,52 @@ export default function FeePaymentCollectionFormBulk({
   const entityName = t(LOCALE_KEYS.FEE_PAYMENT_COLLECTION, {
     defaultValue: 'Fee Payment Collection',
   });
+
+  const [invoiceVisible, setInvoiceVisible] = React.useState(false);
+  const invoiceRef = React.useRef<HTMLDivElement | null>(null);
+
+  const handleDownloadInvoice = () => {
+    if (!invoiceRef.current) return;
+
+    const printContents = invoiceRef.current.innerHTML;
+    const printWindow = window.open('', '_blank', 'width=900,height=700');
+    if (!printWindow) return;
+
+    printWindow.document.open();
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Invoice</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+              padding: 24px;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 8px;
+              font-size: 12px;
+            }
+            th {
+              background: #f0f2f5;
+              font-weight: 600;
+            }
+          </style>
+        </head>
+        <body>
+          ${printContents}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  };
 
   useEffect(() => {
     if (studentId) {
@@ -198,6 +245,13 @@ export default function FeePaymentCollectionFormBulk({
 
           {!noStudentInParam && (
             <>
+              {studentWithFeeInfo?.feeStructure && (
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+                  <Button type="default" onClick={() => setInvoiceVisible(true)}>
+                    {t(LOCALE_KEYS.INVOICE, { defaultValue: 'Invoice' })}
+                  </Button>
+                </div>
+              )}
               <Row gutter={[24, 24]}>
                 <Col xs={24} lg={12}>
                   <FeePaymentCollectionCard
@@ -237,6 +291,30 @@ export default function FeePaymentCollectionFormBulk({
           )}
         </Form>
       </Card>
+      <Drawer
+        title={t(LOCALE_KEYS.INVOICE, { defaultValue: 'Invoice' })}
+        width={720}
+        open={invoiceVisible}
+        onClose={() => setInvoiceVisible(false)}
+        destroyOnClose
+        extra={
+          <Button type="primary" onClick={handleDownloadInvoice}>
+            Download PDF
+          </Button>
+        }
+      >
+        {studentWithFeeInfo?.feeStructure && (
+          <div ref={invoiceRef}>
+            <FeeStructureInvoice
+              feeStructure={studentWithFeeInfo.feeStructure}
+              installmentPlans={studentWithFeeInfo.feeStructure.installmentPlans || []}
+              selectedDiscountTemplates={studentWithFeeInfo.student.discountTemplates ?? []}
+              isInternational={!!studentWithFeeInfo.student.profile?.isInternational}
+              paymentCollections={studentWithFeeInfo.paymentCollections}
+            />
+          </div>
+        )}
+      </Drawer>
     </div>
   );
 }
