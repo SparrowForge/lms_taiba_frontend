@@ -85,9 +85,14 @@ const CourseAssignmentSubmissionFormFaculty: React.FC<CourseAssignmentSubmission
           router.push('/course-assignment-submissions');
         }
       } else if (mode === 'edit' && courseAssignmentSubmissionId) {
+        const newPaylaod = {
+          marksObtained: values.marksObtained,
+          feedback: values.feedback,
+          status: values.status
+        }
         await editCourseAssignmentSubmission(
           courseAssignmentSubmissionId,
-          values as ICourseAssignmentSubmissionUpdate,
+          newPaylaod as ICourseAssignmentSubmissionUpdate,
         );
         toast.success(t(LOCALE_KEYS.UPDATED_NAME, { name: entityName }));
         if (onSuccess) {
@@ -135,10 +140,10 @@ const CourseAssignmentSubmissionFormFaculty: React.FC<CourseAssignmentSubmission
       initialValues={
         mode === 'edit' && initialValues
           ? {
-              ...initialValues,
-              submittedAt: initialValues.submittedAt ? dayjs(initialValues.submittedAt) : undefined,
-              gradedAt: initialValues.gradedAt ? dayjs(initialValues.gradedAt) : undefined,
-            }
+            ...initialValues,
+            submittedAt: initialValues.submittedAt ? dayjs(initialValues.submittedAt) : undefined,
+            gradedAt: initialValues.gradedAt ? dayjs(initialValues.gradedAt) : undefined,
+          }
           : undefined
       }
     >
@@ -178,7 +183,7 @@ const CourseAssignmentSubmissionFormFaculty: React.FC<CourseAssignmentSubmission
         >
           {students.map((student) => (
             <Select.Option key={student.id} value={student.id}>
-              {student.firstName} 
+              {student.firstName}
             </Select.Option>
           ))}
         </Select>
@@ -247,7 +252,7 @@ const CourseAssignmentSubmissionFormFaculty: React.FC<CourseAssignmentSubmission
         >
           {faculties.map((faculty) => (
             <Select.Option key={faculty.id} value={faculty.id}>
-              {faculty.fullName} 
+              {faculty.fullName}
             </Select.Option>
           ))}
         </Select>

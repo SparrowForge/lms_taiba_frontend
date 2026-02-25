@@ -1,7 +1,7 @@
 import { UpperTabItem } from "../lms/UpperTab";
 
 export const FacultyTabData: UpperTabItem[] = [
-    {
+  {
     key: 'discussion',
     title: 'Discussion',
   },
@@ -14,6 +14,10 @@ export const FacultyTabData: UpperTabItem[] = [
     title: 'Assignments',
   },
   {
+    key: 'submittedAssignments',
+    title: 'Submitted Assignments',
+  },
+  {
     key: 'exam',
     title: 'Exam',
   },
@@ -22,7 +26,7 @@ export const FacultyTabData: UpperTabItem[] = [
 ];
 
 export const StudentTabData: UpperTabItem[] = [
-    {
+  {
     key: 'discussion',
     title: 'Discussion',
   },
