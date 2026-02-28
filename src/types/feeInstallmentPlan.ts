@@ -9,7 +9,6 @@ export interface IFeeInstallmentPlan {
   semesterId: number;
   durationMonths: number;
   amount: number;
-  discountAmount: number;
   dueDate: string;
   createdAt: string;
   updatedAt: string;
@@ -25,7 +24,6 @@ export interface IFeeInstallmentPlanCreate {
   semesterId: number;
   durationMonths: number;
   amount: number;
-  discountAmount: number;
   dueDate: string;
 }
 
@@ -35,6 +33,5 @@ export interface IFeeInstallmentPlanUpdate {
   semesterId?: number;
   durationMonths?: number;
   amount?: number;
-  discountAmount?: number;
   dueDate?: string;
 }

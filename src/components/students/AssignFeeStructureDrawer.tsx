@@ -1,7 +1,7 @@
 'use client';
 
 import { DollarOutlined } from '@ant-design/icons';
-import { Button, Card, Descriptions, Drawer, Form, Select, Spin, Table, Typography } from 'antd';
+import { Button, Card, Descriptions, Drawer, Form, Select, Spin, Table, Tabs, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -10,7 +10,9 @@ import { Status } from '@/enums';
 import { useFeeStructures } from '@/hooks/useFeeStructures';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useStudents } from '@/hooks/useStudents';
+import { useDiscountTemplates } from '@/hooks/useDiscountTemplates';
 
+import FeeStructureInvoice from '@/components/feeStructures/FeeStructureInvoice';
 import { IFeeInstallmentPlan } from '@/types/feeInstallmentPlan';
 import { IFeeStructure } from '@/types/feeStructure';
 
@@ -44,11 +46,16 @@ const AssignFeeStructureDrawer: React.FC<AssignFeeStructureDrawerProps> = ({
     setSelected,
   } = useFeeStructures();
   const { editStudent, students } = useStudents();
+  const { discountTemplates, loadDiscountTemplates } = useDiscountTemplates();
+
+  const selectedDiscountTemplateIds = (Form.useWatch('discountTemplateIds', form) ||
+    []) as string[];
 
   // Load fee structures for dropdown and pre-select student's current fee structure
   useEffect(() => {
     if (visible) {
       loadFeeStructures({ page: 1, limit: 100 });
+      loadDiscountTemplates({ page: 1, limit: 100 });
 
       // Pre-select student's current fee structure if they have one
       if (studentId) {
@@ -57,6 +64,7 @@ const AssignFeeStructureDrawer: React.FC<AssignFeeStructureDrawerProps> = ({
           // Set the form value to the student's current fee structure
           form.setFieldsValue({
             feeStructureId: student.feeStructureId.toString(),
+            discountTemplateIds: student.discountTemplates?.map((d) => d.id.toString()) ?? [],
           });
           // Set the selected fee structure for display
           setSelectedFeeStructure(student.feeStructure);
@@ -86,8 +94,11 @@ const AssignFeeStructureDrawer: React.FC<AssignFeeStructureDrawerProps> = ({
       setLoading(true);
       const values = await form.validateFields();
 
+      const discountTemplateIds: string[] = values.discountTemplateIds || [];
+
       await editStudent(studentId!, {
         feeStructureId: parseInt(values.feeStructureId),
+        discountTemplateIds: discountTemplateIds.map((id) => parseInt(id, 10)),
       });
 
       onSuccess();
@@ -123,6 +134,8 @@ const AssignFeeStructureDrawer: React.FC<AssignFeeStructureDrawerProps> = ({
   }, [visible, form, setSelected, studentId, students]);
 
   const currentFeeStructure = loadedFeeStructure || selectedFeeStructure;
+  const currentStudent = students.find((s) => s.id === studentId);
+  const isInternational = !!currentStudent?.profile?.isInternational;
 
   return (
     <Drawer
@@ -199,116 +212,249 @@ const AssignFeeStructureDrawer: React.FC<AssignFeeStructureDrawerProps> = ({
             disabled={hasExistingFeeStructure}
           />
         </Form.Item>
-      </Form>
 
-      {currentFeeStructure && (
-        <Card
-          title={t(LOCALE_KEYS.DETAILS_NAME, { name: t(LOCALE_KEYS.FEE_STRUCTURE) })}
-          style={{ marginTop: '16px' }}
+        <Form.Item
+          name="discountTemplateIds"
+          label={t(LOCALE_KEYS.DISCOUNT_TEMPLATES, { defaultValue: 'Discount Templates' })}
         >
-          {detailsStatus.status === Status.LOADING ? (
-            <Spin />
-          ) : (
-            <Descriptions column={1} size="small">
-              <Descriptions.Item label={t(LOCALE_KEYS.TEMPLATE_NAME)}>
-                {currentFeeStructure.templateName}
-              </Descriptions.Item>
-              <Descriptions.Item label={t(LOCALE_KEYS.ACADEMIC_YEAR)}>
-                {currentFeeStructure.academicYear}
-              </Descriptions.Item>
-              <Descriptions.Item label={t(LOCALE_KEYS.PAYMENT_TYPE)}>
-                {currentFeeStructure.paymentType}
-              </Descriptions.Item>
-              <Descriptions.Item label={t(LOCALE_KEYS.TOTAL_FEES)}>
-                <Text strong>
-                  {currentFeeStructure.currency} {currentFeeStructure.totalFees}
-                </Text>
-              </Descriptions.Item>
-              <Descriptions.Item label={t(LOCALE_KEYS.ADMISSION_FEE)}>
-                {currentFeeStructure.currency} {currentFeeStructure.admissionFee}
-              </Descriptions.Item>
-              <Descriptions.Item label={t(LOCALE_KEYS.DISCOUNT_TYPE)}>
-                {currentFeeStructure.discountType}
-              </Descriptions.Item>
-              <Descriptions.Item label={t(LOCALE_KEYS.DISCOUNT_AMOUNT)}>
-                {currentFeeStructure.currency} {currentFeeStructure.discountAmount}
-              </Descriptions.Item>
-              <Descriptions.Item label={t(LOCALE_KEYS.CURRENCY)}>
-                {currentFeeStructure.currency}
-              </Descriptions.Item>
-              {currentFeeStructure.remarks && (
-                <Descriptions.Item label={t(LOCALE_KEYS.REMARKS)}>
-                  {currentFeeStructure.remarks}
-                </Descriptions.Item>
-              )}
-            </Descriptions>
-          )}
-        </Card>
-      )}
+          <Select
+            mode="multiple"
+            allowClear
+            placeholder={t(LOCALE_KEYS.SELECT_NAME, {
+              name: t(LOCALE_KEYS.DISCOUNT_TEMPLATES, { defaultValue: 'Discount Templates' }),
+            })}
+            showSearch
+            optionFilterProp="label"
+            options={discountTemplates.map((dt) => ({
+              label: dt.name,
+              value: dt.id.toString(),
+            }))}
+            style={{ width: '100%' }}
+            disabled={hasExistingFeeStructure}
+          />
+        </Form.Item>
+      </Form>
+      {currentFeeStructure && (
+        <Tabs
+          style={{ marginTop: 16 }}
+          items={[
+            {
+              key: 'details',
+              label: t(LOCALE_KEYS.DETAILS_NAME, { name: t(LOCALE_KEYS.FEE_STRUCTURE) }),
+              children: (
+                <Card>
+                  {detailsStatus.status === Status.LOADING ? (
+                    <Spin />
+                  ) : (
+                    <Descriptions column={1} size="small">
+                      <Descriptions.Item label={t(LOCALE_KEYS.TEMPLATE_NAME)}>
+                        {currentFeeStructure.templateName}
+                      </Descriptions.Item>
+                      <Descriptions.Item label={t(LOCALE_KEYS.ACADEMIC_YEAR)}>
+                        {currentFeeStructure.academicYear}
+                      </Descriptions.Item>
+                      <Descriptions.Item label={t(LOCALE_KEYS.PAYMENT_TYPE)}>
+                        {currentFeeStructure.paymentType}
+                      </Descriptions.Item>
+                      <Descriptions.Item label={t(LOCALE_KEYS.TOTAL_FEES)}>
+                        <Text strong>
+                          {currentFeeStructure.currency} {currentFeeStructure.totalFees}
+                        </Text>
+                      </Descriptions.Item>
+                      <Descriptions.Item label={t(LOCALE_KEYS.ADMISSION_FEE)}>
+                        {currentFeeStructure.currency} {currentFeeStructure.admissionFee}
+                      </Descriptions.Item>
+                      <Descriptions.Item label={t(LOCALE_KEYS.CURRENCY)}>
+                        {currentFeeStructure.currency}
+                      </Descriptions.Item>
+                      {currentFeeStructure.remarks && (
+                        <Descriptions.Item label={t(LOCALE_KEYS.REMARKS)}>
+                          {currentFeeStructure.remarks}
+                        </Descriptions.Item>
+                      )}
+                    </Descriptions>
+                  )}
+                </Card>
+              ),
+            },
+            ...(currentFeeStructure.installmentPlans &&
+            currentFeeStructure.installmentPlans.length > 0
+              ? [
+                  {
+                    key: 'plans',
+                    label: t(LOCALE_KEYS.FEE_INSTALLMENT_PLANS, {
+                      defaultValue: 'Installment Plans',
+                    }),
+                    children: (
+                      <Card>
+                        <Table
+                          dataSource={currentFeeStructure.installmentPlans}
+                          rowKey="id"
+                          pagination={false}
+                          size="small"
+                          columns={[
+                            {
+                              title: t(LOCALE_KEYS.SEQUENCE_NO),
+                              dataIndex: 'sequenceNo',
+                              key: 'sequenceNo',
+                              width: 80,
+                              render: (value: number) => <Text strong>#{value}</Text>,
+                            },
+                            {
+                              title: t(LOCALE_KEYS.PAYMENT_LABEL),
+                              dataIndex: 'paymentLabel',
+                              key: 'paymentLabel',
+                              render: (text: string) => <Text>{text}</Text>,
+                            },
+                            {
+                              title: t(LOCALE_KEYS.AMOUNT),
+                              dataIndex: 'amount',
+                              key: 'amount',
+                              render: (amount: number) => (
+                                <Text strong>
+                                  {currentFeeStructure?.currency} {amount.toLocaleString()}
+                                </Text>
+                              ),
+                            },
+                            {
+                              title: t(LOCALE_KEYS.DURATION_MONTHS),
+                              dataIndex: 'durationMonths',
+                              key: 'durationMonths',
+                              render: (months: number) =>
+                                `${months} ${t(LOCALE_KEYS.MONTH, { defaultValue: 'months' })}`,
+                            },
+                            {
+                              title: t(LOCALE_KEYS.DUE_DATE),
+                              dataIndex: 'dueDate',
+                              key: 'dueDate',
+                              render: (date: string) => new Date(date).toLocaleDateString(),
+                            },
+                          ]}
+                        />
+                      </Card>
+                    ),
+                  },
+                ]
+              : []),
+            ...(selectedDiscountTemplateIds.length > 0
+              ? [
+                  {
+                    key: 'discounts',
+                    label: t(LOCALE_KEYS.DISCOUNT_TEMPLATES, {
+                      defaultValue: 'Discount Summary',
+                    }),
+                    children: (
+                      <Card>
+                        {(() => {
+                          const baseAmount = Math.max(
+                            0,
+                            Number(currentFeeStructure.totalFees || 0) -
+                              Number(currentFeeStructure.admissionFee || 0),
+                          );
 
-      {currentFeeStructure &&
-        currentFeeStructure.installmentPlans &&
-        currentFeeStructure.installmentPlans.length > 0 && (
-          <Card
-            title={t(LOCALE_KEYS.FEE_INSTALLMENT_PLANS, { defaultValue: 'Installment Plans' })}
-            style={{ marginTop: '16px' }}
-          >
-            <Table
-              dataSource={currentFeeStructure.installmentPlans}
-              rowKey="id"
-              pagination={false}
-              size="small"
-              columns={[
-                {
-                  title: t(LOCALE_KEYS.SEQUENCE_NO),
-                  dataIndex: 'sequenceNo',
-                  key: 'sequenceNo',
-                  width: 80,
-                  render: (value: number) => <Text strong>#{value}</Text>,
-                },
-                {
-                  title: t(LOCALE_KEYS.PAYMENT_LABEL),
-                  dataIndex: 'paymentLabel',
-                  key: 'paymentLabel',
-                  render: (text: string) => <Text>{text}</Text>,
-                },
-                {
-                  title: t(LOCALE_KEYS.AMOUNT),
-                  dataIndex: 'amount',
-                  key: 'amount',
-                  render: (amount: number, record: IFeeInstallmentPlan) => (
-                    <Text strong>
-                      {currentFeeStructure?.currency} {amount.toLocaleString()}
-                    </Text>
-                  ),
-                },
-                {
-                  title: t(LOCALE_KEYS.DISCOUNT_AMOUNT),
-                  dataIndex: 'discountAmount',
-                  key: 'discountAmount',
-                  render: (discount: number) => (
-                    <Text type={discount > 0 ? 'success' : 'secondary'}>
-                      {currentFeeStructure?.currency} {discount.toLocaleString()}
-                    </Text>
-                  ),
-                },
-                {
-                  title: t(LOCALE_KEYS.DURATION_MONTHS),
-                  dataIndex: 'durationMonths',
-                  key: 'durationMonths',
-                  render: (months: number) =>
-                    `${months} ${t(LOCALE_KEYS.MONTH, { defaultValue: 'months' })}`,
-                },
-                {
-                  title: t(LOCALE_KEYS.DUE_DATE),
-                  dataIndex: 'dueDate',
-                  key: 'dueDate',
-                  render: (date: string) => new Date(date).toLocaleDateString(),
-                },
-              ]}
-            />
-          </Card>
-        )}
+                          const selectedDiscounts = discountTemplates.filter((dt) =>
+                            selectedDiscountTemplateIds.includes(dt.id.toString()),
+                          );
+
+                          const discountRows = selectedDiscounts.map((dt) => {
+                            const amount =
+                              dt.type === 'percent'
+                                ? (baseAmount * Number(dt.amount || 0)) / 100
+                                : Number(dt.amount || 0);
+                            return { template: dt, amount };
+                          });
+
+                          const totalDiscount = discountRows.reduce(
+                            (sum, row) => sum + row.amount,
+                            0,
+                          );
+                          const finalAmount = Math.max(0, baseAmount - totalDiscount);
+
+                          return (
+                            <Descriptions column={1} size="small">
+                              <Descriptions.Item label={t(LOCALE_KEYS.TOTAL_FEES)}>
+                                <Text strong>
+                                  {currentFeeStructure.currency} {currentFeeStructure.totalFees}
+                                </Text>
+                              </Descriptions.Item>
+                              <Descriptions.Item label={t(LOCALE_KEYS.ADMISSION_FEE)}>
+                                {currentFeeStructure.currency} {currentFeeStructure.admissionFee}
+                              </Descriptions.Item>
+                              <Descriptions.Item
+                                label={t(LOCALE_KEYS.AMOUNT_DUE, {
+                                  defaultValue: 'Base After Admission',
+                                })}
+                              >
+                                <Text>
+                                  {currentFeeStructure.currency} {baseAmount.toFixed(2)}
+                                </Text>
+                              </Descriptions.Item>
+
+                              {discountRows.map(({ template, amount }) => (
+                                <Descriptions.Item
+                                  key={template.id}
+                                  label={`${template.name} (${
+                                    template.type === 'percent'
+                                      ? `${template.amount}%`
+                                      : template.amount
+                                  })`}
+                                >
+                                  <Text type="danger">
+                                    - {currentFeeStructure.currency} {amount.toFixed(2)}
+                                  </Text>
+                                </Descriptions.Item>
+                              ))}
+
+                              <Descriptions.Item
+                                label={t(LOCALE_KEYS.DISCOUNT_AMOUNT, {
+                                  defaultValue: 'Total Discount',
+                                })}
+                              >
+                                <Text type="danger">
+                                  - {currentFeeStructure.currency} {totalDiscount.toFixed(2)}
+                                </Text>
+                              </Descriptions.Item>
+                              <Descriptions.Item
+                                label={t(LOCALE_KEYS.BALANCE_AMOUNT, {
+                                  defaultValue: 'Final Amount After Discount',
+                                })}
+                              >
+                                <Text strong>
+                                  {currentFeeStructure.currency} {finalAmount.toFixed(2)}
+                                </Text>
+                              </Descriptions.Item>
+                            </Descriptions>
+                          );
+                        })()}
+                      </Card>
+                    ),
+                  },
+                ]
+              : []),
+            ...(currentFeeStructure.installmentPlans &&
+            currentFeeStructure.installmentPlans.length > 0
+              ? [
+                  {
+                    key: 'invoice',
+                    label: t(LOCALE_KEYS.INVOICE, { defaultValue: 'Invoice' }),
+                    children: (
+                      <Card>
+                        <FeeStructureInvoice
+                          feeStructure={currentFeeStructure}
+                          installmentPlans={currentFeeStructure.installmentPlans}
+                          selectedDiscountTemplates={discountTemplates.filter((dt) =>
+                            selectedDiscountTemplateIds.includes(dt.id.toString()),
+                          )}
+                          isInternational={isInternational}
+                        />
+                      </Card>
+                    ),
+                  },
+                ]
+              : []),
+          ]}
+        />
+      )}
     </Drawer>
   );
 };

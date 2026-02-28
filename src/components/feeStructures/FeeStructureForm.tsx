@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { CURRENCIES } from '@/constants/currencies';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { DISCOUNT_TYPE_OPTIONS, PAYMENT_TYPE_OPTIONS, Status } from '@/enums';
+import { PAYMENT_TYPE_OPTIONS, Status } from '@/enums';
 
 import { useBatches } from '@/hooks/useBatches';
 import { useFeeStructures } from '@/hooks/useFeeStructures';
@@ -242,33 +242,6 @@ const FeeStructureForm: React.FC<FeeStructureFormProps> = ({
           placeholder="0.00"
           formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
         />
-      </Form.Item>
-
-      <Form.Item
-        name="discountType"
-        label={t(LOCALE_KEYS.DISCOUNT_TYPE)}
-        initialValue={DISCOUNT_TYPE_OPTIONS[0]?.value}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_TYPE) }),
-          },
-        ]}
-      >
-        <StatusSelect options={DISCOUNT_TYPE_OPTIONS} />
-      </Form.Item>
-
-      <Form.Item
-        name="discountAmount"
-        label={t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' })}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_AMOUNT) }),
-          },
-        ]}
-      >
-        <InputNumber style={{ width: '100%' }} min={0} step={0.01} />
       </Form.Item>
 
       <Form.Item

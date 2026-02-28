@@ -216,19 +216,6 @@ const FeeInstallmentPlanForm: React.FC<FeeInstallmentPlanFormProps> = ({
       </Form.Item>
 
       <Form.Item
-        name="discountAmount"
-        label={t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' })}
-        rules={[
-          {
-            required: true,
-            message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DISCOUNT_AMOUNT) }),
-          },
-        ]}
-      >
-        <InputNumber style={{ width: '100%' }} min={0} step={0.01} />
-      </Form.Item>
-
-      <Form.Item
         name="dueDate"
         label={t(LOCALE_KEYS.DUE_DATE, { defaultValue: 'Due Date' })}
         rules={[

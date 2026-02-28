@@ -26,6 +26,7 @@ export const ALLOWED_ROUTES = [
   '/attendances',
   '/event-types',
   '/events',
+  '/discount-templates',
 
 ];
 

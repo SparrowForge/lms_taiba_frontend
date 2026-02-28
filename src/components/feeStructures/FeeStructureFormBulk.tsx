@@ -9,13 +9,7 @@ import { toast } from 'react-toastify';
 import { CURRENCIES } from '@/constants/currencies';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { ENTITY_STATUS_OPTIONS } from '@/constants/statusOptions';
-import {
-  DISCOUNT_TYPE_OPTIONS,
-  DiscountType,
-  PAYMENT_TYPE_OPTIONS,
-  PaymentType,
-  Status,
-} from '@/enums';
+import { PAYMENT_TYPE_OPTIONS, PaymentType, Status } from '@/enums';
 
 import { useBatches } from '@/hooks/useBatches';
 import { useFeeStructures } from '@/hooks/useFeeStructures';
@@ -27,6 +21,7 @@ import { IFeeInstallmentPlanCreate } from '@/types/feeInstallmentPlan';
 import { IFeeStructure, IFeeStructureBulkCreate, IFeeStructureCreate } from '@/types/feeStructure';
 
 import { StatusSelect, StatusSelectFormItem } from '../ui/StatusSelect';
+import { InstallmentSection } from './FeeStructureFormBulkInstallment';
 
 import type { Dayjs } from 'dayjs';
 
@@ -42,7 +37,6 @@ interface PaymentRow {
   paymentLabel: string;
   durationMonths: number;
   amount: number;
-  discountAmount: number;
   dueDate: Dayjs | null;
   semesterStartDate: string;
   semesterEndDate: string;
@@ -57,7 +51,6 @@ interface MonthlyPaymentRow {
   sequenceNo: number;
   paymentLabel: string;
   amount: number;
-  discountAmount: number;
   dueDate: Dayjs | null;
   startDate: Dayjs;
   endDate: Dayjs;
@@ -80,62 +73,12 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
   const [semesterOptions, setSemesterOptions] = useState<{ label: string; value: string }[]>([]);
   // const [loadingSemesters, setLoadingSemesters] = useState(false);
 
-  // Helper function to calculate amount per semester/month after admission fee and discount
+  // Helper function to calculate amount per semester/month after admission fee (no discount)
   const calculateAmountPerPeriod = useCallback(
     (totalFees: number, periodCount: number) => {
-      // Get current form values for admission fee and discount
       const admissionFee = Number(form.getFieldValue('admissionFee') || 0);
-      const discountType = form.getFieldValue('discountType');
-      const discountAmount = Number(form.getFieldValue('discountAmount') || 0);
-
-      // Calculate remaining fees after subtracting admission fee
-      const remainingFees = totalFees - admissionFee;
-
-      // Apply discount to remaining fees
-      let discountedFees = remainingFees;
-      if (discountType === 'percent' && discountAmount > 0) {
-        discountedFees = remainingFees * (1 - discountAmount / 100);
-      } else if (discountType === 'fixed' && discountAmount > 0) {
-        discountedFees = remainingFees - discountAmount;
-      }
-      // If discountType is 'none', no discount is applied
-
-      // Ensure discounted fees is not negative
-      discountedFees = Math.max(0, discountedFees);
-
-      // Return the exact amount without rounding to avoid validation issues
-      // The rounding will be handled at the UI level for display purposes
-      return discountedFees / periodCount;
-    },
-    [form],
-  );
-
-  // Helper function to calculate discount amount per period
-  const calculateDiscountPerPeriod = useCallback(
-    (totalFees: number, periodCount: number) => {
-      // Get current form values for admission fee and discount
-      const admissionFee = Number(form.getFieldValue('admissionFee') || 0);
-      const discountType = form.getFieldValue('discountType');
-      const discountAmount = Number(form.getFieldValue('discountAmount') || 0);
-
-      // Calculate remaining fees after subtracting admission fee
-      const remainingFees = totalFees - admissionFee;
-
-      // Calculate discount per period
-      let discountPerPeriod = 0;
-      if (discountType === 'percent' && discountAmount > 0) {
-        // For percentage discount, calculate the discount amount per period
-        const totalDiscountAmount = remainingFees * (discountAmount / 100);
-        discountPerPeriod = totalDiscountAmount / periodCount;
-      } else if (discountType === 'fixed' && discountAmount > 0) {
-        // For fixed discount, divide the fixed amount across periods
-        discountPerPeriod = discountAmount / periodCount;
-      }
-      // If discountType is 'none', no discount is applied
-
-      // Return the exact amount without rounding to avoid validation issues
-      // The rounding will be handled at the UI level for display purposes
-      return Math.max(0, discountPerPeriod);
+      const remainingFees = Math.max(0, totalFees - admissionFee);
+      return remainingFees / periodCount;
     },
     [form],
   );
@@ -191,7 +134,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                 ...row,
                 isBreak,
                 amount: isBreak ? 0 : row.amount,
-                discountAmount: isBreak ? 0 : row.discountAmount,
               }
             : row,
         );
@@ -206,15 +148,10 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
 
             if (activeMonthCount > 0) {
               const amountPerMonth = calculateAmountPerPeriod(totalFeesNumber, activeMonthCount);
-              const discountPerMonth = calculateDiscountPerPeriod(
-                totalFeesNumber,
-                activeMonthCount,
-              );
 
               return updatedRows.map((row) => ({
                 ...row,
                 amount: row.isBreak ? 0 : amountPerMonth,
-                discountAmount: row.isBreak ? 0 : discountPerMonth,
               }));
             }
           }
@@ -223,7 +160,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
         return updatedRows;
       });
     },
-    [form, calculateAmountPerPeriod, calculateDiscountPerPeriod],
+    [form, calculateAmountPerPeriod],
   );
 
   useEffect(() => {
@@ -238,8 +175,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
   const currentPaymentType = Form.useWatch('paymentType', form);
   const totalFees = Form.useWatch('totalFees', form);
   const admissionFee = Form.useWatch('admissionFee', form);
-  const discountType = Form.useWatch('discountType', form);
-  const discountAmount = Form.useWatch('discountAmount', form);
   const dueDateDaysBeforeStart = Form.useWatch('dueDateDaysBeforeStart', form);
   const dueDateDaysBeforeMonthStart = Form.useWatch('dueDateDaysBeforeMonthStart', form);
 
@@ -282,7 +217,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
             sequenceNo: globalSequenceNo++,
             paymentLabel: `${semester.name} - ${month.monthName}`,
             amount: 0, // Will be calculated based on total fees
-            discountAmount: 0,
             dueDate: null,
             startDate: month.start as any, // Convert to Dayjs
             endDate: month.end as any,
@@ -354,19 +288,13 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
     ) {
       const totalFeesNumber = Number(totalFees);
       if (totalFeesNumber > 0) {
-        // Use actual number of non-break semesters for calculation
         const nonBreakSemesterCount = paymentRows.length;
         const amountPerSemester = calculateAmountPerPeriod(totalFeesNumber, nonBreakSemesterCount);
-        const discountPerSemester = calculateDiscountPerPeriod(
-          totalFeesNumber,
-          nonBreakSemesterCount,
-        );
 
         setPaymentRows((prev) =>
           prev.map((row) => ({
             ...row,
             amount: amountPerSemester,
-            discountAmount: discountPerSemester,
           })),
         );
       }
@@ -374,13 +302,10 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
   }, [
     totalFees,
     admissionFee,
-    discountType,
-    discountAmount,
     currentPaymentType,
     selectedBatch,
     paymentRows.length,
     calculateAmountPerPeriod,
-    calculateDiscountPerPeriod,
   ]);
 
   // Auto-distribute total fees across monthly payment when totalFees changes
@@ -388,19 +313,16 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
     if (currentPaymentType === 'monthly' && monthlyPaymentRows.length > 0 && totalFees) {
       const totalFeesNumber = Number(totalFees);
       if (totalFeesNumber > 0) {
-        // Only count non-break months for distribution
         const activeMonths = monthlyPaymentRows.filter((row) => !row.isBreak);
         const activeMonthCount = activeMonths.length;
 
         if (activeMonthCount > 0) {
           const amountPerMonth = calculateAmountPerPeriod(totalFeesNumber, activeMonthCount);
-          const discountPerMonth = calculateDiscountPerPeriod(totalFeesNumber, activeMonthCount);
 
           setMonthlyPaymentRows((prev) =>
             prev.map((row) => ({
               ...row,
               amount: row.isBreak ? 0 : amountPerMonth,
-              discountAmount: row.isBreak ? 0 : discountPerMonth,
             })),
           );
         }
@@ -409,12 +331,9 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
   }, [
     totalFees,
     admissionFee,
-    discountType,
-    discountAmount,
     currentPaymentType,
     monthlyPaymentRows.length,
     calculateAmountPerPeriod,
-    calculateDiscountPerPeriod,
   ]);
 
   // Auto-calculate due dates when due date days before start changes
@@ -461,7 +380,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
             paymentLabel: `${semester.name} Fee`,
             durationMonths: durationMonths, // Already rounded to 2 decimal places
             amount: 0,
-            discountAmount: 0,
             dueDate: null,
             semesterStartDate: semester.startDate,
             semesterEndDate: semester.endDate,
@@ -505,7 +423,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
   // No need for add/delete functionality since batch has fixed number of semesters
 
   // Update payment row
-  const updatePaymentRow = (id: string, field: keyof PaymentRow, value: any) => {
+  const updatePaymentRow = (id: string, field: string, value: any) => {
     setPaymentRows((prev) => prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)));
   };
 
@@ -515,34 +433,10 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
       // Validate basic form values
       const formTotalFees = Number(values.totalFees) || 0;
       const formAdmissionFee = Number(values.admissionFee) || 0;
-      const formDiscountType = values.discountType;
-      const formDiscountAmount = Number(values.discountAmount) || 0;
 
       // Validate admission fee doesn't exceed total fees
       if (formAdmissionFee >= formTotalFees) {
         toast.error('Admission fee cannot be greater than or equal to total fees');
-        return;
-      }
-
-      // Validate discount amounts
-      if (
-        formDiscountType === DiscountType.PERCENT &&
-        (formDiscountAmount < 0 || formDiscountAmount > 100)
-      ) {
-        toast.error('Percentage discount must be between 0 and 100');
-        return;
-      }
-      if (formDiscountType === DiscountType.FIXED && formDiscountAmount < 0) {
-        toast.error('Fixed discount amount cannot be negative');
-        return;
-      }
-
-      // Validate that discount doesn't exceed remaining amount after admission fee
-      const remainingAfterAdmission = formTotalFees - formAdmissionFee;
-      if (formDiscountType === DiscountType.FIXED && formDiscountAmount > remainingAfterAdmission) {
-        toast.error(
-          `Fixed discount amount (${formDiscountAmount}) cannot exceed the remaining amount after admission fee (${remainingAfterAdmission})`,
-        );
         return;
       }
 
@@ -569,34 +463,10 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
       // Validate basic form values
       const formTotalFees = Number(values.totalFees) || 0;
       const formAdmissionFee = Number(values.admissionFee) || 0;
-      const formDiscountType = values.discountType;
-      const formDiscountAmount = Number(values.discountAmount) || 0;
 
       // Validate admission fee doesn't exceed total fees
       if (formAdmissionFee >= formTotalFees) {
         toast.error('Admission fee cannot be greater than or equal to total fees');
-        return;
-      }
-
-      // Validate discount amounts
-      if (
-        formDiscountType === DiscountType.PERCENT &&
-        (formDiscountAmount < 0 || formDiscountAmount > 100)
-      ) {
-        toast.error('Percentage discount must be between 0 and 100');
-        return;
-      }
-      if (formDiscountType === DiscountType.FIXED && formDiscountAmount < 0) {
-        toast.error('Fixed discount amount cannot be negative');
-        return;
-      }
-
-      // Validate that discount doesn't exceed remaining amount after admission fee
-      const remainingAfterAdmission = formTotalFees - formAdmissionFee;
-      if (formDiscountType === DiscountType.FIXED && formDiscountAmount > remainingAfterAdmission) {
-        toast.error(
-          `Fixed discount amount (${formDiscountAmount}) cannot exceed the remaining amount after admission fee (${remainingAfterAdmission})`,
-        );
         return;
       }
 
@@ -621,23 +491,18 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
         return;
       }
 
-      // Validate that sum of semester amounts equals the amount after admission fee and discount
+      const remainingAfterAdmission = formTotalFees - formAdmissionFee;
+
+      // Validate that sum of semester amounts equals the amount after admission fee
       const totalSemesterAmounts = paymentRows.reduce((sum, row) => sum + row.amount, 0);
 
-      // Calculate expected amount after admission fee and discount
-      let expectedAmountAfterDiscount = remainingAfterAdmission;
-
-      if (formDiscountType === DiscountType.PERCENT && formDiscountAmount > 0) {
-        expectedAmountAfterDiscount = remainingAfterAdmission * (1 - formDiscountAmount / 100);
-      } else if (formDiscountType === DiscountType.FIXED && formDiscountAmount > 0) {
-        expectedAmountAfterDiscount = remainingAfterAdmission - formDiscountAmount;
-      }
-
-      expectedAmountAfterDiscount = Math.max(0, expectedAmountAfterDiscount);
-
-      if (Math.abs(totalSemesterAmounts - expectedAmountAfterDiscount) > 0.01) {
+      if (Math.abs(totalSemesterAmounts - remainingAfterAdmission) > 0.01) {
         toast.error(
-          `Amount mismatch: Expected ${expectedAmountAfterDiscount.toFixed(2)} after admission fee (${formAdmissionFee}) and discount (${formDiscountType === 'percent' ? formDiscountAmount + '%' : formDiscountAmount}), but sum of semester amounts is ${totalSemesterAmounts.toFixed(2)}`,
+          `Amount mismatch: Expected ${remainingAfterAdmission.toFixed(
+            2,
+          )} after admission fee (${formAdmissionFee}), but sum of semester amounts is ${totalSemesterAmounts.toFixed(
+            2,
+          )}`,
         );
         return;
       }
@@ -649,7 +514,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
         ...submissionValues,
         totalFees: Number(values.totalFees) || 0,
         admissionFee: Number(values.admissionFee) || 0,
-        discountAmount: Number(values.discountAmount) || 0,
         feeInstallmentPlans: paymentRows.map(
           (row) =>
             ({
@@ -658,7 +522,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
               semesterId: Number(row.semester) || 0,
               durationMonths: row.durationMonths,
               amount: row.amount,
-              discountAmount: row.discountAmount,
               dueDate: row.dueDate ? row.dueDate.format('YYYY-MM-DD') : '',
             }) as Omit<IFeeInstallmentPlanCreate, 'feeStructureId'>,
         ),
@@ -684,36 +547,13 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
       // Validate basic form values
       const formTotalFees = Number(values.totalFees) || 0;
       const formAdmissionFee = Number(values.admissionFee) || 0;
-      const formDiscountType = values.discountType;
-      const formDiscountAmount = Number(values.discountAmount) || 0;
-
       // Validate admission fee doesn't exceed total fees
       if (formAdmissionFee >= formTotalFees) {
         toast.error('Admission fee cannot be greater than or equal to total fees');
         return;
       }
 
-      // Validate discount amounts
-      if (
-        formDiscountType === DiscountType.PERCENT &&
-        (formDiscountAmount < 0 || formDiscountAmount > 100)
-      ) {
-        toast.error('Percentage discount must be between 0 and 100');
-        return;
-      }
-      if (formDiscountType === DiscountType.FIXED && formDiscountAmount < 0) {
-        toast.error('Fixed discount amount cannot be negative');
-        return;
-      }
-
-      // Validate that discount doesn't exceed remaining amount after admission fee
       const remainingAfterAdmission = formTotalFees - formAdmissionFee;
-      if (formDiscountType === DiscountType.FIXED && formDiscountAmount > remainingAfterAdmission) {
-        toast.error(
-          `Fixed discount amount (${formDiscountAmount}) cannot exceed the remaining amount after admission fee (${remainingAfterAdmission})`,
-        );
-        return;
-      }
 
       // Validate that all monthly rows have required fields (exclude break months from amount validation)
       const invalidRows = monthlyPaymentRows.filter(
@@ -737,23 +577,16 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
         return;
       }
 
-      // Validate that sum of monthly amounts equals the amount after admission fee and discount
+      // Validate that sum of monthly amounts equals the amount after admission fee
       const totalMonthlyAmounts = monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0);
 
-      // Calculate expected amount after admission fee and discount
-      let expectedAmountAfterDiscount = remainingAfterAdmission;
-
-      if (formDiscountType === DiscountType.PERCENT && formDiscountAmount > 0) {
-        expectedAmountAfterDiscount = remainingAfterAdmission * (1 - formDiscountAmount / 100);
-      } else if (formDiscountType === DiscountType.FIXED && formDiscountAmount > 0) {
-        expectedAmountAfterDiscount = remainingAfterAdmission - formDiscountAmount;
-      }
-
-      expectedAmountAfterDiscount = Math.max(0, expectedAmountAfterDiscount);
-
-      if (Math.abs(totalMonthlyAmounts - expectedAmountAfterDiscount) > 0.01) {
+      if (Math.abs(totalMonthlyAmounts - remainingAfterAdmission) > 0.01) {
         toast.error(
-          `Amount mismatch: Expected ${expectedAmountAfterDiscount.toFixed(2)} after admission fee (${formAdmissionFee}) and discount (${formDiscountType === 'percent' ? formDiscountAmount + '%' : formDiscountAmount}), but sum of monthly amounts is ${totalMonthlyAmounts.toFixed(2)}`,
+          `Amount mismatch: Expected ${remainingAfterAdmission.toFixed(
+            2,
+          )} after admission fee (${formAdmissionFee}), but sum of monthly amounts is ${totalMonthlyAmounts.toFixed(
+            2,
+          )}`,
         );
         return;
       }
@@ -765,7 +598,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
         ...submissionValues,
         totalFees: Number(values.totalFees) || 0,
         admissionFee: Number(values.admissionFee) || 0,
-        discountAmount: Number(values.discountAmount) || 0,
         feeInstallmentPlans: monthlyPaymentRows.map(
           (row) =>
             ({
@@ -774,7 +606,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
               semesterId: row.semesterId,
               durationMonths: 1, // Monthly payment are always 1 month
               amount: row.isBreak ? 0 : row.amount, // Ensure break months have amount = 0
-              discountAmount: row.isBreak ? 0 : row.discountAmount, // Ensure break months have discount = 0
               dueDate: row.dueDate ? row.dueDate.format('YYYY-MM-DD') : '',
             }) as Omit<IFeeInstallmentPlanCreate, 'feeStructureId'>,
         ),
@@ -1001,39 +832,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
             <Row gutter={16}>
               <Col span={8}>
                 <Form.Item
-                  name="discountType"
-                  initialValue={DISCOUNT_TYPE_OPTIONS[0]?.value}
-                  label={t(LOCALE_KEYS.DISCOUNT_TYPE)}
-                  rules={[
-                    {
-                      required: true,
-                      message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
-                        name: t(LOCALE_KEYS.DISCOUNT_TYPE),
-                      }),
-                    },
-                  ]}
-                >
-                  <StatusSelect options={DISCOUNT_TYPE_OPTIONS} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
-                  name="discountAmount"
-                  label={t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' })}
-                  rules={[
-                    {
-                      required: true,
-                      message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, {
-                        name: t(LOCALE_KEYS.DISCOUNT_AMOUNT),
-                      }),
-                    },
-                  ]}
-                >
-                  <InputNumber style={{ width: '100%' }} min={0} step={0.01} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
                   name="currency"
                   label={t(LOCALE_KEYS.CURRENCY)}
                   rules={[
@@ -1163,430 +961,22 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
 
         {/* Installment Payment Details Section - Only show when batch is selected AND payment type is installment */}
         {selectedBatch && currentPaymentType === 'installment' && (
-          <Card title="Fee Structure Details (Installment)" style={{ marginBottom: 16 }}>
-            {/* Show helpful note when no semesters exist */}
-            {semesters.length === 0 && (
-              <div
-                style={{
-                  padding: '12px 16px',
-                  marginBottom: '16px',
-                  borderRadius: '6px',
-                  border: '1px solid #ffd591',
-                  fontSize: '13px',
-                }}
-              >
-                <p style={{ color: '#d46b08', margin: 0 }}>
-                  <strong>Note:</strong> This batch is configured for{' '}
-                  {selectedBatch.course?.durationInSemesters || 0} semesters, but no semester
-                  records exist yet. You'll need to create the semester records first to generate
-                  fee structure rows.
-                </p>
-              </div>
-            )}
-
-            {/* Show warning when some semesters are missing */}
-            {semesters.length > 0 &&
-              semesters.length < selectedBatch.course?.durationInSemesters && (
-                <div
-                  style={{
-                    padding: '12px 16px',
-                    marginBottom: '16px',
-                    borderRadius: '6px',
-                    border: '1px solid #ffccc7',
-                    fontSize: '13px',
-                  }}
-                >
-                  <p style={{ color: '#cf1322', margin: 0, marginBottom: '8px' }}>
-                    <strong>⚠️ Warning:</strong> This batch is configured for{' '}
-                    {selectedBatch.course?.durationInSemesters || 0} semesters, but only{' '}
-                    {semesters.length} semester records were found.
-                  </p>
-                  <p style={{ color: '#434343', margin: 0, marginBottom: '8px', fontSize: '12px' }}>
-                    <strong>Missing semesters:</strong> {getMissingSemesterNumbers()}
-                  </p>
-                  <p style={{ color: '#666', margin: 0, fontSize: '12px' }}>
-                    You can proceed with the available semesters, but consider creating the missing
-                    ones for a complete fee structure.
-                  </p>
-                  <div style={{ marginTop: '8px' }}>
-                    <Button
-                      type="primary"
-                      danger
-                      size="small"
-                      onClick={() => {
-                        if (selectedBatch) {
-                          sessionStorage.setItem(
-                            'batchForSemesterCreation',
-                            JSON.stringify({
-                              batchId: selectedBatch.id,
-                              batchName: selectedBatch.name,
-                              courseName: selectedBatch.course?.name,
-                              durationInSemesters: selectedBatch.course?.durationInSemesters,
-                              missingSemesters: getMissingSemesterNumbers(),
-                            }),
-                          );
-                        }
-                        router.push('/semesters/create');
-                      }}
-                      style={{ marginRight: '8px' }}
-                    >
-                      Create Missing Semesters
-                    </Button>
-                    <Button
-                      type="default"
-                      size="small"
-                      onClick={() => window.open('/semesters', '_blank')}
-                    >
-                      View All Semesters
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-            {/* Show break semester information */}
-            {(() => {
-              const breakInfo = getBreakSemesterInfo();
-              if (breakInfo) {
-                return (
-                  <div
-                    style={{
-                      padding: '12px 16px',
-                      marginBottom: '16px',
-                      borderRadius: '6px',
-                      border: '1px solid #d9f7be',
-                      backgroundColor: '#f6ffed',
-                      fontSize: '13px',
-                    }}
-                  >
-                    <p style={{ color: '#389e0d', margin: 0, marginBottom: '4px' }}>
-                      <strong>ℹ️ Break Semesters Excluded:</strong> {breakInfo.count} break semester
-                      {breakInfo.count !== 1 ? 's' : ''} ({breakInfo.names}){' '}
-                      {breakInfo.count !== 1 ? 'are' : 'is'} excluded from fee calculations.
-                    </p>
-                    <p style={{ color: '#666', margin: 0, fontSize: '12px' }}>
-                      Only active semesters are included in the installment payment structure.
-                    </p>
-                  </div>
-                );
-              }
-              return null;
-            })()}
-
-            {/* Show totals summary for installment payment */}
-            {paymentRows.length > 0 && (
-              <div
-                style={{
-                  padding: '12px',
-                  marginBottom: '16px',
-                  borderRadius: '6px',
-                  border: '1px solid #e1e4e8',
-                }}
-              >
-                <Row gutter={16}>
-                  <Col span={6}>
-                    <strong>Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
-                  </Col>
-                  <Col span={6}>
-                    <strong>Admission Fee:</strong>{' '}
-                    {Number(form.getFieldValue('admissionFee') || 0).toFixed(2)}
-                  </Col>
-                  <Col span={6}>
-                    <strong>Remaining After Admission:</strong>{' '}
-                    {Math.max(
-                      0,
-                      Number(totalFees || 0) - Number(form.getFieldValue('admissionFee') || 0),
-                    ).toFixed(2)}
-                  </Col>
-                  <Col span={6}>
-                    <strong>After Discount:</strong>{' '}
-                    {(() => {
-                      const totalFeesNumber = Number(totalFees || 0);
-                      const admissionFee = Number(form.getFieldValue('admissionFee') || 0);
-                      const discountType = form.getFieldValue('discountType');
-                      const discountAmount = Number(form.getFieldValue('discountAmount') || 0);
-
-                      const remainingFees = totalFeesNumber - admissionFee;
-                      let discountedFees = remainingFees;
-
-                      if (discountType === 'percent' && discountAmount > 0) {
-                        discountedFees = remainingFees * (1 - discountAmount / 100);
-                      } else if (discountType === 'fixed' && discountAmount > 0) {
-                        discountedFees = remainingFees - discountAmount;
-                      }
-
-                      return Math.max(0, discountedFees).toFixed(2);
-                    })()}
-                  </Col>
-                </Row>
-                <Row gutter={16} style={{ marginTop: '8px' }}>
-                  <Col span={6}>
-                    <strong>Semester Sum ({paymentRows.length} active semesters):</strong>{' '}
-                    {formatForDisplay(
-                      paymentRows.reduce((sum, row) => sum + row.amount, 0),
-                    ).toFixed(2)}
-                  </Col>
-                  <Col span={6}>
-                    <strong>Amount Per Semester:</strong>{' '}
-                    {paymentRows.length > 0
-                      ? formatForDisplay(
-                          paymentRows.reduce((sum, row) => sum + row.amount, 0) /
-                            paymentRows.length,
-                        ).toFixed(2)
-                      : '0.00'}
-                  </Col>
-                  <Col span={6}>
-                    <strong>Total Discount Applied:</strong>{' '}
-                    {formatForDisplay(
-                      paymentRows.reduce((sum, row) => sum + row.discountAmount, 0),
-                    ).toFixed(2)}
-                  </Col>
-                  <Col span={6}>
-                    <strong>Difference:</strong>{' '}
-                    {formatForDisplay(
-                      Math.abs(
-                        Number(totalFees || 0) -
-                          (Number(form.getFieldValue('admissionFee') || 0) +
-                            paymentRows.reduce((sum, row) => sum + row.amount, 0)),
-                      ),
-                    ).toFixed(2)}
-                  </Col>
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                  <Col span={24}>
-                    <Button
-                      type="dashed"
-                      size="small"
-                      onClick={() => {
-                        const totalFeesNumber = Number(totalFees || 0);
-                        if (totalFeesNumber > 0 && paymentRows.length > 0) {
-                          const nonBreakSemesterCount = paymentRows.length; // Use actual number of non-break semesters
-                          const amountPerSemester = calculateAmountPerPeriod(
-                            totalFeesNumber,
-                            nonBreakSemesterCount,
-                          );
-                          const discountPerSemester = calculateDiscountPerPeriod(
-                            totalFeesNumber,
-                            nonBreakSemesterCount,
-                          );
-
-                          setPaymentRows((prev) =>
-                            prev.map((row) => ({
-                              ...row,
-                              amount: amountPerSemester,
-                              discountAmount: discountPerSemester,
-                            })),
-                          );
-                        }
-                      }}
-                      disabled={!totalFees || paymentRows.length === 0}
-                    >
-                      Auto-Distribute Remaining Fees Across {paymentRows.length} Active Semesters
-                    </Button>
-                  </Col>
-                </Row>
-              </div>
-            )}
-
-            {listStatus.status === Status.LOADING ? (
-              <div style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
-                <p>Loading semester data...</p>
-              </div>
-            ) : semesters.length === 0 ? (
-              <div
-                style={{
-                  textAlign: 'center',
-                  padding: '20px',
-                  color: '#ff4d4f',
-                  borderRadius: '6px',
-                  border: '1px solid #ffccc7',
-                }}
-              >
-                <p style={{ color: '#cf1322', fontWeight: 500, marginBottom: '12px' }}>
-                  ⚠️ No semesters found for this batch
-                </p>
-                <p style={{ color: '#434343', marginBottom: '16px' }}>
-                  This batch has {selectedBatch?.course?.durationInSemesters || 0} semesters
-                  configured, but no semester records exist.
-                </p>
-                <p style={{ color: '#666', fontSize: '12px', marginBottom: '16px' }}>
-                  You need to create semester records before you can generate fee structure rows.
-                </p>
-                <Button
-                  type="primary"
-                  danger
-                  onClick={() => {
-                    // Store the current batch info in sessionStorage for the semester creation form
-                    if (selectedBatch) {
-                      sessionStorage.setItem(
-                        'batchForSemesterCreation',
-                        JSON.stringify({
-                          batchId: selectedBatch.id,
-                          batchName: selectedBatch.name,
-                          courseName: selectedBatch.course?.name,
-                          durationInSemesters: selectedBatch.course?.durationInSemesters,
-                        }),
-                      );
-                    }
-                    router.push('/semesters/create');
-                  }}
-                  style={{ marginRight: '8px' }}
-                >
-                  Create Semesters
-                </Button>
-                <Button type="default" onClick={() => window.open('/semesters', '_blank')}>
-                  View All Semesters
-                </Button>
-              </div>
-            ) : paymentRows.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
-                <p>Select a batch to automatically generate fee structure rows for each semester</p>
-                <p style={{ fontSize: '12px', marginTop: '8px' }}>
-                  Each row represents a fee structure for a specific semester
-                </p>
-              </div>
-            ) : (
-              <>
-                <div
-                  style={{
-                    padding: '8px 12px',
-                    marginBottom: '16px',
-                    borderRadius: '4px',
-                    border: '1px solid #91d5ff',
-                    fontSize: '12px',
-                  }}
-                >
-                  💡 <strong>Tip:</strong> The auto-distribute function will: 1) Subtract admission
-                  fee from total fees, 2) Apply discount (percent or fixed), 3) Divide remaining
-                  amount across all semesters, 4) Set discount amount per semester. You can also
-                  manually adjust individual semester amounts.
-                </div>
-                <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>
-                          Semester
-                        </th>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>
-                          Start Date
-                        </th>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>
-                          Sequence No
-                        </th>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>
-                          Payment Label
-                        </th>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>
-                          Duration (Months)
-                        </th>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>
-                          Amount
-                        </th>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>
-                          Discount Amount
-                        </th>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>
-                          Due Date
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {paymentRows.map((row) => (
-                        <tr key={row.id}>
-                          <td style={{ padding: '12px' }}>
-                            <Select
-                              style={{ width: '100%' }}
-                              placeholder="Select Semester"
-                              disabled={true}
-                              value={row.semester}
-                              onChange={(value) => updatePaymentRow(row.id, 'semester', value)}
-                              options={semesterOptions}
-                            />
-                          </td>
-                          <td style={{ padding: '12px' }}>
-                            <Input
-                              value={
-                                row.semesterStartDate
-                                  ? dayjs(row.semesterStartDate).format('YYYY-MM-DD')
-                                  : 'N/A'
-                              }
-                              disabled
-                              style={{
-                                textAlign: 'center',
-                                backgroundColor: '#f5f5f5',
-                                color: '#666',
-                              }}
-                            />
-                          </td>
-                          <td style={{ padding: '12px' }}>
-                            <Input
-                              value={row.sequenceNo}
-                              disabled
-                              style={{ textAlign: 'center' }}
-                            />
-                          </td>
-                          <td style={{ padding: '12px' }}>
-                            <Input
-                              placeholder="e.g., Tuition Fee"
-                              value={row.paymentLabel}
-                              onChange={(e) =>
-                                updatePaymentRow(row.id, 'paymentLabel', e.target.value)
-                              }
-                            />
-                          </td>
-                          <td style={{ padding: '12px' }}>
-                            <InputNumber
-                              style={{ width: '100%', backgroundColor: '#f5f5f5', color: '#666' }}
-                              min={1}
-                              value={row.durationMonths}
-                              disabled
-                            />
-                          </td>
-                          <td style={{ padding: '12px' }}>
-                            <InputNumber
-                              style={{ width: '100%' }}
-                              min={0}
-                              step={0.01}
-                              placeholder="0.00"
-                              value={formatForDisplay(row.amount)}
-                              onChange={(value) => updatePaymentRow(row.id, 'amount', value)}
-                              formatter={(value) =>
-                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                              }
-                            />
-                          </td>
-                          <td style={{ padding: '12px' }}>
-                            <InputNumber
-                              style={{ width: '100%' }}
-                              min={0}
-                              step={0.01}
-                              placeholder="0.00"
-                              value={formatForDisplay(row.discountAmount)}
-                              onChange={(value) =>
-                                updatePaymentRow(row.id, 'discountAmount', value)
-                              }
-                              formatter={(value) =>
-                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                              }
-                            />
-                          </td>
-                          <td style={{ padding: '12px' }}>
-                            <DatePicker
-                              style={{ width: '100%' }}
-                              placeholder="mm/dd/yyyy"
-                              value={row.dueDate}
-                              onChange={(date) => updatePaymentRow(row.id, 'dueDate', date)}
-                              status={!row.dueDate ? 'error' : undefined}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
-          </Card>
+          <InstallmentSection
+            selectedBatch={selectedBatch}
+            semesters={semesters}
+            listStatus={listStatus}
+            paymentRows={paymentRows}
+            semesterOptions={semesterOptions}
+            totalFees={totalFees}
+            form={form}
+            formatForDisplay={formatForDisplay}
+            calculateAmountPerPeriod={calculateAmountPerPeriod}
+            getMissingSemesterNumbers={getMissingSemesterNumbers}
+            getBreakSemesterInfo={getBreakSemesterInfo}
+            updatePaymentRow={updatePaymentRow}
+            setPaymentRows={setPaymentRows}
+            router={router}
+          />
         )}
 
         {/* Monthly Payment Details Section - Only show when batch is selected AND payment type is monthly */}
@@ -1696,26 +1086,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                       Number(totalFees || 0) - Number(form.getFieldValue('admissionFee') || 0),
                     ).toFixed(2)}
                   </Col>
-                  <Col span={6}>
-                    <strong>After Discount:</strong>{' '}
-                    {(() => {
-                      const totalFeesNumber = Number(totalFees || 0);
-                      const admissionFee = Number(form.getFieldValue('admissionFee') || 0);
-                      const discountType = form.getFieldValue('discountType');
-                      const discountAmount = Number(form.getFieldValue('discountAmount') || 0);
-
-                      const remainingFees = totalFeesNumber - admissionFee;
-                      let discountedFees = remainingFees;
-
-                      if (discountType === 'percent' && discountAmount > 0) {
-                        discountedFees = remainingFees * (1 - discountAmount / 100);
-                      } else if (discountType === 'fixed' && discountAmount > 0) {
-                        discountedFees = remainingFees - discountAmount;
-                      }
-
-                      return Math.max(0, discountedFees).toFixed(2);
-                    })()}
-                  </Col>
+                  {/* Removed discount summary: only admission and remaining are shown now */}
                 </Row>
                 <Row gutter={16} style={{ marginTop: '8px' }}>
                   <Col span={6}>
@@ -1735,12 +1106,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                           ).toFixed(2)
                         : '0.00';
                     })()}
-                  </Col>
-                  <Col span={6}>
-                    <strong>Total Discount Applied:</strong>{' '}
-                    {formatForDisplay(
-                      monthlyPaymentRows.reduce((sum, row) => sum + row.discountAmount, 0),
-                    ).toFixed(2)}
                   </Col>
                   <Col span={6}>
                     <strong>Difference:</strong>{' '}
@@ -1784,22 +1149,17 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                           const activeMonthCount = activeMonths.length;
 
                           if (activeMonthCount > 0) {
-                            const amountPerMonth = calculateAmountPerPeriod(
-                              totalFeesNumber,
-                              activeMonthCount,
-                            );
-                            const discountPerMonth = calculateDiscountPerPeriod(
-                              totalFeesNumber,
-                              activeMonthCount,
-                            );
+                          const amountPerMonth = calculateAmountPerPeriod(
+                            totalFeesNumber,
+                            activeMonthCount,
+                          );
 
-                            setMonthlyPaymentRows((prev) =>
-                              prev.map((row) => ({
-                                ...row,
-                                amount: row.isBreak ? 0 : amountPerMonth,
-                                discountAmount: row.isBreak ? 0 : discountPerMonth,
-                              })),
-                            );
+                          setMonthlyPaymentRows((prev) =>
+                            prev.map((row) => ({
+                              ...row,
+                              amount: row.isBreak ? 0 : amountPerMonth,
+                            })),
+                          );
                           }
                         }
                       }}
@@ -1882,9 +1242,8 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   }}
                 >
                   💡 <strong>Tip:</strong> The auto-distribute function will: 1) Subtract admission
-                  fee from total fees, 2) Apply discount (percent or fixed), 3) Divide remaining
-                  amount across all months, 4) Set discount amount per month. You can also manually
-                  adjust individual monthly amounts.
+                  fee from total fees, 2) Divide the remaining amount across all months. You can
+                  also manually adjust individual monthly amounts.
                 </div>
                 <div style={{ overflowX: 'auto' }}>
                   {(() => {
@@ -1984,16 +1343,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                                     fontSize: '13px',
                                   }}
                                 >
-                                  Discount Amount
-                                </th>
-                                <th
-                                  style={{
-                                    padding: '10px 12px',
-                                    textAlign: 'left',
-                                    fontWeight: 600,
-                                    fontSize: '13px',
-                                  }}
-                                >
                                   Due Date
                                 </th>
                               </tr>
@@ -2060,28 +1409,6 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                                         setMonthlyPaymentRows((prev) =>
                                           prev.map((r) =>
                                             r.id === row.id ? { ...r, amount: value || 0 } : r,
-                                          ),
-                                        );
-                                      }}
-                                      formatter={(value) =>
-                                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                                      }
-                                    />
-                                  </td>
-                                  <td style={{ padding: '10px 12px' }}>
-                                    <InputNumber
-                                      style={{ width: '100%' }}
-                                      min={0}
-                                      step={0.01}
-                                      placeholder="0.00"
-                                      value={formatForDisplay(row.discountAmount)}
-                                      disabled={row.isBreak}
-                                      onChange={(value) => {
-                                        setMonthlyPaymentRows((prev) =>
-                                          prev.map((r) =>
-                                            r.id === row.id
-                                              ? { ...r, discountAmount: value || 0 }
-                                              : r,
                                           ),
                                         );
                                       }}
