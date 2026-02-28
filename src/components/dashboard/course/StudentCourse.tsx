@@ -100,10 +100,10 @@ const StudentCourse = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {subjectsData.data.subjects.map((subject) => (
                   <SubjectCard
-                    key={subject.id}
+                    key={subject?.id}
                     subject={subject}
                     semesterId={selectedSemesterId}
-                    onClick={() => router.push(`/dashboard/course/${subject.id}`)}
+                    onClick={() => router.push(`/dashboard/course/${subject?.id}`)}
                   />
                 ))}
               </div>

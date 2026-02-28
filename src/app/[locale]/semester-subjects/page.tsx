@@ -218,7 +218,7 @@ export default function SemesterSubjectsPage() {
         >
           <EntityList config={config as EntityConfig<ISemesterSubject>} />
         </AsyncErrorBoundary> */}
-        <SemesterSubjectManagement/>
+        <SemesterSubjectManagement handleCreateDrawer={handleCreateDrawer}/>
 
         <SemesterSubjectFormDrawer
           mode={drawerMode}

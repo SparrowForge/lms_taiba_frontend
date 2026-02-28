@@ -51,7 +51,7 @@ const FacultyExamsManagement: React.FC = () => {
 
       {/* Assignment Cards */}
       {listStatus.status === Status.SUCCESS && exams?.length > 0 ? (
-        <div className="flex flex-col gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
+        <div className="grid grid-cols-2 gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
           {exams?.map((item) => (
             <FacultyExamList key={item.id} data={item} />
           ))}

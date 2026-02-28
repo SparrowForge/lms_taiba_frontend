@@ -10,6 +10,7 @@ import {
   IStudent,
   IStudentCreate,
   IStudentRegistrationCreate,
+  IStudentSemesterResultFinalization,
   IStudentUpdate,
   IStudentWithFeeInfo,
 } from '@/types/student';
@@ -27,6 +28,7 @@ import {
   setPagination,
   setSelectedStudent,
   setStudents,
+  setStudentsWithSemesterResultFinalization,
   setStudentWithFeeInfo,
   updateStudent,
 } from '@/store/slices/studentSlice';
@@ -35,6 +37,7 @@ export const useStudents = () => {
   const dispatch = useDispatch();
   const {
     students,
+    studentsWithSemesterResultFinalization,
     selectedStudent,
     listStatus,
     detailsStatus,
@@ -61,6 +64,24 @@ export const useStudents = () => {
             },
           ),
         );
+        dispatch(setListStatus({ status: Status.SUCCESS }));
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof AxiosError
+            ? error?.response?.data?.message || error?.message || 'Failed to load students'
+            : 'Failed to load students';
+        dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
+      }
+    },
+    [dispatch],
+  );
+
+  const loadStudentsWithSemesterResultFinalization = useCallback(
+    async (params = {}) => {
+      try {
+        dispatch(setListStatus({ status: Status.LOADING }));
+        const response: IBaseResponse<IStudentSemesterResultFinalization[]> = await studentService.getStudentsWithSemesterResultFinalization(params);
+        dispatch(setStudentsWithSemesterResultFinalization(response?.data ?? []));
         dispatch(setListStatus({ status: Status.SUCCESS }));
       } catch (error: unknown) {
         const errorMessage =
@@ -104,8 +125,8 @@ export const useStudents = () => {
         const errorMessage =
           error instanceof AxiosError
             ? error?.response?.data?.message ||
-              error?.message ||
-              'Failed to load student with fee info'
+            error?.message ||
+            'Failed to load student with fee info'
             : 'Failed to load student with fee info';
         dispatch(setDetailsStatus({ status: Status.FAILED, message: errorMessage }));
         throw error;
@@ -232,8 +253,8 @@ export const useStudents = () => {
         const errorMessage =
           error instanceof AxiosError
             ? error?.response?.data?.message ||
-              error?.message ||
-              'Failed to load students without user accounts'
+            error?.message ||
+            'Failed to load students without user accounts'
             : 'Failed to load students without user accounts';
         dispatch(setListStatus({ status: Status.FAILED, message: errorMessage }));
       }
@@ -277,6 +298,7 @@ export const useStudents = () => {
 
   return {
     students,
+    studentsWithSemesterResultFinalization,
     selectedStudent,
     studentWithFeeInfo,
     listStatus,
@@ -285,6 +307,7 @@ export const useStudents = () => {
     pagination,
 
     loadStudents,
+    loadStudentsWithSemesterResultFinalization,
     loadStudentsWithoutUser,
     loadStudent,
     loadStudentWithFeeInfo,

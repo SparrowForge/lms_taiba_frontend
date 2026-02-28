@@ -1,16 +1,51 @@
+"use client"
+
+import { Card, Tabs } from 'antd'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
+import { LOCALE_KEYS } from '@/constants/localizationKeys'
+
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
-import { FinalExamResultManagement } from '@/components/examResults/FinalExamResultManagement'
+import RetakeExams from '@/components/exams/RetakeExams'
 import { MainLayout } from '@/components/layout/MainLayout'
-import StudentResultAssign from '@/components/result/StudentsResultAssign'
+import GradeEntry from '@/components/result/GradeEntry'
+import { PageHeader } from '@/components/ui/PageHeader'
+
+import { useLocalization } from '@/hooks/useLocalization'
+
+
 
 const ResultCreatePage = () => {
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.GRADING, { defaultValue: 'Grading' });
+  const router = useRouter()
+
   return (
     <ProtectedRoute>
       <MainLayout>
-        {/* <StudentResultAssign /> */}
-        <FinalExamResultManagement/>
+        <PageHeader
+          title={t(LOCALE_KEYS.ADD_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <Card className="pl-4">
+          <Tabs
+            defaultActiveKey="grade"
+            items={[
+              {
+                key: 'grade',
+                label: 'Grade Entry',
+                children: <GradeEntry />,
+              },
+              {
+                key: 'retake',
+                label: 'Retake Exam',
+                children: <RetakeExams />,
+              },
+            ]}
+          />
+        </Card>
+      
       </MainLayout>
     </ProtectedRoute>
   )

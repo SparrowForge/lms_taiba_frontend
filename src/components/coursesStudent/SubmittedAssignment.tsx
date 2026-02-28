@@ -32,7 +32,7 @@ const SubmittedAssignment: React.FC = () => {
     if (user?.student?.id) {
       loadCourseAssignmentSubmissions({ studentId: user?.student?.id });
     } else if (user?.faculty?.id) {
-      loadCourseAssignmentSubmissions({ facultyId: user?.faculty?.id });
+      loadCourseAssignmentSubmissions();
     }
   }, [loadCourseAssignmentSubmissions, user]);
 
@@ -57,7 +57,7 @@ const SubmittedAssignment: React.FC = () => {
 
       {/* Assignment Cards */}
       {listStatus.status === Status.SUCCESS && courseAssignmentSubmissions.length > 0 && (
-        <div className="flex flex-col gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
+        <div className="grid grid-cols-2 gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
           {courseAssignmentSubmissions.map((item:any) => (
             <AssignmentSubmissionCardByStudent key={item.id} data={item} />
           ))}

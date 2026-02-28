@@ -20,14 +20,14 @@ import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
 import { useBatches } from '@/hooks/useBatches';
 import { useCourses } from '@/hooks/useCourses';
+import { useExams } from '@/hooks/useExams';
 import { useExamSubmissions } from '@/hooks/useExamSubmissions';
 import { useLocalization } from '@/hooks/useLocalization';
-import { useSemesters } from '@/hooks/useSemesters';
+import { useStudents } from '@/hooks/useStudents';
 import { useSubjects } from '@/hooks/useSubjects';
 
 import { IExamSubmission } from '@/types/examSubmission';
-import { useStudents } from '@/hooks/useStudents';
-import { useExams } from '@/hooks/useExams';
+
 
 
 export default function ExamSubmissionPage() {
@@ -52,7 +52,6 @@ export default function ExamSubmissionPage() {
   const limit = searchParams.get('limit');
   const courseId = searchParams.get('courseId');
   const batchId = searchParams.get('batchId');
-  const examId = searchParams.get('examId');
   const subjectId = searchParams.get('subjectId');
 
 
@@ -257,6 +256,8 @@ export default function ExamSubmissionPage() {
         >
           <EntityList config={config as EntityConfig<IExamSubmission>} />
         </AsyncErrorBoundary>
+
+
 
         <AddressFormDrawer
           mode={drawerMode}

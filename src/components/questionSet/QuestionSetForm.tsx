@@ -51,17 +51,21 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ formData, changeHandl
                     <Col xs={24} sm={6}>
                         <p className='font-semibold text-md'>Course: {selectedExam?.course.name}</p>
                     </Col>
-
-
-
-
                 </Row>
 
                 <Form layout="vertical">
                     <Row gutter={16}>
                         <Col xs={24} sm={8}>
-                            <Form.Item label="Name">
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.NAME) }),
+                                    },
+                                ]}
+                                label="Name">
                                 <Input
+                                    required
                                     placeholder={t(LOCALE_KEYS.NAME)}
                                     value={formData.name}
                                     onChange={(e) => changeHandler("name", e.target.value)}
@@ -70,8 +74,16 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ formData, changeHandl
                         </Col>
 
                         <Col xs={24} sm={8}>
-                            <Form.Item label="Description">
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: t(LOCALE_KEYS.PLEASE_ENTER_NAME, { name: t(LOCALE_KEYS.DESCRIPTION) }),
+                                    },
+                                ]}
+                                label="Description">
                                 <Input
+                                    required
                                     placeholder={t(LOCALE_KEYS.ENTER_DESCRIPTION)}
                                     value={formData.description}
                                     onChange={(e) =>

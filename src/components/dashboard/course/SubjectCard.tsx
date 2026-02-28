@@ -37,16 +37,16 @@ const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick, semesterId 
         {/* Header: Name and Status */}
         <div className="flex items-start justify-between gap-2">
           <Typography.Title level={5} className="mb-0 flex-1">
-            {subject.name}
+            {subject?.name}
           </Typography.Title>
-          <Tag color={getStatusColor(subject.status)}>{subject.status?.toUpperCase()}</Tag>
+          <Tag color={getStatusColor(subject?.status)}>{subject?.status?.toUpperCase()}</Tag>
         </div>
 
         {/* Subject Code */}
         <div className="flex items-center gap-2">
           <BookOutlined className="text-gray-400" />
           <Typography.Text type="secondary" className="text-sm">
-            {subject.code}
+            {subject?.code}
           </Typography.Text>
         </div>
 
@@ -64,7 +64,7 @@ const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick, semesterId 
               <ClockCircleOutlined className="text-blue-500" />
               <Typography.Text className="text-xs text-gray-500">Credits</Typography.Text>
               <Typography.Text strong className="text-sm">
-                {subject.creditHours || 0}
+                {subject?.creditHours || 0}
               </Typography.Text>
             </div>
           </div>
@@ -75,7 +75,7 @@ const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick, semesterId 
               <FileTextOutlined className="text-green-500" />
               <Typography.Text className="text-xs text-gray-500">Theory</Typography.Text>
               <Typography.Text strong className="text-sm">
-                {subject.theoryHours || 0}h
+                {subject?.theoryHours || 0}h
               </Typography.Text>
             </div>
           </div>
@@ -86,18 +86,18 @@ const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick, semesterId 
               <ExperimentOutlined className="text-purple-500" />
               <Typography.Text className="text-xs text-gray-500">Practical</Typography.Text>
               <Typography.Text strong className="text-sm">
-                {subject.practicalHours || 0}h
+                {subject?.practicalHours || 0}h
               </Typography.Text>
             </div>
           </div>
         </div>
 
 
-        {subject.description && (
+        {subject?.description && (
           <>
             <Divider className="my-2" />
           
-            <div dangerouslySetInnerHTML={{ __html: subject.description }} />
+            <div dangerouslySetInnerHTML={{ __html: subject?.description }} />
           </>
         )}
       </div>

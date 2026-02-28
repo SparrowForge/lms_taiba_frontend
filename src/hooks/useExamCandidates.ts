@@ -122,11 +122,11 @@ export const useExamCandidates = () => {
           await examCandidateService.createExamCandidateBulk(data);
 
         // Add all created candidates to the store
-        if (response.data) {
-          response.data.forEach((candidate) => {
-            dispatch(addExamCandidate(candidate));
-          });
-        }
+        // if (response.data) {
+        //   response.data.forEach((candidate) => {
+        //     dispatch(addExamCandidate(candidate));
+        //   });
+        // }
 
         dispatch(
           setActionStatus({

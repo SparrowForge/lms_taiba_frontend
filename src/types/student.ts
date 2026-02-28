@@ -101,3 +101,11 @@ export interface IStudentSubjects {
   semester: ISemester;
   subjects: ISubjectWithFaculty[];
 }
+
+
+export interface IStudentSemesterResultFinalization {
+  student: IStudent
+  subjectResult: ISubjectResult | null
+  examResults: IExamResult[]
+  attendance: IAttendance[]
+}

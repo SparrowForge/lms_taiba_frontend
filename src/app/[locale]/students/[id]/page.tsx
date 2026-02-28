@@ -30,6 +30,7 @@ import { IStudent } from '@/types/student';
 import { ActivityTimeline } from '../../../../components/students/ActivityTimeline';
 import StudentAcademicRecord from '@/components/students/StudentAcademicRecord';
 import StudentDocuments from '@/components/students/StudentDocuments';
+import AcademicResult from '@/components/students/AcademicResult';
 
 
 export default function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -47,7 +48,6 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
     loadStudent(studentId);
   }, [loadStudent, studentId]);
 
-  console.log("Student", selectedStudent)
 
   const config = useCreateStudentDetailsConfig(
     selectedStudent,
@@ -73,16 +73,15 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
       case 'documents':
         return <StudentDocuments />
       case 'academic':
-        return <StudentAcademicRecord />
+        return <StudentAcademicRecord studentInfo={selectedStudent} />
       case 'fees':
         return <PaymentDetails />
       case 'grades':
-        return <AcademicResultGrade />
+        return <AcademicResult />
       case 'attendance':
         return <StudentAttendanceRecord />
       case 'activity':
         return <ActivityTimeline />
-
 
     }
   }

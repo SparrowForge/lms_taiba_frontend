@@ -1,37 +1,77 @@
-'use client';
+'use client'
 
-import { DownloadOutlined, CreditCardOutlined, ArrowUpOutlined } from '@ant-design/icons';
-import { Card, Progress, Table, Button, Tag, Space, Row, Col, Statistic } from 'antd';
-import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
+import {
+  DownloadOutlined,
+  CreditCardOutlined,
+} from '@ant-design/icons'
+import {
+  Card,
+  Progress,
+  Table,
+  Button,
+  Tag,
+  Space,
+  Row,
+  Col,
+  Statistic,
+} from 'antd'
+import dayjs from 'dayjs'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useMemo } from 'react'
 
-import { UserType } from '@/enums/user-type.enum';
+import { UserType } from '@/enums/user-type.enum'
 
-import { useAuth } from '@/hooks/useAuth';
-import { useFeePaymentCollections } from '@/hooks/useFeePaymentCollections';
+import { useAuth } from '@/hooks/useAuth'
+import { useFeePaymentCollections } from '@/hooks/useFeePaymentCollections'
 
-import { IFeePaymentCollection } from '@/types/feePaymentCollection';
+import { IFeePaymentCollection } from '@/types/feePaymentCollection'
 
-import type { TableColumnsType } from 'antd';
-
-
+import type { TableColumnsType } from 'antd'
 
 const PaymentDetails = () => {
-    const {id} = useParams()
-    const {loadFeePaymentCollections, feePaymentCollections} = useFeePaymentCollections()
-    const {user} = useAuth()
-  // Calculated metrics
-  const totalFees = 200000;
-  const totalPaid = 72250; // 25000 + 47250
-  const progressPercent = Math.round((totalPaid / totalFees) * 100);
-  const onTimePayments = 2;
-  const totalPayments = 6;
+  const { id } = useParams()
+  const { user } = useAuth()
+  const { loadFeePaymentCollections, feePaymentCollections } =
+    useFeePaymentCollections()
+  const router = useRouter()
 
-  useEffect(()=>{
-    if(id || user.type === UserType.STUDENT){
-      loadFeePaymentCollections({studentId: id ? id : user?.student?.id})
+  useEffect(() => {
+    if (id || user.type === UserType.STUDENT) {
+      loadFeePaymentCollections({
+        studentId: id ? id : user?.student?.id,
+      })
     }
-  },[id, loadFeePaymentCollections, user?.student?.id, user.type])
+  }, [id, loadFeePaymentCollections, user?.student?.id, user.type])
+
+
+
+  const feeStructure = feePaymentCollections?.[0]?.feeStructure
+  const student = feePaymentCollections?.[0]?.student
+
+  const totalFees = feeStructure?.totalFees ?? 0
+  const discount = feeStructure?.discountAmount ?? 0
+  const payableAmount = totalFees - discount
+
+  const totalPaid = useMemo(() => {
+    return feePaymentCollections?.reduce(
+      (sum, p) => sum + (p.amountPaid || 0),
+      0,
+    )
+  }, [feePaymentCollections])
+
+  const progressPercent =
+    payableAmount > 0
+      ? Math.round((totalPaid / payableAmount) * 100)
+      : 0
+
+  const handleMakePayment = () => {
+    if (id) {
+      return router.push(`/fee-payment-collections/create?studentId=${id}`)
+    } else if (user?.id) {
+      return router.push(`/fee-payment-collections/create?studentId=${user?.id}`)
+    }
+
+  }
 
 
 
@@ -39,179 +79,148 @@ const PaymentDetails = () => {
     {
       title: 'Date',
       dataIndex: 'paymentDate',
-      key: 'paymentDate',
-      width: 100,
-      render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
+      render: (value) => dayjs(value).format('DD MMM YYYY'),
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-      width: 350,
-      render: (text) => <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>{text}</div>,
-    },
-    {
-      title: 'Reference',
-      dataIndex: 'reference',
-      key: 'reference',
-      width: 120,
-    },
-    {
-      title: 'Amount (SAR)',
-      dataIndex: 'amountPaid',
-      key: 'amountPaid',
-      width: 120,
+      title: 'Mode',
+      dataIndex: 'paymentMode',
       render: (value) => (
-        <span style={{ color: value > 0 ? '#000' : '#52c41a', fontWeight: 500 }}>
-          {value > 0 ? '+' : ''}{value?.toLocaleString()}
-        </span>
+        <Tag color="blue">{value?.toUpperCase()}</Tag>
       ),
     },
     {
-      title: 'Balance (SAR)',
-      dataIndex: 'balance',
-      key: 'balance',
-      width: 120,
-      render: (value) => <span style={{ fontWeight: 600 }}>{value?.toLocaleString()}</span>,
+      title: 'Reference',
+      dataIndex: 'transactionRef',
     },
-  ];
+    {
+      title: 'Amount',
+      dataIndex: 'amountPaid',
+      align: 'right',
+      render: (value, record) => (
+        <strong>
+          {record.currency} {value?.toLocaleString()}
+        </strong>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      render: (value) => (
+        <Tag color={value === 'paid' ? 'green' : 'orange'}>
+          {value.toUpperCase()}
+        </Tag>
+      ),
+    },
+  ]
 
   return (
-    <div style={{  backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-      <div >
-        {/* Payment Progress Card */}
-        <Card
-          style={{ marginBottom: '24px' }}
-          bodyStyle={{ padding: '24px' }}
-        >
-          <Row justify="space-between" align="middle" style={{ marginBottom: '24px' }}>
-            <Col>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>Payment Progress</h2>
-              <p style={{ margin: '4px 0 0 0', color: '#666', fontSize: '14px' }}>
-                {progressPercent}% of total fees paid or discounted
-              </p>
-            </Col>
-            <Col>
-              <Space direction="vertical" align="end" size={0}>
-                <ArrowUpOutlined style={{ color: '#ff7a45', marginRight: '8px', fontSize: '16px' }} />
-                <span style={{ fontSize: '14px', fontWeight: 600 }}>On-Time Streak: {onTimePayments}/{totalPayments}</span>
-              </Space>
-            </Col>
-          </Row>
+    <div style={{ background: '#f5f5f5', minHeight: '100vh' }}>
 
-          {/* Progress Bar */}
-          <div style={{ marginBottom: '24px' }}>
-            <Progress
-              percent={progressPercent}
-              strokeColor="#ff7a45"
-              trailColor="#d9d9d9"
-              showInfo={false}
+      <Card style={{ marginBottom: 24 }}>
+        <Row gutter={24}>
+          <Col span={8}>
+            <Statistic
+              title="Student"
+              value={`${student?.firstName} ${student?.lastName}`}
             />
-            <div style={{ textAlign: 'right', marginTop: '8px', fontSize: '14px', fontWeight: 600 }}>
-              {progressPercent}%
-            </div>
-          </div>
+          </Col>
+          <Col span={8}>
+            <Statistic
+              title="Registration No"
+              value={student?.registrationNo}
+            />
+          </Col>
+          <Col span={8}>
+            <Statistic
+              title="Card No"
+              value={student?.cardNo}
+            />
+          </Col>
+        </Row>
+      </Card>
 
-          {/* On-Time Payment Streak */}
-          <Card
-            style={{
-              backgroundColor: '#f0f0f0',
-              border: 'none',
-              borderRadius: '4px',
-            }}
-            bodyStyle={{ padding: '16px' }}
-          >
-            <Row justify="space-between" align="center" style={{ marginBottom: '12px' }}>
-              <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 600 }}>On-Time Payment Streak</h3>
-              <span style={{ fontSize: '12px', color: '#666' }}>{onTimePayments} of {totalPayments}</span>
-            </Row>
-            <Row gutter={8} style={{ marginBottom: '12px' }}>
-              {Array.from({ length: totalPayments }).map((_, i) => (
-                <Col key={i} xs={4}>
-                  <div
-                    style={{
-                      height: '12px',
-                      backgroundColor: i < onTimePayments ? '#52c41a' : '#d9d9d9',
-                      borderRadius: '2px',
-                    }}
-                  />
-                </Col>
-              ))}
-            </Row>
-            <p style={{ margin: 0, fontSize: '12px', color: '#666' }}>
-              Complete 6 consecutive on-time payments to earn a free installment
-            </p>
-          </Card>
-        </Card>
 
-        {/* Fee Assignment Details Card */}
-        <Card
-          style={{ marginBottom: '24px' }}
-          title="Fee Assignment Details"
-          extra={<Button type="text">View Full Schedule</Button>}
-          bodyStyle={{ padding: '24px' }}
-        >
-          <Row gutter={[32, 16]}>
-            <Col xs={24} sm={12} md={6}>
-              <Statistic
-                title="Template"
-                value="Diploma Standard Fee"
-                titleStyle={{ fontSize: '12px', color: '#999', marginBottom: '8px' }}
-                valueStyle={{ fontSize: '14px', fontWeight: 600, color: '#000' }}
-              />
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Statistic
-                title="Payment Schedule"
-                value="Monthly Installments"
-                titleStyle={{ fontSize: '12px', color: '#999', marginBottom: '8px' }}
-                valueStyle={{ fontSize: '14px', fontWeight: 600, color: '#000' }}
-              />
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Statistic
-                title="VAT Status"
-                value="No VAT (Saudi)"
-                titleStyle={{ fontSize: '12px', color: '#999', marginBottom: '8px' }}
-                valueStyle={{ fontSize: '14px', fontWeight: 600, color: '#000' }}
-              />
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Statistic
-                title="Next Payment Due"
-                value="1 Dec 2024"
-                titleStyle={{ fontSize: '12px', color: '#999', marginBottom: '8px' }}
-                valueStyle={{ fontSize: '14px', fontWeight: 600, color: '#000' }}
-              />
-            </Col>
-          </Row>
-        </Card>
+      <Card style={{ marginBottom: 24 }}>
+        <Row justify="space-between" align="middle">
+          <Col>
+            <h3 style={{ marginBottom: 4 }}>
+              Payment Progress
+            </h3>
+            <span>
+              {feeStructure?.currency}{' '}
+              {totalPaid.toLocaleString()} /{' '}
+              {payableAmount.toLocaleString()}
+            </span>
+          </Col>
+          <Col>
+            <strong>{progressPercent}%</strong>
+          </Col>
+        </Row>
 
-        {/* Fee Statement Card */}
-        <Card
-          title="Fee Statement"
-          extra={
-            <Space>
-              <Button icon={<DownloadOutlined />}>Download Statement</Button>
-              <Button type="primary" danger icon={<CreditCardOutlined />}>
-                Make Payment
-              </Button>
-            </Space>
-          }
-          bodyStyle={{ padding: '0' }}
-        >
-          <Table
-            columns={columns}
-            dataSource={feePaymentCollections}
-            pagination={false}
-            rowKey="id"
-            size="middle"
-            style={{ backgroundColor: '#fff' }}
-          />
-        </Card>
-      </div>
+        <Progress
+          percent={progressPercent}
+          showInfo={false}
+          style={{ marginTop: 16 }}
+        />
+      </Card>
+
+
+      <Card title="Fee Structure" style={{ marginBottom: 24 }}>
+        <Row gutter={[24, 16]}>
+          <Col span={6}>
+            <Statistic
+              title="Template"
+              value={feeStructure?.templateName}
+            />
+          </Col>
+          <Col span={6}>
+            <Statistic
+              title="Payment Type"
+              value={feeStructure?.paymentType}
+            />
+          </Col>
+          <Col span={6}>
+            <Statistic
+              title="Total Fees"
+              value={`${feeStructure?.currency} ${totalFees.toLocaleString()}`}
+            />
+          </Col>
+          <Col span={6}>
+            <Statistic
+              title="Discount"
+              value={`${feeStructure?.currency} ${discount.toLocaleString()}`}
+            />
+          </Col>
+        </Row>
+      </Card>
+
+      {/* PAYMENT HISTORY */}
+      <Card
+        title="Payment History"
+        extra={
+          <Space>
+            {/* <Button icon={<DownloadOutlined />}>
+              Download
+            </Button> */}
+            <Button
+              type="primary"
+              icon={<CreditCardOutlined />}
+              onClick={() => handleMakePayment()}
+            >
+              Make Payment
+            </Button>
+          </Space>
+        }
+      >
+        <Table
+          columns={columns}
+          dataSource={feePaymentCollections}
+          rowKey="id"
+          pagination={false}
+        />
+      </Card>
     </div>
-  );
-};
+  )
+}
 
-export default PaymentDetails;
+export default PaymentDetails

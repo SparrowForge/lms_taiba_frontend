@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -19,7 +20,6 @@ import { useEvents } from '@/hooks/useEvents';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import { IEvent } from '@/types/event';
-import { useTranslations } from 'next-intl';
 
 export default function EventsPage() {
   const { t } = useLocalization();
