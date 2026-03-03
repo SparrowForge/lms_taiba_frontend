@@ -233,7 +233,7 @@ export default function VoucherEntryPage() {
         chequeDate: d.chequeDate,
         bankName: d.bankName,
         bankAccno: d.bankAccno,
-        children: d.children.map((c: any) => ({ ...c, _key: generateKey() })), // Ensure keys for children too
+        subEntries: d.children.map((c: any) => ({ ...c, _key: generateKey() })), // Ensure keys for children too
       }));
 
       setLines(mappedLines);
@@ -317,7 +317,7 @@ export default function VoucherEntryPage() {
   const buildLineFromForm = (
     values: any,
     key: string,
-    children: IAccVoucherDetailChildCreate[] = [],
+    subEntries: IAccVoucherDetailChildCreate[] = [],
   ): IVoucherLineFormState => {
     const trType = values.trType as 'DR' | 'CR';
     const amount = values.currAmount || 0;
@@ -346,7 +346,7 @@ export default function VoucherEntryPage() {
       chequeDate: values.chequeDate,
       bankName: values.bankName,
       bankAccno: values.bankAccno,
-      children,
+      subEntries,
     };
   };
 
@@ -373,8 +373,8 @@ export default function VoucherEntryPage() {
     if (!editingLineKey) return;
     try {
       const values = await lineForm.validateFields();
-      const existingChildren = lines.find((l) => l.key === editingLineKey)?.children || [];
-      const updatedLine = buildLineFromForm(values, editingLineKey, existingChildren);
+      const existingSubEntries = lines.find((l) => l.key === editingLineKey)?.subEntries || [];
+      const updatedLine = buildLineFromForm(values, editingLineKey, existingSubEntries);
       setLines((prev) =>
         prev.map((l: IVoucherLineFormState) => (l.key === editingLineKey ? updatedLine : l)),
       );
@@ -418,7 +418,7 @@ export default function VoucherEntryPage() {
     setChildLineKey(lineKey);
     const line = lines.find((l) => l.key === lineKey);
     setChildEntries(
-      (line?.children || []).map((c: IAccVoucherDetailChildCreate) => ({
+      (line?.subEntries || []).map((c: IAccVoucherDetailChildCreate) => ({
         ...c,
         _key: generateKey(),
       })),
@@ -449,7 +449,7 @@ export default function VoucherEntryPage() {
       setLines((prev) =>
         prev.map((l: IVoucherLineFormState) =>
           l.key === childLineKey
-            ? { ...l, children: childEntries.map(({ _key, ...rest }) => rest) }
+            ? { ...l, subEntries: childEntries.map(({ _key, ...rest }) => rest) }
             : l,
         ),
       );
@@ -529,7 +529,7 @@ export default function VoucherEntryPage() {
             chequeDate: l.chequeDate,
             bankName: l.bankName,
             bankAccno: l.bankAccno,
-            children: (l.children || []).map((c: any) =>
+            children: (l.subEntries || []).map((c: any) =>
               cleanObj({
                 refType: c.refType,
                 refId: c.refId,
@@ -1049,6 +1049,45 @@ export default function VoucherEntryPage() {
                       background: editingLineKey === record.key ? '#e6f7ff' : undefined,
                     },
                   })}
+                  expandable={{
+                    expandedRowRender: (record) => (
+                      <Table
+                        dataSource={record.subEntries}
+                        pagination={false}
+                        size="small"
+                        rowKey={(c: any) => c._key || c.id}
+                        columns={[
+                          {
+                            title: t(LOCALE_KEYS.TYPE),
+                            dataIndex: 'refType',
+                            render: (v: number) =>
+                              v === 1 ? t(LOCALE_KEYS.BILL) : t(LOCALE_KEYS.ADVANCE),
+                          },
+                          { title: t(LOCALE_KEYS.BILL_NO), dataIndex: 'billNo' },
+                          {
+                            title: t(LOCALE_KEYS.AMOUNT),
+                            dataIndex: 'amount',
+                            align: 'right' as const,
+                            render: (v: number) => (v ? Number(v).toFixed(2) : ''),
+                          },
+                          {
+                            title: t(LOCALE_KEYS.RATE),
+                            dataIndex: 'rate',
+                            align: 'right' as const,
+                            render: (v: number) => (v ? Number(v).toFixed(4) : ''),
+                          },
+                          {
+                            title: t(LOCALE_KEYS.BASE_AMOUNT),
+                            dataIndex: 'amountBase',
+                            align: 'right' as const,
+                            render: (v: number) => (v ? Number(v).toFixed(2) : ''),
+                          },
+                          { title: t(LOCALE_KEYS.REMARKS), dataIndex: 'remarks' },
+                        ]}
+                      />
+                    ),
+                    rowExpandable: (record) => (record.subEntries || []).length > 0,
+                  }}
                   summary={() => (
                     <Table.Summary fixed>
                       <Table.Summary.Row>

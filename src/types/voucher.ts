@@ -130,5 +130,5 @@ export interface IVoucherLineFormState {
   chequeDate?: string;
   bankName?: string;
   bankAccno?: string;
-  children: IAccVoucherDetailChildCreate[];
+  subEntries: IAccVoucherDetailChildCreate[];
 }

@@ -19,6 +19,7 @@ export const voucherService = {
       chartOfAccountId?: number;
       costCenterId?: number;
       voucherNo?: string;
+      isPosted?: number;
     } = {},
   ): Promise<IBasePaginatedResponse<IAccVoucher>> => {
     const response = await api.get<IBasePaginatedResponse<IAccVoucher>>(BASE_URL, { params });

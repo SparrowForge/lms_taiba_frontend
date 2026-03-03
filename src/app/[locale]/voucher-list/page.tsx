@@ -25,8 +25,11 @@ import {
   Card,
   Col,
   DatePicker,
+  Descriptions,
+  Divider,
   Form,
   Input,
+  Modal,
   Row,
   Select,
   Space,
@@ -72,6 +75,9 @@ export default function VoucherListPage() {
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedVoucher, setSelectedVoucher] = useState<IAccVoucher | null>(null);
+  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   // Dropdown data
   const [voucherTypes, setVoucherTypes] = useState<IVoucherType[]>([]);
@@ -137,6 +143,7 @@ export default function VoucherListPage() {
         chartOfAccountId: filters.chartOfAccountId,
         costCenterId: filters.costCenterId,
         voucherNo: filters.voucherNo,
+        isPosted: filters.isPosted,
       };
 
       if (filters.dateRange && filters.dateRange.length === 2) {
@@ -168,6 +175,30 @@ export default function VoucherListPage() {
     filterForm.resetFields();
     setCurrentPage(1);
     loadVouchers(1, pageSize);
+  };
+
+  const handleViewVoucher = (voucher: IAccVoucher) => {
+    setSelectedVoucher(voucher);
+    setIsDetailModalVisible(true);
+  };
+
+  const handleTogglePost = async (checked: boolean) => {
+    if (!selectedVoucher) return;
+
+    setUpdatingStatus(true);
+    try {
+      const status = checked ? 1 : 0;
+      await voucherService.update(selectedVoucher.id, { isPosted: status });
+      toast.success(t(LOCALE_KEYS.SUCCESS_OPERATION));
+
+      // Update local state and list
+      setSelectedVoucher({ ...selectedVoucher, isPosted: status });
+      loadVouchers(currentPage, pageSize);
+    } catch (error) {
+      toast.error(t(LOCALE_KEYS.ACTION_FAILED));
+    } finally {
+      setUpdatingStatus(false);
+    }
   };
 
   // ============ Columns ============
@@ -223,11 +254,7 @@ export default function VoucherListPage() {
       key: 'actions',
       render: (_, record) => (
         <Space>
-          <Button
-            type="text"
-            icon={<EyeOutlined />}
-            onClick={() => router.push(`/voucher-entry?id=${record.id}&mode=view`)}
-          />
+          <Button type="text" icon={<EyeOutlined />} onClick={() => handleViewVoucher(record)} />
           <Button
             type="text"
             icon={<EditOutlined />}
@@ -367,6 +394,14 @@ export default function VoucherListPage() {
                     </Select>
                   </Form.Item>
                 </Col>
+                <Col xs={24} sm={12} md={8} lg={4}>
+                  <Form.Item name="isPosted" label={t(LOCALE_KEYS.STATUS)}>
+                    <Select placeholder={t(LOCALE_KEYS.SELECT)} allowClear>
+                      <Select.Option value={1}>{t(LOCALE_KEYS.POSTED)}</Select.Option>
+                      <Select.Option value={0}>{t(LOCALE_KEYS.UNPOSTED)}</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
 
                 <Col
                   xs={24}
@@ -405,6 +440,174 @@ export default function VoucherListPage() {
               }}
             />
           </Card>
+
+          <Modal
+            title={
+              selectedVoucher
+                ? `${selectedVoucher.financialYear?.yearName} - ${selectedVoucher.voucherType?.name} - ${selectedVoucher.voucherNo}`
+                : t(LOCALE_KEYS.VIEW)
+            }
+            open={isDetailModalVisible}
+            onCancel={() => setIsDetailModalVisible(false)}
+            width={1000}
+            footer={[
+              <Button key="close" onClick={() => setIsDetailModalVisible(false)}>
+                {t(LOCALE_KEYS.CLOSE)}
+              </Button>,
+              selectedVoucher && !selectedVoucher.isPosted && (
+                <Button
+                  key="post"
+                  type="primary"
+                  loading={updatingStatus}
+                  onClick={() => handleTogglePost(true)}
+                >
+                  {t(LOCALE_KEYS.POSTED)}
+                </Button>
+              ),
+            ]}
+          >
+            {selectedVoucher && (
+              <>
+                <Descriptions
+                  bordered
+                  size="small"
+                  column={{ xxl: 3, xl: 3, lg: 3, md: 2, sm: 1, xs: 1 }}
+                >
+                  <Descriptions.Item label={t(LOCALE_KEYS.BRANCH)}>
+                    {selectedVoucher.branch?.name}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={t(LOCALE_KEYS.DEPARTMENT)}>
+                    {selectedVoucher.department?.name || '-'}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={t(LOCALE_KEYS.VOUCHER_DATE)}>
+                    {dayjs(selectedVoucher.voucherDate).format('YYYY-MM-DD')}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={t(LOCALE_KEYS.NARRATION)} span={3}>
+                    {selectedVoucher.narration}
+                  </Descriptions.Item>
+                </Descriptions>
+
+                <Divider orientation="left">{t(LOCALE_KEYS.VOUCHER_ENTRY)}</Divider>
+
+                <Table
+                  dataSource={selectedVoucher.details}
+                  rowKey="id"
+                  pagination={false}
+                  size="small"
+                  childrenColumnName="subEntries"
+                  columns={[
+                    {
+                      title: t(LOCALE_KEYS.LEDGER),
+                      dataIndex: ['chartOfAccount', 'accountName'],
+                      key: 'account',
+                    },
+                    {
+                      title: t(LOCALE_KEYS.COST_CENTER),
+                      dataIndex: ['costCenter', 'costName'],
+                      key: 'costCenter',
+                    },
+                    {
+                      title: t(LOCALE_KEYS.CURRENCY),
+                      dataIndex: ['currency', 'code'],
+                      key: 'currency',
+                    },
+                    {
+                      title: t(LOCALE_KEYS.EXCHANGE_RATE),
+                      dataIndex: 'currencyExRate',
+                      key: 'exRate',
+                      align: 'right',
+                      render: (val) => Number(val).toFixed(2),
+                    },
+                    {
+                      title: t(LOCALE_KEYS.DEBIT),
+                      dataIndex: 'debitAmount',
+                      key: 'debit',
+                      align: 'right',
+                      render: (val) => Number(val).toFixed(2),
+                    },
+                    {
+                      title: t(LOCALE_KEYS.CREDIT),
+                      dataIndex: 'creditAmount',
+                      key: 'credit',
+                      align: 'right',
+                      render: (val) => Number(val).toFixed(2),
+                    },
+                    {
+                      title: t(LOCALE_KEYS.BANK_NAME),
+                      key: 'bank',
+                      render: (_, record: any) =>
+                        record.bankName ? `${record.bankName} (${record.bankAccno || ''})` : '-',
+                    },
+                    {
+                      title: t(LOCALE_KEYS.CHEQUE_NO),
+                      dataIndex: 'chequeNo',
+                      key: 'chequeNo',
+                    },
+                    {
+                      title: t(LOCALE_KEYS.CHEQUE_DATE),
+                      dataIndex: 'chequeDate',
+                      key: 'chequeDate',
+                      render: (date) => date && dayjs(date).format('YYYY-MM-DD'),
+                    },
+                    {
+                      title: t(LOCALE_KEYS.NARRATION),
+                      dataIndex: 'lineNarration',
+                      key: 'narration',
+                    },
+                  ]}
+                  expandable={{
+                    expandedRowRender: (record: any) => {
+                      if (!record.children || record.children.length === 0) return null;
+                      return (
+                        <Table
+                          dataSource={record.children}
+                          rowKey="id"
+                          pagination={false}
+                          size="small"
+                          columns={[
+                            {
+                              title: t(LOCALE_KEYS.TYPE),
+                              dataIndex: 'refType',
+                              key: 'refType',
+                              render: (type) =>
+                                type === 1 ? t(LOCALE_KEYS.BILL) : t(LOCALE_KEYS.ADVANCE),
+                            },
+                            { title: t(LOCALE_KEYS.REF_ID), dataIndex: 'refId', key: 'refId' },
+                            { title: t(LOCALE_KEYS.BILL_NO), dataIndex: 'billNo', key: 'billNo' },
+                            {
+                              title: t(LOCALE_KEYS.COST_CENTER),
+                              dataIndex: ['costCenter', 'costName'],
+                              key: 'costCenter',
+                            },
+                            {
+                              title: t(LOCALE_KEYS.CURRENCY),
+                              dataIndex: ['currency', 'code'],
+                              key: 'currency',
+                            },
+                            {
+                              title: t(LOCALE_KEYS.EXCHANGE_RATE),
+                              dataIndex: 'rate',
+                              key: 'rate',
+                              align: 'right',
+                              render: (val) => Number(val).toFixed(2),
+                            },
+                            {
+                              title: t(LOCALE_KEYS.AMOUNT),
+                              dataIndex: 'amount',
+                              key: 'amount',
+                              align: 'right',
+                              render: (val) => Number(val).toFixed(2),
+                            },
+                            { title: t(LOCALE_KEYS.REMARKS), dataIndex: 'remarks', key: 'remarks' },
+                          ]}
+                        />
+                      );
+                    },
+                  }}
+                />
+              </>
+            )}
+          </Modal>
         </div>
       </MainLayout>
     </ProtectedRoute>
