@@ -5,20 +5,74 @@ import React, { useMemo } from 'react';
 
 import { LOCALE_KEYS, type LocaleKey } from '@/constants/localizationKeys';
 
+import type { IDiscountTemplate } from '@/types/discountTemplate';
+import type { IFeeStructure } from '@/types/feeStructure';
+import type { IFeePaymentSummary } from '@/types/student';
+
 import { FEE_PLAN_STATUS_CONFIG } from './constants';
 import type { FeePaymentDetailsRow } from './types';
 
 export interface FeePaymentDetailsCardProps {
   feePaymentDetailsRows: FeePaymentDetailsRow[];
   studentFeeInstallmentPlans: { id: number; sequenceNo?: number }[];
+  /** When provided, discount and grand total summary (invoice-style) is shown */
+  feeStructure?: IFeeStructure | null;
+  /** Discount templates from student response (student.discountTemplates). Used to show discount breakdown in summary. */
+  discountTemplates?: IDiscountTemplate[] | null;
+  isInternational?: boolean;
+  /** When provided (e.g. from API), fee summary from server is shown */
+  feeSummary?: IFeePaymentSummary | null;
   t: (key: LocaleKey, options?: Record<string, unknown>) => string;
 }
 
 export default function FeePaymentDetailsCard({
   feePaymentDetailsRows,
   studentFeeInstallmentPlans,
+  feeStructure,
+  discountTemplates = [],
+  isInternational = false,
+  feeSummary: feeSummaryFromApi = null,
   t,
 }: FeePaymentDetailsCardProps) {
+  const currency = feeStructure?.currency ?? '';
+
+  /** Per-discount breakdown from student.discountTemplates (for display only). Totals come from feeSummary API. */
+  const discountRowsForDisplay = useMemo(() => {
+    if (!feeStructure || !discountTemplates?.length) return [];
+    const baseAfterAdmission = Math.max(
+      0,
+      Number(feeStructure.totalFees || 0) - Number(feeStructure.admissionFee || 0),
+    );
+    return discountTemplates.map((dt) => {
+      const amount =
+        dt.type === 'percent'
+          ? (baseAfterAdmission * Number(dt.amount || 0)) / 100
+          : Number(dt.amount || 0);
+      return { template: dt, amount };
+    });
+  }, [feeStructure, discountTemplates]);
+
+  const totalPaidFromRows = useMemo(
+    () =>
+      feePaymentDetailsRows.reduce(
+        (sum, row) => sum + row.amountPaid + (row.newAmountPaid || 0),
+        0,
+      ),
+    [feePaymentDetailsRows],
+  );
+
+  const previousPaidFromRows = useMemo(
+    () =>
+      feePaymentDetailsRows.reduce((sum, row) => sum + row.amountPaid, 0),
+    [feePaymentDetailsRows],
+  );
+
+  const newPaymentFromRows = useMemo(
+    () =>
+      feePaymentDetailsRows.reduce((sum, row) => sum + (row.newAmountPaid || 0), 0),
+    [feePaymentDetailsRows],
+  );
+
   const columns = useMemo(
     () => [
       {
@@ -108,6 +162,90 @@ export default function FeePaymentDetailsCard({
 
   return (
     <Card title={t(LOCALE_KEYS.FEE_PAYMENT_DETAILS, { defaultValue: 'Fee Payment Details' })}>
+      {feeSummaryFromApi && (
+        <div
+          style={{
+            padding: '12px',
+            borderRadius: '6px',
+            marginBottom: '16px',
+            border: '1px solid #d9d9d9',
+            backgroundColor: '#f0f7ff',
+          }}
+        >
+          <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+            {t(LOCALE_KEYS.SUMMARY, { defaultValue: 'Summary' })}
+          </Typography.Text>
+          <Row gutter={[8, 4]}>
+            <Col span={24}>
+              <Typography.Text type="secondary">Total Due:</Typography.Text>
+              <Typography.Text style={{ float: 'right' }}>
+                {feeSummaryFromApi.totalDue.toFixed(2)} {currency}
+              </Typography.Text>
+            </Col>
+            <Col span={24}>
+              <Typography.Text type="secondary">Total Discount:</Typography.Text>
+              <Typography.Text style={{ float: 'right' }}>
+                -{feeSummaryFromApi.totalDiscount.toFixed(2)} {currency}
+              </Typography.Text>
+            </Col>
+            <Col span={24}>
+              <Typography.Text type="secondary">Net Due:</Typography.Text>
+              <Typography.Text style={{ float: 'right' }}>
+                {feeSummaryFromApi.netDue.toFixed(2)} {currency}
+              </Typography.Text>
+            </Col>
+            <Col span={24}>
+              <Typography.Text type="secondary">VAT:</Typography.Text>
+              <Typography.Text style={{ float: 'right' }}>
+                {feeSummaryFromApi.vatAmount.toFixed(2)} {currency}
+              </Typography.Text>
+            </Col>
+            <Col span={24}>
+              <Typography.Text strong>Total Amount Due:</Typography.Text>
+              <Typography.Text strong style={{ float: 'right' }}>
+                {feeSummaryFromApi.totalAmountDue.toFixed(2)} {currency}
+              </Typography.Text>
+            </Col>
+            <Col span={24}>
+              <Typography.Text type="secondary">Total Paid:</Typography.Text>
+              <Typography.Text type="success" style={{ float: 'right' }}>
+                {feeSummaryFromApi.totalPaid.toFixed(2)} {currency}
+              </Typography.Text>
+            </Col>
+            <Col span={24}>
+              <Typography.Text strong>Outstanding Balance:</Typography.Text>
+              <Typography.Text strong type="danger" style={{ float: 'right' }}>
+                {feeSummaryFromApi.outstandingBalance.toFixed(2)} {currency}
+              </Typography.Text>
+            </Col>
+          </Row>
+          {discountRowsForDisplay.length > 0 && (
+            <Row gutter={[8, 4]} style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid #e8e8e8' }}>
+              <Col span={24}>
+                <Typography.Text strong type="secondary" style={{ fontSize: 12 }}>
+                  Discount breakdown (from student):
+                </Typography.Text>
+              </Col>
+              {discountRowsForDisplay.map(({ template, amount }) => {
+                const valueLabel =
+                  template.type === 'percent'
+                    ? `${template.amount}%`
+                    : `${Number(template.amount || 0).toFixed(2)} ${currency}`;
+                return (
+                  <Col span={24} key={template.id}>
+                    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                      {template.name} · Value: {valueLabel}
+                    </Typography.Text>
+                    <Typography.Text type="secondary" style={{ float: 'right', fontSize: 12 }}>
+                      -{amount.toFixed(2)} {currency}
+                    </Typography.Text>
+                  </Col>
+                );
+              })}
+            </Row>
+          )}
+        </div>
+      )}
       {feePaymentDetailsRows.length > 0 && (
         <div
           style={{
@@ -119,33 +257,45 @@ export default function FeePaymentDetailsCard({
         >
           <Row gutter={16}>
             <Col span={6}>
-              <Typography.Text strong>Total Due:</Typography.Text>
+              <Typography.Text strong>
+                {feeSummaryFromApi ? 'Total Amount Due:' : 'Total Due:'}
+              </Typography.Text>
               <br />
               <Typography.Text>
-                {feePaymentDetailsRows.reduce((sum, row) => sum + row.amountDue, 0).toFixed(2)}
+                {feeSummaryFromApi
+                  ? feeSummaryFromApi.totalAmountDue.toFixed(2)
+                  : feePaymentDetailsRows
+                      .reduce((sum, row) => sum + row.amountDue, 0)
+                      .toFixed(2)}
               </Typography.Text>
             </Col>
             <Col span={6}>
               <Typography.Text strong>Previously Paid:</Typography.Text>
               <br />
               <Typography.Text type="success">
-                {feePaymentDetailsRows.reduce((sum, row) => sum + row.amountPaid, 0).toFixed(2)}
+                {feeSummaryFromApi
+                  ? feeSummaryFromApi.totalPaid.toFixed(2)
+                  : previousPaidFromRows.toFixed(2)}
               </Typography.Text>
             </Col>
             <Col span={6}>
               <Typography.Text strong>New Payment:</Typography.Text>
               <br />
               <Typography.Text style={{ color: '#1890ff' }}>
-                {feePaymentDetailsRows
-                  .reduce((sum, row) => sum + (row.newAmountPaid || 0), 0)
-                  .toFixed(2)}
+                {newPaymentFromRows.toFixed(2)}
               </Typography.Text>
             </Col>
             <Col span={6}>
               <Typography.Text strong>Remaining:</Typography.Text>
               <br />
               <Typography.Text type="danger">
-                {feePaymentDetailsRows.reduce((sum, row) => sum + row.balanceAmount, 0).toFixed(2)}
+                {feeSummaryFromApi
+                  ? Math.max(0, feeSummaryFromApi.outstandingBalance - newPaymentFromRows).toFixed(
+                      2,
+                    )
+                  : feePaymentDetailsRows
+                      .reduce((sum, row) => sum + row.balanceAmount, 0)
+                      .toFixed(2)}
               </Typography.Text>
             </Col>
           </Row>
@@ -153,9 +303,11 @@ export default function FeePaymentDetailsCard({
             <Col span={24}>
               <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
                 Total Paid (Previous + New):{' '}
-                {feePaymentDetailsRows
-                  .reduce((sum, row) => sum + row.amountPaid + (row.newAmountPaid || 0), 0)
-                  .toFixed(2)}
+                {(feeSummaryFromApi
+                  ? feeSummaryFromApi.totalPaid + newPaymentFromRows
+                  : totalPaidFromRows
+                ).toFixed(2)}{' '}
+                {currency}
               </Typography.Text>
             </Col>
           </Row>
