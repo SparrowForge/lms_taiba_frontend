@@ -43,10 +43,12 @@ export function useBatchFormSemesters(
       for (let i = 0; i < semesterList.length; i++) {
         const semester = semesterList[i];
         semester.startDate = currentDate.toISOString();
-        const endDate = currentDate.add(semester.duration, 'month');
+        // End = last day of the period (e.g. Jan 1 + 3 months → March 31, not April 1)
+        const endDate = currentDate.add(semester.duration, 'month').subtract(1, 'day');
         semester.endDate = endDate.toISOString();
         semester.name = generateSemesterNameWithTerm(semester.termNo, currentDate);
-        currentDate = endDate;
+        // Next semester starts the day after this semester ends
+        currentDate = endDate.add(1, 'day');
       }
     },
     [form],
@@ -80,24 +82,21 @@ export function useBatchFormSemesters(
           : [];
       const defaultSemesterDuration = 3;
 
+      let currentStart = batchStartDate ? dayjs(batchStartDate) : null;
       for (let i = 1; i <= duration; i++) {
         let semesterStartDate = '';
         let semesterEndDate = '';
         let semesterName = '';
 
-        if (batchStartDate) {
-          const batchStart = dayjs(batchStartDate);
-          let semesterStart = batchStart;
-          if (i > 1) {
-            for (let j = 1; j < i; j++) {
-              const prev = newSemesters[j - 1]?.duration ?? defaultSemesterDuration;
-              semesterStart = semesterStart.add(prev, 'month');
-            }
-          }
-          const semesterEnd = semesterStart.add(defaultSemesterDuration, 'month');
+        if (batchStartDate && currentStart) {
+          const semesterStart = currentStart;
+          // End = last day of the period (e.g. Jan 1 + 3 months → March 31, not April 1)
+          const semesterEnd = semesterStart.add(defaultSemesterDuration, 'month').subtract(1, 'day');
           semesterStartDate = semesterStart.toISOString();
           semesterEndDate = semesterEnd.toISOString();
           semesterName = generateSemesterNameWithTerm(i, semesterStart);
+          // Next semester starts the day after this one ends
+          currentStart = semesterEnd.add(1, 'day');
         } else {
           semesterName = `Semester ${i}`;
         }
