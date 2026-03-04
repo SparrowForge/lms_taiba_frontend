@@ -12,6 +12,10 @@ import { IStudentProfile, IStudentProfileCreate } from './studentProfile';
 import { ISubjectWithFaculty } from './subject';
 import { IDiscountTemplate } from './discountTemplate';
 
+import { IExamResult } from './examResult';
+import { IAttendance } from './attendance';
+import { ISubjectExamResult } from './subjectResult';
+
 export interface IStudent {
   id: number;
   applicationNo: string;
@@ -72,6 +76,10 @@ export interface IStudentRegistrationCreate {
 
 export interface IFeePaymentSummary {
   totalDue: number;
+  totalDiscount: number;
+  netDue: number;
+  vatAmount: number;
+  totalAmountDue: number;
   totalPaid: number;
   outstandingBalance: number;
   paymentCount: number;
@@ -105,7 +113,7 @@ export interface IStudentSubjects {
 
 export interface IStudentSemesterResultFinalization {
   student: IStudent
-  subjectResult: ISubjectResult | null
+  subjectResult: ISubjectExamResult | null
   examResults: IExamResult[]
   attendance: IAttendance[]
 }

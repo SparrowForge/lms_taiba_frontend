@@ -83,12 +83,12 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
     [form],
   );
 
-  // Helper function to calculate duration in months between two dates
+  // Helper function to calculate duration in months between two dates (whole months only)
   const calculateDurationInMonths = useCallback((startDate: string, endDate: string) => {
     const start = dayjs(startDate);
     const end = dayjs(endDate);
-    const duration = end.diff(start, 'month', true); // true for fractional months
-    return Math.round(duration * 100) / 100; // Round to 2 decimal places
+    const duration = end.diff(start, 'month', true);
+    return Math.round(duration); // Whole months only (e.g. 2.97 → 3)
   }, []);
 
   // Helper function to format numbers for display (2 decimal places)
@@ -181,29 +181,29 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
   // Generate monthly payment rows when payment type is monthly
   const generateMonthlyPaymentRows = useCallback(() => {
     if (currentPaymentType === 'monthly' && selectedBatch && semesters.length > 0) {
+      const course = selectedBatch.course;
+      const totalMonths = course?.durationInMonths ?? 0;
+      const totalSemesters = course?.durationInSemesters ?? 1;
+      const monthsPerSemester =
+        totalSemesters > 0 ? Math.round(totalMonths / totalSemesters) : 0;
+
       const monthlyRows: MonthlyPaymentRow[] = [];
       let globalSequenceNo = 1;
 
       semesters.forEach((semester, semesterIndex) => {
-        const semesterStartDate = new Date(semester.startDate);
-        const semesterEndDate = new Date(semester.endDate);
+        const start = dayjs(semester.startDate).startOf('month');
+        const durationMonths = monthsPerSemester;
 
-        // Calculate months between start and end dates
         const months = [];
-        const currentDate = new Date(semesterStartDate);
-
-        while (currentDate <= semesterEndDate) {
-          const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-          const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-
+        for (let i = 0; i < durationMonths; i++) {
+          const monthStart = start.add(i, 'month');
+          const monthEnd = monthStart.endOf('month');
           months.push({
-            start: monthStart,
-            end: monthEnd,
-            monthNumber: currentDate.getMonth() + 1,
-            monthName: currentDate.toLocaleDateString('en-US', { month: 'long' }),
+            start: monthStart.toDate(),
+            end: monthEnd.toDate(),
+            monthNumber: monthStart.month() + 1,
+            monthName: monthStart.format('MMMM'),
           });
-
-          currentDate.setMonth(currentDate.getMonth() + 1);
         }
 
         // Create monthly rows for this semester
@@ -378,7 +378,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
             semester: semester.id.toString(),
             sequenceNo: index + 1, // Use index + 1 for proper sequence
             paymentLabel: `${semester.name} Fee`,
-            durationMonths: durationMonths, // Already rounded to 2 decimal places
+            durationMonths: durationMonths, // Whole months
             amount: 0,
             dueDate: null,
             semesterStartDate: semester.startDate,

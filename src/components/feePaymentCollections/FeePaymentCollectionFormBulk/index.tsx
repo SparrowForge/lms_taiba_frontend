@@ -80,6 +80,14 @@ export default function FeePaymentCollectionFormBulk({
   const [invoiceVisible, setInvoiceVisible] = React.useState(false);
   const invoiceRef = React.useRef<HTMLDivElement | null>(null);
 
+  const amountPaid = Form.useWatch('amountPaid', form);
+  const remainingBalance =
+    studentWithFeeInfo?.feeSummary != null
+      ? studentWithFeeInfo.feeSummary.outstandingBalance
+      : originalRows.reduce((sum, row) => sum + row.balanceAmount, 0);
+  const paymentValid =
+    (Number(amountPaid) || 0) >= 0 && (Number(amountPaid) || 0) <= remainingBalance;
+
   const handleDownloadInvoice = () => {
     if (!invoiceRef.current) return;
 
@@ -266,9 +274,14 @@ export default function FeePaymentCollectionFormBulk({
                   />
                 </Col>
                 <Col xs={24} lg={12}>
+                  {/* discountTemplates from student response (student.discountTemplates) for discount summary */}
                   <FeePaymentDetailsCard
                     feePaymentDetailsRows={feePaymentDetailsRows}
                     studentFeeInstallmentPlans={studentFeeInstallmentPlans}
+                    feeStructure={studentWithFeeInfo?.feeStructure}
+                    discountTemplates={studentWithFeeInfo?.student?.discountTemplates ?? []}
+                    isInternational={!!studentWithFeeInfo?.student?.profile?.isInternational}
+                    feeSummary={studentWithFeeInfo?.feeSummary ?? null}
                     t={t}
                   />
                 </Col>
@@ -279,6 +292,7 @@ export default function FeePaymentCollectionFormBulk({
                     type="primary"
                     htmlType="submit"
                     loading={actionStatus.status === Status.LOADING}
+                    disabled={actionStatus.status === Status.LOADING || !paymentValid}
                   >
                     {t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
                   </Button>

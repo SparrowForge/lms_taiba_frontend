@@ -376,6 +376,7 @@ export function InstallmentSection(props: InstallmentSectionProps) {
                       <InputNumber
                         style={{ width: '100%', backgroundColor: '#f5f5f5', color: '#666' }}
                         min={1}
+                        precision={0}
                         value={row.durationMonths}
                         disabled
                       />
