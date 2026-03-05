@@ -42,10 +42,10 @@ export function useBatchFormSemesters(
 
       for (let i = 0; i < semesterList.length; i++) {
         const semester = semesterList[i];
-        semester.startDate = currentDate.toISOString();
+        semester.startDate = currentDate.format('YYYY-MM-DD');
         // End = last day of the period (e.g. Jan 1 + 3 months → March 31, not April 1)
         const endDate = currentDate.add(semester.duration, 'month').subtract(1, 'day');
-        semester.endDate = endDate.toISOString();
+        semester.endDate = endDate.format('YYYY-MM-DD');
         semester.name = generateSemesterNameWithTerm(semester.termNo, currentDate);
         // Next semester starts the day after this semester ends
         currentDate = endDate.add(1, 'day');
@@ -73,14 +73,19 @@ export function useBatchFormSemesters(
   );
 
   const generateSemesters = useCallback(
-    (duration: number, totalCreditHours?: number) => {
+    (course: ICourse) => {
+      const duration = course.durationInSemesters ?? 1;
+      const totalCreditHours = course.totalCreditHours;
+      const totalMonths = course.durationInMonths ?? 0;
+      const monthsPerSemester =
+        duration > 0 ? Math.round(totalMonths / duration) || 1 : 1;
+
       const newSemesters: ISemesterFormData[] = [];
       const batchStartDate = form.getFieldValue('startDate');
       const creditPerSemester =
         totalCreditHours != null && totalCreditHours > 0 && duration > 0
           ? distributeCreditHours(totalCreditHours, duration)
           : [];
-      const defaultSemesterDuration = 3;
 
       let currentStart = batchStartDate ? dayjs(batchStartDate) : null;
       for (let i = 1; i <= duration; i++) {
@@ -91,9 +96,9 @@ export function useBatchFormSemesters(
         if (batchStartDate && currentStart) {
           const semesterStart = currentStart;
           // End = last day of the period (e.g. Jan 1 + 3 months → March 31, not April 1)
-          const semesterEnd = semesterStart.add(defaultSemesterDuration, 'month').subtract(1, 'day');
-          semesterStartDate = semesterStart.toISOString();
-          semesterEndDate = semesterEnd.toISOString();
+          const semesterEnd = semesterStart.add(monthsPerSemester, 'month').subtract(1, 'day');
+          semesterStartDate = semesterStart.format('YYYY-MM-DD');
+          semesterEndDate = semesterEnd.format('YYYY-MM-DD');
           semesterName = generateSemesterNameWithTerm(i, semesterStart);
           // Next semester starts the day after this one ends
           currentStart = semesterEnd.add(1, 'day');
@@ -107,7 +112,7 @@ export function useBatchFormSemesters(
           termNo: i,
           startDate: semesterStartDate,
           endDate: semesterEndDate,
-          duration: defaultSemesterDuration,
+          duration: monthsPerSemester,
           status: SemesterStatus.ACTIVE,
           remarks: '',
           isBreak: false,
@@ -121,20 +126,19 @@ export function useBatchFormSemesters(
 
   const updateSemester = useCallback(
     (index: number, field: keyof ISemesterFormData, value: unknown) => {
+      // Semester duration is read-only (from course); ignore updates
+      if (field === 'duration') return;
       setSemesters((prev) => {
         const updated = [...prev];
         updated[index] = { ...updated[index], [field]: value };
 
-        if (field === 'duration' && typeof value === 'number' && value > 0) {
-          recalculateSemesterDates(updated, index);
-        }
         if (field === 'creditHours' && typeof value === 'number' && selectedCourse?.totalCreditHours) {
           redistributeCreditHours(updated, index, value, selectedCourse.totalCreditHours);
         }
         return updated;
       });
     },
-    [recalculateSemesterDates, redistributeCreditHours, selectedCourse?.totalCreditHours],
+    [redistributeCreditHours, selectedCourse?.totalCreditHours],
   );
 
   const handleBatchDateChange = useCallback(() => {
@@ -169,10 +173,7 @@ export function useBatchFormSemesters(
         if (startDate && durationMonths > 0) {
           form.setFieldsValue({ endDate: dayjs(startDate).add(durationMonths, 'month') });
         }
-        generateSemesters(
-          course.durationInSemesters ?? 1,
-          course.totalCreditHours ?? undefined,
-        );
+        generateSemesters(course);
         setShowSemesterSection(true);
       } else {
         setSelectedCourse(null);

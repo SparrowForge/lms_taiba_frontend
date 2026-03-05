@@ -65,11 +65,13 @@ function SemesterCard({ semester, onUpdate, t }: SemesterCardProps) {
           <Form.Item label={t(LOCALE_KEYS.DURATION_MONTHS)} style={{ marginBottom: 8 }}>
             <InputNumber
               value={semester.duration}
-              onChange={(value) => onUpdate('duration', value)}
               min={1}
               max={12}
-              style={{ width: '100%' }}
+              precision={0}
+              style={{ width: '100%', backgroundColor: '#f5f5f5', color: '#666' }}
               placeholder="Months"
+              disabled
+              title="Calculated from course duration (durationInMonths ÷ durationInSemesters)"
             />
           </Form.Item>
         </Col>

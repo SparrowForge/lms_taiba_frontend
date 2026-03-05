@@ -78,10 +78,10 @@ export default function BatchForm({
       const payload = {
         ...batchData,
         startDate: values.startDate
-          ? dayjs(values.startDate as unknown as string | Date).toISOString()
+          ? dayjs(values.startDate as unknown as string | Date).format('YYYY-MM-DD')
           : undefined,
         endDate: values.endDate
-          ? dayjs(values.endDate as unknown as string | Date).toISOString()
+          ? dayjs(values.endDate as unknown as string | Date).format('YYYY-MM-DD')
           : undefined,
       };
 
@@ -114,8 +114,12 @@ export default function BatchForm({
           const semesterData = validSemesters.map((semester: ISemesterFormData) => ({
             name: semester.name,
             termNo: semester.termNo,
-            startDate: semester.startDate,
-            endDate: semester.endDate,
+            startDate: semester.startDate
+              ? dayjs(semester.startDate).format('YYYY-MM-DD')
+              : semester.startDate,
+            endDate: semester.endDate
+              ? dayjs(semester.endDate).format('YYYY-MM-DD')
+              : semester.endDate,
             status: semester.status,
             remarks: semester.remarks,
             isBreak: semester.isBreak,
