@@ -53,11 +53,11 @@ export default function ProfileTabs({ activeTab, onTabChange, children }: Profil
       label: 'Attendance',
       icon: <CalendarOutlined />,
     },
-    {
-      key: 'activity',
-      label: 'Activity',
-      icon: <UserOutlined />,
-    },
+    // {
+    //   key: 'activity',
+    //   label: 'Activity',
+    //   icon: <UserOutlined />,
+    // },
   ]
 
   return (

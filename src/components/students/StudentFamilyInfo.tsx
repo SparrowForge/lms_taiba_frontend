@@ -22,6 +22,7 @@ import { LOCALE_KEYS } from '@/constants/localizationKeys'
 import { toast } from 'react-toastify'
 import FileUpload from '../ui/FileUpload'
 import { EntityType, FileCategory, FileType } from '@/enums'
+import { useAuth } from '@/hooks/useAuth'
 
 const documentStatusData = [
     { id: 1, title: "nidFrontFather", name: 'Father National ID Card Front', nameAr: 'بطاقة الهوية الوطنية', status: 'verified', bgColor: '#f6ffed' },
@@ -38,10 +39,10 @@ const StudentFamilyInfo = () => {
     const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
     const [selectedStudentFamilyId, setSelectedStudentFamilyId] = useState<number | undefined>();
     const [drawerVisible, setDrawerVisible] = useState(false);
-    const { t } = useLocalization();
     const [fileId, setFileId] = useState<number | undefined>();
     const [selectedDoc, setSelectedDoc] = useState<string | undefined>();
     const [loading, setLoading] = useState(false);
+    const { user } = useAuth()
 
 
     const handleChange = (value: string) => {
@@ -81,8 +82,14 @@ const StudentFamilyInfo = () => {
                 limit: 1,
                 studentId: Number(id),
             })
+        } else if (user?.student?.id) {
+            loadStudentFamilies({
+                page: 1,
+                limit: 1,
+                studentId: Number(user.student.id),
+            })
         }
-    }, [loadStudentFamilies, id])
+    }, [loadStudentFamilies, id, user?.student?.id])
 
     const family = studentFamilies?.[0]
 
@@ -128,7 +135,7 @@ const StudentFamilyInfo = () => {
                 </Card> : <Card
                     className="rounded-lg"
                     title="Family Information"
-                   
+
                 >
                     <Typography.Title level={4} className="mb-4">
                         Family Documents Upload Section

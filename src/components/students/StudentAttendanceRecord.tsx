@@ -1,17 +1,17 @@
 'use client';
 
+import { Card, Empty } from 'antd';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 
 import { UserType } from '@/enums/user-type.enum';
-
+import { Status } from '@/enums';
 import { useAttendances } from '@/hooks/useAttendances';
 import { useAuth } from '@/hooks/useAuth';
 
 import { AttendanceBySubject } from './AttendanceBySubject';
 import { AttendanceStats } from './AttendanceStats';
 import { DailyAttendanceCalendar } from './DailyAttendanceCalendar';
-import { Status } from '@/enums';
 
 export default function StudentAttendanceRecord() {
   const { loadAttendanceStudents, attendanceStudents, actionStatus } = useAttendances();
@@ -48,17 +48,11 @@ export default function StudentAttendanceRecord() {
         if (!mark) return;
 
         total++;
-
         if (mark === 'p') present++;
         if (mark === 'a') absent++;
 
-        // calendar
-        calendarMap.set(
-          a.date,
-          (calendarMap.get(a.date) || 0) + 1
-        );
+        calendarMap.set(a.date, (calendarMap.get(a.date) || 0) + 1);
 
-        // subject aggregation
         const subject = row.subject;
         if (!subject) return;
 
@@ -85,13 +79,11 @@ export default function StudentAttendanceRecord() {
       totalClasses: total,
       presentCount: present,
       absentCount: absent,
-      lateCount: 0, // not applicable with pattern
+      lateCount: 0,
       attendanceRate: total ? Number(((present / total) * 100).toFixed(1)) : 0,
       subjects: Array.from(subjectMap.values()).map((s) => ({
         ...s,
-        attendanceRate: s.total
-          ? Number(((s.present / s.total) * 100).toFixed(1))
-          : 0,
+        attendanceRate: s.total ? Number(((s.present / s.total) * 100).toFixed(1)) : 0,
       })),
       dailyAttendance: Array.from(calendarMap.entries()).map(
         ([date, count]) => ({ date, count })
@@ -99,17 +91,30 @@ export default function StudentAttendanceRecord() {
     };
   }, [attendanceStudents]);
 
+  // Loading state
   if (actionStatus.message === Status.LOADING) {
     return <p className="text-center mt-10 text-gray-500">Loading attendance…</p>;
   }
 
+  // Empty state
   if (!data) {
-    return <p className="text-center mt-10 text-gray-500">No attendance data</p>;
+    return (
+      <div className="">
+        <Card className="">
+          <Empty
+            description={
+              <span className="text-gray-500">
+                No attendance data available
+              </span>
+            }
+          />
+        </Card>
+      </div>
+    );
   }
 
   return (
-    <main style={{ marginBottom: '100px' }}>
-
+    <main className="mb-24">
       <AttendanceStats
         totalClasses={data.totalClasses}
         presentCount={data.presentCount}
@@ -122,7 +127,7 @@ export default function StudentAttendanceRecord() {
 
       <DailyAttendanceCalendar
         month="February"
-        year="2026"
+        year={2026}
         attendances={data.dailyAttendance}
       />
     </main>

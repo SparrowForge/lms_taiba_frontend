@@ -5,6 +5,10 @@ export function DailyAttendanceCalendar({
   month,
   year,
   attendances = [],
+}: {
+  month: number | string;
+  year: number | string;
+  attendances?: Array<{ date: string; count: number }>;
 }) {
   if (!attendances.length) {
     return (

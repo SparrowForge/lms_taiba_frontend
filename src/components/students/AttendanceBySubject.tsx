@@ -1,6 +1,14 @@
 import { Card, Progress, Empty } from 'antd';
 
-export function AttendanceBySubject({ subjects = [] }) {
+interface Subject {
+  code: string;
+  name: string;
+  attendanceRate: number;
+  present: number;
+  total: number;
+}
+
+export function AttendanceBySubject({ subjects = [] }: { subjects?: Subject[] }) {
   return (
     <Card className="p-6 border-0 " >
       <h2 className="text-lg font-bold mb-4">Attendance by Subject</h2>
