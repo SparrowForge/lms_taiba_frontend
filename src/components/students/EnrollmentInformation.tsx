@@ -7,7 +7,7 @@ import React from "react"
 import { IStudent } from "@/types/student"
 
 interface EnrollmentInformationProps {
-  student: IStudent
+  student: IStudent | null
 }
 
 export default function EnrollmentInformation({ student }: EnrollmentInformationProps) {
@@ -21,11 +21,13 @@ export default function EnrollmentInformation({ student }: EnrollmentInformation
     </div>
   )
 
-  const enrollmentDate = new Date(student?.admissionDate).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+  const enrollmentDate = student?.admissionDate
+    ? new Date(student.admissionDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : 'N/A'
 
   return (
     <Card

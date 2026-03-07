@@ -138,12 +138,12 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
       initialValues={
         mode === 'edit'
           ? {
-              ...initialValues,
-              publishDate: initialValues?.publishDate
-                ? dayjs(initialValues.publishDate)
-                : undefined,
-              dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined,
-            }
+            ...initialValues,
+            publishDate: initialValues?.publishDate
+              ? dayjs(initialValues.publishDate)
+              : undefined,
+            dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined,
+          }
           : undefined
       }
     >
@@ -457,17 +457,17 @@ const CourseAssignmentForm: React.FC<CourseAssignmentFormProps> = ({
         />
       </Form.Item>
 
-     <Form.Item name="fileId" label={t(LOCALE_KEYS.FILE)}>
+      <Form.Item name="fileId" label={t(LOCALE_KEYS.FILE)}>
         <FileUpload
-                fileType={FileType.DOCUMENT}
-                fileCategory={FileCategory.ACADEMIC}
-                entityType={EntityType.COURSE_MATERIAL}
-                entityId={courseAssignmentId}
-                accept="*/*"
-                maxSize={50}
-                allowAllFiles={true}
-                />
-            </Form.Item>
+          fileType={FileType.DOCUMENT}
+          fileCategory={FileCategory.ACADEMIC}
+          entityType={EntityType.COURSE_MATERIAL}
+          entityId={courseAssignmentId}
+          accept="*/*"
+          maxSize={50}
+          allowAllFiles={true}
+        />
+      </Form.Item>
 
       <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
 

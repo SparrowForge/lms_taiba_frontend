@@ -16,6 +16,7 @@ export interface IStudentFamily {
   updatedAt: string;
   deletedAt: string | null;
   student: IStudent;
+  documentsFiles?: IDocumentFile[] | null;
 }
 
 export interface IStudentFamilyCreate {
@@ -29,6 +30,7 @@ export interface IStudentFamilyCreate {
   motherEmail: string;
   noOfSiblings: number;
   siblingsIds: number[];
+  
 }
 
 export interface IStudentFamilyUpdate {
@@ -42,4 +44,21 @@ export interface IStudentFamilyUpdate {
   motherEmail?: string;
   noOfSiblings?: number;
   siblingsIds?: number[];
+   documents?: {
+    [key: string]: number
+  }
+}
+
+export interface IDocumentFile {
+  id: number
+  fileName: string
+  originalName: string
+  filePath: string
+  fileSize: string
+  mimeType: string
+  fileType: string
+  fileCategory: string
+  uploadedBy: number
+  uploadedAt: string
+  updatedAt: string
 }

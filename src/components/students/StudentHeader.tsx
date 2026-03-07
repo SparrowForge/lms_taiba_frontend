@@ -3,7 +3,7 @@
 import { PrinterOutlined, DownloadOutlined, EditOutlined } from '@ant-design/icons'
 import { Card, Tag, Row, Col, Button, Space, } from 'antd'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useStudents } from '@/hooks/useStudents'
 
@@ -12,12 +12,17 @@ import type { IStudent, } from '@/types/student'
 import StudentFormDrawer from './StudentFormDrawer'
 
 interface StudentHeaderProps {
-  student: IStudent
+  student: IStudent | null
 }
 
 export default function StudentHeader({ student }: StudentHeaderProps) {
   const { id } = useParams()
-  const initials = student?.firstName.charAt(0) + student?.lastName.charAt(0)
+  const [initials, setInitials] = useState('')
+  useEffect(() => {
+    if (student?.firstName && student?.lastName) {
+      setInitials(student.firstName.charAt(0) + student.lastName.charAt(0));
+    }
+  }, [student]);
   const { loadStudent } = useStudents()
 
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -35,13 +40,15 @@ export default function StudentHeader({ student }: StudentHeaderProps) {
     loadStudent(Number(id));
   };
 
+
+
   return (
     <div className="mb-6">
       <Card className="shadow-sm">
         <Row gutter={[24, 24]} align="middle">
           <Col span={24} md={6}>
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-200 rounded-lg flex items-center justify-center text-2xl font-bold text-white">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-400 rounded-lg flex items-center justify-center text-2xl font-bold text-white">
                 {initials}
               </div>
               <div>
@@ -63,7 +70,7 @@ export default function StudentHeader({ student }: StudentHeaderProps) {
           </Col>
 
           <Col span={24} md={6}>
-            <div className="border-l-4 border-purple-500 pl-4">
+            <div className="border-l-4 border-blue-500 pl-4">
               <p className="text-xs text-gray-500 mb-1">BATCH</p>
               <p className="font-semibold text-sm">{student?.batch?.name}</p>
               <p className="text-xs text-gray-600">{student?.batch?.code}</p>
@@ -71,33 +78,19 @@ export default function StudentHeader({ student }: StudentHeaderProps) {
           </Col>
 
           <Col span={24} md={6}>
-            <div className="border-l-4 border-purple-500 pl-4">
+            <div className="border-l-4 border-blue-500 pl-4">
               <p className="text-xs text-gray-500 mb-1">FEE STATUS</p>
               <Tag color="orange" className="mb-1">Assigned</Tag>
               <p className="text-xs text-gray-500 mt-5">{student?.feeStructure?.totalFees} {student?.feeStructure?.currency}</p>
             </div>
           </Col>
 
-          {/* <Col span={24} md={6}>
-            <div className="flex flex-col gap-3">
-              <div className="text-center border-b pb-3">
-                <p className="text-xs text-gray-500 mb-1">CUMULATIVE GPA</p>
-                <p className="text-3xl font-bold text-orange-500">3.42</p>
-                <p className="text-xs text-gray-600">out of 5.00</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xs text-gray-500 mb-1">FEE STATUS</p>
-                <Tag color="orange" className="mb-1">Assigned</Tag>
-                <p className="text-sm font-semibold">{student?.feeStructure?.totalFees} {student?.feeStructure?.currency}</p>
-              </div>
-            </div>
-          </Col> */}
+
         </Row>
 
         <Row justify="end" className="mt-6 pt-4">
           <Space>
-            <Button icon={<PrinterOutlined />}>Print</Button>
-            <Button onClick={() => window.print()} icon={<DownloadOutlined />}>Export</Button>
+            <Button onClick={() => window.print()} icon={<PrinterOutlined />}>Print</Button>
             <Button onClick={() => handleEditDrawer(Number(id))} type="primary" icon={<EditOutlined />}>
               Edit Profile
             </Button>

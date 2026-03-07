@@ -12,4 +12,5 @@ export enum Status {
 export enum EntityType {
   COURSE_MATERIAL = 'course_materials',
   COURSE_ASSIGNMENT_SUBMISSION = 'course_assignment_submissions',
+  STUDENT_DOCUMENT = 'student_documents',
 }

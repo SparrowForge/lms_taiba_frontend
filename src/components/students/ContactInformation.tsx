@@ -6,9 +6,11 @@ import React from "react"
 
 import { IStudent } from '@/types/student'
 
+interface BasicInformationProps {
+  student: IStudent | null;
+}
 
-
-export default function ContactInformation({ student }: IStudent) {
+export default function ContactInformation({ student }: BasicInformationProps) {
   const InfoItem = ({ label, value, icon }: { label: string; value: string | null; icon?: React.ReactNode }) => (
     <div className="mb-4">
       <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
@@ -30,7 +32,7 @@ export default function ContactInformation({ student }: IStudent) {
 
         <InfoItem
           label="Primary Phone"
-          value={student?.profile?.phone}
+          value={student?.profile?.phone ?? null}
           icon={<PhoneOutlined className="text-blue-500" />}
         />
 
@@ -59,7 +61,7 @@ export default function ContactInformation({ student }: IStudent) {
 
         <InfoItem
           label="Email Address"
-          value={student?.profile?.email}
+          value={student?.profile?.email || null}
           icon={<MailOutlined className="text-blue-500" />}
         />
       </Card>

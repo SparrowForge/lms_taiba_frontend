@@ -65,19 +65,31 @@ export default function ProfileTabs({ activeTab, onTabChange, children }: Profil
       <Tabs
         activeKey={activeTab}
         onChange={onTabChange}
+        className="mb-6 profile-tabs-full"
         items={tabs.map(tab => ({
           key: tab.key,
           label: (
-            <div className="flex items-center justify-center gap-2 w-full">
-              <span className="text-sm">{tab.label}</span>
+            <div className="flex  items-center justify-center gap-1">
               <span className="text-sm">{tab.icon}</span>
+              <span className="text-sm">{tab.label}</span>
             </div>
           ),
         }))}
-        className="mb-6 profile-tabs-full"
       />
-    </div>
 
+      <style jsx global>{`
+        .profile-tabs-full .ant-tabs-nav-list {
+          display: flex !important;
+          justify-content:  space-between !important;
+          width: 100%;
+        }
+
+        .profile-tabs-full .ant-tabs-tab {
+          flex: 1 1 0%;
+          text-align: center;
+        }
+      `}</style>
+    </div>
 
   )
 }

@@ -10,9 +10,8 @@ import { IStudent } from '@/types/student'
 
 
 interface BasicInformationProps {
-    student: IStudent
+  student: IStudent | null;
 }
-
 export default function BasicInformation({ student }: BasicInformationProps) {
     const InfoItem = ({ label, value, icon }: { label: string; value: string | null; icon?: React.ReactNode }) => (
         <div className="mb-4">
@@ -41,7 +40,7 @@ export default function BasicInformation({ student }: BasicInformationProps) {
 
                 <InfoItem
                     label="Student Number"
-                    value={student?.registrationNo}
+                    value={student?.registrationNo || null}
                     icon={<IdcardOutlined className="text-blue-500" />}
                 />
 
@@ -49,7 +48,7 @@ export default function BasicInformation({ student }: BasicInformationProps) {
 
                 <InfoItem
                     label="National ID"
-                    value={student?.profile?.identityNo}
+                    value={student?.profile?.identityNo || null}
                 />
 
                 <InfoItem
@@ -60,7 +59,7 @@ export default function BasicInformation({ student }: BasicInformationProps) {
 
                 <InfoItem
                     label="Place of Birth"
-                    value={student?.profile?.placeOfBirth}
+                    value={student?.profile?.placeOfBirth || null}
                     icon={<EnvironmentOutlined className="text-blue-500" />}
                 />
 
@@ -78,19 +77,19 @@ export default function BasicInformation({ student }: BasicInformationProps) {
             >
                 <div className="text-xs text-gray-500 mb-4">Student and family nationality details</div>
 
-                <InfoItem label="Student Nationality" value="Saudi" />
+                <InfoItem label="Student Nationality" value={student?.profile?.placeOfBirth || 'N/A'} />
 
                 <div className="bg-orange-50 border border-orange-200 rounded px-3 py-2 mb-4">
-                    <span className="text-xs text-orange-700">Saudi</span>
+                    <span className="text-xs text-orange-700">{student?.profile?.permanentAddress.country || 'N/A'}</span>
                 </div>
 
                 <Divider className="my-4" />
 
-                <InfoItem label="Father's Nationality" value="Saudi" />
+                <InfoItem label="Father's Nationality" value={student?.profile?.placeOfBirth || 'N/A'} />
 
                 <Divider className="my-4" />
 
-                <InfoItem label="Mother's Nationality" value="Saudi" />
+                <InfoItem label="Mother's Nationality" value={student?.profile?.placeOfBirth || 'N/A'} />
             </Card>
         </div>
     )

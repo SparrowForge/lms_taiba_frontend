@@ -13,11 +13,13 @@ import { IStudent } from '@/types/student';
 import AcademicSubjectCard from './AcademicSubjectCard';
 import SemesterSelector from '../dashboard/course/SemesterSelector';
 
+interface BasicInformationProps {
+  studentInfo: IStudent | null;
+}
 
 
 
-
-const StudentAcademicRecord = ({ studentInfo }: IStudent) => {
+const StudentAcademicRecord = ({ studentInfo }: BasicInformationProps) => {
 
   const { user } = useAuth()
   const { semesters, loadSemesters } = useSemesters();
@@ -34,11 +36,11 @@ const StudentAcademicRecord = ({ studentInfo }: IStudent) => {
 
   useEffect(() => {
     if (user?.id) {
-      loadSemesters({ page: 1, limit: 100, batchId: user?.batchId });
+      loadSemesters({ page: 1, limit: 100, batchId: user?.student?.batchId });
     } else if (studentInfo) {
       loadSemesters({ page: 1, limit: 100, batchId: studentInfo?.batchId });
     }
-  }, [loadSemesters, studentInfo, user?.batchId, user?.id]);
+  }, [loadSemesters, studentInfo, user?.student?.batchId, user?.id]);
 
   // Auto-select current semester based on current date
   useEffect(() => {
@@ -65,7 +67,7 @@ const StudentAcademicRecord = ({ studentInfo }: IStudent) => {
 
   return (
     <div className="space-y-4 overflow-y-auto min-h-screen">
-      <StudentCourseHeader course={studentInfo.course || null} />
+      <StudentCourseHeader course={studentInfo?.course || null} />
 
       {/* Semester Selection */}
       <SemesterSelector

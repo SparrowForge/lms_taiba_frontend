@@ -43,6 +43,7 @@ export interface IStudent {
   profile: IStudentProfile | null;
   feeStructure: IFeeStructure | null;
   discountTemplates?: IDiscountTemplate[] | null;
+  documentsFiles?: IDocumentFile[] | null;
 }
 
 export interface IStudentCreate {
@@ -62,6 +63,11 @@ export interface IStudentCreate {
   status: StudentStatus;
   feeStructureId?: number;
   discountTemplateIds?: number[];
+  discountTemplates?: IDiscountTemplate[] | null;
+  documents?: {
+    [key: string]: number
+  }
+
 }
 
 export type IStudentUpdate = Omit<IStudentCreate, 'courseId' | 'batchId' | 'branchId'>;
@@ -116,4 +122,18 @@ export interface IStudentSemesterResultFinalization {
   subjectResult: ISubjectExamResult | null
   examResults: IExamResult[]
   attendance: IAttendance[]
+}
+
+export interface IDocumentFile {
+  id: number
+  fileName: string
+  originalName: string
+  filePath: string
+  fileSize: string
+  mimeType: string
+  fileType: string
+  fileCategory: string
+  uploadedBy: number
+  uploadedAt: string
+  updatedAt: string
 }

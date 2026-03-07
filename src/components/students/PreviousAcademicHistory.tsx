@@ -5,13 +5,18 @@ import {
     BookOutlined,
     CalendarOutlined,
 } from '@ant-design/icons'
-import { Card, Button, Tag, Space, Empty, } from 'antd'
+import { Card, Button, Tag, Space, Empty, Select, Typography, } from 'antd'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { useStudentEducations } from '@/hooks/useStudentEducations'
 
 import StudentEducationFormDrawer from '../studentEducations/StudentEducationFormDrawer'
+import { useLocalization } from '@/hooks/useLocalization'
+import { useTranslations } from 'next-intl'
+import { LOCALE_KEYS } from '@/constants/localizationKeys'
+import { toast } from 'react-toastify'
+import { useStudents } from '@/hooks/useStudents'
 
 const getDegreeTypeLabel = (
     degreeType: string,
@@ -27,8 +32,16 @@ const getDegreeTypeLabel = (
     return types[degreeType] || { label: degreeType, color: '#ff6b35' }
 }
 
-export default function PreviousAcademicHistory() {
+const documentStatusData = [
 
+    { id: 4, title: "highSchoolCertificate", name: 'High School Certificate', nameAr: 'شهادة الثانوية العامة', status: 'missing', bgColor: '#f5f5f5' },
+    { id: 4, title: "schoolCertificate", name: 'School Certificate', nameAr: 'شهادة الثانوية العامة', status: 'missing', bgColor: '#f5f5f5' },
+    { id: 5, title: "medicalFitnessReport", name: 'Medical Fitness Report', nameAr: 'تقرير اللياقة الطبية', status: 'verified', bgColor: '#f6ffed' },
+
+]
+
+export default function PreviousAcademicHistory() {
+    const { editStudent } = useStudents()
     const { loadStudentEducations, studentEducations } =
         useStudentEducations()
     const { id } = useParams()
@@ -37,6 +50,15 @@ export default function PreviousAcademicHistory() {
     const [selectedStudentEducationId, setSelectedStudentEducationId] = useState<
         number | undefined
     >();
+
+    const [selectedDoc, setSelectedDoc] = useState<string | undefined>();
+    const [loading, setLoading] = useState(false);
+    const handleChange = (value: string) => {
+        setSelectedDoc(value);
+    };
+
+    const [fileId, setFileId] = useState<number | undefined>();
+
 
     const handleCreateDrawer = () => {
         setSelectedStudentEducationId(undefined);
@@ -59,6 +81,28 @@ export default function PreviousAcademicHistory() {
         }
     }, [loadStudentEducations, id])
 
+    const handleSubmit = async () => {
+        if (!selectedDoc || !fileId) {
+            toast.error('Please select a document and upload a file before submitting.');
+            return;
+        }
+        const formData = {
+            documents: {
+                [selectedDoc]: fileId
+            }
+        }
+        console.log(formData)
+        setLoading(true);
+        try {
+            await editStudent(Number(id), formData)
+        } catch (error) {
+            toast.error('Failed to approve student:' + (error instanceof Error ? error.message : 'Unknown error'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
 
     const educations = studentEducations ?? []
 
@@ -75,13 +119,13 @@ export default function PreviousAcademicHistory() {
                 </div>
                 <Button
                     type="primary"
-                    danger
                     icon={<PlusOutlined />}
                     onClick={handleCreateDrawer}
                     className="flex items-center gap-2"
                 >
                     Add Education
-                </Button></div>
+                </Button>
+            </div>
         }>
             <div className='flex justify-end'>
 
@@ -90,6 +134,41 @@ export default function PreviousAcademicHistory() {
                 educations.length === 0 ? <Empty description="No education history records." />
                     : <div className="rounded-lg min-h-screen overflow-y-auto">
                         <div className="space-y-4 ">
+                            <div>
+                                <Select
+                                    placeholder="Select a document"
+                                    value={selectedDoc}
+                                    onChange={handleChange}
+                                    className="w-full"
+                                    size="large"
+                                    allowClear
+                                    showSearch
+                                    optionFilterProp="label"
+                                    filterOption={(input, option) =>
+                                        (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
+                                    }
+                                >
+                                    {documentStatusData.map((doc) => (
+                                        <Select.Option
+                                            key={doc.id}
+                                            value={doc.title}     // submit this
+                                            label={doc.name}      // show this
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <Typography.Text type="secondary" className="text-xs">
+                                                    {doc.name} {doc.status === "missing" ? "(Missing)" : ""}
+                                                </Typography.Text>
+                                            </div>
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+
+                                {selectedDoc && (
+                                    <p style={{ marginTop: "10px" }}>
+                                        You selected: {documentStatusData.find((d) => d.title === selectedDoc)?.name}
+                                    </p>
+                                )}
+                            </div>
                             {educations.map((education, index) => {
                                 const degreeInfo = getDegreeTypeLabel(
                                     education.degreeType,

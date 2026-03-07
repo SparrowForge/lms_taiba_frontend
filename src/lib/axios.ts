@@ -12,7 +12,8 @@ import type {
 
 // Environment variables for Next.js
 //const BASE_URL = 'http://localhost:3001/api/v1'
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://79.132.131.161:3001/api/v1';
+const BASE_URL =  'http://79.132.131.161:3001/api/v1';
+// process.env.NEXT_PUBLIC_API_BASE_URL ||
 const ENV = process.env.NODE_ENV || 'development';
 
 // Create axios instance

@@ -19,8 +19,7 @@ import StudentAttendanceRecord from '@/components/students/StudentAttendanceReco
 import { useCreateStudentDetailsConfig } from '@/components/students/studentConfig';
 import StudentFamilyInfo from '@/components/students/StudentFamilyInfo';
 import StudentHeader from '@/components/students/StudentHeader';
-import { EntityDetails } from '@/components/ui/EntityDetails';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+
 
 import { useLocalization } from '@/hooks/useLocalization';
 import { useStudents } from '@/hooks/useStudents';
@@ -31,11 +30,13 @@ import { ActivityTimeline } from '../../../../components/students/ActivityTimeli
 import StudentAcademicRecord from '@/components/students/StudentAcademicRecord';
 import StudentDocuments from '@/components/students/StudentDocuments';
 import AcademicResult from '@/components/students/AcademicResult';
+import { Spin } from 'antd';
+import AcademicInformation from '@/components/students/AcademicInformation';
 
 
 export default function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [activeTab, setActiveTab] = useState('personal')
-  const { selectedStudent, detailsStatus, loadStudent } = useStudents();
+  const { selectedStudent, detailsStatus, loadStudent, actionStatus } = useStudents();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
 
@@ -63,7 +64,6 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
         return (<>
           <BasicInformation student={selectedStudent} />
           <ContactInformation student={selectedStudent} />
-          {/* <AcademicInformation student={selectedStudent} /> */}
           <EnrollmentInformation student={selectedStudent} />
         </>)
       case 'guardian':
@@ -82,27 +82,30 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
         return <StudentAttendanceRecord />
       case 'activity':
         return <ActivityTimeline />
-
     }
   }
+
+  
 
   return (
     <ProtectedRoute>
       <MainLayout>
         {/* <EntityDetails config={config as EntityDetailsConfig<IStudent>} /> */}
-        <div className="py-6 px-4 h-screen overflow-y-auto" >
-          <div className=" mx-auto">
-            <StudentHeader student={selectedStudent} />
+        {
+          actionStatus.status === Status.LOADING ? <div className=""><Spin size="large" /></div> : <div className="py-6 px-4 h-screen overflow-y-auto" >
+            <div className=" mx-auto">
+              <StudentHeader student={selectedStudent} />
 
-            <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab}>
-              {renderTabContent()}
-            </ProfileTabs>
+              <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab}>
+                {renderTabContent()}
+              </ProfileTabs>
 
-            <div className="mt-8 ">
-              {renderTabContent()}
+              <div className="mt-8 ">
+                {renderTabContent()}
+              </div>
             </div>
           </div>
-        </div>
+        }
       </MainLayout>
     </ProtectedRoute>
   );
