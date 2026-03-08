@@ -19,7 +19,7 @@ import ExamScheduleDetailsDrawer from '../dashboard/schedule/ExamScheduleDetails
 function ClassScheduleCalendarView() {
   const { user } = useAuth();
 
-  /* ------------------ State ------------------ */
+
 
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
 
@@ -35,12 +35,12 @@ function ClassScheduleCalendarView() {
   const [formDrawerVisible, setFormDrawerVisible] = useState(false);
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
 
-  /* ------------------ Data ------------------ */
+
 
   const { classSchedules, loadClassSchedules } = useClassSchedules();
   const { exams, loadExams } = useExams();
 
-  /* ------------------ Load Class Schedules ------------------ */
+
 
   useEffect(() => {
     if (!user?.faculty?.id) return;
@@ -54,9 +54,9 @@ function ClassScheduleCalendarView() {
         year: currentMonth.year(),
       });
     }
-  }, [currentMonth, loadClassSchedules, user?.faculty?.id, user.role]);
+  }, [currentMonth, loadClassSchedules, user?.faculty?.id, user?.role]);
 
-  /* ------------------ Load Exams ------------------ */
+
 
   useEffect(() => {
     if (!user?.student?.batchId) return;
@@ -68,7 +68,7 @@ function ClassScheduleCalendarView() {
     });
   }, [user?.student?.batchId, loadExams]);
 
-  /* ------------------ Handlers ------------------ */
+
 
   const handleClassClick = (schedule: IClassSchedule, date: string) => {
     setSelectedSchedule(schedule);
@@ -94,7 +94,7 @@ function ClassScheduleCalendarView() {
     setClickedDate(undefined);
   };
 
-  /* ------------------ Group Classes ------------------ */
+
 
   const schedulesByDate = useMemo(() => {
     const grouped: Record<string, IClassSchedule[]> = {};
@@ -134,7 +134,6 @@ function ClassScheduleCalendarView() {
     return grouped;
   }, [classSchedules, currentMonth]);
 
-  /* ------------------ Group Exams ------------------ */
 
   const examsByDate = useMemo(() => {
     const grouped: Record<string, any[]> = {};
@@ -148,7 +147,7 @@ function ClassScheduleCalendarView() {
     return grouped;
   }, [exams]);
 
-  /* ------------------ Helpers ------------------ */
+
 
   const getClassColor = (schedule: IClassSchedule) => {
     switch (schedule.status) {
@@ -163,7 +162,7 @@ function ClassScheduleCalendarView() {
     }
   };
 
-  /* ------------------ Calendar Cell ------------------ */
+
 
   const dateCellRender = (date: Dayjs) => {
     const key = date.format('YYYY-MM-DD');
@@ -211,7 +210,7 @@ function ClassScheduleCalendarView() {
     );
   };
 
-  /* ------------------ Render ------------------ */
+
 
   return (
     <Card>

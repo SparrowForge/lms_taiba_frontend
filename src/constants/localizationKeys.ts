@@ -43,6 +43,7 @@ export const LOCALE_KEYS = {
   DELETE: 'delete',
   ID: 'id',
   ADD_NAME: 'add_name',
+  REVIEW_NAME: 'review_name',
   QUICK_ADD_NAME: 'quick_add_name',
   EXPORT: 'export',
   ERROR: 'error',

@@ -75,7 +75,7 @@ const ExamSubmissionReviewPage = () => {
     try {
       await reviewExamSubmission(Number(submissionId), payload as { reviews: IExamSubmissionReviewItem[] });
       toast.success(t(LOCALE_KEYS.CREATED_NAME, { name: entityName }));
-      router.push('/exam-submissions');
+      router.back();
     } catch (error: unknown) {
       let errorMessage = t(LOCALE_KEYS.FAILED_NAME, {
         name: entityName,

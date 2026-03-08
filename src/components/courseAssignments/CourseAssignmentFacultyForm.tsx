@@ -39,9 +39,9 @@ interface CourseAssignmentFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   embedded?: boolean;
-  subjectId?: string,
-  semesterId?: string,
-  batchId?: string
+  subjectId?: number,
+  semesterId?: number,
+  batchId?: number
 }
 
 const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
@@ -90,8 +90,8 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
 
   useEffect(() => {
     loadCourse(selectedSubject?.courseId ?? 0)
-    loadBatch(parseInt(finalBatchId ?? '0'))
-    loadSemester(parseInt(finalSemesterId ?? '0'))
+    loadBatch(Number(finalBatchId ?? '0'))
+    loadSemester(Number(finalSemesterId ?? '0'))
   }, [finalBatchId, loadBatch, loadCourse, loadSemester, selectedSubject?.courseId, finalSemesterId])
 
 
@@ -100,9 +100,9 @@ const CourseAssignmentFacultyForm: React.FC<CourseAssignmentFormProps> = ({
     const mValues = {
       ...values,
       courseId: selectedSubject?.courseId ?? 0,
-      subjectId: parseInt(finalSubjectId ?? '0'),
-      semesterId: parseInt(finalSemesterId ?? '0'),
-      batchId: parseInt(finalBatchId ?? '0'),
+      subjectId: Number(finalSubjectId ?? '0'),
+      semesterId: Number(finalSemesterId ?? '0'),
+      batchId: Number(finalBatchId ?? '0'),
       facultyId: user?.faculty?.id ?? 0
     }
     try {

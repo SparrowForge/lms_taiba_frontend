@@ -133,23 +133,8 @@ const GradeEntry = () => {
                 {renderTabContent()}
             </div>
 
-            {/* {
-                (!selectedBatch) && <Card><Empty description="Select a batch to start grading" /></Card>
-            } */}
-            {/* {
-                (!selectedSemester && selectedBatch) && <Card><Empty description="Select a semester to start grading" /></Card>
-            }
-            {
-                (!selectedSemesterSubject && selectedBatch && selectedSemester) && <Card><Empty description="Select a subject to start grading" /></Card>
-            }
-            {
-                (!selectedGradeType && selectedBatch && selectedSemester && selectedSemesterSubject) && <Card><Empty description="Select a grade type to start grading" /></Card>
-            }
-            {
-                (!selectedExam && selectedBatch && selectedSemester && selectedSemesterSubject && selectedGradeType) && <Card><Empty description="Select an exam to start grading" /></Card>
-            } */}
-            {/* <SemesterFinalResultManagement batch={selectedBatch} subject={selectedSemesterSubject} /> */}
-            <StudentResultAssign examId={selectedExam} />
+
+           
         </div>
     )
 }

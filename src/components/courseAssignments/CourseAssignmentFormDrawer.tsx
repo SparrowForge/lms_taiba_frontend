@@ -21,9 +21,9 @@ interface CourseAssignmentFormDrawerProps {
   onCancel: () => void;
   onSuccess: () => void;
   isAdmin?:boolean
-  subjectId?: string
-  semesterId?: string
-  batchId?: string
+  subjectId?: number
+  semesterId?: number
+  batchId?: number
 }
 
 const CourseAssignmentFormDrawer: React.FC<CourseAssignmentFormDrawerProps> = ({

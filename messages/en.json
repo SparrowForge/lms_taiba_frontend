@@ -37,6 +37,7 @@
   "delete": "Delete",
   "id": "ID",
   "add_name": "Add {name}",
+  "review_name": "Review Exam",
   "quick_add_name": "Quick Add {name}",
   "export": "Export",
   "error": "Error",

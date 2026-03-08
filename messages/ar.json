@@ -37,6 +37,7 @@
   "delete": "حذف",
   "id": "المعرف",
   "add_name": "إضافة {name}",
+  "review_name": "مراجعة {name}",
   "quick_add_name": "إضافة سريعة {name}",
   "export": "تصدير",
   "error": "خطأ",

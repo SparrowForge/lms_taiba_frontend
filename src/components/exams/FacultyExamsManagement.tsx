@@ -1,8 +1,8 @@
 'use client';
 
 
-import { Card, Empty, Spin, } from 'antd';
-import { useParams, useSearchParams } from 'next/navigation';
+import { Button, Card, Empty, Spin, } from 'antd';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -13,6 +13,7 @@ import { useExams } from '@/hooks/useExams';
 import { useLocalization } from '@/hooks/useLocalization';
 
 import FacultyExamList from './FacultyExamLists';
+import { PlusOutlined } from '@ant-design/icons';
 
 
 
@@ -26,18 +27,29 @@ const FacultyExamsManagement: React.FC = () => {
   const subjectId = params.id as string
   const semesterId = searchParams.get('semesterId') as string
   const batchId = searchParams.get('batchId') as string
-
+  const router = useRouter()
 
   useEffect(() => {
     if (subjectId && semesterId) {
       loadExams({ page: 1, limit: 99, subjectId: Number(subjectId), semesterId: Number(semesterId), batchId: batchId ? Number(batchId) : undefined })
     }
   }, [batchId, loadExams, semesterId, subjectId])
+
+  const handleAddQuestion = () => {
+    return router.push(`/exam-questions/create?subjectId=${subjectId}`)
+  }
   return (
     <Card className="rounded-xl shadow-sm mb-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">{t(LOCALE_KEYS.EXAM_SCHEDULE)}</h2>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => handleAddQuestion()}
+        >
+          Add Question
+        </Button>
       </div>
 
       {/* States */}

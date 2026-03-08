@@ -53,9 +53,7 @@ const FacultyExamList = ({ data }: ExamListProps) => {
   const batchId = searchParams.get('batchId') as string
 
   const router = useRouter()
-  const handleAddQuestion = (subjectId: number) => {
-    return router.push(`/exam-questions/create?subjectId=${subjectId}`)
-  }
+
 
   const handleAddQuestionSet = (examId: number) => {
     return router.push(`/question-set/create?examId=${examId}`)
@@ -80,13 +78,13 @@ const FacultyExamList = ({ data }: ExamListProps) => {
   const handleAddResult = (examId: number) => {
     return router.push(`/result/create?examId=${examId}`)
   }
-  const handleShowResults = (examId: number) => {
-    return router.push(`/exam-results?examId=${examId}`)
+  const handleReviewExam = () => {
+    return router.push(`/exam-submission/details?subjectId=${subjectId}`)
   }
 
   const { user } = useAuth()
 
-  const isHead = hasAnyHeadRole(user)
+  const isHead = user ? hasAnyHeadRole(user) : false
 
   console.log("object, user", user)
 
@@ -165,14 +163,6 @@ const FacultyExamList = ({ data }: ExamListProps) => {
               Add Faculty
             </Button>
             <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              style={{ marginLeft: 16 }}
-              onClick={() => handleCreateDrawer()}
-            >
-              Manage Question Set
-            </Button>
-            <Button
               color="primary"
               variant="filled"
               icon={<PlusOutlined />}
@@ -181,41 +171,36 @@ const FacultyExamList = ({ data }: ExamListProps) => {
             >
               Add Question Set
             </Button>
-
-          </>
-        }
-
-        {
-          !isHead && <>
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => handleAddQuestion(data.subjectId)}
+              style={{ marginLeft: 16 }}
+              onClick={() => handleCreateDrawer()}
             >
-              Add Question
+              Manage Question Set
             </Button>
 
-            <Button
-              color="primary"
-              variant="outlined"
-              icon={<PlusOutlined />}
-              style={{ marginLeft: 16 }}
-              onClick={() => handleAddResult(data.id)}
-            >
-              Add Result
-            </Button>
-
-            <Button
-              color="primary"
-              variant="dashed"
-              style={{ marginLeft: 16 }}
-              onClick={() => handleShowResults(data.id)}
-            >
-              Show Result
-            </Button>
           </>
         }
 
+        <Button
+          color="primary"
+          variant="dashed"
+          style={{ marginLeft: 16 }}
+          onClick={() => handleReviewExam()}
+        >
+          Review
+        </Button>
+
+        {/* <Button
+          color="primary"
+          variant="outlined"
+          icon={<PlusOutlined />}
+          style={{ marginLeft: 16 }}
+          onClick={() => handleAddResult(data.id)}
+        >
+          Add Result
+        </Button> */}
       </div>
 
       <ExamSetManageDrawer
