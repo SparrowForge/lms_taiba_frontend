@@ -1,15 +1,21 @@
-'use client'
+'use client';
 
-import { EditOutlined, PhoneOutlined, MailOutlined, WhatsAppOutlined } from '@ant-design/icons'
-import { Card, Row, Col, Divider, Button, Tag } from 'antd'
-import React from "react"
+import { EditOutlined, MailOutlined, PhoneOutlined, WhatsAppOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Divider, Row, Tag } from 'antd';
+import React from 'react';
 
-import { IStudent } from '@/types/student'
-
-
+import { IStudent } from '@/types/student';
 
 export default function ContactInformation({ student }: IStudent) {
-  const InfoItem = ({ label, value, icon }: { label: string; value: string | null; icon?: React.ReactNode }) => (
+  const InfoItem = ({
+    label,
+    value,
+    icon,
+  }: {
+    label: string;
+    value: string | null;
+    icon?: React.ReactNode;
+  }) => (
     <div className="mb-4">
       <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
         {icon}
@@ -17,10 +23,10 @@ export default function ContactInformation({ student }: IStudent) {
       </div>
       <p className="font-medium text-sm">{value || 'N/A'}</p>
     </div>
-  )
+  );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
       <Card
         title="Contact Information"
         extra={<Button type="text" size="small" icon={<EditOutlined />} />}
@@ -65,7 +71,7 @@ export default function ContactInformation({ student }: IStudent) {
       </Card>
 
       <Card
-        title="Address Information"
+        title="Present Address Information"
         extra={<Button type="text" size="small" icon={<EditOutlined />} />}
         className="shadow-sm"
       >
@@ -73,7 +79,7 @@ export default function ContactInformation({ student }: IStudent) {
 
         <div className="mb-4">
           <div className="text-xs text-gray-500 mb-1">Street Address (English)</div>
-          <p className="font-medium text-sm">123 King Fahd Road, Al-Olaya District</p>
+          <p className="font-medium text-sm">{student?.profile?.presentAddress.address}</p>
         </div>
 
         <Divider className="my-4" />
@@ -81,7 +87,7 @@ export default function ContactInformation({ student }: IStudent) {
         <div className="mb-4">
           <div className="text-xs text-gray-500 mb-1">Street Address (Arabic)</div>
           <p className="font-medium text-sm text-right" dir="rtl">
-            123 طريق الملك فهد، حي الوليد
+            {student?.profile?.presentAddress.address}
           </p>
         </div>
 
@@ -91,13 +97,14 @@ export default function ContactInformation({ student }: IStudent) {
           <Col span={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">City</div>
-              <p className="font-medium text-sm">Riyadh</p>
+              <p className="font-medium text-sm">{student?.profile?.presentAddress.city}</p>
             </div>
           </Col>
+
           <Col span={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">Region</div>
-              <p className="font-medium text-sm">Riyadh Region</p>
+              <p className="font-medium text-sm">{student?.profile?.presentAddress.state || '-'}</p>
             </div>
           </Col>
         </Row>
@@ -106,17 +113,75 @@ export default function ContactInformation({ student }: IStudent) {
           <Col span={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">Postal Code</div>
-              <p className="font-medium text-sm">12345</p>
+              <p className="font-medium text-sm">{student?.profile?.presentAddress.zipCode}</p>
             </div>
           </Col>
+
           <Col span={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">Country</div>
-              <p className="font-medium text-sm">Saudi Arabia</p>
+              <p className="font-medium text-sm">{student?.profile?.presentAddress.country}</p>
+            </div>
+          </Col>
+        </Row>
+      </Card>
+      <Card
+        title="Permanent Address Information"
+        extra={<Button type="text" size="small" icon={<EditOutlined />} />}
+        className="shadow-sm"
+      >
+        <div className="text-xs text-gray-500 mb-4">Residential address details</div>
+
+        <div className="mb-4">
+          <div className="text-xs text-gray-500 mb-1">Street Address (English)</div>
+          <p className="font-medium text-sm">{student?.profile?.permanentAddress.address}</p>
+        </div>
+
+        <Divider className="my-4" />
+
+        <div className="mb-4">
+          <div className="text-xs text-gray-500 mb-1">Street Address (Arabic)</div>
+          <p className="font-medium text-sm text-right" dir="rtl">
+            {student?.profile?.permanentAddress.address}
+          </p>
+        </div>
+
+        <Divider className="my-4" />
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <div className="mb-4">
+              <div className="text-xs text-gray-500 mb-1">City</div>
+              <p className="font-medium text-sm">{student?.profile?.permanentAddress.city}</p>
+            </div>
+          </Col>
+
+          <Col span={12}>
+            <div className="mb-4">
+              <div className="text-xs text-gray-500 mb-1">Region</div>
+              <p className="font-medium text-sm">
+                {student?.profile?.permanentAddress.state || '-'}
+              </p>
+            </div>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <div className="mb-4">
+              <div className="text-xs text-gray-500 mb-1">Postal Code</div>
+              <p className="font-medium text-sm">{student?.profile?.permanentAddress.zipCode}</p>
+            </div>
+          </Col>
+
+          <Col span={12}>
+            <div className="mb-4">
+              <div className="text-xs text-gray-500 mb-1">Country</div>
+              <p className="font-medium text-sm">{student?.profile?.permanentAddress.country}</p>
             </div>
           </Col>
         </Row>
       </Card>
     </div>
-  )
+  );
 }

@@ -1,12 +1,9 @@
 "use client";
 
 import { Button, Card, Tag } from "antd";
+import { useRouter } from "next/navigation";
 
 import { IExam } from "@/types/exam";
-import { useRouter } from "next/navigation";
-import { PlusOutlined } from "@ant-design/icons";
-
-
 
 
 
@@ -38,7 +35,7 @@ const StudentExamList = ({ data }: ExamListProps) => {
     return router.push(`/exam-instructions?subjectId=${subjectId}&examId=${examId}`)
   }
 
-  function isExamButtonDisabled(examDatetime) {
+  function isExamButtonDisabled(examDatetime:any) {
     return new Date(examDatetime).toDateString() !== new Date().toDateString();
   }
 
@@ -57,39 +54,55 @@ const StudentExamList = ({ data }: ExamListProps) => {
       }
     >
       <div className="space-y-2 text-sm">
-        <p>
-          <span className="font-medium">Subject:</span>{" "}
-          {data?.subject?.name}
-        </p>
+        <div className="space-y-2 text-sm text-gray-700">
+          <p className="flex gap-2">
+            <span className="min-w-[80px] font-medium text-gray-900">
+              Subject:
+            </span>
+            <span>{data?.subject?.name}</span>
+          </p>
 
-        <p>
-          <span className="font-medium">Marks:</span> {data.marks}
-        </p>
+          <p className="flex gap-2">
+            <span className="min-w-[80px] font-medium text-gray-900">
+              Marks:
+            </span>
+            <span>{data.marks}</span>
+          </p>
 
-        <p>
-          <span className="font-medium">Date:</span>{" "}
-          {formatDate(data.examDatetime)}
-        </p>
+          <p className="flex gap-2">
+            <span className="min-w-[80px] font-medium text-gray-900">
+              Date:
+            </span>
+            <span>{formatDate(data.examDatetime)}</span>
+          </p>
 
-        <p>
-          <span className="font-medium">Time:</span>{" "}
-          {formatTime(data.examDatetime)}
-        </p>
+          <p className="flex gap-2">
+            <span className="min-w-[80px] font-medium text-gray-900">
+              Time:
+            </span>
+            <span>{formatTime(data.examDatetime)}</span>
+          </p>
 
-        <p>
-          <span className="font-medium">Duration:</span>{" "}
-          {data.duration?.hours
-            ? `${data.duration.hours} hr${data.duration.hours > 1 ? "s" : ""}`
-            : ""}
-          {data.duration?.minutes
-            ? ` ${data.duration.minutes} min`
-            : ""}
-        </p>
+          <p className="flex gap-2">
+            <span className="min-w-[80px] font-medium text-gray-900">
+              Duration:
+            </span>
+            <span>
+              {data.duration?.hours
+                ? `${data.duration.hours} hr${data.duration.hours > 1 ? "s" : ""}`
+                : ""}
+              {data.duration?.minutes ? ` ${data.duration.minutes} min` : ""}
+            </span>
+          </p>
 
-        <p>
-          <span className="font-medium">Room:</span>{" "}
-          {data.room?.name}
-        </p>
+          <p className="flex gap-2">
+            <span className="min-w-[80px] font-medium text-gray-900">
+              Room:
+            </span>
+            <span>{data.room?.name}</span>
+          </p>
+        </div>
+
         <Button
           type="primary"
           onClick={() => handlePrepareExam(data.subjectId, data.id)}

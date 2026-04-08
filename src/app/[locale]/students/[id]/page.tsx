@@ -10,22 +10,24 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import BasicInformation from '@/components/students/BasicInformation';
 import ContactInformation from '@/components/students/ContactInformation';
 import EnrollmentInformation from '@/components/students/EnrollmentInformation';
+import PaymentDetails from '@/components/students/PaymentDetails';
 import PreviousAcademicHistory from '@/components/students/PreviousAcademicHistory';
 import ProfileTabs from '@/components/students/ProfileTabs';
+import StudentAttendanceRecord from '@/components/students/StudentAttendanceRecord';
 import { useCreateStudentDetailsConfig } from '@/components/students/studentConfig';
 import StudentFamilyInfo from '@/components/students/StudentFamilyInfo';
 import StudentHeader from '@/components/students/StudentHeader';
-import { EntityDetails } from '@/components/ui/EntityDetails';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
 
 import { useLocalization } from '@/hooks/useLocalization';
 import { useStudents } from '@/hooks/useStudents';
 
-import { IStudent } from '@/types/student';
-import StudentsResult from '@/components/result/StudentsResult';
+import AcademicResult from '@/components/students/AcademicResult';
+import StudentAcademicRecord from '@/components/students/StudentAcademicRecord';
+import StudentDocuments from '@/components/students/StudentDocuments';
+import { ActivityTimeline } from '../../../../components/students/ActivityTimeline';
 
 export default function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const [activeTab, setActiveTab] = useState('personal')
+  const [activeTab, setActiveTab] = useState('personal');
   const { selectedStudent, detailsStatus, loadStudent } = useStudents();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
@@ -39,8 +41,6 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
     loadStudent(studentId);
   }, [loadStudent, studentId]);
 
-  console.log("Student", selectedStudent)
-
   const config = useCreateStudentDetailsConfig(
     selectedStudent,
     detailsStatus.status === Status.LOADING,
@@ -52,31 +52,38 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
   const renderTabContent = () => {
     switch (activeTab) {
       case 'personal':
-        return (<>
-          <BasicInformation student={selectedStudent} />
-          <ContactInformation student={selectedStudent} />
-          {/* <AcademicInformation student={selectedStudent} /> */}
-          <EnrollmentInformation student={selectedStudent} />
-        </>)
+        return (
+          <>
+            <BasicInformation student={selectedStudent} />
+            <ContactInformation student={selectedStudent} />
+            {/* <AcademicInformation student={selectedStudent} /> */}
+            <EnrollmentInformation student={selectedStudent} />
+          </>
+        );
       case 'guardian':
-        return (<>
-          <StudentFamilyInfo />
-        </>)
+        return <StudentFamilyInfo />;
       case 'previous-data':
-        return (<>
-          <PreviousAcademicHistory />
-        </>)
-        case 'grades':
-          return <StudentsResult/>
-
+        return <PreviousAcademicHistory />;
+      case 'documents':
+        return <StudentDocuments />;
+      case 'academic':
+        return <StudentAcademicRecord studentInfo={selectedStudent} />;
+      case 'fees':
+        return <PaymentDetails />;
+      case 'grades':
+        return <AcademicResult />;
+      case 'attendance':
+        return <StudentAttendanceRecord />;
+      case 'activity':
+        return <ActivityTimeline />;
     }
-  }
+  };
 
   return (
     <ProtectedRoute>
       <MainLayout>
         {/* <EntityDetails config={config as EntityDetailsConfig<IStudent>} /> */}
-        <div className="py-6 px-4 h-screen overflow-y-auto" >
+        <div className="py-6 px-4 h-screen overflow-y-auto">
           <div className=" mx-auto">
             <StudentHeader student={selectedStudent} />
 
@@ -84,9 +91,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
               {renderTabContent()}
             </ProfileTabs>
 
-            <div className="mt-8 ">
-              {renderTabContent()}
-            </div>
+            <div className="mt-8 ">{renderTabContent()}</div>
           </div>
         </div>
       </MainLayout>

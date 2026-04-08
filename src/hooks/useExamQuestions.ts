@@ -127,7 +127,7 @@ export const useExamQuestions = () => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
         const response = await examQuestionService.createMultipleExamQuestion(data);
-        dispatch(addExamQuestionsBulk(response));
+        // dispatch(addExamQuestionsBulk(response));
         dispatch(
           setActionStatus({
             status: Status.SUCCESS,

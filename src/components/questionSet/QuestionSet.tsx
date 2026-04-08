@@ -64,7 +64,7 @@ const QuestionSet = () => {
     }
 
     await createQuestionSetWithQuestions(data)
-    toast.success(actionStatus.message)
+    toast.success("Question Set Added Successfully!")
     router.push(`/dashboard/course`)
   }
 

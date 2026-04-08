@@ -128,7 +128,7 @@ export const useQuestionSets = () => {
       try {
         dispatch(setActionStatus({ status: Status.LOADING }));
         const response: IQuestionSet = await questionSetService.createQuestionSetWithQuestions(data);
-        dispatch(addQuestionSet(response));
+        // dispatch(addQuestionSet(response));
         dispatch(
           setActionStatus({
             status: Status.SUCCESS,

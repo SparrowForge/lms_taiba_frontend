@@ -1,6 +1,17 @@
 'use client';
 
-import { Button, DatePicker, Form, Input, InputNumber, Select, Space, Switch } from 'antd';
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+  Switch,
+} from 'antd';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -174,6 +185,17 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
         <InputNumber min={1} max={20} style={{ width: '100%' }} />
       </Form.Item>
       <Form.Item
+        name="creditHours"
+        label={t(LOCALE_KEYS.CREDIT_HOURS)}
+      >
+        <InputNumber
+          min={0}
+          max={500}
+          style={{ width: '100%', minWidth: 50 }}
+          placeholder="e.g. 15"
+        />
+      </Form.Item>
+      <Form.Item
         name="startDate"
         label={t(LOCALE_KEYS.START_DATE)}
         rules={[
@@ -201,7 +223,7 @@ const SemesterForm: React.FC<SemesterFormProps> = ({
       <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
         <Input.TextArea rows={3} />
       </Form.Item>
-      <Form.Item name="isBreak" label={t(LOCALE_KEYS.IS_BREAK)}>
+      <Form.Item name="isBreak" label={t(LOCALE_KEYS.IS_BREAK)} valuePropName="checked">
         <Switch />
       </Form.Item>
       <Form.Item>

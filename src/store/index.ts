@@ -25,12 +25,15 @@ import examScheduleReducer from './slices/examScheduleSlice';
 import examReducer from './slices/examSlice';
 import examSubmissionReducer from './slices/examSubmissionSlice';
 import examTypeReducer from './slices/examTypeSlice';
+import eventReducer from './slices/eventSlice';
+import eventTypeReducer from './slices/eventTypeSlice';
 import facultyReducer from './slices/facultySlice';
 import facultySubjectReducer from './slices/facultySubjectSlice';
 import feeInstallmentPlanReducer from './slices/feeInstallmentPlanSlice';
 import feePaymentCollectionReducer from './slices/feePaymentCollectionSlice';
 import feePaymentDetailsReducer from './slices/feePaymentDetailsSlice';
 import feeStructureReducer from './slices/feeStructureSlice';
+import discountTemplateReducer from './slices/discountTemplateSlice';
 import gradeRuleReducer from './slices/gradeRuleSlice';
 import instituteReducer from './slices/instituteSlice';
 import markDistributionReducer from './slices/markDistributionSlice';
@@ -94,6 +97,7 @@ export interface RootState {
   feePaymentCollections: ReturnType<typeof feePaymentCollectionReducer>;
   feePaymentDetails: ReturnType<typeof feePaymentDetailsReducer>;
   feeStructures: ReturnType<typeof feeStructureReducer>;
+  discountTemplates: ReturnType<typeof discountTemplateReducer>;
   gradeRules: ReturnType<typeof gradeRuleReducer>;
   markDistributions: ReturnType<typeof markDistributionReducer>;
   notifications: ReturnType<typeof notificationReducer>;
@@ -108,6 +112,8 @@ export interface RootState {
   examSchedules: ReturnType<typeof examScheduleReducer>;
   examSubmissions: ReturnType<typeof examSubmissionReducer>;
   examTypes: ReturnType<typeof examTypeReducer>;
+  events: ReturnType<typeof eventReducer>;
+  eventTypes: ReturnType<typeof eventTypeReducer>;
   rooms: ReturnType<typeof roomReducer>;
   roomTypes: ReturnType<typeof roomTypeReducer>;
   scheduleTypes: ReturnType<typeof scheduleTypeReducer>;
@@ -159,6 +165,7 @@ export const store = configureStore({
     feePaymentCollections: feePaymentCollectionReducer,
     feePaymentDetails: feePaymentDetailsReducer,
     feeStructures: feeStructureReducer,
+  discountTemplates: discountTemplateReducer,
     gradeRules: gradeRuleReducer,
     markDistributions: markDistributionReducer,
     notifications: notificationReducer,
@@ -173,6 +180,8 @@ export const store = configureStore({
     examSchedules: examScheduleReducer,
     examSubmissions: examSubmissionReducer,
     examTypes: examTypeReducer,
+    events: eventReducer,
+    eventTypes: eventTypeReducer,
     rooms: roomReducer,
     roomTypes: roomTypeReducer,
     scheduleTypes: scheduleTypeReducer,

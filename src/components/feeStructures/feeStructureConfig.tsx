@@ -46,8 +46,6 @@ export const useCreateFeeStructureDetailsConfig = (
       { key: 'paymentType', label: t(LOCALE_KEYS.PAYMENT_TYPE) },
       { key: 'totalFees', label: t(LOCALE_KEYS.TOTAL_FEES) },
       { key: 'admissionFee', label: t(LOCALE_KEYS.ADMISSION_FEE) },
-      { key: 'discountType', label: t(LOCALE_KEYS.DISCOUNT_TYPE) },
-      { key: 'discountAmount', label: t(LOCALE_KEYS.DISCOUNT_AMOUNT) },
       { key: 'currency', label: t(LOCALE_KEYS.CURRENCY) },
       { key: 'remarks', label: t(LOCALE_KEYS.REMARKS) },
       { key: 'status', label: t(LOCALE_KEYS.STATUS) },

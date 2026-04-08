@@ -3,7 +3,7 @@ export interface IQuestion {
   id?: number
   questionText: string
   options?: IQuestionOption[]
-  correctOptionNumber: "a" | "b" | "c" | "d" // a=0, b=1, c=2, d=3
+  correctOptionNumber: 1 | 2 | 3 | 4 // a=0, b=1, c=2, d=3
   difficultyLevel: "easy" | "medium" | "hard"
   courseId: number
   subjectId: number

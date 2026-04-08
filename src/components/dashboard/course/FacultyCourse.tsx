@@ -13,6 +13,7 @@ import { SubjectCollapse } from './SubjectCollapse'
 const FacultyCourse = () => {
     const {facultySubjects, loadFacultySubjects} = useFacultySubjects()
     const {user} = useAuth()
+    console.log(user)
     useEffect(()=>{
         loadFacultySubjects({page:1, limit:99, facultyId: user?.faculty?.id })
     },[loadFacultySubjects, user])
@@ -43,7 +44,6 @@ const FacultyCourse = () => {
 
   const groupedData = groupBySemesterAndBatch(facultySubjects)
 
-  console.log("groupedData",groupedData)
 
 
   return (

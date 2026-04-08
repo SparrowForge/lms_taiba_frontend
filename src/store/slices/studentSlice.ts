@@ -3,13 +3,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status } from '@/enums';
 
 import { IPaginationMeta, IStatusState } from '@/types/common';
-import { IStudent, IStudentWithFeeInfo } from '@/types/student';
+import { IStudent, IStudentSemesterResultFinalization, IStudentWithFeeInfo } from '@/types/student';
 
 interface IStudentsState {
   listStatus: IStatusState;
   detailsStatus: IStatusState;
   actionStatus: IStatusState;
   students: IStudent[];
+  studentsWithSemesterResultFinalization:IStudentSemesterResultFinalization[],
   selectedStudent: IStudent | null;
   studentWithFeeInfo: IStudentWithFeeInfo | null;
   pagination: IPaginationMeta;
@@ -20,6 +21,7 @@ const initialState: IStudentsState = {
   detailsStatus: { status: Status.INITIAL },
   actionStatus: { status: Status.INITIAL },
   students: [],
+  studentsWithSemesterResultFinalization:[],
   selectedStudent: null,
   studentWithFeeInfo: null,
   pagination: {
@@ -47,6 +49,9 @@ const studentSlice = createSlice({
     },
     setStudents: (state, action: PayloadAction<IStudent[]>) => {
       state.students = action.payload;
+    },
+    setStudentsWithSemesterResultFinalization: (state, action: PayloadAction<IStudentSemesterResultFinalization[]>) => {
+      state.studentsWithSemesterResultFinalization = action.payload;
     },
     addStudent: (state, action: PayloadAction<IStudent>) => {
       state.students.unshift(action.payload);
@@ -89,6 +94,7 @@ export const {
   setDetailsStatus,
   setActionStatus,
   setStudents,
+  setStudentsWithSemesterResultFinalization,
   addStudent,
   updateStudent,
   deleteStudent,

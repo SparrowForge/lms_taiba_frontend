@@ -7,7 +7,6 @@ export interface PaymentRow {
   paymentLabel: string;
   durationMonths: number;
   amount: number;
-  discountAmount: number;
   dueDate: Dayjs | null;
 }
 
@@ -20,7 +19,6 @@ export interface MonthlyPaymentRow {
   sequenceNo: number;
   paymentLabel: string;
   amount: number;
-  discountAmount: number;
   dueDate: Dayjs | null;
   startDate: Dayjs;
   endDate: Dayjs;

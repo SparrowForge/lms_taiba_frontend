@@ -10,6 +10,7 @@ import {
   Space,
   Typography,
   Form,
+  Empty,
 } from "antd"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -49,19 +50,19 @@ export default function Quiz({
   const { selectedExam, loadExam } = useExams()
   const { selectedQuestionSet, loadQuestionSet } = useQuestionSets()
 
-  /* ---------------- Load exam ---------------- */
+
   useEffect(() => {
     if (examId) loadExam(Number(examId))
   }, [examId, loadExam])
 
-  /* ---------------- Load question set ---------------- */
+
   useEffect(() => {
     if (selectedExam?.selectedQuestionSetId) {
       loadQuestionSet(Number(selectedExam.selectedQuestionSetId))
     }
   }, [selectedExam?.selectedQuestionSetId, loadQuestionSet])
 
-  /* ---------------- Exam timer (FIXED) ---------------- */
+
   useEffect(() => {
     if (!selectedExam?.examDatetime || !selectedExam?.duration?.minutes) return
 
@@ -77,7 +78,6 @@ export default function Quiz({
         setRemainingTime(examEnd - examStart)
         return
       }
-
       if (now >= examEnd) {
         setIsExamActive(false)
         setRemainingTime(0)
@@ -98,7 +98,7 @@ export default function Quiz({
     return () => clearInterval(interval)
   }, [selectedExam])
 
-  /* ---------------- Helpers ---------------- */
+
   const currentItem = selectedQuestionSet?.items?.[currentQuestionIndex]
   const currentQuestion = currentItem?.question
 
@@ -117,7 +117,7 @@ export default function Quiz({
       .padStart(2, "0")}`
   }
 
-  /* ---------------- MCQ handler ---------------- */
+
   const handleOptionChange = (value: string) => {
     setAnswers((prev) => ({
       ...prev,
@@ -137,7 +137,7 @@ export default function Quiz({
     }
   }
 
-  /* ---------------- Submit ---------------- */
+
   const handleSubmit = async () => {
     if (submitting) return
 
@@ -157,7 +157,7 @@ export default function Quiz({
           ? null
           : formValues[`answer_${index}`] ?? "",
       })),
-      status: "draft",
+      status: "submitted",
     }
 
     try {
@@ -169,6 +169,10 @@ export default function Quiz({
   }
 
   if (!currentQuestion) return null
+
+  if (!isExamActive) {
+    <Empty description="No Content" />
+  }
 
 
   return (
@@ -211,7 +215,7 @@ export default function Quiz({
                   </Form.Item>
                 ) : (
                   <Radio.Group
-                    disabled={!isExamActive}
+                    // disabled={!isExamActive}
                     value={answers[currentQuestionIndex]}
                     onChange={(e) => handleOptionChange(e.target.value)}
                     style={{ display: "flex", flexDirection: "column", gap: 12 }}

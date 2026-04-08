@@ -1,6 +1,7 @@
 "use client";
 
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+// eslint-disable-next-line import/order
 import {
   Button,
   Card,
@@ -20,15 +21,16 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { Status } from "@/enums";
-import { EntityStatus } from "@/enums/status";
 import { DIFFICULTY_LEVEL_OPTIONS } from "@/enums/difficulty-level.enum";
 import { IQuestion } from "@/enums/question";
+import { EntityStatus } from "@/enums/status";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useCourses } from "@/hooks/useCourses";
 import { useExamQuestions } from "@/hooks/useExamQuestions";
 import { useSubjects } from "@/hooks/useSubjects";
 
+import { getErrorMessage } from "@/types/errors";
 import { IExamQuestionBulkCreate } from "@/types/examQuestion";
 
 const { Text } = Typography;
@@ -48,7 +50,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   onSuccess,
   onCancel,
   onSubmit,
-  isLoading = false,
+
 }) => {
   const { user } = useAuth();
   const { selectedCourse, loadCourse } = useCourses();
@@ -87,7 +89,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
             { text: "", order: 2 },
             { text: "", order: 3 },
           ],
-          correctOptionNumber: "a",
+          correctOptionNumber: 1,
           difficultyLevel: "easy",
           courseId: Number(selectedCourse?.id),
           subjectId: Number(selectedSubject?.id),
@@ -95,12 +97,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       ]);
       setSelectedQuestionIndex(0);
     }
-  }, []);
+  }, [questions.length, selectedCourse?.id, selectedSubject?.id]);
 
 
   const handleTypeChange = (value: string) => {
-    console.log("Selected type:", value)
-    // example: setQuestionType(value)
     setQuestionType(value)
   }
 
@@ -152,7 +152,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
         { text: "", order: 2 },
         { text: "", order: 3 },
       ],
-      correctOptionNumber: "a",
+      correctOptionNumber: 1,
       difficultyLevel: "easy",
       courseId: Number(selectedCourse?.id),
       subjectId: Number(selectedSubject?.id),
@@ -175,7 +175,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   };
 
   // UPDATE FIELD
-  const updateQuestionField = (field: keyof IQuestion, value: any) => {
+  const updateQuestionField = (field: keyof IQuestion, value: string | number) => {
     const updated = [...questions];
     updated[selectedQuestionIndex] = {
       ...updated[selectedQuestionIndex],
@@ -206,30 +206,26 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
       setSubmitting(true);
 
-      const correctOptionToNumber = (c: "a" | "b" | "c" | "d") =>
-        ({ a: 0, b: 1, c: 2, d: 3 }[c] ?? 0);
-      const toDifficultyOption = (d: string) => ({
-        value: d as "easy" | "medium" | "hard",
-        label: d.charAt(0).toUpperCase() + d.slice(1),
-      });
-
       const formattedMcqQuestions = questions.map((q) => ({
         questionText: q.questionText,
         options: (q.options ?? []).map((o) => o.text),
-        correctOptionNumber: correctOptionToNumber(q.correctOptionNumber),
+        correctOptionNumber: String(q.correctOptionNumber), 
         courseId: selectedCourse?.id ?? 0,
         subjectId: selectedSubject?.id ?? 0,
-        difficultyLevel: toDifficultyOption(q.difficultyLevel),
+        facultyId: user?.faculty?.id ?? 0,          
+        difficultyLevel: q.difficultyLevel,          
         status: EntityStatus.ACTIVE,
       }));
+
 
       const formattedWrittenQuestions = questions.map((q) => ({
         questionText: q.questionText,
         options: [] as string[],
-        correctOptionNumber: 0,
+        correctOptionNumber: null,
         courseId: selectedCourse?.id ?? 0,
         subjectId: selectedSubject?.id ?? 0,
-        difficultyLevel: toDifficultyOption(q.difficultyLevel),
+        facultyId: user?.faculty?.id ?? 0, 
+        difficultyLevel: q.difficultyLevel,   
         status: EntityStatus.ACTIVE,
       }));
 
@@ -241,11 +237,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
       // toast.success(`${mode === "create" ? "Created" : "Updated"} ${questions.length} question(s)`);
 
-      setQuestions([])
+      // setQuestions([])
       if (onSuccess) onSuccess();
     } catch (err: any) {
-      // toast.error(getErrorMessage(err));
-      console.log(err)
+      toast.error(getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -318,7 +313,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
         {/* RIGHT PANEL */}
         <Col span={16}>
           {
-            questionType === "mcq" ? <Card title={`Question ${selectedQuestionIndex + 1}`} size="small">
+            questionType === "mcq" && <Card title={`Question ${selectedQuestionIndex + 1}`} size="small">
 
               <Form.Item
                 label="Question Text"
@@ -338,8 +333,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
               <br />
 
               {(q?.options ?? []).map((opt, idx) => {
-                const labels = ["A", "B", "C", "D"];
-                const key = ["a", "b", "c", "d"][idx] as "a" | "b" | "c" | "d";
+                const labels = [1,2,3,4];
+                const key = [1,2,3,4][idx] as 1 | 2 | 3 | 4;
                 const isCorrect = q.correctOptionNumber === key;
 
                 return (
@@ -372,10 +367,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
                       value={q?.correctOptionNumber}
                       onChange={(val) => updateQuestionField("correctOptionNumber", val)}
                       options={[
-                        { label: "Option A", value: "a" },
-                        { label: "Option B", value: "b" },
-                        { label: "Option C", value: "c" },
-                        { label: "Option D", value: "d" },
+                        { label: "Option 1", value: 1 },
+                        { label: "Option 2", value: 2 },
+                        { label: "Option 3", value: 3 },
+                        { label: "Option 4", value: 4 },
                       ]}
                     />
                   </Form.Item>
@@ -414,7 +409,9 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
                   Cancel
                 </Button>
               )}
-            </Card> :
+            </Card> }
+            {
+              questionType === "written" && 
               <Card title={`Question ${selectedQuestionIndex + 1}`} size="small">
                 {/* Question Text */}
                 <Form.Item

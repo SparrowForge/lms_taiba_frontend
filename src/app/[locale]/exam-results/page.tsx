@@ -28,6 +28,8 @@ import { IExamResult } from '@/types/examResult';
 
 import { useSections } from '../../../hooks/useSections';
 import { useSemesterSubjects } from '../../../hooks/useSemesterSubjects';
+import { IExam } from '@/types/exam';
+import { IStudent } from '@/types/student';
 
 
 export default function ExamResultsPage() {
@@ -48,7 +50,7 @@ export default function ExamResultsPage() {
   const { loadExams, exams } = useExams()
   const { loadCourses, courses } = useCourses()
   const { loadExamTypes, examTypes } = useExamTypes()
-  const {sections, loadSections} = useSections()
+  const { sections, loadSections } = useSections()
 
   const { examResults, listStatus, pagination, loadExamResults, removeExamResult } =
     useExamResults();
@@ -92,7 +94,7 @@ export default function ExamResultsPage() {
   }, [loadExamTypes])
 
   useEffect(() => {
-    if(courseId){
+    if (courseId) {
       loadBatches({ page: 1, limit: 99, courseId })
     }
   }, [loadBatches, courseId])
@@ -117,7 +119,7 @@ export default function ExamResultsPage() {
 
   useEffect(() => {
     if (subjectId) {
-      loadExams({ page: 1, limit: 99, courseId,  subjectId, semesterId, batchId, examTypeId })
+      loadExams({ page: 1, limit: 99, courseId, subjectId, semesterId, batchId, examTypeId })
     }
   }, [subjectId, loadExams, courseId, semesterId, batchId, examTypeId])
 
@@ -242,16 +244,16 @@ export default function ExamResultsPage() {
     ],
     columns: [
       {
-        title: t(LOCALE_KEYS.EXAM_ID),
-        dataIndex: 'examId',
-        key: 'examId',
-        render: (text: number) => <span>{text}</span>,
+        title: t(LOCALE_KEYS.EXAM),
+        dataIndex:"exam",
+        key: 'exam',
+        render: (exam: IExam) => <span>{exam.name || 'N/A'}</span>,
       },
       {
-        title: t(LOCALE_KEYS.STUDENT_ID),
-        dataIndex: 'studentId',
-        key: 'studentId',
-        render: (text: number) => <span>{text}</span>,
+        title: t(LOCALE_KEYS.STUDENT),
+        dataIndex:"student",
+        key: 'student',
+        render: (student: IStudent) => <span>{student.applicationNo || 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.MARKS_OBTAINED),
@@ -263,13 +265,13 @@ export default function ExamResultsPage() {
         title: t(LOCALE_KEYS.GRADE),
         dataIndex: 'grade',
         key: 'grade',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <span>{text || 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.REMARKS),
         dataIndex: 'remarks',
         key: 'remarks',
-        render: (text: string) => <span>{text}</span>,
+        render: (text: string) => <span>{text || 'N/A'}</span>,
       },
       {
         title: t(LOCALE_KEYS.STATUS),
