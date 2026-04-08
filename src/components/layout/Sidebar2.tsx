@@ -161,86 +161,7 @@ export const Sidebar2 = React.memo(
       [locale],
     );
 
-    const menuItems = useMemo(() => {
-      const items = transformMenus(myMenus || []) || [];
-      // Manually inject Chart of Accounts if not present
-      /*
-      if (!items.find((item: any) => item?.key === '/chart-of-accounts')) {
-        items.push({
-          key: '/chart-of-accounts',
-          icon: <Icons.BankOutlined />,
-          label: t(LOCALE_KEYS.CHART_OF_ACCOUNTS, { defaultValue: 'Chart of Accounts' }),
-        });
-      }
-      */
-      // Actually, let's just append it for now as the user requested "make it available".
-      // Ideally this should come from backend, but explicit override is fine for dev.
-      const financialManagementLabel = t(LOCALE_KEYS.FINANCIAL_MANAGEMENT, {
-        defaultValue: 'Financial Management',
-      });
-
-      // Find existing Financial Management menu item
-      const financialManagementIndex = items.findIndex(
-        (item: any) =>
-          item?.label === financialManagementLabel || item?.label === 'Financial Management',
-      );
-
-      const newChildren = [
-        {
-          key: '/financial-years',
-          icon: <Icons.CalendarOutlined />,
-          label: t(LOCALE_KEYS.FINANCIAL_YEARS, { defaultValue: 'Financial Years' }),
-        },
-        {
-          key: '/chart-of-accounts',
-          icon: <Icons.BankOutlined />,
-          label: t(LOCALE_KEYS.CHART_OF_ACCOUNTS, { defaultValue: 'Chart of Accounts' }),
-        },
-        {
-          key: '/cost-centers',
-          icon: <Icons.ApartmentOutlined />,
-          label: t(LOCALE_KEYS.COST_CENTERS, { defaultValue: 'Cost Centers' }),
-        },
-
-        {
-          key: '/voucher-types',
-          icon: <Icons.FileTextOutlined />,
-          label: t(LOCALE_KEYS.VOUCHER_TYPES, { defaultValue: 'Voucher Types' }),
-        },
-        {
-          key: '/currencies',
-          icon: <Icons.DollarOutlined />,
-          label: t(LOCALE_KEYS.CURRENCY, { defaultValue: 'Currencies' }),
-        },
-        {
-          key: '/exchange-rates',
-          icon: <Icons.StockOutlined />,
-          label: t(LOCALE_KEYS.EXCHANGE_RATES, { defaultValue: 'Exchange Rates' }),
-        },
-        {
-          key: '/voucher-entry',
-          icon: <Icons.FormOutlined />,
-          label: t(LOCALE_KEYS.VOUCHER_ENTRY, { defaultValue: 'Voucher Entry' }),
-        },
-        {
-          key: '/voucher-list',
-          icon: <Icons.UnorderedListOutlined />,
-          label: t(LOCALE_KEYS.VOUCHER_LIST, { defaultValue: 'Voucher List' }),
-        },
-      ];
-
-      if (financialManagementIndex > -1) {
-        // If exists, clone and append children
-        const newItems = [...items];
-        const existingItem = { ...newItems[financialManagementIndex] } as any;
-        existingItem.children = [...(existingItem.children || []), ...newChildren];
-        newItems[financialManagementIndex] = existingItem;
-        return newItems;
-      }
-
-      // If not exists, create new one
-      return [...items];
-    }, [myMenus, transformMenus, t]);
+    const menuItems = useMemo(() => transformMenus(myMenus || []), [myMenus, transformMenus]);
 
     // Update selected keys and open keys when route changes
     useEffect(() => {
@@ -451,7 +372,7 @@ export const Sidebar2 = React.memo(
     const settingsMenuItems = useMemo(
       () => [
         {
-          key: 'settings-parent',
+          key: 'settings',
           icon: <SettingOutlined />,
           label: collapsed ? null : t(LOCALE_KEYS.SETTINGS),
           children: settingsMenuItemsDropdown,
