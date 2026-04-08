@@ -15,6 +15,7 @@ export interface IAccVoucherDetailChild {
   refType?: number; // 1=Bill, 2=Advance
   remarks?: string;
   costCenter?: { id: number; costName: string };
+  currency?: { id: number; code: string; symbol: string };
 }
 
 export interface IAccVoucherDetailChildCreate {
@@ -52,6 +53,7 @@ export interface IAccVoucherDetail {
     isMultiCurrency: string;
   };
   costCenter?: { id: number; costName: string };
+  currency?: { id: number; code: string; symbol: string };
   children: IAccVoucherDetailChild[];
 }
 
@@ -87,7 +89,37 @@ export interface IAccVoucher {
   fileExt?: string;
   fileSize?: number;
   financialYear?: { id: number; yearName: string };
-  branch?: { id: number; name: string };
+  branch?: {
+    id: number;
+    name: string;
+    code?: string;
+    instituteId?: number;
+    addressId?: number;
+    externalInstituteIdNo?: string;
+    institute?: {
+      id: number;
+      name: string;
+      website?: string | null;
+      address?: {
+        id: number;
+        phone?: string | null;
+        email?: string | null;
+        address?: string | null;
+        city?: string | null;
+        state?: string | null;
+        country?: string | null;
+      } | null;
+    } | null;
+    address?: {
+      id: number;
+      phone?: string | null;
+      email?: string | null;
+      address?: string | null;
+      city?: string | null;
+      state?: string | null;
+      country?: string | null;
+    } | null;
+  };
   department?: { id: number; name: string };
   details: IAccVoucherDetail[];
   createdBy?: string;

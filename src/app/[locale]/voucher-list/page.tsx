@@ -2,6 +2,7 @@
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { VoucherPrintModal } from '@/components/vouchers/VoucherPrintModal';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useLocalization } from '@/hooks/useLocalization';
 import { branchService } from '@/services/branchService';
@@ -18,6 +19,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
+  PrinterOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
 import {
@@ -78,6 +80,8 @@ export default function VoucherListPage() {
   const [selectedVoucher, setSelectedVoucher] = useState<IAccVoucher | null>(null);
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [printVoucher, setPrintVoucher] = useState<IAccVoucher | null>(null);
+  const [isPrintModalVisible, setIsPrintModalVisible] = useState(false);
 
   // Dropdown data
   const [voucherTypes, setVoucherTypes] = useState<IVoucherType[]>([]);
@@ -255,6 +259,15 @@ export default function VoucherListPage() {
       render: (_, record) => (
         <Space>
           <Button type="text" icon={<EyeOutlined />} onClick={() => handleViewVoucher(record)} />
+          <Button
+            type="text"
+            icon={<PrinterOutlined />}
+            onClick={() => {
+              setPrintVoucher(record);
+              setIsPrintModalVisible(true);
+            }}
+            title={t(LOCALE_KEYS.PRINT)}
+          />
           <Button
             type="text"
             icon={<EditOutlined />}
@@ -608,6 +621,15 @@ export default function VoucherListPage() {
               </>
             )}
           </Modal>
+
+          <VoucherPrintModal
+            voucher={printVoucher}
+            open={isPrintModalVisible}
+            onClose={() => {
+              setIsPrintModalVisible(false);
+              setPrintVoucher(null);
+            }}
+          />
         </div>
       </MainLayout>
     </ProtectedRoute>

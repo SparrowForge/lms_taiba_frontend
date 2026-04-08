@@ -2,9 +2,8 @@
 
 import { LineChartOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Typography } from 'antd';
-import Image from 'next/image';
 import { useLocale } from 'next-intl';
-import React from 'react';
+import Image from 'next/image';
 import { FaChalkboardTeacher } from 'react-icons/fa';
 import { IoIosPeople } from 'react-icons/io';
 import { PiStudentFill } from 'react-icons/pi';
@@ -54,7 +53,7 @@ const LeftComponent = () => {
       </div>
 
       <Title level={3} style={{ color: '#fff', marginBottom: 0, fontSize: '30px' }}>
-        {t(LOCALE_KEYS.EDUTRAIN_INSTITUTE)}
+        {t(LOCALE_KEYS.INSTITUTE_NAME)}
       </Title>
       <Text style={{ color: '#fff', fontSize: '18px' }}>{t(LOCALE_KEYS.ERP_TAGLINE)}</Text>
 

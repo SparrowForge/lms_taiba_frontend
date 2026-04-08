@@ -30,6 +30,7 @@ export const ALLOWED_ROUTES = [
   '/currencies',
   '/voucher-entry',
   '/voucher-list',
+  '/voucher-print',
 ];
 
 /**
