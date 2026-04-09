@@ -1,13 +1,11 @@
 'use client';
 
-import { CreditCardOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
-import { useState, useMemo, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useAuth } from '@/hooks/useAuth';
 import { useStudents } from '@/hooks/useStudents';
 
 // Your actual API data
-
 
 export default function PaymentsDashboard() {
   const { user } = useAuth();
@@ -19,8 +17,6 @@ export default function PaymentsDashboard() {
       loadStudentWithFeeInfo(user.student.id);
     }
   }, [loadStudentWithFeeInfo, user?.student?.id]);
-
-
 
   const calculatedData = useMemo(() => {
     if (!studentWithFeeInfo) {
@@ -68,12 +64,9 @@ export default function PaymentsDashboard() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold  mb-2">
-            Course Fees Payment
-          </h1>
+          <h1 className="text-4xl font-bold  mb-2">Course Fees Payment</h1>
           <p className="text-lg  ">
-            {studentWithFeeInfo?.student.firstName}{' '}
-            {studentWithFeeInfo?.student.lastName} •{' '}
+            {studentWithFeeInfo?.student.firstName} {studentWithFeeInfo?.student.lastName} •{' '}
             {studentWithFeeInfo?.student.course?.name ?? ''}
           </p>
         </div>
@@ -83,14 +76,10 @@ export default function PaymentsDashboard() {
           {/* Total Due */}
           <div className=" rounded-lg p-6 shadow-md border ">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold  ">
-                Total Due
-              </h3>
+              <h3 className="text-sm font-semibold  ">Total Due</h3>
               <ClockCircleOutlined className="text-2xl text-amber-500" />
             </div>
-            <p className="text-3xl font-bold  mb-2">
-              {formatCurrency(calculatedData.totalDue)}
-            </p>
+            <p className="text-3xl font-bold  mb-2">{formatCurrency(calculatedData.totalDue)}</p>
             <p className="text-sm  dark:text-slate-400">
               Out of {formatCurrency(studentWithFeeInfo?.feeStructure.totalFees)}
             </p>
@@ -99,14 +88,10 @@ export default function PaymentsDashboard() {
           {/* Total Paid */}
           <div className=" rounded-lg p-6 shadow-md border ">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold  ">
-                Total Paid
-              </h3>
+              <h3 className="text-sm font-semibold  ">Total Paid</h3>
               <CheckCircleOutlined className="text-2xl text-green-500" />
             </div>
-            <p className="text-3xl font-bold  mb-2">
-              {formatCurrency(calculatedData.totalPaid)}
-            </p>
+            <p className="text-3xl font-bold  mb-2">{formatCurrency(calculatedData.totalPaid)}</p>
             <p className="text-sm  dark:text-slate-400">
               {(() => {
                 const { totalPaid, totalFees } = calculatedData;
@@ -120,17 +105,11 @@ export default function PaymentsDashboard() {
           {/* Upcoming Payment */}
           <div className=" rounded-lg p-6 shadow-md border ">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold  ">
-                Next Payment
-              </h3>
+              <h3 className="text-sm font-semibold  ">Next Payment</h3>
               <CreditCardOutlined className="text-2xl text-blue-500" />
             </div>
-            <p className="text-3xl font-bold  mb-2">
-              {formatCurrency(22500)}
-            </p>
-            <p className="text-sm  dark:text-slate-400">
-              Level 2 Fee (Due Mar 31, 2026)
-            </p>
+            <p className="text-3xl font-bold  mb-2">{formatCurrency(22500)}</p>
+            <p className="text-sm  dark:text-slate-400">Level 2 Fee (Due Mar 31, 2026)</p>
           </div>
         </div>
 
@@ -139,18 +118,11 @@ export default function PaymentsDashboard() {
           {/* Installment Plans */}
           <div className="lg:col-span-2">
             <div className=" rounded-lg p-6 shadow-md border ">
-              <h2 className="text-2xl font-bold  mb-6">
-                Installment Schedule
-              </h2>
+              <h2 className="text-2xl font-bold  mb-6">Installment Schedule</h2>
               <div className="space-y-3">
                 {studentWithFeeInfo?.feeStructure.installmentPlans.map((plan, idx) => {
                   const status = calculatedData.installmentStatus[plan.paymentLabel] || 'pending';
-                  const statusColor =
-                    status === 'paid'
-                      ? ''
-                      : status === 'partial'
-                        ? ''
-                        : '';
+                  const statusColor = status === 'paid' ? '' : status === 'partial' ? '' : '';
 
                   const statusText =
                     status === 'paid'
@@ -158,39 +130,24 @@ export default function PaymentsDashboard() {
                       : status === 'partial'
                         ? 'Partially Paid'
                         : 'Pending';
-                  const statusTextColor =
-                    status === 'paid'
-                      ? ''
-                      : status === 'partial'
-                        ? ''
-                        : ' ';
+                  const statusTextColor = status === 'paid' ? '' : status === 'partial' ? '' : ' ';
 
                   return (
                     <div
                       key={plan.id}
                       className={`border rounded-lg p-4 cursor-pointer transition-all ${statusColor} hover:shadow-md`}
                       onClick={() =>
-                        setSelectedInstallment(
-                          selectedInstallment === plan.id ? null : plan.id
-                        )
+                        setSelectedInstallment(selectedInstallment === plan.id ? null : plan.id)
                       }
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="font-semibold ">
-                            {plan.paymentLabel}
-                          </h3>
-                          <p className="text-sm  ">
-                            Due: {formatDate(plan.dueDate)}
-                          </p>
+                          <h3 className="font-semibold ">{plan.paymentLabel}</h3>
+                          <p className="text-sm  ">Due: {formatDate(plan.dueDate)}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold ">
-                            {formatCurrency(plan.amount)}
-                          </p>
-                          <p className={`text-xs font-semibold ${statusTextColor}`}>
-                            {statusText}
-                          </p>
+                          <p className="font-bold ">{formatCurrency(plan.amount)}</p>
+                          <p className={`text-xs font-semibold ${statusTextColor}`}>{statusText}</p>
                         </div>
                       </div>
                       {selectedInstallment === plan.id && (
@@ -198,9 +155,7 @@ export default function PaymentsDashboard() {
                           <div className="grid grid-cols-2 gap-2 text-sm">
                             <div>
                               <p className="">Amount</p>
-                              <p className="font-semibold ">
-                                {formatCurrency(plan.amount)}
-                              </p>
+                              <p className="font-semibold ">{formatCurrency(plan.amount)}</p>
                             </div>
                           </div>
                         </div>
@@ -215,31 +170,18 @@ export default function PaymentsDashboard() {
           {/* Payment History */}
           <div>
             <div className=" rounded-lg p-6 shadow-md border ">
-              <h2 className="text-xl font-bold  mb-6">
-                Payment History
-              </h2>
+              <h2 className="text-xl font-bold  mb-6">Payment History</h2>
               <div className="space-y-4">
                 {studentWithFeeInfo?.paymentCollections.map((payment) => (
-                  <div
-                    key={payment.id}
-                    className="pb-4 border-b  last:border-0"
-                  >
+                  <div key={payment.id} className="pb-4 border-b  last:border-0">
                     <div className="flex justify-between items-start mb-2">
-                      <p className="font-semibold ">
-                        {formatCurrency(payment.amountPaid)}
-                      </p>
-                      <span
-                       
-                      >
+                      <p className="font-semibold ">{formatCurrency(payment.amountPaid)}</p>
+                      <span>
                         {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
                       </span>
                     </div>
-                    <p className="text-xs">
-                      {formatDate(payment.paymentDate)}
-                    </p>
-                    <p className="text-xs  ">
-                      {/* Ref: {payment.transactionRef || 'N/A'} */}
-                    </p>
+                    <p className="text-xs">{formatDate(payment.paymentDate)}</p>
+                    <p className="text-xs  ">{/* Ref: {payment.transactionRef || 'N/A'} */}</p>
                   </div>
                 ))}
               </div>

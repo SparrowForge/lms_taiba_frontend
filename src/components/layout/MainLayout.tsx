@@ -7,11 +7,11 @@ import { ToastContainer } from 'react-toastify';
 
 import { useNotifications } from '@/hooks/useNotifications';
 
-import { Sidebar2 } from './Sidebar2';
-import { useSidebar } from './SidebarContext';
 import ErrorBoundary from '../error/ErrorBoundary';
 import { NotificationBell } from '../notifications/NotificationBell';
 import { LanguageSwitcher } from '../ui/LanguageSwitcher';
+import { Sidebar2 } from './Sidebar2';
+import { useSidebar } from './SidebarContext';
 
 const { Header, Content } = Layout;
 
@@ -38,22 +38,14 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   const pathname = usePathname();
   const locale = pathname.split('/')[1];
 
-
-  const {
-    loadUnreadCount,
-    unreadCount,
-    loadNotifications,
-    notifications,
-  } = useNotifications();
+  const { loadUnreadCount, unreadCount, loadNotifications, notifications } = useNotifications();
 
   const isFirstLoad = useRef(true);
-
 
   useEffect(() => {
     loadUnreadCount();
     loadNotifications({ page: 1, limit: 10 });
   }, [loadUnreadCount, loadNotifications]);
-
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -63,30 +55,21 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     return () => clearInterval(interval);
   }, [loadUnreadCount]);
 
-
   useEffect(() => {
     if (unreadCount === undefined || unreadCount === null) return;
 
-    const storedCount = Number(
-      localStorage.getItem(UNREAD_COUNT_KEY) ?? 0
-    );
+    const storedCount = Number(localStorage.getItem(UNREAD_COUNT_KEY) ?? 0);
 
     // First-time sync
     if (isFirstLoad.current) {
-      localStorage.setItem(
-        UNREAD_COUNT_KEY,
-        unreadCount.toString()
-      );
+      localStorage.setItem(UNREAD_COUNT_KEY, unreadCount.toString());
       isFirstLoad.current = false;
       return;
     }
 
     // New notification detected
     if (unreadCount !== storedCount) {
-      localStorage.setItem(
-        UNREAD_COUNT_KEY,
-        unreadCount.toString()
-      );
+      localStorage.setItem(UNREAD_COUNT_KEY, unreadCount.toString());
 
       loadNotifications({ page: 1, limit: 10 });
     }
@@ -131,14 +114,13 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
       width: '100%',
       minWidth: 0,
       maxWidth: '100%',
+      overflowY: 'auto' as const,
+      height: 'calc(100vh - 64px)',
     }),
     [],
   );
 
-  const currentPath = useMemo(
-    () => pathname.split('?')[0],
-    [pathname],
-  );
+  const currentPath = useMemo(() => pathname.split('?')[0], [pathname]);
 
   const memoizedSidebar = useMemo(
     () => (
@@ -187,27 +169,18 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         {memoizedSidebar}
 
         <Layout style={layoutStyle}>
-          <Header
-            className="px-4 flex items-center justify-between h-16"
-            style={headerStyle}
-          >
+          <Header className="px-4 flex items-center justify-between h-16" style={headerStyle}>
             <div className="flex-1" />
 
             <div className="flex items-center gap-4">
-              <NotificationBell
-                unreadCount={unreadCount}
-                notifications={notifications}
-                
-              />
+              <NotificationBell unreadCount={unreadCount} notifications={notifications} />
               <LanguageSwitcher />
             </div>
           </Header>
 
           <Content style={contentStyle}>
             <ErrorBoundary>
-              <div style={{ width: '100%', minWidth: 0 }}>
-                {children}
-              </div>
+              <div style={{ width: '100%', minWidth: 0 }}>{children}</div>
             </ErrorBoundary>
           </Content>
         </Layout>

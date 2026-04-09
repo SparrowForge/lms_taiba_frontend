@@ -11,7 +11,6 @@ export const PUBLIC_ROUTES = [
   '/register-student',
   '/verify-2fa',
   '/reset-password',
-
 ];
 
 /**
@@ -28,6 +27,16 @@ export const ALLOWED_ROUTES = [
   '/events',
   '/discount-templates',
 
+  '/attendances',
+  '/chart-of-accounts',
+  '/cost-centers',
+  '/financial-years',
+  '/voucher-types',
+  '/exchange-rates',
+  '/currencies',
+  '/voucher-entry',
+  '/voucher-list',
+  '/voucher-print',
 ];
 
 /**
@@ -37,7 +46,7 @@ export const ALLOWED_ROUTES = [
 export const STUDENT_ALLOWED_ROUTES: string[] = [
   '/exam-instructions',
   '/participate-exam',
-  '/exam-complete'
+  '/exam-complete',
 ];
 
 /**
@@ -51,7 +60,7 @@ export const FACULTY_ALLOWED_ROUTES: string[] = [
   '/exam-questions',
   '/exam-submission',
   '/exam-results',
-  '/publish-result'
+  '/publish-result',
 ];
 
 /**
@@ -89,9 +98,7 @@ export const matchesPattern = (route: string, pattern: string): boolean => {
   const normalizedPattern = normalizeRoute(pattern);
 
   // Convert pattern to regex (replace * with [^/]+)
-  const regexPattern = normalizedPattern
-    .replace(/\*/g, '[^/]+')
-    .replace(/\//g, '\\/');
+  const regexPattern = normalizedPattern.replace(/\*/g, '[^/]+').replace(/\//g, '\\/');
   const regex = new RegExp(`^${regexPattern}$`);
 
   return regex.test(normalizedRoute);
@@ -151,9 +158,7 @@ const isRouteInAllowList = (routeWithoutLocale: string, allowList: string[]): bo
     if (allowedRoute.includes('*')) {
       return matchesPattern(routeWithoutLocale, allowedRoute);
     }
-    return (
-      routeWithoutLocale === allowedRoute || routeWithoutLocale.startsWith(allowedRoute + '/')
-    );
+    return routeWithoutLocale === allowedRoute || routeWithoutLocale.startsWith(allowedRoute + '/');
   });
 };
 
@@ -191,9 +196,7 @@ export const isRouteAccessible = (
       return matchesPattern(routeWithoutLocale, allowedRoute);
     }
     // Exact match or prefix match
-    return (
-      routeWithoutLocale === allowedRoute || routeWithoutLocale.startsWith(allowedRoute + '/')
-    );
+    return routeWithoutLocale === allowedRoute || routeWithoutLocale.startsWith(allowedRoute + '/');
   });
 
   if (isAllowed) {

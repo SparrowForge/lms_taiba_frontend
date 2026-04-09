@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import { PrinterOutlined, DownloadOutlined, EditOutlined } from '@ant-design/icons'
-import { Card, Tag, Row, Col, Button, Space, } from 'antd'
-import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { DownloadOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Row, Space, Tag } from 'antd';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
 
-import { useStudents } from '@/hooks/useStudents'
+import { useStudents } from '@/hooks/useStudents';
 
-import type { IStudent, } from '@/types/student'
+import type { IStudent } from '@/types/student';
 
-import StudentFormDrawer from './StudentFormDrawer'
+import StudentFormDrawer from './StudentFormDrawer';
 
 interface StudentHeaderProps {
-  student: IStudent
+  student: IStudent;
 }
 
 export default function StudentHeader({ student }: StudentHeaderProps) {
-  const { id } = useParams()
-  const initials = student?.firstName.charAt(0) + student?.lastName.charAt(0)
-  const { loadStudent } = useStudents()
+  const { id } = useParams();
+  const initials = student?.firstName.charAt(0) + student?.lastName.charAt(0);
+  const { loadStudent } = useStudents();
 
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
@@ -73,8 +73,12 @@ export default function StudentHeader({ student }: StudentHeaderProps) {
           <Col span={24} md={6}>
             <div className="border-l-4 border-purple-500 pl-4">
               <p className="text-xs text-gray-500 mb-1">FEE STATUS</p>
-              <Tag color="orange" className="mb-1">Assigned</Tag>
-              <p className="text-xs text-gray-500 mt-5">{student?.feeStructure?.totalFees} {student?.feeStructure?.currency}</p>
+              <Tag color="orange" className="mb-1">
+                Assigned
+              </Tag>
+              <p className="text-xs text-gray-500 mt-5">
+                {student?.feeStructure?.totalFees} {student?.feeStructure?.currency}
+              </p>
             </div>
           </Col>
 
@@ -97,8 +101,14 @@ export default function StudentHeader({ student }: StudentHeaderProps) {
         <Row justify="end" className="mt-6 pt-4">
           <Space>
             <Button icon={<PrinterOutlined />}>Print</Button>
-            <Button onClick={() => window.print()} icon={<DownloadOutlined />}>Export</Button>
-            <Button onClick={() => handleEditDrawer(Number(id))} type="primary" icon={<EditOutlined />}>
+            <Button onClick={() => window.print()} icon={<DownloadOutlined />}>
+              Export
+            </Button>
+            <Button
+              onClick={() => handleEditDrawer(Number(id))}
+              type="primary"
+              icon={<EditOutlined />}
+            >
               Edit Profile
             </Button>
           </Space>
@@ -113,5 +123,5 @@ export default function StudentHeader({ student }: StudentHeaderProps) {
         onSuccess={handleDrawerSuccess}
       />
     </div>
-  )
+  );
 }

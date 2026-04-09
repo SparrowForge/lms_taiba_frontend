@@ -20,14 +20,13 @@ import { useWeekDays } from '@/hooks/useWeekDays';
 import { getErrorMessage } from '@/types/errors';
 import { IExamSchedule, IExamScheduleCreate, IExamScheduleUpdate } from '@/types/examSchedule';
 
+import { IExam } from '@/types/exam';
 import FormLayout from '../layout/FormLayout';
+import TimeSlotFormDrawer from '../timeSlots/TimeSlotFormDrawer';
 import QuickAddDrawerButton from '../ui/QuickAddDrawerButton';
 import { StatusSelectFormItem } from '../ui/StatusSelect';
-import TimeSlotFormDrawer from '../timeSlots/TimeSlotFormDrawer';
-import { IExam } from '@/types/exam';
 
 const { Option } = Select;
-
 
 interface ExamScheduleFormProps {
   mode: 'create' | 'edit';
@@ -37,10 +36,10 @@ interface ExamScheduleFormProps {
   onCancel?: () => void;
   embedded?: boolean;
   fullWidth?: boolean;
-  response:IExam;
-  setResponse:React.Dispatch<React.SetStateAction<IExamSchedule>>
-  setCurrent:React.Dispatch<React.SetStateAction<number>>
-  current:number
+  response: IExam;
+  setResponse: React.Dispatch<React.SetStateAction<IExamSchedule>>;
+  setCurrent: React.Dispatch<React.SetStateAction<number>>;
+  current: number;
 }
 
 const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
@@ -53,7 +52,7 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
   fullWidth = false,
   response,
   setCurrent,
-  current
+  current,
 }) => {
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.EXAM_SCHEDULE, { defaultValue: 'Exam Schedule' });
@@ -65,7 +64,7 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
 
   const { weekDays, loadWeekDays } = useWeekDays();
   const { timeSlots, loadTimeSlots } = useTimeSlots();
-  const {user} = useAuth()
+  const { user } = useAuth();
 
   useEffect(() => {
     if (mode === 'create') {
@@ -74,22 +73,22 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
   }, [mode, form]);
 
   useEffect(() => {
-    if(response){
+    if (response) {
       loadExam(response.id);
       loadRoom(response.roomId);
     }
-   
+
     loadWeekDays();
     loadTimeSlots();
   }, [loadExam, loadRoom, loadWeekDays, loadTimeSlots, response]);
 
   const handleSubmit = async (values: Partial<IExamSchedule>) => {
     try {
-      const payload = { 
-        ...values, 
-        examId:selectedExam?.id,
-        roomId:selectedRoom?.id
-       };
+      const payload = {
+        ...values,
+        examId: selectedExam?.id,
+        roomId: selectedRoom?.id,
+      };
 
       if (mode === 'create') {
         await createExamSchedule(payload as IExamScheduleCreate);
@@ -107,7 +106,7 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
           onSuccess();
         } else {
           // router.push(`/exam-schedules/${examScheduleId}`);
-          setCurrent(current + 1)
+          setCurrent(current + 1);
         }
       }
     } catch (error: unknown) {
@@ -140,8 +139,6 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
       ? t(LOCALE_KEYS.CREATE_NAME, { name: entityName })
       : t(LOCALE_KEYS.UPDATE_NAME, { name: entityName });
 
-
-
   const formContent = (
     <Form
       form={form}
@@ -150,26 +147,24 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
       onFinish={handleSubmit}
       disabled={actionStatus.status === Status.LOADING}
     >
-     <Card title="Faculty Details" bordered className="shadow-sm" style={{marginBottom:"10px"}}>
-      <Row gutter={[16, 16]}>
-        <Col span={12}>
-          <strong>Exam:</strong>
-          <div>{selectedExam?.name || "—"}</div>
-        </Col>
+      <Card title="Faculty Details" bordered className="shadow-sm" style={{ marginBottom: '10px' }}>
+        <Row gutter={[16, 16]}>
+          <Col span={12}>
+            <strong>Exam:</strong>
+            <div>{selectedExam?.name || '—'}</div>
+          </Col>
 
-        <Col span={12}>
-          <strong>Room:</strong>
-          <div>{selectedRoom?.name || "—"}</div>
-        </Col>
+          <Col span={12}>
+            <strong>Room:</strong>
+            <div>{selectedRoom?.name || '—'}</div>
+          </Col>
 
-
-        <Col span={12}>
-          <strong>Faculty:</strong>
-          <div>{user?.faculty?.fullName || "—"}</div>
-        </Col>
-       
-      </Row>
-    </Card>
+          <Col span={12}>
+            <strong>Faculty:</strong>
+            <div>{user?.faculty?.fullName || '—'}</div>
+          </Col>
+        </Row>
+      </Card>
 
       <Form.Item
         name="weekDayId"
