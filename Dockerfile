@@ -1,53 +1,50 @@
-# Use the official Node.js runtime as the base image
-FROM node:18-alpine AS base
-
-# Install Bun and other dependencies
-RUN apk add --no-cache libc6-compat curl unzip bash
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:$PATH"
-RUN bun --version
-
-# Install dependencies
-FROM base AS deps
+# Stage 1: Dependency installation
+FROM oven/bun:1-alpine AS deps
 WORKDIR /app
+
+# Install system dependencies needed for building
+RUN apk add --no-cache libc6-compat python3 make g++
+
+# Copy package files
 COPY package.json bun.lock* ./
+
+# Install dependencies using Bun
 RUN bun install --frozen-lockfile
 
-# Build the application
-FROM base AS builder
+# Stage 2: Application build
+FROM oven/bun:1-alpine AS builder
 WORKDIR /app
+
+# Set environment variables for memory optimization
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+# Hard limit memory during build to prevent OOM on 2GB server
+ENV NODE_OPTIONS="--max-old-space-size=1024"
+# Limit Next.js build workers to reduce memory spikes
+ENV NEXT_BUILD_WORKERS=1
+
+# Copy node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
+# Copy application source
 COPY . .
 
-# Set environment variables for memory optimization (1.9GB server)
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
-ENV NODE_OPTIONS="--max-old-space-size=1024 --max-semi-space-size=64"
-ENV BUN_OPTIONS="--max-old-space-size=1024"
+# Build the application
+# We use bun run build which calls next build
+RUN bun run build
 
-# Set build-specific optimizations for low memory
-ENV NEXT_BUILD_WORKERS=1
-ENV NEXT_BUILD_MEMORY_LIMIT=1024
-
-# Use optimized build script
-COPY build-optimized.sh ./
-RUN chmod +x build-optimized.sh
-RUN ./build-optimized.sh
-
-# Production image
-FROM base AS runner
+# Stage 3: Production runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Create system user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
+# Create a system user for security
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Copy assets and built app
+# Copy essential files from builder
 COPY --from=builder /app/public ./public
-RUN mkdir .next && chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
@@ -57,7 +54,8 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:3000/api/health || exit 1
+# Healthcheck to verify the app is responding
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:3000/api/health', (res) => { if (res.statusCode === 200) process.exit(0); else process.exit(1); })" || exit 1
 
 CMD ["node", "server.js"]
