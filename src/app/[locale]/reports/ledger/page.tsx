@@ -2,12 +2,12 @@
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { ReportFooter, ReportHeader } from '@/components/reports/ReportHeaderFooter';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useLocalization } from '@/hooks/useLocalization';
 import { accReportsService } from '@/services/accReportsService';
 import { branchService } from '@/services/branchService';
 import { chartOfAccountsService } from '@/services/chartOfAccountsService';
-import { ReportFooter, ReportHeader } from '@/components/reports/ReportHeaderFooter';
 import { currencyService } from '@/services/currencyService';
 import { IBranch } from '@/types/branch';
 import { IChartOfAccount } from '@/types/chartOfAccounts';
@@ -28,10 +28,11 @@ const getLeafNodes = (items: any[]): any[] => {
   const leaves: any[] = [];
   const traverse = (nodes: any[]) => {
     for (const node of nodes) {
+      if (node.isTransaction && node.status === '1') {
+        leaves.push(node);
+      }
       if (node.children && node.children.length > 0) {
         traverse(node.children);
-      } else {
-        leaves.push(node);
       }
     }
   };
@@ -90,7 +91,7 @@ export default function LedgerReportPage() {
         `${dayjs(values.dateRange[0]).format('DD-MMM-YYYY')} To ${dayjs(values.dateRange[1]).format('DD-MMM-YYYY')}`,
       );
       const bId = values.branchId;
-      const foundBranch = bId ? branches.find(b => Number(b.id) === Number(bId)) || null : null;
+      const foundBranch = bId ? branches.find((b) => Number(b.id) === Number(bId)) || null : null;
       setSelectedBranch(foundBranch);
       setBranchStr(foundBranch ? foundBranch.name : t(LOCALE_KEYS.ALL_BRANCHES));
 
@@ -284,7 +285,6 @@ export default function LedgerReportPage() {
                 currencyCode={defaultCurrencyCode}
               />
 
-
               <table className="ledger-summary-table w-full border-collapse border border-black mb-4 align-top text-sm">
                 <thead>
                   <tr className="bg-gray-100">
@@ -329,7 +329,9 @@ export default function LedgerReportPage() {
                 bordered
                 size="small"
                 rowClassName={(record) => 'align-top'}
-                title={() => <span className="font-bold">{t(LOCALE_KEYS.TRANSACTION_DETAILS)}</span>}
+                title={() => (
+                  <span className="font-bold">{t(LOCALE_KEYS.TRANSACTION_DETAILS)}</span>
+                )}
                 className="print-table"
               />
 

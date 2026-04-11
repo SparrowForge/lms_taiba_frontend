@@ -57,10 +57,11 @@ const getLeafNodes = (items: any[]): any[] => {
   const leaves: any[] = [];
   const traverse = (nodes: any[]) => {
     for (const node of nodes) {
+      if (node.isTransaction && node.status === '1') {
+        leaves.push(node);
+      }
       if (node.children && node.children.length > 0) {
         traverse(node.children);
-      } else {
-        leaves.push(node);
       }
     }
   };

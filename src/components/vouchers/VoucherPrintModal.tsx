@@ -230,7 +230,7 @@ export const VoucherPrintModal = ({ voucher, open, onClose }: VoucherPrintModalP
                     {t(LOCALE_KEYS.PARTICULARS)}
                   </th>
                   <th className="text-center" colSpan={2}>
-                    {t(LOCALE_KEYS.AMOUNT)} ({defaultCurrency?.symbol || 'TK.'})
+                    {t(LOCALE_KEYS.AMOUNT)} ({defaultCurrency?.code || 'TK.'})
                   </th>
                 </tr>
                 <tr>
