@@ -12,7 +12,6 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
 import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
 import { PageHeader } from '@/components/ui/PageHeader';
-
 import { useAddresses } from '@/hooks/useAddresses';
 import { useLocalization } from '@/hooks/useLocalization';
 
