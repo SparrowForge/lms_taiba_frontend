@@ -1,32 +1,31 @@
 'use client';
 
 import {
-    AppstoreOutlined,
-    BookOutlined,
-    CalendarOutlined,
-    CheckCircleOutlined,
-    ClockCircleOutlined,
-    EditOutlined,
-    EnvironmentOutlined,
-    FileTextOutlined,
-    ReloadOutlined,
-    StarOutlined,
-    TeamOutlined,
-    UploadOutlined,
-    UserOutlined,
-    ZoomInOutlined,
+  AppstoreOutlined,
+  BookOutlined,
+  CalendarOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  EditOutlined,
+  EnvironmentOutlined,
+  FileTextOutlined,
+  ReloadOutlined,
+  TeamOutlined,
+  UploadOutlined,
+  UserOutlined,
+  ZoomInOutlined,
 } from '@ant-design/icons';
-import {Button, Descriptions, Divider, Drawer, Tag} from 'antd';
+import { Button, Descriptions, Divider, Drawer, Tag } from 'antd';
 import dayjs from 'dayjs';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
-import {LOCALE_KEYS} from '@/constants/localizationKeys';
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
-import {useLocalization} from '@/hooks/useLocalization';
+import { useLocalization } from '@/hooks/useLocalization';
 
-import {IClassSchedule} from '@/types/classSchedule';
 import CourseAssignmentFormDrawer from '@/components/courseAssignments/CourseAssignmentFormDrawer';
+import { IClassSchedule } from '@/types/classSchedule';
 
 interface ScheduleDetailsDrawerProps {
   schedule: IClassSchedule | null;
@@ -41,16 +40,16 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
   onClose,
   clickedDate,
 }) => {
-  const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create')
-  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<number | undefined>();
+  const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
+  const [selectedCourseAssignmentId, setSelectedCourseAssignmentId] = useState<
+    number | undefined
+  >();
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const { t } = useLocalization();
   const router = useRouter();
 
   if (!schedule) return null;
-
-
 
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format('MMMM D, YYYY');
@@ -85,13 +84,16 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
       }
     }
 
+    console.log('attendanceId', attendanceId);
+
     if (attendanceId) {
       router.push(`/attendances/${attendanceId}/mark`);
-    } else {
-      // If no attendance exists, create new one with schedule and date info
-      const dateParam = clickedDate ? `&date=${dayjs(clickedDate).format('YYYY-MM-DD')}` : '';
-      router.push(`/attendances/create?scheduleId=${schedule.id}${dateParam}`);
     }
+    // else {
+    //   // If no attendance exists, create new one with schedule and date info
+    //   const dateParam = clickedDate ? `&date=${dayjs(clickedDate).format('YYYY-MM-DD')}` : '';
+    //   router.push(`/attendances/create?scheduleId=${schedule.id}${dateParam}`);
+    // }
     onClose();
   };
 
@@ -111,19 +113,19 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
     onClose();
   };
 
-    const handleCreateDrawer = () => {
+  const handleCreateDrawer = () => {
     setSelectedCourseAssignmentId(undefined);
     setDrawerMode('create');
     setDrawerVisible(true);
   };
-    const handleDrawerSuccess = () => {
+  const handleDrawerSuccess = () => {
     setDrawerVisible(false);
     // loadCourseAssignments({ page: 1, limit: 10 });
   };
 
   const handleStartClass = () => {
-    console.log("Start Class", schedule.zoomSession?.startUrl)
-  }
+    console.log('Start Class', schedule.zoomSession?.startUrl);
+  };
 
   return (
     <Drawer
@@ -187,8 +189,8 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
             onClick={handleStartClass}
             block
             className="h-10"
-            target='_blank'
-            href={schedule.zoomSession?.startUrl && schedule.zoomSession?.startUrl || undefined}
+            target="_blank"
+            href={(schedule.zoomSession?.startUrl && schedule.zoomSession?.startUrl) || undefined}
           >
             Start Class
           </Button>
@@ -366,15 +368,15 @@ const ScheduleDetailsDrawer: React.FC<ScheduleDetailsDrawerProps> = ({
       </Descriptions>
 
       <CourseAssignmentFormDrawer
-          mode={drawerMode}
-          courseAssignmentId={selectedCourseAssignmentId}
-          visible={drawerVisible}
-          onCancel={() => setDrawerVisible(false)}
-          onSuccess={handleDrawerSuccess}
-          isAdmin={false}
-          subjectId={schedule.subjectId}
-          semesId={schedule.semesterId}
-          batId={schedule.batchId}
+        mode={drawerMode}
+        courseAssignmentId={selectedCourseAssignmentId}
+        visible={drawerVisible}
+        onCancel={() => setDrawerVisible(false)}
+        onSuccess={handleDrawerSuccess}
+        isAdmin={false}
+        subjectId={schedule.subjectId}
+        semesId={schedule.semesterId}
+        batId={schedule.batchId}
       />
     </Drawer>
   );

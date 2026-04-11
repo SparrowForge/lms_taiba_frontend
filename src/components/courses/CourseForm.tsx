@@ -1,6 +1,17 @@
 'use client';
 
-import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+  Switch,
+  Typography,
+} from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -304,6 +315,59 @@ const CourseForm: React.FC<CourseFormProps> = ({
           style={{ width: '100%' }}
         />
       </Form.Item>
+
+      <Form.Item
+        name="durationInMonths"
+        label={t(LOCALE_KEYS.DURATION_MONTHS)}
+        rules={[
+          {
+            required: true,
+            message: t(LOCALE_KEYS.ENTER_DURATION_MONTHS, {
+              defaultValue: 'Please enter duration in months',
+            }),
+          },
+        ]}
+      >
+        <InputNumber
+          min={1}
+          max={120}
+          style={{ width: '100%' }}
+          placeholder="e.g. 12"
+        />
+      </Form.Item>
+
+      <Form.Item
+        name="totalCreditHours"
+        label={t(LOCALE_KEYS.CREDIT_HOURS)}
+      >
+        <InputNumber
+          min={0}
+          max={500}
+          style={{ width: '100%', minWidth: 50 }}
+          placeholder="e.g. 120"
+        />
+      </Form.Item>
+
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            name="summerTrainingRequired"
+            label={t(LOCALE_KEYS.SUMMER_TRAINING_REQUIRED)}
+            valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            name="summerAcceleration"
+            label={t(LOCALE_KEYS.SUMMER_ACCELERATION)}
+            valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         name="description"

@@ -223,12 +223,6 @@ export default function FeeInstallmentPlansPage() {
         render: (text: string) => <span>{text}</span>,
       },
       {
-        title: t(LOCALE_KEYS.DISCOUNT_AMOUNT, { defaultValue: 'Discount Amount' }),
-        dataIndex: 'discountAmount',
-        key: 'discountAmount',
-        render: (text: string) => <span>{text}</span>,
-      },
-      {
         title: t(LOCALE_KEYS.DUE_DATE, { defaultValue: 'Due Date' }),
         dataIndex: 'dueDate',
         key: 'dueDate',

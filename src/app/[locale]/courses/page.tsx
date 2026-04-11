@@ -147,6 +147,12 @@ export default function CoursesPage() {
         render: (text: number) => <span>{text}</span>,
       },
       {
+        title: t(LOCALE_KEYS.DURATION_MONTHS),
+        dataIndex: 'durationInMonths',
+        key: 'durationInMonths',
+        render: (text: number) => <span>{text ?? '—'}</span>,
+      },
+      {
         title: t(LOCALE_KEYS.DEPARTMENT),
         dataIndex: 'department',
         key: 'department',

@@ -11,8 +11,6 @@ export interface IFeeStructure {
   paymentType: string;
   totalFees: number;
   admissionFee: number;
-  discountType: string;
-  discountAmount: number;
   currency: string;
   remarks: string;
   status: string;
@@ -32,8 +30,6 @@ export interface IFeeStructureCreate {
   paymentType: string;
   totalFees: number;
   admissionFee: number;
-  discountType: string;
-  discountAmount: number;
   currency: string;
   remarks: string;
   status: string;
@@ -47,8 +43,6 @@ export interface IFeeStructureUpdate {
   paymentType?: string;
   totalFees?: number;
   admissionFee?: number;
-  discountType?: string;
-  discountAmount?: number;
   currency?: string;
   remarks?: string;
   status?: string;

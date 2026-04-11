@@ -109,8 +109,8 @@ const ExamSubmissionReviewPage = () => {
           <Empty description="Loading submission..." />
         ) : (
           <>
-            {/* 🔹 Exam & Student Info */}
-            <Card>
+
+            <Card style={{ display: "flex", justifyContent: "space-between" }}>
               <Title level={4}>{selectedExamSubmission.exam.name}</Title>
               <Text>
                 Student:{" "}
@@ -126,9 +126,10 @@ const ExamSubmissionReviewPage = () => {
             {/* 🔹 Scrollable Review Area */}
             <div
               style={{
-                maxHeight: "65vh",
+                height: "65vh",
                 overflowY: "auto",
                 paddingRight: 8,
+                margin: "0 24px"
               }}
             >
               {
@@ -213,7 +214,7 @@ const ExamSubmissionReviewPage = () => {
                 position: "sticky",
                 bottom: 0,
                 background: "#fff",
-                padding: "12px 0",
+                padding: "12px 64px",
                 borderTop: "1px solid #f0f0f0",
                 textAlign: "right",
               }}

@@ -10,6 +10,10 @@ import { useLocalization } from '@/hooks/useLocalization';
 import { useStudentFamilies } from '@/hooks/useStudentFamilies';
 
 import StudentFamilyForm from './StudentFamilyForm';
+import { useParams } from 'next/navigation';
+import { UserType } from '@/enums/user-type.enum';
+import StudentFamilyFormForStudent from '../students/StudentFamilyFormForStudent';
+import { useAuth } from '@/hooks/useAuth';
 
 interface StudentFamilyFormDrawerProps {
   mode: 'create' | 'edit';
@@ -30,6 +34,8 @@ const StudentFamilyFormDrawer: React.FC<StudentFamilyFormDrawerProps> = ({
     useStudentFamilies();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT_FAMILY, { defaultValue: 'Student Family' });
+  const { id } = useParams()
+  const { user } = useAuth()
 
   useEffect(() => {
     if (visible && mode === 'edit' && studentFamilyId) {
@@ -63,14 +69,23 @@ const StudentFamilyFormDrawer: React.FC<StudentFamilyFormDrawerProps> = ({
       onClose={handleCancel}
       destroyOnHidden={true}
     >
-      <StudentFamilyForm
-        mode={mode}
-        studentFamilyId={studentFamilyId}
-        initialValues={selectedStudentFamily || undefined}
-        onSuccess={handleSuccess}
-        onCancel={handleCancel}
-        embedded={true}
-      />
+      {
+        id || user?.type === UserType.STUDENT ? <StudentFamilyFormForStudent
+          mode={mode}
+          studentFamilyId={id || user?.student?.id}
+          initialValues={selectedStudentFamily || undefined}
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
+          embedded={true}
+        /> : <StudentFamilyForm
+          mode={mode}
+          studentFamilyId={studentFamilyId}
+          initialValues={selectedStudentFamily || undefined}
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
+          embedded={true}
+        />
+      }
     </Drawer>
   );
 };

@@ -30,8 +30,6 @@ export default function BatchesPage() {
   const entityName = t(LOCALE_KEYS.BATCH, { defaultValue: 'Batch' });
   const router = useRouter();
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const [selectedBatchId, setSelectedBatchId] = useState<number | undefined>();
   const [detailsDrawerVisible, setDetailsDrawerVisible] = useState(false);
   const [selectedDetailsBatchId, setSelectedDetailsBatchId] = useState<number | undefined>();
 
@@ -62,14 +60,10 @@ export default function BatchesPage() {
   }, [searchParams, skip, limit, loadBatches, loadCourses]);
 
   const handleEditDrawer = (batchId: number) => {
-    setSelectedBatchId(batchId);
-    setDrawerMode('edit');
-    setDrawerVisible(true);
+    router.push(`/batches/${batchId}/edit`);
   };
 
   const handleCreateDrawer = () => {
-    setSelectedBatchId(undefined);
-    setDrawerMode('create');
     setDrawerVisible(true);
   };
 
@@ -85,9 +79,7 @@ export default function BatchesPage() {
 
   const handleDetailsEdit = (batchId: number) => {
     setDetailsDrawerVisible(false);
-    setSelectedBatchId(batchId);
-    setDrawerMode('edit');
-    setDrawerVisible(true);
+    router.push(`/batches/${batchId}/edit`);
   };
 
   const config: EntityConfig<IBatch> = {
@@ -230,8 +222,6 @@ export default function BatchesPage() {
         </AsyncErrorBoundary>
 
         <BatchFormDrawer
-          mode={drawerMode}
-          batchId={selectedBatchId}
           visible={drawerVisible}
           onCancel={() => setDrawerVisible(false)}
           onSuccess={handleDrawerSuccess}

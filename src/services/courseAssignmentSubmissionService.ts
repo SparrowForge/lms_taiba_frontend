@@ -39,8 +39,8 @@ export const courseAssignmentSubmissionService = {
     id: number,
     data: ICourseAssignmentSubmissionUpdate,
   ): Promise<ICourseAssignmentSubmission> => {
-    const response = await api.put<ICourseAssignmentSubmission>(
-      `/course-assignment-submissions/${id}`,
+    const response = await api.post<ICourseAssignmentSubmission>(
+      `/course-assignment-submissions/${id}/grade`,
       data,
     );
     return response.data;

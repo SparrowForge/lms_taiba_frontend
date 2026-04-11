@@ -32,11 +32,20 @@ export interface IExamCandidateUpdate {
 
 export interface IExamCandidateBulkItem {
   studentId: number;
-  rollNo: string;
+  // rollNo: string;
   status: EntityStatus;
 }
 
 export interface ICreateExamCandidateBulk {
   examId: number;
   candidates: IExamCandidateBulkItem[];
+}
+
+
+// types/examCandidate.ts
+
+export interface ICreateExamCandidateBulkResponse {
+  removedCount: number;
+  createdCount: number;
+  candidates: IExamCandidate[];
 }

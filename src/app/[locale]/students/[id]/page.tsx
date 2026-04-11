@@ -1,22 +1,33 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { MainLayout } from '@/components/layout/MainLayout';
+import BasicInformation from '@/components/students/BasicInformation';
+import ContactInformation from '@/components/students/ContactInformation';
+import EnrollmentInformation from '@/components/students/EnrollmentInformation';
+import PaymentDetails from '@/components/students/PaymentDetails';
+import PreviousAcademicHistory from '@/components/students/PreviousAcademicHistory';
+import ProfileTabs from '@/components/students/ProfileTabs';
+import StudentAttendanceRecord from '@/components/students/StudentAttendanceRecord';
 import { useCreateStudentDetailsConfig } from '@/components/students/studentConfig';
-import { EntityDetails } from '@/components/ui/EntityDetails';
-import { EntityDetailsConfig } from '@/components/ui/EntityDetailsContent';
+import StudentFamilyInfo from '@/components/students/StudentFamilyInfo';
+import StudentHeader from '@/components/students/StudentHeader';
 
 import { useLocalization } from '@/hooks/useLocalization';
 import { useStudents } from '@/hooks/useStudents';
 
-import { IStudent } from '@/types/student';
+import AcademicResult from '@/components/students/AcademicResult';
+import StudentAcademicRecord from '@/components/students/StudentAcademicRecord';
+import StudentDocuments from '@/components/students/StudentDocuments';
+import { ActivityTimeline } from '../../../../components/students/ActivityTimeline';
 
 export default function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const [activeTab, setActiveTab] = useState('personal');
   const { selectedStudent, detailsStatus, loadStudent } = useStudents();
   const { t } = useLocalization();
   const entityName = t(LOCALE_KEYS.STUDENT, { defaultValue: 'Student' });
@@ -38,10 +49,51 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
       : null,
   );
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'personal':
+        return (
+          <>
+            <BasicInformation student={selectedStudent} />
+            <ContactInformation student={selectedStudent} />
+            {/* <AcademicInformation student={selectedStudent} /> */}
+            <EnrollmentInformation student={selectedStudent} />
+          </>
+        );
+      case 'guardian':
+        return <StudentFamilyInfo />;
+      case 'previous-data':
+        return <PreviousAcademicHistory />;
+      case 'documents':
+        return <StudentDocuments />;
+      case 'academic':
+        return <StudentAcademicRecord studentInfo={selectedStudent} />;
+      case 'fees':
+        return <PaymentDetails />;
+      case 'grades':
+        return <AcademicResult />;
+      case 'attendance':
+        return <StudentAttendanceRecord />;
+      case 'activity':
+        return <ActivityTimeline />;
+    }
+  };
+
   return (
     <ProtectedRoute>
       <MainLayout>
-        <EntityDetails config={config as EntityDetailsConfig<IStudent>} />
+        {/* <EntityDetails config={config as EntityDetailsConfig<IStudent>} /> */}
+        <div className="py-6 px-4 h-screen overflow-y-auto">
+          <div className=" mx-auto">
+            <StudentHeader student={selectedStudent} />
+
+            <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab}>
+              {renderTabContent()}
+            </ProfileTabs>
+
+            <div className="mt-8 ">{renderTabContent()}</div>
+          </div>
+        </div>
       </MainLayout>
     </ProtectedRoute>
   );

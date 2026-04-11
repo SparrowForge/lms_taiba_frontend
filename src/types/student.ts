@@ -1,15 +1,20 @@
-import {StudentStatus} from '@/enums';
+import { StudentStatus } from '@/enums';
 
-import {IAddressCreate} from './address';
-import {IBatch} from './batch';
-import {IBranch} from './branch';
-import {ICourse} from './course';
-import {IFeePaymentCollection} from './feePaymentCollection';
-import {IFeeStructure} from './feeStructure';
-import {ISemester} from './semester';
-import {IStudentEducationCreate} from './studentEducation';
-import {IStudentProfile, IStudentProfileCreate} from './studentProfile';
-import {ISubjectWithFaculty} from './subject';
+import { IAddressCreate } from './address';
+import { IBatch } from './batch';
+import { IBranch } from './branch';
+import { ICourse } from './course';
+import { IFeePaymentCollection } from './feePaymentCollection';
+import { IFeeStructure } from './feeStructure';
+import { ISemester } from './semester';
+import { IStudentEducationCreate } from './studentEducation';
+import { IStudentProfile, IStudentProfileCreate } from './studentProfile';
+import { ISubjectWithFaculty } from './subject';
+import { IDiscountTemplate } from './discountTemplate';
+
+import { IExamResult } from './examResult';
+import { IAttendance } from './attendance';
+import { ISubjectExamResult } from './subjectResult';
 
 export interface IStudent {
   id: number;
@@ -28,6 +33,7 @@ export interface IStudent {
   admissionSource: string;
   status: StudentStatus;
   feeStructureId: number;
+  discountTemplateIds?: number[];
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -36,6 +42,7 @@ export interface IStudent {
   branch: IBranch | null;
   profile: IStudentProfile | null;
   feeStructure: IFeeStructure | null;
+  discountTemplates?: IDiscountTemplate[] | null;
 }
 
 export interface IStudentCreate {
@@ -54,6 +61,7 @@ export interface IStudentCreate {
   admissionSource: string;
   status: StudentStatus;
   feeStructureId?: number;
+  discountTemplateIds?: number[];
 }
 
 export type IStudentUpdate = Omit<IStudentCreate, 'courseId' | 'batchId' | 'branchId'>;
@@ -68,6 +76,10 @@ export interface IStudentRegistrationCreate {
 
 export interface IFeePaymentSummary {
   totalDue: number;
+  totalDiscount: number;
+  netDue: number;
+  vatAmount: number;
+  totalAmountDue: number;
   totalPaid: number;
   outstandingBalance: number;
   paymentCount: number;
@@ -96,4 +108,12 @@ export interface IStudentDashboard {
 export interface IStudentSubjects {
   semester: ISemester;
   subjects: ISubjectWithFaculty[];
+}
+
+
+export interface IStudentSemesterResultFinalization {
+  student: IStudent
+  subjectResult: ISubjectExamResult | null
+  examResults: IExamResult[]
+  attendance: IAttendance[]
 }

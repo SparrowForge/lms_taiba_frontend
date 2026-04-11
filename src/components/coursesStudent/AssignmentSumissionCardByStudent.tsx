@@ -6,32 +6,35 @@ import { useState } from "react";
 import { useCourseAssignmentSubmissions } from "@/hooks/useCourseAssignmentSubmissions";
 import { useAuth } from "@/hooks/useAuth";
 import { ICourseAssignmentSubmission } from "@/types/courseAssignmentSubmission";
+import { UserType } from "@/enums/user-type.enum";
 
 const AssignmentSubmissionCardByStudent = ({ data }: { data: ICourseAssignmentSubmission }) => {
-    const {
+  const {
     student,
     assignment,
     submittedAt,
     status,
     marksObtained,
   } = data;
-    const {user} = useAuth()
-    const { loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions()
-    const [assignmentSubmissiondrawerMode, setAssignmentSubmissionDrawerMode] = useState<'create' | 'edit'>('create');
-    const [assignmentSubmissionDrawerVisible, setAssignmentSubmissionDrawerVisible] = useState(false);
-    const [selectedAssignmentSubmissionId, setSelectedAssignmentSubmissionId] = useState<number | undefined>();
+  const { user } = useAuth()
+  const { loadCourseAssignmentSubmissions } = useCourseAssignmentSubmissions()
+  const [assignmentSubmissiondrawerMode, setAssignmentSubmissionDrawerMode] = useState<'create' | 'edit'>('create');
+  const [assignmentSubmissionDrawerVisible, setAssignmentSubmissionDrawerVisible] = useState(false);
+  const [selectedAssignmentSubmissionId, setSelectedAssignmentSubmissionId] = useState<number | undefined>();
 
-      const handleAssignmentSubmissionDrawerSuccess = () => {
-        setAssignmentSubmissionDrawerVisible(false);
-        loadCourseAssignmentSubmissions({ page: 1, limit: 10 });
-      };
-    
-    const handleEditDrawer = (courseAssignmentSubmissionId: number) => {
-        setSelectedAssignmentSubmissionId(courseAssignmentSubmissionId);
-        setAssignmentSubmissionDrawerMode('edit');
-        setAssignmentSubmissionDrawerVisible(true);
-      };
-    
+
+  const handleAssignmentSubmissionDrawerSuccess = () => {
+    setAssignmentSubmissionDrawerVisible(false);
+    loadCourseAssignmentSubmissions({ page: 1, limit: 10 });
+  };
+
+
+  const handleEditDrawer = (courseAssignmentSubmissionId: number) => {
+    setSelectedAssignmentSubmissionId(courseAssignmentSubmissionId);
+    setAssignmentSubmissionDrawerMode('edit');
+    setAssignmentSubmissionDrawerVisible(true);
+  };
+
 
 
 
@@ -47,14 +50,14 @@ const AssignmentSubmissionCardByStudent = ({ data }: { data: ICourseAssignmentSu
       <p><strong>Due Date:</strong> {assignment?.dueDate}</p>
 
       {
-         user?.faculty?.id && <>
-         
-         <hr style={{ margin: "12px 0" }} />
+        user?.faculty?.id && <>
 
-      {/* Student Info */}
-      <p><strong>Student:</strong> {student?.firstName} {student?.middleName} {student?.lastName}</p>
-      <p><strong>Student ID:</strong> {student?.id}</p>
-</>
+          <hr style={{ margin: "12px 0" }} />
+
+          {/* Student Info */}
+          <p><strong>Student:</strong> {student?.firstName} {student?.middleName} {student?.lastName}</p>
+          <p><strong>Student ID:</strong> {student?.id}</p>
+        </>
       }
 
       <hr style={{ margin: "12px 0" }} />
@@ -72,10 +75,10 @@ const AssignmentSubmissionCardByStudent = ({ data }: { data: ICourseAssignmentSu
             status === "draft"
               ? "orange"
               : status === "submitted"
-              ? "blue"
-              : status === "graded"
-              ? "green"
-              : "default"
+                ? "blue"
+                : status === "graded"
+                  ? "green"
+                  : "default"
           }
         >
           {status.toUpperCase()}
@@ -86,16 +89,18 @@ const AssignmentSubmissionCardByStudent = ({ data }: { data: ICourseAssignmentSu
         <strong>Marks Obtained:</strong>{" "}
         {marksObtained !== null ? marksObtained : "Not Graded"}
       </p>
-{/* 
-      <Button
+
+      {
+        user?.type === UserType.FACULTY && <Button
           type="primary"
           size="small"
           className="flex-1"
           icon={<BiEditAlt size={14} />}
           onClick={() => handleEditDrawer(data.id)}
-      >
-          Edit
-      </Button> */}
+        >
+          Add Mark
+        </Button>
+      }
 
       <CourseAssignmentSubmissionFormDrawer
         mode={assignmentSubmissiondrawerMode}

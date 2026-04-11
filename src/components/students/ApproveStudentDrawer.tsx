@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, DatePicker,  Drawer,  Form,  Input, } from 'antd';
+import { Button, DatePicker, Drawer, Form, Input } from 'antd';
+import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
@@ -39,7 +40,7 @@ const ApproveStudentDrawer: React.FC<ApproveStudentDrawerProps> = ({
         };
         // console.log(formData)
 
-        await  editStudent(studentId,  formData )
+        await  editStudent(studentId!,  formData )
         onSuccess();
     } catch (error) {
       console.error('Failed to approve student:', error);
@@ -58,20 +59,42 @@ const ApproveStudentDrawer: React.FC<ApproveStudentDrawerProps> = ({
     onClose();
   };
 
-  // Clear form and selection when drawer closes 
+  // Prefill card no, registration no, and admission date when drawer opens and student has them
+  useEffect(() => {
+    if (visible && studentId) {
+      const student = students.find((s) => s.id === studentId);
+      if (student) {
+        const values: {
+          cardNo?: string;
+          registrationNo?: string;
+          admissionDate?: ReturnType<typeof dayjs>;
+        } = {};
+        if (student.cardNo?.trim()) values.cardNo = student.cardNo.trim();
+        if (student.registrationNo?.trim()) values.registrationNo = student.registrationNo.trim();
+        if (student.admissionDate) {
+          const date = dayjs(student.admissionDate);
+          if (date.isValid()) values.admissionDate = date;
+        }
+        if (Object.keys(values).length > 0) {
+          form.setFieldsValue(values);
+        }
+      }
+    }
+  }, [visible, studentId, students, form]);
+
+  // Clear form and selection when drawer closes
   useEffect(() => {
     if (!visible) {
-      
       const student = students.find((s) => s.id === studentId);
       if (!student || !student.id) {
         form.resetFields();
       }
     }
-  }, [visible,form,students,studentId]);
+  }, [visible, form, students, studentId]);
 
-    const handleCancel = () => {
-        
-    };
+  const handleCancel = () => {
+    handleClose();
+  };
 
 
 

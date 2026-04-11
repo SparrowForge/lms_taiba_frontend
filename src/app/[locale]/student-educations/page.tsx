@@ -1,9 +1,11 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { STUDENT_STATUS_OPTIONS } from '@/constants/statusOptions';
 import { DEGREE_TYPE_OPTIONS, Status } from '@/enums';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -14,14 +16,12 @@ import StudentEducationFormDrawer from '@/components/studentEducations/StudentEd
 import EntityActions from '@/components/ui/EntityActions';
 import { EntityConfig, EntityList } from '@/components/ui/EntityList';
 
+import { useInstitutes } from '@/hooks/useInstitutes';
 import { useLocalization } from '@/hooks/useLocalization';
 import { useStudentEducations } from '@/hooks/useStudentEducations';
 
 import { IStudent } from '@/types/student';
 import { IStudentEducation } from '@/types/studentEducation';
-import { STUDENT_STATUS_OPTIONS } from '@/constants/statusOptions';
-import { useTranslations } from 'next-intl';
-import { useInstitutes } from '@/hooks/useInstitutes';
 
 export default function StudentEducationsPage() {
   const { t } = useLocalization();

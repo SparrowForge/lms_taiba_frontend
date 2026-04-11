@@ -45,7 +45,6 @@ export const useCreateFeeInstallmentPlanDetailsConfig = (
       { key: 'semester.name', label: t(LOCALE_KEYS.SEMESTER) },
       { key: 'durationMonths', label: t(LOCALE_KEYS.DURATION_MONTHS) },
       { key: 'amount', label: t(LOCALE_KEYS.AMOUNT) },
-      { key: 'discountAmount', label: t(LOCALE_KEYS.DISCOUNT_AMOUNT) },
       {
         key: 'dueDate',
         label: t(LOCALE_KEYS.DUE_DATE),
