@@ -4,7 +4,7 @@ export const LOCALE_KEYS = {
   MODULE: 'module',
   PRINT: 'print',
   // Common
-  GRADING:'grading',
+  GRADING: 'grading',
   NO_UPCOMING_ASSIGNMENTS: 'no_upcoming_assignments',
   PUBLISH_NAME: 'publish_name',
   SUCCESS_OPERATION: 'success_operation',
@@ -918,6 +918,7 @@ export const LOCALE_KEYS = {
   TRANSACTION_DETAILS: 'transaction_details',
   BALANCE: 'balance',
   AMOUNTS_IN: 'amounts_in',
+  EX: 'ex',
 } as const;
 
 // Type for the keys

@@ -923,5 +923,6 @@
   "search": "بحث",
   "transaction_details": "تفاصيل المعاملة",
   "balance": "الرصيد",
-  "amounts_in": "المبالغ بـ"
+  "amounts_in": "المبالغ بـ",
+  "ex": "المتبث"
 }

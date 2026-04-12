@@ -926,5 +926,6 @@
   "search": "Search",
   "transaction_details": "Transaction Details",
   "balance": "Balance",
-  "amounts_in": "All Amounts in"
+  "amounts_in": "All Amounts in",
+  "ex": "Ex"
 }
