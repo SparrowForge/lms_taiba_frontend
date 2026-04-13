@@ -2,10 +2,10 @@
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { ReportFooter, ReportHeader } from '@/components/reports/ReportHeaderFooter';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useLocalization } from '@/hooks/useLocalization';
 import { accReportsService } from '@/services/accReportsService';
-import { ReportFooter, ReportHeader } from '@/components/reports/ReportHeaderFooter';
 import { branchService } from '@/services/branchService';
 import { currencyService } from '@/services/currencyService';
 import { IBranch } from '@/types/branch';
@@ -18,6 +18,23 @@ import { toast } from 'react-toastify';
 
 const { RangePicker } = DatePicker;
 const { Title, Text } = Typography;
+
+const formatNumber = (val: number) => {
+  if (!val || Math.abs(val) < 0.001) return '0.00';
+  const formatted = Math.abs(val).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  return val < 0 ? `(${formatted})` : formatted;
+};
+
+const getBalance = (debit: number, credit: number, type: string) => {
+  const t = type?.toLowerCase();
+  if (t === 'asset' || t === 'expense') {
+    return debit - credit;
+  }
+  return credit - debit;
+};
 
 export default function TrialBalancePage() {
   const { t } = useLocalization();
@@ -67,7 +84,7 @@ export default function TrialBalancePage() {
         `${dayjs(values.dateRange[0]).format('DD-MMM-YYYY')} To ${dayjs(values.dateRange[1]).format('DD-MMM-YYYY')}`,
       );
       const bId = values.branchId;
-      const foundBranch = bId ? branches.find(b => Number(b.id) === Number(bId)) || null : null;
+      const foundBranch = bId ? branches.find((b) => Number(b.id) === Number(bId)) || null : null;
       setSelectedBranch(foundBranch);
       setBranchStr(foundBranch ? foundBranch.name : t(LOCALE_KEYS.ALL_BRANCHES));
 
@@ -88,34 +105,49 @@ export default function TrialBalancePage() {
 
   const columns: ColumnsType<any> = [
     {
-      title: t(LOCALE_KEYS.A_C_CODE),
-      dataIndex: 'accountCode',
-      key: 'accountCode',
-      className: 'whitespace-nowrap',
-    },
-    {
-      title: t(LOCALE_KEYS.ACCOUNT_HEAD),
+      title: t(LOCALE_KEYS.ACCOUNTS),
       dataIndex: 'accountName',
       key: 'accountName',
+      width: '35%',
+      render: (text, record) => {
+        const level = record.level || 0;
+        const isBold = level < 3;
+        const color = level === 1 ? '#1890ff' : level === 3 ? '#52c41a' : 'inherit';
+
+        return (
+          <span
+            style={{
+              paddingLeft: (level - 1) * 15,
+              fontWeight: isBold ? 'bold' : 'normal',
+              color: color,
+              display: 'inline-block',
+              textTransform: level < 3 ? 'uppercase' : 'none',
+              fontSize: '9px',
+            }}
+          >
+            {record.accountCode} - {text}
+          </span>
+        );
+      },
     },
     {
-      title: t(LOCALE_KEYS.OPENING_BALANCE),
-      children: [
-        {
-          title: t(LOCALE_KEYS.DEBIT),
-          dataIndex: 'openingDebit',
-          key: 'openingDebit',
-          align: 'right',
-          render: (val) => (val > 0 ? Number(val).toFixed(2) : ''),
-        },
-        {
-          title: t(LOCALE_KEYS.CREDIT),
-          dataIndex: 'openingCredit',
-          key: 'openingCredit',
-          align: 'right',
-          render: (val) => (val > 0 ? Number(val).toFixed(2) : ''),
-        },
-      ],
+      title: t(LOCALE_KEYS.OPENING),
+      key: 'opening',
+      align: 'right',
+      width: '15%',
+      render: (_, record) => {
+        const bal = getBalance(record.openingDebit, record.openingCredit, record.accountType);
+        return (
+          <span
+            style={{
+              fontWeight: record.level < 3 ? 'bold' : 'normal',
+              fontSize: '9px',
+            }}
+          >
+            {formatNumber(bal)}
+          </span>
+        );
+      },
     },
     {
       title: t(LOCALE_KEYS.DURING_PERIOD),
@@ -125,37 +157,53 @@ export default function TrialBalancePage() {
           dataIndex: 'periodDebit',
           key: 'periodDebit',
           align: 'right',
-          render: (val) => (val > 0 ? Number(val).toFixed(2) : ''),
+          width: '17.5%',
+          render: (val) => (
+            <span style={{ fontSize: '9px' }}>
+              {val > 0
+                ? Number(val)
+                    .toFixed(2)
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                : '0.00'}
+            </span>
+          ),
         },
         {
           title: t(LOCALE_KEYS.CREDIT),
           dataIndex: 'periodCredit',
           key: 'periodCredit',
           align: 'right',
-          render: (val) => (val > 0 ? Number(val).toFixed(2) : ''),
+          width: '17.5%',
+          render: (val) => (
+            <span style={{ fontSize: '9px' }}>
+              {val > 0
+                ? Number(val)
+                    .toFixed(2)
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                : '0.00'}
+            </span>
+          ),
         },
       ],
     },
     {
-      title: t(LOCALE_KEYS.CLOSING_BALANCE),
-      children: [
-        {
-          title: t(LOCALE_KEYS.DEBIT),
-          dataIndex: 'closingDebit',
-          key: 'closingDebit',
-          align: 'right',
-          render: (val) =>
-            val > 0 ? <span className="font-semibold">{Number(val).toFixed(2)}</span> : '',
-        },
-        {
-          title: t(LOCALE_KEYS.CREDIT),
-          dataIndex: 'closingCredit',
-          key: 'closingCredit',
-          align: 'right',
-          render: (val) =>
-            val > 0 ? <span className="font-semibold">{Number(val).toFixed(2)}</span> : '',
-        },
-      ],
+      title: t(LOCALE_KEYS.CLOSING),
+      key: 'closing',
+      align: 'right',
+      width: '15%',
+      render: (_, record) => {
+        const bal = getBalance(record.closingDebit, record.closingCredit, record.accountType);
+        return (
+          <span
+            style={{
+              fontWeight: record.level < 3 ? 'bold' : 'normal',
+              fontSize: '9px',
+            }}
+          >
+            {formatNumber(bal)}
+          </span>
+        );
+      },
     },
   ];
 
@@ -249,13 +297,15 @@ export default function TrialBalancePage() {
                 </Button>
               </div>
 
-              <ReportHeader
-                selectedBranch={selectedBranch}
-                reportTitle={t(LOCALE_KEYS.TRIAL_BALANCE)}
-                dateInfo={dateRangeStr}
-                dateLabel={t(LOCALE_KEYS.FOR_THE_PERIOD)}
-                currencyCode={defaultCurrencyCode}
-              />
+              <div className="text-center mb-8">
+                <ReportHeader
+                  selectedBranch={selectedBranch}
+                  reportTitle={t(LOCALE_KEYS.TRIAL_BALANCE)}
+                  dateInfo={dateRangeStr}
+                  dateLabel={t(LOCALE_KEYS.DATE)}
+                  currencyCode={defaultCurrencyCode}
+                />
+              </div>
 
               <Table
                 dataSource={reportData}
@@ -264,30 +314,27 @@ export default function TrialBalancePage() {
                 rowKey="accountId"
                 bordered
                 size="small"
+                expandable={{
+                  defaultExpandAllRows: true,
+                  showExpandColumn: false,
+                }}
                 summary={() => (
                   <Table.Summary fixed>
                     <Table.Summary.Row className="bg-gray-100 font-bold uppercase">
-                      <Table.Summary.Cell index={0} colSpan={2} align="center">
-                        {t(LOCALE_KEYS.TOTAL)}
-                      </Table.Summary.Cell>
+                      <Table.Summary.Cell index={0} colSpan={2} align="center"></Table.Summary.Cell>
                       <Table.Summary.Cell index={1} align="right">
-                        {totals.openingDebit.toFixed(2)}
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell index={2} align="right">
-                        {totals.openingCredit.toFixed(2)}
+                        {totals.periodDebit.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
                       </Table.Summary.Cell>
                       <Table.Summary.Cell index={3} align="right">
-                        {totals.periodDebit.toFixed(2)}
+                        {totals.periodCredit.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell index={4} align="right">
-                        {totals.periodCredit.toFixed(2)}
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell index={5} align="right">
-                        {totals.closingDebit.toFixed(2)}
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell index={6} align="right">
-                        {totals.closingCredit.toFixed(2)}
-                      </Table.Summary.Cell>
+                      <Table.Summary.Cell index={4} align="right"></Table.Summary.Cell>
                     </Table.Summary.Row>
                   </Table.Summary>
                 )}
@@ -301,18 +348,7 @@ export default function TrialBalancePage() {
 
         <style jsx global>{`
           @media print {
-            .ant-layout-sider,
-            .ant-layout-header {
-              display: none !important;
-            }
-            main.ant-layout-content {
-              margin: 0 !important;
-              padding: 0 !important;
-              background: white !important;
-              width: 100% !important;
-              max-width: 100% !important;
-            }
-          @media print {
+            /* Hide all UI navigation elements */
             .ant-layout-sider,
             .ant-layout-header,
             .ant-layout-sider-trigger,
@@ -320,60 +356,86 @@ export default function TrialBalancePage() {
             aside {
               display: none !important;
               width: 0 !important;
-              min-width: 0 !important;
-              max-width: 0 !important;
-              flex: 0 !important;
             }
+
+            /* Reset Layout containers to be full height/visible overflow */
+            html,
+            body,
+            #__next,
             .ant-layout,
-            .ant-layout-has-sider {
-              display: block !important;
+            .ant-layout-content,
+            main {
+              height: auto !important;
+              overflow: visible !important;
+              width: 100% !important;
               margin: 0 !important;
-              margin-left: 0 !important;
-              margin-right: 0 !important;
               padding: 0 !important;
             }
-            .ant-layout-content,
-            main.ant-layout-content {
-              margin: 0 !important;
-              margin-left: 0 !important;
-              padding: 0 !important;
-              background: white !important;
-              width: 100% !important;
-              max-width: 100% !important;
+
+            /* Main container width adjustment */
+            .ant-layout {
+              display: block !important;
+            }
+
+            /* Content area reset */
+            .ant-layout-content {
               min-height: auto !important;
             }
+
             .print\\:hidden {
               display: none !important;
             }
-            .ant-card {
-              border: none !important;
-              box-shadow: none !important;
-              padding: 0 !important;
-              width: 100% !important;
-            }
-            .ant-card-body {
-              padding: 0 !important;
-            }
+
+            /* Card and Table Resets */
+            .ant-card,
+            .ant-card-body,
             .ant-table-wrapper,
             .ant-spin-nested-loading,
             .ant-spin-container,
-            .ant-table {
+            .ant-table,
+            .ant-table-container,
+            .ant-table-content,
+            .ant-table-body {
               width: 100% !important;
+              height: auto !important;
+              overflow: visible !important;
             }
+
             .ant-table {
-              font-size: 11px;
+              font-size: 9px;
+              table-layout: fixed !important;
             }
+
             .ant-table-thead > tr > th {
-              background: #e5e5e5 !important;
+              background: #f0f0f0 !important;
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
-              padding: 4px 6px !important;
+              padding: 2px 4px !important;
+              border-bottom: 2px solid #000 !important;
             }
+
             .ant-table-tbody > tr > td {
-              padding: 4px 6px !important;
+              padding: 2px 4px !important;
+              border-bottom: 1px solid #eee !important;
             }
+
+            .ant-table-summary {
+              background: #f0f0f0 !important;
+              font-weight: bold;
+            }
+
+            /* Prevent premature page breaks */
+            .ant-table-row,
+            .ant-table-summary-row {
+              page-break-inside: avoid !important;
+            }
+
+            .ant-card {
+              page-break-inside: auto !important;
+            }
+
             @page {
-              size: A4 landscape;
+              size: auto; /* Allow user to choose, defaults to portrait */
               margin: 10mm;
             }
           }
