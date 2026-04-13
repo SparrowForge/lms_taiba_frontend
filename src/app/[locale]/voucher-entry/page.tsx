@@ -25,6 +25,7 @@ import {
 import {
   Button,
   Card,
+  Checkbox,
   Col,
   DatePicker,
   Form,
@@ -53,14 +54,16 @@ const useKeyGenerator = () => {
 /**
  * Flatten a tree to only return leaf nodes (nodes with no children).
  */
-const getLeafNodes = (items: any[]): any[] => {
+const getLeafNodes = (items: any[], filterFn?: (node: any) => boolean): any[] => {
   const leaves: any[] = [];
   const traverse = (nodes: any[]) => {
     for (const node of nodes) {
       if (node.children && node.children.length > 0) {
         traverse(node.children);
       } else {
-        leaves.push(node);
+        if (!filterFn || filterFn(node)) {
+          leaves.push(node);
+        }
       }
     }
   };
@@ -99,6 +102,7 @@ export default function VoucherEntryPage() {
   const [currencies, setCurrencies] = useState<any[]>([]);
   const [defaultCurrency, setDefaultCurrency] = useState<any>(null);
   const [exchangeRates, setExchangeRates] = useState<Record<number, number>>({}); // currencyId -> rate
+  const [isExChecked, setIsExChecked] = useState(false);
 
   // Line form
   const [lineForm] = Form.useForm();
@@ -113,6 +117,7 @@ export default function VoucherEntryPage() {
   const [childEntries, setChildEntries] = useState<
     (IAccVoucherDetailChildCreate & { _key: string })[]
   >([]);
+  const [isExChildChecked, setIsExChildChecked] = useState(false);
 
   const searchParams = useSearchParams();
   const voucherIdParam = searchParams.get('id');
@@ -152,14 +157,22 @@ export default function VoucherEntryPage() {
       const openFY = fyItems.find((fy: any) => fy.isClosed === 0);
       if (openFY) setFinancialYearId(openFY.id);
 
-      // Ledger: only leaf accounts (no children = selectable)
+      // Ledger: only leaf transaction accounts that are active
       const coaTree = coaRes.data;
-      const leafAccounts = getLeafNodes(coaTree);
+      const leafAccounts = getLeafNodes(
+        coaTree,
+        (node) =>
+          (node.isTransaction === true || node.isTransaction === '1') &&
+          (node.status === '1' || node.status === true),
+      );
       setLedgerAccounts(leafAccounts);
 
-      // Cost Centers: only leaf nodes
+      // Cost Centers: only leaf nodes that are active
       const ccTree = ccRes.data;
-      const leafCostCenters = getLeafNodes(ccTree);
+      const leafCostCenters = getLeafNodes(
+        ccTree,
+        (node) => node.status === '1' || node.status === true,
+      );
       setCostCenters(leafCostCenters);
 
       const curItems = curRes.data.items;
@@ -310,8 +323,11 @@ export default function VoucherEntryPage() {
         toast.warning(t(LOCALE_KEYS.NO_EXCHANGE_RATE_FOUND));
       }
     } else {
-      lineForm.setFieldsValue({ currRate: undefined });
+      // Default currency or reset
+      lineForm.setFieldsValue({ currRate: 1.0 });
     }
+    // Always reset Ex when currency changes
+    setIsExChecked(false);
   };
 
   // ============ Build line from form values ============
@@ -360,10 +376,36 @@ export default function VoucherEntryPage() {
   const handleAddLine = async () => {
     try {
       const values = await lineForm.validateFields();
+
+      // If manual exchange rate is enabled, save it to the system
+      if (
+        isExChecked &&
+        values.currencyId &&
+        values.currRate &&
+        values.currencyId !== defaultCurrency?.id
+      ) {
+        try {
+          const dateStr = voucherDate.format('YYYY-MM-DD');
+          await currencyService.saveExchangeRates([
+            {
+              currencyId: values.currencyId,
+              rate: values.currRate,
+              date: dateStr,
+            },
+          ]);
+          // Update local rates so subsequent entries use this one
+          setExchangeRates((prev) => ({ ...prev, [values.currencyId]: values.currRate }));
+          toast.success(t(LOCALE_KEYS.RATES_UPDATED_SUCCESSFULLY));
+        } catch (err) {
+          console.error('Failed to save manual exchange rate', err);
+        }
+      }
+
       const newLine = buildLineFromForm(values, generateKey());
       setLines((prev) => [...prev, newLine]);
       setEditingLineKey(null);
       resetLineForm();
+      setIsExChecked(false); // Reset Ex checkbox
     } catch {
       // validation error
     }
@@ -374,6 +416,31 @@ export default function VoucherEntryPage() {
     if (!editingLineKey) return;
     try {
       const values = await lineForm.validateFields();
+
+      // If manual exchange rate is enabled, save it to the system
+      if (
+        isExChecked &&
+        values.currencyId &&
+        values.currRate &&
+        values.currencyId !== defaultCurrency?.id
+      ) {
+        try {
+          const dateStr = voucherDate.format('YYYY-MM-DD');
+          await currencyService.saveExchangeRates([
+            {
+              currencyId: values.currencyId,
+              rate: values.currRate,
+              date: dateStr,
+            },
+          ]);
+          // Update local rates
+          setExchangeRates((prev) => ({ ...prev, [values.currencyId]: values.currRate }));
+          toast.success(t(LOCALE_KEYS.RATES_UPDATED_SUCCESSFULLY));
+        } catch (err) {
+          console.error('Failed to save manual exchange rate', err);
+        }
+      }
+
       const existingSubEntries = lines.find((l) => l.key === editingLineKey)?.subEntries || [];
       const updatedLine = buildLineFromForm(values, editingLineKey, existingSubEntries);
       setLines((prev) =>
@@ -381,6 +448,7 @@ export default function VoucherEntryPage() {
       );
       setEditingLineKey(null);
       resetLineForm();
+      setIsExChecked(false); // Reset Ex checkbox
     } catch {
       // validation error
     }
@@ -430,12 +498,37 @@ export default function VoucherEntryPage() {
   const handleAddChild = async () => {
     try {
       const values = await childForm.validateFields();
+
+      // If manual exchange rate is enabled, save it to the system
+      if (
+        isExChildChecked &&
+        values.currencyId &&
+        values.rate &&
+        values.currencyId !== defaultCurrency?.id
+      ) {
+        try {
+          const dateStr = voucherDate.format('YYYY-MM-DD');
+          await currencyService.saveExchangeRates([
+            {
+              currencyId: values.currencyId,
+              rate: values.rate,
+              date: dateStr,
+            },
+          ]);
+          setExchangeRates((prev) => ({ ...prev, [values.currencyId]: values.rate }));
+          toast.success(t(LOCALE_KEYS.RATES_UPDATED_SUCCESSFULLY));
+        } catch (err) {
+          console.error('Failed to save manual exchange rate', err);
+        }
+      }
+
       // auto-calc amountBase if not set
       const rate = values.rate || 0;
       const amount = values.amount || 0;
       const amountBase = amount * rate;
       setChildEntries((prev) => [...prev, { ...values, amountBase, _key: generateKey() }]);
       childForm.resetFields();
+      setIsExChildChecked(false);
     } catch {
       // validation error
     }
@@ -828,7 +921,6 @@ export default function VoucherEntryPage() {
                       label={t(LOCALE_KEYS.DEPARTMENT)}
                       name="departmentId"
                       initialValue={departmentId}
-                      rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
                     >
                       <Select
                         onChange={setDepartmentId}
@@ -930,7 +1022,16 @@ export default function VoucherEntryPage() {
                               min={0}
                               step={0.0001}
                               precision={4}
-                              disabled
+                              disabled={!isExChecked}
+                              controls={false}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={1}>
+                          <Form.Item label={t(LOCALE_KEYS.EX)}>
+                            <Checkbox
+                              checked={isExChecked}
+                              onChange={(e) => setIsExChecked(e.target.checked)}
                             />
                           </Form.Item>
                         </Col>
@@ -953,11 +1054,7 @@ export default function VoucherEntryPage() {
                           </Form.Item>
                         </Col>
                         <Col span={3}>
-                          <Form.Item
-                            name="lineNarration"
-                            label={t(LOCALE_KEYS.REMARKS)}
-                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
-                          >
+                          <Form.Item name="lineNarration" label={t(LOCALE_KEYS.REMARKS)}>
                             <Input placeholder={t(LOCALE_KEYS.REMARKS)} />
                           </Form.Item>
                         </Col>
@@ -966,38 +1063,22 @@ export default function VoucherEntryPage() {
                       {/* ===== Second Row: Cheque & Bank Details ===== */}
                       <Row gutter={8}>
                         <Col span={4}>
-                          <Form.Item
-                            name="chequeNo"
-                            label={t(LOCALE_KEYS.CHEQUE_NO)}
-                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
-                          >
+                          <Form.Item name="chequeNo" label={t(LOCALE_KEYS.CHEQUE_NO)}>
                             <Input placeholder={t(LOCALE_KEYS.CHEQUE_NO)} />
                           </Form.Item>
                         </Col>
                         <Col span={4}>
-                          <Form.Item
-                            name="chequeDate"
-                            label={t(LOCALE_KEYS.CHEQUE_DATE)}
-                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
-                          >
+                          <Form.Item name="chequeDate" label={t(LOCALE_KEYS.CHEQUE_DATE)}>
                             <DatePicker style={{ width: '100%' }} />
                           </Form.Item>
                         </Col>
                         <Col span={4}>
-                          <Form.Item
-                            name="bankName"
-                            label={t(LOCALE_KEYS.BANK_NAME)}
-                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
-                          >
+                          <Form.Item name="bankName" label={t(LOCALE_KEYS.BANK_NAME)}>
                             <Input placeholder={t(LOCALE_KEYS.BANK_NAME)} />
                           </Form.Item>
                         </Col>
                         <Col span={4}>
-                          <Form.Item
-                            name="bankAccno"
-                            label={t(LOCALE_KEYS.BANK_ACC_NO)}
-                            rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
-                          >
+                          <Form.Item name="bankAccno" label={t(LOCALE_KEYS.BANK_ACC_NO)}>
                             <Input placeholder={t(LOCALE_KEYS.ACCOUNT_NO)} />
                           </Form.Item>
                         </Col>
@@ -1233,8 +1314,9 @@ export default function VoucherEntryPage() {
                           toast.warning(t(LOCALE_KEYS.NO_EXCHANGE_RATE_FOUND));
                         }
                       } else {
-                        childForm.setFieldsValue({ rate: undefined });
+                        childForm.setFieldsValue({ rate: 1.0 });
                       }
+                      setIsExChildChecked(false);
                     }}
                   />
                 </Form.Item>
@@ -1251,7 +1333,15 @@ export default function VoucherEntryPage() {
                     step={0.0001}
                     precision={6}
                     controls={false}
-                    disabled
+                    disabled={!isExChildChecked}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={1}>
+                <Form.Item label="Ex">
+                  <Checkbox
+                    checked={isExChildChecked}
+                    onChange={(e) => setIsExChildChecked(e.target.checked)}
                   />
                 </Form.Item>
               </Col>
@@ -1282,11 +1372,7 @@ export default function VoucherEntryPage() {
             </Row>
             <Row gutter={8}>
               <Col span={8}>
-                <Form.Item
-                  name="remarks"
-                  label={t(LOCALE_KEYS.REMARKS)}
-                  rules={[{ required: true, message: t(LOCALE_KEYS.REQUIRED) }]}
-                >
+                <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
                   <Input placeholder={t(LOCALE_KEYS.REMARKS)} />
                 </Form.Item>
               </Col>

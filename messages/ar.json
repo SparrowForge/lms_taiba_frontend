@@ -744,6 +744,7 @@
   "submitted-assignment": "المهام المقدمة",
   "question_set": "مجموعة الأسئلة",
   "module": "الوحدة",
+  "accounts": "الحسابات",
   "chart_of_accounts": "دليل الحسابات",
   "financial_management": "الإدارة المالية",
   "financial_year": "سنة مالية",
@@ -892,7 +893,9 @@
   "general_ledger_running_balance": "دليل عام (رصيد جاري)",
   "trial_balance": "رصيد جاري",
   "particulars": "التفاصيل",
+  "opening": "الفتح",
   "opening_balance": "رصيد الفتح",
+  "closing": "الإغلاق",
   "closing_balance": "رصيد الإغلاق",
   "during_period": "خلال الفترة",
   "for_the_period": "للفترة",
@@ -923,5 +926,6 @@
   "search": "بحث",
   "transaction_details": "تفاصيل المعاملة",
   "balance": "الرصيد",
-  "amounts_in": "المبالغ بـ"
+  "amounts_in": "المبالغ بـ",
+  "ex": "المتبث"
 }

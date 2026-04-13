@@ -895,7 +895,9 @@
   "general_ledger_running_balance": "General Ledger (Running Balance)",
   "trial_balance": "Trial Balance",
   "particulars": "Particulars",
+  "opening": "Opening",
   "opening_balance": "Opening Balance",
+  "closing": "Closing",
   "closing_balance": "Closing Balance",
   "during_period": "During Period",
   "for_the_period": "For the Period",
@@ -926,5 +928,6 @@
   "search": "Search",
   "transaction_details": "Transaction Details",
   "balance": "Balance",
-  "amounts_in": "All Amounts in"
+  "amounts_in": "All Amounts in",
+  "ex": "Ex"
 }

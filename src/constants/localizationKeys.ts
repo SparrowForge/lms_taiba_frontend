@@ -4,7 +4,7 @@ export const LOCALE_KEYS = {
   MODULE: 'module',
   PRINT: 'print',
   // Common
-  GRADING:'grading',
+  GRADING: 'grading',
   NO_UPCOMING_ASSIGNMENTS: 'no_upcoming_assignments',
   PUBLISH_NAME: 'publish_name',
   SUCCESS_OPERATION: 'success_operation',
@@ -728,6 +728,7 @@ export const LOCALE_KEYS = {
   TIME_SPENT: 'Time Spent',
   NEXT_EXAM: 'Next Exam',
   QUESTION_SET: 'question_set',
+  ACCOUNTS: 'accounts',
   CHART_OF_ACCOUNTS: 'chart_of_accounts',
   COST_CENTERS: 'cost_centers',
   FINANCIAL_MANAGEMENT: 'financial_management',
@@ -890,7 +891,9 @@ export const LOCALE_KEYS = {
   GENERAL_LEDGER_RUNNING_BALANCE: 'general_ledger_running_balance',
   TRIAL_BALANCE: 'trial_balance',
   PARTICULARS: 'particulars',
+  OPENING: 'opening',
   OPENING_BALANCE: 'opening_balance',
+  CLOSING: 'closing',
   CLOSING_BALANCE: 'closing_balance',
   DURING_PERIOD: 'during_period',
   FOR_THE_PERIOD: 'for_the_period',
@@ -918,6 +921,7 @@ export const LOCALE_KEYS = {
   TRANSACTION_DETAILS: 'transaction_details',
   BALANCE: 'balance',
   AMOUNTS_IN: 'amounts_in',
+  EX: 'ex',
 } as const;
 
 // Type for the keys

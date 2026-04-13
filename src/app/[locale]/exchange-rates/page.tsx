@@ -45,8 +45,19 @@ export default function ExchangeRatePage() {
         total: currencyRes.data.meta.total,
       });
 
-      const defaultCurr = currenciesData.find((c) => c.isDefault);
-      setDefaultCurrency(defaultCurr || null);
+      // Find default currency if not already found
+      const currentDefault = currenciesData.find((c) => c.isDefault);
+      if (currentDefault) {
+        setDefaultCurrency(currentDefault);
+      } else if (!defaultCurrency) {
+        // As a fallback if not on the first page, we search all currencies (limit: 100)
+        // or just rely on finding it eventually. But usually it's on page 1.
+        // For robustness, let's try to fetch it if we don't have it.
+        const allCurrenciesRes = await currencyService.getCurrencies({ page: 1, limit: 100 });
+        const allCurrencies = allCurrenciesRes.data.items;
+        const foundDefault = allCurrencies.find((c) => c.isDefault);
+        if (foundDefault) setDefaultCurrency(foundDefault);
+      }
 
       // 2. Fetch Rates (We need rates for the *displayed* currencies)
       // Since our API currently paginates rates independently, we have a challenge matching them 1:1 if we paginate both differently.
@@ -89,7 +100,14 @@ export default function ExchangeRatePage() {
     setSaving(true);
     try {
       const dateStr = selectedDate.format('YYYY-MM-DD');
-      const ratesToSave: IExchangeRateCreate[] = Object.entries(rates).map(
+      
+      // Ensure default currency is included with rate 1.0 if we know it
+      const ratesToSaveMap = { ...rates };
+      if (defaultCurrency) {
+        ratesToSaveMap[defaultCurrency.id] = 1.0;
+      }
+
+      const ratesToSave: IExchangeRateCreate[] = Object.entries(ratesToSaveMap).map(
         ([currencyId, rate]) => ({
           currencyId: Number(currencyId),
           rate,
