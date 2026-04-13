@@ -346,6 +346,7 @@ export const Sidebar2 = React.memo(
         branches,
         handleBranchChange,
         loadBranches,
+        showBranchSelect,
         // locale // uncomment if you localize branch label via locale
       ],
     );
