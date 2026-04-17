@@ -1,0 +1,6 @@
+[phases.setup]
+nixPkgs = ["nodejs-22_x"]
+
+[phases.build]
+cmds = ["npm run build"]
+env = { NODE_OPTIONS = "--max-old-space-size=1024", NEXT_BUILD_WORKERS = "1" }
