@@ -1,18 +1,18 @@
 # Stage 1: Dependency installation
-FROM oven/bun:1-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 
 # Install system dependencies needed for building
 RUN apk add --no-cache libc6-compat python3 make g++
 
 # Copy package files
-COPY package.json bun.lock* ./
+COPY package.json package-lock.json ./
 
-# Install dependencies using Bun
-RUN bun install --frozen-lockfile
+# Install dependencies using npm
+RUN npm ci
 
 # Stage 2: Application build
-FROM oven/bun:1-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Set environment variables for memory optimization
@@ -29,8 +29,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build the application
-# We use bun run build which calls next build
-RUN bun run build
+RUN npm run build
 
 # Stage 3: Production runner
 FROM node:22-alpine AS runner
