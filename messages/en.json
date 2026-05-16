@@ -888,6 +888,8 @@
   "total_income": "Total Income",
   "total_expense": "Total Expense",
   "net_profit_loss": "Net Profit / Loss",
+  "total_profit": "Total Profit",
+  "total_loss": "Total Loss",
   "prepared_by": "Prepared By",
   "checked_by": "Checked By",
   "approved_by": "Approved By",

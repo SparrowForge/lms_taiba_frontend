@@ -10,7 +10,8 @@ import { branchService } from '@/services/branchService';
 import { currencyService } from '@/services/currencyService';
 import { IBranch } from '@/types/branch';
 import { PrinterOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Card, Col, DatePicker, Form, Row, Select, Typography } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Typography } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -105,19 +106,72 @@ export default function BalanceSheetPage() {
     window.print();
   };
 
-  const renderTree = (nodes: any[], depth = 0) => {
-    return nodes.map((node, index) => (
-      <div key={node.accountId + index}>
-        <div
-          className={`flex justify-between py-1 border-b border-gray-200 ${depth === 0 ? 'bg-gray-100 font-bold uppercase mt-2' : ''} ${!node.isTransaction ? 'font-semibold text-gray-700' : 'text-gray-600'}`}
-        >
-          <div style={{ paddingLeft: `${depth * 20}px` }}>{node.accountName}</div>
-          <div>{Number(node.balance).toFixed(2)}</div>
-        </div>
-        {node.children && node.children.length > 0 && renderTree(node.children, depth + 1)}
-      </div>
-    ));
+  const formatNumber = (val: number) => {
+    if (!val && val !== 0) return '0.00';
+    // Indian Numbering System: 7,00,27,575.57
+    const x = Math.abs(val).toFixed(2).split('.');
+    let x1 = x[0];
+    const x2 = x.length > 1 ? '.' + x[1] : '';
+    const lastThree = x1.substring(x1.length - 3);
+    const otherNumbers = x1.substring(0, x1.length - 3);
+    if (otherNumbers !== '') {
+      x1 = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree;
+    } else {
+      x1 = lastThree;
+    }
+    const formatted = x1 + x2;
+    return val < 0 ? `(${formatted})` : formatted;
   };
+
+  const columns: ColumnsType<any> = [
+    {
+      title: t(LOCALE_KEYS.PARTICULARS),
+      dataIndex: 'accountName',
+      key: 'accountName',
+      render: (text, record) => {
+        const level = record.level || 1;
+        const isBold = level < 5;
+
+        return (
+          <div className="particulars-cell">
+            <span
+              style={{
+                paddingLeft: (level - 1) * 15,
+                fontWeight: isBold ? 'bold' : 'normal',
+                display: 'inline-block',
+                textTransform: 'uppercase',
+                fontSize: '10px',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {text}
+            </span>
+            <div className="dotted-connector"></div>
+          </div>
+        );
+      },
+    },
+    {
+      title: t(LOCALE_KEYS.AMOUNT),
+      dataIndex: 'balance',
+      key: 'balance',
+      align: 'right',
+      width: 150,
+      render: (val, record) => {
+        const level = record.level || (record.parentId ? 2 : 1);
+        return (
+          <span
+            style={{
+              fontWeight: level < 5 ? 'bold' : 'normal',
+              fontSize: '10px',
+            }}
+          >
+            {formatNumber(val)}
+          </span>
+        );
+      },
+    },
+  ];
 
   const filterByTypes = (types: string[]) => {
     return reportData.filter((d) => types.includes(d.accountType));
@@ -197,37 +251,79 @@ export default function BalanceSheetPage() {
                 currencyCode={defaultCurrencyCode}
               />
 
-              <div className="print-table flex flex-col md:flex-row gap-8">
-                {/* Assets */}
-                <div className="flex-1 border p-4">
-                  <Title
-                    level={4}
-                    className="border-b-2 border-black pb-2 text-center uppercase tracking-wider"
-                  >
-                    {t(LOCALE_KEYS.PROPERTY_ASSETS)}
-                  </Title>
-                  {renderTree(filterByTypes(['Asset']))}
-
-                  <div className="mt-8 flex justify-between font-bold text-lg border-t-2 border-black border-b-2 border-double pt-2 pb-1">
-                    <span>{t(LOCALE_KEYS.TOTAL_ASSETS)}</span>
-                    <span>{totalAsset.toFixed(2)}</span>
-                  </div>
+              <div className="print-table flex flex-col lg:flex-row gap-4 items-start">
+                {/* Assets Table */}
+                <div className="flex-1 w-full">
+                  <Table
+                    dataSource={filterByTypes(['Asset'])}
+                    columns={columns}
+                    pagination={false}
+                    rowKey="accountId"
+                    bordered={false}
+                    size="small"
+                    expandable={{
+                      defaultExpandAllRows: true,
+                      showExpandColumn: false,
+                    }}
+                    title={() => (
+                      <div className="text-center font-bold uppercase tracking-wider bg-gray-50 py-1">
+                        {t(LOCALE_KEYS.PROPERTY_ASSETS)}
+                      </div>
+                    )}
+                    summary={() => (
+                      <Table.Summary fixed>
+                        <Table.Summary.Row className="bg-gray-100">
+                          <Table.Summary.Cell index={0} className="font-bold text-xs uppercase">
+                            {t(LOCALE_KEYS.TOTAL_ASSETS)}
+                          </Table.Summary.Cell>
+                          <Table.Summary.Cell
+                            index={1}
+                            align="right"
+                            className="font-bold text-xs border-double border-b-4 border-black"
+                          >
+                            {formatNumber(totalAsset)}
+                          </Table.Summary.Cell>
+                        </Table.Summary.Row>
+                      </Table.Summary>
+                    )}
+                  />
                 </div>
 
-                {/* Liabilities & Equity */}
-                <div className="flex-1 border p-4">
-                  <Title
-                    level={4}
-                    className="border-b-2 border-black pb-2 text-center uppercase tracking-wider"
-                  >
-                    {t(LOCALE_KEYS.FUND_LIABILITIES)}
-                  </Title>
-                  {renderTree(filterByTypes(['Equity', 'Liability']))}
-
-                  <div className="mt-8 flex justify-between font-bold text-lg border-t-2 border-black border-b-2 border-double pt-2 pb-1">
-                    <span>{t(LOCALE_KEYS.TOTAL_FUND_LIABILITIES)}</span>
-                    <span>{totalLiabEq.toFixed(2)}</span>
-                  </div>
+                {/* Liabilities & Equity Table */}
+                <div className="flex-1 w-full">
+                  <Table
+                    dataSource={filterByTypes(['Equity', 'Liability'])}
+                    columns={columns}
+                    pagination={false}
+                    rowKey="accountId"
+                    bordered={false}
+                    size="small"
+                    expandable={{
+                      defaultExpandAllRows: true,
+                      showExpandColumn: false,
+                    }}
+                    title={() => (
+                      <div className="text-center font-bold uppercase tracking-wider bg-gray-50 py-1">
+                        {t(LOCALE_KEYS.FUND_LIABILITIES)}
+                      </div>
+                    )}
+                    summary={() => (
+                      <Table.Summary fixed>
+                        <Table.Summary.Row className="bg-gray-100">
+                          <Table.Summary.Cell index={0} className="font-bold text-sm uppercase">
+                            {t(LOCALE_KEYS.TOTAL_FUND_LIABILITIES)}
+                          </Table.Summary.Cell>
+                          <Table.Summary.Cell
+                            index={1}
+                            align="right"
+                            className="font-bold text-sm border-double border-b-4 border-black"
+                          >
+                            {formatNumber(totalLiabEq)}
+                          </Table.Summary.Cell>
+                        </Table.Summary.Row>
+                      </Table.Summary>
+                    )}
+                  />
                 </div>
               </div>
 
@@ -237,6 +333,35 @@ export default function BalanceSheetPage() {
         </div>
 
         <style jsx global>{`
+          .particulars-cell {
+            display: flex;
+            align-items: baseline;
+            width: 100%;
+          }
+          .dotted-connector {
+            flex: 1;
+            border-bottom: 1px dotted #ccc;
+            margin-left: 8px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+          }
+          
+          .print-table .ant-table {
+            background: transparent;
+          }
+          .print-table .ant-table-thead > tr > th {
+            background: #fdfdfd !important;
+            border-bottom: 2px solid #000 !important;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 11px;
+            padding: 8px !important;
+          }
+          .print-table .ant-table-tbody > tr > td {
+            border-bottom: 1px dotted #ccc !important;
+            padding: 4px 8px !important;
+          }
+
           @media print {
             .ant-layout-sider,
             .ant-layout-header,
@@ -245,43 +370,54 @@ export default function BalanceSheetPage() {
             aside {
               display: none !important;
               width: 0 !important;
-              min-width: 0 !important;
-              max-width: 0 !important;
-              flex: 0 !important;
             }
+
+            html,
+            body,
+            #__next,
             .ant-layout,
-            .ant-layout-has-sider {
-              display: block !important;
-              margin: 0 !important;
-              margin-left: 0 !important;
-              margin-right: 0 !important;
-              padding: 0 !important;
-            }
             .ant-layout-content,
-            main.ant-layout-content {
-              margin: 0 !important;
-              margin-left: 0 !important;
-              padding: 0 !important;
-              background: white !important;
+            main {
+              height: auto !important;
+              overflow: visible !important;
               width: 100% !important;
-              max-width: 100% !important;
-              min-height: auto !important;
+              margin: 0 !important;
+              padding: 0 !important;
             }
-            .print\\:hidden {
+
+            .ant-layout {
+              display: block !important;
+            }
+
+            .print:hidden {
               display: none !important;
             }
-            .ant-card {
-              border: none !important;
-              box-shadow: none !important;
-              padding: 0 !important;
+
+            .ant-table-wrapper,
+            .ant-spin-nested-loading,
+            .ant-spin-container,
+            .ant-table,
+            .ant-table-container,
+            .ant-table-content,
+            .ant-table-body {
               width: 100% !important;
+              height: auto !important;
+              overflow: visible !important;
             }
-            .ant-card-body {
-              padding: 0 !important;
+
+            .print-table {
+              font-size: 10px;
             }
+
+            .ant-table-tbody > tr > td {
+              border: none !important;
+              border-bottom: 1px dotted #ccc !important;
+              padding: 2px 8px !important;
+            }
+
             @page {
-              size: A4 portrait;
-              margin: 10mm;
+              size: auto;
+              margin: 15mm;
             }
           }
         `}</style>
