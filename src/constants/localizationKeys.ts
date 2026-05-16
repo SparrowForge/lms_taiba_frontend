@@ -884,6 +884,8 @@ export const LOCALE_KEYS = {
   TOTAL_INCOME: 'total_income',
   TOTAL_EXPENSE: 'total_expense',
   NET_PROFIT_LOSS: 'net_profit_loss',
+  TOTAL_PROFIT: 'total_profit',
+  TOTAL_LOSS: 'total_loss',
   PREPARED_BY: 'prepared_by',
   CHECKED_BY: 'checked_by',
   APPROVED_BY: 'approved_by',

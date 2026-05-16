@@ -2,10 +2,10 @@
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { ReportFooter, ReportHeader } from '@/components/reports/ReportHeaderFooter';
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 import { useLocalization } from '@/hooks/useLocalization';
 import { accReportsService } from '@/services/accReportsService';
-import { ReportFooter, ReportHeader } from '@/components/reports/ReportHeaderFooter';
 import { branchService } from '@/services/branchService';
 import { currencyService } from '@/services/currencyService';
 import { IBranch } from '@/types/branch';
@@ -101,24 +101,68 @@ export default function IncomeStatementPage() {
     }
   };
 
+  const formatNumber = (val: number) => {
+    if (!val && val !== 0) return '0.00';
+    // Indian Numbering System: 7,00,27,575.57
+    const x = Math.abs(val).toFixed(2).split('.');
+    let x1 = x[0];
+    const x2 = x.length > 1 ? '.' + x[1] : '';
+    const lastThree = x1.substring(x1.length - 3);
+    const otherNumbers = x1.substring(0, x1.length - 3);
+    if (otherNumbers !== '') {
+      x1 = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree;
+    } else {
+      x1 = lastThree;
+    }
+    const formatted = x1 + x2;
+    return val < 0 ? `(${formatted})` : formatted;
+  };
+
   const columns: ColumnsType<any> = [
     {
       title: t(LOCALE_KEYS.PARTICULARS),
       dataIndex: 'accountName',
       key: 'accountName',
-      render: (text, record) => (
-        <span className={!record.isTransaction ? 'font-bold uppercase' : ''}>{text}</span>
-      ),
+      render: (text, record) => {
+        const level = record.level || 1;
+        const isBold = level < 5;
+
+        return (
+          <div className="particulars-cell">
+            <span
+              style={{
+                paddingLeft: (level - 1) * 15,
+                fontWeight: isBold ? 'bold' : 'normal',
+                display: 'inline-block',
+                textTransform: 'uppercase',
+                fontSize: '10px',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {text}
+            </span>
+            <div className="dotted-connector"></div>
+          </div>
+        );
+      },
     },
     {
       title: t(LOCALE_KEYS.AMOUNT),
       dataIndex: 'periodBalance',
       key: 'periodBalance',
       align: 'right',
+      width: 180,
       render: (val, record) => {
-        if (val === 0) return '-';
+        const level = record.level || (record.parentId ? 2 : 1);
         return (
-          <span className={!record.isTransaction ? 'font-bold' : ''}>{Number(val).toFixed(2)}</span>
+          <span
+            style={{
+              fontWeight: level < 5 ? 'bold' : 'normal',
+              fontSize: '10px',
+            }}
+          >
+            {formatNumber(val)}
+          </span>
         );
       },
     },
@@ -207,45 +251,49 @@ export default function IncomeStatementPage() {
                 columns={columns}
                 pagination={false}
                 rowKey="accountId"
-                bordered
-                size="middle"
+                bordered={false}
+                size="small"
+                expandable={{
+                  defaultExpandAllRows: true,
+                  showExpandColumn: false,
+                }}
                 className="print-table"
                 summary={() => (
-                  <Table.Summary>
-                    <Table.Summary.Row>
-                      <Table.Summary.Cell index={0} className="font-bold text-lg bg-gray-100">
+                  <Table.Summary fixed>
+                    <Table.Summary.Row className="bg-gray-50">
+                      <Table.Summary.Cell index={0} className="font-bold text-xs uppercase">
                         {t(LOCALE_KEYS.TOTAL_INCOME)}
                       </Table.Summary.Cell>
                       <Table.Summary.Cell
                         index={1}
                         align="right"
-                        className="font-bold text-lg bg-gray-100 border-double border-b-4"
+                        className="font-bold text-xs border-b-2 border-black"
                       >
-                        {totalIncome.toFixed(2)}
+                        {formatNumber(totalIncome)}
                       </Table.Summary.Cell>
                     </Table.Summary.Row>
-                    <Table.Summary.Row>
-                      <Table.Summary.Cell index={0} className="font-bold text-lg bg-gray-100">
+                    <Table.Summary.Row className="bg-gray-50">
+                      <Table.Summary.Cell index={0} className="font-bold text-xs uppercase">
                         {t(LOCALE_KEYS.TOTAL_EXPENSE)}
                       </Table.Summary.Cell>
                       <Table.Summary.Cell
                         index={1}
                         align="right"
-                        className="font-bold text-lg bg-gray-100 border-double border-b-4"
+                        className="font-bold text-xs border-b-2 border-black"
                       >
-                        {totalExpense.toFixed(2)}
+                        {formatNumber(totalExpense)}
                       </Table.Summary.Cell>
                     </Table.Summary.Row>
-                    <Table.Summary.Row>
-                      <Table.Summary.Cell index={0} className="font-bold text-xl bg-gray-200">
-                        {t(LOCALE_KEYS.NET_PROFIT_LOSS)}
+                    <Table.Summary.Row className="bg-gray-100">
+                      <Table.Summary.Cell index={0} className="font-bold text-sm uppercase">
+                        {totalIncome + totalExpense < 0 ? t(LOCALE_KEYS.TOTAL_LOSS) : t(LOCALE_KEYS.TOTAL_PROFIT)}
                       </Table.Summary.Cell>
                       <Table.Summary.Cell
                         index={1}
                         align="right"
-                        className="font-bold text-xl bg-gray-200 underline"
+                        className="font-bold text-sm border-double border-b-4 border-black"
                       >
-                        {(totalIncome - totalExpense).toFixed(2)}
+                        {formatNumber(totalIncome + totalExpense)}
                       </Table.Summary.Cell>
                     </Table.Summary.Row>
                   </Table.Summary>
@@ -258,7 +306,37 @@ export default function IncomeStatementPage() {
         </div>
 
         <style jsx global>{`
+          .particulars-cell {
+            display: flex;
+            align-items: baseline;
+            width: 100%;
+          }
+          .dotted-connector {
+            flex: 1;
+            border-bottom: 1px dotted #ccc;
+            margin-left: 8px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+          }
+          
+          .print-table .ant-table {
+            background: transparent;
+          }
+          .print-table .ant-table-thead > tr > th {
+            background: #fdfdfd !important;
+            border-bottom: 2px solid #000 !important;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 11px;
+            padding: 8px !important;
+          }
+          .print-table .ant-table-tbody > tr > td {
+            border-bottom: 1px dotted #ccc !important;
+            padding: 4px 8px !important;
+          }
+
           @media print {
+            /* Hide all UI navigation elements */
             .ant-layout-sider,
             .ant-layout-header,
             .ant-layout-sider-trigger,
@@ -266,62 +344,65 @@ export default function IncomeStatementPage() {
             aside {
               display: none !important;
               width: 0 !important;
-              min-width: 0 !important;
-              max-width: 0 !important;
-              flex: 0 !important;
             }
+
+            /* Reset Layout containers to be full height/visible overflow */
+            html,
+            body,
+            #__next,
             .ant-layout,
-            .ant-layout-has-sider {
-              display: block !important;
-              margin: 0 !important;
-              margin-left: 0 !important;
-              margin-right: 0 !important;
-              padding: 0 !important;
-            }
             .ant-layout-content,
-            main.ant-layout-content {
-              margin: 0 !important;
-              margin-left: 0 !important;
-              padding: 0 !important;
-              background: white !important;
+            main {
+              height: auto !important;
+              overflow: visible !important;
               width: 100% !important;
-              max-width: 100% !important;
-              min-height: auto !important;
+              margin: 0 !important;
+              padding: 0 !important;
             }
-            .print\\:hidden {
+
+            .ant-layout {
+              display: block !important;
+            }
+
+            .print:hidden {
               display: none !important;
             }
-            .ant-card {
-              border: none !important;
-              box-shadow: none !important;
-              padding: 0 !important;
-              width: 100% !important;
-            }
-            .ant-card-body {
-              padding: 0 !important;
-            }
+
             .ant-table-wrapper,
             .ant-spin-nested-loading,
             .ant-spin-container,
-            .ant-table {
+            .ant-table,
+            .ant-table-container,
+            .ant-table-content,
+            .ant-table-body {
               width: 100% !important;
+              height: auto !important;
+              overflow: visible !important;
             }
+
             .ant-table {
-              font-size: 12px;
+              font-size: 10px;
+              table-layout: fixed !important;
             }
+
             .ant-table-thead > tr > th {
-              background: #e5e5e5 !important;
+              background: #fff !important;
+              border-top: 2px solid #000 !important;
+              border-bottom: 2px solid #000 !important;
+              padding: 4px 8px !important;
+            }
+
+            .ant-table-tbody > tr > td {
+              border: none !important;
+              border-bottom: 1px dotted #ccc !important;
+              padding: 2px 8px !important;
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
-              padding: 4px 8px !important;
-              text-transform: uppercase;
             }
-            .ant-table-tbody > tr > td {
-              padding: 4px 8px !important;
-            }
+
             @page {
-              size: A4 portrait;
-              margin: 10mm;
+              size: auto;
+              margin: 15mm;
             }
           }
         `}</style>
