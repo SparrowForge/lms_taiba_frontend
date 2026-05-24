@@ -2,14 +2,44 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import {
+  Alert,
+  Avatar,
+  Card,
+  Col,
+  Collapse,
+  Divider,
+  Empty,
+  Flex,
+  List,
+  Progress,
+  Row,
+  Skeleton,
+  Space,
+  Statistic,
+  Tag,
+  Typography,
+} from 'antd';
+
+import {
+  CalendarOutlined,
+  CheckCircleFilled,
+  ClockCircleOutlined,
+  CreditCardOutlined,
+  DollarCircleOutlined,
+  FileTextOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+
 import { useAuth } from '@/hooks/useAuth';
 import { useStudents } from '@/hooks/useStudents';
 
-// Your actual API data
+const { Title, Text } = Typography;
 
 export default function PaymentsDashboard() {
   const { user } = useAuth();
   const { loadStudentWithFeeInfo, studentWithFeeInfo } = useStudents();
+
   const [selectedInstallment, setSelectedInstallment] = useState<number | null>(null);
 
   useEffect(() => {
@@ -24,6 +54,7 @@ export default function PaymentsDashboard() {
         totalPaid: 0,
         totalDue: 0,
         totalFees: 0,
+        paymentPercentage: 0,
         installmentStatus: {} as Record<string, string>,
       };
     }
@@ -32,11 +63,17 @@ export default function PaymentsDashboard() {
       (sum, payment) => sum + payment.amountPaid,
       0,
     );
-    const totalFees = studentWithFeeInfo.feeStructure?.totalFees ?? 0;
+
+    const totalFees = studentWithFeeInfo?.feeStructure?.totalFees ?? 0;
+
     const totalDue = Math.max(0, totalFees - totalPaid);
 
-    // Find which installments are paid/unpaid
+    const paymentPercentage = totalFees
+      ? Number(((totalPaid / totalFees) * 100).toFixed(1))
+      : 0;
+
     const installmentStatus: Record<string, string> = {};
+
     studentWithFeeInfo.paymentCollections.forEach((payment) => {
       payment.paymentDetails.forEach((detail) => {
         if (detail.balanceAmount === 0) {
@@ -49,145 +86,322 @@ export default function PaymentsDashboard() {
       });
     });
 
-    return { totalPaid, totalDue, totalFees, installmentStatus };
+    return {
+      totalPaid,
+      totalDue,
+      totalFees,
+      paymentPercentage,
+      installmentStatus,
+    };
   }, [studentWithFeeInfo]);
 
-  const formatDate = (date: string) => new Date(date).toLocaleDateString();
   const formatCurrency = (amount?: number) => {
-    const currency = studentWithFeeInfo?.feeStructure.currency ?? '';
-    const safeAmount = amount ?? 0;
-    return `${currency} ${safeAmount.toLocaleString()}`;
+    const currency = studentWithFeeInfo?.feeStructure?.currency ?? '';
+    return `${currency} ${(amount ?? 0).toLocaleString()}`;
   };
 
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString('en-BD', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+
+  const getStatusTag = (status: string) => {
+    switch (status) {
+      case 'paid':
+        return <Tag color="success">Paid</Tag>;
+
+      case 'partial':
+        return <Tag color="warning">Partial</Tag>;
+
+      default:
+        return <Tag color="default">Pending</Tag>;
+    }
+  };
+
+  if (!studentWithFeeInfo) {
+    return (
+      <div className="p-6">
+        <Skeleton active paragraph={{ rows: 10 }} />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen  p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#f5f7fb] p-4 lg:p-8">
+      <div className="">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold  mb-2">Course Fees Payment</h1>
-          <p className="text-lg  ">
-            {studentWithFeeInfo?.student.firstName} {studentWithFeeInfo?.student.lastName} •{' '}
-            {studentWithFeeInfo?.student.course?.name ?? ''}
-          </p>
-        </div>
+        <Card
+          bordered={false}
+          className="mb-6 shadow-sm rounded-2xl"
+          bodyStyle={{ padding: 24, marginBottom: 20 }}
+        >
+          <Flex justify="space-between" align="center" wrap="wrap" gap={20}>
+            <Space size={16} align="center">
+              <Avatar
+                size={64}
+                icon={<UserOutlined />}
+                className="bg-blue-500"
+              />
+
+              <div>
+                <Title level={3} className="!mb-1">
+                  Course Fee Dashboard
+                </Title>
+
+                <Text type="secondary">
+                  {studentWithFeeInfo?.student?.firstName}{' '}
+                  {studentWithFeeInfo?.student?.lastName}
+                </Text>
+
+                <br />
+
+                <Text strong>
+                  {studentWithFeeInfo?.student?.course?.name ?? 'No Course'}
+                </Text>
+              </div>
+            </Space>
+
+            <div className="min-w-[220px]">
+              <Text type="secondary">Overall Payment Progress</Text>
+
+              <Progress
+                percent={calculatedData.paymentPercentage}
+                strokeColor="#1677ff"
+                size="small"
+              />
+            </div>
+          </Flex>
+        </Card>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Total Due */}
-          <div className=" rounded-lg p-6 shadow-md border ">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold  ">Total Due</h3>
-              <ClockCircleOutlined className="text-2xl text-amber-500" />
-            </div>
-            <p className="text-3xl font-bold  mb-2">{formatCurrency(calculatedData.totalDue)}</p>
-            <p className="text-sm  dark:text-slate-400">
-              Out of {formatCurrency(studentWithFeeInfo?.feeStructure.totalFees)}
-            </p>
-          </div>
+        <Row gutter={[16, 16]} className="mb-6">
+          <Col xs={24} md={8}>
+            <Card
+              bordered={false}
+              className="shadow-sm rounded-2xl"
+            >
+              <Statistic
+                title="Total Due"
+                value={calculatedData.totalDue}
+                formatter={(value) => formatCurrency(Number(value))}
+                prefix={<ClockCircleOutlined />}
+                valueStyle={{ color: '#fa8c16' }}
+              />
 
-          {/* Total Paid */}
-          <div className=" rounded-lg p-6 shadow-md border ">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold  ">Total Paid</h3>
-              <CheckCircleOutlined className="text-2xl text-green-500" />
-            </div>
-            <p className="text-3xl font-bold  mb-2">{formatCurrency(calculatedData.totalPaid)}</p>
-            <p className="text-sm  dark:text-slate-400">
-              {(() => {
-                const { totalPaid, totalFees } = calculatedData;
-                if (!totalFees) return '0.0% of total fees';
-                const percent = ((totalPaid / totalFees) * 100).toFixed(1);
-                return `${percent}% of total fees`;
-              })()}
-            </p>
-          </div>
+              <Divider />
 
-          {/* Upcoming Payment */}
-          <div className=" rounded-lg p-6 shadow-md border ">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold  ">Next Payment</h3>
-              <CreditCardOutlined className="text-2xl text-blue-500" />
-            </div>
-            <p className="text-3xl font-bold  mb-2">{formatCurrency(22500)}</p>
-            <p className="text-sm  dark:text-slate-400">Level 2 Fee (Due Mar 31, 2026)</p>
-          </div>
-        </div>
+              <Text type="secondary">
+                Remaining from total fees of{' '}
+                {formatCurrency(calculatedData.totalFees)}
+              </Text>
+            </Card>
+          </Col>
 
-        {/* Payment Schedule */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Installment Plans */}
-          <div className="lg:col-span-2">
-            <div className=" rounded-lg p-6 shadow-md border ">
-              <h2 className="text-2xl font-bold  mb-6">Installment Schedule</h2>
-              <div className="space-y-3">
-                {studentWithFeeInfo?.feeStructure.installmentPlans.map((plan, idx) => {
-                  const status = calculatedData.installmentStatus[plan.paymentLabel] || 'pending';
-                  const statusColor = status === 'paid' ? '' : status === 'partial' ? '' : '';
+          <Col xs={24} md={8}>
+            <Card
+              bordered={false}
+              className="shadow-sm rounded-2xl"
+            >
+              <Statistic
+                title="Total Paid"
+                value={calculatedData.totalPaid}
+                formatter={(value) => formatCurrency(Number(value))}
+                prefix={<CheckCircleFilled />}
+                valueStyle={{ color: '#52c41a' }}
+              />
 
-                  const statusText =
-                    status === 'paid'
-                      ? 'Paid'
-                      : status === 'partial'
-                        ? 'Partially Paid'
-                        : 'Pending';
-                  const statusTextColor = status === 'paid' ? '' : status === 'partial' ? '' : ' ';
+              <Divider />
 
-                  return (
-                    <div
-                      key={plan.id}
-                      className={`border rounded-lg p-4 cursor-pointer transition-all ${statusColor} hover:shadow-md`}
-                      onClick={() =>
-                        setSelectedInstallment(selectedInstallment === plan.id ? null : plan.id)
-                      }
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-semibold ">{plan.paymentLabel}</h3>
-                          <p className="text-sm  ">Due: {formatDate(plan.dueDate)}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold ">{formatCurrency(plan.amount)}</p>
-                          <p className={`text-xs font-semibold ${statusTextColor}`}>{statusText}</p>
-                        </div>
-                      </div>
-                      {selectedInstallment === plan.id && (
-                        <div className="mt-4 pt-4 border-t border-current">
-                          <div className="grid grid-cols-2 gap-2 text-sm">
-                            <div>
-                              <p className="">Amount</p>
-                              <p className="font-semibold ">{formatCurrency(plan.amount)}</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+              <Text type="secondary">
+                {calculatedData.paymentPercentage}% completed
+              </Text>
+            </Card>
+          </Col>
+
+          <Col xs={24} md={8}>
+            <Card
+              bordered={false}
+              className="shadow-sm rounded-2xl"
+            >
+              <Statistic
+                title="Total Fees"
+                value={calculatedData.totalFees}
+                formatter={(value) => formatCurrency(Number(value))}
+                prefix={<DollarCircleOutlined />}
+                valueStyle={{ color: '#1677ff' }}
+              />
+
+              <Divider />
+
+              <Text type="secondary">
+                Full academic payment structure
+              </Text>
+            </Card>
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]}>
+          {/* Installments */}
+          <Col xs={24} lg={16}>
+            <Card
+              bordered={false}
+              className="shadow-sm rounded-2xl"
+              title={
+                <Space>
+                  <CreditCardOutlined />
+                  <span>Installment Schedule</span>
+                </Space>
+              }
+            >
+              {studentWithFeeInfo?.feeStructure?.installmentPlans?.length ? (
+                <Collapse
+                  accordion
+                  ghost
+                  activeKey={selectedInstallment ?? undefined}
+                  onChange={(key) =>
+                    setSelectedInstallment(Number(key))
+                  }
+                  items={studentWithFeeInfo.feeStructure.installmentPlans.map(
+                    (plan) => {
+                      const status =
+                        calculatedData.installmentStatus[
+                          plan.paymentLabel
+                        ] || 'pending';
+
+                      return {
+                        key: plan.id,
+                        label: (
+                          <Flex
+                            justify="space-between"
+                            align="center"
+                            wrap="wrap"
+                            gap={12}
+                          >
+                            <Space direction="vertical" size={0}>
+                              <Text strong>{plan.paymentLabel}</Text>
+
+                              <Text type="secondary">
+                                <CalendarOutlined /> Due:{' '}
+                                {formatDate(plan.dueDate)}
+                              </Text>
+                            </Space>
+
+                            <Space size={12}>
+                              <Text strong>
+                                {formatCurrency(plan.amount)}
+                              </Text>
+
+                              {getStatusTag(status)}
+                            </Space>
+                          </Flex>
+                        ),
+
+                        children: (
+                          <Row gutter={[16, 16]}>
+                            <Col xs={24} md={12}>
+                              <Card size="small">
+                                <Statistic
+                                  title="Installment Amount"
+                                  value={plan.amount}
+                                  formatter={(value) =>
+                                    formatCurrency(Number(value))
+                                  }
+                                />
+                              </Card>
+                            </Col>
+
+                            <Col xs={24} md={12}>
+                              <Card size="small">
+                                <Statistic
+                                  title="Due Date"
+                                  value={formatDate(plan.dueDate)}
+                                  prefix={<CalendarOutlined />}
+                                />
+                              </Card>
+                            </Col>
+                          </Row>
+                        ),
+                      };
+                    },
+                  )}
+                />
+              ) : (
+                <Empty description="No installment plans found" />
+              )}
+            </Card>
+          </Col>
 
           {/* Payment History */}
-          <div>
-            <div className=" rounded-lg p-6 shadow-md border ">
-              <h2 className="text-xl font-bold  mb-6">Payment History</h2>
-              <div className="space-y-4">
-                {studentWithFeeInfo?.paymentCollections.map((payment) => (
-                  <div key={payment.id} className="pb-4 border-b  last:border-0">
-                    <div className="flex justify-between items-start mb-2">
-                      <p className="font-semibold ">{formatCurrency(payment.amountPaid)}</p>
-                      <span>
-                        {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                      </span>
-                    </div>
-                    <p className="text-xs">{formatDate(payment.paymentDate)}</p>
-                    <p className="text-xs  ">{/* Ref: {payment.transactionRef || 'N/A'} */}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+          <Col xs={24} lg={8}>
+            <Card
+              bordered={false}
+              className="shadow-sm rounded-2xl"
+              title={
+                <Space>
+                  <FileTextOutlined />
+                  <span>Payment History</span>
+                </Space>
+              }
+            >
+              {studentWithFeeInfo?.paymentCollections?.length ? (
+                <List
+                  itemLayout="vertical"
+                  dataSource={studentWithFeeInfo.paymentCollections}
+                  renderItem={(payment) => (
+                    <List.Item
+                      key={payment.id}
+                      className="!px-0"
+                    >
+                      <Flex justify="space-between" align="start">
+                        <div>
+                          <Text strong>
+                            {formatCurrency(payment.amountPaid)}
+                          </Text>
+
+                          <br />
+
+                          <Text type="secondary">
+                            {formatDate(payment.paymentDate)}
+                          </Text>
+                        </div>
+
+                        <Tag
+                          color={
+                            payment.status === 'paid'
+                              ? 'success'
+                              : payment.status === 'partial'
+                                ? 'warning'
+                                : 'default'
+                          }
+                        >
+                          {payment.status.toUpperCase()}
+                        </Tag>
+                      </Flex>
+                    </List.Item>
+                  )}
+                />
+              ) : (
+                <Empty description="No payment history found" />
+              )}
+            </Card>
+
+            {/* Notice Card */}
+            <Card
+              bordered={false}
+              className="shadow-sm rounded-2xl mt-4"
+              style={{marginTop:20}}
+            >
+              <Alert
+                type="info"
+                showIcon
+                message="Payment Reminder"
+                description="Please complete upcoming installment payments before the due date to avoid penalties."
+              />
+            </Card>
+          </Col>
+        </Row>
       </div>
     </div>
   );

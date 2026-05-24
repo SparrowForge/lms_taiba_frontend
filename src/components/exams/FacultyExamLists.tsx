@@ -1,41 +1,36 @@
-"use client";
+'use client';
 
-import { PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Tag } from "antd";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Tag } from 'antd';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
-import { hasAnyHeadRole } from "@/utils/roleUtils";
+import { hasAnyHeadRole } from '@/utils/roleUtils';
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from '@/hooks/useAuth';
 
-import { IExam } from "@/types/exam";
+import { IExam } from '@/types/exam';
 
-
-
-import ExamSetManageDrawer from "./ExamSetManageDrawer";
-import ExamFacultyAssignDrawer from "../faculties/ExamFacultyAssignmentDrawer";
-import { useExams } from "@/hooks/useExams";
-
-
+import ExamSetManageDrawer from './ExamSetManageDrawer';
+import ExamFacultyAssignDrawer from '../faculties/ExamFacultyAssignmentDrawer';
+import { useExams } from '@/hooks/useExams';
 
 export const formatDate = (value: string) => {
   const date = new Date(value);
   const day = date.getDate();
-  const month = date.toLocaleString("en-US", { month: "short" }); // Dec
+  const month = date.toLocaleString('en-US', { month: 'short' }); // Dec
   const year = date.getFullYear();
   return `${day} ${month} ${year}`;
 };
 
 export const formatTime = (value: string) => {
   const date = new Date(value);
-  return date.toLocaleString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
+  return date.toLocaleString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
     hour12: true,
   });
 };
-
 
 interface ExamListProps {
   data: IExam;
@@ -45,21 +40,21 @@ const FacultyExamList = ({ data }: ExamListProps) => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [facultyDrawerVisible, setFacultyDrawerVisible] = useState(false);
   const [drawerMode, setDrawerMode] = useState<'create' | 'edit'>('create');
-  const { loadExams } = useExams()
-  const params = useParams()
-  const searchParams = useSearchParams()
-  const subjectId = params.id as string
-  const semesterId = searchParams.get('semesterId') as string
-  const batchId = searchParams.get('batchId') as string
+  const { loadExams } = useExams();
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const subjectId = params.id as string;
+  const semesterId = searchParams.get('semesterId') as string;
+  const batchId = searchParams.get('batchId') as string;
 
-  const router = useRouter()
+  const router = useRouter();
   const handleAddQuestion = (subjectId: number) => {
-    return router.push(`/exam-questions/create?subjectId=${subjectId}`)
-  }
+    return router.push(`/exam-questions/create?subjectId=${subjectId}`);
+  };
 
   const handleAddQuestionSet = (examId: number) => {
-    return router.push(`/question-set/create?examId=${examId}`)
-  }
+    return router.push(`/question-set/create?examId=${examId}`);
+  };
 
   const handleCreateDrawer = () => {
     setDrawerMode('create');
@@ -72,27 +67,29 @@ const FacultyExamList = ({ data }: ExamListProps) => {
 
   const handleDrawerSuccess = () => {
     setDrawerVisible(false);
-    loadExams({ page: 1, limit: 99, subjectId: Number(subjectId), semesterId: Number(semesterId), batchId: batchId ? Number(batchId) : undefined })
+    loadExams({
+      page: 1,
+      limit: 99,
+      subjectId: Number(subjectId),
+      semesterId: Number(semesterId),
+      batchId: batchId ? Number(batchId) : undefined,
+    });
   };
 
-
-
   const handleAddResult = (examId: number) => {
-    return router.push(`/result/create?examId=${examId}`)
-  }
+    return router.push(`/result/create?examId=${examId}`);
+  };
   const handleShowResults = (examId: number) => {
-    return router.push(`/exam-results?examId=${examId}`)
-  }
+    return router.push(`/exam-results?examId=${examId}`);
+  };
 
-  const { user } = useAuth()
+  const { user } = useAuth();
 
-  const isHead = hasAnyHeadRole(user)
+  const isHead = hasAnyHeadRole(user);
 
-  console.log("object, user", user)
-
+  console.log('object, user', user);
 
   return (
-
     <Card
       key={data.id}
       className="shadow-md rounded-xl border"
@@ -108,70 +105,63 @@ const FacultyExamList = ({ data }: ExamListProps) => {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Subject</span>
-              <span className="font-medium text-gray-900">
-                {data.subject?.name}
-              </span>
+              <span className="font-medium text-gray-900">{data.subject?.name}</span>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Marks</span>
-              <span className="font-medium text-gray-900">
-                {data.marks}
-              </span>
+              <span className="font-medium text-gray-900">{data.marks}</span>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Date</span>
-              <span className="font-medium text-gray-900">
-                {formatDate(data.examDatetime)}
-              </span>
+              <span className="font-medium text-gray-900">{formatDate(data.examDatetime)}</span>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Time</span>
-              <span className="font-medium text-gray-900">
-                {formatTime(data.examDatetime)}
-              </span>
+              <span className="font-medium text-gray-900">{formatTime(data.examDatetime)}</span>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Duration</span>
               <span className="font-medium text-gray-900">
                 {data.duration?.hours
-                  ? `${data.duration.hours} hr${data.duration.hours > 1 ? "s" : ""}`
-                  : ""}
-                {data.duration?.minutes ? ` ${data.duration.minutes} min` : ""}
+                  ? `${data.duration.hours} hr${data.duration.hours > 1 ? 's' : ''}`
+                  : ''}
+                {data.duration?.minutes ? ` ${data.duration.minutes} min` : ''}
               </span>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Room</span>
-              <span className="font-medium text-gray-900">
-                {data.room?.name}
-              </span>
+              <span className="font-medium text-gray-900">{data.room?.name}</span>
             </div>
           </div>
         </div>
 
-
-        {
-          isHead && <>
+        {isHead && (
+          <>
             <Button
               type="primary"
               icon={<PlusOutlined />}
-
               onClick={() => handleCreateFacultyAddDrawer()}
             >
               Add Faculty
             </Button>
+          </>
+        )}
+
+        {!isHead && (
+          <>
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              style={{ marginLeft: 16 }}
-              onClick={() => handleCreateDrawer()}
+              onClick={() => handleAddQuestion(data.subjectId)}
             >
-              Manage Question Set
+              Add Question
             </Button>
+
             <Button
               color="primary"
               variant="filled"
@@ -181,20 +171,14 @@ const FacultyExamList = ({ data }: ExamListProps) => {
             >
               Add Question Set
             </Button>
-
-          </>
-        }
-
-        {
-          !isHead && <>
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => handleAddQuestion(data.subjectId)}
+              style={{ marginLeft: 16 }}
+              onClick={() => handleCreateDrawer()}
             >
-              Add Question
+              Manage Question Set
             </Button>
-
             <Button
               color="primary"
               variant="outlined"
@@ -208,14 +192,13 @@ const FacultyExamList = ({ data }: ExamListProps) => {
             <Button
               color="primary"
               variant="dashed"
-              style={{ marginLeft: 16 }}
+              style={{ marginLeft: 16, marginTop: 8 }}
               onClick={() => handleShowResults(data.id)}
             >
               Show Result
             </Button>
           </>
-        }
-
+        )}
       </div>
 
       <ExamSetManageDrawer
@@ -233,7 +216,6 @@ const FacultyExamList = ({ data }: ExamListProps) => {
         onSuccess={handleDrawerSuccess}
       />
     </Card>
-
   );
 };
 
