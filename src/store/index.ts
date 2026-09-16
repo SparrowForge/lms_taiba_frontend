@@ -1,9 +1,9 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 
-import {adminStatsApi} from './api/adminStatsApi';
-import {classScheduleApi} from './api/classScheduleApi';
-import {examApi} from './api/examApi';
-import {studentApi} from './api/studentApi';
+import { adminStatsApi } from './api/adminStatsApi';
+import { classScheduleApi } from './api/classScheduleApi';
+import { examApi } from './api/examApi';
+import { studentApi } from './api/studentApi';
 import addressReducer from './slices/addressSlice';
 import attendanceReducer from './slices/attendanceSlice';
 import auditReducer from './slices/auditSlice';
@@ -36,6 +36,7 @@ import feeStructureReducer from './slices/feeStructureSlice';
 import discountTemplateReducer from './slices/discountTemplateSlice';
 import gradeRuleReducer from './slices/gradeRuleSlice';
 import instituteReducer from './slices/instituteSlice';
+import leadReducer from './slices/leadSlice';
 import markDistributionReducer from './slices/markDistributionSlice';
 import menuReducer from './slices/menuSlice';
 import notificationReducer from './slices/notificationSlice';
@@ -63,7 +64,6 @@ import twofaReducer from './slices/twofaSlice';
 import userRoleReducer from './slices/userRoleSlice';
 import userReducer from './slices/userSlice';
 import weekDayReducer from './slices/weekDaySlice';
-
 
 // Root state type
 export interface RootState {
@@ -120,7 +120,8 @@ export interface RootState {
   sections: ReturnType<typeof sectionReducer>;
   employmentTypes: ReturnType<typeof employmentTypeReducer>;
   institutes: ReturnType<typeof instituteReducer>;
-  twofa: ReturnType<typeof twofaReducer>
+  leads: ReturnType<typeof leadReducer>;
+  twofa: ReturnType<typeof twofaReducer>;
   students: ReturnType<typeof studentReducer>;
   studentEducations: ReturnType<typeof studentEducationReducer>;
   studentFamilies: ReturnType<typeof studentFamilyReducer>;
@@ -165,7 +166,7 @@ export const store = configureStore({
     feePaymentCollections: feePaymentCollectionReducer,
     feePaymentDetails: feePaymentDetailsReducer,
     feeStructures: feeStructureReducer,
-  discountTemplates: discountTemplateReducer,
+    discountTemplates: discountTemplateReducer,
     gradeRules: gradeRuleReducer,
     markDistributions: markDistributionReducer,
     notifications: notificationReducer,
@@ -188,7 +189,8 @@ export const store = configureStore({
     sections: sectionReducer,
     employmentTypes: employmentTypeReducer,
     institutes: instituteReducer,
-    twofa:twofaReducer,
+    leads: leadReducer,
+    twofa: twofaReducer,
     students: studentReducer,
     studentEducations: studentEducationReducer,
     studentFamilies: studentFamilyReducer,
@@ -197,7 +199,7 @@ export const store = configureStore({
     weekDays: weekDayReducer,
     classSchedules: classScheduleReducer,
     settings: settingsReducer,
-    subjectResults:subjectResultReducer,
+    subjectResults: subjectResultReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -209,7 +211,12 @@ export const store = configureStore({
         // Ignore these paths in the state
         ignoredPaths: ['items.dates'],
       },
-    }).concat(adminStatsApi.middleware, classScheduleApi.middleware, examApi.middleware, studentApi.middleware),
+    }).concat(
+      adminStatsApi.middleware,
+      classScheduleApi.middleware,
+      examApi.middleware,
+      studentApi.middleware,
+    ),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

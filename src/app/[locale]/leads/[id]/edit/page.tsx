@@ -1,0 +1,52 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+
+import { LOCALE_KEYS } from '@/constants/localizationKeys';
+import { Status } from '@/enums';
+
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { MainLayout } from '@/components/layout/MainLayout';
+import LeadForm from '@/components/leads/LeadForm';
+import EntityEditLoadingView from '@/components/ui/EntityEditLoadingView';
+import EntityEditNotFoundView from '@/components/ui/EntityEditNotFoundView';
+import { PageHeader } from '@/components/ui/PageHeader';
+
+import { useLeads } from '@/hooks/useLeads';
+import { useLocalization } from '@/hooks/useLocalization';
+
+const LeadEditPage: React.FC<{ params: Promise<{ id: string }> }> = ({ params }) => {
+  const resolvedParams = React.use(params);
+  const router = useRouter();
+  const { selectedLead, detailsStatus, loadLead } = useLeads();
+  const { t } = useLocalization();
+  const entityName = t(LOCALE_KEYS.LEAD, { defaultValue: 'Lead' });
+
+  useEffect(() => {
+    const leadId = parseInt(resolvedParams.id);
+    loadLead(leadId);
+  }, [resolvedParams.id, loadLead]);
+
+  if (detailsStatus.status === Status.LOADING) {
+    return <EntityEditLoadingView entityName={entityName} />;
+  }
+
+  if (!selectedLead || selectedLead.id !== parseInt(resolvedParams.id)) {
+    return <EntityEditNotFoundView entityName={entityName} backRoute="/leads" />;
+  }
+
+  return (
+    <ProtectedRoute>
+      <MainLayout>
+        <PageHeader
+          title={t(LOCALE_KEYS.EDIT_NAME, { name: entityName })}
+          onBack={() => router.back()}
+        />
+        <LeadForm mode="edit" leadId={parseInt(resolvedParams.id)} initialValues={selectedLead} />
+      </MainLayout>
+    </ProtectedRoute>
+  );
+};
+
+export default LeadEditPage;

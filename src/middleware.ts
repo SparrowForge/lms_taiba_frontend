@@ -1,7 +1,7 @@
-import {NextRequest, NextResponse} from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
-import {routing} from './i18n/routing';
+import { routing } from './i18n/routing';
 
 // Protected routes that require authentication
 const protectedRoutes = [
@@ -27,6 +27,8 @@ const protectedRoutes = [
   '/schedule-types',
   '/employment-types',
   '/institutes',
+  '/leads',
+  '/lead-sources',
   '/grade-rules',
   '/mark-distributions',
   '/exams',
@@ -44,7 +46,13 @@ const protectedRoutes = [
 ];
 
 // Public routes that don't require authentication
-const publicRoutes = ['/login', '/register', '/forgot-password', '/register-student', '/verify-2fa'];
+const publicRoutes = [
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/register-student',
+  '/verify-2fa',
+];
 
 const intlMiddleware = createMiddleware(routing);
 

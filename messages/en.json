@@ -931,5 +931,20 @@
   "transaction_details": "Transaction Details",
   "balance": "Balance",
   "amounts_in": "All Amounts in",
-  "ex": "Ex"
+  "ex": "Ex",
+  "lead": "Lead",
+  "leads": "Leads",
+  "select_lead": "Select lead",
+  "lead_pipeline": "Admissions Pipeline",
+  "lead_source": "Lead Source",
+  "lead_sources": "Lead Sources",
+  "convert_to_student": "Convert to Student",
+  "lead_stage": "Stage",
+  "lead_stage_new": "New",
+  "lead_stage_contacted": "Contacted",
+  "lead_stage_qualified": "Qualified",
+  "lead_stage_applied": "Applied",
+  "lead_stage_admitted": "Admitted",
+  "lead_stage_enrolled": "Enrolled",
+  "lead_stage_lost": "Lost"
 }

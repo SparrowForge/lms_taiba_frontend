@@ -929,5 +929,20 @@
   "transaction_details": "تفاصيل المعاملة",
   "balance": "الرصيد",
   "amounts_in": "المبالغ بـ",
-  "ex": "المتبث"
+  "ex": "المتبث",
+  "lead": "طالب محتمل",
+  "leads": "الطلاب المحتملون",
+  "select_lead": "اختر الطالب المحتمل",
+  "lead_pipeline": "مسار القبول",
+  "lead_source": "مصدر الاستقطاب",
+  "lead_sources": "مصادر الاستقطاب",
+  "convert_to_student": "تحويل إلى طالب",
+  "lead_stage": "المرحلة",
+  "lead_stage_new": "جديد",
+  "lead_stage_contacted": "تم التواصل",
+  "lead_stage_qualified": "مؤهل",
+  "lead_stage_applied": "قدّم الطلب",
+  "lead_stage_admitted": "مقبول",
+  "lead_stage_enrolled": "مسجّل",
+  "lead_stage_lost": "خسارة"
 }
