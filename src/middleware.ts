@@ -43,6 +43,16 @@ const protectedRoutes = [
   '/room-types',
   '/class-schedules',
   '/week-days',
+  '/designations',
+  '/salary-components',
+  '/salary-structures',
+  '/staff-attendance',
+  '/leave-types',
+  '/leave-applications',
+  '/payroll-periods',
+  '/employee-loans',
+  '/payroll-bonuses',
+  '/payroll-reports',
 ];
 
 // Public routes that don't require authentication
