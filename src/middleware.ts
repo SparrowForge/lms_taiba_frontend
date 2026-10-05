@@ -125,6 +125,13 @@ export default function middleware(request: NextRequest) {
     return NextResponse.redirect(dashboardUrl);
   }
 
+  // Serve the dashboard for `/{locale}` from a nested route. The bare `/[locale]` route returns a
+  // cached 404 on Vercel while every nested route works, so rewrite instead of relying on it.
+  // The URL stays `/{locale}`, so menu access (route "/") still applies.
+  if (isValidLocale && pathWithoutLocale === '' && isAuthenticated) {
+    return NextResponse.rewrite(new URL(`/${resolvedLocale}/home`, request.url));
+  }
+
   // Apply internationalization middleware
   return intlMiddleware(request);
 }
