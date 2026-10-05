@@ -29,6 +29,10 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+// Render on every request. Statically prerendering this layout at build time cached a 404
+// for `/en` and `/ar` (the home page) on Vercel.
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'LMS Taiba Admin Panel',
   description: 'Learning Management System Admin Panel',
