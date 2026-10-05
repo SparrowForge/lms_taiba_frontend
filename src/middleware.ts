@@ -53,6 +53,10 @@ const protectedRoutes = [
   '/employee-loans',
   '/payroll-bonuses',
   '/payroll-reports',
+  '/lead-pipeline',
+  '/lead-follow-ups',
+  '/lead-activities',
+  '/crm-reports',
 ];
 
 // Public routes that don't require authentication
