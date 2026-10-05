@@ -18,7 +18,7 @@ const ENV = process.env.NODE_ENV || 'development';
 // Create axios instance
 const api: AxiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000, // serverless cold starts on the backend can take well over 10s
   headers: {
     'Content-Type': 'application/json',
     'ngrok-skip-browser-warning': 'true',
