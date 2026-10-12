@@ -89,14 +89,14 @@ const InstallmentSection: React.FC<InstallmentSectionProps> = ({
           }}
         >
           <Row gutter={16}>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={8}>
               <strong>Form Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={8}>
               <strong>Semester Sum ({paymentRows.length} semesters):</strong>{' '}
               {paymentRows.reduce((sum, row) => sum + row.amount, 0).toFixed(2)}
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={8}>
               <strong>Difference:</strong>{' '}
               {Math.abs(
                 Number(totalFees || 0) - paymentRows.reduce((sum, row) => sum + row.amount, 0),

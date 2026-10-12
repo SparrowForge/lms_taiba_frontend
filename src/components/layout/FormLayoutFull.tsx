@@ -2,12 +2,12 @@ import {Card} from 'antd';
 
 function FormLayoutFull({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ padding: '24px', height: 'calc(100vh - 128px)', overflow: 'auto' }}>
+    <div className="p-2 md:p-6" style={{ height: 'calc(100dvh - 128px)', overflow: 'auto' }}>
       <Card
+        className="md:p-6"
         style={{
           width: '100%',
           margin: '0 auto',
-          padding: '24px',
         }}
         role="main"
         aria-labelledby="form-title"

@@ -14,7 +14,7 @@ const LayoutDashboard = () => {
     <div className="overflow-auto">
       <Row
         gutter={[24, 24]}
-        className="pl-6"
+        className="px-2 md:pl-6 md:pr-0"
         style={{ width: '100%', minWidth: 0, height: '100%' }}
       >
         {user?.type === UserType.FACULTY ? (

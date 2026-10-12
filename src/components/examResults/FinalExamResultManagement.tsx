@@ -522,7 +522,7 @@ export function FinalExamResultManagement() {
       : '0.00';
 
   return (
-    <div style={{ padding: '24px', background: '#f5f5f5', height: '100vh', overflowY: 'auto' }}>
+    <div className="p-2 md:p-6" style={{ background: '#f5f5f5', height: '100vh', overflowY: 'auto' }}>
       <Card
         title={<h2 style={{ margin: 0 }}>Result Management</h2>}
         style={{ marginBottom: '24px' }}

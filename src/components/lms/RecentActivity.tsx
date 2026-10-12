@@ -40,7 +40,7 @@ const RecentActivity = () => {
   return (
     <Card className="rounded-2xl shadow-sm ">
       {/* Header */}
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
         <h2 className="text-base font-semibold flex gap-2 items-center">
           {t(LOCALE_KEYS.RECENT_ACTIVITY)}
         </h2>

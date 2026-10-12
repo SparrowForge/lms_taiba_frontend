@@ -91,12 +91,12 @@ export default function VoucherPrintPage() {
           {/* Header */}
           <div className="border-b-2 border-black pb-3 mb-3">
             <Row align="middle">
-              <Col span={4}>
+              <Col xs={12} sm={8} md={4}>
                 <div className="h-12 w-12 border-2 border-black flex items-center justify-center font-bold text-sm rounded">
                   Logo
                 </div>
               </Col>
-              <Col span={20}>
+              <Col xs={24} md={20}>
                 <Title level={3} style={{ margin: 0, fontWeight: 'bold' }}>
                   {(voucher.branch as any)?.institute?.name || t(LOCALE_KEYS.INSTITUTE)}
                 </Title>

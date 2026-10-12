@@ -435,9 +435,9 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
 
   // Form content for page mode (multiple assignments)
   const pageFormContent = (
-    <div style={{ padding: '24px', height: 'calc(100vh - 128px)', overflow: 'auto' }}>
+    <div className="p-2 md:p-6" style={{ height: 'calc(100vh - 128px)', overflow: 'auto' }}>
       <Row gutter={24}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Card
             title={`${mode === 'create' ? 'Create' : 'Edit'} ${entityName}`}
             style={{ height: 'fit-content' }}
@@ -657,7 +657,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
             {subjectAssignments.length > 0 && (
               <Card title="Summary" style={{ marginTop: 16 }} size="small">
                 <Row gutter={16}>
-                  <Col span={12}>
+                  <Col xs={24} md={12}>
                     <div style={{ textAlign: 'center' }}>
                       <Text strong style={{ fontSize: '16px', color: '#1890ff' }}>
                         {subjectAssignments.length}
@@ -666,7 +666,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
                       <Text type="secondary">Subjects</Text>
                     </div>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} md={12}>
                     <div style={{ textAlign: 'center' }}>
                       <Text strong style={{ fontSize: '16px', color: '#52c41a' }}>
                         {subjectAssignments.reduce(
@@ -684,7 +684,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
           </Card>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} md={12}>
           {/* Subject Assignments */}
           {subjectAssignments.length === 0 ? (
             <Card
@@ -829,7 +829,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
 
                   {assignment.faculty.map((faculty, facultyIndex) => (
                     <Row key={facultyIndex} gutter={16} style={{ marginBottom: 16 }}>
-                      <Col span={8}>
+                      <Col xs={24} sm={12} md={8}>
                         <Form.Item
                           label="Faculty"
                           style={{ marginBottom: 0 }}
@@ -869,7 +869,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
                           </Select>
                         </Form.Item>
                       </Col>
-                      <Col span={6}>
+                      <Col xs={24} sm={12} md={6}>
                         <Form.Item
                           label="Hours/Week"
                           style={{ marginBottom: 0 }}
@@ -893,7 +893,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
                           />
                         </Form.Item>
                       </Col>
-                      <Col span={6}>
+                      <Col xs={24} sm={12} md={6}>
                         <Form.Item
                           label="Role"
                           style={{ marginBottom: 0 }}
@@ -921,7 +921,7 @@ const SemesterSubjectForm: React.FC<SemesterSubjectFormProps> = ({
                           </Select>
                         </Form.Item>
                       </Col>
-                      <Col span={4}>
+                      <Col xs={12} sm={8} md={4}>
                         <div style={{ paddingTop: 32 }}>
                           <Button
                             type="text"

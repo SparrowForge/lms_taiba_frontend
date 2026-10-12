@@ -75,7 +75,7 @@ export default function ResetPasswordPage() {
 
           {/* Verification Card */}
           <Card
-            style={{ width: 420 }}
+            style={{ width: '100%', maxWidth: 420 }}
             bordered={false}
             bodyStyle={{ padding: 32 }}
           >

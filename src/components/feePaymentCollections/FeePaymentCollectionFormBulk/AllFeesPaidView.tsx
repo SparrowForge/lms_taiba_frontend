@@ -80,15 +80,15 @@ export default function AllFeesPaidView({
   ];
 
   return (
-    <div style={{ padding: '24px', height: 'calc(100vh - 128px)', overflow: 'auto' }}>
-      <Card style={{ margin: '0 auto', padding: '24px' }} role="main" aria-labelledby="form-title">
+    <div className="p-2 md:p-6" style={{ height: 'calc(100vh - 128px)', overflow: 'auto' }}>
+      <Card className="md:p-6" style={{ margin: '0 auto' }} role="main" aria-labelledby="form-title">
         {studentId && studentWithFeeInfo?.student && (
           <Card
             title={t(LOCALE_KEYS.STUDENT_INFORMATION, { defaultValue: 'Student Information' })}
             style={{ marginBottom: 24 }}
           >
             <Row gutter={16}>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Typography.Text strong>
                   {t(LOCALE_KEYS.NAME, { defaultValue: 'Name' })}:
                 </Typography.Text>
@@ -97,14 +97,14 @@ export default function AllFeesPaidView({
                   {studentWithFeeInfo.student.firstName} {studentWithFeeInfo.student.lastName}
                 </Typography.Text>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Typography.Text strong>
                   {t(LOCALE_KEYS.APPLICATION_NO, { defaultValue: 'Application No' })}:
                 </Typography.Text>
                 <br />
                 <Typography.Text>{studentWithFeeInfo.student.applicationNo}</Typography.Text>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Typography.Text strong>
                   {t(LOCALE_KEYS.REGISTRATION_NO, { defaultValue: 'Registration No' })}:
                 </Typography.Text>

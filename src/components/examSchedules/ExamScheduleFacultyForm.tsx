@@ -149,17 +149,17 @@ const ExamScheduleFacultyForm: React.FC<ExamScheduleFormProps> = ({
     >
       <Card title="Faculty Details" bordered className="shadow-sm" style={{ marginBottom: '10px' }}>
         <Row gutter={[16, 16]}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <strong>Exam:</strong>
             <div>{selectedExam?.name || '—'}</div>
           </Col>
 
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <strong>Room:</strong>
             <div>{selectedRoom?.name || '—'}</div>
           </Col>
 
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <strong>Faculty:</strong>
             <div>{user?.faculty?.fullName || '—'}</div>
           </Col>

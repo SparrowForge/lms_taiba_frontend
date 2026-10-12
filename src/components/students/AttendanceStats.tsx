@@ -24,7 +24,7 @@ export function AttendanceStats({
       {stats.map((s) => {
         const Icon = s.icon;
         return (
-          <Card key={s.label} className="p-6 border-0">
+          <Card key={s.label} className="p-3 md:p-6 border-0">
             <Icon className="text-xl mb-2" />
             <p className="text-sm text-gray-600">{s.label}</p>
             <p className="text-2xl font-bold">{s.value}</p>

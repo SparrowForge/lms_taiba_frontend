@@ -76,7 +76,7 @@ export default function CourseTimeline() {
     label: <div className="font-bold text-slate-900">Class {item.classNo }</div>,
     children: (
       <div className="space-y-3">
-        <div className="text-sm text-slate-600 mt-3 flex justify-between">
+        <div className="text-sm text-slate-600 mt-3 flex justify-between flex-wrap gap-2">
           <h1><span className="font-semibold">Date:</span> {new Date(item.date).toLocaleDateString()}</h1>
            <Button
               onClick={()=>handleCreateDrawer(item.classNo)}
@@ -132,7 +132,7 @@ export default function CourseTimeline() {
       onSuccess={handleDrawerSuccess}
       classNo={classNo}
     />
-    <div className="bg-white rounded-lg border border-slate-200 p-6">
+    <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6">
       <div className="max-h-[800px] overflow-y-auto overflow-x-hidden pr-2">
           <Timeline items={items} mode="left" />
           {

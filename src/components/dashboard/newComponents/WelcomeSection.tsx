@@ -40,7 +40,7 @@ const WelcomeSection = () => {
           body: { padding: '24px' },
         }}
       >
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center flex-wrap gap-2">
           <div>
             <Title
               level={2}

@@ -37,7 +37,7 @@ const ParentsSection = () => {
   const { t } = useLocalization();
 
   return (
-    <Card className="rounded-lg p-6" style={{ marginTop: '20px' }}>
+    <Card className="rounded-lg p-3 md:p-6" style={{ marginTop: '20px' }}>
       <h3 className="font-bold text-xl mb-4">{t(LOCALE_KEYS.PARENTS_VIEW)}</h3>
 
       <Carousel dots={false} slidesToShow={1.5} slidesToScroll={1} infinite autoplay>

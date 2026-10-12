@@ -263,7 +263,7 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
       >
         <Row gutter={16}>
           {/* Row 1: Head Code + Head Name */}
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item
               label={t(LOCALE_KEYS.HEAD_CODE, { defaultValue: 'Head Code' })}
               name="headCode"
@@ -279,7 +279,7 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
               <Input readOnly />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item
               label={t(LOCALE_KEYS.HEAD_NAME, { defaultValue: 'Head Name' })}
               name="headName"
@@ -297,7 +297,7 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
           </Col>
 
           {/* Row 2: Parent Head + Head Type */}
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item
               label={t(LOCALE_KEYS.PARENT_HEAD, { defaultValue: 'Parent Head' })}
               name="parentHead"
@@ -305,7 +305,7 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
               <Input readOnly />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item
               label={t(LOCALE_KEYS.HEAD_TYPE, { defaultValue: 'Head Type' })}
               name="headType"
@@ -395,14 +395,14 @@ const ChartOfAccountsForm: React.FC<ChartOfAccountsFormProps> = ({
           </Col>
 
           {/* Row 3: IsTransaction + IsActive */}
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="isTransaction" valuePropName="checked">
               <Checkbox>
                 {t(LOCALE_KEYS.IS_TRANSACTION, { defaultValue: 'Is Transaction' })}
               </Checkbox>
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="isActive" valuePropName="checked">
               <Checkbox>{t(LOCALE_KEYS.IS_ACTIVE, { defaultValue: 'Active' })}</Checkbox>
             </Form.Item>

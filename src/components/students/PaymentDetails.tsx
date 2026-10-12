@@ -118,19 +118,19 @@ const PaymentDetails = () => {
 
       <Card style={{ marginBottom: 24 }}>
         <Row gutter={24}>
-          <Col span={8}>
+          <Col xs={24} sm={12} md={8}>
             <Statistic
               title="Student"
               value={`${student?.firstName} ${student?.lastName}`}
             />
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={12} md={8}>
             <Statistic
               title="Registration No"
               value={student?.registrationNo}
             />
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={12} md={8}>
             <Statistic
               title="Card No"
               value={student?.cardNo}
@@ -167,25 +167,25 @@ const PaymentDetails = () => {
 
       <Card title="Fee Structure" style={{ marginBottom: 24 }}>
         <Row gutter={[24, 16]}>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6}>
             <Statistic
               title="Template"
               value={feeStructure?.templateName}
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6}>
             <Statistic
               title="Payment Type"
               value={feeStructure?.paymentType}
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6}>
             <Statistic
               title="Total Fees"
               value={`${feeStructure?.currency} ${totalFees.toLocaleString()}`}
             />
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} md={6}>
             <Statistic
               title="Discount"
               value={`${feeStructure?.currency} ${discount.toLocaleString()}`}

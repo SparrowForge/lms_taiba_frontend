@@ -73,7 +73,7 @@ const RecentAnnouncenments = () => {
     <div className="mb-5">
       <Card>
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h1 className="text-lg font-semibold">{t(LOCALE_KEYS.RECENT_ANNOUNCEMENT)}</h1>
           <Button type="text" style={{ color: '#1F4BCA', fontSize: '14px', fontWeight: '400' }}>
             View All
@@ -84,7 +84,7 @@ const RecentAnnouncenments = () => {
         <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto pr-2">
           {sortedData.map((item, index) => (
             <div key={index} className="py-2 px-4 rounded-lg" style={{ background: item.color }}>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center flex-wrap gap-2">
                 <h2 className="text-[14px] font-semibold">{item.title}</h2>
                 <p className="text-sm text-gray-600">{formatDay(item.date)}</p>
               </div>

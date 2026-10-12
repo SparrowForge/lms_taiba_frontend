@@ -256,7 +256,7 @@ export default function FeePaymentDetailsCard({
           }}
         >
           <Row gutter={16}>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Typography.Text strong>
                 {feeSummaryFromApi ? 'Total Amount Due:' : 'Total Due:'}
               </Typography.Text>
@@ -269,7 +269,7 @@ export default function FeePaymentDetailsCard({
                       .toFixed(2)}
               </Typography.Text>
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Typography.Text strong>Previously Paid:</Typography.Text>
               <br />
               <Typography.Text type="success">
@@ -278,14 +278,14 @@ export default function FeePaymentDetailsCard({
                   : previousPaidFromRows.toFixed(2)}
               </Typography.Text>
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Typography.Text strong>New Payment:</Typography.Text>
               <br />
               <Typography.Text style={{ color: '#1890ff' }}>
                 {newPaymentFromRows.toFixed(2)}
               </Typography.Text>
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Typography.Text strong>Remaining:</Typography.Text>
               <br />
               <Typography.Text type="danger">

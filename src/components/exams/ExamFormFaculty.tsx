@@ -233,7 +233,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
       </Form.Item>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="examTypeId"
             label={t(LOCALE_KEYS.EXAM_TYPE)}
@@ -283,7 +283,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
           </Form.Item>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="roomId"
             label={t(LOCALE_KEYS.ROOM)}
@@ -315,7 +315,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
 
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="marks"
             label={t(LOCALE_KEYS.MARKS)}
@@ -334,7 +334,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="examDatetime"
             label={t(LOCALE_KEYS.EXAM_DATETIME)}
@@ -356,7 +356,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="duration"
             label={t(LOCALE_KEYS.DURATION)}
@@ -387,7 +387,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="questionType"
             label={t(LOCALE_KEYS.QUESTION_TYPE)}
@@ -412,7 +412,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="questionsCount"
             label={t(LOCALE_KEYS.QUESTIONS_COUNT)}
@@ -431,7 +431,7 @@ const ExamFormFaculty: React.FC<ExamFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="optionsPerQuestion"
             label={t(LOCALE_KEYS.OPTIONS_PER_QUESTION)}

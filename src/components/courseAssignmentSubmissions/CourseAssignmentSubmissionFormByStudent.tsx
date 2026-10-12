@@ -154,32 +154,32 @@ const {user} = useAuth()
       
       <Card title="Assignment Details">
         <Row gutter={[16, 16]}>
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <strong>Assignment:</strong>
               <div>{selectedCourseAssignment?.title || "—"}</div>
             </Col>
 
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <strong>Course:</strong>
               <div>{selectedCourseAssignment?.course.name || "—"}</div>
             </Col>
 
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <strong>Course:</strong>
               <div>{selectedCourseAssignment?.subject.name || "—"}</div>
             </Col>
 
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <strong>Course:</strong>
               <div>{selectedCourseAssignment?.batch.name || "—"}</div>
             </Col>
 
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <strong>Course:</strong>
               <div>{selectedCourseAssignment?.semester.name || "—"}</div>
             </Col>
 
-             <Col span={12}>
+             <Col xs={24} md={12}>
               <strong>Course:</strong>
               <div>{selectedCourseAssignment?.faculty.fullName || "—"}</div>
             </Col>

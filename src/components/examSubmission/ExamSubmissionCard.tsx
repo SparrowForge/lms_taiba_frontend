@@ -32,7 +32,7 @@ export const ExamSubmissionCard = ({ submission }: Props) => {
     <Card
       size="small"
       title={
-        <div className="flex justify-between">
+        <div className="flex justify-between flex-wrap gap-2">
           <Space>
             <FileTextOutlined />
             {submission.exam.name}

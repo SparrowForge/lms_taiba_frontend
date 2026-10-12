@@ -12,6 +12,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { LOCALE_KEYS } from '@/constants/localizationKeys';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useLocalization } from '@/hooks/useLocalization';
 
 const { Title } = Typography;
@@ -44,6 +45,7 @@ export interface EntityConfig<T> {
 // Generic EntityList component
 export const EntityList = <T extends { id: number }>({ config }: { config: EntityConfig<T> }) => {
   const { t } = useLocalization();
+  const isMobile = useIsMobile();
   const router = useRouter();
   const searchParams = useSearchParams();
   const skip = searchParams.get('skip');
@@ -81,7 +83,14 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
   };
 
   return (
-    <div style={{ padding: '8px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{
+        padding: isMobile ? '4px' : '8px',
+        height: isMobile ? 'auto' : '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Card style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Fixed Top Section */}
         <div
@@ -99,11 +108,15 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '12px',
               marginBottom: '16px',
             }}
           >
-            <Title level={2}>{config.title}</Title>
-            <div style={{ display: 'flex', gap: '16px' }}>
+            <Title level={isMobile ? 4 : 2} style={{ margin: 0 }}>
+              {config.title}
+            </Title>
+            <div style={{ display: 'flex', gap: isMobile ? '8px' : '16px', flexWrap: 'wrap' }}>
               {config.extraActions?.map((action, index) => (
                 <div key={index}>{action}</div>
               ))}
@@ -159,8 +172,8 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
                   onSearch={(value) => {
                     config.onSearch?.(value);
                   }}
-                  size="large"
-                  style={{ maxWidth: '400px' }}
+                  size={isMobile ? 'middle' : 'large'}
+                  style={{ maxWidth: isMobile ? '100%' : '400px' }}
                 />
               )}
 
@@ -173,7 +186,7 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
                     placeholder={f.label}
                     allowClear={f.allowClear ?? true}
                     options={f.options}
-                    style={{ minWidth: 160 }}
+                    style={{ minWidth: 160, flex: isMobile ? '1 1 160px' : undefined }}
                     onChange={(val) => {
                       const nextVal = (val as string | undefined) ?? '';
                       // reset to first page when filters change
@@ -207,10 +220,18 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
 
         {/* Scrollable Table Section */}
         <div
-          style={{ flex: 1, overflow: 'auto', marginBottom: '16px', height: 'calc(100vh - 200px)' }}
+          style={{
+            flex: 1,
+            overflow: 'auto',
+            marginBottom: '16px',
+            height: isMobile ? 'auto' : 'calc(100vh - 200px)',
+          }}
         >
           <Table
-            scroll={{ y: 'calc(100vh - 360px)' }}
+            scroll={
+              isMobile ? { x: 'max-content' } : { x: 'max-content', y: 'calc(100vh - 360px)' }
+            }
+            size={isMobile ? 'small' : undefined}
             loading={config.loading}
             columns={config.columns}
             dataSource={config.items}
@@ -238,8 +259,9 @@ export const EntityList = <T extends { id: number }>({ config }: { config: Entit
             current={skip ? parseInt(skip ?? '0') / parseInt(limit ?? '10') + 1 : 1}
             total={config.itemsCount ?? config.items.length}
             pageSize={parseInt(limit ?? '10')}
-            showSizeChanger={true}
-            showQuickJumper={true}
+            size={isMobile ? 'small' : 'default'}
+            showSizeChanger={!isMobile}
+            showQuickJumper={!isMobile}
             showTotal={(total, range) =>
               `${range[0]}-${range[1]} ${t(LOCALE_KEYS.OF)} ${total} ${config.name}`
             }

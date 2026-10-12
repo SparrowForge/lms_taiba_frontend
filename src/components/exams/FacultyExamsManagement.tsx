@@ -36,7 +36,7 @@ const FacultyExamsManagement: React.FC = () => {
   return (
     <Card className="rounded-xl shadow-sm mb-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
         <h2 className="text-xl font-semibold">{t(LOCALE_KEYS.EXAM_SCHEDULE)}</h2>
       </div>
 
@@ -51,7 +51,7 @@ const FacultyExamsManagement: React.FC = () => {
 
       {/* Assignment Cards */}
       {listStatus.status === Status.SUCCESS && exams?.length > 0 ? (
-        <div className="grid grid-cols-2 gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
           {exams?.map((item) => (
             <FacultyExamList key={item.id} data={item} />
           ))}

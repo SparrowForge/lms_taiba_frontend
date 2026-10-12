@@ -17,7 +17,7 @@ const UpperHeaderSection = () => {
   return (
     <div>
       {/* Header with Toggle */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-2">
         {/* Title */}
         <h2 className="text-xl font-bold">{t(LOCALE_KEYS.My_SUBJECT)}</h2>
 

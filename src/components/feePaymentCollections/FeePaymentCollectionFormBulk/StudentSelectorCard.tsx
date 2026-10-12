@@ -124,7 +124,7 @@ export default function StudentSelectorCard({
       ) : (
         studentWithFeeInfo?.student && (
           <Row gutter={16}>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={8}>
               <Typography.Text strong>
                 {t(LOCALE_KEYS.NAME, { defaultValue: 'Name' })}:
               </Typography.Text>
@@ -133,14 +133,14 @@ export default function StudentSelectorCard({
                 {studentWithFeeInfo.student.firstName} {studentWithFeeInfo.student.lastName}
               </Typography.Text>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={8}>
               <Typography.Text strong>
                 {t(LOCALE_KEYS.APPLICATION_NO, { defaultValue: 'Application No' })}:
               </Typography.Text>
               <br />
               <Typography.Text>{studentWithFeeInfo.student.applicationNo}</Typography.Text>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={8}>
               <Typography.Text strong>
                 {t(LOCALE_KEYS.REGISTRATION_NO, { defaultValue: 'Registration No' })}:
               </Typography.Text>

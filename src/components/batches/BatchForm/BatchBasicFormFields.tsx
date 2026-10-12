@@ -139,7 +139,7 @@ export default function BatchBasicFormFields({
         <Input />
       </Form.Item>
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="academicYear"
             label={t(LOCALE_KEYS.ACADEMIC_YEAR)}
@@ -159,7 +159,7 @@ export default function BatchBasicFormFields({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="session"
             label={t(LOCALE_KEYS.SESSION)}
@@ -180,7 +180,7 @@ export default function BatchBasicFormFields({
       </Row>
 
       <Row gutter={16}>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="duration"
             label={t(LOCALE_KEYS.DURATION_MONTHS)}
@@ -209,7 +209,7 @@ export default function BatchBasicFormFields({
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="startDate"
             label={t(LOCALE_KEYS.START_DATE)}
@@ -227,7 +227,7 @@ export default function BatchBasicFormFields({
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="endDate"
             label={t(LOCALE_KEYS.END_DATE)}
@@ -245,7 +245,7 @@ export default function BatchBasicFormFields({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="intakeCapacity"
             label={t(LOCALE_KEYS.INTAKE_CAPACITY)}
@@ -261,7 +261,7 @@ export default function BatchBasicFormFields({
             <InputNumber min={1} max={10000} style={{ width: '100%' }} />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
         </Col>
       </Row>

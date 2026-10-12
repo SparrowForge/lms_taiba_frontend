@@ -19,7 +19,7 @@ const AdminDashboard = () => {
 
   if (error) {
     return (
-      <div className="p-6">
+      <div className="p-3 md:p-6">
         <WelcomeSection />
         <Card className="mt-6">
           <div className="text-center py-8">
@@ -34,8 +34,8 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-3 md:p-6">
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-2">
         <Title level={2}>Admin Dashboard</Title>
         <Button
           type="primary"

@@ -294,7 +294,7 @@ const RegisterStudentPage: React.FC = () => {
 
   return (
     <div className="min-h-screen py-8">
-      <div className="mx-auto px-12">
+      <div className="mx-auto px-3 md:px-12">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">{t(LOCALE_KEYS.STUDENT_REGISTRATION)}</h1>
@@ -350,7 +350,7 @@ const RegisterStudentPage: React.FC = () => {
               </div>
 
               {/* Navigation Buttons */}
-              <div className="flex justify-between mt-6">
+              <div className="flex flex-wrap justify-between gap-3 mt-6">
                 <div>
                   {currentStep > 0 && (
                     <Button size="large" onClick={handlePrevious}>

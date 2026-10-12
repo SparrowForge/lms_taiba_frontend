@@ -67,7 +67,7 @@ const ReportsDocuments = () => {
           return (
             <li
               key={doc.id}
-              className="p-2 shadow rounded-md flex justify-between items-center gap-2"
+              className="p-2 shadow rounded-md flex justify-between items-center gap-2 flex-wrap"
             >
               <div
                 className={`flex items-center justify-center w-7 h-7 rounded p-2 ${colors.bg} ${colors.text}`}

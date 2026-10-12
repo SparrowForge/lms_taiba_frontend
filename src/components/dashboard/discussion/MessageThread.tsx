@@ -117,7 +117,7 @@ export function MessageThread({
         <Panel
           key={message.id}
           header={
-            <div className="flex  justify-between w-full">
+            <div className="flex  justify-between w-full flex-wrap gap-2">
               <div className="flex items-start gap-4">
                 <Avatar
                   src={message.author.avatarUrl}

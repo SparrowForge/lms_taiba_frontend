@@ -349,7 +349,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
       </Form.Item>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="summerTrainingRequired"
             label={t(LOCALE_KEYS.SUMMER_TRAINING_REQUIRED)}
@@ -358,7 +358,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
             <Switch />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="summerAcceleration"
             label={t(LOCALE_KEYS.SUMMER_ACCELERATION)}

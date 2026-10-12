@@ -172,7 +172,7 @@ const CourseMaterials = () => {
   return (
     <Card style={{ marginBottom: '10px' }} className="rounded-xl shadow-sm">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
         <h2 className="text-2xl font-semibold">{t(LOCALE_KEYS.COURSE_MATERIALS)}</h2>
         
       </div>
@@ -226,7 +226,7 @@ const CourseMaterials = () => {
         <div className="flex flex-col gap-4 overflow-y-auto" style={{ maxHeight: '420px' }}>
           {filteredMaterials.map((m: ICourseMaterial) => (
             <Card key={m.id} className="shadow-sm" bodyStyle={{ padding: '12px 16px' }}>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-3">
                   {getIcon(m.type)}
                   <div>

@@ -195,7 +195,7 @@ export default function LedgerReportPage() {
       <MainLayout>
         <div className="p-4 print:p-0">
           <Card bordered={false} className="mb-4 print:hidden">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-6 flex-wrap gap-2">
               <Title level={4} style={{ margin: 0 }}>
                 Ledger Report
               </Title>
@@ -270,7 +270,7 @@ export default function LedgerReportPage() {
 
           {reportData && (
             <Card bordered={false} className="print:shadow-none print:border-none">
-              <div className="flex justify-between items-start mb-4 print:hidden">
+              <div className="flex justify-between items-start mb-4 print:hidden flex-wrap gap-2">
                 <Button icon={<PrinterOutlined />} onClick={handlePrint}>
                   {t(LOCALE_KEYS.PRINT_REPORT)}
                 </Button>

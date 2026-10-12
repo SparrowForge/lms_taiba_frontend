@@ -75,7 +75,7 @@ export default function StudentDocuments() {
                 {/* Document Status Grid */}
                 <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
                     {documentStatusData.map(doc => (
-                        <Col span={8} key={doc.id}>
+                        <Col xs={24} sm={12} md={8} key={doc.id}>
                             <Card
                                 style={{
                                     backgroundColor: doc.bgColor,

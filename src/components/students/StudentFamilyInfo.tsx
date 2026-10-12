@@ -65,7 +65,7 @@ const StudentFamilyInfo = () => {
       ) : (
         <Card className="rounded-lg" title="Family Information" style={{ marginBottom: '80px' }}>
           {/* Father Info */}
-          <div className="flex justify-between">
+          <div className="flex justify-between flex-wrap gap-2">
             <div className="mb-6">
               <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                 <UserOutlined />

@@ -122,7 +122,7 @@ export default function PaymentsDashboard() {
 
   if (!studentWithFeeInfo) {
     return (
-      <div className="p-6">
+      <div className="p-3 md:p-6">
         <Skeleton active paragraph={{ rows: 10 }} />
       </div>
     );

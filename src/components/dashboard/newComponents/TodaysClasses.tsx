@@ -43,9 +43,9 @@ const TodaysClasses = () => {
       <Row gutter={16}>
         {todaysClasses.length > 0 ? (
           todaysClasses.map((cls, idx) => (
-            <Col span={8} key={idx}>
+            <Col xs={24} sm={12} md={8} key={idx}>
               <Card className="shadow-sm rounded-lg" style={{ padding: '0px' }}>
-                <div className="flex justify-between mb-2">
+                <div className="flex justify-between mb-2 flex-wrap gap-2">
                   <Tag color="blue">{cls.timeSlot?.name || 'No Time'}</Tag>
                   <span className="text-gray-500">{cls.maxCapacity || ''}</span>
                 </div>

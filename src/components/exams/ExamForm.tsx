@@ -558,7 +558,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="marks"
             label={t(LOCALE_KEYS.MARKS)}
@@ -577,7 +577,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="examDatetime"
             label={t(LOCALE_KEYS.EXAM_DATETIME)}
@@ -599,7 +599,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="duration"
             label={t(LOCALE_KEYS.DURATION)}
@@ -630,7 +630,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="questionType"
             label={t(LOCALE_KEYS.QUESTION_TYPE)}
@@ -655,7 +655,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="questionsCount"
             label={t(LOCALE_KEYS.QUESTIONS_COUNT)}
@@ -674,7 +674,7 @@ const ExamForm: React.FC<ExamFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="optionsPerQuestion"
             label={t(LOCALE_KEYS.OPTIONS_PER_QUESTION)}

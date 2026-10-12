@@ -16,31 +16,31 @@ const CourseAssignmentsFacultyDetails = ({semester,batch, course,subject, classN
   return (
     <Card title="Course Material Details" bordered className="shadow-sm" style={{marginBottom:"10px"}}>
       <Row gutter={[16, 16]}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <strong>Course:</strong>
           <div>{course?.name || "—"}</div>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <strong>Subject:</strong>
           <div>{subject?.name || "—"}</div>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <strong>Semester:</strong>
           <div>{semester?.name || "—"}</div>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <strong>Batch:</strong>
           <div>{batch?.name || "—"}</div>
         </Col>
 
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <strong>Faculty:</strong>
           <div>{user?.faculty?.fullName || "—"}</div>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <strong>Class NO:</strong>
           <div>{classNo + 1 || "—"}</div>
         </Col>

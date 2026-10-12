@@ -76,7 +76,7 @@ export default function ListEventView({ currentDate, events, exams, classSchedul
                       backgroundColor: `${typeInfo.color}15`,
                     }}
                   >
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-start justify-between flex-wrap gap-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-1 flex-wrap">
                           <h4 className="font-semibold text-gray-900">

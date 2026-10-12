@@ -73,7 +73,7 @@ const StudentCourse = () => {
       {selectedSemesterId && (
         <Card className="rounded-2xl shadow-sm" style={{ margin: '12px 12px' }}>
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <Typography.Text strong className="text-lg">
                 Subjects
               </Typography.Text>

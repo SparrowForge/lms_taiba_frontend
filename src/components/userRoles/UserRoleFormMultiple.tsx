@@ -280,7 +280,7 @@ function UserRoleFormMultiple({
                     : '1px solid #e8e8e8',
                   borderRadius: '6px',
                   padding: '12px',
-                  minWidth: '300px',
+                  minWidth: 'min(300px, 100%)',
                   flex: '1 1 300px',
                   maxWidth: '400px',
                 }}

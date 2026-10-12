@@ -113,7 +113,7 @@ const FeePaymentDetailsForm: React.FC<FeePaymentDetailsFormProps> = ({
       disabled={actionStatus.status === Status.LOADING}
     >
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="paymentId"
             label={t(LOCALE_KEYS.PAYMENT_ID, { defaultValue: 'Payment ID' })}
@@ -131,7 +131,7 @@ const FeePaymentDetailsForm: React.FC<FeePaymentDetailsFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="feeInstallmentPlanId"
             label={t(LOCALE_KEYS.FEE_INSTALLMENT_PLAN, { defaultValue: 'Fee Installment Plan' })}
@@ -178,7 +178,7 @@ const FeePaymentDetailsForm: React.FC<FeePaymentDetailsFormProps> = ({
       </Form.Item>
 
       <Row gutter={16}>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="amountDue"
             label={t(LOCALE_KEYS.AMOUNT_DUE, { defaultValue: 'Amount Due' })}
@@ -203,7 +203,7 @@ const FeePaymentDetailsForm: React.FC<FeePaymentDetailsFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="amountPaid"
             label={t(LOCALE_KEYS.AMOUNT_PAID)}
@@ -228,7 +228,7 @@ const FeePaymentDetailsForm: React.FC<FeePaymentDetailsFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="balanceAmount"
             label={t(LOCALE_KEYS.BALANCE_AMOUNT, { defaultValue: 'Balance Amount' })}

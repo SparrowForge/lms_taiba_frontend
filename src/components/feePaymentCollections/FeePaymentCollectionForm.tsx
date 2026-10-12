@@ -139,7 +139,7 @@ const FeePaymentCollectionForm: React.FC<FeePaymentCollectionFormProps> = ({
       disabled={actionStatus.status === Status.LOADING}
     >
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="studentId"
             label={t(LOCALE_KEYS.STUDENT)}
@@ -166,7 +166,7 @@ const FeePaymentCollectionForm: React.FC<FeePaymentCollectionFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="feeStructureId"
             label={t(LOCALE_KEYS.FEE_STRUCTURE)}
@@ -196,7 +196,7 @@ const FeePaymentCollectionForm: React.FC<FeePaymentCollectionFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="paymentDate"
             label={t(LOCALE_KEYS.PAYMENT_DATE, { defaultValue: 'Payment Date' })}
@@ -214,7 +214,7 @@ const FeePaymentCollectionForm: React.FC<FeePaymentCollectionFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="paymentMode"
             label={t(LOCALE_KEYS.PAYMENT_MODE, { defaultValue: 'Payment Mode' })}
@@ -237,7 +237,7 @@ const FeePaymentCollectionForm: React.FC<FeePaymentCollectionFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="transactionRef"
             label={t(LOCALE_KEYS.TRANSACTION_REF, { defaultValue: 'Transaction Reference' })}
@@ -253,7 +253,7 @@ const FeePaymentCollectionForm: React.FC<FeePaymentCollectionFormProps> = ({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="amountPaid"
             label={t(LOCALE_KEYS.AMOUNT_PAID, { defaultValue: 'Amount Paid' })}
@@ -281,7 +281,7 @@ const FeePaymentCollectionForm: React.FC<FeePaymentCollectionFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="currency"
             label={t(LOCALE_KEYS.CURRENCY)}
@@ -301,7 +301,7 @@ const FeePaymentCollectionForm: React.FC<FeePaymentCollectionFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <StatusSelectFormItem options={PAYMENT_STATUS_OPTIONS} />
         </Col>
       </Row>

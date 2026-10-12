@@ -90,7 +90,7 @@ export default function FeePaymentCollectionCard({
       </Form.Item>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="paymentDate"
             label={t(LOCALE_KEYS.PAYMENT_DATE, { defaultValue: 'Payment Date' })}
@@ -110,7 +110,7 @@ export default function FeePaymentCollectionCard({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="paymentMode"
             label={t(LOCALE_KEYS.PAYMENT_MODE, { defaultValue: 'Payment Mode' })}
@@ -137,7 +137,7 @@ export default function FeePaymentCollectionCard({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="transactionRef"
             label={t(LOCALE_KEYS.TRANSACTION_REF, { defaultValue: 'Transaction Reference' })}
@@ -157,7 +157,7 @@ export default function FeePaymentCollectionCard({
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="amountPaid"
             label={t(LOCALE_KEYS.AMOUNT_PAID)}
@@ -191,7 +191,7 @@ export default function FeePaymentCollectionCard({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="currency"
             label={t(LOCALE_KEYS.CURRENCY)}
@@ -215,7 +215,7 @@ export default function FeePaymentCollectionCard({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <StatusSelectFormItem options={PAYMENT_STATUS_OPTIONS} />
         </Col>
       </Row>

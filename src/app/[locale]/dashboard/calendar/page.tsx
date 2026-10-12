@@ -188,8 +188,8 @@ export default function Home() {
     <ProtectedRoute>
       <MainLayout>
         <div className="h-[95vh] overflow-y-auto bg-white">
-          <div className="bg-white border-b border-gray-200 px-8 py-4">
-            <div className="flex items-center justify-between">
+          <div className="bg-white border-b border-gray-200 px-4 md:px-8 py-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 mb-1">
                   Academic Calendar
@@ -206,7 +206,7 @@ export default function Home() {
             </div>
           </div>
 
-          <Content className="p-8">
+          <Content className="p-4 md:p-8">
             {/* Navigation and Controls */}
             <Card className="mb-6 border-gray-200">
               <div className="flex flex-col gap-4">

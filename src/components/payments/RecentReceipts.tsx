@@ -49,7 +49,7 @@ const RecentReceipts = () => {
             return (
               <li
                 key={receipt.id}
-                className="p-2 shadow rounded-md flex justify-between items-center"
+                className="p-2 shadow rounded-md flex justify-between items-center flex-wrap gap-2"
               >
                 <div
                   className={`flex items-center justify-center w-7 h-7 rounded p-2 ${colors.bg} ${colors.text}`}

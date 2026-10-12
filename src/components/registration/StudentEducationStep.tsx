@@ -26,7 +26,7 @@ const StudentEducationStep: React.FC<StudentEducationStepProps> = ({ form }) => 
           <>
             {fields.map(({ key, name, ...restField }) => (
               <div key={key} className="mb-6 p-4 border border-gray-200 rounded-lg">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
                   <h4 className="text-md font-medium text-gray-700">
                     {t(LOCALE_KEYS.EDUCATION_ENTRY, { number: name + 1 })}
                   </h4>

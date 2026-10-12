@@ -12,7 +12,7 @@ const RightComponent = () => {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <div className="flex justify-between md:justify-around items-center px-2 md:px-6  pt-4 ">
+      <div className="flex justify-between md:justify-around items-center px-2 md:px-6  pt-4 flex-wrap gap-2">
         <h1 className="text-black text-center">{t(LOCALE_KEYS.WELCOME_BACK)}</h1>
         <div className="border rounded-md">
           <LanguageSwitcher />
@@ -20,7 +20,7 @@ const RightComponent = () => {
       </div>
 
       {/* Center Form */}
-      <div className="flex flex-1 justify-center items-center">
+      <div className="flex flex-1 justify-center items-center px-4 py-6">
         <LoginForm />
       </div>
 

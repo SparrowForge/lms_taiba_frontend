@@ -40,7 +40,7 @@ export default function CostCentersPage() {
       <MainLayout>
         <div className="p-4">
           <Row gutter={16}>
-            <Col span={10}>
+            <Col xs={24} sm={12} md={10}>
               <Card
                 title={t(LOCALE_KEYS.COST_CENTERS, { defaultValue: 'Cost Centers' })}
                 className="h-full"
@@ -53,7 +53,7 @@ export default function CostCentersPage() {
                 />
               </Card>
             </Col>
-            <Col span={14}>
+            <Col xs={24} md={14}>
               <CostCentersForm
                 selectedNode={selectedNode}
                 onSuccess={handleSuccess}

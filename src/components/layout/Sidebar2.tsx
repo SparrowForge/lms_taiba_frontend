@@ -3,6 +3,7 @@
 import * as Icons from '@ant-design/icons';
 import {
   BellOutlined,
+  CloseOutlined,
   DashOutlined,
   LeftOutlined,
   LogoutOutlined,
@@ -30,6 +31,9 @@ const { Text } = Typography;
 interface SidebarProps {
   collapsed: boolean;
   onCollapse: (collapsed: boolean) => void;
+  isMobile?: boolean;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
   openKeys: string[];
   selectedKeys: string[];
   setSelectedKeys: (keys: string[]) => void;
@@ -44,6 +48,9 @@ export const Sidebar2 = React.memo(
   ({
     collapsed,
     onCollapse,
+    isMobile = false,
+    mobileOpen = false,
+    onMobileClose,
     openKeys,
     selectedKeys,
     setSelectedKeys,
@@ -271,16 +278,19 @@ export const Sidebar2 = React.memo(
         if (key && !key.startsWith('parent-') && !key.startsWith('menu-') && key !== currentPath) {
           router.push(key);
         }
+        if (isMobile && key && !key.startsWith('parent-')) {
+          onMobileClose?.();
+        }
       },
-      [router, currentPath],
+      [router, currentPath, isMobile, onMobileClose],
     );
 
     // ✅ USER PROFILE with Branch dropdown
     const userProfileSection = useMemo(
       () => (
-        <div className="p-4 border-b border-gray-100">
+        <div className={`${isMobile ? 'px-4 py-3' : 'p-4'} border-b border-gray-100`}>
           <div
-            className={`flex ${collapsed ? 'flex-col gap-2' : 'flex-row'}  items-center space-x-3`}
+            className={`flex ${collapsed ? 'flex-col gap-2' : 'flex-row gap-3'} items-center`}
           >
             <Avatar
               size={collapsed ? 22 : 40}
@@ -288,15 +298,18 @@ export const Sidebar2 = React.memo(
               className="bg-gradient-to-r from-blue-500 to-purple-600 "
             />
             {!collapsed && (
-              <div className="flex-1 min-w-0 text-white pl-6">
-                <Text strong className="block text-sm truncate text-white">
+              <div className={`flex-1 min-w-0 text-white ${isMobile ? 'ps-1' : 'ps-6'}`}>
+                <Text strong className="block text-sm truncate" style={{ color: '#ffffff' }}>
                   {getUserFullName()}
                 </Text>
-                <Text type="secondary" className="text-xs truncate text-white">
+                <Text
+                  className="block text-xs truncate"
+                  style={{ color: 'rgba(255, 255, 255, 0.75)' }}
+                >
                   {user?.email}
                 </Text>
-                <div className="flex items-center mt-1 ml-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                <div className="flex items-center gap-2 mt-1 ms-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <Text className="text-xs" style={{ color: '#ffffff' }}>
                     Online
                   </Text>
@@ -337,6 +350,7 @@ export const Sidebar2 = React.memo(
       ),
       [
         collapsed,
+        isMobile,
         getUserFullName,
         user?.email,
         //  user?.type,
@@ -418,22 +432,50 @@ export const Sidebar2 = React.memo(
           collapsed={collapsed}
           collapsedWidth={80}
           trigger={null}
-          width={280}
+          width={isMobile ? 'min(280px, 85vw)' : 280}
           theme="light"
-          className="border-r flex flex-col "
+          className={`border-r flex flex-col ${isMobile ? 'mobile-sider' : ''}`}
           style={{
             overflow: 'auto',
-            height: '100vh',
+            height: '100dvh',
             position: 'fixed',
             [locale === 'ar' ? 'right' : 'left']: 0,
             top: 0,
             bottom: 0,
             zIndex: 1000,
             backgroundColor: '#1F4BCA',
-            transition: '1000ms ease',
+            transition: isMobile ? 'transform 300ms ease, visibility 300ms' : '1000ms ease',
+            // Off-canvas on phones: slide out of view until opened from the header
+            transform:
+              isMobile && !mobileOpen
+                ? `translateX(${locale === 'ar' ? '100%' : '-100%'})`
+                : undefined,
+            visibility: isMobile && !mobileOpen ? 'hidden' : undefined,
           }}
         >
           {/* Logo */}
+          {isMobile ? (
+            // Compact header row on phones with the close button in-flow
+            <div className="mobile-sider-header flex items-center justify-between gap-3 px-4 py-3 border-b border-gray-100 shrink-0 text-white">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 shrink-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-base">L</span>
+                </div>
+                <div className="min-w-0 leading-tight">
+                  <div className="text-base font-bold truncate">LMS Taiba</div>
+                  <Text className="text-[11px] uppercase" style={{ color: '#52d1f8ff' }}>
+                    {user?.type} Panel
+                  </Text>
+                </div>
+              </div>
+              <Button
+                type="text"
+                icon={<CloseOutlined style={{ fontSize: 18, color: '#ffffff' }} />}
+                onClick={() => onMobileClose?.()}
+                aria-label="Close menu"
+              />
+            </div>
+          ) : (
           <div className="py-6 border-b border-gray-100 shrink-0 text-white">
             <div className="flex items-center justify-center">
               {!collapsed ? (
@@ -453,7 +495,9 @@ export const Sidebar2 = React.memo(
               )}
             </div>
           </div>
-          {/* Side toggle (middle-right) */}
+          )}
+          {/* Side toggle (middle-right) — desktop only */}
+          {!isMobile && (
           <div className={`absolute  ${collapsed ? 'top-40' : 'top-36'} right-0 z-20`}>
             <Button
               type="primary"
@@ -468,12 +512,13 @@ export const Sidebar2 = React.memo(
               }}
             />
           </div>
+          )}
           {/* User Profile + Branch */}
           <div className="shrink-0">{userProfileSection}</div>
 
           {/* Navigation Menu */}
           <div
-            className="flex-1 min-h-0 overflow-auto "
+            className={`flex-1 min-h-0 overflow-auto ${isMobile ? 'mobile-sider-nav' : ''}`}
             style={{ overflow: 'auto' }}
             ref={(el) => {
               if (el) {
@@ -512,10 +557,10 @@ export const Sidebar2 = React.memo(
           </div>
 
           {/* Settings & Logout */}
-          <div className="py-4 border-t border-gray-100 shrink-0">
+          <div className={`${isMobile ? 'py-2' : 'py-4'} border-t border-gray-100 shrink-0`}>
             <h1
               className={`${
-                collapsed ? (locale === 'ar' ? 'px-4' : 'px-2') : 'pl-4'
+                collapsed ? (locale === 'ar' ? 'px-4' : 'px-2') : 'px-4'
               } text-gray-400 uppercase text-xs tracking-wider mb-2`}
             >
               {t(LOCALE_KEYS.SETTINGS)}
@@ -527,13 +572,14 @@ export const Sidebar2 = React.memo(
               style={{ backgroundColor: 'transparent', color: '#ffffff' }}
             />
             <Menu
-              mode="vertical"
+              // Pop-out submenus open off-screen on phones, so expand inline there
+              mode={isMobile ? 'inline' : 'vertical'}
               items={settingsMenuItems}
               className="text-white"
               style={{
                 backgroundColor: 'transparent',
                 color: '#ffffff',
-                paddingLeft: collapsed ? '0px' : '10px',
+                paddingInlineStart: collapsed || isMobile ? '0px' : '10px',
               }}
             />
             <Menu
@@ -547,6 +593,31 @@ export const Sidebar2 = React.memo(
         <style jsx global>{`
           aside::-webkit-scrollbar {
             width: 4px;
+          }
+
+          /* Phone drawer: header stays pinned, menu + settings scroll together below it */
+          aside.mobile-sider {
+            overflow: hidden !important;
+          }
+          aside.mobile-sider > .ant-layout-sider-children {
+            height: 100%;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+          }
+          aside.mobile-sider .mobile-sider-header {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: #1f4bca;
+          }
+          aside.mobile-sider .mobile-sider-nav {
+            overflow: visible !important;
+          }
+          aside.mobile-sider .ant-menu-inline .ant-menu-item,
+          aside.mobile-sider .ant-menu-inline .ant-menu-submenu-title {
+            height: 44px;
+            line-height: 44px;
           }
           aside::-webkit-scrollbar-track {
             background: transparent;

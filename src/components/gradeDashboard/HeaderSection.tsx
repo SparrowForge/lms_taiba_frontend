@@ -78,7 +78,7 @@ const HeaderSection = () => {
     <div className="grid md:grid-cols-4 gap-4 mb-6">
       {statsData.map((stat) => (
         <Card key={stat.id} className="p-4 shadow rounded-lg">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center flex-wrap gap-2">
             {/* Left side: text info */}
             <div>
               <p className={`text-sm font-medium ${stat.titleColor}`}>

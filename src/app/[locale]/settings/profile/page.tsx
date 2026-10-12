@@ -50,7 +50,7 @@ const ProfileSettings = () => {
       <ProtectedRoute>
         <MainLayout>
           <PageHeader title={t(LOCALE_KEYS.PROFILE)} />
-          <div style={{ padding: '24px', textAlign: 'center' }}>
+          <div className="p-2 md:p-6" style={{ textAlign: 'center' }}>
             <Text type="secondary">Loading user information...</Text>
           </div>
         </MainLayout>
@@ -63,7 +63,7 @@ const ProfileSettings = () => {
       <MainLayout>
         <PageHeader title={t(LOCALE_KEYS.PROFILE)} onBack={() => router.back()} />
 
-        <div style={{ padding: '24px', maxWidth: '1000px', margin: '0 auto' }}>
+        <div className="p-2 md:p-6" style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <Card>
             <Space direction="vertical" size="large" style={{ width: '100%' }}>
               {/* Profile Header */}

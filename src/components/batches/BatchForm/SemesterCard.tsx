@@ -99,7 +99,7 @@ function SemesterCard({ semester, onUpdate, t }: SemesterCardProps) {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item label={t(LOCALE_KEYS.START_DATE)} style={{ marginBottom: 8 }}>
             <DatePicker
               value={semester.startDate ? dayjs(semester.startDate) : undefined}
@@ -109,7 +109,7 @@ function SemesterCard({ semester, onUpdate, t }: SemesterCardProps) {
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item label={t(LOCALE_KEYS.END_DATE)} style={{ marginBottom: 8 }}>
             <DatePicker
               value={semester.endDate ? dayjs(semester.endDate) : undefined}
@@ -121,7 +121,7 @@ function SemesterCard({ semester, onUpdate, t }: SemesterCardProps) {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item label={t(LOCALE_KEYS.STATUS)} style={{ marginBottom: 8 }}>
             <Select
               value={semester.status}
@@ -134,7 +134,7 @@ function SemesterCard({ semester, onUpdate, t }: SemesterCardProps) {
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item label={t(LOCALE_KEYS.REMARKS)} style={{ marginBottom: 8 }}>
             <Input
               value={localRemarks}

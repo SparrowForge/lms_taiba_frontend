@@ -250,10 +250,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   const errors = validationErrors[selectedQuestionIndex] || [];
 
   return (
-    <div className="p-6 min-h-screen">
+    <div className="p-3 md:p-6 min-h-screen">
       <Row gutter={24}>
         {/* LEFT PANEL */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Card size="small" title="Questions">
             <p className="font-medium text-md">Course: {selectedCourse?.name}</p>
             <p className="font-medium text-md">Subject: {selectedSubject?.name}</p>
@@ -311,7 +311,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
         </Col>
 
         {/* RIGHT PANEL */}
-        <Col span={16}>
+        <Col xs={24} md={16}>
           {
             questionType === "mcq" && <Card title={`Question ${selectedQuestionIndex + 1}`} size="small">
 
@@ -361,7 +361,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
               {/* Correct + Difficulty */}
               <Row gutter={12}>
-                <Col span={12}>
+                <Col xs={24} md={12}>
                   <Form.Item label="Correct Option">
                     <Select
                       value={q?.correctOptionNumber}
@@ -376,7 +376,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
                   </Form.Item>
                 </Col>
 
-                <Col span={12}>
+                <Col xs={24} md={12}>
                   <Form.Item label="Difficulty Level">
                     <Select
                       value={q?.difficultyLevel}
@@ -428,11 +428,11 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 
                 {/* Correct + Difficulty */}
                 <Row gutter={12}>
-                  <Col span={12}>
+                  <Col xs={24} md={12}>
 
                   </Col>
 
-                  <Col span={12}>
+                  <Col xs={24} md={12}>
                     <Form.Item label="Difficulty Level">
                       <Select
                         value={q?.difficultyLevel}

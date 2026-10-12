@@ -56,7 +56,7 @@ export default function PreviousAcademicHistory() {
   return (
     <Card
       title={
-        <div className="flex justify-between items-center my-10">
+        <div className="flex justify-between items-center my-10 flex-wrap gap-2">
           <div>
             <h3 className="text-lg font-semibold text-gray-800">Previous Academic History</h3>
             <p className="text-sm text-gray-500">Educational background before enrollment</p>
@@ -89,14 +89,14 @@ export default function PreviousAcademicHistory() {
                   styles={{ body: { padding: '24px' } }}
                   style={{ margin: '10px 0' }}
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between flex-wrap gap-2">
                     <div className="flex items-start gap-4 flex-1">
                       <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
                         <BookOutlined className="text-xl text-orange-500" />
                       </div>
 
                       <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-start justify-between mb-2 flex-wrap gap-2">
                           <div>
                             <h4 className="text-lg font-semibold text-gray-800">
                               {education.institute}

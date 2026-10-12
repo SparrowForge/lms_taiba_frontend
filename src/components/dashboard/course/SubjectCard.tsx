@@ -35,7 +35,7 @@ const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onClick, semesterId 
     >
       <div className="space-y-3">
         {/* Header: Name and Status */}
-        <div className="flex items-start justify-between gap-2">
+        <div className="flex items-start justify-between gap-2 flex-wrap">
           <Typography.Title level={5} className="mb-0 flex-1">
             {subject?.name}
           </Typography.Title>

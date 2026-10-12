@@ -211,7 +211,7 @@ export function SubjectCollapse({ data }: SubjectCollapseProps) {
                           className="h-full hover:shadow-md transition-shadow"
                         >
                           <div className="space-y-3">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                               <h3 className="font-semibold text-sm">
                                 {item.subject?.name}
                               </h3>

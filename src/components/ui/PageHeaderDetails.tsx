@@ -32,9 +32,11 @@ const PageHeaderDetails: React.FC<PageHeaderDetailsProps> = ({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '8px',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px 16px', flexWrap: 'wrap', minWidth: 0 }}>
           {onBack && (
             <Button icon={<ArrowLeftOutlined />} onClick={onBack} type="text">
               {backText || t(LOCALE_KEYS.BACK)}

@@ -59,7 +59,7 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({ weekSchedules, onScheduleClick 
   };
 
   return (
-    <div className="grid grid-cols-5 gap-3 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
       {WEEKDAYS.map((day, dayIndex) => {
         const daySchedules = schedulesByDay[day.key] || [];
         const isWeekend = dayIndex >= 5;

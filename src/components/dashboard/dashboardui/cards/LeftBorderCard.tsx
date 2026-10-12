@@ -31,7 +31,7 @@ const LeftBorderCard: React.FC<LeftBorderCardProps> = ({
         padding: '0px',
       }}
     >
-      <div className="flex items-center justify-between gap-2 ">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="w-[80%]">
           {/* Show localized title if Arabic, otherwise normal title */}
           {locale === 'ar' ? (

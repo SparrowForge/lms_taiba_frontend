@@ -26,7 +26,7 @@ const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({ params }) => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div className="h-[95vh] overflow-y-auto p-6">
+        <div className="h-[95vh] overflow-y-auto p-3 md:p-6">
           {/* Header with Back Button */}
           <div className="mb-6">
             <Button icon={<ArrowLeftOutlined />} onClick={handleBack} size="large">

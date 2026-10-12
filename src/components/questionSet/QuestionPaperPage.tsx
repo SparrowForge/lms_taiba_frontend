@@ -51,12 +51,7 @@ export default function QuestionPaperPage() {
             </div>
 
             {/* Question Paper */}
-            <div className="max-w-4xl mx-auto p-8 print:p-12
-                max-h-[calc(100vh-4rem)]
-                overflow-y-auto
-                print:max-h-none
-                print:overflow-visible
-                overflow-y-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+            <div className="max-w-4xl mx-auto p-4 md:p-8 print:p-12 max-h-[calc(100vh-4rem)] overflow-y-auto print:max-h-none print:overflow-visible overflow-y-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
                 {/* Header Section */}
                 <div className="border-b-2 border-foreground pb-6 mb-8">
                     <div className="text-center space-y-2">
@@ -65,44 +60,44 @@ export default function QuestionPaperPage() {
                     </div>
 
                     <div className="mt-6 border-t border-border pt-6">
-                        <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
-                            <div className="flex justify-between">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Exam:</span>
                                 <span>{selectedQuestionSet?.exam.name}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Total Marks:</span>
                                 <span>{selectedQuestionSet?.exam.marks}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Subject:</span>
                                 <span>{selectedQuestionSet?.subject.name}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Duration:</span>
                                 <span>{selectedQuestionSet?.exam.duration.hours} Hours</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Subject Code:</span>
                                 <span>{selectedQuestionSet?.subject.code}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Questions:</span>
                                 <span>{selectedQuestionSet?.exam.questionsCount}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Batch:</span>
                                 <span>{selectedQuestionSet?.batch.name}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Date:</span>
                                 <span>{formatDate(selectedQuestionSet?.exam.examDatetime)}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Semester:</span>
                                 <span>{selectedQuestionSet?.semester.name}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between flex-wrap gap-2">
                                 <span className="font-semibold">Time:</span>
                                 <span>{formatTime(selectedQuestionSet?.exam.examDatetime)}</span>
                             </div>
@@ -111,7 +106,7 @@ export default function QuestionPaperPage() {
                 </div>
 
                 {/* Instructions Section */}
-                <Card className="mb-8 p-6 bg-muted/30">
+                <Card className="mb-8 p-3 md:p-6 bg-muted/30">
                     <h2 className="text-lg font-bold mb-3">Instructions:</h2>
                     <ul className="space-y-2 text-sm list-disc list-inside text-muted-foreground">
                         <li>Read all questions carefully before answering</li>
@@ -123,8 +118,8 @@ export default function QuestionPaperPage() {
                 </Card>
 
                 {/* Student Information Section */}
-                <div className="mb-8 p-6 border-2 border-dashed border-border rounded-lg">
-                    <div className="grid grid-cols-2 gap-6">
+                <div className="mb-8 p-3 md:p-6 border-2 border-dashed border-border rounded-lg">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                         <div>
                             <label className="text-sm font-semibold">Student Name:</label>
                             <div className="mt-1 border-b border-foreground pb-1"></div>

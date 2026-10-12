@@ -48,7 +48,7 @@ export default function SemesterBatchCurriculumCard({ selectedBatch }:  Semester
   return (
     <Card style={{ marginBottom: 24 }}>
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
         <div>
           <h2 className="m-0 text-lg">{course.name}</h2>
           <p className="text-xs text-gray-500 mt-1">
@@ -94,7 +94,7 @@ export default function SemesterBatchCurriculumCard({ selectedBatch }:  Semester
       {activeSemester && (
         <Card className="mb-6" style={{ background: '#0050b3', color: '#fff' }}>
           <Row>
-            <Col span={20}>
+            <Col xs={24} md={20}>
               <h3 className="m-0">
                 Semester {activeSemester.termNo} – {activeSemester.name}
               </h3>
@@ -103,7 +103,7 @@ export default function SemesterBatchCurriculumCard({ selectedBatch }:  Semester
               </p>
             </Col>
 
-            <Col span={4} className="text-right">
+            <Col xs={12} sm={8} md={4} className="text-right">
               <div className="text-3xl font-bold">
                 {activeSemester.creditHours}
               </div>

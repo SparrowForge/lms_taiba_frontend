@@ -160,7 +160,7 @@ const Assignments: React.FC = () => {
   return (
     <Card className="rounded-xl shadow-sm mb-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
         <h2 className="text-xl font-semibold">{t(LOCALE_KEYS.UPCOMING_ASSIGNMENT)}</h2>
         {user?.type === UserType.FACULTY && 
         <Button type="primary" onClick={() => handleCreateDrawer()}>
@@ -191,7 +191,7 @@ const Assignments: React.FC = () => {
               bodyStyle={{ padding: '12px 16px' }}
               
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 {/* Left section: Icon + Title */}
                 <div className="flex items-center gap-3">
                   {getIcon(a.type || 'default')}

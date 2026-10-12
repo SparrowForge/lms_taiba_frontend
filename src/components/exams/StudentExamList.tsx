@@ -47,7 +47,7 @@ const StudentExamList = ({ data }: ExamListProps) => {
       key={data.id}
       className="shadow-md rounded-xl border"
       title={
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center flex-wrap gap-2">
           <span className="font-semibold">{data.name}</span>
           <Tag color="blue">{data?.examType?.name}</Tag>
         </div>

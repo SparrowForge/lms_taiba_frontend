@@ -69,7 +69,7 @@ const RecentInvoices = () => {
   return (
     <Card className="h-screen overflow-hidden rounded-lg md:col-span-2">
       {/* Header */}
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex justify-between items-center mb-3 flex-wrap gap-2">
         <h3 className="font-bold text-gray-700 text-xl">{t(LOCALE_KEYS.RECENT_INVOICES)}</h3>
         <div className="flex gap-2">
           <button className="bg-gray-100 px-3 py-1 rounded-md text-sm">

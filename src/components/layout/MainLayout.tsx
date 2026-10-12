@@ -1,10 +1,12 @@
 'use client';
 
-import { Layout } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
+import { Button, Layout } from 'antd';
 import { usePathname } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useNotifications } from '@/hooks/useNotifications';
 
 import ErrorBoundary from '../error/ErrorBoundary';
@@ -37,6 +39,17 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
   const pathname = usePathname();
   const locale = pathname.split('/')[1];
+
+  // On phones and tablets (< lg) the sidebar becomes an off-canvas overlay instead of a fixed
+  // 280px column, which would otherwise leave too little room for the page content
+  const isMobile = useIsMobile(1023.98);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [pathname, isMobile]);
+
+  const closeMobileSidebar = useCallback(() => setMobileSidebarOpen(false), []);
 
   const { loadUnreadCount, unreadCount, loadNotifications, notifications } = useNotifications();
 
@@ -75,7 +88,10 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     }
   }, [unreadCount, loadNotifications]);
 
-  const sidebarWidth = useMemo(() => (collapsed ? 80 : 280), [collapsed]);
+  const sidebarWidth = useMemo(
+    () => (isMobile ? 0 : collapsed ? 80 : 280),
+    [collapsed, isMobile],
+  );
 
   const handleToggleCollapse = useCallback(() => {
     setCollapsed(!collapsed);
@@ -86,7 +102,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   const layoutStyle = useMemo(
     () => ({
       [locale === 'ar' ? 'marginRight' : 'marginLeft']: sidebarWidth,
-      width: `calc(100vw - ${sidebarWidth}px)`,
+      width: isMobile ? '100%' : `calc(100vw - ${sidebarWidth}px)`,
       minWidth: 0,
       overflow: 'hidden',
       transition: `
@@ -94,19 +110,19 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         width ${COLLAPSE_MS}ms ease
       `,
     }),
-    [sidebarWidth, locale],
+    [sidebarWidth, locale, isMobile],
   );
 
   const headerStyle = useMemo(
     () => ({
       backgroundColor: '#ffffff',
-      padding: '0 16px',
+      padding: isMobile ? '0 8px' : '0 16px',
       height: '64px',
       lineHeight: '64px',
       width: '100%',
       minWidth: 0,
     }),
-    [],
+    [isMobile],
   );
 
   const contentStyle = useMemo(
@@ -115,7 +131,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
       minWidth: 0,
       maxWidth: '100%',
       overflowY: 'auto' as const,
-      height: 'calc(100vh - 64px)',
+      height: 'calc(100dvh - 64px)',
     }),
     [],
   );
@@ -125,8 +141,11 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   const memoizedSidebar = useMemo(
     () => (
       <Sidebar2
-        collapsed={collapsed}
+        collapsed={isMobile ? false : collapsed}
         onCollapse={setCollapsed}
+        isMobile={isMobile}
+        mobileOpen={mobileSidebarOpen}
+        onMobileClose={closeMobileSidebar}
         openKeys={openKeys}
         selectedKeys={selectedKeys}
         setSelectedKeys={setSelectedKeys}
@@ -138,6 +157,9 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     ),
     [
       collapsed,
+      isMobile,
+      mobileSidebarOpen,
+      closeMobileSidebar,
       openKeys,
       selectedKeys,
       setSelectedKeys,
@@ -165,14 +187,32 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <>
       <ToastContainer />
-      <Layout className="h-screen overflow-hidden w-full">
+      <Layout className="h-dvh overflow-hidden w-full">
         {memoizedSidebar}
+
+        {isMobile && mobileSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/45"
+            style={{ zIndex: 999 }}
+            onClick={closeMobileSidebar}
+            aria-hidden="true"
+          />
+        )}
 
         <Layout style={layoutStyle}>
           <Header className="px-4 flex items-center justify-between h-16" style={headerStyle}>
-            <div className="flex-1" />
+            <div className="flex-1 flex items-center">
+              {isMobile && (
+                <Button
+                  type="text"
+                  icon={<MenuOutlined style={{ fontSize: 20 }} />}
+                  onClick={() => setMobileSidebarOpen(true)}
+                  aria-label="Open menu"
+                />
+              )}
+            </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               <NotificationBell unreadCount={unreadCount} notifications={notifications} />
               <LanguageSwitcher />
             </div>

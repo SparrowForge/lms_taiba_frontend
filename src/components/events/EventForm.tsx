@@ -290,7 +290,7 @@ const EventForm: React.FC<EventFormProps> = ({
       </Form.Item>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="semesterId"
             label={t(LOCALE_KEYS.SEMESTER)}
@@ -312,7 +312,7 @@ const EventForm: React.FC<EventFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="sectionId"
             label={t(LOCALE_KEYS.SECTION)}
@@ -339,7 +339,7 @@ const EventForm: React.FC<EventFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="startAt"
             label="Start At"
@@ -348,7 +348,7 @@ const EventForm: React.FC<EventFormProps> = ({
             <DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm" />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Form.Item
             name="endAt"
             label="End At"
@@ -360,17 +360,17 @@ const EventForm: React.FC<EventFormProps> = ({
       </Row>
 
       <Row gutter={16}>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item name="isAllDay" label="All Day" valuePropName="checked">
             <Switch />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item name="isHoliday" label="Holiday" valuePropName="checked">
             <Switch />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="isAffectsAttendance"
             label="Affects Attendance"

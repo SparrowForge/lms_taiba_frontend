@@ -35,7 +35,7 @@ const StudentAcademicSemesters: React.FC<SemesterSectionProps> = ({ semester, in
   return (
     <>
       <Card className="semester-section mb-8 my-10" bordered={false}>
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
           <div className="flex items-center gap-4">
             <div
               className="flex items-center justify-center w-12 h-12 rounded-full"

@@ -58,7 +58,7 @@ const MyCourcesCard = () => {
                 style={{ borderTop: `8px solid ${color}` }}
               >
                 {/* Top row */}
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
                   <h3 className="font-bold text-xl">{course.name}</h3>
                   <span className="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full uppercase">
                     {course.status}
@@ -72,7 +72,7 @@ const MyCourcesCard = () => {
 
                 {/* Progress */}
                 <div className="mb-2">
-                  <div className="flex justify-between text-xs mb-1">
+                  <div className="flex justify-between text-xs mb-1 flex-wrap gap-2">
                     <span>{t(LOCALE_KEYS.PROGRESS)}</span>
                     <span>{course.progress ?? 0}%</span>
                   </div>
@@ -88,7 +88,7 @@ const MyCourcesCard = () => {
                 </div>
 
                 {/* Units and Time */}
-                <div className="flex justify-between items-center text-sm mt-2">
+                <div className="flex justify-between items-center text-sm mt-2 flex-wrap gap-2">
                   <span>{course.units ?? 0} Units</span>
                   <span className="flex items-center gap-1">
                     <ClockCircleOutlined style={{ fontSize: 14 }} /> {course.time || 'N/A'}

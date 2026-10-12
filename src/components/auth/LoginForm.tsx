@@ -65,7 +65,7 @@ export const LoginForm = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={true} />
-      <Card style={{ width: 400, padding: '0px' }} className="shadow-lg rounded-lg">
+      <Card style={{ width: '100%', maxWidth: 400, padding: '0px' }} className="shadow-lg rounded-lg">
         <div className="flex justify-center items-center pt-4 pb-2">
           <Image src="/logo2.PNG" alt="logo" width={80} height={80} />
         </div>

@@ -682,7 +682,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
         <Card title="Fee Template Configuration" style={{ marginBottom: 16 }}>
           <>
             <Row gutter={16}>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Form.Item
                   name="templateName"
                   label={t(LOCALE_KEYS.TEMPLATE_NAME)}
@@ -698,7 +698,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   <Input />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Form.Item
                   name="batchId"
                   label={t(LOCALE_KEYS.BATCH)}
@@ -727,7 +727,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Form.Item
                   name="academicYear"
                   label={t(LOCALE_KEYS.ACADEMIC_YEAR)}
@@ -751,7 +751,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
             </Row>
 
             <Row gutter={16}>
-              {/* <Col span={8}>
+              {/* <Col xs={24} sm={12} md={8}>
         <Form.Item
         name="semesterId"
         label={t(LOCALE_KEYS.SEMESTER, { defaultValue: 'Semester' })}
@@ -766,7 +766,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
         />
       </Form.Item>
         </Col> */}
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Form.Item
                   name="paymentType"
                   label={t(LOCALE_KEYS.PAYMENT_TYPE)}
@@ -783,7 +783,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   <StatusSelect options={PAYMENT_TYPE_OPTIONS} />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Form.Item
                   name="totalFees"
                   label={t(LOCALE_KEYS.TOTAL_FEES)}
@@ -805,7 +805,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Form.Item
                   name="admissionFee"
                   label={t(LOCALE_KEYS.ADMISSION_FEE)}
@@ -830,7 +830,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
             </Row>
 
             <Row gutter={16}>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Form.Item
                   name="currency"
                   label={t(LOCALE_KEYS.CURRENCY)}
@@ -855,7 +855,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
             <Row gutter={16}>
               {/* Show different due date fields based on payment type */}
               {currentPaymentType === 'installment' && (
-                <Col span={8}>
+                <Col xs={24} sm={12} md={8}>
                   <Form.Item
                     name="dueDateDaysBeforeStart"
                     label="Due Date Days Before Semester Start"
@@ -884,7 +884,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
               )}
 
               {currentPaymentType === 'monthly' && (
-                <Col span={8}>
+                <Col xs={24} sm={12} md={8}>
                   <Form.Item
                     name="dueDateDaysBeforeMonthStart"
                     label="Due Date Days Before Month Start"
@@ -911,12 +911,12 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
             </Row>
 
             <Row gutter={16}>
-              <Col span={12}>
+              <Col xs={24} md={12}>
                 <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
                   <Input.TextArea rows={3} />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col xs={24} md={12}>
                 <StatusSelectFormItem options={ENTITY_STATUS_OPTIONS} />
               </Col>
             </Row>
@@ -931,7 +931,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
             bodyStyle={{ padding: '16px' }}
           >
             <Row gutter={16}>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <div style={{ marginBottom: '8px' }}>
                   <strong>Course Name:</strong>
                 </div>
@@ -939,7 +939,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   {selectedBatch.course?.name || 'N/A'}
                 </div>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <div style={{ marginBottom: '8px' }}>
                   <strong>Duration (Semesters):</strong>
                 </div>
@@ -947,7 +947,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   {selectedBatch.course?.durationInSemesters || 'N/A'} semesters
                 </div>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <div style={{ marginBottom: '8px' }}>
                   <strong>Batch Year:</strong>
                 </div>
@@ -1072,14 +1072,14 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                 }}
               >
                 <Row gutter={16}>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6}>
                     <strong>Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6}>
                     <strong>Admission Fee:</strong>{' '}
                     {Number(form.getFieldValue('admissionFee') || 0).toFixed(2)}
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6}>
                     <strong>Remaining After Admission:</strong>{' '}
                     {Math.max(
                       0,
@@ -1089,13 +1089,13 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                   {/* Removed discount summary: only admission and remaining are shown now */}
                 </Row>
                 <Row gutter={16} style={{ marginTop: '8px' }}>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6}>
                     <strong>Monthly Sum:</strong>{' '}
                     {formatForDisplay(
                       monthlyPaymentRows.reduce((sum, row) => sum + row.amount, 0),
                     ).toFixed(2)}
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6}>
                     <strong>Amount Per Month:</strong>{' '}
                     {(() => {
                       const activeMonths = monthlyPaymentRows.filter((row) => !row.isBreak);
@@ -1107,7 +1107,7 @@ const FeeStructureFormBulk: React.FC<FeeStructureFormBulkProps> = ({ onSuccess, 
                         : '0.00';
                     })()}
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={12} md={6}>
                     <strong>Difference:</strong>{' '}
                     {formatForDisplay(
                       Math.abs(

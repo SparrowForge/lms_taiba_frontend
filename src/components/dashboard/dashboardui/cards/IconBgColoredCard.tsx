@@ -48,7 +48,7 @@ const IconBgColoredCard: React.FC<IconBgColoredCardProps> = ({
 
       {/* Content */}
       <div className="flex-1">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center flex-wrap gap-2">
           <h1 className="text-[14px] text-black " style={{ fontSize: textSize }}>
             {text}
           </h1>

@@ -23,7 +23,7 @@ const CourseDashboard: React.FC = () => {
   return (
     <div className="">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="text-xl font-semibold flex items-center gap-2">
           <SignatureOutlined style={{ color: '#155dfc' }} className="p-3 bg-blue-50 rounded-lg" />
           {selectedSubject?.name}
@@ -38,7 +38,7 @@ const CourseDashboard: React.FC = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4 mt-5 text-center">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 text-center">
         <div className="bg-blue-50 rounded-lg px-3 py-4">
           <h1 className="text-xl font-bold">{t(LOCALE_KEYS.COMPLETED_UNITS)}</h1>
           <p className="text-[18px] font-bold">-</p>

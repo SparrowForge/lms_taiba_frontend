@@ -74,7 +74,7 @@ const VerifyModalTwofa: React.FC = ({setVerifyTwofa,twoFaState}) => {
         centered
         open={twoFaState}
       >
-         <Card  style={{ width: 450, height: 300 }}>
+         <Card  style={{ width: '100%', maxWidth: 450, minHeight: 300 }}>
                 <Text>
                     <b>Verify Your Code that sent to your Email</b>
                 </Text>

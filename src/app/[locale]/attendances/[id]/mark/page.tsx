@@ -27,6 +27,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 import { useAttendances } from '@/hooks/useAttendances';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useLocalization } from '@/hooks/useLocalization';
 import { attendanceService } from '@/services/attendanceService';
 import { IAttendanceStudent } from '@/types/attendance';
@@ -38,6 +39,7 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
   const attendanceId = parseInt(resolvedParams.id);
 
   const router = useRouter();
+  const isMobile = useIsMobile();
   const {
     selectedAttendance,
     attendanceStudents,
@@ -494,8 +496,9 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
           style={{
             display: 'flex',
             flexDirection: 'column',
-            height: 'calc(100vh - 64px)',
-            overflow: 'hidden',
+            // On phones the page scrolls naturally instead of squeezing the table into the viewport
+            height: isMobile ? 'auto' : 'calc(100vh - 64px)',
+            overflow: isMobile ? 'visible' : 'hidden',
           }}
         >
           <div style={{ flexShrink: 0 }}>
@@ -505,22 +508,22 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
           {/* Attendance Info Card */}
           <Card
             title={`Mark Attendance for: ${selectedAttendance.course?.name} - ${selectedAttendance.subject?.name} - ${selectedAttendance.semester?.name} - ${selectedAttendance.batch?.name}`}
-            style={{ margin: 12, flexShrink: 0 }}
+            style={{ margin: isMobile ? 8 : 12, flexShrink: 0 }}
           >
             <Row gutter={16}>
-              <Col span={6}>
+              <Col xs={24} sm={12} md={6}>
                 <Text strong>Date: </Text>
                 <Text>{selectedAttendance.date}</Text>
               </Col>
-              <Col span={6}>
+              <Col xs={24} sm={12} md={6}>
                 <Text strong>Class No: </Text>
                 <Text>{selectedAttendance.classNo}</Text>
               </Col>
-              <Col span={6}>
+              <Col xs={24} sm={12} md={6}>
                 <Text strong>Faculty: </Text>
                 <Text>{selectedAttendance.faculty?.fullName}</Text>
               </Col>
-              <Col span={6}>
+              <Col xs={24} sm={12} md={6}>
                 <Text strong>Total Students: </Text>
                 <Text>{relevantStudents.length}</Text>
               </Col>
@@ -530,11 +533,11 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
           {/* Students Attendance Card: flex 1 so it takes remaining space; body is flex column, table wrapper scrolls */}
           <Card
             title="Students Attendance"
-            style={{ margin: 12, flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
-            bodyStyle={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: 24 }}
+            style={{ margin: isMobile ? 8 : 12, flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+            bodyStyle={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: isMobile ? 12 : 24 }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-              <Row gutter={16} align="middle" style={{ flexShrink: 0 }}>
+              <Row gutter={[16, 8]} align="middle" style={{ flexShrink: 0 }}>
                 <Col flex="auto">
                   <Input.Search
                     placeholder="Search students by name, application no, or registration no..."
@@ -552,9 +555,9 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
                 </Col>
               </Row>
 
-              <Row justify="space-between" align="middle" style={{ flexShrink: 0, marginTop: 12, marginBottom: 12 }}>
+              <Row justify="space-between" align="middle" gutter={[8, 8]} style={{ flexShrink: 0, marginTop: 12, marginBottom: 12 }}>
                 <Col>
-                  <Space size="middle">
+                  <Space size="middle" wrap>
                     <Tooltip title="Set all students to Present for this class">
                       <Button
                         icon={<CheckCircleOutlined />}
@@ -624,9 +627,7 @@ const MarkAttendancePage: React.FC<{ params: Promise<{ id: string }> }> = ({ par
                 <Table
                   dataSource={filteredTableRows}
                   columns={generateAttendanceColumns(selectedAttendance.classNo)}
-                  scroll={{
-                    y: 'calc(100vh - 540px)',
-                  }}
+                  scroll={isMobile ? { x: 800 } : { x: 800, y: 'calc(100vh - 540px)' }}
                   pagination={false}
                   size="small"
                   rowKey={(row) => row.student.id}

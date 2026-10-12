@@ -128,7 +128,7 @@ export default function QuestionsTable({ questions, selectedQuestions, setSelect
         </Row>
       </Card>
 
-      <div className="flex justify-between mr-10">
+      <div className="flex justify-between mr-10 flex-wrap gap-2">
         <div className="relative">
           <Button
             style={{ margin: "16px 0" }}

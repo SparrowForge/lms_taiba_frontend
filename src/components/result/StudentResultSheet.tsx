@@ -160,7 +160,7 @@ export default function StudentResultSheet() {
         }
         style={{ marginBottom: 16 }}
       >
-        <Descriptions bordered column={2}>
+        <Descriptions bordered column={{ xs: 1, sm: 2 }}>
           <Descriptions.Item label="Name">
             {examResults?.[0]?.student
               ? `${examResults[0].student.firstName ?? ""} ${examResults[0].student.middleName ?? ""} ${examResults[0].student.lastName ?? ""}`

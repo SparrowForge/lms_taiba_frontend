@@ -103,7 +103,7 @@ export default function StudentResultsDisplay() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 16 }}>
+          <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: 16 }}>
             <div>
               <Text type="secondary" style={{ fontSize: 12 }}>
                 Course
@@ -164,7 +164,7 @@ export default function StudentResultsDisplay() {
         }
         bordered
       >
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 }}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <div style={{ textAlign: "center" }}>
             <Text type="secondary" style={{ fontSize: 12, display: "block", marginBottom: 8 }}>
               Overall Percentage

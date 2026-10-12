@@ -21,7 +21,7 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
     <Form form={form} onFinish={onFinish} layout="vertical">
       <Card title="Basic Information" style={{ marginBottom: 16 }}>
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item
               name="name"
               label={t(LOCALE_KEYS.NAME)}
@@ -35,7 +35,7 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
               <Input placeholder={t(LOCALE_KEYS.ENTER_NAME)} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item
               name="batchId"
               label={t(LOCALE_KEYS.BATCH)}
@@ -67,7 +67,7 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
         </Row>
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item
               name="totalFees"
               label={t(LOCALE_KEYS.TOTAL_FEES)}
@@ -86,7 +86,7 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
               />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item name="admissionFee" label={t(LOCALE_KEYS.ADMISSION_FEE)}>
               <InputNumber
                 placeholder={t(LOCALE_KEYS.ENTER_AMOUNT)}
@@ -99,7 +99,7 @@ const BasicFeeForm: React.FC<BasicFeeFormProps> = ({ form, onFinish, loading = f
         </Row>
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Form.Item
               name="paymentType"
               label={t(LOCALE_KEYS.PAYMENT_TYPE)}

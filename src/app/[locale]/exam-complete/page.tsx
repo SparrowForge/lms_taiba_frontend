@@ -71,7 +71,7 @@ export default function ExamCompletionPage() {
                             }}
                         >
                             <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                                <div className="grid grid-cols-2 gap-4 md:gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                                     <Statistic
                                         title="Submission Status"
                                         value="Successful"

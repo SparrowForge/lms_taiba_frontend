@@ -22,7 +22,7 @@ const StudentRegistrationSuccessPage: React.FC = () => {
 
   return (
     <div className="min-h-screen py-8">
-      <div className="mx-auto px-12">
+      <div className="mx-auto px-3 md:px-12">
         <Card className="max-w-2xl mx-auto">
           <Result
             status="success"

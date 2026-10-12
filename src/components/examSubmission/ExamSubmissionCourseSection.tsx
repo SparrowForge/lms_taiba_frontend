@@ -40,7 +40,7 @@ export const ExamSubmissionCourseSection = ({ submissions }: CourseSectionProps)
 
   return (
     <Card className="mb-6">
-      <div className="flex justify-between px-2 mb-6">
+      <div className="flex justify-between px-2 mb-6 flex-wrap gap-2">
         <Statistic title="Total Submissions" value={totalSubmissions} suffix="exams" />
         <Statistic title="Submitted" value={submittedCount} valueStyle={{ color: '#52c41a' }} />
         <Statistic title="Draft" value={draftCount} valueStyle={{ color: '#faad14' }} />

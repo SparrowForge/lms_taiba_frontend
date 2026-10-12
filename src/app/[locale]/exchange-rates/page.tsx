@@ -166,7 +166,7 @@ export default function ExchangeRatePage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div className="p-6">
+        <div className="p-3 md:p-6">
           <Card
             title={t(LOCALE_KEYS.EXCHANGE_RATES)}
             extra={

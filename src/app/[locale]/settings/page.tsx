@@ -130,7 +130,7 @@ function SettingsPage() {
     <MainLayout>
       <PageHeader title={t(LOCALE_KEYS.SETTINGS)} />
 
-      <div style={{ padding: '24px', maxWidth: '1000px', margin: '0 auto' }}>
+      <div className="p-2 md:p-6" style={{ maxWidth: '1000px', margin: '0 auto' }}>
         <Tabs
           defaultActiveKey="appearance"
           items={tabItems}

@@ -7,12 +7,15 @@ interface FormLayoutProps {
 
 function FormLayout({ children, fullWidth = false }: FormLayoutProps) {
   return (
-    <div style={{ padding: fullWidth ? '0' : '24px', height: fullWidth ? 'auto' : 'calc(100vh - 128px)', overflow: 'auto' }}>
+    <div
+      className={fullWidth ? undefined : 'p-2 md:p-6'}
+      style={{ height: fullWidth ? 'auto' : 'calc(100dvh - 128px)', overflow: 'auto' }}
+    >
       <Card
+        className={fullWidth ? undefined : 'md:p-6'}
         style={{
           maxWidth: fullWidth ? '100%' : '600px',
           margin: fullWidth ? 0 : '0 auto',
-          padding: fullWidth ? 0 : '24px',
         }}
         role="main"
         aria-labelledby="form-title"

@@ -49,7 +49,7 @@ export default function CurriculumManagement({ handleCreateDrawer }) {
       }}
 
     >
-      <div style={{ padding: '24px', marginBottom: "100px" }}>
+      <div className="p-2 md:p-6" style={{ marginBottom: "100px" }}>
 
         {/* Header */}
         <div style={{ marginBottom: '24px' }}>

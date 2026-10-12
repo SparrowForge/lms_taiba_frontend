@@ -156,7 +156,7 @@ const ExamSubmissionReviewPage = () => {
                                 <div dangerouslySetInnerHTML={{ __html: answer.answerText || "" }} />
                               </Card>
                               <Row gutter={16}>
-                                <Col span={6}>
+                                <Col xs={24} sm={12} md={6}>
                                   <InputNumber
                                     min={0}
                                     placeholder="Points"
@@ -175,7 +175,7 @@ const ExamSubmissionReviewPage = () => {
                                   />
                                 </Col>
 
-                                <Col span={18}>
+                                <Col xs={24} md={18}>
                                   <TextArea
                                     rows={2}
                                     placeholder="Feedback"

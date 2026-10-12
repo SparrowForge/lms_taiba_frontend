@@ -85,7 +85,7 @@ export function DiscussionSection() {
 
   return (
     <>
-      <div className="flex justify-between m-4">
+      <div className="flex justify-between m-4 flex-wrap gap-2">
         <h1 className="text-2xl font-bold">
           Course Discussion | مناقشة الدورة
         </h1>

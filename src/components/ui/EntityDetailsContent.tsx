@@ -91,7 +91,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
     <div style={{ marginTop: config.embedded ? '0' : '8px' }}>
       <Row gutter={[8, 8]}>
         {/* Profile Card */}
-        <Col xs={8} lg={config.embedded ? 24 : 8}>
+        <Col xs={24} lg={config.embedded ? 24 : 8}>
           <Card title={`${config.name} ${t(LOCALE_KEYS.PROFILE)}`}>
             <div style={{ textAlign: 'center' }}>
               <Avatar
@@ -113,7 +113,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
 
         </Col>
         {/* Details Table */}
-        <Col xs={8} lg={config.embedded ? 24 : 16}>
+        <Col xs={24} lg={config.embedded ? 24 : 16}>
           {
             isStudentPage ? <>
               <UpperTab items={StudentProfileTabData} initial={tab ?? 'profile'} onTabChange={(tab) => setActiveTab(tab)} />
@@ -138,7 +138,7 @@ export const EntityDetailsContent = <T extends { id: number }>({
                       >
                         <td
                           style={{
-                            padding: '12px 16px',
+                            padding: '12px 8px',
                             fontWeight: '600',
                             // backgroundColor: '#fafafa',
                             width: '30%',
@@ -149,8 +149,9 @@ export const EntityDetailsContent = <T extends { id: number }>({
                         </td>
                         <td
                           style={{
-                            padding: '12px 16px',
+                            padding: '12px 8px',
                             verticalAlign: 'top',
+                            wordBreak: 'break-word',
                           }}
                         >
                           {field.render

@@ -11,7 +11,7 @@ interface StatCardProps {
 
 const StudentAcademicStatCard: React.FC<StatCardProps> = ({ icon, title, value }) => (
   <Card className="stat-card" bordered={false}>
-    <div className="flex items-start justify-between">
+    <div className="flex items-start justify-between flex-wrap gap-2">
       <div className="flex-1">
         <div className="text-gray-600 text-sm mb-2">{title}</div>
         <div className="text-3xl font-bold text-gray-900">{value}</div>

@@ -160,7 +160,8 @@ const MailSettings = () => {
                     </Space>
                 }
                 style={{ 
-                    width: 450, 
+                    width: '100%',
+                    maxWidth: 450,
                     minHeight: 350,
                     border: isActive ? '2px solid #52c41a' : '1px solid #d9d9d9',
                     boxShadow: isActive ? '0 2px 8px rgba(82, 196, 26, 0.15)' : 'none'

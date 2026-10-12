@@ -19,10 +19,10 @@ const UpBorderCard: React.FC<UpBorderCardProps> = ({
 }) => {
   return (
     <div
-      className="rounded-2xl p-6 shadow-md hover:-translate-y-1 transition-transform duration-300"
+      className="rounded-2xl p-3 md:p-6 shadow-md hover:-translate-y-1 transition-transform duration-300"
       style={{ borderTop: `8px solid ${color}` }}
     >
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
         <div>
           <h3 className="font-snormal text-[16px] text-gray-500">{title}</h3>
           <div className="text-3xl font-bold">{number}</div>

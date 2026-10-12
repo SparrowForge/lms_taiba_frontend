@@ -53,7 +53,7 @@ export const StatsSection = () => {
   ];
 
   return (
-    <div className="p-6 bg-gray-50">
+    <div className="p-3 md:p-6 bg-gray-50">
       {/* Welcome Section */}
       <div className="mb-8">
         <Title level={2} className="mb-2 text-gray-800">
@@ -72,7 +72,7 @@ export const StatsSection = () => {
               className="shadow-sm hover:shadow-md transition-shadow duration-300 border-0"
               styles={{ body: { padding: '24px' } }}
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                 <div className="p-3 rounded-lg" style={{ backgroundColor: `${stat.color}15` }}>
                   <div style={{ color: stat.color, fontSize: '24px' }}>{stat.prefix}</div>
                 </div>

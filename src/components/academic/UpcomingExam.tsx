@@ -49,7 +49,7 @@ const UpcomingExam = () => {
   return (
     <Card className="p-4 bg-white rounded-2xl shadow-md w-full md:w-[400px]">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
         <h2 className="text-xl font-semibold text-gray-800">{t(LOCALE_KEYS.UPCOMING_EXAMS)}</h2>
 
         <Button onClick={()=>handleViewAllExam()} className="text-sm font-medium" style={{ color: '#1F4BCA' }}>

@@ -61,13 +61,13 @@ export function NotificationBell({
   };
 
   const content = (
-    <div className="w-[360px]">
+    <div className="w-[min(360px,calc(100vw-32px))]">
       {items.length === 0 ? (
         <Empty description="No notifications" />
       ) : (
         <>
           {/* Header */}
-          <div className="flex justify-between items-center px-3 py-2 border-b">
+          <div className="flex justify-between items-center px-3 py-2 border-b flex-wrap gap-2">
             <span className="font-semibold">Notifications</span>
 
             <div className="flex gap-2">
@@ -107,7 +107,7 @@ export function NotificationBell({
                       />
                     }
                     title={
-                      <div className="flex justify-between items-center gap-2">
+                      <div className="flex justify-between items-center gap-2 flex-wrap">
                         <span
                           className={`text-sm ${
                             isUnread ? "font-semibold" : ""

@@ -7,7 +7,6 @@ import {
   Col,
   Radio,
   Row,
-  Space,
   Typography,
   Form,
   Empty,
@@ -177,13 +176,14 @@ export default function Quiz({
 
   return (
     <Form form={form} layout="vertical">
-      <div className="min-h-screen p-6">
+      <div className="min-h-screen p-3 md:p-6">
         <div className="max-w-7xl mx-auto">
-          <Row gutter={24}>
+          <Row gutter={[24, 16]}>
             {/* Left Sidebar */}
             <Col xs={24} sm={8} md={6}>
-              <Card title={title} size="small" className="sticky top-6">
-                <Space direction="vertical" style={{ width: "100%" }} size={8}>
+              <Card title={title} size="small" className="sm:sticky sm:top-6">
+                {/* Wrapping row of question chips on phones, vertical list from sm up */}
+                <div className="flex flex-row flex-wrap gap-2 sm:flex-col">
                   {selectedQuestionSet?.items?.map((_, idx) => (
                     <Card
                       key={idx}
@@ -194,7 +194,7 @@ export default function Quiz({
                       <Text strong>Q{idx + 1}</Text>
                     </Card>
                   ))}
-                </Space>
+                </div>
               </Card>
             </Col>
 

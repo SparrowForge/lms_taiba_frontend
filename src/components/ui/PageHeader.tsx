@@ -19,8 +19,16 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, onBack, children 
   return (
     <Card style={{ marginTop: '8px', marginRight: '8px', marginLeft: '8px' }} size="small">
       <Space direction="vertical" style={{ width: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '8px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px 16px', flexWrap: 'wrap', minWidth: 0 }}>
             {onBack && (
               <Button icon={<ArrowLeftOutlined />} onClick={onBack} type="text">
                 {t(LOCALE_KEYS.BACK, { defaultValue: 'Back' })}

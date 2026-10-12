@@ -301,7 +301,7 @@ export default function VoucherListPage() {
       <MainLayout>
         <div className="p-4">
           <Card bordered={false} className="mb-4">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-6 flex-wrap gap-2">
               <Title level={4} style={{ margin: 0 }}>
                 {t(LOCALE_KEYS.VOUCHER_LIST)}
               </Title>

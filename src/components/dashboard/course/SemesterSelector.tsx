@@ -49,7 +49,7 @@ const SemesterSelector: React.FC<SemesterSelectorProps> = ({
 
             return (
               <Select.Option key={semester.id} value={semester.id}>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
                     <span>{semester.name}</span>
                     {isCurrent && (

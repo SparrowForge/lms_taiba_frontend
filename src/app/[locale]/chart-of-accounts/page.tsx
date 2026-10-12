@@ -41,7 +41,7 @@ export default function ChartOfAccountsPage() {
       <MainLayout>
         <div className="p-4">
           <Row gutter={16}>
-            <Col span={10}>
+            <Col xs={24} sm={12} md={10}>
               <Card title={t(LOCALE_KEYS.COA, { defaultValue: 'COA' })} className="h-full">
                 <ChartOfAccountsTree
                   onSelect={handleSelectNode}
@@ -51,7 +51,7 @@ export default function ChartOfAccountsPage() {
                 />
               </Card>
             </Col>
-            <Col span={14}>
+            <Col xs={24} md={14}>
               <ChartOfAccountsForm
                 selectedNode={selectedNode}
                 onSuccess={handleSuccess}

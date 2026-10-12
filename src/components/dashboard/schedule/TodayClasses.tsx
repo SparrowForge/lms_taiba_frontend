@@ -61,7 +61,7 @@ const TodayClasses: React.FC<TodayClassesProps> = ({ todaySchedules, onScheduleC
                 onClick={() => onScheduleClick?.(schedule, todayDate)}
               >
                 
-                <div className="flex justify-between items-start mb-3">
+                <div className="flex justify-between items-start mb-3 flex-wrap gap-2">
                   <div className="flex items-center gap-2">
                     <ClockCircleOutlined className="text-blue-500" />
                     <span className="font-semibold text-blue-600">

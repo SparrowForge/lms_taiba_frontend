@@ -261,14 +261,14 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
   );
 
   return (
-    <div style={{ padding: '24px', height: 'calc(100vh - 128px)', overflow: 'auto' }}>
+    <div className="p-2 md:p-6" style={{ height: 'calc(100vh - 128px)', overflow: 'auto' }}>
       <Row gutter={24}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Card title={`Edit ${entityName}`} style={{ height: 'fit-content' }}>
             {batchFormContent}
           </Card>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Card title={`Semesters (${localSemesters.length})`} style={{ height: 'fit-content' }}>
             {listStatus.status === Status.LOADING ? (
               <div style={{ textAlign: 'center', padding: '20px' }}>
@@ -283,7 +283,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                   title={`Semester ${semester.termNo}`}
                 >
                   <Row gutter={16}>
-                    <Col span={12}>
+                    <Col xs={24} md={12}>
                       <Form.Item label={t(LOCALE_KEYS.NAME)} style={{ marginBottom: 8 }}>
                         <Input
                           value={semester.name}
@@ -292,7 +292,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} md={12}>
                       <Form.Item label={t(LOCALE_KEYS.TERM_NO)} style={{ marginBottom: 8 }}>
                         <InputNumber
                           value={semester.termNo}
@@ -305,7 +305,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                     </Col>
                   </Row>
                   <Row gutter={16}>
-                    <Col span={12}>
+                    <Col xs={24} md={12}>
                       <Form.Item label={t(LOCALE_KEYS.START_DATE)} style={{ marginBottom: 8 }}>
                         <DatePicker
                           value={semester.startDate ? dayjs(semester.startDate) : undefined}
@@ -317,7 +317,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} md={12}>
                       <Form.Item label={t(LOCALE_KEYS.END_DATE)} style={{ marginBottom: 8 }}>
                         <DatePicker
                           value={semester.endDate ? dayjs(semester.endDate) : undefined}
@@ -331,7 +331,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                     </Col>
                   </Row>
                   <Row gutter={16}>
-                    <Col span={12}>
+                    <Col xs={24} md={12}>
                       <Form.Item label={t(LOCALE_KEYS.STATUS)} style={{ marginBottom: 8 }}>
                         <Select
                           value={semester.status}
@@ -344,7 +344,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                         </Select>
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} md={12}>
                       <Form.Item label={t(LOCALE_KEYS.REMARKS)} style={{ marginBottom: 8 }}>
                         <Input
                           value={semester.remarks}
@@ -355,7 +355,7 @@ const BatchEditForm: React.FC<BatchEditFormProps> = ({
                     </Col>
                   </Row>
                   <Row gutter={16}>
-                    <Col span={12}>
+                    <Col xs={24} md={12}>
                       <Form.Item label={t(LOCALE_KEYS.IS_BREAK)} style={{ marginBottom: 8 }}>
                         <Switch
                           value={semester.isBreak}

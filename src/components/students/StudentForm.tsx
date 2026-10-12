@@ -175,7 +175,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
       </Form.Item>
 
       <Row gutter={16}>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="firstName"
             label={t(LOCALE_KEYS.FIRST_NAME, { defaultValue: 'First Name' })}
@@ -189,7 +189,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
             <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.FIRST_NAME) })} />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="middleName"
             label={t(LOCALE_KEYS.MIDDLE_NAME, { defaultValue: 'Middle Name' })}
@@ -197,7 +197,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
             <Input placeholder={t(LOCALE_KEYS.ENTER_NAME, { name: t(LOCALE_KEYS.MIDDLE_NAME) })} />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8}>
           <Form.Item
             name="lastName"
             label={t(LOCALE_KEYS.LAST_NAME, { defaultValue: 'Last Name' })}

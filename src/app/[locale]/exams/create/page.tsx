@@ -53,7 +53,7 @@ export default function CreateExamPage() {
           title={t(LOCALE_KEYS.CREATE_NAME, { name: entityName })}
           onBack={() => router.back()}
         />
-        <div style={{ width: 1000, margin: "auto" , marginTop:16 }}>
+        <div style={{ width: '100%', maxWidth: 1000, margin: "auto", marginTop: 16, padding: '0 8px' }}>
           <Steps
             current={current}
             onChange={(value) => setCurrent(value)}

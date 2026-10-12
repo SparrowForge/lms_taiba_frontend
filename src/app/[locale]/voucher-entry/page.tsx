@@ -781,15 +781,16 @@ export default function VoucherEntryPage() {
   return (
     <ProtectedRoute>
       <MainLayout>
-        <div className="p-6" style={{ display: 'flex', gap: 16 }}>
+        <div className="p-2 md:p-6 flex flex-col md:flex-row gap-4">
           {/* ===== Left Sidebar: Voucher Types ===== */}
           <Card
             title={t(LOCALE_KEYS.VOUCHER_TYPE)}
-            style={{ width: 200, flexShrink: 0 }}
+            className="w-full md:w-[200px]"
+            style={{ flexShrink: 0 }}
             styles={{ body: { padding: 0 } }}
             loading={loading}
           >
-            <div style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+            <div className="max-h-[200px] md:max-h-[calc(100vh-200px)]" style={{ overflowY: 'auto' }}>
               {voucherTypes.map((vt) => (
                 <div
                   key={vt.id}
@@ -812,7 +813,7 @@ export default function VoucherEntryPage() {
           </Card>
 
           {/* ===== Main Content ===== */}
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <Card
               title={
                 <Space>
@@ -824,7 +825,7 @@ export default function VoucherEntryPage() {
                 </Space>
               }
               extra={
-                <Space>
+                <Space wrap>
                   <Button icon={<ClearOutlined />} onClick={handleClearAll} disabled={isViewMode}>
                     {t(LOCALE_KEYS.CLEAR)}
                   </Button>
@@ -854,12 +855,12 @@ export default function VoucherEntryPage() {
                 }}
               >
                 <Row gutter={16} style={{ marginBottom: 16 }}>
-                  <Col span={4}>
+                  <Col xs={12} sm={8} md={4}>
                     <Form.Item label={t(LOCALE_KEYS.VOUCHER_NO)}>
                       <Input value={voucherNo} disabled />
                     </Form.Item>
                   </Col>
-                  <Col span={4}>
+                  <Col xs={12} sm={8} md={4}>
                     <Form.Item
                       label={t(LOCALE_KEYS.VOUCHER_DATE)}
                       name="voucherDate"
@@ -874,7 +875,7 @@ export default function VoucherEntryPage() {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={4}>
+                  <Col xs={12} sm={8} md={4}>
                     <Form.Item
                       label={t(LOCALE_KEYS.FINANCIAL_YEAR)}
                       name="financialYearId"
@@ -893,7 +894,7 @@ export default function VoucherEntryPage() {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={4}>
+                  <Col xs={12} sm={8} md={4}>
                     <Form.Item
                       label={t(LOCALE_KEYS.BRANCH)}
                       name="branchId"
@@ -916,7 +917,7 @@ export default function VoucherEntryPage() {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={4}>
+                  <Col xs={12} sm={8} md={4}>
                     <Form.Item
                       label={t(LOCALE_KEYS.DEPARTMENT)}
                       name="departmentId"
@@ -937,7 +938,7 @@ export default function VoucherEntryPage() {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={4}>
+                  <Col xs={12} sm={8} md={4}>
                     {/* Placeholder for label alignment if needed, or just leave empty */}
                   </Col>
                 </Row>
@@ -951,7 +952,7 @@ export default function VoucherEntryPage() {
                       initialValues={{ trType: 'DR', currencyId: defaultCurrency?.id }}
                     >
                       <Row gutter={8}>
-                        <Col span={2}>
+                        <Col xs={12} sm={8} md={2}>
                           <Form.Item
                             name="trType"
                             label={t(LOCALE_KEYS.TR)}
@@ -963,7 +964,7 @@ export default function VoucherEntryPage() {
                             </Select>
                           </Form.Item>
                         </Col>
-                        <Col span={6}>
+                        <Col xs={24} sm={12} md={6}>
                           <Form.Item
                             name="chartOfAccountId"
                             label={t(LOCALE_KEYS.LEDGER)}
@@ -980,7 +981,7 @@ export default function VoucherEntryPage() {
                             />
                           </Form.Item>
                         </Col>
-                        <Col span={3}>
+                        <Col xs={12} sm={8} md={3}>
                           <Form.Item
                             name="currencyId"
                             label={t(LOCALE_KEYS.CURRENCY)}
@@ -997,7 +998,7 @@ export default function VoucherEntryPage() {
                             />
                           </Form.Item>
                         </Col>
-                        <Col span={3}>
+                        <Col xs={12} sm={8} md={3}>
                           <Form.Item
                             name="currAmount"
                             label={t(LOCALE_KEYS.AMOUNT)}
@@ -1011,7 +1012,7 @@ export default function VoucherEntryPage() {
                             />
                           </Form.Item>
                         </Col>
-                        <Col span={2}>
+                        <Col xs={12} sm={8} md={2}>
                           <Form.Item
                             name="currRate"
                             label={t(LOCALE_KEYS.RATE)}
@@ -1027,7 +1028,7 @@ export default function VoucherEntryPage() {
                             />
                           </Form.Item>
                         </Col>
-                        <Col span={1}>
+                        <Col xs={12} sm={8} md={1}>
                           <Form.Item label={t(LOCALE_KEYS.EX)}>
                             <Checkbox
                               checked={isExChecked}
@@ -1035,7 +1036,7 @@ export default function VoucherEntryPage() {
                             />
                           </Form.Item>
                         </Col>
-                        <Col span={3}>
+                        <Col xs={12} sm={8} md={3}>
                           <Form.Item
                             name="costCenterId"
                             label={t(LOCALE_KEYS.COST_CENTER)}
@@ -1053,7 +1054,7 @@ export default function VoucherEntryPage() {
                             />
                           </Form.Item>
                         </Col>
-                        <Col span={3}>
+                        <Col xs={12} sm={8} md={3}>
                           <Form.Item name="lineNarration" label={t(LOCALE_KEYS.REMARKS)}>
                             <Input placeholder={t(LOCALE_KEYS.REMARKS)} />
                           </Form.Item>
@@ -1062,27 +1063,27 @@ export default function VoucherEntryPage() {
 
                       {/* ===== Second Row: Cheque & Bank Details ===== */}
                       <Row gutter={8}>
-                        <Col span={4}>
+                        <Col xs={12} sm={8} md={4}>
                           <Form.Item name="chequeNo" label={t(LOCALE_KEYS.CHEQUE_NO)}>
                             <Input placeholder={t(LOCALE_KEYS.CHEQUE_NO)} />
                           </Form.Item>
                         </Col>
-                        <Col span={4}>
+                        <Col xs={12} sm={8} md={4}>
                           <Form.Item name="chequeDate" label={t(LOCALE_KEYS.CHEQUE_DATE)}>
                             <DatePicker style={{ width: '100%' }} />
                           </Form.Item>
                         </Col>
-                        <Col span={4}>
+                        <Col xs={12} sm={8} md={4}>
                           <Form.Item name="bankName" label={t(LOCALE_KEYS.BANK_NAME)}>
                             <Input placeholder={t(LOCALE_KEYS.BANK_NAME)} />
                           </Form.Item>
                         </Col>
-                        <Col span={4}>
+                        <Col xs={12} sm={8} md={4}>
                           <Form.Item name="bankAccno" label={t(LOCALE_KEYS.BANK_ACC_NO)}>
                             <Input placeholder={t(LOCALE_KEYS.ACCOUNT_NO)} />
                           </Form.Item>
                         </Col>
-                        <Col span={8} style={{ display: 'flex', alignItems: 'flex-end', gap: 4 }}>
+                        <Col xs={24} sm={12} md={8} style={{ display: 'flex', alignItems: 'flex-end', gap: 4 }}>
                           <Form.Item>
                             <Space size="small">
                               <Button
@@ -1122,7 +1123,7 @@ export default function VoucherEntryPage() {
                   rowKey="key"
                   size="small"
                   pagination={false}
-                  scroll={{ y: 300 }}
+                  scroll={{ x: 900, y: 300 }}
                   style={{ marginBottom: 16 }}
                   onRow={(record) => ({
                     onClick: () => handleRowClick(record),
@@ -1240,7 +1241,7 @@ export default function VoucherEntryPage() {
         >
           <Form form={childForm} layout="vertical" style={{ marginBottom: 16 }}>
             <Row gutter={8}>
-              <Col span={4}>
+              <Col xs={12} sm={8} md={4}>
                 <Form.Item name="refType" label={t(LOCALE_KEYS.TYPE)} rules={[{ required: true }]}>
                   <Select>
                     <Select.Option value={1}>{t(LOCALE_KEYS.BILL)}</Select.Option>
@@ -1248,7 +1249,7 @@ export default function VoucherEntryPage() {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              <Col xs={12} sm={8} md={4}>
                 <Form.Item
                   name="refId"
                   label={t(LOCALE_KEYS.REF_ID)}
@@ -1257,7 +1258,7 @@ export default function VoucherEntryPage() {
                   <InputNumber style={{ width: '100%' }} min={0} controls={false} />
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              <Col xs={12} sm={8} md={4}>
                 <Form.Item
                   name="billNo"
                   label={t(LOCALE_KEYS.BILL_NO)}
@@ -1266,7 +1267,7 @@ export default function VoucherEntryPage() {
                   <Input />
                 </Form.Item>
               </Col>
-              <Col span={6}>
+              <Col xs={24} sm={12} md={6}>
                 <Form.Item
                   name="costCenterId"
                   label={t(LOCALE_KEYS.COST_CENTER)}
@@ -1286,12 +1287,12 @@ export default function VoucherEntryPage() {
               </Col>
             </Row>
             <Row gutter={8}>
-              <Col span={3}>
+              <Col xs={12} sm={8} md={3}>
                 <Form.Item label={`${t(LOCALE_KEYS.BASE)} (${defaultCurrency?.code || 'N/A'})`}>
                   <Input value={defaultCurrency?.code || ''} disabled />
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              <Col xs={12} sm={8} md={4}>
                 <Form.Item
                   name="currencyId"
                   label={t(LOCALE_KEYS.CURRENCY)}
@@ -1321,7 +1322,7 @@ export default function VoucherEntryPage() {
                   />
                 </Form.Item>
               </Col>
-              <Col span={3}>
+              <Col xs={12} sm={8} md={3}>
                 <Form.Item
                   name="rate"
                   label={t(LOCALE_KEYS.RATE)}
@@ -1337,7 +1338,7 @@ export default function VoucherEntryPage() {
                   />
                 </Form.Item>
               </Col>
-              <Col span={1}>
+              <Col xs={12} sm={8} md={1}>
                 <Form.Item label="Ex">
                   <Checkbox
                     checked={isExChildChecked}
@@ -1345,12 +1346,12 @@ export default function VoucherEntryPage() {
                   />
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              <Col xs={12} sm={8} md={4}>
                 <Form.Item name="amount" label={t(LOCALE_KEYS.AMOUNT)} rules={[{ required: true }]}>
                   <InputNumber style={{ width: '100%' }} min={0} precision={2} controls={false} />
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              <Col xs={12} sm={8} md={4}>
                 <Form.Item dependencies={['amount', 'rate']} noStyle>
                   {({ getFieldValue }) => {
                     const amt = getFieldValue('amount') || 0;
@@ -1371,12 +1372,12 @@ export default function VoucherEntryPage() {
               </Col>
             </Row>
             <Row gutter={8}>
-              <Col span={8}>
+              <Col xs={24} sm={12} md={8}>
                 <Form.Item name="remarks" label={t(LOCALE_KEYS.REMARKS)}>
                   <Input placeholder={t(LOCALE_KEYS.REMARKS)} />
                 </Form.Item>
               </Col>
-              <Col span={3} style={{ display: 'flex', alignItems: 'flex-end' }}>
+              <Col xs={12} sm={8} md={3} style={{ display: 'flex', alignItems: 'flex-end' }}>
                 <Form.Item>
                   <Button type="primary" icon={<PlusOutlined />} onClick={handleAddChild}>
                     {t(LOCALE_KEYS.ADD)}
@@ -1391,6 +1392,7 @@ export default function VoucherEntryPage() {
             rowKey="_key"
             size="small"
             pagination={false}
+            scroll={{ x: 'max-content' }}
             columns={[
               {
                 title: t(LOCALE_KEYS.TYPE),

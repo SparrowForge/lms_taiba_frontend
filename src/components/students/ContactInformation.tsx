@@ -94,14 +94,14 @@ export default function ContactInformation({ student }: IStudent) {
         <Divider className="my-4" />
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">City</div>
               <p className="font-medium text-sm">{student?.profile?.presentAddress.city}</p>
             </div>
           </Col>
 
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">Region</div>
               <p className="font-medium text-sm">{student?.profile?.presentAddress.state || '-'}</p>
@@ -110,14 +110,14 @@ export default function ContactInformation({ student }: IStudent) {
         </Row>
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">Postal Code</div>
               <p className="font-medium text-sm">{student?.profile?.presentAddress.zipCode}</p>
             </div>
           </Col>
 
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">Country</div>
               <p className="font-medium text-sm">{student?.profile?.presentAddress.country}</p>
@@ -149,14 +149,14 @@ export default function ContactInformation({ student }: IStudent) {
         <Divider className="my-4" />
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">City</div>
               <p className="font-medium text-sm">{student?.profile?.permanentAddress.city}</p>
             </div>
           </Col>
 
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">Region</div>
               <p className="font-medium text-sm">
@@ -167,14 +167,14 @@ export default function ContactInformation({ student }: IStudent) {
         </Row>
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">Postal Code</div>
               <p className="font-medium text-sm">{student?.profile?.permanentAddress.zipCode}</p>
             </div>
           </Col>
 
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <div className="mb-4">
               <div className="text-xs text-gray-500 mb-1">Country</div>
               <p className="font-medium text-sm">{student?.profile?.permanentAddress.country}</p>

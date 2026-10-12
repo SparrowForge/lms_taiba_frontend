@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
           </div>
 
           <Card
-            style={{ width: 420 }}
+            style={{ width: '100%', maxWidth: 420 }}
             bordered={false}
             bodyStyle={{ padding: 32 }}
           >

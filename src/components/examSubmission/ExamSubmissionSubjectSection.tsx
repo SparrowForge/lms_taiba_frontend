@@ -32,7 +32,7 @@ export const ExamSubmissionSubjectSection = ({ submissions }: SubjectSectionProp
             </span>
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex justify-between flex-wrap gap-2">
             <Statistic title="Total Submissions" value={submissions.length} />
             <Statistic title="Submitted" value={submittedCount} valueStyle={{ color: '#52c41a' }} />
             <Statistic title="Draft" value={draftCount} valueStyle={{ color: '#faad14' }} />
@@ -41,7 +41,7 @@ export const ExamSubmissionSubjectSection = ({ submissions }: SubjectSectionProp
       </div>
 
       {/* Student Cards */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {submissions.map(submission => (
           <ExamSubmissionCard key={submission.id} submission={submission} />
         ))}

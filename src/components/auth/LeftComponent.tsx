@@ -46,7 +46,7 @@ const LeftComponent = () => {
   ];
 
   return (
-    <div className="bg-[#1F4BCA] w-full  flex flex-col justify-center items-center py-10 md:py-0">
+    <div className="bg-[#1F4BCA] w-full hidden md:flex flex-col justify-center items-center py-10 md:py-0">
       {/* Logo */}
       <div style={{ marginBottom: 10 }}>
         <Image src="/logo2.PNG" alt="logo" width={80} height={80} />

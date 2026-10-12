@@ -23,7 +23,7 @@ const ExamResultByStudent = () => {
     return (
         <Card className="rounded-xl shadow-sm mb-6">
             {/* Header */}
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
                 <h2 className="text-xl font-semibold">{t(LOCALE_KEYS.EXAM_RESULT)}</h2>
             </div>
 
@@ -46,7 +46,7 @@ const ExamResultByStudent = () => {
                             <Card
                                 className="shadow-md rounded-xl border"
                                 title={
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex justify-between items-center flex-wrap gap-2">
                                         <span className="font-semibold">{item?.exam?.name}</span>
   
                                     </div>

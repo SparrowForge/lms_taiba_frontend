@@ -171,14 +171,14 @@ export function InstallmentSection(props: InstallmentSectionProps) {
           }}
         >
           <Row gutter={16}>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <strong>Total Fees:</strong> {Number(totalFees || 0).toFixed(2)}
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <strong>Admission Fee:</strong>{' '}
               {Number(form.getFieldValue('admissionFee') || 0).toFixed(2)}
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <strong>Remaining After Admission:</strong>{' '}
               {Math.max(
                 0,
@@ -187,11 +187,11 @@ export function InstallmentSection(props: InstallmentSectionProps) {
             </Col>
           </Row>
           <Row gutter={16} style={{ marginTop: '8px' }}>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <strong>Semester Sum ({paymentRows.length} active semesters):</strong>{' '}
               {formatForDisplay(paymentRows.reduce((sum, row) => sum + row.amount, 0)).toFixed(2)}
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <strong>Amount Per Semester:</strong>{' '}
               {paymentRows.length > 0
                 ? formatForDisplay(
@@ -199,7 +199,7 @@ export function InstallmentSection(props: InstallmentSectionProps) {
                   ).toFixed(2)
                 : '0.00'}
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <strong>Difference:</strong>{' '}
               {formatForDisplay(
                 Math.abs(

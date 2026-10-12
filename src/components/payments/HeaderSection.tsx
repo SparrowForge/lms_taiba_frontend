@@ -27,8 +27,8 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({ title, dueDate, onPayNow 
         marginBottom: '10px',
       }}
     >
-      <div className=" flex justify-between items-center">
-        <div className="flex justify-between items-center gap-10">
+      <div className="flex justify-between items-center flex-wrap gap-2">
+        <div className="flex justify-between items-center gap-10 flex-wrap">
           <ExclamationOutlined
             className="text-3xl p-2 rounded-full"
             style={{ backgroundColor: '#fb2c36', color: '#ffffff', margin: '0px 10px' }}

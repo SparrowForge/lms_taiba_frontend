@@ -602,13 +602,14 @@ function RoleMenuPermissionFormMultiple({
               💡 <strong>Tip:</strong> Selecting a panel automatically selects all its menus and
               grants all permissions
             </div>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-col md:flex-row gap-2">
               <div
                 style={{
                   border: '1px solid #d9d9d9',
                   borderRadius: '6px',
                   padding: '16px',
                   height: 'calc(100vh - 400px)',
+                  minHeight: '300px',
                   overflowY: 'auto',
                 }}
               >
@@ -637,7 +638,7 @@ function RoleMenuPermissionFormMultiple({
                           borderRadius: '6px',
                           padding: '12px',
                           maxWidth: '350px',
-                          minWidth: '250px',
+                          minWidth: 'min(250px, 100%)',
                           flex: '1 1 250px',
                           width: '100%',
                         }}
@@ -1223,8 +1224,10 @@ function RoleMenuPermissionFormMultiple({
                   border: '1px solid #d9d9d9',
                   borderRadius: '6px',
                   padding: '16px',
-                  width: '400px',
+                  width: '100%',
+                  maxWidth: '400px',
                   height: 'calc(100vh - 400px)',
+                  minHeight: '300px',
                   overflowY: 'auto',
                 }}
               >

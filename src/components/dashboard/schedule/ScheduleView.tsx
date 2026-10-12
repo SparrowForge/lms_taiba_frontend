@@ -66,7 +66,7 @@ const ScheduleView: React.FC = () => {
   return (
     <Card className="shadow-md rounded-xl min-h-[500px]">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-2">
         <h3 className="font-semibold text-lg m-0">
           {t(LOCALE_KEYS.WEEKLY_SCHEDULE_TITLE, { defaultValue: 'Weekly Schedule' })}
         </h3>
